@@ -1,0 +1,5 @@
+# Check for running node processes
+ps aux | grep figma-mcp-server
+
+# Or check for processes on the default MCP port
+lsof -i :8080

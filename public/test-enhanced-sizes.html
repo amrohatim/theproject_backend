@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Enhanced Size Selection Test</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+</head>
+<body class="bg-gray-100 p-8">
+    <div class="max-w-4xl mx-auto">
+        <h1 class="text-3xl font-bold text-gray-900 mb-8">Enhanced Size Selection System Test</h1>
+
+        <div class="bg-white rounded-lg shadow p-6">
+            <h2 class="text-xl font-medium text-gray-900 mb-6">Product Sizes</h2>
+
+            <div class="mb-4 flex justify-between items-center">
+                <p class="text-sm text-gray-600">Add size options with category-based selection</p>
+                <button type="button" id="add-size" class="inline-flex items-center px-3 py-2 border border-transparent text-sm leading-4 font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
+                    <i class="fas fa-plus mr-2"></i> Add Size
+                </button>
+            </div>
+
+            <div id="sizes-container" class="space-y-6">
+                <div class="size-item border border-gray-200 rounded-lg p-4">
+                    <div class="grid grid-cols-12 gap-4">
+                        <div class="col-span-3">
+                            <label class="block text-sm font-medium text-gray-700 mb-1">Size Category</label>
+                            <select class="size-category-select focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md" required>
+                                <option value="">Select Category</option>
+                                <option value="clothes">Clothes</option>
+                                <option value="shoes">Shoes</option>
+                                <option value="hats">Hats</option>
+                            </select>
+                        </div>
+                        <div class="size-selection-container col-span-6 grid grid-cols-6 gap-4">
+                            <div class="col-span-6 flex items-center justify-center text-gray-500">
+                                <p>Please select a size category</p>
+                            </div>
+                            <input type="hidden" name="sizes[0][name]" required>
+                            <input type="hidden" name="sizes[0][value]">
+                        </div>
+                        <div class="col-span-2">
+                            <label class="block text-sm font-medium text-gray-700 mb-1">Price Adjustment</label>
+                            <input type="number" step="0.01" name="sizes[0][price_adjustment]" placeholder="0.00" value="0" class="focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md">
+                        </div>
+                        <div class="col-span-1 flex items-end justify-center">
+                            <button type="button" class="remove-item text-red-500 hover:text-red-700">
+                                <i class="fas fa-trash"></i>
+                            </button>
+                        </div>
+                    </div>
+                    <div class="grid grid-cols-12 gap-4 mt-4">
+                        <div class="col-span-3">
+                            <label class="block text-sm font-medium text-gray-700 mb-1">Additional Info</label>
+                            <input type="text" name="sizes[0][additional_info]" placeholder="Foot length, age group, etc." class="focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md">
+                        </div>
+                        <div class="col-span-2">
+                            <label class="block text-sm font-medium text-gray-700 mb-1">Stock</label>
+                            <input type="number" name="sizes[0][stock]" placeholder="10" value="0" class="focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md">
+                        </div>
+                        <div class="col-span-2">
+                            <label class="block text-sm font-medium text-gray-700 mb-1">Order</label>
+                            <input type="number" name="sizes[0][display_order]" placeholder="0" value="0" class="focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md">
+                        </div>
+                        <div class="col-span-5">
+                            <div class="flex items-start">
+                                <div class="flex items-center h-5">
+                                    <input id="sizes[0][is_default]" name="sizes[0][is_default]" type="checkbox" class="default-size-checkbox focus:ring-indigo-500 h-4 w-4 text-indigo-600 border-gray-300 rounded" value="1">
+                                </div>
+                                <div class="ml-3 text-sm">
+                                    <label for="sizes[0][is_default]" class="font-medium text-gray-700">Default Size</label>
+                                    <p class="text-gray-500">Set as the default size option</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="mt-6">
+                <button type="button" onclick="showFormData()" class="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-green-600 hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500">
+                    <i class="fas fa-eye mr-2"></i> Show Form Data
+                </button>
+            </div>
+
+            <div id="form-data-display" class="mt-6 hidden">
+                <h3 class="text-lg font-medium text-gray-900 mb-4">Form Data Preview</h3>
+                <pre id="form-data-content" class="bg-gray-100 p-4 rounded-md text-sm overflow-auto"></pre>
+            </div>
+        </div>
+    </div>
+
+    <script src="js/enhanced-size-selection.js"></script>
+    <script>
+        // Add size functionality for test
+        document.getElementById('add-size').addEventListener('click', function() {
+            const sizesContainer = document.getElementById('sizes-container');
+            const items = sizesContainer.querySelectorAll('.size-item');
+            const newIndex = items.length;
+
+            const newItem = document.createElement('div');
+            newItem.innerHTML = EnhancedSizeSelection.createEnhancedSizeItem(newIndex);
+            sizesContainer.appendChild(newItem.firstElementChild);
+        });
+
+        // Remove item functionality
+        document.addEventListener('click', function(e) {
+            if (e.target.closest('.remove-item')) {
+                const item = e.target.closest('.size-item');
+                if (item) {
+                    item.remove();
+                }
+            }
+        });
+
+        // Show form data function
+        function showFormData() {
+            const formData = {};
+            const sizeItems = document.querySelectorAll('.size-item');
+
+            sizeItems.forEach((item, index) => {
+                const inputs = item.querySelectorAll('input, select');
+                formData[`size_${index}`] = {};
+
+                inputs.forEach(input => {
+                    if (input.name) {
+                        const fieldName = input.name.replace(/sizes\[\d+\]\[(\w+)\]/, '$1');
+                        if (input.type === 'checkbox') {
+                            formData[`size_${index}`][fieldName] = input.checked;
+                        } else {
+                            formData[`size_${index}`][fieldName] = input.value;
+                        }
+                    } else if (input.classList.contains('size-category-select')) {
+                        formData[`size_${index}`]['category'] = input.value;
+                    }
+                });
+            });
+
+            document.getElementById('form-data-content').textContent = JSON.stringify(formData, null, 2);
+            document.getElementById('form-data-display').classList.remove('hidden');
+        }
+    </script>
+</body>
+</html>

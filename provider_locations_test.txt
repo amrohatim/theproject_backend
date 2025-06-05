@@ -1,0 +1,7 @@
+Provider ID: 1
+Number of locations: 0
+No locations found for this provider.
+Added a sample location for testing.
+After adding: Number of locations: 1
+Locations:
+- ID: 1, Label: Test Location, Emirate: Dubai
