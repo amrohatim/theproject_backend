@@ -19,7 +19,18 @@ class Cors
     {
         $response = $next($request);
         
-        $response->headers->set('Access-Control-Allow-Origin', '*');
+        // Get allowed origins from environment or use production IP
+        $allowedOrigins = [
+            'http://82.25.109.98',
+            'https://82.25.109.98',
+        ];
+
+        $origin = $request->headers->get('Origin');
+        if (in_array($origin, $allowedOrigins)) {
+            $response->headers->set('Access-Control-Allow-Origin', $origin);
+        } else {
+            $response->headers->set('Access-Control-Allow-Origin', 'http://82.25.109.98');
+        }
         $response->headers->set('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, OPTIONS');
         $response->headers->set('Access-Control-Allow-Headers', 'Content-Type, Authorization, X-Requested-With, X-XSRF-TOKEN');
         
