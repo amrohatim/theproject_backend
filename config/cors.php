@@ -19,7 +19,12 @@ return [
 
     'allowed_methods' => ['*'],
 
-    'allowed_origins' => ['*'],
+    'allowed_origins' => [
+        'http://82.25.109.98',
+        'https://82.25.109.98',
+        // Add your Flutter app domains here
+        // 'https://yourdomain.com',
+    ],
 
     'allowed_origins_patterns' => [],
 

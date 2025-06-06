@@ -34,7 +34,11 @@ sudo apt install nginx -y
 ### 1. Clone Repository
 ```bash
 cd /var/www/
+<<<<<<< HEAD
 sudo git clone https://github.com/roothatim/theproject_backend.git laravel-app
+=======
+sudo git clone https://github.com/amrohatim/theproject_backend.git laravel-app
+>>>>>>> 6784681faf1a8a3946f12e302fe84ec74113ed6a
 cd laravel-app
 sudo chown -R www-data:www-data .
 ```
@@ -57,9 +61,15 @@ php artisan key:generate --force
 ```bash
 # Create database
 mysql -u root -p
+<<<<<<< HEAD
 CREATE DATABASE tower;
 CREATE USER 'root'@'localhost' IDENTIFIED BY 'fifa2021';
 GRANT ALL PRIVILEGES ON tower.* TO 'root'@'localhost';
+=======
+CREATE DATABASE your_production_database;
+CREATE USER 'your_db_username'@'localhost' IDENTIFIED BY 'your_secure_db_password';
+GRANT ALL PRIVILEGES ON your_production_database.* TO 'your_db_username'@'localhost';
+>>>>>>> 6784681faf1a8a3946f12e302fe84ec74113ed6a
 FLUSH PRIVILEGES;
 EXIT;
 
@@ -288,4 +298,8 @@ php artisan view:clear
 
 - Laravel Documentation: https://laravel.com/docs
 - Deployment Guide: README_PRODUCTION_DEPLOYMENT.md
+<<<<<<< HEAD
 - Shipping Integration: README_SHIPPING.md
+=======
+- Shipping Integration: README_SHIPPING.md
+>>>>>>> 6784681faf1a8a3946f12e302fe84ec74113ed6a
