@@ -58,7 +58,7 @@ class RegistrationController extends Controller
      */
     public function showMerchantRegistration()
     {
-        return view('auth.merchant-register');
+        return view('auth.merchant-register-vue');
     }
 
     /**

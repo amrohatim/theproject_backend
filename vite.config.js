@@ -13,7 +13,8 @@ export default defineConfig({
                 'resources/css/modern-auth.css',
                 'resources/js/app.js',
                 'resources/js/modern-interactions.js',
-                'resources/js/vendor-registration.js'
+                'resources/js/vendor-registration.js',
+                'resources/js/merchant-registration.js'
             ],
             refresh: true,
         }),
