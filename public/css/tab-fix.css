@@ -1,0 +1,44 @@
+/* CSS fixes for tab panels */
+
+/* Make sure tab panels are visible when not hidden */
+.tab-panel {
+    display: block !important;
+    visibility: visible !important;
+    opacity: 1 !important;
+}
+
+/* Only hide when the hidden class is explicitly applied */
+.tab-panel.hidden {
+    display: none !important;
+}
+
+/* Add a border to make tab panels more visible for debugging */
+.tab-panel {
+    border: 2px solid #4f46e5;
+    padding: 20px;
+    margin-bottom: 20px;
+    border-radius: 8px;
+}
+
+/* Style for active tab */
+.tab-link.active {
+    border-bottom-color: #4f46e5 !important;
+    color: #4f46e5 !important;
+}
+
+/* Debug styles to make elements more visible */
+#specifications-panel {
+    background-color: rgba(79, 70, 229, 0.1);
+}
+
+#colors-panel {
+    background-color: rgba(239, 68, 68, 0.1);
+}
+
+#sizes-panel {
+    background-color: rgba(16, 185, 129, 0.1);
+}
+
+#branches-panel {
+    background-color: rgba(245, 158, 11, 0.1);
+}

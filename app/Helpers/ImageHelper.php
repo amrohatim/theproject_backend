@@ -1,0 +1,602 @@
+<?php
+
+namespace App\Helpers;
+
+use Illuminate\Support\Facades\Config;
+use Illuminate\Support\Facades\Log;
+
+class ImageHelper
+{
+    /**
+     * Fix image path for display in templates
+     *
+     * @param string|null $imagePath
+     * @return string|null
+     */
+    public static function fixPath($imagePath)
+    {
+        if (empty($imagePath)) {
+            return null;
+        }
+
+        // If image starts with http or https, it's already a full URL
+        if (str_starts_with($imagePath, 'http://') || str_starts_with($imagePath, 'https://')) {
+            return $imagePath;
+        }
+
+        // Remove any leading slash
+        $imagePath = ltrim($imagePath, '/');
+
+        // Check if file exists in public directory
+        if (file_exists(public_path($imagePath))) {
+            return $imagePath;
+        }
+
+        // Special case for storage paths with potentially missing 'storage/' prefix
+        if (str_starts_with($imagePath, 'products/') || str_starts_with($imagePath, 'users/')) {
+            $storagePath = 'storage/' . $imagePath;
+            if (file_exists(public_path($storagePath))) {
+                return $storagePath;
+            } else {
+                // Attempt to fix path by ensuring storage/ prefix
+                return 'storage/' . $imagePath;
+            }
+        }
+
+        // If path starts with storage/ already
+        if (str_starts_with($imagePath, 'storage/')) {
+            return $imagePath;
+        }
+
+        // Last resort: make an educated guess and add storage/ prefix if missing
+        return 'storage/' . $imagePath;
+    }
+
+    /**
+     * Get the full URL for an image path
+     *
+     * @param string|null $imagePath
+     * @return string|null
+     */
+    public static function getFullImageUrl($imagePath)
+    {
+        if (empty($imagePath)) {
+            // Return a default placeholder image
+            $appUrl = Config::get('app.url');
+            $placeholderPath = "images/placeholder.png";
+
+            // Check if placeholder exists, if not create a simple one
+            if (!file_exists(public_path($placeholderPath))) {
+                self::createPlaceholderImage(public_path($placeholderPath));
+            }
+
+            return "{$appUrl}/{$placeholderPath}";
+        }
+
+        // If the image path already starts with http, return it as is
+        if (str_starts_with($imagePath, 'http://') || str_starts_with($imagePath, 'https://')) {
+            return $imagePath;
+        }
+
+        // Get the app URL from config
+        $appUrl = Config::get('app.url');
+
+        // Remove any double slashes that might be in the path
+        $imagePath = str_replace('//', '/', $imagePath);
+
+        // Normalize the path by removing leading slash
+        $normalizedPath = ltrim($imagePath, '/');
+
+        // Extract the filename from the path
+        $filename = basename($normalizedPath);
+
+        // Log the image path we're trying to resolve
+        Log::debug("Resolving image path: {$imagePath}, filename: {$filename}");
+
+        // Create an array of possible paths to check
+        $possiblePaths = [
+            // Check in public/images/products
+            "images/products/{$filename}",
+
+            // Check in public/storage/products
+            "storage/products/{$filename}",
+
+            // Check in public/images/categories
+            "images/categories/{$filename}",
+
+            // Check in public/storage/categories
+            "storage/categories/{$filename}",
+
+            // Check in public/storage/deals
+            "storage/deals/{$filename}",
+
+            // Check in public/images/deals
+            "images/deals/{$filename}",
+
+            // Check in public/storage/branches
+            "storage/branches/{$filename}",
+
+            // Check in public/images/branches
+            "images/branches/{$filename}",
+
+            // Check in storage with the original path
+            $normalizedPath,
+
+            // Check in storage with just the filename
+            "storage/{$filename}",
+
+            // Check directly in public with just the filename
+            $filename,
+
+            // Check for product-colors (for color variants)
+            "storage/product-colors/{$filename}",
+
+            // Check in public/images/product-colors
+            "images/product-colors/{$filename}",
+        ];
+
+        // Try each path
+        foreach ($possiblePaths as $path) {
+            if (file_exists(public_path($path))) {
+                Log::debug("Found image at public_path({$path})");
+                return "{$appUrl}/{$path}";
+            }
+        }
+
+        // If we couldn't find the file, check if it exists in storage/app/public
+        // but isn't accessible through the symbolic link
+        $storageAppPublicPath = storage_path("app/public/{$filename}");
+        if (file_exists($storageAppPublicPath)) {
+            Log::warning("Image exists at {$storageAppPublicPath} but is not accessible via public URL. Check symbolic link.");
+
+            // Try to copy the file to the public directory as a fallback
+            try {
+                $publicDestination = public_path("storage/{$filename}");
+                if (!file_exists(dirname($publicDestination))) {
+                    mkdir(dirname($publicDestination), 0755, true);
+                }
+                copy($storageAppPublicPath, $publicDestination);
+                Log::info("Copied image from {$storageAppPublicPath} to {$publicDestination}");
+                return "{$appUrl}/storage/{$filename}";
+            } catch (\Exception $e) {
+                Log::error("Failed to copy image: " . $e->getMessage());
+            }
+        }
+
+        // Check if the path is a storage URL (starts with /storage/)
+        if (str_starts_with($imagePath, '/storage/') || str_starts_with($imagePath, 'storage/')) {
+            // Ensure the storage directory exists
+            $storagePath = str_replace('/storage/', 'storage/', $imagePath);
+            $storagePath = ltrim($storagePath, '/');
+
+            // Try to create the directory if it doesn't exist
+            $dirPath = dirname(public_path($storagePath));
+            if (!file_exists($dirPath)) {
+                try {
+                    mkdir($dirPath, 0755, true);
+                    Log::info("Created directory: {$dirPath}");
+                } catch (\Exception $e) {
+                    Log::error("Failed to create directory: " . $e->getMessage());
+                }
+            }
+
+            // Check if we need to create a placeholder image at this location
+            $fullPath = public_path($storagePath);
+            if (!file_exists($fullPath)) {
+                try {
+                    // Create a placeholder image at this location
+                    self::createPlaceholderImage($fullPath);
+                    Log::info("Created placeholder image at: {$fullPath}");
+                } catch (\Exception $e) {
+                    Log::error("Failed to create placeholder image: " . $e->getMessage());
+                }
+            }
+
+            return "{$appUrl}/{$storagePath}";
+        }
+
+        // Check if the path contains specific folders
+        if (str_contains($normalizedPath, 'products/')) {
+            // Try to ensure the directory exists
+            $dirPath = public_path('storage/products');
+            if (!file_exists($dirPath)) {
+                try {
+                    mkdir($dirPath, 0755, true);
+                    Log::info("Created directory: {$dirPath}");
+                } catch (\Exception $e) {
+                    Log::error("Failed to create directory: " . $e->getMessage());
+                }
+            }
+
+            $fullPath = public_path("storage/products/{$filename}");
+            if (!file_exists($fullPath)) {
+                try {
+                    // Create a placeholder image at this location
+                    self::createPlaceholderImage($fullPath);
+                    Log::info("Created placeholder image at: {$fullPath}");
+                } catch (\Exception $e) {
+                    Log::error("Failed to create placeholder image: " . $e->getMessage());
+                }
+            }
+
+            Log::info("Using products path for: {$imagePath}");
+            return "{$appUrl}/storage/products/{$filename}";
+        }
+
+        if (str_contains($normalizedPath, 'product-colors/')) {
+            // Try to ensure the directory exists
+            $dirPath = public_path('storage/product-colors');
+            if (!file_exists($dirPath)) {
+                try {
+                    mkdir($dirPath, 0755, true);
+                    Log::info("Created directory: {$dirPath}");
+                } catch (\Exception $e) {
+                    Log::error("Failed to create directory: " . $e->getMessage());
+                }
+            }
+
+            $fullPath = public_path("storage/product-colors/{$filename}");
+            if (!file_exists($fullPath)) {
+                try {
+                    // Create a placeholder image at this location
+                    self::createPlaceholderImage($fullPath);
+                    Log::info("Created placeholder image at: {$fullPath}");
+                } catch (\Exception $e) {
+                    Log::error("Failed to create placeholder image: " . $e->getMessage());
+                }
+            }
+
+            Log::info("Using product-colors path for: {$imagePath}");
+            return "{$appUrl}/storage/product-colors/{$filename}";
+        }
+
+        if (str_contains($normalizedPath, 'categories/')) {
+            // Try to ensure the directory exists
+            $dirPath = public_path('storage/categories');
+            if (!file_exists($dirPath)) {
+                try {
+                    mkdir($dirPath, 0755, true);
+                    Log::info("Created directory: {$dirPath}");
+                } catch (\Exception $e) {
+                    Log::error("Failed to create directory: " . $e->getMessage());
+                }
+            }
+
+            // First check if the file exists directly with the provided path
+            $directPath = public_path(ltrim($normalizedPath, '/'));
+            if (file_exists($directPath)) {
+                Log::info("Found category image at direct path: {$directPath}");
+                return "{$appUrl}/{$normalizedPath}";
+            }
+
+            // Then check if it exists in the storage/categories directory
+            $fullPath = public_path("storage/categories/{$filename}");
+            if (file_exists($fullPath)) {
+                Log::info("Found category image at: {$fullPath}");
+                return "{$appUrl}/storage/categories/{$filename}";
+            }
+
+            // If not found, try to copy from storage/app/public/categories
+            try {
+                $storageAppPublicPath = storage_path("app/public/categories/{$filename}");
+                if (file_exists($storageAppPublicPath)) {
+                    // Copy the file to the public directory
+                    copy($storageAppPublicPath, $fullPath);
+                    Log::info("Copied image from {$storageAppPublicPath} to {$fullPath}");
+                    return "{$appUrl}/storage/categories/{$filename}";
+                } else {
+                    // Create a placeholder image at this location
+                    self::createPlaceholderImage($fullPath);
+                    Log::info("Created placeholder image at: {$fullPath}");
+                    return "{$appUrl}/storage/categories/{$filename}";
+                }
+            } catch (\Exception $e) {
+                Log::error("Failed to handle category image: " . $e->getMessage());
+                // Still try to return a valid path
+                return "{$appUrl}/storage/categories/{$filename}";
+            }
+        }
+
+        // Handle deal images
+        if (str_contains($normalizedPath, 'deals/')) {
+            // Try to ensure the directory exists
+            $dirPath = public_path('storage/deals');
+            if (!file_exists($dirPath)) {
+                try {
+                    mkdir($dirPath, 0755, true);
+                    Log::info("Created directory: {$dirPath}");
+                } catch (\Exception $e) {
+                    Log::error("Failed to create directory: " . $e->getMessage());
+                }
+            }
+
+            // First check if the file exists directly with the provided path
+            $directPath = public_path(ltrim($normalizedPath, '/'));
+            if (file_exists($directPath)) {
+                Log::info("Found deal image at direct path: {$directPath}");
+                return "{$appUrl}/{$normalizedPath}";
+            }
+
+            // Then check if it exists in the storage/deals directory
+            $fullPath = public_path("storage/deals/{$filename}");
+            if (file_exists($fullPath)) {
+                Log::info("Found deal image at: {$fullPath}");
+                return "{$appUrl}/storage/deals/{$filename}";
+            }
+
+            // If not found, try to copy from storage/app/public/deals
+            try {
+                $storageAppPublicPath = storage_path("app/public/deals/{$filename}");
+                if (file_exists($storageAppPublicPath)) {
+                    // Copy the file to the public directory
+                    copy($storageAppPublicPath, $fullPath);
+                    Log::info("Copied deal image from {$storageAppPublicPath} to {$fullPath}");
+                    return "{$appUrl}/storage/deals/{$filename}";
+                } else {
+                    // Create a placeholder image at this location
+                    self::createPlaceholderImage($fullPath);
+                    Log::info("Created placeholder image at: {$fullPath}");
+                    return "{$appUrl}/storage/deals/{$filename}";
+                }
+            } catch (\Exception $e) {
+                Log::error("Failed to handle deal image: " . $e->getMessage());
+                // Still try to return a valid path
+                return "{$appUrl}/storage/deals/{$filename}";
+            }
+        }
+
+        if (str_contains($normalizedPath, 'users/')) {
+            // Try to ensure the directory exists
+            $dirPath = public_path('storage/users');
+            if (!file_exists($dirPath)) {
+                try {
+                    mkdir($dirPath, 0755, true);
+                    Log::info("Created directory: {$dirPath}");
+                } catch (\Exception $e) {
+                    Log::error("Failed to create directory: " . $e->getMessage());
+                }
+            }
+
+            $fullPath = public_path("storage/users/{$filename}");
+            if (!file_exists($fullPath)) {
+                try {
+                    // Create a placeholder image at this location
+                    self::createPlaceholderImage($fullPath);
+                    Log::info("Created placeholder image at: {$fullPath}");
+                } catch (\Exception $e) {
+                    Log::error("Failed to create placeholder image: " . $e->getMessage());
+                }
+            }
+
+            Log::info("Using users path for: {$imagePath}");
+            return "{$appUrl}/storage/users/{$filename}";
+        }
+
+        // Handle service images
+        if (str_contains($normalizedPath, 'services/')) {
+            // Try to ensure the directory exists
+            $dirPath = public_path('storage/services');
+            if (!file_exists($dirPath)) {
+                try {
+                    mkdir($dirPath, 0755, true);
+                    Log::info("Created directory: {$dirPath}");
+                } catch (\Exception $e) {
+                    Log::error("Failed to create directory: " . $e->getMessage());
+                }
+            }
+
+            // First check if the file exists directly with the provided path
+            $directPath = public_path(ltrim($normalizedPath, '/'));
+            if (file_exists($directPath)) {
+                Log::info("Found service image at direct path: {$directPath}");
+                return "{$appUrl}/{$normalizedPath}";
+            }
+
+            $fullPath = public_path("storage/services/{$filename}");
+            if (!file_exists($fullPath)) {
+                try {
+                    // Try to copy from storage/app/public/services
+                    $storageAppPublicPath = storage_path("app/public/services/{$filename}");
+                    if (file_exists($storageAppPublicPath)) {
+                        copy($storageAppPublicPath, $fullPath);
+                        Log::info("Copied service image from {$storageAppPublicPath} to {$fullPath}");
+                        return "{$appUrl}/storage/services/{$filename}";
+                    } else {
+                        // Create a placeholder image at this location
+                        self::createPlaceholderImage($fullPath);
+                        Log::info("Created placeholder image at: {$fullPath}");
+                        return "{$appUrl}/storage/services/{$filename}";
+                    }
+                } catch (\Exception $e) {
+                    Log::error("Failed to handle service image: " . $e->getMessage());
+                    // Still try to return a valid path
+                    return "{$appUrl}/storage/services/{$filename}";
+                }
+            }
+
+            Log::info("Using services path for: {$imagePath}");
+            return "{$appUrl}/storage/services/{$filename}";
+        }
+
+        // Handle branch images
+        if (str_contains($normalizedPath, 'branches/')) {
+            // Try to ensure the directory exists
+            $dirPath = public_path('storage/branches');
+            if (!file_exists($dirPath)) {
+                try {
+                    mkdir($dirPath, 0755, true);
+                    Log::info("Created directory: {$dirPath}");
+                } catch (\Exception $e) {
+                    Log::error("Failed to create directory: " . $e->getMessage());
+                }
+            }
+
+            // First check if the file exists directly with the provided path
+            $directPath = public_path(ltrim($normalizedPath, '/'));
+            if (file_exists($directPath)) {
+                Log::info("Found branch image at direct path: {$directPath}");
+                return "{$appUrl}/{$normalizedPath}";
+            }
+
+            // Then check if it exists in the storage/branches directory
+            $fullPath = public_path("storage/branches/{$filename}");
+            if (file_exists($fullPath)) {
+                Log::info("Found branch image at: {$fullPath}");
+                return "{$appUrl}/storage/branches/{$filename}";
+            }
+
+            // If not found, try to copy from storage/app/public/branches
+            try {
+                $storageAppPublicPath = storage_path("app/public/branches/{$filename}");
+                if (file_exists($storageAppPublicPath)) {
+                    // Copy the file to the public directory
+                    copy($storageAppPublicPath, $fullPath);
+                    Log::info("Copied branch image from {$storageAppPublicPath} to {$fullPath}");
+                    return "{$appUrl}/storage/branches/{$filename}";
+                } else {
+                    // Create a placeholder image at this location
+                    self::createPlaceholderImage($fullPath);
+                    Log::info("Created placeholder image at: {$fullPath}");
+                    return "{$appUrl}/storage/branches/{$filename}";
+                }
+            } catch (\Exception $e) {
+                Log::error("Failed to handle branch image: " . $e->getMessage());
+                // Still try to return a valid path
+                return "{$appUrl}/storage/branches/{$filename}";
+            }
+        }
+
+        // Log problematic paths for debugging
+        Log::warning("Image path could not be resolved: {$imagePath}");
+
+        // Last resort: create a placeholder in the storage directory
+        $placeholderPath = "storage/{$filename}";
+        $fullPath = public_path($placeholderPath);
+
+        // Ensure the directory exists
+        if (!file_exists(dirname($fullPath))) {
+            try {
+                mkdir(dirname($fullPath), 0755, true);
+                Log::info("Created directory: " . dirname($fullPath));
+            } catch (\Exception $e) {
+                Log::error("Failed to create directory: " . $e->getMessage());
+            }
+        }
+
+        // Create a placeholder image
+        if (!file_exists($fullPath)) {
+            try {
+                self::createPlaceholderImage($fullPath);
+                Log::info("Created placeholder image at: {$fullPath}");
+            } catch (\Exception $e) {
+                Log::error("Failed to create placeholder image: " . $e->getMessage());
+            }
+        }
+
+        return "{$appUrl}/{$placeholderPath}";
+    }
+
+    /**
+     * Create a simple placeholder image
+     *
+     * @param string $path
+     * @return bool
+     */
+    private static function createPlaceholderImage($path)
+    {
+        // Create a simple image
+        $width = 400;
+        $height = 300;
+        $image = \imagecreatetruecolor($width, $height);
+
+        // Colors
+        $bgColor = \imagecolorallocate($image, 240, 240, 240);
+        $textColor = \imagecolorallocate($image, 50, 50, 50);
+        $borderColor = \imagecolorallocate($image, 200, 200, 200);
+
+        // Fill background
+        \imagefill($image, 0, 0, $bgColor);
+
+        // Add border
+        \imagerectangle($image, 0, 0, $width-1, $height-1, $borderColor);
+
+        // Add text
+        $text = "Product Image";
+        $font = 5; // Built-in font
+        $textWidth = \imagefontwidth($font) * strlen($text);
+        $textHeight = \imagefontheight($font);
+        $x = ($width - $textWidth) / 2;
+        $y = ($height - $textHeight) / 2;
+        \imagestring($image, $font, $x, $y, $text, $textColor);
+
+        // Ensure the directory exists
+        $directory = dirname($path);
+        if (!file_exists($directory)) {
+            mkdir($directory, 0755, true);
+        }
+
+        // Save the image
+        // Save as PNG since imagejpeg might not be available
+        // PNG compression: 0 (no compression) to 9 (max compression). null for default.
+        $result = \imagepng($image, $path); // Using default compression
+        \imagedestroy($image);
+
+        return $result;
+    }
+
+    /**
+     * Check if an image exists in any of the possible locations
+     *
+     * @param string|null $imagePath
+     * @return bool
+     */
+    public static function imageExists($imagePath)
+    {
+        if (empty($imagePath)) {
+            return false;
+        }
+
+        // If it's a URL, we can't check if it exists
+        if (str_starts_with($imagePath, 'http://') || str_starts_with($imagePath, 'https://')) {
+            return true; // Assume it exists
+        }
+
+        // Normalize the path
+        $normalizedPath = ltrim(str_replace('//', '/', $imagePath), '/');
+        $filename = basename($normalizedPath);
+
+        // Check various possible locations
+        $possiblePaths = [
+            public_path("images/products/{$filename}"),
+            public_path("storage/products/{$filename}"),
+            public_path("images/categories/{$filename}"),
+            public_path("storage/categories/{$filename}"),
+            public_path("images/deals/{$filename}"),
+            public_path("storage/deals/{$filename}"),
+            public_path("images/branches/{$filename}"),
+            public_path("storage/branches/{$filename}"),
+            public_path("images/services/{$filename}"),
+            public_path("storage/services/{$filename}"),
+            public_path($normalizedPath),
+            public_path("storage/{$filename}"),
+            public_path($filename),
+            public_path("storage/product-colors/{$filename}"),
+            public_path("images/product-colors/{$filename}"),
+            storage_path("app/public/{$filename}"),
+            storage_path("app/public/products/{$filename}"),
+            storage_path("app/public/categories/{$filename}"),
+            storage_path("app/public/services/{$filename}"),
+            storage_path("app/public/deals/{$filename}"),
+            storage_path("app/public/branches/{$filename}"),
+            storage_path("app/public/product-colors/{$filename}"),
+        ];
+
+        foreach ($possiblePaths as $path) {
+            if (file_exists($path)) {
+                return true;
+            }
+        }
+
+        return false;
+    }
+}

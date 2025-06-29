@@ -1,0 +1,196 @@
+/* Global Styles for the Application */
+
+/* Apply modern textarea styling to all textareas */
+textarea {
+    @apply block w-full px-4 py-3 border-0 rounded-lg;
+    @apply bg-gray-50 dark:bg-gray-800;
+    @apply text-gray-900 dark:text-gray-100;
+    @apply shadow-sm;
+    @apply transition-all duration-300 ease-in-out;
+    @apply focus:ring-4 focus:ring-opacity-50 focus:ring-blue-500 focus:border-blue-500 focus:outline-none;
+    @apply dark:focus:ring-blue-600 dark:focus:border-blue-600;
+    @apply placeholder-gray-400 dark:placeholder-gray-500;
+    @apply resize-y;
+    min-height: 100px;
+    backdrop-filter: blur(4px);
+    border-width: 1px;
+    border-color: rgba(209, 213, 219, 0.8);
+}
+
+textarea:hover {
+    @apply bg-white dark:bg-gray-700;
+    @apply shadow-md;
+    transform: translateY(-1px);
+}
+
+textarea:focus {
+    @apply bg-white dark:bg-gray-700;
+    @apply shadow-lg;
+    transform: translateY(-2px);
+}
+
+/* Dark mode specific styles */
+.dark textarea {
+    border-color: rgba(75, 85, 99, 0.8);
+    box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px 0 rgba(0, 0, 0, 0.06);
+}
+
+.dark textarea:hover,
+.dark textarea:focus {
+    border-color: rgba(59, 130, 246, 0.8); /* Blue color */
+}
+
+/* Error state for textarea */
+textarea.error {
+    @apply border-red-500 dark:border-red-500;
+    @apply focus:ring-red-500 focus:border-red-500;
+    @apply dark:focus:ring-red-500 dark:focus:border-red-500;
+}
+
+/* Success state for textarea */
+textarea.success {
+    @apply border-green-500 dark:border-green-500;
+    @apply focus:ring-green-500 focus:border-green-500;
+    @apply dark:focus:ring-green-500 dark:focus:border-green-500;
+}
+
+/* Disabled state for textarea */
+textarea:disabled {
+    @apply opacity-70 cursor-not-allowed;
+    @apply bg-gray-100 dark:bg-gray-900;
+    transform: none !important;
+    box-shadow: none !important;
+}
+
+/* Apply modern styling to all text inputs */
+input[type="text"],
+input[type="email"],
+input[type="password"],
+input[type="number"],
+input[type="search"],
+input[type="tel"],
+input[type="url"],
+input[type="date"],
+input[type="datetime-local"],
+input[type="month"],
+input[type="week"],
+input[type="time"],
+input[type="color"] {
+    @apply block w-full px-4 py-2.5 border-0 rounded-lg;
+    @apply bg-gray-50 dark:bg-gray-800;
+    @apply text-gray-900 dark:text-gray-100;
+    @apply shadow-sm;
+    @apply transition-all duration-300 ease-in-out;
+    @apply focus:ring-4 focus:ring-opacity-50 focus:ring-blue-500 focus:border-blue-500 focus:outline-none;
+    @apply dark:focus:ring-blue-600 dark:focus:border-blue-600;
+    @apply placeholder-gray-400 dark:placeholder-gray-500;
+    backdrop-filter: blur(4px);
+    border-width: 1px;
+    border-color: rgba(209, 213, 219, 0.8);
+    min-height: 2.75rem; /* More reasonable height */
+}
+
+input[type="text"]:hover,
+input[type="email"]:hover,
+input[type="password"]:hover,
+input[type="number"]:hover,
+input[type="search"]:hover,
+input[type="tel"]:hover,
+input[type="url"]:hover,
+input[type="date"]:hover,
+input[type="datetime-local"]:hover,
+input[type="month"]:hover,
+input[type="week"]:hover,
+input[type="time"]:hover,
+input[type="color"]:hover {
+    @apply bg-white dark:bg-gray-700;
+    @apply shadow-md;
+    transform: translateY(-1px);
+}
+
+input[type="text"]:focus,
+input[type="email"]:focus,
+input[type="password"]:focus,
+input[type="number"]:focus,
+input[type="search"]:focus,
+input[type="tel"]:focus,
+input[type="url"]:focus,
+input[type="date"]:focus,
+input[type="datetime-local"]:focus,
+input[type="month"]:focus,
+input[type="week"]:focus,
+input[type="time"]:focus,
+input[type="color"]:focus {
+    @apply bg-white dark:bg-gray-700;
+    @apply shadow-lg;
+    transform: translateY(-2px);
+}
+
+/* Dark mode specific styles for inputs */
+.dark input[type="text"],
+.dark input[type="email"],
+.dark input[type="password"],
+.dark input[type="number"],
+.dark input[type="search"],
+.dark input[type="tel"],
+.dark input[type="url"],
+.dark input[type="date"],
+.dark input[type="datetime-local"],
+.dark input[type="month"],
+.dark input[type="week"],
+.dark input[type="time"],
+.dark input[type="color"] {
+    border-color: rgba(75, 85, 99, 0.8);
+    box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px 0 rgba(0, 0, 0, 0.06);
+}
+
+.dark input[type="text"]:hover,
+.dark input[type="email"]:hover,
+.dark input[type="password"]:hover,
+.dark input[type="number"]:hover,
+.dark input[type="search"]:hover,
+.dark input[type="tel"]:hover,
+.dark input[type="url"]:hover,
+.dark input[type="date"]:hover,
+.dark input[type="datetime-local"]:hover,
+.dark input[type="month"]:hover,
+.dark input[type="week"]:hover,
+.dark input[type="time"]:hover,
+.dark input[type="color"]:hover,
+.dark input[type="text"]:focus,
+.dark input[type="email"]:focus,
+.dark input[type="password"]:focus,
+.dark input[type="number"]:focus,
+.dark input[type="search"]:focus,
+.dark input[type="tel"]:focus,
+.dark input[type="url"]:focus,
+.dark input[type="date"]:focus,
+.dark input[type="datetime-local"]:focus,
+.dark input[type="month"]:focus,
+.dark input[type="week"]:focus,
+.dark input[type="time"]:focus,
+.dark input[type="color"]:focus {
+    border-color: rgba(59, 130, 246, 0.8); /* Blue color */
+}
+
+/* Error state for inputs */
+input.error {
+    @apply border-red-500 dark:border-red-500;
+    @apply focus:ring-red-500 focus:border-red-500;
+    @apply dark:focus:ring-red-500 dark:focus:border-red-500;
+}
+
+/* Success state for inputs */
+input.success {
+    @apply border-green-500 dark:border-green-500;
+    @apply focus:ring-green-500 focus:border-green-500;
+    @apply dark:focus:ring-green-500 dark:focus:border-green-500;
+}
+
+/* Disabled state for inputs */
+input:disabled {
+    @apply opacity-70 cursor-not-allowed;
+    @apply bg-gray-100 dark:bg-gray-900;
+    transform: none !important;
+    box-shadow: none !important;
+}
