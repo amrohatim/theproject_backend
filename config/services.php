@@ -62,6 +62,10 @@ return [
     //     'sender_id' => env('SMARTVISION_SENDER_ID', 'YourAppName'),
     // ],
 
+    'google' => [
+        'maps_api_key' => env('GOOGLE_MAPS_API_KEY'),
+    ],
+
     'aramex' => [
         // API credentials
         'account_number' => env('ARAMEX_ACCOUNT_NUMBER', 'test_account'),

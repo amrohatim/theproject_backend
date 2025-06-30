@@ -221,8 +221,9 @@ Route::middleware('guest')->group(function () {
     Route::get('/register/provider/license', [RegistrationController::class, 'showProviderLicenseForm'])->name('provider.registration.license');
     Route::post('/register/provider/license', [RegistrationController::class, 'uploadProviderLicense'])->name('provider.registration.license.submit');
 
-    // Merchant Registration
+    // Merchant Registration (Vue.js)
     Route::get('/register/merchant', [RegistrationController::class, 'showMerchantRegistration'])->name('register.merchant');
+    Route::get('/register/merchant/legacy', [RegistrationController::class, 'showMerchantRegistration'])->name('register.merchant.legacy');
     Route::post('/register/merchant', [RegistrationController::class, 'registerMerchant'])->name('register.merchant.submit');
     Route::get('/register/merchant/license', [RegistrationController::class, 'showMerchantLicenseForm'])->name('merchant.registration.license');
     Route::post('/register/merchant/license', [RegistrationController::class, 'uploadMerchantLicense'])->name('merchant.registration.license.submit');
@@ -236,16 +237,6 @@ Route::middleware('guest')->group(function () {
     Route::get('/vendor/otp/verify/temp/{token}', [RegistrationController::class, 'showTempVendorOtpVerification'])->name('vendor.otp.verify.temp');
     Route::post('/vendor/otp/verify/temp', [RegistrationController::class, 'verifyTempVendorOtp'])->name('vendor.otp.verify.temp.submit');
     Route::post('/vendor/otp/resend/temp', [RegistrationController::class, 'resendTempVendorOtp'])->name('vendor.otp.resend.temp');
-
-    // Merchant temporary registration email verification routes (public)
-    Route::get('/merchant/email/verify/temp/{token}', [RegistrationController::class, 'showTempMerchantEmailVerification'])->name('merchant.email.verify.temp');
-    Route::post('/merchant/email/verify/temp', [RegistrationController::class, 'verifyTempMerchantEmail'])->name('merchant.email.verify.temp.submit');
-    Route::post('/merchant/email/resend/temp', [RegistrationController::class, 'resendTempMerchantEmailVerification'])->name('merchant.email.resend.temp');
-
-    // Merchant temporary registration phone verification routes (public)
-    Route::get('/merchant/otp/verify/temp/{token}', [RegistrationController::class, 'showTempMerchantOtpVerification'])->name('merchant.otp.verify.temp');
-    Route::post('/merchant/otp/verify/temp', [RegistrationController::class, 'verifyTempMerchantOtp'])->name('merchant.otp.verify.temp.submit');
-    Route::post('/merchant/otp/resend/temp', [RegistrationController::class, 'resendTempMerchantOtp'])->name('merchant.otp.resend.temp');
 
     // OTP routes for registration
     Route::post('/register/send-otp', [RegistrationController::class, 'sendOtp'])->name('register.send-otp');
