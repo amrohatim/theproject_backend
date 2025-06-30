@@ -14,6 +14,7 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Facades\Cache;
 use Illuminate\Http\UploadedFile;
 use Carbon\Carbon;
 use Exception;
@@ -112,11 +113,18 @@ class RegistrationService
 
             // Create role-specific profile if merchant
             if ($userType === 'merchant') {
-                $this->createMerchantProfile($user, $userData);
+                // Get temporary files
+                $tempFiles = $this->getTemporaryFiles($registrationToken);
+                $this->createMerchantProfile($user, $userData, $tempFiles);
             }
 
             // Clean up temporary data
             $this->tempRegistrationService->removeTemporaryRegistration($registrationToken);
+
+            // Clean up temporary files
+            if ($userType === 'merchant') {
+                $this->cleanupTemporaryFiles($registrationToken);
+            }
 
             DB::commit();
 
@@ -145,6 +153,100 @@ class RegistrationService
     private function generateVerificationCode(): string
     {
         return str_pad(random_int(0, 999999), 6, '0', STR_PAD_LEFT);
+    }
+
+    /**
+     * Store uploaded files temporarily during registration.
+     */
+    private function storeTemporaryFiles(string $registrationToken, array $fileUploads): void
+    {
+        $filePaths = [];
+
+        foreach ($fileUploads as $fieldName => $file) {
+            if ($file instanceof \Illuminate\Http\UploadedFile) {
+                try {
+                    // Get file information before storing
+                    $originalName = $file->getClientOriginalName();
+                    $mimeType = $file->getClientMimeType();
+                    $size = $file->getSize();
+                    $extension = $file->getClientOriginalExtension();
+
+                    $filename = $fieldName . '_' . $registrationToken . '_' . time() . '.' . $extension;
+
+                    // Store file using Laravel's storage system
+                    $storagePath = $file->storeAs('temp_registration', $filename, 'local');
+                    $fullPath = storage_path('app/' . $storagePath);
+
+                    $filePaths[$fieldName] = [
+                        'path' => $fullPath,
+                        'storage_path' => $storagePath,
+                        'original_name' => $originalName,
+                        'mime_type' => $mimeType,
+                        'size' => $size,
+                    ];
+
+                    Log::info("File stored temporarily", [
+                        'field' => $fieldName,
+                        'filename' => $filename,
+                        'size' => $size,
+                        'storage_path' => $storagePath,
+                    ]);
+                } catch (Exception $e) {
+                    Log::error("Failed to store temporary file", [
+                        'field' => $fieldName,
+                        'error' => $e->getMessage(),
+                    ]);
+                    // Continue with other files, don't fail the entire registration
+                }
+            }
+        }
+
+        // Store file information in cache
+        $cacheKey = "temp_files_{$registrationToken}";
+        Cache::put($cacheKey, $filePaths, Carbon::now()->addHours(24));
+
+        Log::info("Temporary files stored for registration", [
+            'token' => $registrationToken,
+            'files' => array_keys($filePaths),
+        ]);
+    }
+
+    /**
+     * Retrieve temporarily stored files.
+     */
+    private function getTemporaryFiles(string $registrationToken): array
+    {
+        $cacheKey = "temp_files_{$registrationToken}";
+        return Cache::get($cacheKey, []);
+    }
+
+    /**
+     * Clean up temporary files after registration completion.
+     */
+    private function cleanupTemporaryFiles(string $registrationToken): void
+    {
+        // Get file information from cache
+        $cacheKey = "temp_files_{$registrationToken}";
+        $tempFiles = Cache::get($cacheKey, []);
+
+        // Delete each temporary file
+        foreach ($tempFiles as $fieldName => $fileInfo) {
+            if (isset($fileInfo['storage_path']) && Storage::disk('local')->exists($fileInfo['storage_path'])) {
+                Storage::disk('local')->delete($fileInfo['storage_path']);
+                Log::info("Temporary file deleted", [
+                    'field' => $fieldName,
+                    'storage_path' => $fileInfo['storage_path'],
+                ]);
+            }
+        }
+
+        // Remove from cache
+        Cache::forget($cacheKey);
+
+        Log::info("Temporary files cleaned up", [
+            'token' => $registrationToken,
+            'files_count' => count($tempFiles),
+        ]);
     }
 
     /**
@@ -306,8 +408,25 @@ class RegistrationService
             // Validate unique fields before storing temporarily
             $this->validateUniqueFields($userData);
 
-            // Store registration data temporarily
-            $registrationToken = $this->tempRegistrationService->storeTemporaryRegistration($userData, 'merchant');
+            // Separate file uploads from other data
+            $fileUploads = [];
+            $serializableData = [];
+
+            foreach ($userData as $key => $value) {
+                if ($value instanceof \Illuminate\Http\UploadedFile) {
+                    $fileUploads[$key] = $value;
+                } else {
+                    $serializableData[$key] = $value;
+                }
+            }
+
+            // Store registration data temporarily (without files)
+            $registrationToken = $this->tempRegistrationService->storeTemporaryRegistration($serializableData, 'merchant');
+
+            // Store file uploads temporarily if any exist
+            if (!empty($fileUploads)) {
+                $this->storeTemporaryFiles($registrationToken, $fileUploads);
+            }
 
             // Generate and store email verification code
             $verificationCode = $this->generateVerificationCode();
@@ -591,7 +710,7 @@ class RegistrationService
     /**
      * Create merchant profile.
      */
-    private function createMerchantProfile(User $user, array $userData): void
+    private function createMerchantProfile(User $user, array $userData, array $tempFiles = []): void
     {
         $merchantData = [
             'user_id' => $user->id,
@@ -615,20 +734,54 @@ class RegistrationService
 
         $merchant = Merchant::create($merchantData);
 
-        // Handle file uploads
-        if (isset($userData['logo']) && $userData['logo'] instanceof UploadedFile) {
-            $logoPath = $this->uploadMerchantLogo($userData['logo'], $merchant->id);
-            $merchant->update(['logo' => $logoPath]);
+        // Handle temporary file uploads
+        foreach ($tempFiles as $fieldName => $fileInfo) {
+            if (file_exists($fileInfo['path'])) {
+                switch ($fieldName) {
+                    case 'logo':
+                        $logoPath = $this->moveTemporaryFileToFinal($fileInfo, 'images/merchants', 'merchant_' . $merchant->id . '_logo');
+                        $merchant->update(['logo' => $logoPath]);
+                        break;
+                    case 'uae_id_front':
+                        $frontPath = $this->moveTemporaryFileToFinal($fileInfo, 'images/uae_ids', 'uae_id_front_' . $user->id);
+                        $merchant->update(['uae_id_front' => $frontPath]);
+                        break;
+                    case 'uae_id_back':
+                        $backPath = $this->moveTemporaryFileToFinal($fileInfo, 'images/uae_ids', 'uae_id_back_' . $user->id);
+                        $merchant->update(['uae_id_back' => $backPath]);
+                        break;
+                }
+            }
         }
+    }
 
-        if (isset($userData['uae_id_front']) && $userData['uae_id_front'] instanceof UploadedFile) {
-            $frontPath = $this->uploadUaeIdImage($userData['uae_id_front'], $user->id, 'front');
-            $merchant->update(['uae_id_front' => $frontPath]);
-        }
+    /**
+     * Move temporary file to final storage location.
+     */
+    private function moveTemporaryFileToFinal(array $fileInfo, string $directory, string $baseFilename): string
+    {
+        $extension = pathinfo($fileInfo['original_name'], PATHINFO_EXTENSION);
+        $filename = $baseFilename . '_' . time() . '.' . $extension;
+        $finalPath = $directory . '/' . $filename;
 
-        if (isset($userData['uae_id_back']) && $userData['uae_id_back'] instanceof UploadedFile) {
-            $backPath = $this->uploadUaeIdImage($userData['uae_id_back'], $user->id, 'back');
-            $merchant->update(['uae_id_back' => $backPath]);
+        // Copy file from temp storage to public storage
+        if (isset($fileInfo['storage_path']) && Storage::disk('local')->exists($fileInfo['storage_path'])) {
+            $fileContents = Storage::disk('local')->get($fileInfo['storage_path']);
+            Storage::disk('public')->put($finalPath, $fileContents);
+
+            Log::info("File moved from temporary to final location", [
+                'from' => $fileInfo['storage_path'],
+                'to' => $finalPath,
+                'public_path' => $finalPath,
+            ]);
+
+            return $finalPath;
+        } else {
+            Log::error("Temporary file not found", [
+                'storage_path' => $fileInfo['storage_path'] ?? 'not set',
+                'file_info' => $fileInfo,
+            ]);
+            throw new Exception("Temporary file not found");
         }
     }
 
