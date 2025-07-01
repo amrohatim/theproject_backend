@@ -4,6 +4,8 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Facades\Log;
 
 class Service extends Model
 {
@@ -43,6 +45,36 @@ class Service extends Model
     ];
 
     /**
+     * The "booted" method of the model.
+     *
+     * @return void
+     */
+    protected static function booted()
+    {
+        // Handle image deletion when a service is being deleted
+        static::deleting(function ($service) {
+            try {
+                Log::info("Starting image cleanup for service ID: {$service->id}");
+
+                // Delete service image if exists
+                if ($service->image) {
+                    $rawImagePath = $service->getRawImagePath();
+                    if ($rawImagePath && Storage::disk('public')->exists($rawImagePath)) {
+                        Storage::disk('public')->delete($rawImagePath);
+                        Log::info("Deleted service image: {$rawImagePath}");
+                    }
+                }
+
+                Log::info("Completed image cleanup for service ID: {$service->id}");
+
+            } catch (\Exception $e) {
+                Log::error("Error during image cleanup for service ID: {$service->id}. Error: " . $e->getMessage());
+                // Don't throw the exception to prevent deletion failure
+            }
+        });
+    }
+
+    /**
      * Get the image attribute with full URL.
      *
      * @param  string|null  $value
@@ -51,6 +83,16 @@ class Service extends Model
     public function getImageAttribute($value)
     {
         return \App\Helpers\ImageHelper::getFullImageUrl($value);
+    }
+
+    /**
+     * Get the raw image path without URL processing.
+     *
+     * @return string|null
+     */
+    public function getRawImagePath()
+    {
+        return parent::getRawOriginal('image');
     }
 
     /**
