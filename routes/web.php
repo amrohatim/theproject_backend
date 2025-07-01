@@ -1632,5 +1632,77 @@ Route::prefix('provider')->name('provider.')->middleware(['auth', \App\Http\Midd
     Route::delete('/provider-products/{id}', [App\Http\Controllers\Provider\ProviderProductController::class, 'destroy'])->name('provider-products.destroy');
 });
 
+// Merchant routes
+Route::prefix('merchant')->name('merchant.')->middleware(['auth', \App\Http\Middleware\MerchantMiddleware::class])->group(function () {
+    // Dashboard
+    Route::get('/dashboard', [App\Http\Controllers\Merchant\DashboardController::class, 'index'])->name('dashboard');
+    Route::get('/dashboard/stats', [App\Http\Controllers\Merchant\DashboardController::class, 'getStats'])->name('dashboard.stats');
+
+    // Products
+    Route::get('/products', [App\Http\Controllers\Merchant\ProductController::class, 'index'])->name('products.index');
+    Route::get('/products/create', [App\Http\Controllers\Merchant\ProductController::class, 'create'])->name('products.create');
+    Route::post('/products', [App\Http\Controllers\Merchant\ProductController::class, 'store'])->name('products.store');
+    Route::get('/products/{id}', [App\Http\Controllers\Merchant\ProductController::class, 'show'])->name('products.show');
+    Route::get('/products/{id}/edit', [App\Http\Controllers\Merchant\ProductController::class, 'edit'])->name('products.edit');
+    Route::put('/products/{id}', [App\Http\Controllers\Merchant\ProductController::class, 'update'])->name('products.update');
+    Route::delete('/products/{id}', [App\Http\Controllers\Merchant\ProductController::class, 'destroy'])->name('products.destroy');
+
+    // Services
+    Route::get('/services', [App\Http\Controllers\Merchant\ServiceController::class, 'index'])->name('services.index');
+    Route::get('/services/create', [App\Http\Controllers\Merchant\ServiceController::class, 'create'])->name('services.create');
+    Route::post('/services', [App\Http\Controllers\Merchant\ServiceController::class, 'store'])->name('services.store');
+    Route::get('/services/{id}', [App\Http\Controllers\Merchant\ServiceController::class, 'show'])->name('services.show');
+    Route::get('/services/{id}/edit', [App\Http\Controllers\Merchant\ServiceController::class, 'edit'])->name('services.edit');
+    Route::put('/services/{id}', [App\Http\Controllers\Merchant\ServiceController::class, 'update'])->name('services.update');
+    Route::delete('/services/{id}', [App\Http\Controllers\Merchant\ServiceController::class, 'destroy'])->name('services.destroy');
+
+    // Orders
+    Route::get('/orders', [App\Http\Controllers\Merchant\OrderController::class, 'index'])->name('orders.index');
+    Route::get('/orders/{id}', [App\Http\Controllers\Merchant\OrderController::class, 'show'])->name('orders.show');
+    Route::put('/orders/{id}/status', [App\Http\Controllers\Merchant\OrderController::class, 'updateStatus'])->name('orders.update-status');
+    Route::delete('/orders/{id}', [App\Http\Controllers\Merchant\OrderController::class, 'cancel'])->name('orders.cancel');
+
+    // Customers
+    Route::get('/customers', [App\Http\Controllers\Merchant\CustomerController::class, 'index'])->name('customers.index');
+    Route::get('/customers/{id}', [App\Http\Controllers\Merchant\CustomerController::class, 'show'])->name('customers.show');
+    Route::get('/customers/{id}/edit', [App\Http\Controllers\Merchant\CustomerController::class, 'edit'])->name('customers.edit');
+    Route::put('/customers/{id}', [App\Http\Controllers\Merchant\CustomerController::class, 'update'])->name('customers.update');
+    Route::delete('/customers/{id}', [App\Http\Controllers\Merchant\CustomerController::class, 'destroy'])->name('customers.destroy');
+
+    // Reports
+    Route::get('/reports', [App\Http\Controllers\Merchant\ReportController::class, 'index'])->name('reports.index');
+    Route::get('/reports/{id}', [App\Http\Controllers\Merchant\ReportController::class, 'show'])->name('reports.show');
+    Route::get('/reports/{id}/edit', [App\Http\Controllers\Merchant\ReportController::class, 'edit'])->name('reports.edit');
+    Route::put('/reports/{id}', [App\Http\Controllers\Merchant\ReportController::class, 'update'])->name('reports.update');
+    Route::delete('/reports/{id}', [App\Http\Controllers\Merchant\ReportController::class, 'destroy'])->name('reports.destroy');
+
+    // Settings
+    Route::get('/settings/personal', [App\Http\Controllers\Merchant\SettingsController::class, 'personal'])->name('settings.personal');
+    Route::put('/settings/personal', [App\Http\Controllers\Merchant\SettingsController::class, 'updatePersonal'])->name('settings.personal.update');
+    Route::get('/settings/global', [App\Http\Controllers\Merchant\SettingsController::class, 'global'])->name('settings.global');
+    Route::put('/settings/global', [App\Http\Controllers\Merchant\SettingsController::class, 'updateGlobal'])->name('settings.global.update');
+
+    // Mini Store
+    Route::get('/mini-store', [App\Http\Controllers\Merchant\MiniStoreController::class, 'index'])->name('mini-store');
+    Route::put('/mini-store', [App\Http\Controllers\Merchant\MiniStoreController::class, 'update'])->name('mini-store.update');
+
+    // Verification and Registration Status Routes (for middleware redirects)
+    Route::get('/verification/pending', function () {
+        return view('merchant.verification.pending');
+    })->name('verification.pending')->withoutMiddleware(\App\Http\Middleware\MerchantMiddleware::class);
+
+    Route::get('/registration/status', function () {
+        return view('merchant.registration.status');
+    })->name('registration.status')->withoutMiddleware(\App\Http\Middleware\MerchantMiddleware::class);
+
+    Route::get('/email/verify/{user_id}', function ($user_id) {
+        return view('merchant.email.verify', compact('user_id'));
+    })->name('email.verify')->withoutMiddleware(\App\Http\Middleware\MerchantMiddleware::class);
+
+    Route::get('/otp/verify/{user_id}', function ($user_id) {
+        return view('merchant.otp.verify', compact('user_id'));
+    })->name('otp.verify')->withoutMiddleware(\App\Http\Middleware\MerchantMiddleware::class);
+});
+
 
 require __DIR__.'/test.php';

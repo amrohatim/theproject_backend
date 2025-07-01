@@ -217,6 +217,14 @@ class User extends Authenticatable
     }
 
     /**
+     * Get the merchant record for the user.
+     */
+    public function merchantRecord()
+    {
+        return $this->hasOne(Merchant::class);
+    }
+
+    /**
      * Get the ratings given by this user as a customer to vendors.
      */
     public function vendorRatingsGiven()

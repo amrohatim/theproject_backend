@@ -137,6 +137,8 @@ class Product extends Model
         return \App\Helpers\ImageHelper::getFullImageUrl($value);
     }
 
+
+
     /**
      * Get the default color for the product.
      *
