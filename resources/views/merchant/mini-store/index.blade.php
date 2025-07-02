@@ -85,20 +85,20 @@
     </div>
 @endif
 
-<!-- Mini Store Information Card -->
+<!-- Store Location Information Card -->
 <div class="discord-card">
     <div class="discord-card-header d-flex justify-content-between align-items-center">
         <div>
-            <i class="fas fa-store me-2" style="color: var(--discord-primary);"></i>
-            Mini Store Information
+            <i class="fas fa-map-marker-alt me-2" style="color: var(--discord-primary);"></i>
+            Store Location Management
         </div>
         @if($merchant)
             <button type="button" class="discord-btn" onclick="toggleEditMode()">
-                <i class="fas fa-edit me-1"></i> Edit Store Info
+                <i class="fas fa-edit me-1"></i> Edit Location
             </button>
         @else
             <button type="button" class="discord-btn" onclick="showCreateForm()">
-                <i class="fas fa-plus me-1"></i> Add Mini Store
+                <i class="fas fa-plus me-1"></i> Set Location
             </button>
         @endif
     </div>
@@ -109,40 +109,40 @@
                 <div class="row">
                     <div class="col-md-6">
                         <div class="mb-3">
-                            <label class="form-label">Business Name</label>
-                            <p class="form-control-plaintext">{{ $merchant->business_name ?? 'Not set' }}</p>
+                            <label class="form-label">Store Location Address</label>
+                            <p class="form-control-plaintext">{{ $merchant->store_location_address ?? 'Not set' }}</p>
                         </div>
                         <div class="mb-3">
-                            <label class="form-label">Business Type</label>
-                            <p class="form-control-plaintext">{{ $merchant->business_type ?? 'Not set' }}</p>
-                        </div>
-                        <div class="mb-3">
-                            <label class="form-label">City</label>
-                            <p class="form-control-plaintext">{{ $merchant->city ?? 'Not set' }}</p>
-                        </div>
-                        <div class="mb-3">
-                            <label class="form-label">Emirate</label>
-                            <p class="form-control-plaintext">{{ $merchant->emirate ?? 'Not set' }}</p>
+                            <label class="form-label">Coordinates</label>
+                            <p class="form-control-plaintext">
+                                @if($merchant->store_location_lat && $merchant->store_location_lng)
+                                    {{ number_format($merchant->store_location_lat, 6) }}, {{ number_format($merchant->store_location_lng, 6) }}
+                                @else
+                                    Not set
+                                @endif
+                            </p>
                         </div>
                     </div>
                     <div class="col-md-6">
                         <div class="mb-3">
-                            <label class="form-label">Store Address</label>
-                            <p class="form-control-plaintext">{{ $merchant->store_location_address ?? 'Not set' }}</p>
-                        </div>
-                        <div class="mb-3">
-                            <label class="form-label">Delivery Capability</label>
+                            <label class="form-label">Location Status</label>
                             <p class="form-control-plaintext">
-                                @if($merchant->delivery_capability)
-                                    <span class="badge bg-success">Available</span>
+                                @if($merchant->store_location_address)
+                                    <span class="badge bg-success">
+                                        <i class="fas fa-check me-1"></i>Location Set
+                                    </span>
                                 @else
-                                    <span class="badge bg-secondary">Not Available</span>
+                                    <span class="badge bg-warning">
+                                        <i class="fas fa-exclamation-triangle me-1"></i>Location Not Set
+                                    </span>
                                 @endif
                             </p>
                         </div>
                         <div class="mb-3">
-                            <label class="form-label">Description</label>
-                            <p class="form-control-plaintext">{{ $merchant->description ?? 'No description provided' }}</p>
+                            <div class="alert alert-info" style="background-color: var(--discord-blue); border: none; color: white;">
+                                <i class="fas fa-info-circle me-2"></i>
+                                <small>For business details, visit <a href="{{ route('merchant.settings.global') }}" style="color: white; text-decoration: underline;">Global Settings</a></small>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -150,121 +150,16 @@
 
             <!-- Edit Mode Form -->
             <div id="edit-mode" style="display: none;">
-                <form id="mini-store-form" action="{{ route('merchant.mini-store.update') }}" method="POST" enctype="multipart/form-data">
+                <form id="mini-store-form" action="{{ route('merchant.mini-store.update') }}" method="POST">
                     @csrf
                     @method('PUT')
-                    
-                    <div class="row">
-                        <div class="col-md-6">
-                            <div class="mb-3">
-                                <label for="business_name" class="form-label">Business Name <span class="text-danger">*</span></label>
-                                <input type="text" class="form-control @error('business_name') is-invalid @enderror" 
-                                       id="business_name" name="business_name" 
-                                       value="{{ old('business_name', $merchant->business_name) }}" required>
-                                @error('business_name')
-                                    <div class="invalid-feedback" data-server-error>{{ $message }}</div>
-                                @enderror
-                            </div>
-
-                            <div class="mb-3">
-                                <label for="business_type" class="form-label">Business Type</label>
-                                <select class="form-select @error('business_type') is-invalid @enderror" 
-                                        id="business_type" name="business_type">
-                                    <option value="">Select Business Type</option>
-                                    <option value="retail" {{ old('business_type', $merchant->business_type) == 'retail' ? 'selected' : '' }}>Retail</option>
-                                    <option value="restaurant" {{ old('business_type', $merchant->business_type) == 'restaurant' ? 'selected' : '' }}>Restaurant</option>
-                                    <option value="service" {{ old('business_type', $merchant->business_type) == 'service' ? 'selected' : '' }}>Service</option>
-                                    <option value="grocery" {{ old('business_type', $merchant->business_type) == 'grocery' ? 'selected' : '' }}>Grocery</option>
-                                    <option value="electronics" {{ old('business_type', $merchant->business_type) == 'electronics' ? 'selected' : '' }}>Electronics</option>
-                                    <option value="fashion" {{ old('business_type', $merchant->business_type) == 'fashion' ? 'selected' : '' }}>Fashion</option>
-                                    <option value="other" {{ old('business_type', $merchant->business_type) == 'other' ? 'selected' : '' }}>Other</option>
-                                </select>
-                                @error('business_type')
-                                    <div class="invalid-feedback" data-server-error>{{ $message }}</div>
-                                @enderror
-                            </div>
-
-                            <div class="mb-3">
-                                <label for="city" class="form-label">City</label>
-                                <input type="text" class="form-control @error('city') is-invalid @enderror" 
-                                       id="city" name="city" 
-                                       value="{{ old('city', $merchant->city) }}">
-                                @error('city')
-                                    <div class="invalid-feedback" data-server-error>{{ $message }}</div>
-                                @enderror
-                            </div>
-
-                            <div class="mb-3">
-                                <label for="emirate" class="form-label">Emirate</label>
-                                <select class="form-select @error('emirate') is-invalid @enderror" 
-                                        id="emirate" name="emirate">
-                                    <option value="">Select Emirate</option>
-                                    <option value="Abu Dhabi" {{ old('emirate', $merchant->emirate) == 'Abu Dhabi' ? 'selected' : '' }}>Abu Dhabi</option>
-                                    <option value="Dubai" {{ old('emirate', $merchant->emirate) == 'Dubai' ? 'selected' : '' }}>Dubai</option>
-                                    <option value="Sharjah" {{ old('emirate', $merchant->emirate) == 'Sharjah' ? 'selected' : '' }}>Sharjah</option>
-                                    <option value="Ajman" {{ old('emirate', $merchant->emirate) == 'Ajman' ? 'selected' : '' }}>Ajman</option>
-                                    <option value="Umm Al Quwain" {{ old('emirate', $merchant->emirate) == 'Umm Al Quwain' ? 'selected' : '' }}>Umm Al Quwain</option>
-                                    <option value="Ras Al Khaimah" {{ old('emirate', $merchant->emirate) == 'Ras Al Khaimah' ? 'selected' : '' }}>Ras Al Khaimah</option>
-                                    <option value="Fujairah" {{ old('emirate', $merchant->emirate) == 'Fujairah' ? 'selected' : '' }}>Fujairah</option>
-                                </select>
-                                @error('emirate')
-                                    <div class="invalid-feedback" data-server-error>{{ $message }}</div>
-                                @enderror
-                            </div>
-
-                            <div class="mb-3">
-                                <label for="logo" class="form-label">Store Logo</label>
-                                <input type="file" class="form-control @error('logo') is-invalid @enderror" 
-                                       id="logo" name="logo" accept="image/*">
-                                <small class="form-text text-muted">Max size: 2MB. Formats: JPEG, PNG, JPG, GIF</small>
-                                @if($merchant->logo)
-                                    <div class="mt-2">
-                                        <img src="{{ asset('storage/' . $merchant->logo) }}" alt="Current Logo" 
-                                             style="max-width: 100px; max-height: 100px; object-fit: cover;">
-                                    </div>
-                                @endif
-                                @error('logo')
-                                    <div class="invalid-feedback" data-server-error>{{ $message }}</div>
-                                @enderror
-                            </div>
-                        </div>
-
-                        <div class="col-md-6">
-                            <div class="mb-3">
-                                <label for="description" class="form-label">Description</label>
-                                <textarea class="form-control @error('description') is-invalid @enderror" 
-                                          id="description" name="description" rows="4" 
-                                          placeholder="Describe your business...">{{ old('description', $merchant->description) }}</textarea>
-                                @error('description')
-                                    <div class="invalid-feedback" data-server-error>{{ $message }}</div>
-                                @enderror
-                            </div>
-
-                            <div class="mb-3">
-                                <div class="form-check">
-                                    <input class="form-check-input" type="checkbox" 
-                                           id="delivery_capability" name="delivery_capability" value="1"
-                                           {{ old('delivery_capability', $merchant->delivery_capability) ? 'checked' : '' }}>
-                                    <label class="form-check-label" for="delivery_capability">
-                                        Delivery Available
-                                    </label>
-                                </div>
-                            </div>
-
-                            <!-- Hidden fields for coordinates -->
-                            <input type="hidden" id="store_location_lat" name="store_location_lat" 
-                                   value="{{ old('store_location_lat', $merchant->store_location_lat) }}">
-                            <input type="hidden" id="store_location_lng" name="store_location_lng" 
-                                   value="{{ old('store_location_lng', $merchant->store_location_lng) }}">
-                        </div>
-                    </div>
 
                     <div class="row">
                         <div class="col-12">
                             <div class="mb-3">
                                 <label for="store_location_address" class="form-label">Store Location Address</label>
-                                <input type="text" class="form-control @error('store_location_address') is-invalid @enderror" 
-                                       id="store_location_address" name="store_location_address" 
+                                <input type="text" class="form-control @error('store_location_address') is-invalid @enderror"
+                                       id="store_location_address" name="store_location_address"
                                        value="{{ old('store_location_address', $merchant->store_location_address) }}"
                                        placeholder="Enter your store address or click on the map">
                                 @error('store_location_address')
@@ -274,9 +169,22 @@
                         </div>
                     </div>
 
+                    <!-- Hidden fields for coordinates -->
+                    <input type="hidden" id="store_location_lat" name="store_location_lat"
+                           value="{{ old('store_location_lat', $merchant->store_location_lat) }}">
+                    <input type="hidden" id="store_location_lng" name="store_location_lng"
+                           value="{{ old('store_location_lng', $merchant->store_location_lng) }}">
+
+                    <div class="alert alert-info mb-3" style="background-color: var(--discord-blue); border: none; color: white;">
+                        <i class="fas fa-info-circle me-2"></i>
+                        <strong>Note:</strong> This page is for setting your store's physical location only.
+                        To update business details like name, description, logo, etc., please visit
+                        <a href="{{ route('merchant.settings.global') }}" style="color: white; text-decoration: underline;">Global Settings</a>.
+                    </div>
+
                     <div class="d-flex gap-2">
                         <button type="submit" class="discord-btn">
-                            <i class="fas fa-save me-1"></i> Save Changes
+                            <i class="fas fa-save me-1"></i> Save Location
                         </button>
                         <button type="button" class="discord-btn discord-btn-secondary" onclick="cancelEdit()">
                             <i class="fas fa-times me-1"></i> Cancel
@@ -285,116 +193,22 @@
                 </form>
             </div>
         @else
-            <!-- No Mini Store Message -->
+            <!-- No Location Set Message -->
             <div id="no-store-message" class="text-center py-5">
-                <i class="fas fa-store fa-3x mb-3" style="color: var(--discord-light);"></i>
-                <h4 style="color: var(--discord-lightest);">No Mini Store Created Yet</h4>
-                <p style="color: var(--discord-light);">Create your mini store to start selling online and manage your business location.</p>
+                <i class="fas fa-map-marker-alt fa-3x mb-3" style="color: var(--discord-light);"></i>
+                <h4 style="color: var(--discord-lightest);">Store Location Not Set</h4>
+                <p style="color: var(--discord-light);">Set your store's physical location to help customers find you.</p>
+                <div class="alert alert-info mt-3" style="background-color: var(--discord-blue); border: none; color: white;">
+                    <i class="fas fa-info-circle me-2"></i>
+                    <small>For business details, visit <a href="{{ route('merchant.settings.global') }}" style="color: white; text-decoration: underline;">Global Settings</a></small>
+                </div>
             </div>
 
             <!-- Create Form (Initially Hidden) -->
             <div id="create-form" style="display: none;">
-                <form action="{{ route('merchant.mini-store.update') }}" method="POST" enctype="multipart/form-data">
+                <form action="{{ route('merchant.mini-store.update') }}" method="POST">
                     @csrf
                     @method('PUT')
-
-                    <div class="row">
-                        <div class="col-md-6">
-                            <div class="mb-3">
-                                <label for="create_business_name" class="form-label">Business Name <span class="text-danger">*</span></label>
-                                <input type="text" class="form-control @error('business_name') is-invalid @enderror"
-                                       id="create_business_name" name="business_name"
-                                       value="{{ old('business_name', $user->name . "'s Store") }}" required>
-                                @error('business_name')
-                                    <div class="invalid-feedback" data-server-error>{{ $message }}</div>
-                                @enderror
-                            </div>
-
-                            <div class="mb-3">
-                                <label for="create_business_type" class="form-label">Business Type</label>
-                                <select class="form-select @error('business_type') is-invalid @enderror"
-                                        id="create_business_type" name="business_type">
-                                    <option value="">Select Business Type</option>
-                                    <option value="retail" {{ old('business_type') == 'retail' ? 'selected' : '' }}>Retail</option>
-                                    <option value="restaurant" {{ old('business_type') == 'restaurant' ? 'selected' : '' }}>Restaurant</option>
-                                    <option value="service" {{ old('business_type') == 'service' ? 'selected' : '' }}>Service</option>
-                                    <option value="grocery" {{ old('business_type') == 'grocery' ? 'selected' : '' }}>Grocery</option>
-                                    <option value="electronics" {{ old('business_type') == 'electronics' ? 'selected' : '' }}>Electronics</option>
-                                    <option value="fashion" {{ old('business_type') == 'fashion' ? 'selected' : '' }}>Fashion</option>
-                                    <option value="other" {{ old('business_type') == 'other' ? 'selected' : '' }}>Other</option>
-                                </select>
-                                @error('business_type')
-                                    <div class="invalid-feedback" data-server-error>{{ $message }}</div>
-                                @enderror
-                            </div>
-
-                            <div class="mb-3">
-                                <label for="create_city" class="form-label">City</label>
-                                <input type="text" class="form-control @error('city') is-invalid @enderror"
-                                       id="create_city" name="city" value="{{ old('city') }}">
-                                @error('city')
-                                    <div class="invalid-feedback" data-server-error>{{ $message }}</div>
-                                @enderror
-                            </div>
-
-                            <div class="mb-3">
-                                <label for="create_emirate" class="form-label">Emirate</label>
-                                <select class="form-select @error('emirate') is-invalid @enderror"
-                                        id="create_emirate" name="emirate">
-                                    <option value="">Select Emirate</option>
-                                    <option value="Abu Dhabi" {{ old('emirate') == 'Abu Dhabi' ? 'selected' : '' }}>Abu Dhabi</option>
-                                    <option value="Dubai" {{ old('emirate') == 'Dubai' ? 'selected' : '' }}>Dubai</option>
-                                    <option value="Sharjah" {{ old('emirate') == 'Sharjah' ? 'selected' : '' }}>Sharjah</option>
-                                    <option value="Ajman" {{ old('emirate') == 'Ajman' ? 'selected' : '' }}>Ajman</option>
-                                    <option value="Umm Al Quwain" {{ old('emirate') == 'Umm Al Quwain' ? 'selected' : '' }}>Umm Al Quwain</option>
-                                    <option value="Ras Al Khaimah" {{ old('emirate') == 'Ras Al Khaimah' ? 'selected' : '' }}>Ras Al Khaimah</option>
-                                    <option value="Fujairah" {{ old('emirate') == 'Fujairah' ? 'selected' : '' }}>Fujairah</option>
-                                </select>
-                                @error('emirate')
-                                    <div class="invalid-feedback" data-server-error>{{ $message }}</div>
-                                @enderror
-                            </div>
-
-                            <div class="mb-3">
-                                <label for="create_logo" class="form-label">Store Logo</label>
-                                <input type="file" class="form-control @error('logo') is-invalid @enderror"
-                                       id="create_logo" name="logo" accept="image/*">
-                                <small class="form-text text-muted">Max size: 2MB. Formats: JPEG, PNG, JPG, GIF</small>
-                                @error('logo')
-                                    <div class="invalid-feedback" data-server-error>{{ $message }}</div>
-                                @enderror
-                            </div>
-                        </div>
-
-                        <div class="col-md-6">
-                            <div class="mb-3">
-                                <label for="create_description" class="form-label">Description</label>
-                                <textarea class="form-control @error('description') is-invalid @enderror"
-                                          id="create_description" name="description" rows="4"
-                                          placeholder="Describe your business...">{{ old('description') }}</textarea>
-                                @error('description')
-                                    <div class="invalid-feedback" data-server-error>{{ $message }}</div>
-                                @enderror
-                            </div>
-
-                            <div class="mb-3">
-                                <div class="form-check">
-                                    <input class="form-check-input" type="checkbox"
-                                           id="create_delivery_capability" name="delivery_capability" value="1"
-                                           {{ old('delivery_capability') ? 'checked' : '' }}>
-                                    <label class="form-check-label" for="create_delivery_capability">
-                                        Delivery Available
-                                    </label>
-                                </div>
-                            </div>
-
-                            <!-- Hidden fields for coordinates -->
-                            <input type="hidden" id="create_store_location_lat" name="store_location_lat"
-                                   value="{{ old('store_location_lat') }}">
-                            <input type="hidden" id="create_store_location_lng" name="store_location_lng"
-                                   value="{{ old('store_location_lng') }}">
-                        </div>
-                    </div>
 
                     <div class="row">
                         <div class="col-12">
@@ -411,9 +225,22 @@
                         </div>
                     </div>
 
+                    <!-- Hidden fields for coordinates -->
+                    <input type="hidden" id="create_store_location_lat" name="store_location_lat"
+                           value="{{ old('store_location_lat') }}">
+                    <input type="hidden" id="create_store_location_lng" name="store_location_lng"
+                           value="{{ old('store_location_lng') }}">
+
+                    <div class="alert alert-info mb-3" style="background-color: var(--discord-blue); border: none; color: white;">
+                        <i class="fas fa-info-circle me-2"></i>
+                        <strong>Note:</strong> This will only set your store's physical location.
+                        To add business details like name, description, logo, etc., please visit
+                        <a href="{{ route('merchant.settings.global') }}" style="color: white; text-decoration: underline;">Global Settings</a> after setting your location.
+                    </div>
+
                     <div class="d-flex gap-2">
                         <button type="submit" class="discord-btn">
-                            <i class="fas fa-save me-1"></i> Create Mini Store
+                            <i class="fas fa-save me-1"></i> Set Location
                         </button>
                         <button type="button" class="discord-btn discord-btn-secondary" onclick="cancelCreate()">
                             <i class="fas fa-times me-1"></i> Cancel
@@ -455,7 +282,7 @@
 @endsection
 
 @section('scripts')
-<script src="https://maps.googleapis.com/maps/api/js?key={{ config('googlemaps.api_key') }}&libraries=places&callback=initMap" async defer></script>
+<script src="https://maps.googleapis.com/maps/api/js?key={{ config('googlemaps.api_key') }}&libraries=places&callback=initMap" async defer onerror="handleGoogleMapsError()"></script>
 <script>
     // Global variables
     let map;
@@ -465,6 +292,8 @@
 
     // Initialize Google Maps
     function initMap() {
+        let center;
+
         try {
             // Remove loading state
             const mapContainer = document.getElementById('google-map');
@@ -482,7 +311,7 @@
             const existingLat = existingLatField ? existingLatField.value : null;
             const existingLng = existingLngField ? existingLngField.value : null;
 
-            const center = (existingLat && existingLng) ?
+            center = (existingLat && existingLng) ?
                 { lat: parseFloat(existingLat), lng: parseFloat(existingLng) } :
                 defaultCenter;
 
@@ -502,23 +331,23 @@
                     }
                 ]
             });
+
+            // Initialize geocoder
+            geocoder = new google.maps.Geocoder();
+
+            // Create marker
+            marker = new google.maps.Marker({
+                position: center,
+                map: map,
+                draggable: true,
+                title: 'Store Location'
+            });
         } catch (error) {
             console.error('Error initializing Google Maps:', error);
             document.getElementById('google-map').innerHTML =
                 '<div class="alert alert-danger">Error loading Google Maps. Please refresh the page and try again.</div>';
             return;
         }
-
-        // Initialize geocoder
-        geocoder = new google.maps.Geocoder();
-
-        // Create marker
-        marker = new google.maps.Marker({
-            position: center,
-            map: map,
-            draggable: true,
-            title: 'Store Location'
-        });
 
         // Set up autocomplete
         const searchInput = document.getElementById('map-search');
@@ -617,9 +446,28 @@
     // Handle Google Maps loading errors
     window.gm_authFailure = function() {
         console.error('Google Maps authentication failed');
-        document.getElementById('google-map').innerHTML =
-            '<div class="alert alert-danger">Failed to load Google Maps. Please check your API key configuration.</div>';
+        const mapElement = document.getElementById('google-map');
+        if (mapElement) {
+            mapElement.innerHTML =
+                '<div class="alert alert-danger">' +
+                '<i class="fas fa-exclamation-triangle me-2"></i>' +
+                'Google Maps authentication failed. Please check your API key configuration.' +
+                '</div>';
+        }
     };
+
+    // Handle script loading errors
+    function handleGoogleMapsError() {
+        console.error('Failed to load Google Maps API script');
+        const mapElement = document.getElementById('google-map');
+        if (mapElement) {
+            mapElement.innerHTML =
+                '<div class="alert alert-warning">' +
+                '<i class="fas fa-exclamation-triangle me-2"></i>' +
+                'Failed to load Google Maps. Please check your internet connection and try again.' +
+                '</div>';
+        }
+    }
 
     // Form validation
     document.addEventListener('DOMContentLoaded', function() {

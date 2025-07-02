@@ -25,7 +25,7 @@
             </div>
         @endif
 
-        <form action="{{ route('merchant.settings.global.update') }}" method="POST">
+        <form action="{{ route('merchant.settings.global.update') }}" method="POST" enctype="multipart/form-data">
             @csrf
             @method('PUT')
             
@@ -75,14 +75,96 @@
                     <label for="website" class="form-label" style="color: var(--discord-lightest); font-weight: 500;">
                         <i class="fas fa-globe me-1"></i>Website URL
                     </label>
-                    <input type="url" 
-                           class="form-control @error('website') is-invalid @enderror" 
-                           id="website" 
-                           name="website" 
+                    <input type="url"
+                           class="form-control @error('website') is-invalid @enderror"
+                           id="website"
+                           name="website"
                            value="{{ old('website', $merchant->website ?? '') }}"
                            placeholder="https://example.com"
                            style="background-color: var(--discord-darkest); border: 1px solid #ddd; color: var(--discord-lightest);">
                     @error('website')
+                        <div class="invalid-feedback">{{ $message }}</div>
+                    @enderror
+                </div>
+
+                <!-- City -->
+                <div class="col-md-6 mb-3">
+                    <label for="city" class="form-label" style="color: var(--discord-lightest); font-weight: 500;">
+                        <i class="fas fa-city me-1"></i>City
+                    </label>
+                    <input type="text"
+                           class="form-control @error('city') is-invalid @enderror"
+                           id="city"
+                           name="city"
+                           value="{{ old('city', $merchant->city ?? '') }}"
+                           placeholder="Enter your city"
+                           style="background-color: var(--discord-darkest); border: 1px solid #ddd; color: var(--discord-lightest);">
+                    @error('city')
+                        <div class="invalid-feedback">{{ $message }}</div>
+                    @enderror
+                </div>
+
+                <!-- Emirate -->
+                <div class="col-md-6 mb-3">
+                    <label for="emirate" class="form-label" style="color: var(--discord-lightest); font-weight: 500;">
+                        <i class="fas fa-map-marker-alt me-1"></i>Emirate
+                    </label>
+                    <select class="form-control @error('emirate') is-invalid @enderror"
+                            id="emirate"
+                            name="emirate"
+                            style="background-color: var(--discord-darkest); border: 1px solid #ddd; color: var(--discord-lightest);">
+                        <option value="">Select Emirate</option>
+                        <option value="Abu Dhabi" {{ old('emirate', $merchant->emirate ?? '') == 'Abu Dhabi' ? 'selected' : '' }}>Abu Dhabi</option>
+                        <option value="Dubai" {{ old('emirate', $merchant->emirate ?? '') == 'Dubai' ? 'selected' : '' }}>Dubai</option>
+                        <option value="Sharjah" {{ old('emirate', $merchant->emirate ?? '') == 'Sharjah' ? 'selected' : '' }}>Sharjah</option>
+                        <option value="Ajman" {{ old('emirate', $merchant->emirate ?? '') == 'Ajman' ? 'selected' : '' }}>Ajman</option>
+                        <option value="Umm Al Quwain" {{ old('emirate', $merchant->emirate ?? '') == 'Umm Al Quwain' ? 'selected' : '' }}>Umm Al Quwain</option>
+                        <option value="Ras Al Khaimah" {{ old('emirate', $merchant->emirate ?? '') == 'Ras Al Khaimah' ? 'selected' : '' }}>Ras Al Khaimah</option>
+                        <option value="Fujairah" {{ old('emirate', $merchant->emirate ?? '') == 'Fujairah' ? 'selected' : '' }}>Fujairah</option>
+                    </select>
+                    @error('emirate')
+                        <div class="invalid-feedback">{{ $message }}</div>
+                    @enderror
+                </div>
+
+                <!-- Address -->
+                <div class="col-md-6 mb-3">
+                    <label for="address" class="form-label" style="color: var(--discord-lightest); font-weight: 500;">
+                        <i class="fas fa-map-pin me-1"></i>Business Address
+                    </label>
+                    <input type="text"
+                           class="form-control @error('address') is-invalid @enderror"
+                           id="address"
+                           name="address"
+                           value="{{ old('address', $merchant->address ?? '') }}"
+                           placeholder="Enter your business address"
+                           style="background-color: var(--discord-darkest); border: 1px solid #ddd; color: var(--discord-lightest);">
+                    @error('address')
+                        <div class="invalid-feedback">{{ $message }}</div>
+                    @enderror
+                </div>
+
+                <!-- Logo -->
+                <div class="col-md-6 mb-3">
+                    <label for="logo" class="form-label" style="color: var(--discord-lightest); font-weight: 500;">
+                        <i class="fas fa-image me-1"></i>Business Logo
+                    </label>
+                    <input type="file"
+                           class="form-control @error('logo') is-invalid @enderror"
+                           id="logo"
+                           name="logo"
+                           accept="image/*"
+                           style="background-color: var(--discord-darkest); border: 1px solid #ddd; color: var(--discord-lightest);">
+                    <small class="form-text text-muted" style="color: var(--discord-light);">
+                        Max size: 2MB. Formats: JPEG, PNG, JPG, GIF
+                    </small>
+                    @if($merchant && $merchant->logo)
+                        <div class="mt-2">
+                            <img src="{{ asset('storage/' . $merchant->logo) }}" alt="Current Logo"
+                                 style="max-width: 100px; max-height: 100px; object-fit: cover; border-radius: 8px;">
+                        </div>
+                    @endif
+                    @error('logo')
                         <div class="invalid-feedback">{{ $message }}</div>
                     @enderror
                 </div>
