@@ -105,7 +105,7 @@
 -This page will have a button to edit the user's mini store information and location ✅ COMPLETED
 
 **NEXT STEPS FOR FUTURE DEVELOPMENT:**
-1. Complete the remaining views for services (create, edit, show)
+1. Complete the remaining views for services (create, edit, show) ✅ COMPLETED
 2. Implement actual order management when order system is ready
 3. Implement customer relationship management
 4. Implement reporting system with analytics
