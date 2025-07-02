@@ -10,6 +10,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
+use App\Helpers\ImageHelper;
 
 class ProductController extends Controller
 {
@@ -140,6 +141,9 @@ class ProductController extends Controller
                 }
 
                 $data['image'] = $imagePath;
+
+                // Automatically sync the uploaded image to public/storage
+                ImageHelper::syncUploadedImage($imagePath);
 
             } catch (\Exception $e) {
                 \Log::error('Product image upload failed: ' . $e->getMessage());
@@ -274,9 +278,17 @@ class ProductController extends Controller
 
                 $data['image'] = $imagePath;
 
+                // Automatically sync the uploaded image to public/storage
+                ImageHelper::syncUploadedImage($imagePath);
+
                 // Delete old image only after successful upload
                 if ($oldImagePath && Storage::disk('public')->exists($oldImagePath)) {
                     Storage::disk('public')->delete($oldImagePath);
+                    // Also delete from public/storage if it exists
+                    $oldPublicPath = public_path('storage/' . $oldImagePath);
+                    if (file_exists($oldPublicPath)) {
+                        unlink($oldPublicPath);
+                    }
                 }
 
             } catch (\Exception $e) {

@@ -53,6 +53,111 @@ class ImageHelper
     }
 
     /**
+     * Get the relative path for an image (for use with asset() helper)
+     *
+     * @param string|null $imagePath
+     * @return string|null
+     */
+    public static function getImagePath($imagePath)
+    {
+        if (empty($imagePath)) {
+            // Return a default placeholder image path
+            $placeholderPath = "images/placeholder.png";
+
+            // Check if placeholder exists, if not create a simple one
+            if (!file_exists(public_path($placeholderPath))) {
+                self::createPlaceholderImage(public_path($placeholderPath));
+            }
+
+            return $placeholderPath;
+        }
+
+        // If the image path already starts with http, return it as is (external URL)
+        if (str_starts_with($imagePath, 'http://') || str_starts_with($imagePath, 'https://')) {
+            return $imagePath;
+        }
+
+        // Remove any double slashes that might be in the path
+        $imagePath = str_replace('//', '/', $imagePath);
+
+        // Normalize the path by removing leading slash
+        $normalizedPath = ltrim($imagePath, '/');
+
+        // Extract the filename from the path
+        $filename = basename($normalizedPath);
+
+        // Log the image path we're trying to resolve
+        Log::debug("Resolving image path: {$imagePath}, filename: {$filename}");
+
+        // Create an array of possible paths to check
+        $possiblePaths = [
+            // Check in public/storage/products (most common for products)
+            "storage/products/{$filename}",
+
+            // Check in public/images/products
+            "images/products/{$filename}",
+
+            // Check in public/storage/categories
+            "storage/categories/{$filename}",
+
+            // Check in public/images/categories
+            "images/categories/{$filename}",
+
+            // Check in public/storage/deals
+            "storage/deals/{$filename}",
+
+            // Check in public/images/deals
+            "images/deals/{$filename}",
+
+            // Check in public/storage/branches
+            "storage/branches/{$filename}",
+
+            // Check in public/images/branches
+            "images/branches/{$filename}",
+
+            // Check in public/storage/merchant-logos
+            "storage/merchant-logos/{$filename}",
+
+            // Check in public/images/merchant-logos
+            "images/merchant-logos/{$filename}",
+
+            // Check for product-colors (for color variants)
+            "storage/product-colors/{$filename}",
+
+            // Check in public/images/product-colors
+            "images/product-colors/{$filename}",
+
+            // Check in storage with the original path
+            $normalizedPath,
+
+            // Check in storage with just the filename
+            "storage/{$filename}",
+
+            // Check directly in public with just the filename
+            $filename,
+        ];
+
+        // Try each path
+        foreach ($possiblePaths as $path) {
+            if (file_exists(public_path($path))) {
+                Log::debug("Found image at public_path({$path})");
+                return $path;
+            }
+        }
+
+        // If we couldn't find the file, return the original normalized path
+        // This allows the system to handle missing files gracefully
+        Log::warning("Image not found: {$imagePath}, returning normalized path: {$normalizedPath}");
+
+        // For products, ensure we return a storage path
+        if (str_contains($normalizedPath, 'products/')) {
+            return "storage/{$normalizedPath}";
+        }
+
+        return $normalizedPath;
+    }
+
+    /**
      * Get the full URL for an image path
      *
      * @param string|null $imagePath
@@ -118,6 +223,12 @@ class ImageHelper
 
             // Check in public/images/branches
             "images/branches/{$filename}",
+
+            // Check in public/storage/merchant-logos
+            "storage/merchant-logos/{$filename}",
+
+            // Check in public/images/merchant-logos
+            "images/merchant-logos/{$filename}",
 
             // Check in storage with the original path
             $normalizedPath,
@@ -342,6 +453,54 @@ class ImageHelper
                 Log::error("Failed to handle deal image: " . $e->getMessage());
                 // Still try to return a valid path
                 return "{$appUrl}/storage/deals/{$filename}";
+            }
+        }
+
+        // Handle merchant logo images
+        if (str_contains($normalizedPath, 'merchant-logos/')) {
+            // Try to ensure the directory exists
+            $dirPath = public_path('storage/merchant-logos');
+            if (!file_exists($dirPath)) {
+                try {
+                    mkdir($dirPath, 0755, true);
+                    Log::info("Created directory: {$dirPath}");
+                } catch (\Exception $e) {
+                    Log::error("Failed to create directory: " . $e->getMessage());
+                }
+            }
+
+            // First check if the file exists directly with the provided path
+            $directPath = public_path(ltrim($normalizedPath, '/'));
+            if (file_exists($directPath)) {
+                Log::info("Found merchant logo at direct path: {$directPath}");
+                return "{$appUrl}/{$normalizedPath}";
+            }
+
+            // Then check if it exists in the storage/merchant-logos directory
+            $fullPath = public_path("storage/merchant-logos/{$filename}");
+            if (file_exists($fullPath)) {
+                Log::info("Found merchant logo at: {$fullPath}");
+                return "{$appUrl}/storage/merchant-logos/{$filename}";
+            }
+
+            // If not found, try to copy from storage/app/public/merchant-logos
+            try {
+                $storageAppPublicPath = storage_path("app/public/merchant-logos/{$filename}");
+                if (file_exists($storageAppPublicPath)) {
+                    // Copy the file to the public directory
+                    copy($storageAppPublicPath, $fullPath);
+                    Log::info("Copied merchant logo from {$storageAppPublicPath} to {$fullPath}");
+                    return "{$appUrl}/storage/merchant-logos/{$filename}";
+                } else {
+                    // Create a placeholder image at this location
+                    self::createPlaceholderImage($fullPath);
+                    Log::info("Created placeholder image at: {$fullPath}");
+                    return "{$appUrl}/storage/merchant-logos/{$filename}";
+                }
+            } catch (\Exception $e) {
+                Log::error("Failed to handle merchant logo: " . $e->getMessage());
+                // Still try to return a valid path
+                return "{$appUrl}/storage/merchant-logos/{$filename}";
             }
         }
 
@@ -598,5 +757,121 @@ class ImageHelper
         }
 
         return false;
+    }
+
+    /**
+     * Sync a specific file from storage/app/public to public/storage
+     *
+     * @param string $relativePath The relative path from storage/app/public (e.g., 'products/image.jpg')
+     * @return bool True if sync was successful, false otherwise
+     */
+    public static function syncFile($relativePath)
+    {
+        try {
+            $sourcePath = storage_path('app/public/' . $relativePath);
+            $destPath = public_path('storage/' . $relativePath);
+
+            // Check if source file exists
+            if (!file_exists($sourcePath)) {
+                Log::warning("Source file does not exist for sync: {$sourcePath}");
+                return false;
+            }
+
+            // Ensure destination directory exists
+            $destDir = dirname($destPath);
+            if (!is_dir($destDir)) {
+                mkdir($destDir, 0755, true);
+                Log::info("Created directory for sync: {$destDir}");
+            }
+
+            // Copy the file
+            if (copy($sourcePath, $destPath)) {
+                chmod($destPath, 0644);
+                Log::info("Successfully synced file: {$relativePath}");
+                return true;
+            } else {
+                Log::error("Failed to copy file during sync: {$relativePath}");
+                return false;
+            }
+        } catch (\Exception $e) {
+            Log::error("Exception during file sync: " . $e->getMessage() . " for file: {$relativePath}");
+            return false;
+        }
+    }
+
+    /**
+     * Sync a specific directory from storage/app/public to public/storage
+     *
+     * @param string $relativePath The relative directory path from storage/app/public (e.g., 'products')
+     * @return bool True if sync was successful, false otherwise
+     */
+    public static function syncDirectory($relativePath)
+    {
+        try {
+            $sourceDir = storage_path('app/public/' . $relativePath);
+            $destDir = public_path('storage/' . $relativePath);
+
+            // Check if source directory exists
+            if (!is_dir($sourceDir)) {
+                Log::warning("Source directory does not exist for sync: {$sourceDir}");
+                return false;
+            }
+
+            // Ensure destination directory exists
+            if (!is_dir($destDir)) {
+                mkdir($destDir, 0755, true);
+                Log::info("Created destination directory for sync: {$destDir}");
+            }
+
+            $syncedCount = 0;
+            $iterator = new \RecursiveIteratorIterator(
+                new \RecursiveDirectoryIterator($sourceDir, \RecursiveDirectoryIterator::SKIP_DOTS),
+                \RecursiveIteratorIterator::SELF_FIRST
+            );
+
+            foreach ($iterator as $item) {
+                $subPath = $iterator->getSubPathName();
+                $destPath = $destDir . DIRECTORY_SEPARATOR . $subPath;
+
+                if ($item->isDir()) {
+                    if (!is_dir($destPath)) {
+                        mkdir($destPath, 0755, true);
+                    }
+                } else {
+                    // Only copy if file doesn't exist or source is newer
+                    if (!file_exists($destPath) || filemtime($item) > filemtime($destPath)) {
+                        copy($item, $destPath);
+                        chmod($destPath, 0644);
+                        $syncedCount++;
+                    }
+                }
+            }
+
+            Log::info("Successfully synced directory: {$relativePath} ({$syncedCount} files)");
+            return true;
+        } catch (\Exception $e) {
+            Log::error("Exception during directory sync: " . $e->getMessage() . " for directory: {$relativePath}");
+            return false;
+        }
+    }
+
+    /**
+     * Automatically sync an uploaded image file
+     * This method should be called immediately after a successful image upload
+     *
+     * @param string $imagePath The image path returned by Laravel's store() method
+     * @return bool True if sync was successful, false otherwise
+     */
+    public static function syncUploadedImage($imagePath)
+    {
+        if (empty($imagePath)) {
+            return false;
+        }
+
+        // Remove any leading slash or storage/ prefix to get the relative path
+        $relativePath = ltrim($imagePath, '/');
+        $relativePath = str_replace('storage/', '', $relativePath);
+
+        return self::syncFile($relativePath);
     }
 }

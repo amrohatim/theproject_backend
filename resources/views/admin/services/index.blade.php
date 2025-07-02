@@ -97,7 +97,7 @@
                             <div class="flex items-center">
                                 <div class="flex-shrink-0 h-10 w-10">
                                     @if($service->image)
-                                        <img src="{{ asset(str_replace('/storage/', 'storage/', $service->image)) }}" alt="{{ $service->name }}" class="h-10 w-10 rounded-md object-cover">
+                                        <img src="{{ $service->image }}" alt="{{ $service->name }}" class="h-10 w-10 rounded-md object-cover">
                                     @else
                                         <div class="h-10 w-10 rounded-md bg-gray-200 dark:bg-gray-700 flex items-center justify-center">
                                             <i class="fas fa-image text-gray-400"></i>

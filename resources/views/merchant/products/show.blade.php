@@ -266,7 +266,7 @@
             </div>
             <div class="discord-card-body text-center">
                 @if($product->image)
-                    <img src="{{ asset('storage/' . $product->image) }}"
+                    <img src="{{ asset($product->image) }}"
                          alt="{{ $product->name }}"
                          class="img-fluid"
                          style="max-width: 100%; border-radius: 8px; box-shadow: 0 4px 8px rgba(0,0,0,0.3);">

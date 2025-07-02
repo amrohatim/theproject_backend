@@ -158,10 +158,14 @@
                     <small class="form-text text-muted" style="color: var(--discord-light);">
                         Max size: 2MB. Formats: JPEG, PNG, JPG, GIF
                     </small>
-                    @if($merchant && $merchant->logo)
-                        <div class="mt-2">
-                            <img src="{{ asset('storage/' . $merchant->logo) }}" alt="Current Logo"
-                                 style="max-width: 100px; max-height: 100px; object-fit: cover; border-radius: 8px;">
+                    @if($merchant && $merchant->getRawOriginal('logo'))
+                        <div class="mt-2" id="current-logo-preview">
+                            <img src="{{ $merchant->logo }}" alt="Current Logo"
+                                 style="max-width: 100px; max-height: 100px; object-fit: cover; border-radius: 8px;"
+                                 onerror="this.style.display='none'; this.nextElementSibling.style.display='block';">
+                            <div style="display: none; padding: 20px; background-color: var(--discord-darkest); border-radius: 8px; text-align: center; color: var(--discord-light);">
+                                <i class="fas fa-exclamation-triangle"></i> Logo not found
+                            </div>
                         </div>
                     @endif
                     @error('logo')
@@ -236,55 +240,123 @@
                 <!-- Delivery Fees (shown when delivery is enabled) -->
                 <div id="delivery-fees-section" class="col-md-12" style="display: {{ old('delivery_capability', $merchant->delivery_capability ?? false) ? 'block' : 'none' }};">
                     <h5 style="color: var(--discord-lightest); margin-bottom: 15px;">
-                        <i class="fas fa-dollar-sign me-1"></i>Delivery Fees
+                        <i class="fas fa-dollar-sign me-1"></i>Delivery Fees by Emirate (AED)
                     </h5>
-                    
+
                     <div class="row">
-                        <div class="col-md-4 mb-3">
-                            <label for="local_delivery_fee" class="form-label" style="color: var(--discord-lightest); font-weight: 500;">
-                                Local Delivery (within city)
+                        <div class="col-md-6 mb-3">
+                            <label for="dubai_delivery_fee" class="form-label" style="color: var(--discord-lightest); font-weight: 500;">
+                                Dubai
                             </label>
                             <div class="input-group">
-                                <span class="input-group-text" style="background-color: var(--discord-darkest); border: 1px solid #ddd; color: var(--discord-lightest);">$</span>
-                                <input type="number" 
-                                       class="form-control" 
-                                       id="local_delivery_fee" 
-                                       name="delivery_fees[local]" 
-                                       value="{{ old('delivery_fees.local', $merchant->delivery_fees['local'] ?? '') }}"
+                                <span class="input-group-text" style="background-color: var(--discord-darkest); border: 1px solid #ddd; color: var(--discord-lightest);">AED</span>
+                                <input type="number"
+                                       class="form-control"
+                                       id="dubai_delivery_fee"
+                                       name="delivery_fees[dubai]"
+                                       value="{{ old('delivery_fees.dubai', $merchant->delivery_fees['dubai'] ?? '') }}"
                                        step="0.01"
                                        min="0"
                                        style="background-color: var(--discord-darkest); border: 1px solid #ddd; color: var(--discord-lightest);">
                             </div>
                         </div>
-                        
-                        <div class="col-md-4 mb-3">
-                            <label for="regional_delivery_fee" class="form-label" style="color: var(--discord-lightest); font-weight: 500;">
-                                Regional Delivery
+
+                        <div class="col-md-6 mb-3">
+                            <label for="abu_dhabi_delivery_fee" class="form-label" style="color: var(--discord-lightest); font-weight: 500;">
+                                Abu Dhabi
                             </label>
                             <div class="input-group">
-                                <span class="input-group-text" style="background-color: var(--discord-darkest); border: 1px solid #ddd; color: var(--discord-lightest);">$</span>
-                                <input type="number" 
-                                       class="form-control" 
-                                       id="regional_delivery_fee" 
-                                       name="delivery_fees[regional]" 
-                                       value="{{ old('delivery_fees.regional', $merchant->delivery_fees['regional'] ?? '') }}"
+                                <span class="input-group-text" style="background-color: var(--discord-darkest); border: 1px solid #ddd; color: var(--discord-lightest);">AED</span>
+                                <input type="number"
+                                       class="form-control"
+                                       id="abu_dhabi_delivery_fee"
+                                       name="delivery_fees[abu_dhabi]"
+                                       value="{{ old('delivery_fees.abu_dhabi', $merchant->delivery_fees['abu_dhabi'] ?? '') }}"
                                        step="0.01"
                                        min="0"
                                        style="background-color: var(--discord-darkest); border: 1px solid #ddd; color: var(--discord-lightest);">
                             </div>
                         </div>
-                        
-                        <div class="col-md-4 mb-3">
-                            <label for="national_delivery_fee" class="form-label" style="color: var(--discord-lightest); font-weight: 500;">
-                                National Delivery
+
+                        <div class="col-md-6 mb-3">
+                            <label for="sharjah_delivery_fee" class="form-label" style="color: var(--discord-lightest); font-weight: 500;">
+                                Sharjah
                             </label>
                             <div class="input-group">
-                                <span class="input-group-text" style="background-color: var(--discord-darkest); border: 1px solid #ddd; color: var(--discord-lightest);">$</span>
-                                <input type="number" 
-                                       class="form-control" 
-                                       id="national_delivery_fee" 
-                                       name="delivery_fees[national]" 
-                                       value="{{ old('delivery_fees.national', $merchant->delivery_fees['national'] ?? '') }}"
+                                <span class="input-group-text" style="background-color: var(--discord-darkest); border: 1px solid #ddd; color: var(--discord-lightest);">AED</span>
+                                <input type="number"
+                                       class="form-control"
+                                       id="sharjah_delivery_fee"
+                                       name="delivery_fees[sharjah]"
+                                       value="{{ old('delivery_fees.sharjah', $merchant->delivery_fees['sharjah'] ?? '') }}"
+                                       step="0.01"
+                                       min="0"
+                                       style="background-color: var(--discord-darkest); border: 1px solid #ddd; color: var(--discord-lightest);">
+                            </div>
+                        </div>
+
+                        <div class="col-md-6 mb-3">
+                            <label for="ajman_delivery_fee" class="form-label" style="color: var(--discord-lightest); font-weight: 500;">
+                                Ajman
+                            </label>
+                            <div class="input-group">
+                                <span class="input-group-text" style="background-color: var(--discord-darkest); border: 1px solid #ddd; color: var(--discord-lightest);">AED</span>
+                                <input type="number"
+                                       class="form-control"
+                                       id="ajman_delivery_fee"
+                                       name="delivery_fees[ajman]"
+                                       value="{{ old('delivery_fees.ajman', $merchant->delivery_fees['ajman'] ?? '') }}"
+                                       step="0.01"
+                                       min="0"
+                                       style="background-color: var(--discord-darkest); border: 1px solid #ddd; color: var(--discord-lightest);">
+                            </div>
+                        </div>
+
+                        <div class="col-md-6 mb-3">
+                            <label for="ras_al_khaimah_delivery_fee" class="form-label" style="color: var(--discord-lightest); font-weight: 500;">
+                                Ras Al Khaimah
+                            </label>
+                            <div class="input-group">
+                                <span class="input-group-text" style="background-color: var(--discord-darkest); border: 1px solid #ddd; color: var(--discord-lightest);">AED</span>
+                                <input type="number"
+                                       class="form-control"
+                                       id="ras_al_khaimah_delivery_fee"
+                                       name="delivery_fees[ras_al_khaimah]"
+                                       value="{{ old('delivery_fees.ras_al_khaimah', $merchant->delivery_fees['ras_al_khaimah'] ?? '') }}"
+                                       step="0.01"
+                                       min="0"
+                                       style="background-color: var(--discord-darkest); border: 1px solid #ddd; color: var(--discord-lightest);">
+                            </div>
+                        </div>
+
+                        <div class="col-md-6 mb-3">
+                            <label for="fujairah_delivery_fee" class="form-label" style="color: var(--discord-lightest); font-weight: 500;">
+                                Fujairah
+                            </label>
+                            <div class="input-group">
+                                <span class="input-group-text" style="background-color: var(--discord-darkest); border: 1px solid #ddd; color: var(--discord-lightest);">AED</span>
+                                <input type="number"
+                                       class="form-control"
+                                       id="fujairah_delivery_fee"
+                                       name="delivery_fees[fujairah]"
+                                       value="{{ old('delivery_fees.fujairah', $merchant->delivery_fees['fujairah'] ?? '') }}"
+                                       step="0.01"
+                                       min="0"
+                                       style="background-color: var(--discord-darkest); border: 1px solid #ddd; color: var(--discord-lightest);">
+                            </div>
+                        </div>
+
+                        <div class="col-md-6 mb-3">
+                            <label for="umm_al_quwain_delivery_fee" class="form-label" style="color: var(--discord-lightest); font-weight: 500;">
+                                Umm Al Quwain
+                            </label>
+                            <div class="input-group">
+                                <span class="input-group-text" style="background-color: var(--discord-darkest); border: 1px solid #ddd; color: var(--discord-lightest);">AED</span>
+                                <input type="number"
+                                       class="form-control"
+                                       id="umm_al_quwain_delivery_fee"
+                                       name="delivery_fees[umm_al_quwain]"
+                                       value="{{ old('delivery_fees.umm_al_quwain', $merchant->delivery_fees['umm_al_quwain'] ?? '') }}"
                                        step="0.01"
                                        min="0"
                                        style="background-color: var(--discord-darkest); border: 1px solid #ddd; color: var(--discord-lightest);">
@@ -358,10 +430,65 @@
 document.addEventListener('DOMContentLoaded', function() {
     const deliveryCheckbox = document.getElementById('delivery_capability');
     const deliveryFeesSection = document.getElementById('delivery-fees-section');
-    
+
     if (deliveryCheckbox && deliveryFeesSection) {
         deliveryCheckbox.addEventListener('change', function() {
             deliveryFeesSection.style.display = this.checked ? 'block' : 'none';
+        });
+    }
+
+    // Logo preview functionality
+    const logoInput = document.getElementById('logo');
+    if (logoInput) {
+        logoInput.addEventListener('change', function(e) {
+            const file = e.target.files[0];
+            if (file) {
+                // Validate file type
+                const allowedTypes = ['image/jpeg', 'image/png', 'image/jpg', 'image/gif'];
+                if (!allowedTypes.includes(file.type)) {
+                    alert('Please select a valid image file (JPEG, PNG, JPG, or GIF).');
+                    this.value = '';
+                    return;
+                }
+
+                // Validate file size (2MB = 2048KB)
+                if (file.size > 2048 * 1024) {
+                    alert('File size must be less than 2MB.');
+                    this.value = '';
+                    return;
+                }
+
+                // Create preview
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    // Remove existing preview if any
+                    let existingPreview = document.getElementById('new-logo-preview');
+                    if (existingPreview) {
+                        existingPreview.remove();
+                    }
+
+                    // Create new preview
+                    const previewDiv = document.createElement('div');
+                    previewDiv.id = 'new-logo-preview';
+                    previewDiv.className = 'mt-2';
+                    previewDiv.innerHTML = `
+                        <div style="position: relative; display: inline-block;">
+                            <img src="${e.target.result}" alt="New Logo Preview"
+                                 style="max-width: 100px; max-height: 100px; object-fit: cover; border-radius: 8px; border: 2px solid var(--discord-primary);">
+                            <div style="position: absolute; top: -8px; right: -8px; background-color: var(--discord-primary); color: white; border-radius: 50%; width: 20px; height: 20px; display: flex; align-items: center; justify-content: center; font-size: 12px;">
+                                <i class="fas fa-check"></i>
+                            </div>
+                        </div>
+                        <div style="margin-top: 4px; font-size: 12px; color: var(--discord-primary);">
+                            <i class="fas fa-info-circle"></i> New logo selected
+                        </div>
+                    `;
+
+                    // Insert after the file input
+                    logoInput.parentNode.insertBefore(previewDiv, logoInput.nextSibling);
+                };
+                reader.readAsDataURL(file);
+            }
         });
     }
 });

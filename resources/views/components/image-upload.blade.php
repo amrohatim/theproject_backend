@@ -22,9 +22,9 @@
         
         <!-- Image Preview -->
         <div class="image-preview" style="{{ $currentImage ? '' : 'display: none;' }}">
-            <img class="preview-img" 
-                 src="{{ $currentImage }}" 
-                 alt="Preview" 
+            <img class="preview-img"
+                 src="{{ $currentImage ? asset($currentImage) : '' }}"
+                 alt="Preview"
                  style="max-width: 100%; max-height: {{ $previewMaxHeight }}; border-radius: 8px; margin-bottom: 12px;">
             <div>
                 <button type="button" 
