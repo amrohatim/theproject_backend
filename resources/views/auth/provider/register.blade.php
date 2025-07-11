@@ -62,12 +62,12 @@
                     Provider Registration
                 </h1>
                 <p class="text-gray-600">
-                    Step 1 of 5: Service Provider Information
+                    Step 1 of 4: Service Provider Information
                 </p>
 
                 <!-- Progress Bar -->
                 <div class="w-full bg-gray-200 rounded-full h-2 mt-4">
-                    <div class="step-indicator h-2 rounded-full" style="width: 20%"></div>
+                    <div class="step-indicator h-2 rounded-full" style="width: 25%"></div>
                 </div>
             </div>
 

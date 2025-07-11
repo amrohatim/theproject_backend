@@ -1,0 +1,15 @@
+{
+    "keep": {
+        "days": true,
+        "amount": 14
+    },
+    "auditLog": "/var/www/vhosts/dala3chic.com/httpdocs/logs/.b9d9855b9c5c16ddbafe12c53d3d8a9e8cd80b9c-audit.json",
+    "files": [
+        {
+            "date": 1751855257899,
+            "name": "/var/www/vhosts/dala3chic.com/httpdocs/logs/mcp-puppeteer-2025-07-07.log",
+            "hash": "0c2c5585b97946f4d0d3f120c6e1cd7fda99d2f302949cde5500bb595ce7ce80"
+        }
+    ],
+    "hashType": "sha256"
+}

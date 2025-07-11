@@ -46,11 +46,63 @@ class RegistrationController extends Controller
     }
 
     /**
-     * Show provider registration form.
+     * Show provider registration form (Step 1).
      */
     public function showProviderRegistration()
     {
-        return view('auth.provider.register');
+        return view('auth.provider-register-step1');
+    }
+
+    /**
+     * Show provider registration step 2 (Email verification).
+     */
+    public function showProviderStep2()
+    {
+        return view('auth.provider-register-step2');
+    }
+
+    /**
+     * Show provider phone verification step.
+     */
+    public function showProviderPhoneVerification(Request $request)
+    {
+        $registrationToken = $request->query('token');
+        $phoneNumber = $request->query('phone');
+
+        if (!$registrationToken) {
+            return redirect()->route('register.provider')->with('error', 'Registration session expired. Please start again.');
+        }
+
+        // Validate the registration token
+        $tempRegistrationService = app(\App\Services\TemporaryRegistrationService::class);
+        $tempData = $tempRegistrationService->getTemporaryRegistration($registrationToken);
+
+        if (!$tempData) {
+            return redirect()->route('register.provider')->with('error', 'Registration session expired or invalid. Please start again.');
+        }
+
+        // Check if email is verified first
+        if (!$tempRegistrationService->isEmailVerified($registrationToken)) {
+            return redirect()->route('register.provider.step2')->with('error', 'Please verify your email first.');
+        }
+
+        // Get phone number from registration data if not provided in query
+        if (!$phoneNumber && isset($tempData['user_data']['phone'])) {
+            $phoneNumber = $tempData['user_data']['phone'];
+        }
+
+        return view('auth.provider.phone-verification', [
+            'registrationToken' => $registrationToken,
+            'phoneNumber' => $phoneNumber
+        ]);
+    }
+
+    /**
+     * Show provider registration step 3 (License upload).
+     */
+    public function showProviderStep3()
+    {
+        return view('auth.provider-register-step3');
     }
 
     /**
@@ -141,7 +193,7 @@ class RegistrationController extends Controller
 
             if ($result['success']) {
                 // Redirect to phone verification
-                return redirect()->route('vendor.otp.verify.temp', ['token' => $request->token])
+                return redirect()->route('vendor.phone.verify.temp', ['token' => $request->token])
                     ->with('success', $result['message']);
             } else {
                 return back()->withErrors(['error' => $result['message']])->withInput();
@@ -563,6 +615,132 @@ class RegistrationController extends Controller
                 'success' => false,
                 'message' => 'Failed to verify OTP',
             ], 500);
+        }
+    }
+
+    /**
+     * Send phone verification OTP for registration.
+     */
+    public function sendPhoneVerificationOTP(Request $request)
+    {
+        try {
+            $validator = Validator::make($request->all(), [
+                'registration_token' => 'required|string',
+            ]);
+
+            if ($validator->fails()) {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'Validation error',
+                    'errors' => $validator->errors(),
+                ], 422);
+            }
+
+            $result = $this->registrationService->sendPhoneVerificationOTP($request->registration_token);
+
+            return response()->json($result);
+        } catch (Exception $e) {
+            Log::error('Web phone verification OTP send error: ' . $e->getMessage());
+            return response()->json([
+                'success' => false,
+                'message' => 'Failed to send phone verification OTP',
+            ], 500);
+        }
+    }
+
+    /**
+     * Verify phone OTP and create user.
+     */
+    public function verifyPhoneOTPAndCreateUser(Request $request)
+    {
+        try {
+            $validator = Validator::make($request->all(), [
+                'registration_token' => 'required|string',
+                'otp_code' => 'required|string|size:6',
+            ]);
+
+            if ($validator->fails()) {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'Validation error',
+                    'errors' => $validator->errors(),
+                ], 422);
+            }
+
+            $result = $this->registrationService->verifyPhoneOTPAndCreateUser(
+                $request->registration_token,
+                $request->otp_code
+            );
+
+            return response()->json($result);
+        } catch (Exception $e) {
+            Log::error('Web phone verification error: ' . $e->getMessage());
+            return response()->json([
+                'success' => false,
+                'message' => 'Failed to verify phone OTP',
+            ], 500);
+        }
+    }
+
+    /**
+     * Resend phone verification OTP.
+     */
+    public function resendPhoneVerificationOTP(Request $request)
+    {
+        try {
+            $validator = Validator::make($request->all(), [
+                'registration_token' => 'required|string',
+            ]);
+
+            if ($validator->fails()) {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'Validation error',
+                    'errors' => $validator->errors(),
+                ], 422);
+            }
+
+            $result = $this->registrationService->resendPhoneVerificationOTP($request->registration_token);
+
+            return response()->json($result);
+        } catch (Exception $e) {
+            Log::error('Web phone verification OTP resend error: ' . $e->getMessage());
+            return response()->json([
+                'success' => false,
+                'message' => 'Failed to resend phone verification OTP',
+            ], 500);
+        }
+    }
+
+    /**
+     * Show phone verification page for temporary registration.
+     */
+    public function showTempVendorPhoneVerification(Request $request, $token)
+    {
+        try {
+            // Get temporary registration data
+            $tempData = $this->tempRegistrationService->getTemporaryRegistration($token);
+
+            if (!$tempData) {
+                return redirect()->route('register.vendor')
+                    ->withErrors(['error' => 'Registration session expired. Please start again.']);
+            }
+
+            // Check if email is verified first
+            if (!$this->tempRegistrationService->isEmailVerified($token)) {
+                return redirect()->route('vendor.email.verify.temp', ['token' => $token])
+                    ->withErrors(['error' => 'Please verify your email first.']);
+            }
+
+            return view('auth.vendor.phone-verification', [
+                'registrationToken' => $token,
+                'phoneNumber' => $tempData['user_data']['phone'],
+                'name' => $tempData['user_data']['name']
+            ]);
+        } catch (Exception $e) {
+            Log::error('Show temp vendor phone verification error: ' . $e->getMessage());
+            return redirect()->route('register.vendor')
+                ->withErrors(['error' => 'An error occurred. Please try again.']);
         }
     }
 }

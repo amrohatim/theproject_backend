@@ -198,6 +198,31 @@ class ImageHelper
         // Log the image path we're trying to resolve
         Log::debug("Resolving image path: {$imagePath}, filename: {$filename}");
 
+        // Check for specific folder types first to use Laravel routes (to avoid 403 errors)
+        if (str_contains($normalizedPath, 'products/colors/')) {
+            // Use specific Laravel route for serving product color images
+            Log::info("Using Laravel route for product color image: {$imagePath}");
+            return route('images.products.colors', ['filename' => $filename]);
+        }
+
+        if (str_contains($normalizedPath, 'products/')) {
+            // Use Laravel route for serving product images to avoid 403 errors
+            Log::info("Using Laravel route for product image: {$imagePath}");
+            return route('images.products', ['filename' => $filename]);
+        }
+
+        if (str_contains($normalizedPath, 'services/')) {
+            // Use Laravel route for serving service images to avoid 403 errors
+            Log::info("Using Laravel route for service image: {$imagePath}");
+            return route('images.services', ['filename' => $filename]);
+        }
+
+        if (str_contains($normalizedPath, 'merchant-logos/')) {
+            // Use Laravel route for serving merchant logo images to avoid 403 errors
+            Log::info("Using Laravel route for merchant logo image: {$imagePath}");
+            return route('images.storage', ['folder' => 'merchant-logos', 'filename' => $filename]);
+        }
+
         // Create an array of possible paths to check
         $possiblePaths = [
             // Check in public/images/products
@@ -306,33 +331,7 @@ class ImageHelper
             return "{$appUrl}/{$storagePath}";
         }
 
-        // Check if the path contains specific folders
-        if (str_contains($normalizedPath, 'products/')) {
-            // Try to ensure the directory exists
-            $dirPath = public_path('storage/products');
-            if (!file_exists($dirPath)) {
-                try {
-                    mkdir($dirPath, 0755, true);
-                    Log::info("Created directory: {$dirPath}");
-                } catch (\Exception $e) {
-                    Log::error("Failed to create directory: " . $e->getMessage());
-                }
-            }
 
-            $fullPath = public_path("storage/products/{$filename}");
-            if (!file_exists($fullPath)) {
-                try {
-                    // Create a placeholder image at this location
-                    self::createPlaceholderImage($fullPath);
-                    Log::info("Created placeholder image at: {$fullPath}");
-                } catch (\Exception $e) {
-                    Log::error("Failed to create placeholder image: " . $e->getMessage());
-                }
-            }
-
-            Log::info("Using products path for: {$imagePath}");
-            return "{$appUrl}/storage/products/{$filename}";
-        }
 
         if (str_contains($normalizedPath, 'product-colors/')) {
             // Try to ensure the directory exists
@@ -531,51 +530,7 @@ class ImageHelper
             return "{$appUrl}/storage/users/{$filename}";
         }
 
-        // Handle service images
-        if (str_contains($normalizedPath, 'services/')) {
-            // Try to ensure the directory exists
-            $dirPath = public_path('storage/services');
-            if (!file_exists($dirPath)) {
-                try {
-                    mkdir($dirPath, 0755, true);
-                    Log::info("Created directory: {$dirPath}");
-                } catch (\Exception $e) {
-                    Log::error("Failed to create directory: " . $e->getMessage());
-                }
-            }
 
-            // First check if the file exists directly with the provided path
-            $directPath = public_path(ltrim($normalizedPath, '/'));
-            if (file_exists($directPath)) {
-                Log::info("Found service image at direct path: {$directPath}");
-                return "{$appUrl}/{$normalizedPath}";
-            }
-
-            $fullPath = public_path("storage/services/{$filename}");
-            if (!file_exists($fullPath)) {
-                try {
-                    // Try to copy from storage/app/public/services
-                    $storageAppPublicPath = storage_path("app/public/services/{$filename}");
-                    if (file_exists($storageAppPublicPath)) {
-                        copy($storageAppPublicPath, $fullPath);
-                        Log::info("Copied service image from {$storageAppPublicPath} to {$fullPath}");
-                        return "{$appUrl}/storage/services/{$filename}";
-                    } else {
-                        // Create a placeholder image at this location
-                        self::createPlaceholderImage($fullPath);
-                        Log::info("Created placeholder image at: {$fullPath}");
-                        return "{$appUrl}/storage/services/{$filename}";
-                    }
-                } catch (\Exception $e) {
-                    Log::error("Failed to handle service image: " . $e->getMessage());
-                    // Still try to return a valid path
-                    return "{$appUrl}/storage/services/{$filename}";
-                }
-            }
-
-            Log::info("Using services path for: {$imagePath}");
-            return "{$appUrl}/storage/services/{$filename}";
-        }
 
         // Handle branch images
         if (str_contains($normalizedPath, 'branches/')) {

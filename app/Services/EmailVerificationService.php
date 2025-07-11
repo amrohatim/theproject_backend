@@ -4,6 +4,7 @@ namespace App\Services;
 
 use App\Models\User;
 use App\Mail\EmailVerification;
+use App\Mail\TempEmailVerification;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Cache;
@@ -102,14 +103,8 @@ class EmailVerificationService
         string $userType
     ): array {
         try {
-            // Create a temporary User object for email sending
-            $tempUser = new User();
-            $tempUser->email = $email;
-            $tempUser->name = $name;
-            $tempUser->id = 0; // Temporary ID for email template
-
-            // Send email using Mailgun
-            Mail::to($email)->send(new EmailVerification($tempUser, $verificationCode, $userType));
+            // Send email using the temporary email verification mailable
+            Mail::to($email)->send(new TempEmailVerification($email, $name, $verificationCode, $userType));
 
             // Log for development
             Log::info("Email verification code for temporary registration sent to {$email}: {$verificationCode}", [

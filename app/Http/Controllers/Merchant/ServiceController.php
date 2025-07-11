@@ -16,16 +16,101 @@ class ServiceController extends Controller
     /**
      * Display a listing of the merchant's services.
      */
-    public function index()
+    public function index(Request $request)
     {
         $user = Auth::user();
 
         // Get services from user's branches
         $userBranches = \App\Models\Branch::where('user_id', $user->id)->pluck('id');
-        $services = Service::whereIn('branch_id', $userBranches)
-            ->with('category')
-            ->orderBy('created_at', 'desc')
-            ->paginate(15);
+        $query = Service::whereIn('branch_id', $userBranches)->with('category');
+
+        // Apply search if provided
+        if ($request->filled('search')) {
+            $searchTerm = $request->get('search');
+            $query->where(function ($q) use ($searchTerm) {
+                $q->where('name', 'like', "%{$searchTerm}%")
+                  ->orWhere('description', 'like', "%{$searchTerm}%")
+                  ->orWhereHas('category', function ($categoryQuery) use ($searchTerm) {
+                      $categoryQuery->where('name', 'like', "%{$searchTerm}%");
+                  });
+            });
+        }
+
+        // Apply filters
+        if ($request->filled('category_id')) {
+            $query->where('category_id', $request->get('category_id'));
+        }
+
+        if ($request->filled('status')) {
+            $status = $request->get('status');
+            if ($status === 'active') {
+                $query->where('is_available', true);
+            } elseif ($status === 'inactive') {
+                $query->where('is_available', false);
+            }
+        }
+
+        if ($request->filled('featured')) {
+            $query->where('featured', $request->boolean('featured'));
+        }
+
+        if ($request->filled('service_type')) {
+            $serviceType = $request->get('service_type');
+            if ($serviceType === 'home_service') {
+                $query->where('home_service', true);
+            } elseif ($serviceType === 'in_store') {
+                $query->where('home_service', false);
+            }
+        }
+
+        if ($request->filled('price_min')) {
+            $query->where('price', '>=', $request->get('price_min'));
+        }
+
+        if ($request->filled('price_max')) {
+            $query->where('price', '<=', $request->get('price_max'));
+        }
+
+        if ($request->filled('duration_min')) {
+            $query->where('duration', '>=', $request->get('duration_min'));
+        }
+
+        if ($request->filled('duration_max')) {
+            $query->where('duration', '<=', $request->get('duration_max'));
+        }
+
+        if ($request->filled('date_from')) {
+            $query->whereDate('created_at', '>=', $request->get('date_from'));
+        }
+
+        if ($request->filled('date_to')) {
+            $query->whereDate('created_at', '<=', $request->get('date_to'));
+        }
+
+        // Apply sorting
+        $sortBy = $request->get('sort_by', 'created_at');
+        $sortOrder = $request->get('sort_order', 'desc');
+
+        $allowedSortFields = ['created_at', 'updated_at', 'name', 'price', 'duration'];
+        if (in_array($sortBy, $allowedSortFields)) {
+            $query->orderBy($sortBy, $sortOrder);
+        } else {
+            $query->orderBy('created_at', 'desc');
+        }
+
+        $services = $query->paginate(15)->appends($request->query());
+
+        // If this is an AJAX request, return JSON response
+        if ($request->ajax()) {
+            return response()->json([
+                'success' => true,
+                'html' => view('merchant.services.partials.services-table', compact('services'))->render(),
+                'pagination' => view('merchant.services.partials.pagination', compact('services'))->render(),
+                'total' => $services->total(),
+                'current_page' => $services->currentPage(),
+                'last_page' => $services->lastPage(),
+            ]);
+        }
 
         return view('merchant.services.index', compact('services'));
     }
@@ -307,5 +392,105 @@ class ServiceController extends Controller
 
         return redirect()->route('merchant.services.index')
             ->with('success', 'Service deleted successfully.');
+    }
+
+    /**
+     * Get search suggestions for services.
+     */
+    public function searchSuggestions(Request $request)
+    {
+        $user = Auth::user();
+        $query = $request->get('q', '');
+
+        if (strlen($query) < 2) {
+            return response()->json([
+                'success' => true,
+                'suggestions' => []
+            ]);
+        }
+
+        $userBranches = \App\Models\Branch::where('user_id', $user->id)->pluck('id');
+        $services = Service::whereIn('branch_id', $userBranches)
+            ->where('name', 'like', "%{$query}%")
+            ->select('id', 'name', 'image', 'price', 'duration')
+            ->limit(10)
+            ->get();
+
+        $categories = \App\Models\Category::where('name', 'like', "%{$query}%")
+            ->where('is_active', true)
+            ->select('id', 'name')
+            ->limit(5)
+            ->get();
+
+        return response()->json([
+            'success' => true,
+            'suggestions' => [
+                'services' => $services->map(function ($service) {
+                    return [
+                        'id' => $service->id,
+                        'name' => $service->name,
+                        'price' => $service->price,
+                        'duration' => $service->duration,
+                        'image' => $service->image,
+                        'type' => 'service'
+                    ];
+                }),
+                'categories' => $categories->map(function ($category) {
+                    return [
+                        'id' => $category->id,
+                        'name' => $category->name,
+                        'type' => 'category'
+                    ];
+                })
+            ]
+        ]);
+    }
+
+    /**
+     * Get filter options for services.
+     */
+    public function getFilterOptions(Request $request)
+    {
+        $user = Auth::user();
+        $userBranches = \App\Models\Branch::where('user_id', $user->id)->pluck('id');
+
+        $categories = \App\Models\Category::whereHas('services', function ($query) use ($userBranches) {
+            $query->whereIn('branch_id', $userBranches);
+        })
+        ->where('is_active', true)
+        ->select('id', 'name')
+        ->orderBy('name')
+        ->get();
+
+        $priceRange = Service::whereIn('branch_id', $userBranches)
+            ->selectRaw('MIN(price) as min_price, MAX(price) as max_price')
+            ->first();
+
+        $durationRange = Service::whereIn('branch_id', $userBranches)
+            ->selectRaw('MIN(duration) as min_duration, MAX(duration) as max_duration')
+            ->first();
+
+        return response()->json([
+            'success' => true,
+            'options' => [
+                'categories' => $categories,
+                'price_range' => [
+                    'min' => $priceRange->min_price ?? 0,
+                    'max' => $priceRange->max_price ?? 1000
+                ],
+                'duration_range' => [
+                    'min' => $durationRange->min_duration ?? 0,
+                    'max' => $durationRange->max_duration ?? 480
+                ],
+                'service_types' => [
+                    ['value' => 'home_service', 'label' => 'Home Service'],
+                    ['value' => 'in_store', 'label' => 'In-Store Service']
+                ],
+                'statuses' => [
+                    ['value' => 'active', 'label' => 'Active'],
+                    ['value' => 'inactive', 'label' => 'Inactive']
+                ]
+            ]
+        ]);
     }
 }

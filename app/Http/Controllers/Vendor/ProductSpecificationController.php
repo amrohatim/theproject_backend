@@ -202,13 +202,14 @@ class ProductSpecificationController extends Controller
             'sizes.*.is_default' => 'nullable|boolean',
         ]);
 
-        // Delete existing sizes
-        $product->sizes()->delete();
-
-        // Add new sizes
+        // Instead of deleting all existing sizes, we'll use firstOrCreate to preserve existing ones
+        // and only add new sizes that don't already exist
         foreach ($request->sizes as $index => $sizeData) {
-            $product->sizes()->create([
+            // Use firstOrCreate to preserve existing sizes and only add new ones
+            ProductSize::firstOrCreate([
+                'product_id' => $product->id,
                 'name' => $sizeData['name'],
+            ], [
                 'value' => $sizeData['value'] ?? null,
                 'additional_info' => $sizeData['additional_info'] ?? null,
                 'price_adjustment' => $sizeData['price_adjustment'] ?? 0,
@@ -219,7 +220,7 @@ class ProductSpecificationController extends Controller
         }
 
         return redirect()->route('vendor.products.specifications.edit', $product->id)
-            ->with('success', 'Product sizes updated successfully.');
+            ->with('success', 'Product sizes updated successfully. Existing sizes have been preserved.');
     }
 
     /**

@@ -217,6 +217,10 @@ Route::middleware('guest')->group(function () {
 
     // Provider Registration
     Route::get('/register/provider', [RegistrationController::class, 'showProviderRegistration'])->name('register.provider');
+    Route::get('/register/provider/step1', [RegistrationController::class, 'showProviderRegistration'])->name('register.provider.step1');
+    Route::get('/register/provider/step2', [RegistrationController::class, 'showProviderStep2'])->name('register.provider.step2');
+    Route::get('/register/provider/phone-verification', [RegistrationController::class, 'showProviderPhoneVerification'])->name('register.provider.phone-verification');
+    Route::get('/register/provider/step3', [RegistrationController::class, 'showProviderStep3'])->name('register.provider.step3');
     Route::post('/register/provider', [RegistrationController::class, 'registerProvider'])->name('register.provider.submit');
     Route::get('/register/provider/license', [RegistrationController::class, 'showProviderLicenseForm'])->name('provider.registration.license');
     Route::post('/register/provider/license', [RegistrationController::class, 'uploadProviderLicense'])->name('provider.registration.license.submit');
@@ -234,13 +238,26 @@ Route::middleware('guest')->group(function () {
     Route::post('/vendor/email/resend/temp', [RegistrationController::class, 'resendTempVendorEmailVerification'])->name('vendor.email.resend.temp');
 
     // Temporary registration phone verification routes (public)
+    Route::get('/vendor/phone/verify/temp/{token}', [RegistrationController::class, 'showTempVendorPhoneVerification'])->name('vendor.phone.verify.temp');
+
+    // Temporary registration phone verification routes (public)
     Route::get('/vendor/otp/verify/temp/{token}', [RegistrationController::class, 'showTempVendorOtpVerification'])->name('vendor.otp.verify.temp');
     Route::post('/vendor/otp/verify/temp', [RegistrationController::class, 'verifyTempVendorOtp'])->name('vendor.otp.verify.temp.submit');
     Route::post('/vendor/otp/resend/temp', [RegistrationController::class, 'resendTempVendorOtp'])->name('vendor.otp.resend.temp');
 
+    // Temporary merchant registration email verification routes (public)
+    Route::get('/merchant/email/verify/temp/{token}', [RegistrationController::class, 'showTempMerchantEmailVerification'])->name('merchant.email.verify.temp');
+    Route::post('/merchant/email/verify/temp', [RegistrationController::class, 'verifyTempMerchantEmail'])->name('merchant.email.verify.temp.submit');
+    Route::post('/merchant/email/resend/temp', [RegistrationController::class, 'resendTempMerchantEmailVerification'])->name('merchant.email.resend.temp');
+
     // OTP routes for registration
     Route::post('/register/send-otp', [RegistrationController::class, 'sendOtp'])->name('register.send-otp');
     Route::post('/register/verify-otp', [RegistrationController::class, 'verifyOtp'])->name('register.verify-otp');
+
+    // Phone verification routes for registration
+    Route::post('/register/send-phone-otp', [RegistrationController::class, 'sendPhoneVerificationOTP'])->name('register.send-phone-otp');
+    Route::post('/register/verify-phone-otp', [RegistrationController::class, 'verifyPhoneOTPAndCreateUser'])->name('register.verify-phone-otp');
+    Route::post('/register/resend-phone-otp', [RegistrationController::class, 'resendPhoneVerificationOTP'])->name('register.resend-phone-otp');
 });
 
 // Email and OTP verification routes (accessible to authenticated users)
@@ -936,6 +953,15 @@ Route::prefix('admin')->name('admin.')->middleware(['auth', \App\Http\Middleware
     Route::post('/shipping/track', [\App\Http\Controllers\Admin\ShippingController::class, 'trackShipment'])->name('shipping.track');
     Route::get('/shipping/vendors', [\App\Http\Controllers\Admin\ShippingController::class, 'vendors'])->name('shipping.vendors');
     Route::put('/shipping/vendors/{id}', [\App\Http\Controllers\Admin\ShippingController::class, 'updateVendorShipping'])->name('shipping.update-vendor');
+
+    // Merchant License Management
+    Route::get('/merchant-licenses', [App\Http\Controllers\Admin\MerchantLicenseController::class, 'index'])->name('merchant-licenses.index');
+    Route::get('/merchant-licenses/{id}', [App\Http\Controllers\Admin\MerchantLicenseController::class, 'show'])->name('merchant-licenses.show');
+    Route::post('/merchant-licenses/{id}/approve', [App\Http\Controllers\Admin\MerchantLicenseController::class, 'approve'])->name('merchant-licenses.approve');
+    Route::post('/merchant-licenses/{id}/reject', [App\Http\Controllers\Admin\MerchantLicenseController::class, 'reject'])->name('merchant-licenses.reject');
+    Route::get('/merchant-licenses/{id}/download', [App\Http\Controllers\Admin\MerchantLicenseController::class, 'downloadLicense'])->name('merchant-licenses.download');
+    Route::get('/merchant-licenses/{id}/view', [App\Http\Controllers\Admin\MerchantLicenseController::class, 'viewLicense'])->name('merchant-licenses.view');
+    Route::post('/merchant-licenses/bulk-approve', [App\Http\Controllers\Admin\MerchantLicenseController::class, 'bulkApprove'])->name('merchant-licenses.bulk-approve');
 
     // Settings
     Route::get('/settings', function () {
@@ -1638,23 +1664,54 @@ Route::prefix('merchant')->name('merchant.')->middleware(['auth', \App\Http\Midd
     Route::get('/dashboard', [App\Http\Controllers\Merchant\DashboardController::class, 'index'])->name('dashboard');
     Route::get('/dashboard/stats', [App\Http\Controllers\Merchant\DashboardController::class, 'getStats'])->name('dashboard.stats');
 
+    // Global Search APIs
+    Route::get('/dashboard/search', [App\Http\Controllers\Merchant\DashboardController::class, 'globalSearch'])->name('dashboard.search');
+    Route::get('/dashboard/search/suggestions', [App\Http\Controllers\Merchant\DashboardController::class, 'searchSuggestions'])->name('dashboard.search.suggestions');
+    Route::post('/dashboard/search/save', [App\Http\Controllers\Merchant\DashboardController::class, 'saveSearch'])->name('dashboard.search.save');
+
     // Products
     Route::get('/products', [App\Http\Controllers\Merchant\ProductController::class, 'index'])->name('products.index');
-    Route::get('/products/create', [App\Http\Controllers\Merchant\ProductController::class, 'create'])->name('products.create');
-    Route::post('/products', [App\Http\Controllers\Merchant\ProductController::class, 'store'])->name('products.store');
+    Route::get('/products/create', [App\Http\Controllers\Merchant\ProductController::class, 'create'])->middleware('valid.license')->name('products.create');
+    Route::post('/products', [App\Http\Controllers\Merchant\ProductController::class, 'store'])->middleware('valid.license')->name('products.store');
     Route::get('/products/{id}', [App\Http\Controllers\Merchant\ProductController::class, 'show'])->name('products.show');
     Route::get('/products/{id}/edit', [App\Http\Controllers\Merchant\ProductController::class, 'edit'])->name('products.edit');
+    Route::get('/products/{id}/edit-data', [App\Http\Controllers\Merchant\ProductController::class, 'getEditData'])->name('products.edit.data');
     Route::put('/products/{id}', [App\Http\Controllers\Merchant\ProductController::class, 'update'])->name('products.update');
     Route::delete('/products/{id}', [App\Http\Controllers\Merchant\ProductController::class, 'destroy'])->name('products.destroy');
 
+    // Product Search and Filter APIs
+    Route::get('/products/search/suggestions', [App\Http\Controllers\Merchant\ProductController::class, 'searchSuggestions'])->name('products.search.suggestions');
+    Route::get('/products/filter/options', [App\Http\Controllers\Merchant\ProductController::class, 'getFilterOptions'])->name('products.filter.options');
+
+    // Product Specifications and Color-Size Management (Enhanced functionality)
+    Route::get('/products/{id}/specifications', [\App\Http\Controllers\Merchant\ProductSpecificationController::class, 'edit'])->name('products.specifications.edit');
+    Route::post('/products/{id}/specifications', [\App\Http\Controllers\Merchant\ProductSpecificationController::class, 'updateSpecifications'])->name('products.specifications.update');
+    Route::post('/products/{id}/colors', [\App\Http\Controllers\Merchant\ProductSpecificationController::class, 'updateColors'])->name('products.colors.update');
+    Route::post('/products/{id}/sizes', [\App\Http\Controllers\Merchant\ProductSpecificationController::class, 'updateSizes'])->name('products.sizes.update');
+
+    // Color-Size API routes for enhanced product management
+    Route::post('/api/color-sizes/get-sizes-for-color', [\App\Http\Controllers\Merchant\ProductColorSizeController::class, 'getSizesForColor'])->name('api.color-sizes.get-sizes-for-color');
+    Route::post('/api/color-sizes/validate-stock-allocation', [\App\Http\Controllers\Merchant\ProductColorSizeController::class, 'validateStockAllocation'])->name('api.color-sizes.validate-stock-allocation');
+    Route::post('/api/color-sizes/get-color-stock-info', [\App\Http\Controllers\Merchant\ProductColorSizeController::class, 'getColorStockInfo'])->name('api.color-sizes.get-color-stock-info');
+    Route::post('/api/color-sizes/save-combinations', [\App\Http\Controllers\Merchant\ProductColorSizeController::class, 'saveColorSizeCombinations'])->name('api.color-sizes.save-combinations');
+
+    // Size Management API routes
+    Route::post('/api/sizes/create', [\App\Http\Controllers\Merchant\ProductColorSizeController::class, 'createSize'])->name('api.sizes.create');
+    Route::post('/api/sizes/update', [\App\Http\Controllers\Merchant\ProductColorSizeController::class, 'updateSize'])->name('api.sizes.update');
+    Route::post('/api/sizes/delete', [\App\Http\Controllers\Merchant\ProductColorSizeController::class, 'deleteSize'])->name('api.sizes.delete');
+
     // Services
     Route::get('/services', [App\Http\Controllers\Merchant\ServiceController::class, 'index'])->name('services.index');
-    Route::get('/services/create', [App\Http\Controllers\Merchant\ServiceController::class, 'create'])->name('services.create');
-    Route::post('/services', [App\Http\Controllers\Merchant\ServiceController::class, 'store'])->name('services.store');
+    Route::get('/services/create', [App\Http\Controllers\Merchant\ServiceController::class, 'create'])->middleware('valid.license')->name('services.create');
+    Route::post('/services', [App\Http\Controllers\Merchant\ServiceController::class, 'store'])->middleware('valid.license')->name('services.store');
     Route::get('/services/{id}', [App\Http\Controllers\Merchant\ServiceController::class, 'show'])->name('services.show');
     Route::get('/services/{id}/edit', [App\Http\Controllers\Merchant\ServiceController::class, 'edit'])->name('services.edit');
     Route::put('/services/{id}', [App\Http\Controllers\Merchant\ServiceController::class, 'update'])->name('services.update');
     Route::delete('/services/{id}', [App\Http\Controllers\Merchant\ServiceController::class, 'destroy'])->name('services.destroy');
+
+    // Service Search and Filter APIs
+    Route::get('/services/search/suggestions', [App\Http\Controllers\Merchant\ServiceController::class, 'searchSuggestions'])->name('services.search.suggestions');
+    Route::get('/services/filter/options', [App\Http\Controllers\Merchant\ServiceController::class, 'getFilterOptions'])->name('services.filter.options');
 
     // Orders
     Route::get('/orders', [App\Http\Controllers\Merchant\OrderController::class, 'index'])->name('orders.index');
@@ -1681,6 +1738,25 @@ Route::prefix('merchant')->name('merchant.')->middleware(['auth', \App\Http\Midd
     Route::put('/settings/personal', [App\Http\Controllers\Merchant\SettingsController::class, 'updatePersonal'])->name('settings.personal.update');
     Route::get('/settings/global', [App\Http\Controllers\Merchant\SettingsController::class, 'global'])->name('settings.global');
     Route::put('/settings/global', [App\Http\Controllers\Merchant\SettingsController::class, 'updateGlobal'])->name('settings.global.update');
+    Route::put('/settings/license', [App\Http\Controllers\Merchant\SettingsController::class, 'updateLicense'])->name('settings.license.update');
+
+    // Debug route for testing file uploads
+    Route::post('/debug/file-upload', function(Request $request) {
+        \Log::info('=== DEBUG FILE UPLOAD ===');
+        \Log::info('Method: ' . $request->method());
+        \Log::info('Content-Type: ' . $request->header('Content-Type'));
+        \Log::info('Content-Length: ' . $request->header('Content-Length'));
+        \Log::info('Has file: ' . ($request->hasFile('license_file') ? 'YES' : 'NO'));
+        \Log::info('All files: ', $request->allFiles());
+        \Log::info('All input: ', $request->all());
+
+        return response()->json([
+            'success' => true,
+            'has_file' => $request->hasFile('license_file'),
+            'files' => $request->allFiles(),
+            'input' => $request->all()
+        ]);
+    })->name('debug.file.upload');
 
     // Mini Store
     Route::get('/mini-store', [App\Http\Controllers\Merchant\MiniStoreController::class, 'index'])->name('mini-store');
@@ -1704,5 +1780,10 @@ Route::prefix('merchant')->name('merchant.')->middleware(['auth', \App\Http\Midd
     })->name('otp.verify')->withoutMiddleware(\App\Http\Middleware\MerchantMiddleware::class);
 });
 
+// Image serving routes (to handle 403 errors from direct storage access)
+Route::get('/images/products/{filename}', [App\Http\Controllers\ImageController::class, 'serveProductImage'])->name('images.products');
+Route::get('/images/products/colors/{filename}', [App\Http\Controllers\ImageController::class, 'serveProductColorImage'])->name('images.products.colors');
+Route::get('/images/services/{filename}', [App\Http\Controllers\ImageController::class, 'serveServiceImage'])->name('images.services');
+Route::get('/images/{folder}/{filename}', [App\Http\Controllers\ImageController::class, 'serveStorageImage'])->name('images.storage');
 
 require __DIR__.'/test.php';

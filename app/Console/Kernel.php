@@ -14,6 +14,9 @@ class Kernel extends ConsoleKernel
     {
         // Calculate trending scores daily at 3 AM
         $schedule->command('trending:calculate')->dailyAt('03:00');
+
+        // Check license expiration daily at 2 AM
+        $schedule->command('license:check-expiration')->dailyAt('02:00');
     }
 
     /**

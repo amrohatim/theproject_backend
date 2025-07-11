@@ -71,11 +71,13 @@ Route::post('/login', [AuthController::class, 'login']);
 
 // Email verification routes for vendor/provider registration (using Laravel email system)
 Route::prefix('vendor/register')->group(function () {
+    Route::post('/validate-info', [VendorRegistrationController::class, 'registerVendorInfo']);
     Route::post('/send-firebase-email-verification', [EmailVerificationController::class, 'sendVendorEmailVerification']);
     Route::post('/check-firebase-email-verification', [EmailVerificationController::class, 'checkVendorEmailVerification']);
 });
 
 Route::prefix('provider/register')->group(function () {
+    Route::post('/validate-info', [ProviderRegistrationController::class, 'registerProviderInfo']);
     Route::post('/send-firebase-email-verification', [EmailVerificationController::class, 'sendProviderEmailVerification']);
     Route::post('/check-firebase-email-verification', [EmailVerificationController::class, 'checkProviderEmailVerification']);
 });
@@ -95,6 +97,11 @@ Route::prefix('vendor-registration')->group(function () {
     Route::post('/verify-otp', [VendorRegistrationController::class, 'verifyOtp']);
     Route::get('/status', [VendorRegistrationController::class, 'getRegistrationStatus']);
     Route::post('/resend-email-verification', [VendorRegistrationController::class, 'resendEmailVerification']);
+
+    // Phone verification routes
+    Route::post('/send-phone-otp', [VendorRegistrationController::class, 'sendPhoneVerificationOTP']);
+    Route::post('/verify-phone-otp', [VendorRegistrationController::class, 'verifyPhoneOTPAndCreateUser']);
+    Route::post('/resend-phone-otp', [VendorRegistrationController::class, 'resendPhoneVerificationOTP']);
 });
 
 // Provider Registration routes (public)
@@ -104,6 +111,10 @@ Route::prefix('provider-registration')->group(function () {
     Route::post('/license', [ProviderRegistrationController::class, 'uploadLicense']);
     Route::post('/send-otp', [ProviderRegistrationController::class, 'sendOtp']);
     Route::post('/verify-otp', [ProviderRegistrationController::class, 'verifyOtp']);
+    Route::post('/resend-otp', [ProviderRegistrationController::class, 'resendOtp']);
+    Route::post('/send-phone-otp', [ProviderRegistrationController::class, 'sendPhoneOtp']);
+    Route::post('/verify-phone-otp', [ProviderRegistrationController::class, 'verifyPhoneOtp']);
+    Route::post('/resend-phone-otp', [ProviderRegistrationController::class, 'resendPhoneOtp']);
     Route::get('/status', [ProviderRegistrationController::class, 'getRegistrationStatus']);
     Route::post('/resend-email-verification', [ProviderRegistrationController::class, 'resendEmailVerification']);
     Route::post('/add-location', [ProviderRegistrationController::class, 'addVendorLocation']);

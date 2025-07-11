@@ -33,10 +33,10 @@ return new class extends Migration
                 $table->index(['ip_address', 'entity_type', 'entity_id']);
                 $table->index('viewed_at');
 
-                // Composite index for unique view checking
-                $table->index(['entity_type', 'entity_id', 'user_id', 'viewed_at']);
-                $table->index(['entity_type', 'entity_id', 'session_id', 'viewed_at']);
-                $table->index(['entity_type', 'entity_id', 'device_fingerprint', 'viewed_at']);
+                // Composite index for unique view checking (with custom names to avoid length issues)
+                $table->index(['entity_type', 'entity_id', 'user_id', 'viewed_at'], 'vt_entity_user_viewed_idx');
+                $table->index(['entity_type', 'entity_id', 'session_id', 'viewed_at'], 'vt_entity_session_viewed_idx');
+                $table->index(['entity_type', 'entity_id', 'device_fingerprint', 'viewed_at'], 'vt_entity_device_viewed_idx');
             });
         }
     }

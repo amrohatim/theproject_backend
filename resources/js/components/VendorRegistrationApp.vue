@@ -225,13 +225,16 @@ export default {
       }
     },
 
-    async handleEmailVerification(verificationCode) {
+    async handleEmailVerification(verificationData) {
       this.clearMessages();
       this.loading = true;
 
       try {
-        const response = await registrationApi.verifyEmail(this.registrationToken, verificationCode);
-        
+        const response = await registrationApi.verifyEmail(
+          verificationData.registration_token,
+          verificationData.verification_code
+        );
+
         if (response.success) {
           this.userId = response.user_id;
           this.success = response.message;

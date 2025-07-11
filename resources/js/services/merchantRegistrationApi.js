@@ -33,7 +33,22 @@ class MerchantRegistrationApi {
 
     try {
       const response = await fetch(url, requestOptions);
-      const data = await response.json();
+
+      // Check if response is JSON
+      const contentType = response.headers.get('content-type');
+      let data;
+
+      if (contentType && contentType.includes('application/json')) {
+        data = await response.json();
+      } else {
+        // If not JSON, get text content for error handling
+        const textContent = await response.text();
+        data = {
+          success: false,
+          message: `Server error: ${response.status} ${response.statusText}`,
+          error: textContent
+        };
+      }
 
       if (!response.ok) {
         throw new Error(data.message || `HTTP error! status: ${response.status}`);
@@ -65,7 +80,22 @@ class MerchantRegistrationApi {
 
     try {
       const response = await fetch(url, options);
-      const data = await response.json();
+
+      // Check if response is JSON
+      const contentType = response.headers.get('content-type');
+      let data;
+
+      if (contentType && contentType.includes('application/json')) {
+        data = await response.json();
+      } else {
+        // If not JSON, get text content for error handling
+        const textContent = await response.text();
+        data = {
+          success: false,
+          message: `Server error: ${response.status} ${response.statusText}`,
+          error: textContent
+        };
+      }
 
       if (!response.ok) {
         throw new Error(data.message || `HTTP error! status: ${response.status}`);

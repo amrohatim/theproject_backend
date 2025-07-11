@@ -368,9 +368,9 @@
 </head>
 <body>
     <div class="registration-container">
-        <a href="/register/provider/step2" class="back-link">
+        <a href="/register/provider/phone-verification" class="back-link">
             <i class="fas fa-arrow-left"></i>
-            Back to Verification
+            Back to Phone Verification
         </a>
 
         <!-- Progress Bar -->
@@ -381,17 +381,21 @@
             </div>
             <div class="progress-step completed">
                 <div class="step-circle"><i class="fas fa-check"></i></div>
-                <div class="step-label">Verification</div>
+                <div class="step-label">Email Verification</div>
+            </div>
+            <div class="progress-step completed">
+                <div class="step-circle"><i class="fas fa-check"></i></div>
+                <div class="step-label">Phone Verification</div>
             </div>
             <div class="progress-step active">
-                <div class="step-circle">3</div>
+                <div class="step-circle">4</div>
                 <div class="step-label">License</div>
             </div>
         </div>
 
         <div class="form-header">
             <h2 class="form-title">Upload Business License</h2>
-            <p class="form-subtitle">Step 3: Upload your business registration documents</p>
+            <p class="form-subtitle">Step 4: Upload your business registration documents</p>
         </div>
 
         <!-- Info Card -->

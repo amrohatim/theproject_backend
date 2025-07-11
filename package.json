@@ -3,7 +3,27 @@
     "type": "module",
     "scripts": {
         "build": "vite build",
-        "dev": "vite"
+        "dev": "vite",
+        "test": "playwright test",
+        "test:headed": "playwright test --headed",
+        "test:debug": "playwright test --debug",
+        "test:license": "playwright test tests/Browser/LicenseManagementTest.js",
+        "test:license:headed": "playwright test tests/Browser/LicenseManagementTest.js --headed",
+        "test:license:debug": "playwright test tests/Browser/LicenseManagementTest.js --debug",
+        "test:search": "playwright test tests/Browser/MerchantSearchAndFiltersTest.js",
+        "test:search:headed": "playwright test tests/Browser/MerchantSearchAndFiltersTest.js --headed",
+        "test:search:debug": "playwright test tests/Browser/MerchantSearchAndFiltersTest.js --debug",
+        "test:search:mobile": "playwright test tests/Browser/MerchantSearchAndFiltersTest.js --project='Mobile Chrome' --project='Mobile Safari'",
+        "test:search:desktop": "playwright test tests/Browser/MerchantSearchAndFiltersTest.js --project=chromium --project=firefox --project=webkit",
+        "test:mobile": "playwright test --project='Mobile Chrome' --project='Mobile Safari'",
+        "test:desktop": "playwright test --project=chromium --project=firefox --project=webkit",
+        "test:chrome": "playwright test --project=chromium",
+        "test:firefox": "playwright test --project=firefox",
+        "test:safari": "playwright test --project=webkit",
+        "report": "playwright show-report",
+        "install-browsers": "playwright install",
+        "test:ci": "playwright test --reporter=github",
+        "test:html-report": "playwright test --reporter=html"
     },
     "devDependencies": {
         "@playwright/test": "^1.53.2",
@@ -18,6 +38,7 @@
     "dependencies": {
         "@vitejs/plugin-vue": "^6.0.0",
         "figma-api": "^2.0.2-beta",
+        "playwright": "^1.54.0",
         "vue": "^3.5.17"
     }
 }

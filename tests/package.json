@@ -1,0 +1,26 @@
+{
+  "name": "merchant-stock-validation-tests",
+  "version": "1.0.0",
+  "description": "Browser automation tests for merchant stock validation system",
+  "main": "run-stock-validation-tests.js",
+  "scripts": {
+    "test": "node run-stock-validation-tests.js",
+    "test:playwright": "npx playwright test Browser/MerchantStockValidationTest.js",
+    "install-browsers": "npx playwright install"
+  },
+  "dependencies": {
+    "playwright": "^1.40.0"
+  },
+  "devDependencies": {
+    "@playwright/test": "^1.40.0"
+  },
+  "keywords": [
+    "playwright",
+    "testing",
+    "stock-validation",
+    "merchant",
+    "browser-automation"
+  ],
+  "author": "Merchant Stock Validation Team",
+  "license": "MIT"
+}

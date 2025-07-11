@@ -11,228 +11,440 @@
     <!-- Font Awesome -->
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
 
-    <!-- Google Fonts - For Discord-like look -->
+    <!-- Google Fonts - For modern dashboard -->
     <link href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
 
-    <!-- Custom styles for Discord-inspired UI -->
+    <!-- Modern Dashboard CSS -->
+    <link href="{{ asset('css/modern-merchant-dashboard.css') }}" rel="stylesheet">
+
+    <!-- Custom styles for modern merchant dashboard -->
     <style>
         :root {
-            /* Light theme color palette - using merchant-specific colors */
-            --discord-primary: #1E5EFF; /* Primary blue from Figma */
-            --discord-primary-hover: #1a52e6;
-            --discord-dark: #f2f3f5;
+            /* Modern color palette matching reference design */
+            --primary-blue: #1E5EFF;
+            --primary-blue-hover: #1a52e6;
+            --primary-blue-light: #eff6ff;
+
+            /* Gray scale */
+            --gray-50: #f9fafb;
+            --gray-100: #f3f4f6;
+            --gray-200: #e5e7eb;
+            --gray-300: #d1d5db;
+            --gray-400: #9ca3af;
+            --gray-500: #6b7280;
+            --gray-600: #4b5563;
+            --gray-700: #374151;
+            --gray-800: #1f2937;
+            --gray-900: #111827;
+
+            /* Status colors */
+            --green-100: #dcfce7;
+            --green-600: #16a34a;
+            --green-800: #166534;
+            --red-100: #fee2e2;
+            --red-600: #dc2626;
+            --red-800: #991b1b;
+            --yellow-100: #fef3c7;
+            --yellow-600: #d97706;
+            --yellow-800: #92400e;
+
+            /* Legacy compatibility */
+            --discord-primary: var(--primary-blue);
+            --discord-primary-hover: var(--primary-blue-hover);
+            --discord-dark: var(--gray-50);
             --discord-darker: #ffffff;
-            --discord-darkest: #e3e5e8;
-            --discord-light: #747f8d;
-            --discord-lighter: #4e5d94;
-            --discord-lightest: #2e3338;
-            --discord-green: #3ba55d;
-            --discord-red: #ed4245;
-            --discord-yellow: #faa81a;
-            --discord-dark-hover: #e9eaeb;
+            --discord-darkest: var(--gray-200);
+            --discord-light: var(--gray-500);
+            --discord-lighter: var(--gray-600);
+            --discord-lightest: var(--gray-900);
+            --discord-green: var(--green-600);
+            --discord-red: var(--red-600);
+            --discord-yellow: var(--yellow-600);
+            --discord-dark-hover: var(--gray-100);
         }
 
         body {
             font-family: 'Open Sans', sans-serif;
-            background-color: var(--discord-dark);
-            color: var(--discord-lightest);
+            background-color: var(--gray-50);
+            color: var(--gray-900);
             min-height: 100vh;
-            display: flex;
             margin: 0;
             padding: 0;
-            overflow: hidden;
         }
 
-        /* Main container */
-        .app-container {
-            display: flex;
-            width: 100%;
+        /* Main layout structure */
+        .dashboard-layout {
+            min-height: 100vh;
+            background-color: var(--gray-50);
+        }
+
+        /* Sidebar */
+        .sidebar {
+            position: fixed;
+            top: 0;
+            left: 0;
+            z-index: 50;
+            width: 256px;
             height: 100vh;
-        }
-
-
-
-        /* Channel (left) sidebar */
-        .channel-sidebar {
-            width: 240px;
-            background-color: var(--discord-darker);
-            display: flex;
-            flex-direction: column;
-            border-right: 1px solid var(--discord-darkest);
+            background-color: white;
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+            transform: translateX(-100%);
+            transition: transform 0.3s ease-in-out;
             overflow-y: auto;
         }
 
-        .server-header {
-            padding: 16px;
-            border-bottom: 1px solid var(--discord-darkest);
-            background-color: var(--discord-darker);
+        .sidebar.open {
+            transform: translateX(0);
         }
 
-        .server-header h2 {
-            margin: 0;
-            font-size: 16px;
-            font-weight: 600;
-            color: var(--discord-lightest);
+        @media (min-width: 1024px) {
+            .sidebar {
+                transform: translateX(0);
+            }
         }
 
-        .channel-list {
-            flex: 1;
-            padding: 16px 8px;
-        }
-
-        .channel-category {
-            margin-bottom: 24px;
-        }
-
-        .category-header {
-            font-size: 12px;
-            font-weight: 600;
-            color: var(--discord-light);
-            text-transform: uppercase;
-            margin-bottom: 8px;
-            padding: 0 8px;
-        }
-
-        .channel-item {
-            display: flex;
-            align-items: center;
-            padding: 8px 12px;
-            margin: 2px 0;
-            border-radius: 4px;
-            color: var(--discord-light);
-            text-decoration: none;
-            transition: all 0.2s ease;
-            font-size: 14px;
-        }
-
-        .channel-item:hover {
-            background-color: var(--discord-dark-hover);
-            color: var(--discord-lightest);
-            text-decoration: none;
-        }
-
-        .channel-item.active {
-            background-color: var(--discord-primary);
-            color: white;
-        }
-
-        .channel-item i {
-            margin-right: 12px;
-            width: 16px;
-            text-align: center;
-        }
-
-        /* Main content area */
-        .content-area {
-            flex: 1;
-            display: flex;
-            flex-direction: column;
-            background-color: var(--discord-darker);
-            overflow: hidden;
-        }
-
-        .content-header {
-            padding: 16px 24px;
-            border-bottom: 1px solid var(--discord-darkest);
-            background-color: var(--discord-darker);
+        /* Sidebar header */
+        .sidebar-header {
             display: flex;
             align-items: center;
             justify-content: space-between;
+            height: 64px;
+            padding: 0 24px;
+            border-bottom: 1px solid var(--gray-200);
         }
 
-        .content-header-title {
-            margin: 0;
+        .sidebar-brand {
             font-size: 20px;
+            font-weight: 700;
+            color: var(--gray-900);
+            margin: 0;
+        }
+
+        .sidebar-close {
+            display: block;
+            padding: 8px;
+            border-radius: 6px;
+            color: var(--gray-400);
+            background: none;
+            border: none;
+            cursor: pointer;
+            transition: color 0.2s ease;
+        }
+
+        .sidebar-close:hover {
+            color: var(--gray-600);
+        }
+
+        @media (min-width: 1024px) {
+            .sidebar-close {
+                display: none;
+            }
+        }
+
+        /* Navigation */
+        .sidebar-nav {
+            margin-top: 24px;
+            padding: 0 12px;
+        }
+
+        .nav-section {
+            margin-bottom: 32px;
+        }
+
+        .nav-section-title {
+            padding: 0 12px;
+            font-size: 12px;
             font-weight: 600;
-            color: var(--discord-lightest);
+            color: var(--gray-500);
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            margin-bottom: 12px;
         }
 
-        .content-body {
-            flex: 1;
-            padding: 24px;
-            overflow-y: auto;
-            background-color: var(--discord-dark);
+        .nav-items {
+            list-style: none;
+            padding: 0;
+            margin: 0;
         }
 
-        /* Discord-style cards */
-        .discord-card {
-            background-color: var(--discord-darker);
-            border: 1px solid var(--discord-darkest);
+        .nav-item {
+            margin-bottom: 4px;
+        }
+
+        .nav-link {
+            display: flex;
+            align-items: center;
+            padding: 8px 12px;
+            font-size: 14px;
+            font-weight: 500;
             border-radius: 8px;
-            margin-bottom: 16px;
+            color: var(--gray-600);
+            text-decoration: none;
+            transition: all 0.2s ease;
+            position: relative;
+        }
+
+        .nav-link:hover {
+            color: var(--gray-900);
+            background-color: var(--gray-100);
+            text-decoration: none;
+        }
+
+        .nav-link.active {
+            background-color: var(--primary-blue-light);
+            color: var(--primary-blue);
+            border-right: 2px solid var(--primary-blue);
+        }
+
+        .nav-link i {
+            width: 20px;
+            height: 20px;
+            margin-right: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        /* Logout section */
+        .sidebar-footer {
+            margin-top: 32px;
+            padding-top: 24px;
+            border-top: 1px solid var(--gray-200);
+        }
+
+        /* Mobile sidebar overlay */
+        .sidebar-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: rgba(0, 0, 0, 0.5);
+            z-index: 40;
+        }
+
+        @media (min-width: 1024px) {
+            .sidebar-overlay {
+                display: none !important;
+            }
+        }
+
+        /* Main content area */
+        .main-content {
+            margin-left: 0;
+            transition: margin-left 0.3s ease-in-out;
+        }
+
+        @media (min-width: 1024px) {
+            .main-content {
+                margin-left: 256px;
+            }
+        }
+
+        /* Top header */
+        .top-header {
+            background-color: white;
+            box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px 0 rgba(0, 0, 0, 0.06);
+            border-bottom: 1px solid var(--gray-200);
+        }
+
+        .header-content {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            height: 64px;
+            padding: 0 16px;
+        }
+
+        @media (min-width: 640px) {
+            .header-content {
+                padding: 0 24px;
+            }
+        }
+
+        @media (min-width: 1024px) {
+            .header-content {
+                padding: 0 32px;
+            }
+        }
+
+        .header-left {
+            display: flex;
+            align-items: center;
+        }
+
+        .mobile-menu-toggle {
+            display: block;
+            padding: 8px;
+            border-radius: 6px;
+            color: var(--gray-400);
+            background: none;
+            border: none;
+            cursor: pointer;
+            transition: color 0.2s ease;
+        }
+
+        .mobile-menu-toggle:hover {
+            color: var(--gray-600);
+        }
+
+        @media (min-width: 1024px) {
+            .mobile-menu-toggle {
+                display: none;
+            }
+        }
+
+        .page-title {
+            margin-left: 16px;
+            font-size: 24px;
+            font-weight: 700;
+            color: var(--gray-900);
+        }
+
+        @media (min-width: 1024px) {
+            .page-title {
+                margin-left: 0;
+            }
+        }
+
+        .header-right {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+        }
+
+        .header-action-btn {
+            padding: 8px;
+            color: var(--gray-400);
+            background: none;
+            border: none;
+            border-radius: 50%;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .header-action-btn:hover {
+            color: var(--gray-600);
+            background-color: var(--gray-100);
+        }
+
+        .user-avatar {
+            width: 32px;
+            height: 32px;
+            background-color: var(--primary-blue);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 14px;
+            font-weight: 500;
+        }
+
+        /* Page content */
+        .page-content {
+            padding: 16px;
+        }
+
+        @media (min-width: 640px) {
+            .page-content {
+                padding: 24px;
+            }
+        }
+
+        @media (min-width: 1024px) {
+            .page-content {
+                padding: 32px;
+            }
+        }
+
+        /* Modern cards */
+        .discord-card {
+            background-color: white;
+            border: 1px solid var(--gray-200);
+            border-radius: 12px;
+            box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px 0 rgba(0, 0, 0, 0.06);
+            margin-bottom: 24px;
             overflow: hidden;
         }
 
         .discord-card-header {
-            padding: 16px 20px;
-            border-bottom: 1px solid var(--discord-darkest);
+            padding: 16px 24px;
+            border-bottom: 1px solid var(--gray-200);
             font-weight: 600;
-            color: var(--discord-lightest);
-            background-color: var(--discord-darker);
+            color: var(--gray-900);
+            background-color: white;
         }
 
         .discord-card-body {
-            padding: 20px;
+            padding: 24px;
         }
 
-        /* Discord-style buttons */
+        /* Modern buttons */
         .discord-btn {
-            background-color: var(--discord-primary);
-            color: white;
-            border: none;
-            padding: 8px 16px;
-            border-radius: 4px;
-            font-size: 14px;
-            font-weight: 500;
-            text-decoration: none;
             display: inline-flex;
             align-items: center;
-            transition: all 0.2s ease;
+            padding: 8px 16px;
+            background-color: var(--primary-blue);
+            color: white;
+            font-size: 14px;
+            font-weight: 500;
+            border-radius: 8px;
+            border: none;
+            text-decoration: none;
             cursor: pointer;
+            transition: all 0.2s ease;
         }
 
         .discord-btn:hover {
-            background-color: var(--discord-primary-hover);
+            background-color: var(--primary-blue-hover);
             color: white;
             text-decoration: none;
         }
 
+        .discord-btn:focus {
+            outline: none;
+            box-shadow: 0 0 0 2px var(--primary-blue-light);
+        }
+
         .discord-btn-secondary {
-            background-color: var(--discord-light);
-            color: white;
+            background-color: var(--gray-300);
+            color: var(--gray-700);
+            border: 1px solid var(--gray-300);
         }
 
         .discord-btn-secondary:hover {
-            background-color: var(--discord-lighter);
-            color: white;
+            background-color: var(--gray-100);
+            color: var(--gray-700);
         }
 
-        /* Discord-style tables */
+        /* Modern tables */
         .discord-table {
             width: 100%;
             border-collapse: collapse;
-            background-color: var(--discord-darker);
+            background-color: white;
         }
 
         .discord-table th {
-            background-color: var(--discord-darkest);
-            color: var(--discord-lightest);
-            padding: 12px;
+            background-color: var(--gray-50);
+            color: var(--gray-500);
+            padding: 16px 24px;
             text-align: left;
-            font-weight: 600;
+            font-weight: 500;
             font-size: 12px;
             text-transform: uppercase;
-            border-bottom: 1px solid var(--discord-darkest);
+            letter-spacing: 0.05em;
+            border-bottom: 1px solid var(--gray-200);
         }
 
         .discord-table td {
-            padding: 12px;
-            border-bottom: 1px solid var(--discord-darkest);
-            color: var(--discord-lightest);
+            padding: 16px 24px;
+            border-bottom: 1px solid var(--gray-200);
+            color: var(--gray-900);
         }
 
         .discord-table tr:hover {
-            background-color: var(--discord-dark-hover);
+            background-color: var(--gray-50);
         }
 
         /* Stats cards */
@@ -298,105 +510,191 @@
         }
     </style>
 
+    <!-- Merchant Search CSS -->
+    <link rel="stylesheet" href="{{ asset('css/merchant-search.css') }}">
+    <!-- Enhanced Merchant Search CSS -->
+    <link rel="stylesheet" href="{{ asset('css/enhanced-merchant-search.css') }}">
+    <!-- Enhanced Filter Components CSS -->
+    <link rel="stylesheet" href="{{ asset('css/enhanced-filter-components.css') }}">
+    <!-- Enhanced Results Display CSS -->
+    <link rel="stylesheet" href="{{ asset('css/enhanced-results-display.css') }}">
+    <!-- Advanced Animations CSS -->
+    <link rel="stylesheet" href="{{ asset('css/advanced-animations.css') }}">
+    <!-- Interactive States CSS -->
+    <link rel="stylesheet" href="{{ asset('css/interactive-states.css') }}">
+    <!-- Mobile Responsive Enhancements CSS -->
+    <link rel="stylesheet" href="{{ asset('css/mobile-responsive-enhancements.css') }}">
+    <!-- Accessibility and Performance CSS -->
+    <link rel="stylesheet" href="{{ asset('css/accessibility-performance.css') }}">
+
+    <!-- Vite Tailwind CSS -->
+    @vite(['resources/css/app.css'])
+
+    <!-- Temporary CDN Tailwind CSS for testing -->
+    <script src="https://cdn.tailwindcss.com"></script>
+
     @yield('styles')
 </head>
 <body>
-    <div class="app-container">
-
-
-        <!-- Channel (left) sidebar -->
-        <div class="channel-sidebar">
-            <div class="server-header">
-                <h2>Merchant Dashboard</h2>
+    <div class="dashboard-layout">
+        <!-- Sidebar -->
+        <aside class="sidebar" id="sidebar">
+            <div class="sidebar-header">
+                <h1 class="sidebar-brand font-it text-[14px]">Merchant | <span class="text-blue-600">Dashboard</span></h1>
+                <button class="sidebar-close" id="sidebarClose">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" width="20" height="20">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+                    </svg>
+                </button>
             </div>
 
-            <div class="channel-list">
-                <!-- Main Navigation -->
-                <div class="channel-category">
-                    <div class="category-header">Main</div>
-                    <a href="{{ route('merchant.dashboard') }}" class="channel-item {{ request()->routeIs('merchant.dashboard') ? 'active' : '' }}">
-                        <i class="fas fa-tachometer-alt"></i>
-                        Dashboard
-                    </a>
-                    <a href="{{ route('merchant.products.index') }}" class="channel-item {{ request()->routeIs('merchant.products.*') ? 'active' : '' }}">
-                        <i class="fas fa-box"></i>
-                        Products
-                    </a>
-                    <a href="{{ route('merchant.services.index') }}" class="channel-item {{ request()->routeIs('merchant.services.*') ? 'active' : '' }}">
-                        <i class="fas fa-concierge-bell"></i>
-                        Services
-                    </a>
-                    <a href="{{ route('merchant.orders.index') }}" class="channel-item {{ request()->routeIs('merchant.orders.*') ? 'active' : '' }}">
-                        <i class="fas fa-shopping-cart"></i>
-                        Orders
-                    </a>
-                    <a href="{{ route('merchant.customers.index') }}" class="channel-item {{ request()->routeIs('merchant.customers.*') ? 'active' : '' }}">
-                        <i class="fas fa-users"></i>
-                        Customers
-                    </a>
-                    <a href="{{ route('merchant.reports.index') }}" class="channel-item {{ request()->routeIs('merchant.reports.*') ? 'active' : '' }}">
-                        <i class="fas fa-chart-bar"></i>
-                        Reports
-                    </a>
+            <nav class="sidebar-nav">
+                <div class="nav-section">
+                    <h3 class="nav-section-title">Main</h3>
+                    <ul class="nav-items">
+                        <li class="nav-item">
+                            <a href="{{ route('merchant.dashboard') }}" class="nav-link {{ request()->routeIs('merchant.dashboard') ? 'active' : '' }}">
+                                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" width="20" height="20">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 7v10a2 2 0 002 2h14a2 2 0 002-2V9a2 2 0 00-2-2H5a2 2 0 00-2-2z"></path>
+                                </svg>
+                                Dashboard
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="{{ route('merchant.products.index') }}" class="nav-link {{ request()->routeIs('merchant.products.*') ? 'active' : '' }}">
+                                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" width="20" height="20">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10"></path>
+                                </svg>
+                                Products
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="{{ route('merchant.services.index') }}" class="nav-link {{ request()->routeIs('merchant.services.*') ? 'active' : '' }}">
+                                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" width="20" height="20">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"></path>
+                                </svg>
+                                Services
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="{{ route('merchant.orders.index') }}" class="nav-link {{ request()->routeIs('merchant.orders.*') ? 'active' : '' }}">
+                                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" width="20" height="20">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z"></path>
+                                </svg>
+                                Orders
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="{{ route('merchant.customers.index') }}" class="nav-link {{ request()->routeIs('merchant.customers.*') ? 'active' : '' }}">
+                                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" width="20" height="20">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197m13.5-9a2.5 2.5 0 11-5 0 2.5 2.5 0 015 0z"></path>
+                                </svg>
+                                Customers
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="{{ route('merchant.reports.index') }}" class="nav-link {{ request()->routeIs('merchant.reports.*') ? 'active' : '' }}">
+                                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" width="20" height="20">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"></path>
+                                </svg>
+                                Reports
+                            </a>
+                        </li>
+                    </ul>
                 </div>
 
-                <!-- Settings -->
-                <div class="channel-category">
-                    <div class="category-header">Settings</div>
-                    <a href="{{ route('merchant.settings.personal') }}" class="channel-item {{ request()->routeIs('merchant.settings.personal') ? 'active' : '' }}">
-                        <i class="fas fa-user-cog"></i>
-                        Personal Settings
-                    </a>
-                    <a href="{{ route('merchant.settings.global') }}" class="channel-item {{ request()->routeIs('merchant.settings.global') ? 'active' : '' }}">
-                        <i class="fas fa-cogs"></i>
-                        Global Settings
-                    </a>
-                    <a href="{{ route('merchant.mini-store') }}" class="channel-item {{ request()->routeIs('merchant.mini-store') ? 'active' : '' }}">
-                        <i class="fas fa-store-alt"></i>
-                        Mini Store
-                    </a>
+                <div class="nav-section">
+                    <h3 class="nav-section-title">Settings</h3>
+                    <ul class="nav-items">
+                        <li class="nav-item">
+                            <a href="{{ route('merchant.settings.personal') }}" class="nav-link {{ request()->routeIs('merchant.settings.personal') ? 'active' : '' }}">
+                                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" width="20" height="20">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"></path>
+                                </svg>
+                                Personal Settings
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="{{ route('merchant.settings.global') }}" class="nav-link {{ request()->routeIs('merchant.settings.global') ? 'active' : '' }}">
+                                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" width="20" height="20">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"></path>
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path>
+                                </svg>
+                                Global Settings
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="{{ route('merchant.mini-store') }}" class="nav-link {{ request()->routeIs('merchant.mini-store') ? 'active' : '' }}">
+                                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" width="20" height="20">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z"></path>
+                                </svg>
+                                Mini Store
+                            </a>
+                        </li>
+                    </ul>
                 </div>
 
-                <!-- Account -->
-                <div class="channel-category">
-                    <div class="category-header">Account</div>
-                    <a href="{{ route('logout') }}" class="channel-item" onclick="event.preventDefault(); document.getElementById('logout-form').submit();">
-                        <i class="fas fa-sign-out-alt"></i>
-                        Logout
-                    </a>
+                <div class="sidebar-footer">
+                    <ul class="nav-items">
+                        <li class="nav-item">
+                            <a href="{{ route('logout') }}" class="nav-link" onclick="event.preventDefault(); document.getElementById('logout-form').submit();">
+                                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" width="20" height="20">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"></path>
+                                </svg>
+                                Logout
+                            </a>
+                        </li>
+                    </ul>
                 </div>
-            </div>
-        </div>
+            </nav>
+        </aside>
 
-        <!-- Main content area -->
-        <div class="content-area">
-            <div class="content-header">
-                <h1 class="content-header-title">@yield('header', 'Dashboard')</h1>
-            </div>
+        <!-- Main Content -->
+        <div class="main-content">
+            <!-- Top Header -->
+            <header class="top-header">
+                <div class="header-content">
+                    <div class="header-left">
+                        <button class="mobile-menu-toggle" id="mobileMenuToggle">
+                            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" width="24" height="24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path>
+                            </svg>
+                        </button>
+                        <h1 class="page-title">@yield('header', 'Dashboard')</h1>
+                    </div>
+                    <div class="header-right">
+                        <button class="header-action-btn">
+                            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" width="24" height="24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 17h5l-5 5v-5zM9 7H4l5-5v5z"></path>
+                            </svg>
+                        </button>
+                        <div class="user-avatar">
+                            {{ strtoupper(substr(auth()->user()->name, 0, 2)) }}
+                        </div>
+                    </div>
+                </div>
+            </header>
 
-            <div class="content-body">
+            <!-- Page Content -->
+            <main class="page-content">
                 @if(session('success'))
-                    <div class="alert alert-success" role="alert" style="background-color: var(--discord-green); color: white; border: none;">
+                    <div class="alert alert-success" role="alert" style="background-color: var(--green-100); color: var(--green-800); border: 1px solid var(--green-600); border-radius: 8px; padding: 12px 16px; margin-bottom: 24px;">
                         {{ session('success') }}
                     </div>
                 @endif
 
                 @if(session('error'))
-                    <div class="alert alert-danger" role="alert" style="background-color: var(--discord-red); color: white; border: none;">
+                    <div class="alert alert-danger" role="alert" style="background-color: var(--red-100); color: var(--red-800); border: 1px solid var(--red-600); border-radius: 8px; padding: 12px 16px; margin-bottom: 24px;">
                         {{ session('error') }}
                     </div>
                 @endif
 
                 @yield('content')
-            </div>
+            </main>
         </div>
 
-        <!-- Optional right sidebar for store stats -->
-        @hasSection('right_sidebar')
-            <div class="active-users">
-                @yield('right_sidebar')
-            </div>
-        @endif
+        <!-- Mobile sidebar overlay -->
+        <div class="sidebar-overlay" id="sidebarOverlay" style="display: none;"></div>
     </div>
 
     <!-- Logout form -->
@@ -410,37 +708,59 @@
 
     <!-- Custom JavaScript -->
     <script>
-        $(document).ready(function() {
-            // Add mobile menu toggle button
-            if ($(window).width() <= 768) {
-                $('.content-header').prepend('<button class="mobile-menu-toggle" style="background: none; border: none; color: var(--discord-lightest); font-size: 18px; margin-right: 12px;"><i class="fas fa-bars"></i></button>');
-            }
+        document.addEventListener('DOMContentLoaded', function() {
+            const sidebar = document.getElementById('sidebar');
+            const sidebarOverlay = document.getElementById('sidebarOverlay');
+            const mobileMenuToggle = document.getElementById('mobileMenuToggle');
+            const sidebarClose = document.getElementById('sidebarClose');
 
             // Mobile menu toggle
-            $(document).on('click', '.mobile-menu-toggle', function() {
-                $('.channel-sidebar').toggleClass('show');
-            });
+            if (mobileMenuToggle) {
+                mobileMenuToggle.addEventListener('click', function() {
+                    sidebar.classList.add('open');
+                    sidebarOverlay.style.display = 'block';
+                    document.body.style.overflow = 'hidden';
+                });
+            }
 
-            // Close mobile menu when clicking outside
-            $(document).click(function(event) {
-                if ($(window).width() <= 768) {
-                    if (!$(event.target).closest('.channel-sidebar, .mobile-menu-toggle').length) {
-                        $('.channel-sidebar').removeClass('show');
-                    }
-                }
-            });
+            // Close sidebar
+            function closeSidebar() {
+                sidebar.classList.remove('open');
+                sidebarOverlay.style.display = 'none';
+                document.body.style.overflow = '';
+            }
+
+            if (sidebarClose) {
+                sidebarClose.addEventListener('click', closeSidebar);
+            }
+
+            if (sidebarOverlay) {
+                sidebarOverlay.addEventListener('click', closeSidebar);
+            }
 
             // Handle window resize
-            $(window).resize(function() {
-                if ($(window).width() > 768) {
-                    $('.mobile-menu-toggle').remove();
-                    $('.channel-sidebar').removeClass('show');
-                } else if ($('.mobile-menu-toggle').length === 0) {
-                    $('.content-header').prepend('<button class="mobile-menu-toggle" style="background: none; border: none; color: var(--discord-lightest); font-size: 18px; margin-right: 12px;"><i class="fas fa-bars"></i></button>');
+            window.addEventListener('resize', function() {
+                if (window.innerWidth >= 1024) {
+                    closeSidebar();
                 }
             });
         });
     </script>
+
+    <!-- Merchant Search JavaScript -->
+    <script src="{{ asset('js/merchant-search.js') }}"></script>
+    <!-- Enhanced Merchant Search JavaScript -->
+    <script src="{{ asset('js/enhanced-merchant-search.js') }}"></script>
+    <!-- Enhanced Filter Components JavaScript -->
+    <script src="{{ asset('js/enhanced-filter-components.js') }}"></script>
+    <!-- Enhanced Results Display JavaScript -->
+    <script src="{{ asset('js/enhanced-results-display.js') }}"></script>
+    <!-- Advanced Animations JavaScript -->
+    <script src="{{ asset('js/advanced-animations.js') }}"></script>
+    <!-- Interactive States JavaScript -->
+    <script src="{{ asset('js/interactive-states.js') }}"></script>
+    <!-- Accessibility and Performance JavaScript -->
+    <script src="{{ asset('js/accessibility-performance.js') }}"></script>
 
     @yield('scripts')
     @stack('scripts')

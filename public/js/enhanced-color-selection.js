@@ -162,10 +162,11 @@ class EnhancedColorSelection {
                     border: 1px solid #d1d5db;
                     border-radius: 6px;
                     box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
-                    z-index: 1000;
+                    z-index: 9999;
                     max-height: 450px;
                     display: none;
                     overflow: hidden;
+                    margin-top: 4px;
                 }
 
                 .color-search-container {
@@ -517,37 +518,55 @@ class EnhancedColorSelection {
 
     initializeCustomDropdown(dropdownElement) {
         const trigger = dropdownElement.querySelector('.custom-color-dropdown-trigger');
+        const menu = dropdownElement.querySelector('.custom-color-dropdown-menu');
         const hiddenSelect = dropdownElement.querySelector('.hidden-color-select');
         const searchInput = dropdownElement.querySelector('.color-search-input');
         const noResultsMessage = dropdownElement.querySelector('.no-results-message');
         let allOptions = dropdownElement.querySelectorAll('.custom-color-dropdown-option');
 
-        // Toggle dropdown
-        trigger.addEventListener('click', (e) => {
+        // Debug logging
+        console.log('Initializing dropdown:', dropdownElement);
+        console.log('Trigger found:', !!trigger);
+        console.log('Menu found:', !!menu);
+        console.log('Search input found:', !!searchInput);
+
+        // Toggle dropdown with improved positioning logic
+        const toggleDropdown = (e) => {
             e.preventDefault();
             e.stopPropagation();
+
+            console.log('Toggle dropdown called');
             this.closeAllDropdowns();
+
+            const wasOpen = dropdownElement.classList.contains('open');
             dropdownElement.classList.toggle('open');
 
-            // Focus search input when dropdown opens
+            console.log('Dropdown toggled, now open:', dropdownElement.classList.contains('open'));
+
+            // Focus search input when dropdown opens and handle positioning
             if (dropdownElement.classList.contains('open')) {
-                setTimeout(() => searchInput.focus(), 100);
+                this.adjustDropdownPosition(dropdownElement, menu);
+                setTimeout(() => {
+                    if (searchInput) {
+                        searchInput.focus();
+                    }
+                }, 100);
             }
-        });
+        };
+
+        // Add click event listener
+        trigger.addEventListener('click', toggleDropdown);
 
         // Handle keyboard navigation
         trigger.addEventListener('keydown', (e) => {
             if (e.key === 'Enter' || e.key === ' ') {
                 e.preventDefault();
-                this.closeAllDropdowns();
-                dropdownElement.classList.toggle('open');
-
-                // Focus search input when dropdown opens
-                if (dropdownElement.classList.contains('open')) {
-                    setTimeout(() => searchInput.focus(), 100);
-                }
+                toggleDropdown(e);
             }
         });
+
+        // Mark as initialized
+        trigger.setAttribute('data-initialized', 'true');
 
         // Search functionality
         searchInput.addEventListener('input', (e) => {
@@ -664,6 +683,70 @@ class EnhancedColorSelection {
         });
     }
 
+    adjustDropdownPosition(dropdownElement, menu) {
+        // Get viewport dimensions
+        const viewportHeight = window.innerHeight;
+        const viewportWidth = window.innerWidth;
+
+        // Get dropdown trigger position
+        const trigger = dropdownElement.querySelector('.custom-color-dropdown-trigger');
+        const triggerRect = trigger.getBoundingClientRect();
+
+        // Reset any previous positioning adjustments
+        menu.style.top = '';
+        menu.style.bottom = '';
+        menu.style.left = '';
+        menu.style.right = '';
+        menu.style.transform = '';
+
+        // Calculate available space
+        const spaceBelow = viewportHeight - triggerRect.bottom;
+        const spaceAbove = triggerRect.top;
+        const spaceRight = viewportWidth - triggerRect.left;
+
+        // Determine if dropdown should open upward
+        const menuHeight = 450; // max-height from CSS
+        const shouldOpenUpward = spaceBelow < menuHeight && spaceAbove > spaceBelow;
+
+        if (shouldOpenUpward) {
+            menu.style.top = 'auto';
+            menu.style.bottom = '100%';
+            menu.style.marginBottom = '4px';
+        } else {
+            menu.style.top = '100%';
+            menu.style.bottom = 'auto';
+            menu.style.marginTop = '4px';
+        }
+
+        // Handle horizontal positioning for narrow screens
+        const menuMinWidth = 420; // min-width from CSS
+        if (spaceRight < menuMinWidth) {
+            // Position dropdown to the left if not enough space on the right
+            menu.style.left = 'auto';
+            menu.style.right = '0';
+        } else {
+            menu.style.left = '0';
+            menu.style.right = 'auto';
+        }
+
+        // For very narrow screens, adjust the width
+        if (viewportWidth < menuMinWidth + 40) {
+            menu.style.minWidth = `${viewportWidth - 40}px`;
+            menu.style.left = '50%';
+            menu.style.right = 'auto';
+            menu.style.transform = 'translateX(-50%)';
+        }
+
+        console.log('Dropdown positioned:', {
+            shouldOpenUpward,
+            spaceBelow,
+            spaceAbove,
+            spaceRight,
+            viewportWidth,
+            viewportHeight
+        });
+    }
+
     // Method to enhance existing dropdowns with custom styling
     enhanceExistingDropdowns() {
         document.querySelectorAll('.color-name-select').forEach(select => {
@@ -675,7 +758,16 @@ class EnhancedColorSelection {
 
     replaceWithCustomDropdown(selectElement) {
         const name = selectElement.name;
-        const selectedValue = selectElement.value;
+
+        // Get selected value more reliably by checking both value and selected attribute
+        let selectedValue = selectElement.value;
+        if (!selectedValue) {
+            const selectedOption = selectElement.querySelector('option[selected]');
+            if (selectedOption) {
+                selectedValue = selectedOption.value;
+            }
+        }
+
         const isRequired = selectElement.hasAttribute('required');
 
         // Create custom dropdown HTML
@@ -697,10 +789,42 @@ class EnhancedColorSelection {
 
     // Method to handle dynamically added color items
     handleDynamicColorItem(colorItem) {
-        const select = colorItem.querySelector('.color-name-select');
-        if (select && !select.classList.contains('enhanced') && !select.classList.contains('hidden-color-select')) {
-            this.replaceWithCustomDropdown(select);
+        console.log('=== HANDLE DYNAMIC COLOR ITEM START ===');
+        console.log('Handling dynamic color item:', colorItem);
+
+        // Check if there's already a custom dropdown that needs initialization
+        const existingDropdown = colorItem.querySelector('.custom-color-dropdown');
+        if (existingDropdown) {
+            const trigger = existingDropdown.querySelector('.custom-color-dropdown-trigger');
+            console.log('Found existing dropdown, trigger initialized:', trigger?.hasAttribute('data-initialized'));
+
+            // If the trigger is not initialized, initialize it
+            if (trigger && !trigger.hasAttribute('data-initialized')) {
+                console.log('Initializing existing dropdown...');
+                this.initializeCustomDropdown(existingDropdown);
+                return;
+            } else {
+                console.log('Dropdown already initialized, skipping...');
+                return;
+            }
         }
+
+        // If no custom dropdown exists, look for a regular select to enhance
+        const select = colorItem.querySelector('.color-name-select:not(.hidden-color-select)');
+        console.log('Regular select element found:', !!select);
+
+        if (select && !select.classList.contains('enhanced')) {
+            console.log('Replacing with custom dropdown...');
+            this.replaceWithCustomDropdown(select);
+
+            // Verify the replacement worked
+            const customDropdown = colorItem.querySelector('.custom-color-dropdown');
+            console.log('Custom dropdown created:', !!customDropdown);
+        } else {
+            console.log('No eligible select element found for enhancement');
+        }
+
+        console.log('=== HANDLE DYNAMIC COLOR ITEM END ===');
     }
 }
 
@@ -708,10 +832,10 @@ class EnhancedColorSelection {
 document.addEventListener('DOMContentLoaded', function() {
     const colorSelection = new EnhancedColorSelection();
 
-    // Enhance existing dropdowns after a short delay to ensure DOM is fully loaded
+    // Enhance existing dropdowns after a delay to ensure DOM is fully loaded and values are set
     setTimeout(() => {
         colorSelection.enhanceExistingDropdowns();
-    }, 100);
+    }, 500);
 
     // Make the color selection instance globally available for dynamic content
     window.enhancedColorSelection = colorSelection;

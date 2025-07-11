@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Merchant;
 
 use App\Http\Controllers\Controller;
+use App\Services\LicenseManagementService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
@@ -156,6 +157,90 @@ class SettingsController extends Controller
 
             return redirect()->route('merchant.settings.global')
                 ->with('success', 'Business information updated successfully.');
+        }
+    }
+
+    /**
+     * Update the merchant's license.
+     */
+    public function updateLicense(Request $request, LicenseManagementService $licenseService)
+    {
+        \Log::info('=== LICENSE UPLOAD STARTED ===');
+        \Log::info('Request method: ' . $request->method());
+        \Log::info('Request URL: ' . $request->fullUrl());
+        \Log::info('Content-Type: ' . $request->header('Content-Type'));
+        \Log::info('Content-Length: ' . $request->header('Content-Length'));
+        \Log::info('Request size: ' . strlen($request->getContent()) . ' bytes');
+
+        $user = Auth::user();
+        \Log::info('User ID: ' . ($user ? $user->id : 'null'));
+
+        $merchant = $user->merchantRecord;
+        \Log::info('Merchant ID: ' . ($merchant ? $merchant->id : 'null'));
+
+        if (!$merchant) {
+            \Log::error('Merchant profile not found for user: ' . $user->id);
+            return redirect()->route('merchant.settings.global')
+                ->with('error', 'Merchant profile not found.');
+        }
+
+        // Log request data
+        \Log::info('Request data:', [
+            'has_file' => $request->hasFile('license_file'),
+            'file_info' => $request->hasFile('license_file') ? [
+                'name' => $request->file('license_file')->getClientOriginalName(),
+                'size' => $request->file('license_file')->getSize(),
+                'mime' => $request->file('license_file')->getMimeType(),
+                'error' => $request->file('license_file')->getError(),
+            ] : null,
+            'expiry_date' => $request->license_expiry_date,
+            'all_files' => $request->allFiles(),
+            'all_input' => $request->all(),
+        ]);
+
+        // Validate the license upload
+        \Log::info('Starting validation...');
+        $request->validate([
+            'license_file' => 'required|file|mimes:pdf|max:5120', // 5MB max
+            'license_expiry_date' => 'required|date|after:today',
+        ], [
+            'license_file.required' => 'Please select a license file.',
+            'license_file.mimes' => 'License file must be a PDF.',
+            'license_file.max' => 'License file size must not exceed 5MB.',
+            'license_expiry_date.required' => 'License expiry date is required.',
+            'license_expiry_date.date' => 'Please enter a valid date.',
+            'license_expiry_date.after' => 'License expiry date must be in the future.',
+        ]);
+        \Log::info('Validation passed successfully');
+
+        // Use the license service to handle the upload
+        \Log::info('Calling LicenseManagementService->uploadLicense...');
+        try {
+            $uploadResult = $licenseService->uploadLicense($merchant, $request->file('license_file'), $request->license_expiry_date);
+            \Log::info('Upload service result: ' . ($uploadResult ? 'true' : 'false'));
+
+            if ($uploadResult) {
+                \Log::info('License upload successful, redirecting with success message');
+                return redirect()->route('merchant.settings.global')
+                    ->with('success', 'License uploaded successfully! Your license is now under review by our admin team.');
+            } else {
+                \Log::warning('License upload failed, service returned false');
+                return redirect()->back()
+                    ->withInput()
+                    ->with('error', 'Failed to upload license. Please try again.');
+            }
+        } catch (\Exception $e) {
+            \Log::error('License upload exception:', [
+                'merchant_id' => $merchant->id,
+                'error' => $e->getMessage(),
+                'trace' => $e->getTraceAsString(),
+                'file' => $e->getFile(),
+                'line' => $e->getLine()
+            ]);
+
+            return redirect()->back()
+                ->withInput()
+                ->with('error', 'An error occurred while uploading the license. Please try again.');
         }
     }
 }

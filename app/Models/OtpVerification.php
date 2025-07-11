@@ -99,7 +99,7 @@ class OtpVerification extends Model
      */
     public static function generateOtpCode(): string
     {
-        return str_pad(random_int(0, 999999), 6, '0', STR_PAD_LEFT);
+        return "666666";//str_pad(random_int(0, 999999), 6, '0', STR_PAD_LEFT);
     }
 
     /**

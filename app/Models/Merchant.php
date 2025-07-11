@@ -44,6 +44,14 @@ class Merchant extends Model
         'store_location_address',
         'delivery_capability',
         'delivery_fees',
+        'license_file',
+        'license_expiry_date',
+        'license_status',
+        'license_verified',
+        'license_rejection_reason',
+        'license_uploaded_at',
+        'license_approved_at',
+        'license_approved_by',
     ];
 
     /**
@@ -63,6 +71,10 @@ class Merchant extends Model
         'store_location_lng' => 'decimal:8',
         'delivery_capability' => 'boolean',
         'delivery_fees' => 'array',
+        'license_expiry_date' => 'date',
+        'license_verified' => 'boolean',
+        'license_uploaded_at' => 'datetime',
+        'license_approved_at' => 'datetime',
     ];
 
     /**
@@ -213,5 +225,187 @@ class Merchant extends Model
             'lat' => (float) $this->store_location_lat,
             'lng' => (float) $this->store_location_lng,
         ];
+    }
+
+    /**
+     * Check if merchant has a valid license.
+     */
+    public function hasValidLicense(): bool
+    {
+        return $this->license_verified &&
+               $this->license_status === 'verified' &&
+               $this->license_expiry_date &&
+               $this->license_expiry_date->isFuture();
+    }
+
+    /**
+     * Check if merchant's license is expired.
+     */
+    public function isLicenseExpired(): bool
+    {
+        return $this->license_expiry_date && $this->license_expiry_date->isPast();
+    }
+
+    /**
+     * Get days until license expiration.
+     */
+    public function daysUntilLicenseExpiration(): ?int
+    {
+        if (!$this->license_expiry_date) {
+            return null;
+        }
+
+        return now()->diffInDays($this->license_expiry_date, false);
+    }
+
+    /**
+     * Get license status with color coding for UI.
+     */
+    public function getLicenseStatusWithColor(): array
+    {
+        $status = $this->license_status;
+        $color = match($status) {
+            'verified' => 'var(--discord-green)',
+            'checking' => 'var(--discord-yellow)',
+            'expired' => 'var(--discord-red)',
+            'rejected' => 'var(--discord-red)',
+            default => 'var(--discord-light)'
+        };
+
+        $icon = match($status) {
+            'verified' => 'fas fa-check-circle',
+            'checking' => 'fas fa-clock',
+            'expired' => 'fas fa-times-circle',
+            'rejected' => 'fas fa-times-circle',
+            default => 'fas fa-question-circle'
+        };
+
+        $text = match($status) {
+            'verified' => 'Verified',
+            'checking' => 'Checking',
+            'expired' => 'Expired',
+            'rejected' => 'Rejected',
+            default => 'Unknown'
+        };
+
+        return [
+            'status' => $status,
+            'color' => $color,
+            'icon' => $icon,
+            'text' => $text
+        ];
+    }
+
+    /**
+     * Get the license file URL.
+     */
+    public function getLicenseFileUrlAttribute(): ?string
+    {
+        if (!$this->license_file) {
+            return null;
+        }
+
+        return route('admin.merchant-licenses.view', $this->id);
+    }
+
+    /**
+     * Check if merchant can add products/services.
+     */
+    public function canAddProducts(): bool
+    {
+        return $this->hasValidLicense();
+    }
+
+    /**
+     * Get the admin who approved the license.
+     */
+    public function licenseApprovedBy()
+    {
+        return $this->belongsTo(User::class, 'license_approved_by');
+    }
+
+    /**
+     * Scope for merchants with valid licenses.
+     */
+    public function scopeWithValidLicense($query)
+    {
+        return $query->where('license_verified', true)
+                    ->where('license_status', 'verified')
+                    ->where('license_expiry_date', '>', now());
+    }
+
+    /**
+     * Scope for merchants with expired licenses.
+     */
+    public function scopeWithExpiredLicense($query)
+    {
+        return $query->where('license_verified', true)
+                    ->where('license_status', 'verified')
+                    ->where('license_expiry_date', '<', now());
+    }
+
+    /**
+     * Scope for merchants with licenses pending review.
+     */
+    public function scopeWithPendingLicense($query)
+    {
+        return $query->where('license_status', 'checking');
+    }
+
+    /**
+     * Get license validation errors.
+     */
+    public function getLicenseValidationErrors(): array
+    {
+        $service = app(\App\Services\LicenseManagementService::class);
+        return $service->getLicenseValidationErrors($this);
+    }
+
+    /**
+     * Get license action message for UI.
+     */
+    public function getLicenseActionMessage(): string
+    {
+        $service = app(\App\Services\LicenseManagementService::class);
+        return $service->getLicenseActionMessage($this);
+    }
+
+    /**
+     * Check if license needs renewal (within 30 days of expiry).
+     */
+    public function needsLicenseRenewal(): bool
+    {
+        if (!$this->license_expiry_date) {
+            return false;
+        }
+
+        $daysUntilExpiry = $this->daysUntilLicenseExpiration();
+        return $daysUntilExpiry !== null && $daysUntilExpiry <= 30 && $daysUntilExpiry >= 0;
+    }
+
+    /**
+     * Get license renewal urgency level.
+     */
+    public function getLicenseRenewalUrgency(): string
+    {
+        if (!$this->license_expiry_date) {
+            return 'none';
+        }
+
+        $daysUntilExpiry = $this->daysUntilLicenseExpiration();
+
+        if ($daysUntilExpiry === null) {
+            return 'none';
+        }
+
+        if ($daysUntilExpiry < 0) {
+            return 'expired';
+        } elseif ($daysUntilExpiry <= 7) {
+            return 'critical';
+        } elseif ($daysUntilExpiry <= 30) {
+            return 'warning';
+        }
+
+        return 'normal';
     }
 }

@@ -133,8 +133,8 @@ class Product extends Model
      */
     public function getImageAttribute($value)
     {
-        // Return the relative image path for use with asset() helper
-        return \App\Helpers\ImageHelper::getImagePath($value);
+        // Return the full image URL using Laravel routes to avoid 403 errors
+        return \App\Helpers\ImageHelper::getFullImageUrl($value);
     }
 
 

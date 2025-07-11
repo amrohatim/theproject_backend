@@ -108,4 +108,163 @@ class DashboardController extends Controller
 
         return response()->json($stats);
     }
+
+    /**
+     * Global search across products and services.
+     */
+    public function globalSearch(Request $request)
+    {
+        $user = Auth::user();
+        $query = $request->get('q', '');
+
+        if (strlen($query) < 2) {
+            return response()->json([
+                'success' => true,
+                'results' => []
+            ]);
+        }
+
+        // Search products
+        $products = Product::where('user_id', $user->id)
+            ->where(function ($q) use ($query) {
+                $q->where('name', 'like', "%{$query}%")
+                  ->orWhere('description', 'like', "%{$query}%")
+                  ->orWhere('sku', 'like', "%{$query}%");
+            })
+            ->with('category')
+            ->select('id', 'name', 'sku', 'image', 'price', 'category_id', 'is_available')
+            ->limit(10)
+            ->get();
+
+        // Search services
+        $userBranches = \App\Models\Branch::where('user_id', $user->id)->pluck('id');
+        $services = Service::whereIn('branch_id', $userBranches)
+            ->where(function ($q) use ($query) {
+                $q->where('name', 'like', "%{$query}%")
+                  ->orWhere('description', 'like', "%{$query}%");
+            })
+            ->with('category')
+            ->select('id', 'name', 'image', 'price', 'duration', 'category_id', 'is_available')
+            ->limit(10)
+            ->get();
+
+        return response()->json([
+            'success' => true,
+            'results' => [
+                'products' => $products->map(function ($product) {
+                    return [
+                        'id' => $product->id,
+                        'name' => $product->name,
+                        'sku' => $product->sku,
+                        'price' => $product->price,
+                        'image' => $product->image,
+                        'category' => $product->category->name ?? 'Uncategorized',
+                        'status' => $product->is_available ? 'Active' : 'Inactive',
+                        'type' => 'product',
+                        'url' => route('merchant.products.show', $product->id)
+                    ];
+                }),
+                'services' => $services->map(function ($service) {
+                    return [
+                        'id' => $service->id,
+                        'name' => $service->name,
+                        'price' => $service->price,
+                        'duration' => $service->duration,
+                        'image' => $service->image,
+                        'category' => $service->category->name ?? 'Uncategorized',
+                        'status' => $service->is_available ? 'Active' : 'Inactive',
+                        'type' => 'service',
+                        'url' => route('merchant.services.show', $service->id)
+                    ];
+                })
+            ]
+        ]);
+    }
+
+    /**
+     * Get search suggestions for global search.
+     */
+    public function searchSuggestions(Request $request)
+    {
+        $user = Auth::user();
+        $query = $request->get('q', '');
+
+        if (strlen($query) < 2) {
+            return response()->json([
+                'success' => true,
+                'suggestions' => []
+            ]);
+        }
+
+        // Get recent searches from session
+        $recentSearches = session('recent_searches', []);
+        $matchingRecent = array_filter($recentSearches, function($search) use ($query) {
+            return stripos($search, $query) !== false;
+        });
+
+        // Get product suggestions
+        $products = Product::where('user_id', $user->id)
+            ->where('name', 'like', "%{$query}%")
+            ->select('name')
+            ->distinct()
+            ->limit(5)
+            ->pluck('name');
+
+        // Get service suggestions
+        $userBranches = \App\Models\Branch::where('user_id', $user->id)->pluck('id');
+        $services = Service::whereIn('branch_id', $userBranches)
+            ->where('name', 'like', "%{$query}%")
+            ->select('name')
+            ->distinct()
+            ->limit(5)
+            ->pluck('name');
+
+        // Get category suggestions
+        $categories = \App\Models\Category::where('name', 'like', "%{$query}%")
+            ->where('is_active', true)
+            ->select('name')
+            ->distinct()
+            ->limit(3)
+            ->pluck('name');
+
+        $suggestions = collect($matchingRecent)
+            ->merge($products)
+            ->merge($services)
+            ->merge($categories)
+            ->unique()
+            ->take(10)
+            ->values();
+
+        return response()->json([
+            'success' => true,
+            'suggestions' => $suggestions
+        ]);
+    }
+
+    /**
+     * Save search query to recent searches.
+     */
+    public function saveSearch(Request $request)
+    {
+        $query = $request->get('q', '');
+
+        if (strlen($query) >= 2) {
+            $recentSearches = session('recent_searches', []);
+
+            // Remove if already exists
+            $recentSearches = array_filter($recentSearches, function($search) use ($query) {
+                return $search !== $query;
+            });
+
+            // Add to beginning
+            array_unshift($recentSearches, $query);
+
+            // Keep only last 10 searches
+            $recentSearches = array_slice($recentSearches, 0, 10);
+
+            session(['recent_searches' => $recentSearches]);
+        }
+
+        return response()->json(['success' => true]);
+    }
 }
