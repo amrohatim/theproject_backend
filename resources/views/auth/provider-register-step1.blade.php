@@ -187,6 +187,18 @@
             box-shadow: 0 0 0 3px rgba(124, 58, 237, 0.1);
         }
 
+        .form-help {
+            font-size: 12px;
+            color: #6b7280;
+            margin-top: 5px;
+            line-height: 1.4;
+        }
+
+        textarea.form-input {
+            resize: vertical;
+            min-height: 100px;
+        }
+
         .password-container {
             position: relative;
         }
@@ -417,10 +429,14 @@
             </div>
             <div class="progress-step">
                 <div class="step-circle">2</div>
-                <div class="step-label">Verification</div>
+                <div class="step-label">Email Verification</div>
             </div>
             <div class="progress-step">
                 <div class="step-circle">3</div>
+                <div class="step-label">Phone Verification</div>
+            </div>
+            <div class="progress-step">
+                <div class="step-circle">4</div>
                 <div class="step-label">License</div>
             </div>
         </div>
@@ -511,6 +527,56 @@
                             <div class="error-message">{{ $message }}</div>
                         @enderror
                     </div>
+                </div>
+            </div>
+
+            <!-- Business Information Section -->
+            <div class="form-section">
+                <h3 class="section-title">
+                    <i class="fas fa-building"></i>
+                    Business Information
+                </h3>
+
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="business_name" class="form-label">Business Name *</label>
+                        <input type="text" id="business_name" name="business_name" class="form-input" required
+                               value="{{ old('business_name') }}" placeholder="Enter your business name">
+                        @error('business_name')
+                            <div class="error-message">{{ $message }}</div>
+                        @enderror
+                    </div>
+
+                    <div class="form-group">
+                        <label for="business_type" class="form-label">Business Type *</label>
+                        <select id="business_type" name="business_type" class="form-input" required>
+                            <option value="">Select business type</option>
+                            <option value="Food & Beverages" {{ old('business_type') == 'Food & Beverages' ? 'selected' : '' }}>Food & Beverages</option>
+                            <option value="Electronics" {{ old('business_type') == 'Electronics' ? 'selected' : '' }}>Electronics</option>
+                            <option value="Fashion & Clothing" {{ old('business_type') == 'Fashion & Clothing' ? 'selected' : '' }}>Fashion & Clothing</option>
+                            <option value="Health & Beauty" {{ old('business_type') == 'Health & Beauty' ? 'selected' : '' }}>Health & Beauty</option>
+                            <option value="Home & Garden" {{ old('business_type') == 'Home & Garden' ? 'selected' : '' }}>Home & Garden</option>
+                            <option value="Sports & Recreation" {{ old('business_type') == 'Sports & Recreation' ? 'selected' : '' }}>Sports & Recreation</option>
+                            <option value="Automotive" {{ old('business_type') == 'Automotive' ? 'selected' : '' }}>Automotive</option>
+                            <option value="Books & Media" {{ old('business_type') == 'Books & Media' ? 'selected' : '' }}>Books & Media</option>
+                            <option value="Toys & Games" {{ old('business_type') == 'Toys & Games' ? 'selected' : '' }}>Toys & Games</option>
+                            <option value="Services" {{ old('business_type') == 'Services' ? 'selected' : '' }}>Services</option>
+                            <option value="Other" {{ old('business_type') == 'Other' ? 'selected' : '' }}>Other</option>
+                        </select>
+                        @error('business_type')
+                            <div class="error-message">{{ $message }}</div>
+                        @enderror
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label for="description" class="form-label">Business Description</label>
+                    <textarea id="description" name="description" class="form-input" rows="4"
+                              placeholder="Describe your business, products, and services...">{{ old('description') }}</textarea>
+                    <div class="form-help">Tell customers about your business and what makes you unique.</div>
+                    @error('description')
+                        <div class="error-message">{{ $message }}</div>
+                    @enderror
                 </div>
             </div>
 
@@ -690,6 +756,10 @@
             .then(response => response.json())
             .then(data => {
                 if (data.success) {
+                    // Store registration token for step 2
+                    if (data.registration_token) {
+                        localStorage.setItem('provider_registration_token', data.registration_token);
+                    }
                     window.location.href = '/register/provider/step2';
                 } else {
                     alert(data.message || 'An error occurred. Please try again.');

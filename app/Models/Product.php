@@ -125,7 +125,7 @@ class Product extends Model
     }
 
     /**
-     * Get the image attribute with full URL.
+     * Get the image attribute with relative path for use with asset() helper.
      * No longer falls back to default color image if main image is missing.
      *
      * @param  string|null  $value
@@ -133,7 +133,7 @@ class Product extends Model
      */
     public function getImageAttribute($value)
     {
-        // Simply return the main image with full URL, without any fallback to default color image
+        // Return the full image URL using Laravel routes to avoid 403 errors
         return \App\Helpers\ImageHelper::getFullImageUrl($value);
     }
 

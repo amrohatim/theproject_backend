@@ -300,13 +300,13 @@ class VendorRegistrationController extends Controller
     }
 
     /**
-     * Resend email verification.
+     * Send phone verification OTP for registration.
      */
-    public function resendEmailVerification(Request $request)
+    public function sendPhoneVerificationOTP(Request $request)
     {
         try {
             $validator = Validator::make($request->all(), [
-                'user_id' => 'required|exists:users,id',
+                'registration_token' => 'required|string',
             ]);
 
             if ($validator->fails()) {
@@ -317,21 +317,144 @@ class VendorRegistrationController extends Controller
                 ], 422);
             }
 
-            $user = User::findOrFail($request->user_id);
+            $result = $this->registrationService->sendPhoneVerificationOTP($request->registration_token);
 
-            if ($user->hasVerifiedEmail()) {
+            return response()->json($result);
+        } catch (Exception $e) {
+            Log::error('API phone verification OTP send error: ' . $e->getMessage());
+            return response()->json([
+                'success' => false,
+                'message' => 'Failed to send phone verification OTP',
+            ], 500);
+        }
+    }
+
+    /**
+     * Verify phone OTP and create user.
+     */
+    public function verifyPhoneOTPAndCreateUser(Request $request)
+    {
+        try {
+            $validator = Validator::make($request->all(), [
+                'registration_token' => 'required|string',
+                'otp_code' => 'required|string|size:6',
+            ]);
+
+            if ($validator->fails()) {
                 return response()->json([
                     'success' => false,
-                    'message' => 'Email is already verified',
-                ], 400);
+                    'message' => 'Validation error',
+                    'errors' => $validator->errors(),
+                ], 422);
             }
 
-            $user->sendEmailVerificationNotification();
+            $result = $this->registrationService->verifyPhoneOTPAndCreateUser(
+                $request->registration_token,
+                $request->otp_code
+            );
 
+            return response()->json($result);
+        } catch (Exception $e) {
+            Log::error('API phone verification error: ' . $e->getMessage());
             return response()->json([
-                'success' => true,
-                'message' => 'Email verification sent successfully',
+                'success' => false,
+                'message' => 'Failed to verify phone OTP',
+            ], 500);
+        }
+    }
+
+    /**
+     * Resend phone verification OTP.
+     */
+    public function resendPhoneVerificationOTP(Request $request)
+    {
+        try {
+            $validator = Validator::make($request->all(), [
+                'registration_token' => 'required|string',
             ]);
+
+            if ($validator->fails()) {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'Validation error',
+                    'errors' => $validator->errors(),
+                ], 422);
+            }
+
+            $result = $this->registrationService->resendPhoneVerificationOTP($request->registration_token);
+
+            return response()->json($result);
+        } catch (Exception $e) {
+            Log::error('API phone verification OTP resend error: ' . $e->getMessage());
+            return response()->json([
+                'success' => false,
+                'message' => 'Failed to resend phone verification OTP',
+            ], 500);
+        }
+    }
+
+    /**
+     * Resend email verification for temporary registration.
+     */
+    public function resendEmailVerification(Request $request)
+    {
+        try {
+            // Check if this is a temporary registration (has registration_token) or existing user (has user_id)
+            if ($request->has('registration_token')) {
+                // Handle temporary registration resend
+                $validator = Validator::make($request->all(), [
+                    'registration_token' => 'required|string',
+                ]);
+
+                if ($validator->fails()) {
+                    return response()->json([
+                        'success' => false,
+                        'message' => 'Validation error',
+                        'errors' => $validator->errors(),
+                    ], 422);
+                }
+
+                $result = $this->registrationService->resendEmailVerification($request->registration_token);
+
+                if ($result['success']) {
+                    return response()->json([
+                        'success' => true,
+                        'message' => $result['message'],
+                        'registration_token' => $request->registration_token,
+                    ]);
+                } else {
+                    return response()->json($result, 400);
+                }
+            } else {
+                // Handle existing user resend (legacy support)
+                $validator = Validator::make($request->all(), [
+                    'user_id' => 'required|exists:users,id',
+                ]);
+
+                if ($validator->fails()) {
+                    return response()->json([
+                        'success' => false,
+                        'message' => 'Validation error',
+                        'errors' => $validator->errors(),
+                    ], 422);
+                }
+
+                $user = User::findOrFail($request->user_id);
+
+                if ($user->hasVerifiedEmail()) {
+                    return response()->json([
+                        'success' => false,
+                        'message' => 'Email is already verified',
+                    ], 400);
+                }
+
+                $user->sendEmailVerificationNotification();
+
+                return response()->json([
+                    'success' => true,
+                    'message' => 'Email verification sent successfully',
+                ]);
+            }
         } catch (Exception $e) {
             Log::error('Resend email verification error: ' . $e->getMessage());
             return response()->json([

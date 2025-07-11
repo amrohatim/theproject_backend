@@ -74,8 +74,19 @@ class TemporaryRegistrationService
     public function storeEmailVerificationCode(string $registrationToken, string $verificationCode): void
     {
         $cacheKey = "temp_email_verification_{$registrationToken}";
+
+        // Check if there's already a code stored
+        $existingCode = Cache::get($cacheKey);
+        if ($existingCode) {
+            Log::info("Overwriting existing email verification code", [
+                'token' => $registrationToken,
+                'old_code' => $existingCode,
+                'new_code' => $verificationCode,
+            ]);
+        }
+
         Cache::put($cacheKey, $verificationCode, Carbon::now()->addHours(24));
-        
+
         Log::info("Email verification code stored for temporary registration", [
             'token' => $registrationToken,
             'code' => $verificationCode,
@@ -83,22 +94,39 @@ class TemporaryRegistrationService
     }
     
     /**
+     * Get email verification code for temporary registration.
+     */
+    public function getEmailVerificationCode(string $registrationToken): ?string
+    {
+        $cacheKey = "temp_email_verification_{$registrationToken}";
+        return Cache::get($cacheKey);
+    }
+
+    /**
      * Verify email verification code for temporary registration.
      */
     public function verifyEmailCode(string $registrationToken, string $code): bool
     {
         $cacheKey = "temp_email_verification_{$registrationToken}";
         $storedCode = Cache::get($cacheKey);
-        
+
+        Log::info("Email verification code check", [
+            'token' => $registrationToken,
+            'provided_code' => $code,
+            'stored_code' => $storedCode,
+            'cache_key' => $cacheKey,
+        ]);
+
         if (!$storedCode) {
             Log::warning("Email verification code not found or expired", [
                 'token' => $registrationToken,
+                'cache_key' => $cacheKey,
             ]);
             return false;
         }
-        
+
         $isValid = $code === $storedCode;
-        
+
         if ($isValid) {
             // Remove verification code after successful verification
             Cache::forget($cacheKey);
@@ -109,12 +137,112 @@ class TemporaryRegistrationService
             Log::warning("Invalid email verification code", [
                 'token' => $registrationToken,
                 'provided_code' => $code,
+                'stored_code' => $storedCode,
+                'code_match' => $isValid,
             ]);
         }
-        
+
         return $isValid;
     }
-    
+
+    /**
+     * Verify email verification code for temporary registration.
+     */
+    public function verifyEmailVerificationCode(string $registrationToken, string $verificationCode): bool
+    {
+        $cacheKey = "temp_email_verification_{$registrationToken}";
+        $storedCode = Cache::get($cacheKey);
+
+        Log::info("Email verification code check", [
+            'token' => $registrationToken,
+            'provided_code' => $verificationCode,
+            'stored_code' => $storedCode,
+            'cache_key' => $cacheKey,
+        ]);
+
+        if (!$storedCode) {
+            Log::warning("No email verification code found", [
+                'token' => $registrationToken,
+            ]);
+            return false;
+        }
+
+        $codeMatch = $storedCode === $verificationCode;
+
+        if (!$codeMatch) {
+            Log::warning("Invalid email verification code", [
+                'token' => $registrationToken,
+                'provided_code' => $verificationCode,
+                'stored_code' => $storedCode,
+                'code_match' => $codeMatch,
+            ]);
+        }
+
+        return $codeMatch;
+    }
+
+    /**
+     * Remove email verification code after successful verification.
+     */
+    public function removeEmailVerificationCode(string $registrationToken): void
+    {
+        $cacheKey = "temp_email_verification_{$registrationToken}";
+        Cache::forget($cacheKey);
+
+        Log::info("Email verification code removed for temporary registration", [
+            'token' => $registrationToken,
+        ]);
+    }
+
+    /**
+     * Check if email is verified for temporary registration.
+     */
+    public function isEmailVerified(string $registrationToken): bool
+    {
+        // Check if email verification code still exists (if it exists, email is not verified)
+        $cacheKey = "temp_email_verification_{$registrationToken}";
+        $storedCode = Cache::get($cacheKey);
+
+        // If no code exists, it means email was verified and code was removed
+        return $storedCode === null;
+    }
+
+    /**
+     * Store phone verification request ID for temporary registration.
+     */
+    public function storePhoneVerificationRequestId(string $registrationToken, string $requestId): void
+    {
+        $cacheKey = "temp_phone_verification_{$registrationToken}";
+        Cache::put($cacheKey, $requestId, Carbon::now()->addHours(24));
+
+        Log::info("Phone verification request ID stored for temporary registration", [
+            'token' => $registrationToken,
+            'request_id' => $requestId,
+        ]);
+    }
+
+    /**
+     * Get phone verification request ID for temporary registration.
+     */
+    public function getPhoneVerificationRequestId(string $registrationToken): ?string
+    {
+        $cacheKey = "temp_phone_verification_{$registrationToken}";
+        return Cache::get($cacheKey);
+    }
+
+    /**
+     * Remove phone verification request ID after successful verification.
+     */
+    public function removePhoneVerificationRequestId(string $registrationToken): void
+    {
+        $cacheKey = "temp_phone_verification_{$registrationToken}";
+        Cache::forget($cacheKey);
+
+        Log::info("Phone verification request ID removed", [
+            'token' => $registrationToken,
+        ]);
+    }
+
     /**
      * Generate a unique registration token.
      */

@@ -1,0 +1,52 @@
+{
+  "server": {
+    "host": "localhost",
+    "port": 3001,
+    "browser": "chrome",
+    "headless": true,
+    "isolated": true,
+    "viewport": {
+      "width": 1280,
+      "height": 720
+    }
+  },
+  "capabilities": [
+    "tabs",
+    "pdf",
+    "history",
+    "wait",
+    "files",
+    "install"
+  ],
+  "security": {
+    "allowedOrigins": [
+      "https://dala3chic.com",
+      "http://localhost:*",
+      "http://127.0.0.1:*"
+    ],
+    "blockedOrigins": [],
+    "blockServiceWorkers": false,
+    "ignoreHttpsErrors": true
+  },
+  "testing": {
+    "outputDir": "./playwright-test-results",
+    "saveTrace": true,
+    "imageResponses": "auto"
+  },
+  "devices": {
+    "desktop": {
+      "viewport": {
+        "width": 1280,
+        "height": 720
+      },
+      "userAgent": "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36"
+    },
+    "mobile": {
+      "device": "iPhone 15",
+      "viewport": {
+        "width": 393,
+        "height": 852
+      }
+    }
+  }
+}

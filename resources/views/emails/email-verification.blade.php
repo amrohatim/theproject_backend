@@ -121,6 +121,8 @@
                     Welcome to Dala3Chic Vendor Platform
                 @elseif($userType === 'provider')
                     Welcome to Dala3Chic Provider Platform
+                @elseif($userType === 'merchant')
+                    Welcome to Dala3Chic Merchant Platform
                 @else
                     Welcome to Dala3Chic
                 @endif
@@ -135,6 +137,8 @@
                 as a vendor
             @elseif($userType === 'provider')
                 as a service provider
+            @elseif($userType === 'merchant')
+                as a merchant
             @endif
             with Dala3Chic! To complete your registration, please verify your email address.
         </p>
@@ -156,13 +160,24 @@
         </div>
 
         <!-- Alternative Button -->
+        @if($user->id > 0)
         <div style="text-align: center;">
             <p>Or click the button below to verify automatically:</p>
-            <a href="{{ route($userType === 'vendor' ? 'vendor.email.verify' : 'provider.email.verify', ['user_id' => $user->id, 'code' => $verificationCode]) }}"
+            <a href="{{ route(match($userType) {
+                'vendor' => 'vendor.email.verify',
+                'provider' => 'provider.email.verify',
+                'merchant' => 'merchant.email.verify',
+                default => 'vendor.email.verify'
+            }, ['user_id' => $user->id, 'code' => $verificationCode]) }}"
                class="button {{ $userType === 'provider' ? 'provider-button' : '' }}">
                 Verify Email Address
             </a>
         </div>
+        @else
+        <div style="text-align: center;">
+            <p>Please return to the registration page and enter the verification code above to continue.</p>
+        </div>
+        @endif
 
         <!-- Security Warning -->
         <div class="warning">
@@ -175,6 +190,8 @@
                 Once verified, you'll be able to set up your store, add products, and start selling on our marketplace.
             @elseif($userType === 'provider')
                 Once verified, you'll be able to offer your services and connect with customers looking for your expertise.
+            @elseif($userType === 'merchant')
+                Once verified, you'll be able to set up your merchant account, manage your business profile, and start accepting orders.
             @else
                 Once verified, you'll have full access to your account.
             @endif

@@ -48,6 +48,16 @@ return new class extends Migration
             $table->boolean('delivery_capability')->default(false);
             $table->json('delivery_fees')->nullable()->comment('Delivery fees by emirate');
 
+            // License management fields
+            $table->string('license_file')->nullable()->comment('Path to current license PDF file');
+            $table->date('license_expiry_date')->nullable()->comment('License expiration date');
+            $table->enum('license_status', ['verified', 'checking', 'expired', 'rejected'])->default('checking')->comment('License verification status');
+            $table->boolean('license_verified')->default(false)->comment('Whether license is currently valid and verified');
+            $table->text('license_rejection_reason')->nullable()->comment('Reason for license rejection');
+            $table->timestamp('license_uploaded_at')->nullable()->comment('When license was last uploaded');
+            $table->timestamp('license_approved_at')->nullable()->comment('When license was approved by admin');
+            $table->foreignId('license_approved_by')->nullable()->constrained('users')->comment('Admin who approved the license');
+
             $table->timestamps();
 
             // Add indexes for performance
@@ -55,6 +65,8 @@ return new class extends Migration
             $table->index(['average_rating']);
             $table->index(['emirate', 'city']);
             $table->index(['delivery_capability']);
+            $table->index(['license_status', 'license_verified']);
+            $table->index(['license_expiry_date']);
         });
     }
 

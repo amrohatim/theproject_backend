@@ -159,9 +159,9 @@
             </div>
             <div class="discord-card-body text-center">
                 @if($service->image)
-                    <img src="{{ asset('storage/' . $service->image) }}" 
-                         alt="{{ $service->name }}" 
-                         class="img-fluid" 
+                    <img src="{{ $service->image }}"
+                         alt="{{ $service->name }}"
+                         class="img-fluid"
                          style="max-width: 100%; border-radius: 8px; box-shadow: 0 4px 8px rgba(0,0,0,0.3);">
                 @else
                     <div style="background-color: var(--discord-darkest); border-radius: 8px; padding: 40px; color: var(--discord-light);">

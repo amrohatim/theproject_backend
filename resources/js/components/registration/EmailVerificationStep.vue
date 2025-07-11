@@ -157,7 +157,7 @@ export default {
   methods: {
     handleDigitInput(index, event) {
       const value = event.target.value;
-      
+
       // Only allow numbers
       if (!/^\d*$/.test(value)) {
         this.verificationCode[index] = '';
@@ -174,8 +174,8 @@ export default {
         }
       }
 
-      // Auto-submit when all digits are filled
-      if (this.isCodeComplete) {
+      // Auto-submit when all digits are filled (with debounce to prevent duplicates)
+      if (this.isCodeComplete && !this.loading) {
         this.$nextTick(() => {
           this.handleSubmit();
         });
@@ -211,9 +211,12 @@ export default {
     },
 
     handleSubmit() {
-      if (this.isCodeComplete) {
+      if (this.isCodeComplete && !this.loading) {
         this.errors = {};
-        this.$emit('submit', this.codeString);
+        this.$emit('submit', {
+          registration_token: this.registrationToken,
+          verification_code: this.codeString
+        });
       }
     },
 

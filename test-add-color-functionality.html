@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Test Add Color Functionality</title>
+    <style>
+        body { font-family: Arial, sans-serif; margin: 20px; }
+        .color-item { border: 1px solid #ccc; padding: 20px; margin: 10px 0; background: #f9f9f9; }
+        .vue-btn { padding: 10px 20px; background: #007bff; color: white; border: none; cursor: pointer; }
+        .vue-btn:hover { background: #0056b3; }
+        #colors-container { border: 2px dashed #ddd; padding: 20px; min-height: 100px; }
+        .test-results { margin-top: 20px; padding: 15px; background: #e9ecef; border-radius: 5px; }
+        .success { color: green; }
+        .error { color: red; }
+    </style>
+</head>
+<body>
+    <h1>Add Color Functionality Test</h1>
+    
+    <div>
+        <button type="button" id="add-color" class="vue-btn">
+            <i class="fas fa-plus"></i>
+            Add Color
+        </button>
+    </div>
+
+    <div id="colors-container">
+        <div class="color-item">
+            <h4>Color Variant 1</h4>
+            <select name="colors[0][name]" class="color-name-select">
+                <option value="">Select color</option>
+                <option value="Red">Red</option>
+                <option value="Blue">Blue</option>
+                <option value="Green">Green</option>
+            </select>
+            <input type="text" name="colors[0][color_code]" placeholder="#000000">
+            <input type="number" name="colors[0][stock]" value="0" class="color-stock-input">
+            <input type="hidden" name="colors[0][display_order]" value="0">
+        </div>
+    </div>
+
+    <div class="test-results">
+        <h3>Test Results:</h3>
+        <div id="test-output"></div>
+    </div>
+
+    <script>
+        // Test the Add Color functionality
+        document.addEventListener('DOMContentLoaded', function() {
+            console.log('Test page loaded');
+            
+            // Calculate next display order
+            function calculateNextDisplayOrder() {
+                const displayOrderInputs = document.querySelectorAll('input[name*="[display_order]"]');
+                let maxOrder = 0;
+                
+                displayOrderInputs.forEach(input => {
+                    const order = parseInt(input.value) || 0;
+                    if (order > maxOrder) {
+                        maxOrder = order;
+                    }
+                });
+                
+                return maxOrder + 1;
+            }
+
+            // Add Color functionality
+            function initializeAddColorFunctionality() {
+                const addColorButton = document.getElementById('add-color');
+                
+                if (addColorButton && !addColorButton.hasAttribute('data-listener-attached')) {
+                    addColorButton.setAttribute('data-listener-attached', 'true');
+                    addColorButton.addEventListener('click', handleAddColor);
+                    logTest('✅ Add Color button listener attached successfully');
+                }
+            }
+
+            function handleAddColor(e) {
+                e.preventDefault();
+                e.stopPropagation();
+                
+                logTest('🖱️ Add Color button clicked');
+                
+                const container = document.getElementById('colors-container');
+                if (!container) {
+                    logTest('❌ Colors container not found', 'error');
+                    return;
+                }
+                
+                const colorItems = Array.from(container.children).filter(child =>
+                    child.classList.contains('color-item')
+                );
+                
+                if (colorItems.length === 0) {
+                    logTest('❌ No color items found to clone', 'error');
+                    return;
+                }
+                
+                const sourceColorItem = colorItems[0];
+                const newIndex = colorItems.length;
+                const nextDisplayOrder = calculateNextDisplayOrder();
+                
+                // Clone the color item
+                const newColorItem = sourceColorItem.cloneNode(true);
+                
+                // Update all name attributes
+                newColorItem.querySelectorAll('[name]').forEach(function(input) {
+                    const name = input.getAttribute('name');
+                    const newName = name.replace(/\[\d+\]/, `[${newIndex}]`);
+                    input.setAttribute('name', newName);
+                    input.value = input.type === 'checkbox' ? false : '';
+                    if (input.type === 'checkbox') {
+                        input.checked = false;
+                    }
+                    
+                    if (name.includes('[display_order]')) {
+                        input.value = nextDisplayOrder;
+                    }
+                });
+                
+                // Update the header
+                const header = newColorItem.querySelector('h4');
+                if (header) {
+                    header.textContent = `Color Variant ${newIndex + 1}`;
+                }
+                
+                // Append to container
+                container.appendChild(newColorItem);
+                
+                logTest(`✅ Successfully added new color item. Total items: ${container.children.length}`, 'success');
+            }
+
+            function logTest(message, type = 'info') {
+                const output = document.getElementById('test-output');
+                const div = document.createElement('div');
+                div.className = type;
+                div.textContent = `${new Date().toLocaleTimeString()}: ${message}`;
+                output.appendChild(div);
+                console.log(message);
+            }
+
+            // Initialize the functionality
+            initializeAddColorFunctionality();
+            
+            // Test button click programmatically
+            setTimeout(() => {
+                logTest('🧪 Running automated test...');
+                const button = document.getElementById('add-color');
+                if (button) {
+                    button.click();
+                }
+            }, 1000);
+        });
+    </script>
+</body>
+</html>

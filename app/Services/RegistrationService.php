@@ -10,6 +10,7 @@ use App\Models\License;
 use App\Models\VendorLocation;
 use App\Services\TemporaryRegistrationService;
 use App\Services\EmailVerificationService;
+use App\Services\SMSalaService;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Log;
@@ -23,13 +24,16 @@ class RegistrationService
 {
     protected $tempRegistrationService;
     protected $emailVerificationService;
+    protected $smsalaService;
 
     public function __construct(
         TemporaryRegistrationService $tempRegistrationService = null,
-        EmailVerificationService $emailVerificationService = null
+        EmailVerificationService $emailVerificationService = null,
+        SMSalaService $smsalaService = null
     ) {
         $this->tempRegistrationService = $tempRegistrationService ?? new TemporaryRegistrationService();
         $this->emailVerificationService = $emailVerificationService ?? new EmailVerificationService();
+        $this->smsalaService = $smsalaService ?? new SMSalaService();
     }
 
     /**
@@ -68,6 +72,68 @@ class RegistrationService
             ];
         } catch (Exception $e) {
             throw $e;
+        }
+    }
+
+    /**
+     * Verify email only without creating user (for phone verification flow).
+     */
+    public function verifyEmailOnly(string $registrationToken, string $verificationCode): array
+    {
+        try {
+            Log::info('Starting email verification process', [
+                'registration_token' => $registrationToken,
+                'verification_code' => $verificationCode,
+            ]);
+
+            // Get temporary registration data
+            $tempData = $this->tempRegistrationService->getTemporaryRegistration($registrationToken);
+
+            if (!$tempData) {
+                Log::warning('Temporary registration not found or expired', [
+                    'token' => $registrationToken,
+                ]);
+                return [
+                    'success' => false,
+                    'message' => 'Registration session expired. Please start again.',
+                ];
+            }
+
+            // Verify the email verification code
+            if (!$this->tempRegistrationService->verifyEmailCode($registrationToken, $verificationCode)) {
+                Log::warning('Invalid email verification code provided', [
+                    'token' => $registrationToken,
+                    'provided_code' => $verificationCode,
+                ]);
+                return [
+                    'success' => false,
+                    'message' => 'Invalid verification code. Please try again.',
+                ];
+            }
+
+            // Mark email as verified by removing the verification code
+            $this->tempRegistrationService->removeEmailVerificationCode($registrationToken);
+
+            Log::info('Email verified successfully for temporary registration', [
+                'registration_token' => $registrationToken,
+                'email' => $tempData['user_data']['email'],
+            ]);
+
+            return [
+                'success' => true,
+                'message' => 'Email verified successfully. You can now proceed to phone verification.',
+                'next_step' => 'phone_verification',
+            ];
+        } catch (Exception $e) {
+            Log::error('Email verification error: ' . $e->getMessage(), [
+                'registration_token' => $registrationToken,
+                'verification_code' => $verificationCode,
+                'exception' => $e->getTraceAsString(),
+            ]);
+            return [
+                'success' => false,
+                'message' => 'Email verification failed. Please try again.',
+            ];
         }
     }
 
@@ -111,20 +177,22 @@ class RegistrationService
                 'email_verified_at' => now(),
             ]);
 
-            // Create role-specific profile if merchant
+            // Create role-specific profile
             if ($userType === 'merchant') {
                 // Get temporary files
                 $tempFiles = $this->getTemporaryFiles($registrationToken);
                 $this->createMerchantProfile($user, $userData, $tempFiles);
+            } elseif ($userType === 'provider') {
+                // Get temporary files
+                $tempFiles = $this->getTemporaryFiles($registrationToken);
+                $this->createProviderProfile($user, $userData, $tempFiles);
             }
 
             // Clean up temporary data
             $this->tempRegistrationService->removeTemporaryRegistration($registrationToken);
 
             // Clean up temporary files
-            if ($userType === 'merchant') {
-                $this->cleanupTemporaryFiles($registrationToken);
-            }
+            $this->cleanupTemporaryFiles($registrationToken);
 
             DB::commit();
 
@@ -369,8 +437,25 @@ class RegistrationService
             // Validate unique fields before storing temporarily
             $this->validateUniqueFields($userData);
 
-            // Store registration data temporarily
-            $registrationToken = $this->tempRegistrationService->storeTemporaryRegistration($userData, 'provider');
+            // Separate file uploads from serializable data
+            $fileUploads = [];
+            $serializableData = [];
+
+            foreach ($userData as $key => $value) {
+                if ($value instanceof \Illuminate\Http\UploadedFile) {
+                    $fileUploads[$key] = $value;
+                } else {
+                    $serializableData[$key] = $value;
+                }
+            }
+
+            // Store registration data temporarily (without files)
+            $registrationToken = $this->tempRegistrationService->storeTemporaryRegistration($serializableData, 'provider');
+
+            // Store file uploads temporarily if any exist
+            if (!empty($fileUploads)) {
+                $this->storeTemporaryFiles($registrationToken, $fileUploads);
+            }
 
             // Generate and store email verification code
             $verificationCode = $this->generateVerificationCode();
@@ -378,8 +463,8 @@ class RegistrationService
 
             // Send email verification
             $emailResult = $this->emailVerificationService->sendVerificationEmailForTempRegistration(
-                $userData['email'],
-                $userData['name'],
+                $serializableData['email'],
+                $serializableData['name'],
                 $verificationCode,
                 'provider'
             );
@@ -756,6 +841,42 @@ class RegistrationService
     }
 
     /**
+     * Create provider profile.
+     */
+    private function createProviderProfile(User $user, array $userData, array $tempFiles = []): void
+    {
+        $providerData = [
+            'user_id' => $user->id,
+            'business_name' => $userData['business_name'],
+            'business_type' => $userData['business_type'],
+            'description' => $userData['description'] ?? null,
+            'delivery_capability' => $userData['delivery_capability'] ?? false,
+            'status' => 'pending',
+            'is_verified' => false,
+        ];
+
+        // Handle logo upload if provided
+        if (isset($userData['logo']) && $userData['logo'] instanceof \Illuminate\Http\UploadedFile) {
+            // Direct UploadedFile object (for backward compatibility)
+            $logoPath = $userData['logo']->store('logos', 'public');
+            $providerData['logo'] = $logoPath;
+        } elseif (isset($tempFiles['logo']) && file_exists($tempFiles['logo']['path'])) {
+            // Temporary file from registration process
+            $logoPath = $this->moveTemporaryFileToFinal($tempFiles['logo'], 'logos', 'provider_' . $user->id . '_logo');
+            $providerData['logo'] = $logoPath;
+        }
+
+        Provider::create($providerData);
+
+        Log::info("Provider profile created", [
+            'user_id' => $user->id,
+            'business_name' => $userData['business_name'],
+            'business_type' => $userData['business_type'],
+            'logo_uploaded' => isset($providerData['logo']),
+        ]);
+    }
+
+    /**
      * Move temporary file to final storage location.
      */
     private function moveTemporaryFileToFinal(array $fileInfo, string $directory, string $baseFilename): string
@@ -823,12 +944,249 @@ class RegistrationService
             return [
                 'success' => true,
                 'message' => 'Email verified successfully. Please verify your phone number.',
+                'next_step' => 'phone_verification',
             ];
         } catch (Exception $e) {
             Log::error('Temp email verification error: ' . $e->getMessage());
             return [
                 'success' => false,
                 'message' => 'Verification failed. Please try again.',
+            ];
+        }
+    }
+
+    /**
+     * Send phone verification OTP.
+     */
+    public function sendPhoneVerificationOTP(string $registrationToken): array
+    {
+        try {
+            // Get temporary registration data
+            $tempData = $this->tempRegistrationService->getTemporaryRegistration($registrationToken);
+
+            if (!$tempData) {
+                return [
+                    'success' => false,
+                    'message' => 'Registration session expired. Please start again.',
+                ];
+            }
+
+            // Check if email is verified first
+            if (!$this->tempRegistrationService->isEmailVerified($registrationToken)) {
+                return [
+                    'success' => false,
+                    'message' => 'Please verify your email first.',
+                ];
+            }
+
+            $phoneNumber = $tempData['user_data']['phone'];
+            $userType = $tempData['user_type'];
+
+            // Send OTP via SMSala
+            $result = $this->smsalaService->sendOTP($phoneNumber, 'registration');
+
+            if ($result['success']) {
+                // Store the request ID for this registration token
+                $this->tempRegistrationService->storePhoneVerificationRequestId(
+                    $registrationToken,
+                    $result['request_id']
+                );
+
+                Log::info('Phone verification OTP sent', [
+                    'registration_token' => $registrationToken,
+                    'phone' => $phoneNumber,
+                    'request_id' => $result['request_id'],
+                    'user_type' => $userType,
+                ]);
+
+                return [
+                    'success' => true,
+                    'message' => 'OTP sent to your phone number.',
+                    'request_id' => $result['request_id'],
+                    'expires_in' => $result['expires_in'],
+                ];
+            } else {
+                Log::error('Failed to send phone verification OTP', [
+                    'registration_token' => $registrationToken,
+                    'phone' => $phoneNumber,
+                    'error' => $result['message'],
+                ]);
+
+                return [
+                    'success' => false,
+                    'message' => $result['message'],
+                ];
+            }
+        } catch (Exception $e) {
+            Log::error('Phone verification OTP send error: ' . $e->getMessage());
+            return [
+                'success' => false,
+                'message' => 'Failed to send OTP. Please try again.',
+            ];
+        }
+    }
+
+    /**
+     * Verify phone OTP and create user.
+     */
+    public function verifyPhoneOTPAndCreateUser(string $registrationToken, string $otpCode): array
+    {
+        try {
+            // Get temporary registration data
+            $tempData = $this->tempRegistrationService->getTemporaryRegistration($registrationToken);
+
+            if (!$tempData) {
+                return [
+                    'success' => false,
+                    'message' => 'Registration session expired. Please start again.',
+                ];
+            }
+
+            // Check if email is verified first
+            if (!$this->tempRegistrationService->isEmailVerified($registrationToken)) {
+                return [
+                    'success' => false,
+                    'message' => 'Please verify your email first.',
+                ];
+            }
+
+            // Get the phone verification request ID
+            $requestId = $this->tempRegistrationService->getPhoneVerificationRequestId($registrationToken);
+            if (!$requestId) {
+                return [
+                    'success' => false,
+                    'message' => 'Phone verification not initiated. Please request OTP first.',
+                ];
+            }
+
+            // Verify OTP
+            $verificationResult = $this->smsalaService->verifyOTP($requestId, $otpCode);
+
+            if (!$verificationResult['success']) {
+                return [
+                    'success' => false,
+                    'message' => $verificationResult['message'],
+                ];
+            }
+
+            $userData = $tempData['user_data'];
+            $userType = $tempData['user_type'];
+
+            DB::beginTransaction();
+
+            // Create the user in database
+            $user = User::create([
+                'name' => $userData['name'],
+                'email' => $userData['email'],
+                'password' => Hash::make($userData['password']),
+                'phone' => $userData['phone'],
+                'role' => $userType,
+                'status' => 'inactive',
+                'registration_step' => 'phone_verified',
+                'email_verified_at' => now(),
+                'phone_verified' => true,
+                'phone_verified_at' => now(),
+            ]);
+
+            // Create role-specific profile
+            if ($userType === 'merchant') {
+                // Get temporary files
+                $tempFiles = $this->getTemporaryFiles($registrationToken);
+                $this->createMerchantProfile($user, $userData, $tempFiles);
+            } elseif ($userType === 'provider') {
+                // Get temporary files
+                $tempFiles = $this->getTemporaryFiles($registrationToken);
+                $this->createProviderProfile($user, $userData, $tempFiles);
+            }
+
+            // Clean up temporary data
+            $this->tempRegistrationService->removeTemporaryRegistration($registrationToken);
+
+            // Clean up temporary files
+            $this->cleanupTemporaryFiles($registrationToken);
+
+            DB::commit();
+
+            $nextStep = match($userType) {
+                'vendor' => 'company_information',
+                'provider' => 'license_upload',
+                'merchant' => 'license_upload',
+                default => 'license_upload'
+            };
+
+            Log::info('User created after phone verification', [
+                'user_id' => $user->id,
+                'phone' => $userData['phone'],
+                'user_type' => $userType,
+            ]);
+
+            return [
+                'success' => true,
+                'message' => 'Phone verified successfully. Registration completed!',
+                'user_id' => $user->id,
+                'next_step' => $nextStep,
+            ];
+        } catch (Exception $e) {
+            DB::rollBack();
+            Log::error('Phone verification error: ' . $e->getMessage());
+            return [
+                'success' => false,
+                'message' => 'Verification failed. Please try again.',
+            ];
+        }
+    }
+
+    /**
+     * Resend phone verification OTP.
+     */
+    public function resendPhoneVerificationOTP(string $registrationToken): array
+    {
+        try {
+            // Get temporary registration data
+            $tempData = $this->tempRegistrationService->getTemporaryRegistration($registrationToken);
+
+            if (!$tempData) {
+                return [
+                    'success' => false,
+                    'message' => 'Registration session expired. Please start again.',
+                ];
+            }
+
+            // Check if email is verified first
+            if (!$this->tempRegistrationService->isEmailVerified($registrationToken)) {
+                return [
+                    'success' => false,
+                    'message' => 'Please verify your email first.',
+                ];
+            }
+
+            // Get the current phone verification request ID
+            $currentRequestId = $this->tempRegistrationService->getPhoneVerificationRequestId($registrationToken);
+
+            if ($currentRequestId) {
+                // Try to resend using existing request ID
+                $result = $this->smsalaService->resendOTP($currentRequestId);
+
+                if ($result['success']) {
+                    // Update the request ID if a new one was generated
+                    if (isset($result['request_id']) && $result['request_id'] !== $currentRequestId) {
+                        $this->tempRegistrationService->storePhoneVerificationRequestId(
+                            $registrationToken,
+                            $result['request_id']
+                        );
+                    }
+
+                    return $result;
+                }
+            }
+
+            // If resend failed or no current request ID, send new OTP
+            return $this->sendPhoneVerificationOTP($registrationToken);
+        } catch (Exception $e) {
+            Log::error('Phone verification OTP resend error: ' . $e->getMessage());
+            return [
+                'success' => false,
+                'message' => 'Failed to resend OTP. Please try again.',
             ];
         }
     }

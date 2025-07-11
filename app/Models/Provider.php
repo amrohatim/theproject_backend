@@ -28,6 +28,7 @@ class Provider extends Model
         'country',
         'website',
         'logo',
+        'delivery_capability',
         'status',
         'is_verified',
         'average_rating',

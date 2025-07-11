@@ -1,0 +1,518 @@
+/* Accessibility and Performance Optimization - WCAG Compliant & Performance-First */
+
+/* CSS Custom Properties for Accessibility */
+:root {
+    /* WCAG AA Compliant Color Contrasts */
+    --a11y-text-primary: #1a1a1a;
+    --a11y-text-secondary: #4a4a4a;
+    --a11y-text-muted: #6a6a6a;
+    --a11y-bg-primary: #ffffff;
+    --a11y-bg-secondary: #f8f9fa;
+    --a11y-border: #d1d5db;
+    --a11y-focus: #2563eb;
+    --a11y-focus-ring: rgba(37, 99, 235, 0.3);
+    --a11y-error: #dc2626;
+    --a11y-success: #16a34a;
+    --a11y-warning: #d97706;
+    
+    /* High Contrast Mode Colors */
+    --hc-text: CanvasText;
+    --hc-bg: Canvas;
+    --hc-border: ButtonText;
+    --hc-focus: Highlight;
+    --hc-link: LinkText;
+    --hc-visited: VisitedText;
+}
+
+/* Performance Optimizations */
+.performance-optimized {
+    /* Use transform and opacity for animations (GPU accelerated) */
+    will-change: transform, opacity;
+    /* Enable hardware acceleration */
+    transform: translateZ(0);
+    backface-visibility: hidden;
+    perspective: 1000px;
+}
+
+.performance-optimized.animation-complete {
+    /* Remove will-change after animation completes */
+    will-change: auto;
+}
+
+/* Reduce animations for performance on low-end devices */
+@media (max-width: 768px) and (max-resolution: 150dpi) {
+    .enhanced-result-card,
+    .enhanced-suggestion-item,
+    .enhanced-filter-tag {
+        transition-duration: 0.1s !important;
+    }
+    
+    .skeleton-avatar,
+    .skeleton-line {
+        animation-duration: 2s !important;
+    }
+}
+
+/* Focus Management and Keyboard Navigation */
+.focus-visible {
+    outline: 2px solid var(--a11y-focus);
+    outline-offset: 2px;
+    border-radius: 4px;
+}
+
+.focus-visible:not(:focus-visible) {
+    outline: none;
+}
+
+/* Enhanced focus indicators for interactive elements */
+.enhanced-search-input:focus-visible,
+.enhanced-filter-toggle:focus-visible,
+.enhanced-filter-tag:focus-visible,
+.state-action-btn:focus-visible,
+.result-action-btn:focus-visible,
+.multiselect-trigger:focus-visible {
+    outline: 2px solid var(--a11y-focus);
+    outline-offset: 2px;
+    box-shadow: 0 0 0 4px var(--a11y-focus-ring);
+    position: relative;
+    z-index: 1;
+}
+
+/* Skip to content link for keyboard users */
+.skip-to-content {
+    position: absolute;
+    top: -40px;
+    left: 6px;
+    background: var(--a11y-focus);
+    color: white;
+    padding: 8px 16px;
+    text-decoration: none;
+    border-radius: 4px;
+    z-index: 10000;
+    font-weight: 600;
+    transition: top 0.2s ease;
+}
+
+.skip-to-content:focus {
+    top: 6px;
+}
+
+/* Screen Reader Optimizations */
+.sr-only {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    margin: -1px;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    white-space: nowrap;
+    border: 0;
+}
+
+.sr-only-focusable:focus {
+    position: static;
+    width: auto;
+    height: auto;
+    padding: inherit;
+    margin: inherit;
+    overflow: visible;
+    clip: auto;
+    white-space: normal;
+}
+
+/* ARIA Live Regions */
+.live-region {
+    position: absolute;
+    left: -10000px;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+}
+
+.live-region[aria-live="polite"] {
+    /* Announcements for search results */
+}
+
+.live-region[aria-live="assertive"] {
+    /* Announcements for errors and important updates */
+}
+
+/* Enhanced ARIA Labels and Descriptions */
+.enhanced-search-input[aria-describedby] + .search-description {
+    font-size: 14px;
+    color: var(--a11y-text-secondary);
+    margin-top: 4px;
+}
+
+.filter-section[aria-labelledby] .filter-section-title {
+    font-weight: 600;
+    color: var(--a11y-text-primary);
+}
+
+/* High Contrast Mode Support */
+@media (prefers-contrast: high) {
+    :root {
+        --discord-primary: var(--hc-link);
+        --discord-lightest: var(--hc-text);
+        --discord-light: var(--hc-text);
+        --discord-darker: var(--hc-bg);
+        --discord-darkest: var(--hc-border);
+    }
+    
+    .enhanced-search-input,
+    .enhanced-filter-toggle,
+    .enhanced-result-card,
+    .empty-state-container,
+    .interactive-loading-container {
+        border: 2px solid var(--hc-border);
+        background: var(--hc-bg);
+        color: var(--hc-text);
+    }
+    
+    .enhanced-search-input:focus,
+    .enhanced-filter-toggle:focus,
+    .state-action-btn:focus {
+        outline: 3px solid var(--hc-focus);
+        outline-offset: 2px;
+    }
+    
+    .enhanced-filter-tag.active,
+    .state-action-btn.primary {
+        background: var(--hc-focus);
+        color: var(--hc-bg);
+        border: 2px solid var(--hc-text);
+    }
+    
+    .skeleton-avatar,
+    .skeleton-line {
+        background: repeating-linear-gradient(
+            90deg,
+            var(--hc-border) 0px,
+            var(--hc-border) 10px,
+            transparent 10px,
+            transparent 20px
+        );
+    }
+}
+
+/* Reduced Motion Support */
+@media (prefers-reduced-motion: reduce) {
+    *,
+    *::before,
+    *::after {
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.01ms !important;
+        scroll-behavior: auto !important;
+    }
+    
+    .enhanced-search-suggestions,
+    .enhanced-filter-panel {
+        transition: none !important;
+        animation: none !important;
+    }
+    
+    .skeleton-avatar,
+    .skeleton-line,
+    .loading-dots .dot,
+    .advanced-spinner .spinner-ring {
+        animation: none !important;
+    }
+    
+    .empty-illustration,
+    .success-illustration {
+        animation: none !important;
+    }
+    
+    /* Provide alternative visual feedback without motion */
+    .enhanced-result-card:hover,
+    .enhanced-suggestion-item:hover {
+        border-color: var(--a11y-focus);
+        box-shadow: 0 0 0 2px var(--a11y-focus-ring);
+    }
+}
+
+/* Color Blind Accessibility */
+.color-blind-safe {
+    /* Use patterns and shapes in addition to color */
+}
+
+.status-indicator {
+    position: relative;
+}
+
+.status-indicator.active::before {
+    content: '✓';
+    position: absolute;
+    top: -2px;
+    right: -2px;
+    background: var(--a11y-success);
+    color: white;
+    border-radius: 50%;
+    width: 16px;
+    height: 16px;
+    font-size: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: bold;
+}
+
+.status-indicator.inactive::before {
+    content: '✕';
+    background: var(--a11y-error);
+}
+
+.status-indicator.featured::before {
+    content: '★';
+    background: var(--a11y-warning);
+}
+
+/* Performance: Optimize Critical Rendering Path */
+.above-fold {
+    /* Critical CSS for above-the-fold content */
+    contain: layout style paint;
+}
+
+.below-fold {
+    /* Non-critical content */
+    content-visibility: auto;
+    contain-intrinsic-size: 200px;
+}
+
+/* Performance: Optimize Images */
+.optimized-image {
+    /* Use modern image formats when supported */
+    image-rendering: -webkit-optimize-contrast;
+    image-rendering: crisp-edges;
+}
+
+.lazy-image {
+    /* Lazy loading optimization */
+    loading: lazy;
+    decoding: async;
+}
+
+/* Performance: Optimize Animations */
+@supports (animation-timeline: scroll()) {
+    .scroll-animation {
+        animation-timeline: scroll();
+        animation-range: entry 0% cover 50%;
+    }
+}
+
+/* Performance: Reduce Layout Thrashing */
+.layout-stable {
+    /* Prevent layout shifts */
+    aspect-ratio: 16 / 9;
+    width: 100%;
+    height: auto;
+}
+
+.text-stable {
+    /* Prevent text layout shifts */
+    font-feature-settings: 'tnum';
+    font-variant-numeric: tabular-nums;
+}
+
+/* Accessibility: Enhanced Error States */
+.error-message {
+    color: var(--a11y-error);
+    font-weight: 500;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-top: 4px;
+}
+
+.error-message::before {
+    content: '⚠';
+    font-size: 16px;
+    flex-shrink: 0;
+}
+
+.success-message {
+    color: var(--a11y-success);
+    font-weight: 500;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-top: 4px;
+}
+
+.success-message::before {
+    content: '✓';
+    font-size: 16px;
+    flex-shrink: 0;
+}
+
+/* Accessibility: Enhanced Form Labels */
+.form-group {
+    position: relative;
+    margin-bottom: 16px;
+}
+
+.form-label {
+    display: block;
+    font-weight: 600;
+    color: var(--a11y-text-primary);
+    margin-bottom: 4px;
+    font-size: 14px;
+}
+
+.form-label.required::after {
+    content: ' *';
+    color: var(--a11y-error);
+    font-weight: bold;
+}
+
+.form-help {
+    font-size: 12px;
+    color: var(--a11y-text-secondary);
+    margin-top: 4px;
+    line-height: 1.4;
+}
+
+/* Performance: Critical Resource Hints */
+.preload-hint {
+    /* For critical resources */
+    font-display: swap;
+}
+
+/* Accessibility: Keyboard Navigation Enhancements */
+.keyboard-navigation-active .enhanced-suggestion-item:focus,
+.keyboard-navigation-active .multiselect-option:focus,
+.keyboard-navigation-active .enhanced-filter-tag:focus {
+    background: var(--a11y-focus-ring);
+    outline: 2px solid var(--a11y-focus);
+    outline-offset: -2px;
+}
+
+/* Accessibility: Touch Target Sizes (WCAG 2.1 AA) */
+.touch-target-wcag {
+    min-width: 44px;
+    min-height: 44px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+}
+
+/* Performance: Contain Layout for Better Performance */
+.search-results-container {
+    contain: layout style paint;
+}
+
+.filter-panel-container {
+    contain: layout style;
+}
+
+/* Accessibility: Improved Loading States */
+.loading-accessible {
+    role: status;
+    aria-live: polite;
+    aria-label: "Loading content";
+}
+
+.loading-accessible .sr-only {
+    /* Screen reader text for loading state */
+}
+
+/* Performance: Optimize for Core Web Vitals */
+.optimize-cls {
+    /* Prevent Cumulative Layout Shift */
+    min-height: 200px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.optimize-fid {
+    /* Optimize First Input Delay */
+    pointer-events: auto;
+    touch-action: manipulation;
+}
+
+.optimize-lcp {
+    /* Optimize Largest Contentful Paint */
+    content-visibility: auto;
+    contain-intrinsic-size: 300px 200px;
+}
+
+/* Dark Mode Accessibility */
+@media (prefers-color-scheme: dark) {
+    :root {
+        --a11y-text-primary: #f9fafb;
+        --a11y-text-secondary: #d1d5db;
+        --a11y-text-muted: #9ca3af;
+        --a11y-bg-primary: #111827;
+        --a11y-bg-secondary: #1f2937;
+        --a11y-border: #374151;
+        --a11y-focus: #60a5fa;
+        --a11y-focus-ring: rgba(96, 165, 250, 0.3);
+    }
+    
+    .enhanced-search-input,
+    .enhanced-filter-toggle,
+    .enhanced-result-card {
+        background: var(--a11y-bg-primary);
+        color: var(--a11y-text-primary);
+        border-color: var(--a11y-border);
+    }
+}
+
+/* Print Accessibility */
+@media print {
+    .enhanced-search-suggestions,
+    .enhanced-filter-panel,
+    .loading-container {
+        display: none !important;
+    }
+    
+    .enhanced-result-card {
+        break-inside: avoid;
+        border: 1px solid #000 !important;
+        background: white !important;
+        color: black !important;
+    }
+    
+    .result-title {
+        color: black !important;
+        font-weight: bold !important;
+    }
+    
+    .result-description {
+        color: #333 !important;
+    }
+    
+    /* Ensure URLs are visible in print */
+    .result-action-btn[href]::after {
+        content: " (" attr(href) ")";
+        font-size: 10px;
+        color: #666;
+    }
+}
+
+/* Performance: Optimize for Slow Connections */
+@media (max-width: 768px) and (prefers-reduced-data: reduce) {
+    .skeleton-avatar,
+    .skeleton-line {
+        animation: none !important;
+        background: #e5e7eb !important;
+    }
+    
+    .advanced-spinner .spinner-ring {
+        animation-duration: 2s !important;
+    }
+    
+    .loading-dots .dot {
+        animation-duration: 2s !important;
+    }
+    
+    /* Reduce visual complexity */
+    .enhanced-result-card,
+    .enhanced-suggestion-item {
+        box-shadow: none !important;
+        border: 1px solid var(--a11y-border) !important;
+    }
+}

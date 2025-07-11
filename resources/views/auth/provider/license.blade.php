@@ -85,12 +85,12 @@
                     License Upload
                 </h1>
                 <p class="text-gray-600">
-                    Step 2 of 3: Upload your professional license or certification
+                    Step 4 of 4: Upload your professional license or certification
                 </p>
 
                 <!-- Progress Bar -->
                 <div class="w-full bg-gray-200 rounded-full h-2 mt-4">
-                    <div class="step-indicator h-2 rounded-full" style="width: 66%"></div>
+                    <div class="step-indicator h-2 rounded-full" style="width: 100%"></div>
                 </div>
             </div>
 

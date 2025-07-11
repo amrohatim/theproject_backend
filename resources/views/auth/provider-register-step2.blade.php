@@ -300,6 +300,44 @@
             line-height: 1.5;
         }
 
+        .resend-link {
+            background: none;
+            border: none;
+            color: #7c3aed;
+            text-decoration: underline;
+            cursor: pointer;
+            font-size: 13px;
+            padding: 0;
+            margin: 0;
+        }
+
+        .resend-link:hover {
+            color: #5b21b6;
+        }
+
+        .resend-link:disabled {
+            color: #9ca3af;
+            cursor: not-allowed;
+        }
+
+        .error-message {
+            color: #dc2626;
+            font-size: 12px;
+            margin-top: 5px;
+            display: none;
+        }
+
+        .success-message {
+            color: #059669;
+            font-size: 12px;
+            margin-top: 5px;
+            display: none;
+            background: #d1fae5;
+            padding: 8px 12px;
+            border-radius: 6px;
+            border: 1px solid #a7f3d0;
+        }
+
         @media (max-width: 640px) {
             .registration-container {
                 margin: 10px;
@@ -341,17 +379,21 @@
             </div>
             <div class="progress-step active">
                 <div class="step-circle">2</div>
-                <div class="step-label">Verification</div>
+                <div class="step-label">Email Verification</div>
             </div>
             <div class="progress-step">
                 <div class="step-circle">3</div>
+                <div class="step-label">Phone Verification</div>
+            </div>
+            <div class="progress-step">
+                <div class="step-circle">4</div>
                 <div class="step-label">License</div>
             </div>
         </div>
 
         <div class="form-header">
             <h2 class="form-title">Verify Your Email</h2>
-            <p class="form-subtitle">Step 2: Verify your email address using Firebase Authentication</p>
+            <p class="form-subtitle">Step 2: Enter the verification code sent to your email</p>
         </div>
 
         <!-- Email Verification Section -->
@@ -365,107 +407,229 @@
             </div>
 
             <div class="info-text">
-                We'll send a verification email to your registered email address. Please check your inbox and click the verification link.
+                We've sent a 6-digit verification code to your email address. Please enter the code below to verify your email.
             </div>
 
-            <button type="button" class="form-button" id="sendEmailBtn">
-                <div class="loading-spinner"></div>
-                <span class="button-text">Send Verification Email</span>
-            </button>
+            <!-- Verification Code Input -->
+            <form id="emailVerificationForm">
+                <div class="form-group">
+                    <label for="verification_code" class="form-label">Verification Code *</label>
+                    <input type="text" id="verification_code" name="verification_code" class="form-input"
+                           required maxlength="6" placeholder="Enter 6-digit code"
+                           style="text-align: center; font-size: 18px; letter-spacing: 2px;">
+                    <div class="error-message" id="codeError" style="display: none;"></div>
+                    <div class="success-message" id="codeSuccess" style="display: none;"></div>
+                </div>
 
-            <div class="info-text" style="margin-top: 15px; font-style: italic;">
-                After clicking the verification link in your email, click the button below to continue.
+                <button type="submit" class="form-button" id="verifyCodeBtn">
+                    <div class="loading-spinner"></div>
+                    <span class="button-text">Verify Code</span>
+                </button>
+            </form>
+
+            <div class="info-text" style="margin-top: 15px; text-align: center;">
+                Didn't receive the code?
+                <button type="button" class="resend-link" id="resendCodeBtn">Resend Code</button>
             </div>
-
-            <button type="button" class="form-button secondary" id="checkVerificationBtn" style="margin-top: 10px; display: none;">
-                <div class="loading-spinner"></div>
-                <span class="button-text">Check Verification Status</span>
-            </button>
         </div>
 
         <!-- Continue Button (hidden until email verification complete) -->
         <button type="button" class="form-button" id="continueBtn" style="display: none;">
-            Continue to License Upload
+            Continue to Phone Verification
         </button>
     </div>
 
     <script>
         let emailVerified = false;
+        let registrationToken = null;
 
-        // Initialize Firebase email verification check on page load
+        // Initialize on page load
         window.addEventListener('load', function() {
-            checkEmailVerificationStatus();
+            // Get registration token from session/localStorage if available
+            registrationToken = localStorage.getItem('provider_registration_token');
+
+            // Check if we have a registration token
+            if (registrationToken) {
+                // Don't automatically send verification email - user should use the code from step 1
+                // Only show the form and let user manually resend if needed
+                console.log('Registration token found. Please use the verification code sent to your email.');
+            } else {
+                showError('Registration session not found. Please start registration again from step 1.');
+            }
         });
 
-        // Send Firebase Email Verification
-        document.getElementById('sendEmailBtn').addEventListener('click', function() {
-            this.classList.add('loading');
-            this.disabled = true;
+        // Send verification email (used for manual resend only)
+        function sendVerificationEmail() {
+            // Check if we have a registration token
+            if (!registrationToken) {
+                console.error('No registration token found. Cannot send verification email.');
+                showError('Registration session not found. Please start registration again.');
+                return;
+            }
 
-            fetch('/api/provider/register/send-firebase-email-verification', {
+            fetch('/api/provider-registration/resend-email-verification', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
                     'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
-                }
+                },
+                body: JSON.stringify({
+                    registration_token: registrationToken
+                })
             })
             .then(response => response.json())
             .then(data => {
                 if (data.success) {
-                    alert('Verification email sent! Please check your inbox and click the verification link.');
-                    document.getElementById('checkVerificationBtn').style.display = 'block';
+                    console.log('Verification email sent successfully');
+                    if (data.registration_token) {
+                        registrationToken = data.registration_token;
+                        localStorage.setItem('provider_registration_token', registrationToken);
+                    }
                 } else {
-                    alert(data.message || 'Failed to send verification email');
+                    console.error('Failed to send verification email:', data.message);
+                    showError(data.message || 'Failed to send verification email. Please try again.');
                 }
             })
             .catch(error => {
-                console.error('Error:', error);
-                alert('Failed to send verification email. Please try again.');
-            })
-            .finally(() => {
-                this.classList.remove('loading');
-                this.disabled = false;
+                console.error('Error sending verification email:', error);
+                showError('Failed to send verification email. Please check your connection and try again.');
             });
-        });
+        }
 
-        // Check Email Verification Status
-        document.getElementById('checkVerificationBtn').addEventListener('click', function() {
-            this.classList.add('loading');
-            this.disabled = true;
+        // Handle verification code form submission
+        document.getElementById('emailVerificationForm').addEventListener('submit', function(e) {
+            e.preventDefault();
 
-            fetch('/api/provider/register/check-firebase-email-verification', {
+            const verifyBtn = document.getElementById('verifyCodeBtn');
+            const codeInput = document.getElementById('verification_code');
+            const errorDiv = document.getElementById('codeError');
+            const code = codeInput.value.trim();
+
+            // Prevent duplicate submissions
+            if (verifyBtn.disabled) {
+                return;
+            }
+
+            // Clear previous messages
+            clearMessages();
+
+            // Validate code format
+            if (!/^\d{6}$/.test(code)) {
+                showError('Please enter a valid 6-digit code');
+                return;
+            }
+
+            if (!registrationToken) {
+                showError('Registration token not found. Please refresh the page and try again.');
+                return;
+            }
+
+            verifyBtn.classList.add('loading');
+            verifyBtn.disabled = true;
+
+            fetch('/api/provider-registration/verify-email', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
                     'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
-                }
+                },
+                body: JSON.stringify({
+                    registration_token: registrationToken,
+                    verification_code: code
+                })
             })
             .then(response => response.json())
             .then(data => {
-                if (data.success && data.verified) {
+                if (data.success) {
                     emailVerified = true;
                     updateEmailVerificationStatus();
                     document.getElementById('continueBtn').style.display = 'block';
-                    alert('Email verified successfully!');
+                    // Keep the registration token for phone verification
+                    // localStorage.removeItem('provider_registration_token');
                 } else {
-                    alert(data.message || 'Email not yet verified. Please check your inbox and click the verification link.');
+                    showError(data.message || 'Invalid verification code. Please try again.');
                 }
             })
             .catch(error => {
                 console.error('Error:', error);
-                alert('Failed to check verification status. Please try again.');
+                showError('Failed to verify code. Please try again.');
             })
             .finally(() => {
-                this.classList.remove('loading');
-                this.disabled = false;
+                verifyBtn.classList.remove('loading');
+                verifyBtn.disabled = false;
+            });
+        });
+
+        // Resend verification code
+        document.getElementById('resendCodeBtn').addEventListener('click', function() {
+            const resendBtn = this;
+
+            // Check if we have a registration token
+            if (!registrationToken) {
+                showError('Registration session not found. Please start registration again.');
+                return;
+            }
+
+            resendBtn.disabled = true;
+            resendBtn.textContent = 'Sending...';
+
+            // Clear any previous messages
+            clearMessages();
+
+            fetch('/api/provider-registration/resend-email-verification', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
+                },
+                body: JSON.stringify({
+                    registration_token: registrationToken
+                })
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    console.log('Verification email resent successfully');
+                    showSuccess('Verification code sent successfully! Please check your email.');
+
+                    // Disable resend button for 60 seconds
+                    let countdown = 60;
+                    const interval = setInterval(() => {
+                        resendBtn.textContent = `Resend Code (${countdown}s)`;
+                        countdown--;
+
+                        if (countdown < 0) {
+                            clearInterval(interval);
+                            resendBtn.disabled = false;
+                            resendBtn.textContent = 'Resend Code';
+                        }
+                    }, 1000);
+                } else {
+                    console.error('Failed to resend verification email:', data.message);
+                    showError(data.message || 'Failed to resend verification code. Please try again.');
+                    resendBtn.disabled = false;
+                    resendBtn.textContent = 'Resend Code';
+                }
+            })
+            .catch(error => {
+                console.error('Error resending verification email:', error);
+                showError('Failed to resend verification code. Please check your connection and try again.');
+                resendBtn.disabled = false;
+                resendBtn.textContent = 'Resend Code';
             });
         });
 
         // Continue to next step
         document.getElementById('continueBtn').addEventListener('click', function() {
-            window.location.href = '/register/provider/step3';
+            const registrationToken = localStorage.getItem('provider_registration_token');
+            if (registrationToken) {
+                window.location.href = `/register/provider/phone-verification?token=${registrationToken}`;
+            } else {
+                window.location.href = '/register/provider/phone-verification';
+            }
         });
 
+        // Helper functions
         function updateEmailVerificationStatus() {
             const emailSection = document.getElementById('emailSection');
             const emailStatus = document.getElementById('emailStatus');
@@ -475,27 +639,42 @@
             emailStatus.className = 'verification-status status-completed';
         }
 
-        function checkEmailVerificationStatus() {
-            // Check if email is already verified from previous session
-            fetch('/api/provider/register/check-firebase-email-verification', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                    'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
-                }
-            })
-            .then(response => response.json())
-            .then(data => {
-                if (data.success && data.verified) {
-                    emailVerified = true;
-                    updateEmailVerificationStatus();
-                    document.getElementById('continueBtn').style.display = 'block';
-                }
-            })
-            .catch(error => {
-                console.error('Error checking email verification status:', error);
-            });
+        function showError(message) {
+            const errorDiv = document.getElementById('codeError');
+            const successDiv = document.getElementById('codeSuccess');
+
+            // Hide success message and show error
+            successDiv.style.display = 'none';
+            errorDiv.textContent = message;
+            errorDiv.style.display = 'block';
         }
+
+        function showSuccess(message) {
+            const errorDiv = document.getElementById('codeError');
+            const successDiv = document.getElementById('codeSuccess');
+
+            // Hide error message and show success
+            errorDiv.style.display = 'none';
+            successDiv.textContent = message;
+            successDiv.style.display = 'block';
+        }
+
+        function clearMessages() {
+            const errorDiv = document.getElementById('codeError');
+            const successDiv = document.getElementById('codeSuccess');
+
+            errorDiv.style.display = 'none';
+            successDiv.style.display = 'none';
+        }
+
+        // Auto-format verification code input (numbers only, max 6 digits)
+        document.getElementById('verification_code').addEventListener('input', function(e) {
+            let value = e.target.value.replace(/\D/g, ''); // Remove non-digits
+            if (value.length > 6) {
+                value = value.substring(0, 6);
+            }
+            e.target.value = value;
+        });
     </script>
 </body>
 </html>

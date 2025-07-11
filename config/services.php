@@ -66,6 +66,15 @@ return [
         'maps_api_key' => env('GOOGLE_MAPS_API_KEY'),
     ],
 
+    'smsala' => [
+        'api_id' => env('SMSALA_API_ID', 'SMSALA_DALA3_3862_SMS'),
+        'api_password' => env('SMSALA_API_PASSWORD', 'Jf8gMgERPiorWrAr'),
+        'sender_id' => env('SMSALA_SENDER_ID', 'DALA3CHIC'),
+        'base_url' => env('SMSALA_BASE_URL', 'https://api.smsala.com/api'),
+        'rate_limit_per_hour' => env('SMSALA_RATE_LIMIT_HOUR', 5),
+        'rate_limit_per_day' => env('SMSALA_RATE_LIMIT_DAY', 20),
+    ],
+
     'aramex' => [
         // API credentials
         'account_number' => env('ARAMEX_ACCOUNT_NUMBER', 'test_account'),

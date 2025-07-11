@@ -77,12 +77,22 @@ class MerchantRegistrationController extends Controller
     public function verifyEmail(Request $request)
     {
         try {
+            Log::info('Merchant email verification attempt', [
+                'registration_token' => $request->registration_token,
+                'verification_code' => $request->verification_code,
+                'ip' => $request->ip(),
+            ]);
+
             $validator = Validator::make($request->all(), [
                 'registration_token' => 'required|string',
                 'verification_code' => 'required|string|size:6',
             ]);
 
             if ($validator->fails()) {
+                Log::warning('Merchant email verification validation failed', [
+                    'errors' => $validator->errors(),
+                    'input' => $request->all(),
+                ]);
                 return response()->json([
                     'success' => false,
                     'message' => 'Validation error',
@@ -95,13 +105,23 @@ class MerchantRegistrationController extends Controller
                 $request->verification_code
             );
 
+            Log::info('Merchant email verification result', [
+                'success' => $result['success'],
+                'message' => $result['message'],
+                'registration_token' => $request->registration_token,
+            ]);
+
             if ($result['success']) {
                 return response()->json($result, 200);
             } else {
                 return response()->json($result, 400);
             }
         } catch (Exception $e) {
-            Log::error('Merchant email verification error: ' . $e->getMessage());
+            Log::error('Merchant email verification error: ' . $e->getMessage(), [
+                'registration_token' => $request->registration_token,
+                'verification_code' => $request->verification_code,
+                'trace' => $e->getTraceAsString(),
+            ]);
             return response()->json([
                 'success' => false,
                 'message' => 'Email verification failed. Please try again.',
