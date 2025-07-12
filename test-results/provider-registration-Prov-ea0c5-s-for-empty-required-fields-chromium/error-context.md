@@ -1,0 +1,48 @@
+# Page snapshot
+
+```yaml
+- link " Back to Registration Options":
+  - /url: http://localhost:8000/register
+- text: 1 Provider Info 2 Email Verification 3 Phone Verification 4 License
+- heading "Provider Registration" [level=2]
+- paragraph: "Step 1: Enter your provider information"
+- heading " Basic Information" [level=3]
+- text: Full Name *
+- textbox "Full Name *"
+- text: Email Address *
+- textbox "Email Address *"
+- text: Phone Number *
+- textbox "Phone Number *"
+- text: Company Logo
+- button "Company Logo  Upload Logo"
+- text:  Upload Logo Password *
+- textbox "Password *"
+- button ""
+- text: Confirm Password *
+- textbox "Confirm Password *"
+- button ""
+- heading " Business Information" [level=3]
+- text: Business Name *
+- textbox "Business Name *"
+- text: This should match your official business registration name Business Type *
+- combobox "Business Type *":
+  - option "Select business type" [selected]
+  - option "Food & Beverages"
+  - option "Electronics"
+  - option "Fashion & Clothing"
+  - option "Health & Beauty"
+  - option "Home & Garden"
+  - option "Sports & Recreation"
+  - option "Automotive"
+  - option "Books & Media"
+  - option "Toys & Games"
+  - option "Services"
+  - option "Other"
+- text: Business Description
+- textbox "Business Description"
+- text: Tell customers about your business and what makes you unique.
+- heading " Delivery Configuration" [level=3]
+- checkbox "We offer delivery services to vendors"
+- text: We offer delivery services to vendors
+- button "Continue to Verification"
+```

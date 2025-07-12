@@ -426,15 +426,13 @@
             @csrf
             
             <div class="form-group">
-                <label for="license_duration_years" class="form-label">License Duration (Years) *</label>
-                <select id="license_duration_years" name="license_duration_years" class="form-select" required>
-                    <option value="">Select duration</option>
-                    <option value="1">1 Year</option>
-                    <option value="2">2 Years</option>
-                    <option value="3">3 Years</option>
-                    <option value="5">5 Years</option>
-                    <option value="10">10 Years</option>
-                </select>
+                <label for="license_start_date" class="form-label">License Start Date *</label>
+                <input type="date" id="license_start_date" name="license_start_date" class="form-input" required>
+            </div>
+
+            <div class="form-group">
+                <label for="license_expiry_date" class="form-label">License Expiry Date *</label>
+                <input type="date" id="license_expiry_date" name="license_expiry_date" class="form-input" required>
             </div>
 
             <div class="form-group">
@@ -460,11 +458,17 @@
     </div>
 
     <script>
+        // Set default start date to today
+        document.addEventListener('DOMContentLoaded', function() {
+            const today = new Date().toISOString().split('T')[0];
+            document.getElementById('license_start_date').value = today;
+        });
+
         // File upload preview
         document.getElementById('license_file').addEventListener('change', function(e) {
             const file = e.target.files[0];
             const label = document.querySelector('.file-upload-label');
-            
+
             if (file) {
                 label.innerHTML = `
                     <div class="file-upload-icon" style="color: #10b981;">
@@ -476,17 +480,50 @@
             }
         });
 
+        // Date validation
+        document.getElementById('license_start_date').addEventListener('change', function() {
+            validateDates();
+        });
+
+        document.getElementById('license_expiry_date').addEventListener('change', function() {
+            validateDates();
+        });
+
+        function validateDates() {
+            const startDate = document.getElementById('license_start_date').value;
+            const expiryDate = document.getElementById('license_expiry_date').value;
+
+            if (startDate && expiryDate) {
+                const start = new Date(startDate);
+                const expiry = new Date(expiryDate);
+
+                if (expiry <= start) {
+                    alert('License expiry date must be after the start date.');
+                    document.getElementById('license_expiry_date').value = '';
+                }
+            }
+        }
+
         // Form submission
         document.getElementById('licenseForm').addEventListener('submit', function(e) {
             e.preventDefault();
-            
+
+            // Get user_id from localStorage (should be set after phone verification)
+            const userId = localStorage.getItem('provider_user_id');
+            if (!userId) {
+                alert('User session not found. Please complete phone verification first.');
+                window.location.href = '/register/provider/phone-verification';
+                return;
+            }
+
             const submitBtn = document.getElementById('submitBtn');
             submitBtn.classList.add('loading');
             submitBtn.disabled = true;
-            
+
             const formData = new FormData(this);
-            
-            fetch('/api/provider/register/upload-license', {
+            formData.append('user_id', userId);
+
+            fetch('/api/provider-registration/license', {
                 method: 'POST',
                 body: formData,
                 headers: {
@@ -496,25 +533,13 @@
             .then(response => response.json())
             .then(data => {
                 if (data.success) {
-                    // Complete registration
-                    return fetch('/api/provider/register/complete', {
-                        method: 'POST',
-                        headers: {
-                            'Content-Type': 'application/json',
-                            'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
-                        }
-                    });
-                } else {
-                    throw new Error(data.message || 'License upload failed');
-                }
-            })
-            .then(response => response.json())
-            .then(data => {
-                if (data.success) {
-                    alert('Registration completed successfully! Please wait for admin approval.');
+                    alert('License uploaded successfully! Registration completed. Please wait for admin approval.');
+                    // Clear stored data
+                    localStorage.removeItem('provider_registration_token');
+                    localStorage.removeItem('provider_user_id');
                     window.location.href = '/login';
                 } else {
-                    throw new Error(data.message || 'Registration completion failed');
+                    throw new Error(data.message || 'License upload failed');
                 }
             })
             .catch(error => {

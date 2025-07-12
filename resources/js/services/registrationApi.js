@@ -135,11 +135,11 @@ class RegistrationApi {
     const formData = new FormData();
     formData.append('user_id', userId);
     formData.append('license_file', licenseData.license_file);
-    
-    if (licenseData.duration_days) {
-      formData.append('duration_days', licenseData.duration_days);
+
+    if (licenseData.license_expiry_date) {
+      formData.append('license_expiry_date', licenseData.license_expiry_date);
     }
-    
+
     if (licenseData.notes) {
       formData.append('notes', licenseData.notes);
     }

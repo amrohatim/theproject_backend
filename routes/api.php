@@ -18,6 +18,7 @@ use App\Http\Controllers\API\ProviderRatingController;
 use App\Http\Controllers\API\DealController;
 use App\Http\Controllers\API\FilterController;
 use App\Http\Controllers\API\SearchController;
+use App\Http\Controllers\API\ValidationController;
 use App\Http\Controllers\API\UserLocationController;
 use App\Http\Controllers\API\VendorRegistrationController;
 use App\Http\Controllers\API\ProviderRegistrationController;
@@ -85,6 +86,13 @@ Route::prefix('provider/register')->group(function () {
 Route::prefix('merchant/register')->group(function () {
     Route::post('/send-firebase-email-verification', [EmailVerificationController::class, 'sendMerchantEmailVerification']);
     Route::post('/check-firebase-email-verification', [EmailVerificationController::class, 'checkMerchantEmailVerification']);
+});
+
+// Validation routes (public)
+Route::prefix('validate')->group(function () {
+    Route::post('/business-name', [ValidationController::class, 'validateBusinessName']);
+    Route::post('/email-status', [ValidationController::class, 'validateEmailStatus']);
+    Route::post('/phone-status', [ValidationController::class, 'validatePhoneStatus']);
 });
 
 // Vendor Registration routes (public)

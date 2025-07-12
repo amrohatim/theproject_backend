@@ -11,6 +11,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Auth;
+use App\Http\Requests\ProviderRegistrationValidationRequest;
 use Exception;
 
 class RegistrationController extends Controller
@@ -348,33 +349,20 @@ class RegistrationController extends Controller
     /**
      * Handle provider registration submission.
      */
-    public function registerProvider(Request $request)
+    public function registerProvider(ProviderRegistrationValidationRequest $request)
     {
         try {
-            $validator = Validator::make($request->all(), [
-                'name' => 'required|string|max:255|unique:users,name',
-                'email' => 'required|email|max:255|unique:users,email',
-                'phone' => 'required|string|max:20|unique:users,phone',
-                'password' => 'required|string|min:8|confirmed',
-                'business_name' => 'nullable|string|max:255',
-                'description' => 'nullable|string|max:1000',
-                'logo' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
-                'deliver_to_vendor_capability' => 'boolean',
-                'delivery_fees' => 'nullable|array',
-                'stock_locations' => 'nullable|array',
-                'stock_locations.*.name' => 'required_with:stock_locations|string|max:255',
-                'stock_locations.*.address' => 'required_with:stock_locations|string|max:500',
-                'stock_locations.*.emirate' => 'required_with:stock_locations|string|max:100',
-                'stock_locations.*.city' => 'required_with:stock_locations|string|max:100',
-                'stock_locations.*.latitude' => 'nullable|numeric|between:-90,90',
-                'stock_locations.*.longitude' => 'nullable|numeric|between:-180,180',
-            ]);
+            // The validation is automatically handled by the ProviderRegistrationValidationRequest
+            // Check if we should skip verification steps based on business logic
+            $skipEmailVerification = $request->shouldSkipEmailVerification();
+            $skipBothVerifications = $request->shouldSkipBothVerifications();
 
-            if ($validator->fails()) {
-                return back()->withErrors($validator)->withInput();
-            }
+            // Prepare the registration data
+            $registrationData = $request->validated();
+            $registrationData['skip_email_verification'] = $skipEmailVerification;
+            $registrationData['skip_both_verifications'] = $skipBothVerifications;
 
-            $result = $this->registrationService->startProviderRegistration($request->all());
+            $result = $this->registrationService->startProviderRegistration($registrationData);
 
             if ($result['success']) {
                 return redirect()->route('provider.registration.license', ['user_id' => $result['user_id']])
@@ -454,7 +442,7 @@ class RegistrationController extends Controller
             $validator = Validator::make($request->all(), [
                 'user_id' => 'required|exists:users,id',
                 'license_file' => 'required|file|mimes:pdf|max:10240', // 10MB max
-                'duration_days' => 'nullable|integer|min:1|max:3650',
+                'license_expiry_date' => 'required|date|after:today',
                 'notes' => 'nullable|string|max:500',
             ]);
 
@@ -465,7 +453,7 @@ class RegistrationController extends Controller
             $result = $this->registrationService->completeProviderLicense(
                 $request->user_id,
                 $request->file('license_file'),
-                $request->only(['duration_days', 'notes'])
+                $request->only(['license_expiry_date', 'notes'])
             );
 
             if ($result['success']) {

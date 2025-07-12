@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Test Registration Flow</title>
+    <meta name="csrf-token" content="test-token">
+</head>
+<body>
+    <h1>Test Registration Flow</h1>
+    
+    <div>
+        <h2>Step 1: Register Provider</h2>
+        <button onclick="registerProvider()">Register Provider</button>
+        <div id="step1-result"></div>
+    </div>
+    
+    <div>
+        <h2>Step 2: Check Token</h2>
+        <button onclick="checkToken()">Check Token in localStorage</button>
+        <div id="step2-result"></div>
+    </div>
+    
+    <div>
+        <h2>Step 3: Navigate to Step 2</h2>
+        <button onclick="goToStep2()">Go to Step 2</button>
+    </div>
+
+    <script>
+        async function registerProvider() {
+            const resultDiv = document.getElementById('step1-result');
+            resultDiv.innerHTML = 'Registering...';
+            
+            try {
+                const formData = new FormData();
+                formData.append('name', 'Test Provider');
+                formData.append('email', 'test@provider.com');
+                formData.append('phone', '+971556441299');
+                formData.append('password', 'password123');
+                formData.append('password_confirmation', 'password123');
+                formData.append('business_name', 'Test Business');
+                formData.append('business_type', 'Services');
+                
+                const response = await fetch('/api/provider/register/validate-info', {
+                    method: 'POST',
+                    body: formData,
+                    headers: {
+                        'Accept': 'application/json'
+                    }
+                });
+                
+                const data = await response.json();
+                
+                if (response.ok && data.success) {
+                    // Store registration token for step 2
+                    if (data.registration_token) {
+                        localStorage.setItem('provider_registration_token', data.registration_token);
+                        resultDiv.innerHTML = `✅ Success! Token stored: ${data.registration_token.substring(0, 20)}...`;
+                    } else {
+                        resultDiv.innerHTML = '❌ Success but no token in response';
+                    }
+                } else {
+                    resultDiv.innerHTML = `❌ Error: ${data.message || 'Unknown error'}`;
+                }
+            } catch (error) {
+                resultDiv.innerHTML = `❌ Network error: ${error.message}`;
+            }
+        }
+        
+        function checkToken() {
+            const token = localStorage.getItem('provider_registration_token');
+            const resultDiv = document.getElementById('step2-result');
+            
+            if (token) {
+                resultDiv.innerHTML = `✅ Token found: ${token.substring(0, 20)}...`;
+            } else {
+                resultDiv.innerHTML = '❌ No token found in localStorage';
+            }
+        }
+        
+        function goToStep2() {
+            window.location.href = '/register/provider/step2';
+        }
+        
+        // Check token on page load
+        window.addEventListener('load', function() {
+            checkToken();
+        });
+    </script>
+</body>
+</html>

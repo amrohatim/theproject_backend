@@ -617,10 +617,17 @@ class RegistrationService
             // Upload license file
             $licensePath = $this->uploadLicenseFile($licenseFile, $userId);
 
-            // Calculate dates
-            $startDate = Carbon::now()->toDateString();
-            $duration = (int)($licenseData['duration_days'] ?? 365); // Cast to int to fix Carbon type error
-            $endDate = Carbon::now()->addDays($duration)->toDateString();
+            // Use provided start date or default to current date
+            $startDate = $licenseData['license_start_date'] ?? Carbon::now()->toDateString();
+
+            // Use provided expiry date or calculate from duration_days (for backward compatibility)
+            if (isset($licenseData['license_expiry_date'])) {
+                $endDate = $licenseData['license_expiry_date'];
+                $duration = Carbon::parse($startDate)->diffInDays(Carbon::parse($endDate));
+            } else {
+                $duration = (int)($licenseData['duration_days'] ?? 365); // Cast to int to fix Carbon type error
+                $endDate = Carbon::parse($startDate)->addDays($duration)->toDateString();
+            }
             $renewalDate = $endDate;
 
             // Create license record

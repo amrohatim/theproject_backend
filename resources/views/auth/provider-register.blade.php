@@ -166,6 +166,14 @@
             gap: 6px;
         }
 
+        .form-help {
+            color: #6b7280;
+            font-size: 12px;
+            margin-top: 4px;
+            display: block;
+            line-height: 1.4;
+        }
+
         .password-strength {
             margin-top: 8px;
         }
@@ -528,6 +536,178 @@
             color: #6b7280;
             margin-bottom: 24px;
         }
+
+        /* Modal Styles */
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+            backdrop-filter: blur(4px);
+        }
+
+        .modal-container {
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+            max-width: 500px;
+            width: 90%;
+            max-height: 80vh;
+            overflow-y: auto;
+            animation: modalSlideIn 0.3s ease-out;
+        }
+
+        @keyframes modalSlideIn {
+            from {
+                opacity: 0;
+                transform: translateY(-20px) scale(0.95);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0) scale(1);
+            }
+        }
+
+        .modal-header {
+            padding: 24px 24px 16px;
+            border-bottom: 1px solid #e5e7eb;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .modal-header.success-header {
+            border-bottom-color: #d1fae5;
+            background: linear-gradient(135deg, #f0fdf4 0%, #dcfce7 100%);
+        }
+
+        .modal-title {
+            font-size: 18px;
+            font-weight: 600;
+            color: #1f2937;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin: 0;
+        }
+
+        .modal-title i {
+            color: #ef4444;
+        }
+
+        .success-header .modal-title i {
+            color: #10b981;
+        }
+
+        .modal-close {
+            background: none;
+            border: none;
+            font-size: 18px;
+            color: #6b7280;
+            cursor: pointer;
+            padding: 4px;
+            border-radius: 4px;
+            transition: all 0.2s;
+        }
+
+        .modal-close:hover {
+            background-color: #f3f4f6;
+            color: #374151;
+        }
+
+        .modal-body {
+            padding: 16px 24px;
+        }
+
+        .modal-description {
+            color: #6b7280;
+            margin-bottom: 16px;
+            line-height: 1.5;
+        }
+
+        .error-list {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+
+        .error-list li {
+            background: #fef2f2;
+            border: 1px solid #fecaca;
+            border-radius: 6px;
+            padding: 12px;
+            margin-bottom: 8px;
+            color: #dc2626;
+            display: flex;
+            align-items: flex-start;
+            gap: 8px;
+            font-size: 14px;
+        }
+
+        .error-list li:last-child {
+            margin-bottom: 0;
+        }
+
+        .error-list li i {
+            margin-top: 2px;
+            flex-shrink: 0;
+        }
+
+        .modal-footer {
+            padding: 16px 24px 24px;
+            display: flex;
+            justify-content: flex-end;
+            gap: 12px;
+        }
+
+        .modal-btn {
+            padding: 10px 20px;
+            border-radius: 6px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.2s;
+            border: none;
+            font-size: 14px;
+        }
+
+        .modal-btn-primary {
+            background: #3b82f6;
+            color: white;
+        }
+
+        .modal-btn-primary:hover {
+            background: #2563eb;
+        }
+
+        .modal-btn-success {
+            background: #10b981;
+            color: white;
+        }
+
+        .modal-btn-success:hover {
+            background: #059669;
+        }
+
+        /* Responsive modal */
+        @media (max-width: 640px) {
+            .modal-container {
+                width: 95%;
+                margin: 20px;
+            }
+
+            .modal-header,
+            .modal-body,
+            .modal-footer {
+                padding-left: 16px;
+                padding-right: 16px;
+            }
+        }
     </style>
 </head>
 <body>
@@ -542,7 +722,7 @@
         </div>
 
         <!-- Registration Form -->
-        <form id="providerRegistrationForm" method="POST" action="{{ route('provider.register') }}" enctype="multipart/form-data">
+        <form id="providerRegistrationForm" method="POST" action="{{ route('register.provider.submit') }}" enctype="multipart/form-data">
             @csrf
 
             <!-- Company Name -->
@@ -556,8 +736,32 @@
                     placeholder="Enter your company or supplier name"
                     value="{{ old('name') }}"
                     required
+                    minlength="2"
+                    maxlength="255"
+                    aria-describedby="name-error"
+                    autocomplete="organization"
                 >
-                <div class="error-message" id="name-error"></div>
+                <div class="error-message" id="name-error" role="alert" aria-live="polite"></div>
+            </div>
+
+            <!-- Business Name -->
+            <div class="form-group">
+                <label for="business_name" class="form-label">Business Name *</label>
+                <input
+                    type="text"
+                    id="business_name"
+                    name="business_name"
+                    class="form-input"
+                    placeholder="Enter your business name (as registered)"
+                    value="{{ old('business_name') }}"
+                    required
+                    minlength="2"
+                    maxlength="255"
+                    aria-describedby="business_name-error business_name-help"
+                    autocomplete="organization"
+                >
+                <small id="business_name-help" class="form-help">This should match your official business registration name</small>
+                <div class="error-message" id="business_name-error" role="alert" aria-live="polite"></div>
             </div>
 
             <!-- Email -->
@@ -571,8 +775,13 @@
                     placeholder="Enter your business email address"
                     value="{{ old('email') }}"
                     required
+                    maxlength="255"
+                    aria-describedby="email-error"
+                    autocomplete="email"
+                    pattern="[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,}$"
+                    title="Please enter a valid email address"
                 >
-                <div class="error-message" id="email-error"></div>
+                <div class="error-message" id="email-error" role="alert" aria-live="polite"></div>
             </div>
 
             <!-- Phone -->
@@ -586,8 +795,13 @@
                     placeholder="+971 50 123 4567"
                     value="{{ old('phone') }}"
                     required
+                    maxlength="20"
+                    aria-describedby="phone-error"
+                    autocomplete="tel"
+                    pattern="(\+971|971|0)?[0-9]{9}"
+                    title="Please enter a valid UAE phone number (e.g., +971501234567)"
                 >
-                <div class="error-message" id="phone-error"></div>
+                <div class="error-message" id="phone-error" role="alert" aria-live="polite"></div>
             </div>
 
             <!-- Password -->
@@ -601,6 +815,10 @@
                         class="form-input"
                         placeholder="Create a strong password"
                         required
+                        minlength="8"
+                        aria-describedby="password-error password-requirements"
+                        autocomplete="new-password"
+                        title="Password must be at least 8 characters long"
                     >
                     <button type="button" class="password-toggle" data-target="password">
                         <i class="fas fa-eye"></i>
@@ -635,47 +853,61 @@
                         class="form-input"
                         placeholder="Confirm your password"
                         required
+                        minlength="8"
+                        aria-describedby="password_confirmation-error"
+                        autocomplete="new-password"
+                        title="Please confirm your password"
                     >
                     <button type="button" class="password-toggle" data-target="password_confirmation">
                         <i class="fas fa-eye"></i>
                     </button>
                 </div>
-                <div class="error-message" id="password_confirmation-error"></div>
+                <div class="error-message" id="password_confirmation-error" role="alert" aria-live="polite"></div>
             </div>
 
             <!-- Delivery Options -->
             <div class="form-group">
-                <label class="form-label">Supply & Delivery Options *</label>
-                <div class="delivery-options">
-                    <div class="delivery-option">
-                        <input type="radio" id="pickup_only" name="delivery_capability" value="pickup_only" checked>
-                        <div class="delivery-option-content">
-                            <h4>Pickup Only</h4>
-                            <p>Vendors collect products from your warehouse</p>
+                <fieldset>
+                    <legend class="form-label">Supply & Delivery Options *</legend>
+                    <div class="delivery-options" role="radiogroup" aria-required="true" aria-describedby="delivery-error">
+                        <div class="delivery-option">
+                            <input type="radio" id="pickup_only" name="delivery_capability" value="pickup_only" checked aria-describedby="pickup_only_desc">
+                            <div class="delivery-option-content">
+                                <h4>Pickup Only</h4>
+                                <p id="pickup_only_desc">Vendors collect products from your warehouse</p>
+                            </div>
+                        </div>
+                        <div class="delivery-option">
+                            <input type="radio" id="delivery_available" name="delivery_capability" value="delivery_available" aria-describedby="delivery_available_desc">
+                            <div class="delivery-option-content">
+                                <h4>Delivery Available</h4>
+                                <p id="delivery_available_desc">You deliver products to vendors</p>
+                            </div>
+                        </div>
+                        <div class="delivery-option">
+                            <input type="radio" id="both_options" name="delivery_capability" value="both" aria-describedby="both_options_desc">
+                            <div class="delivery-option-content">
+                                <h4>Both Options</h4>
+                                <p id="both_options_desc">Pickup and delivery available</p>
+                            </div>
                         </div>
                     </div>
-                    <div class="delivery-option">
-                        <input type="radio" id="delivery_available" name="delivery_capability" value="delivery_available">
-                        <div class="delivery-option-content">
-                            <h4>Delivery Available</h4>
-                            <p>You deliver products to vendors</p>
-                        </div>
-                    </div>
-                    <div class="delivery-option">
-                        <input type="radio" id="both_options" name="delivery_capability" value="both">
-                        <div class="delivery-option-content">
-                            <h4>Both Options</h4>
-                            <p>Pickup and delivery available</p>
-                        </div>
-                    </div>
-                </div>
+                    <div class="error-message" id="delivery-error" role="alert" aria-live="polite"></div>
+                </fieldset>
             </div>
 
             <!-- Company Logo Upload -->
             <div class="form-group">
                 <label for="logo" class="form-label">Company Logo (Optional)</label>
                 <div class="file-upload-area" id="file-upload-area">
-                    <input type="file" id="logo" name="logo" accept="image/*" style="display: none;">
+                    <input
+                        type="file"
+                        id="logo"
+                        name="logo"
+                        accept="image/jpeg,image/png,image/jpg,image/gif"
+                        style="display: none;"
+                        aria-describedby="logo-error logo-help"
+                    >
                     <div class="upload-icon">
                         <i class="fas fa-cloud-upload-alt"></i>
                     </div>
@@ -699,11 +931,20 @@
 
             <!-- Terms and Conditions -->
             <div class="checkbox-container">
-                <input type="checkbox" id="terms" name="terms" class="checkbox" required>
+                <input
+                    type="checkbox"
+                    id="terms"
+                    name="terms"
+                    class="checkbox"
+                    required
+                    aria-describedby="terms-error"
+                    aria-required="true"
+                >
                 <label for="terms" class="checkbox-label">
-                    I agree to the <a href="#" target="_blank">Terms of Service</a> and
-                    <a href="#" target="_blank">Privacy Policy</a>
+                    I agree to the <a href="#" target="_blank" rel="noopener">Terms of Service</a> and
+                    <a href="#" target="_blank" rel="noopener">Privacy Policy</a>
                 </label>
+                <div class="error-message" id="terms-error" role="alert" aria-live="polite"></div>
             </div>
 
             <!-- Submit Button -->
@@ -715,6 +956,50 @@
         <!-- Login Link -->
         <div class="login-link">
             <p>Already have an account? <a href="{{ route('login') }}">Sign in</a></p>
+        </div>
+    </div>
+
+    <!-- Validation Error Modal -->
+    <div id="validationErrorModal" class="modal-overlay" style="display: none;">
+        <div class="modal-container">
+            <div class="modal-header">
+                <h3 class="modal-title">
+                    <i class="fas fa-exclamation-triangle"></i>
+                    Validation Errors
+                </h3>
+                <button type="button" class="modal-close" onclick="closeValidationErrorModal()">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <div class="modal-body">
+                <p class="modal-description">Please fix the following errors before submitting:</p>
+                <ul id="validationErrorList" class="error-list"></ul>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="modal-btn modal-btn-primary" onclick="closeValidationErrorModal()">
+                    Fix Errors
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Success Modal -->
+    <div id="successModal" class="modal-overlay" style="display: none;">
+        <div class="modal-container">
+            <div class="modal-header success-header">
+                <h3 class="modal-title">
+                    <i class="fas fa-check-circle"></i>
+                    Registration Successful
+                </h3>
+            </div>
+            <div class="modal-body">
+                <p class="modal-description">Your provider registration has been submitted successfully. You will receive an email confirmation shortly.</p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="modal-btn modal-btn-success" onclick="redirectToLogin()">
+                    Continue to Login
+                </button>
+            </div>
         </div>
     </div>
     <!-- Modern JavaScript -->
@@ -937,26 +1222,103 @@
 
             switch (fieldName) {
                 case 'name':
-                    if (!value || value.length < 2) {
+                    if (!value) {
+                        showFieldError(input.id, 'Company/supplier name is required');
+                        return false;
+                    }
+                    if (value.length < 2) {
                         showFieldError(input.id, 'Company/supplier name must be at least 2 characters');
                         return false;
                     }
+                    if (value.length > 255) {
+                        showFieldError(input.id, 'Company/supplier name cannot exceed 255 characters');
+                        return false;
+                    }
                     break;
+
+                case 'business_name':
+                    if (!value) {
+                        showFieldError(input.id, 'Business name is required');
+                        return false;
+                    }
+                    if (value.length < 2) {
+                        showFieldError(input.id, 'Business name must be at least 2 characters');
+                        return false;
+                    }
+                    if (value.length > 255) {
+                        showFieldError(input.id, 'Business name cannot exceed 255 characters');
+                        return false;
+                    }
+                    // Check business name uniqueness (async validation)
+                    validateBusinessNameUniqueness(input, value);
+                    break;
+
                 case 'email':
-                    if (!value || !isValidEmail(value)) {
+                    if (!value) {
+                        showFieldError(input.id, 'Email address is required');
+                        return false;
+                    }
+                    if (!isValidEmail(value)) {
                         showFieldError(input.id, 'Please enter a valid email address');
                         return false;
                     }
+                    if (value.length > 255) {
+                        showFieldError(input.id, 'Email address cannot exceed 255 characters');
+                        return false;
+                    }
+                    // Check email registration status (async validation)
+                    validateEmailRegistrationStatus(input, value);
                     break;
+
                 case 'phone':
-                    if (!value || !isValidPhone(value)) {
-                        showFieldError(input.id, 'Please enter a valid UAE phone number');
+                    if (!value) {
+                        showFieldError(input.id, 'Phone number is required');
+                        return false;
+                    }
+                    if (!isValidPhone(value)) {
+                        showFieldError(input.id, 'Please enter a valid UAE phone number (+971XXXXXXXXX)');
+                        return false;
+                    }
+                    if (value.length > 20) {
+                        showFieldError(input.id, 'Phone number cannot exceed 20 characters');
+                        return false;
+                    }
+                    // Check phone registration status (async validation)
+                    validatePhoneRegistrationStatus(input, value);
+                    break;
+
+                case 'password':
+                    if (!value) {
+                        showFieldError(input.id, 'Password is required');
+                        return false;
+                    }
+                    if (value.length < 8) {
+                        showFieldError(input.id, 'Password must be at least 8 characters');
+                        return false;
+                    }
+                    // Check password strength
+                    const passwordStrength = checkPasswordStrength(value);
+                    if (!passwordStrength.isValid) {
+                        showFieldError(input.id, passwordStrength.message);
                         return false;
                     }
                     break;
-                case 'password':
-                    if (!value || value.length < 8) {
-                        showFieldError(input.id, 'Password must be at least 8 characters');
+
+                case 'password_confirmation':
+                    const passwordField = document.getElementById('password');
+                    if (!value) {
+                        showFieldError(input.id, 'Password confirmation is required');
+                        return false;
+                    }
+                    if (value !== passwordField.value) {
+                        showFieldError(input.id, 'Password confirmation does not match');
+                        return false;
+                    }
+                    break;
+
+                case 'description':
+                    if (value && value.length > 1000) {
+                        showFieldError(input.id, 'Description cannot exceed 1000 characters');
                         return false;
                     }
                     break;
@@ -964,6 +1326,129 @@
 
             clearFieldError(input.id);
             return true;
+        }
+
+        // Async validation functions
+        let validationTimeouts = {};
+
+        function validateBusinessNameUniqueness(input, businessName) {
+            // Clear previous timeout
+            if (validationTimeouts.business_name) {
+                clearTimeout(validationTimeouts.business_name);
+            }
+
+            // Debounce the validation
+            validationTimeouts.business_name = setTimeout(async () => {
+                try {
+                    const response = await fetch('/api/validate/business-name', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                            'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
+                        },
+                        body: JSON.stringify({ business_name: businessName })
+                    });
+
+                    const data = await response.json();
+
+                    if (!data.available) {
+                        showFieldError(input.id, 'Business name is already taken');
+                    } else {
+                        clearFieldError(input.id);
+                    }
+                } catch (error) {
+                    console.error('Business name validation error:', error);
+                }
+            }, 500);
+        }
+
+        function validateEmailRegistrationStatus(input, email) {
+            // Clear previous timeout
+            if (validationTimeouts.email) {
+                clearTimeout(validationTimeouts.email);
+            }
+
+            // Debounce the validation
+            validationTimeouts.email = setTimeout(async () => {
+                try {
+                    const response = await fetch('/api/validate/email-status', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                            'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
+                        },
+                        body: JSON.stringify({ email: email })
+                    });
+
+                    const data = await response.json();
+
+                    if (!data.available) {
+                        showFieldError(input.id, data.message);
+                    } else {
+                        clearFieldError(input.id);
+                    }
+                } catch (error) {
+                    console.error('Email validation error:', error);
+                }
+            }, 500);
+        }
+
+        function validatePhoneRegistrationStatus(input, phone) {
+            // Clear previous timeout
+            if (validationTimeouts.phone) {
+                clearTimeout(validationTimeouts.phone);
+            }
+
+            // Debounce the validation
+            validationTimeouts.phone = setTimeout(async () => {
+                try {
+                    const response = await fetch('/api/validate/phone-status', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                            'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
+                        },
+                        body: JSON.stringify({ phone: phone })
+                    });
+
+                    const data = await response.json();
+
+                    if (!data.available) {
+                        showFieldError(input.id, data.message);
+                    } else {
+                        clearFieldError(input.id);
+                    }
+                } catch (error) {
+                    console.error('Phone validation error:', error);
+                }
+            }, 500);
+        }
+
+        function checkPasswordStrength(password) {
+            const minLength = 8;
+            const hasUpperCase = /[A-Z]/.test(password);
+            const hasLowerCase = /[a-z]/.test(password);
+            const hasNumbers = /\d/.test(password);
+            const hasSpecialChar = /[!@#$%^&*(),.?":{}|<>]/.test(password);
+
+            if (password.length < minLength) {
+                return { isValid: false, message: 'Password must be at least 8 characters long' };
+            }
+
+            let strength = 0;
+            if (hasUpperCase) strength++;
+            if (hasLowerCase) strength++;
+            if (hasNumbers) strength++;
+            if (hasSpecialChar) strength++;
+
+            if (strength < 2) {
+                return {
+                    isValid: false,
+                    message: 'Password must contain at least 2 of: uppercase letters, lowercase letters, numbers, special characters'
+                };
+            }
+
+            return { isValid: true, message: 'Password strength is good' };
         }
 
         function showFieldError(fieldId, message) {
@@ -995,31 +1480,57 @@
             form.addEventListener('submit', async function(e) {
                 e.preventDefault();
 
-                // Validate all fields
+                // Clear any previous validation timeouts
+                Object.values(validationTimeouts).forEach(timeout => clearTimeout(timeout));
+
+                // Validate all fields synchronously first
                 const inputs = form.querySelectorAll('.form-input');
                 let isValid = true;
+                let validationErrors = [];
 
                 inputs.forEach(input => {
                     if (!validateField(input)) {
                         isValid = false;
+                        const errorElement = document.getElementById(input.id + '-error');
+                        if (errorElement && errorElement.innerHTML) {
+                            validationErrors.push({
+                                field: input.name || input.id,
+                                message: errorElement.textContent.replace('⚠', '').trim()
+                            });
+                        }
                     }
                 });
+
+                // Validate business name field specifically
+                const businessNameField = form.querySelector('input[name="business_name"]');
+                if (businessNameField && businessNameField.value.trim()) {
+                    if (!validateField(businessNameField)) {
+                        isValid = false;
+                    }
+                }
 
                 // Check delivery capability
                 const deliveryCapability = form.querySelector('input[name="delivery_capability"]:checked');
                 if (!deliveryCapability) {
-                    alert('Please select a delivery option');
+                    validationErrors.push({
+                        field: 'delivery_capability',
+                        message: 'Please select a delivery option'
+                    });
                     isValid = false;
                 }
 
                 // Check terms
                 const termsCheckbox = document.getElementById('terms');
-                if (!termsCheckbox.checked) {
-                    alert('Please agree to the Terms of Service and Privacy Policy');
+                if (!termsCheckbox || !termsCheckbox.checked) {
+                    validationErrors.push({
+                        field: 'terms',
+                        message: 'Please agree to the Terms of Service and Privacy Policy'
+                    });
                     isValid = false;
                 }
 
                 if (!isValid) {
+                    showValidationErrorModal(validationErrors);
                     return;
                 }
 
@@ -1028,18 +1539,45 @@
                 btnText.innerHTML = '<span class="loading"></span>Creating Account...';
 
                 try {
-                    // Simulate form submission (replace with actual endpoint)
+                    // Submit form to server
                     const formData = new FormData(form);
 
-                    // For demo purposes, we'll show success after 2 seconds
-                    // In production, replace this with actual API call
-                    await new Promise(resolve => setTimeout(resolve, 2000));
+                    const response = await fetch(form.action, {
+                        method: 'POST',
+                        body: formData,
+                        headers: {
+                            'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
+                        }
+                    });
 
-                    showSuccessMessage();
+                    const result = await response.json();
+
+                    if (response.ok && result.success) {
+                        showSuccessModal();
+                    } else {
+                        // Handle server validation errors
+                        if (result.errors) {
+                            const serverErrors = [];
+                            Object.keys(result.errors).forEach(field => {
+                                result.errors[field].forEach(message => {
+                                    serverErrors.push({ field, message });
+                                });
+                            });
+                            showValidationErrorModal(serverErrors);
+                        } else {
+                            showValidationErrorModal([{
+                                field: 'general',
+                                message: result.message || 'Registration failed. Please try again.'
+                            }]);
+                        }
+                    }
 
                 } catch (error) {
                     console.error('Registration error:', error);
-                    alert('Registration failed. Please try again.');
+                    showValidationErrorModal([{
+                        field: 'general',
+                        message: 'Network error. Please check your connection and try again.'
+                    }]);
                 } finally {
                     submitBtn.disabled = false;
                     btnText.textContent = 'Create Provider Account';
@@ -1062,6 +1600,89 @@
                 </div>
             `;
         }
+
+        // Modal functions
+        function showValidationErrorModal(errors) {
+            const modal = document.getElementById('validationErrorModal');
+            const errorList = document.getElementById('validationErrorList');
+
+            // Clear previous errors
+            errorList.innerHTML = '';
+
+            // Add each error to the list
+            errors.forEach(error => {
+                const li = document.createElement('li');
+                li.innerHTML = `
+                    <i class="fas fa-exclamation-circle"></i>
+                    <div>
+                        <strong>${getFieldDisplayName(error.field)}:</strong> ${error.message}
+                    </div>
+                `;
+                errorList.appendChild(li);
+            });
+
+            // Show modal
+            modal.style.display = 'flex';
+            document.body.style.overflow = 'hidden';
+
+            // Focus first error field
+            if (errors.length > 0) {
+                const firstErrorField = document.getElementById(errors[0].field) ||
+                                      document.querySelector(`[name="${errors[0].field}"]`);
+                if (firstErrorField) {
+                    setTimeout(() => {
+                        firstErrorField.focus();
+                        firstErrorField.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                    }, 300);
+                }
+            }
+        }
+
+        function closeValidationErrorModal() {
+            const modal = document.getElementById('validationErrorModal');
+            modal.style.display = 'none';
+            document.body.style.overflow = 'auto';
+        }
+
+        function showSuccessModal() {
+            const modal = document.getElementById('successModal');
+            modal.style.display = 'flex';
+            document.body.style.overflow = 'hidden';
+        }
+
+        function redirectToLogin() {
+            window.location.href = '{{ route("login") }}';
+        }
+
+        function getFieldDisplayName(fieldName) {
+            const fieldNames = {
+                'name': 'Company/Supplier Name',
+                'business_name': 'Business Name',
+                'email': 'Email Address',
+                'phone': 'Phone Number',
+                'password': 'Password',
+                'password_confirmation': 'Password Confirmation',
+                'description': 'Description',
+                'delivery_capability': 'Delivery Capability',
+                'terms': 'Terms and Conditions'
+            };
+
+            return fieldNames[fieldName] || fieldName.replace('_', ' ').replace(/\b\w/g, l => l.toUpperCase());
+        }
+
+        // Close modal when clicking outside
+        document.addEventListener('click', function(e) {
+            if (e.target.classList.contains('modal-overlay')) {
+                closeValidationErrorModal();
+            }
+        });
+
+        // Close modal with Escape key
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'Escape') {
+                closeValidationErrorModal();
+            }
+        });
 
         // Utility functions
         function isValidEmail(email) {

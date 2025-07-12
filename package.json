@@ -15,6 +15,12 @@
         "test:search:debug": "playwright test tests/Browser/MerchantSearchAndFiltersTest.js --debug",
         "test:search:mobile": "playwright test tests/Browser/MerchantSearchAndFiltersTest.js --project='Mobile Chrome' --project='Mobile Safari'",
         "test:search:desktop": "playwright test tests/Browser/MerchantSearchAndFiltersTest.js --project=chromium --project=firefox --project=webkit",
+        "test:provider": "playwright test tests/playwright/provider-registration.spec.js",
+        "test:provider:headed": "playwright test tests/playwright/provider-registration.spec.js --headed",
+        "test:provider:debug": "playwright test tests/playwright/provider-registration.spec.js --debug",
+        "test:provider": "playwright test tests/playwright/provider-registration.spec.js",
+        "test:provider:headed": "playwright test tests/playwright/provider-registration.spec.js --headed",
+        "test:provider:debug": "playwright test tests/playwright/provider-registration.spec.js --debug",
         "test:mobile": "playwright test --project='Mobile Chrome' --project='Mobile Safari'",
         "test:desktop": "playwright test --project=chromium --project=firefox --project=webkit",
         "test:chrome": "playwright test --project=chromium",
@@ -33,7 +39,7 @@
         "laravel-vite-plugin": "^1.2.0",
         "npx": "^10.2.2",
         "tailwindcss": "^4.0.0",
-        "vite": "^6.2.4"
+        "vite": "^6.3.5"
     },
     "dependencies": {
         "@vitejs/plugin-vue": "^6.0.0",

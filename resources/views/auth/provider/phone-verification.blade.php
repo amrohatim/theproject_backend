@@ -538,6 +538,11 @@
                 if (data.success) {
                     showAlert('Phone verified successfully! Redirecting...', 'success');
 
+                    // Store user_id for license upload step
+                    if (data.user_id) {
+                        localStorage.setItem('provider_user_id', data.user_id);
+                    }
+
                     // Clear the registration token as it's no longer needed
                     localStorage.removeItem('provider_registration_token');
 

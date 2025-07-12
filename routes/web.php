@@ -217,6 +217,9 @@ Route::middleware('guest')->group(function () {
 
     // Provider Registration
     Route::get('/register/provider', [RegistrationController::class, 'showProviderRegistration'])->name('register.provider');
+    Route::get('/register/provider/single', function () {
+        return view('auth.provider-register');
+    })->name('register.provider.single');
     Route::get('/register/provider/step1', [RegistrationController::class, 'showProviderRegistration'])->name('register.provider.step1');
     Route::get('/register/provider/step2', [RegistrationController::class, 'showProviderStep2'])->name('register.provider.step2');
     Route::get('/register/provider/phone-verification', [RegistrationController::class, 'showProviderPhoneVerification'])->name('register.provider.phone-verification');

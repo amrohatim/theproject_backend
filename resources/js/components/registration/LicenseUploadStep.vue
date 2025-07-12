@@ -65,29 +65,26 @@
         </div>
       </div>
 
-      <!-- License Duration -->
+      <!-- License Expiry Date -->
       <div>
-        <label for="duration_days" class="block text-sm font-medium text-gray-700 mb-2">
-          License Duration (Days)
+        <label for="license_expiry_date" class="block text-sm font-medium text-gray-700 mb-2">
+          License Expiration Date *
         </label>
-        <select
-          id="duration_days"
-          v-model="formData.duration_days"
+        <input
+          type="date"
+          id="license_expiry_date"
+          v-model="formData.license_expiry_date"
           class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors"
+          :class="{ 'border-red-500': errors.license_expiry_date }"
+          :min="minDate"
           :disabled="loading"
-        >
-          <option value="">Select duration (optional)</option>
-          <option value="365">1 Year (365 days)</option>
-          <option value="730">2 Years (730 days)</option>
-          <option value="1095">3 Years (1095 days)</option>
-          <option value="1825">5 Years (1825 days)</option>
-          <option value="3650">10 Years (3650 days)</option>
-        </select>
-        <div v-if="errors.duration_days" class="mt-1 text-sm text-red-600">
-          {{ errors.duration_days[0] }}
+          required
+        />
+        <div v-if="errors.license_expiry_date" class="mt-1 text-sm text-red-600">
+          {{ errors.license_expiry_date[0] }}
         </div>
         <div class="mt-1 text-sm text-gray-500">
-          Leave empty if license doesn't have an expiration date
+          Select the expiration date of your business license
         </div>
       </div>
 
@@ -166,11 +163,19 @@ export default {
       selectedFile: null,
       isDragging: false,
       formData: {
-        duration_days: '',
+        license_expiry_date: '',
         notes: '',
       },
       errors: {},
     };
+  },
+  computed: {
+    minDate() {
+      // Set minimum date to tomorrow
+      const tomorrow = new Date();
+      tomorrow.setDate(tomorrow.getDate() + 1);
+      return tomorrow.toISOString().split('T')[0];
+    }
   },
   methods: {
     triggerFileInput() {
@@ -248,16 +253,32 @@ export default {
     },
 
     handleSubmit() {
+      this.errors = {};
+
+      // Validate required fields
       if (!this.selectedFile) {
         this.errors.license_file = ['Please select a license file.'];
         return;
       }
 
-      this.errors = {};
-      
+      if (!this.formData.license_expiry_date) {
+        this.errors.license_expiry_date = ['Please select a license expiration date.'];
+        return;
+      }
+
+      // Validate that the date is in the future
+      const selectedDate = new Date(this.formData.license_expiry_date);
+      const today = new Date();
+      today.setHours(0, 0, 0, 0);
+
+      if (selectedDate <= today) {
+        this.errors.license_expiry_date = ['License expiration date must be in the future.'];
+        return;
+      }
+
       const licenseData = {
         license_file: this.selectedFile,
-        duration_days: this.formData.duration_days || null,
+        license_expiry_date: this.formData.license_expiry_date,
         notes: this.formData.notes || null,
       };
 

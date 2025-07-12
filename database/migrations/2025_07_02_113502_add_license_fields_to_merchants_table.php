@@ -12,20 +12,49 @@ return new class extends Migration
     public function up(): void
     {
         Schema::table('merchants', function (Blueprint $table) {
-            // License management fields
-            $table->string('license_file')->nullable()->comment('Path to current license PDF file');
-            $table->date('license_expiry_date')->nullable()->comment('License expiration date');
-            $table->enum('license_status', ['verified', 'checking', 'expired', 'rejected'])->default('checking')->comment('License verification status');
-            $table->boolean('license_verified')->default(false)->comment('Whether license is currently valid and verified');
-            $table->text('license_rejection_reason')->nullable()->comment('Reason for license rejection');
-            $table->timestamp('license_uploaded_at')->nullable()->comment('When license was last uploaded');
-            $table->timestamp('license_approved_at')->nullable()->comment('When license was approved by admin');
-            $table->foreignId('license_approved_by')->nullable()->constrained('users')->comment('Admin who approved the license');
-
-            // Add indexes for performance
-            $table->index(['license_status', 'license_verified']);
-            $table->index(['license_expiry_date']);
+            // Check if columns exist before adding them
+            if (!Schema::hasColumn('merchants', 'license_file')) {
+                $table->string('license_file')->nullable()->comment('Path to current license PDF file');
+            }
+            if (!Schema::hasColumn('merchants', 'license_expiry_date')) {
+                $table->date('license_expiry_date')->nullable()->comment('License expiration date');
+            }
+            if (!Schema::hasColumn('merchants', 'license_status')) {
+                $table->enum('license_status', ['verified', 'checking', 'expired', 'rejected'])->default('checking')->comment('License verification status');
+            }
+            if (!Schema::hasColumn('merchants', 'license_verified')) {
+                $table->boolean('license_verified')->default(false)->comment('Whether license is currently valid and verified');
+            }
+            if (!Schema::hasColumn('merchants', 'license_rejection_reason')) {
+                $table->text('license_rejection_reason')->nullable()->comment('Reason for license rejection');
+            }
+            if (!Schema::hasColumn('merchants', 'license_uploaded_at')) {
+                $table->timestamp('license_uploaded_at')->nullable()->comment('When license was last uploaded');
+            }
+            if (!Schema::hasColumn('merchants', 'license_approved_at')) {
+                $table->timestamp('license_approved_at')->nullable()->comment('When license was approved by admin');
+            }
+            if (!Schema::hasColumn('merchants', 'license_approved_by')) {
+                $table->foreignId('license_approved_by')->nullable()->constrained('users')->comment('Admin who approved the license');
+            }
         });
+
+        // Add indexes separately to avoid conflicts
+        try {
+            Schema::table('merchants', function (Blueprint $table) {
+                $table->index(['license_status', 'license_verified']);
+            });
+        } catch (Exception $e) {
+            // Index might already exist, ignore
+        }
+
+        try {
+            Schema::table('merchants', function (Blueprint $table) {
+                $table->index(['license_expiry_date']);
+            });
+        } catch (Exception $e) {
+            // Index might already exist, ignore
+        }
     }
 
     /**
