@@ -175,6 +175,104 @@ class ImageController extends Controller
     }
 
     /**
+     * Serve merchant logo images
+     *
+     * @param string $filename
+     * @return \Symfony\Component\HttpFoundation\BinaryFileResponse|\Illuminate\Http\Response
+     */
+    public function serveMerchantImage($filename)
+    {
+        try {
+            // Validate filename to prevent directory traversal
+            if (!$this->isValidFilename($filename)) {
+                Log::warning("Invalid merchant image filename requested: {$filename}");
+                return $this->returnPlaceholderImage();
+            }
+
+            // Check if file exists in storage
+            $path = "images/merchants/{$filename}";
+            if (!Storage::disk('public')->exists($path)) {
+                Log::info("Merchant image not found: {$path}");
+                return $this->returnPlaceholderImage();
+            }
+
+            // Get the full file path
+            $fullPath = Storage::disk('public')->path($path);
+
+            // Verify file exists on filesystem
+            if (!file_exists($fullPath)) {
+                Log::warning("Merchant image file missing from filesystem: {$fullPath}");
+                return $this->returnPlaceholderImage();
+            }
+
+            // Get file info
+            $mimeType = $this->getMimeType($fullPath);
+            $fileSize = filesize($fullPath);
+
+            // Return the file with appropriate headers
+            return Response::file($fullPath, [
+                'Content-Type' => $mimeType,
+                'Content-Length' => $fileSize,
+                'Cache-Control' => 'public, max-age=31536000', // Cache for 1 year
+                'Expires' => gmdate('D, d M Y H:i:s', time() + 31536000) . ' GMT',
+            ]);
+
+        } catch (\Exception $e) {
+            Log::error("Error serving merchant image {$filename}: " . $e->getMessage());
+            return $this->returnPlaceholderImage();
+        }
+    }
+
+    /**
+     * Serve UAE ID images
+     *
+     * @param string $filename
+     * @return \Symfony\Component\HttpFoundation\BinaryFileResponse|\Illuminate\Http\Response
+     */
+    public function serveUaeIdImage($filename)
+    {
+        try {
+            // Validate filename to prevent directory traversal
+            if (!$this->isValidFilename($filename)) {
+                Log::warning("Invalid UAE ID image filename requested: {$filename}");
+                return $this->returnPlaceholderImage();
+            }
+
+            // Check if file exists in storage
+            $path = "images/uae_ids/{$filename}";
+            if (!Storage::disk('public')->exists($path)) {
+                Log::info("UAE ID image not found: {$path}");
+                return $this->returnPlaceholderImage();
+            }
+
+            // Get the full file path
+            $fullPath = Storage::disk('public')->path($path);
+
+            // Verify file exists on filesystem
+            if (!file_exists($fullPath)) {
+                Log::warning("UAE ID image file missing from filesystem: {$fullPath}");
+                return $this->returnPlaceholderImage();
+            }
+
+            // Get file info
+            $mimeType = $this->getMimeType($fullPath);
+            $fileSize = filesize($fullPath);
+
+            // Return the file with appropriate headers
+            return Response::file($fullPath, [
+                'Content-Type' => $mimeType,
+                'Content-Length' => $fileSize,
+                'Cache-Control' => 'public, max-age=31536000', // Cache for 1 year
+                'Expires' => gmdate('D, d M Y H:i:s', time() + 31536000) . ' GMT',
+            ]);
+
+        } catch (\Exception $e) {
+            Log::error("Error serving UAE ID image {$filename}: " . $e->getMessage());
+            return $this->returnPlaceholderImage();
+        }
+    }
+
+    /**
      * Serve general storage images (for backward compatibility)
      *
      * @param string $folder
@@ -252,7 +350,7 @@ class ImageController extends Controller
      */
     private function isValidFolder($folder)
     {
-        $allowedFolders = ['products', 'services', 'categories', 'users', 'merchants', 'branches', 'companies', 'merchant-logos'];
+        $allowedFolders = ['products', 'services', 'categories', 'users', 'merchants', 'branches', 'companies', 'merchant-logos', 'images/uae_ids'];
         return in_array($folder, $allowedFolders);
     }
 

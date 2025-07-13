@@ -179,12 +179,54 @@ class MerchantRegistrationApi {
   }
 
   // Step 3: Verify OTP
-  async verifyOtp(phoneNumber, otpCode) {
+  async verifyOtp(requestId, otpCode) {
     return await this.makeRequest('/verify-otp', {
       method: 'POST',
       body: JSON.stringify({
-        phone_number: phoneNumber,
+        request_id: requestId,
         otp_code: otpCode,
+      }),
+    });
+  }
+
+  // Step 3: Resend OTP
+  async resendOtp(phoneNumber, type = 'registration') {
+    return await this.makeRequest('/resend-otp', {
+      method: 'POST',
+      body: JSON.stringify({
+        phone_number: phoneNumber,
+        type: type,
+      }),
+    });
+  }
+
+  // Step 3: Send phone OTP using registration token
+  async sendPhoneOtp(registrationToken) {
+    return await this.makeRequest('/send-phone-otp', {
+      method: 'POST',
+      body: JSON.stringify({
+        registration_token: registrationToken,
+      }),
+    });
+  }
+
+  // Step 3: Verify phone OTP using registration token
+  async verifyPhoneOtp(registrationToken, otpCode) {
+    return await this.makeRequest('/verify-phone-otp', {
+      method: 'POST',
+      body: JSON.stringify({
+        registration_token: registrationToken,
+        otp_code: otpCode,
+      }),
+    });
+  }
+
+  // Step 3: Resend phone OTP using registration token
+  async resendPhoneOtp(registrationToken) {
+    return await this.makeRequest('/resend-phone-otp', {
+      method: 'POST',
+      body: JSON.stringify({
+        registration_token: registrationToken,
       }),
     });
   }
@@ -194,11 +236,15 @@ class MerchantRegistrationApi {
     const formData = new FormData();
     formData.append('user_id', userId);
     formData.append('license_file', licenseData.license_file);
-    
-    if (licenseData.duration_days) {
-      formData.append('duration_days', licenseData.duration_days);
+
+    if (licenseData.license_start_date) {
+      formData.append('license_start_date', licenseData.license_start_date);
     }
-    
+
+    if (licenseData.license_end_date) {
+      formData.append('license_end_date', licenseData.license_end_date);
+    }
+
     if (licenseData.notes) {
       formData.append('notes', licenseData.notes);
     }

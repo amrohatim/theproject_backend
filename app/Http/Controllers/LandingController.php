@@ -72,6 +72,8 @@ class LandingController extends Controller
                 return route('vendor.dashboard');
             case 'provider':
                 return route('provider.dashboard');
+            case 'merchant':
+                return route('merchant.dashboard');
             default:
                 // Regular customers go to home page (could be changed to a customer dashboard if available)
                 return url('/');

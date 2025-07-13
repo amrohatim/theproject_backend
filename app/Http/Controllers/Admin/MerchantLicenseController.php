@@ -162,4 +162,105 @@ class MerchantLicenseController extends Controller
             'Content-Disposition' => 'inline; filename="' . basename($merchant->license_file) . '"'
         ]);
     }
+
+    /**
+     * View a merchant image in full-screen mode.
+     */
+    public function viewImage($id, $type)
+    {
+        $merchant = Merchant::with(['user'])->findOrFail($id);
+
+        // Validate image type
+        $validTypes = ['uae_front', 'uae_back', 'logo'];
+        if (!in_array($type, $validTypes)) {
+            abort(404, 'Invalid image type.');
+        }
+
+        // Get the image path based on type
+        $imagePath = null;
+        $imageTitle = '';
+
+        switch ($type) {
+            case 'uae_front':
+                $imagePath = $merchant->getRawOriginal('uae_id_front');
+                $imageTitle = 'UAE ID Front';
+                break;
+            case 'uae_back':
+                $imagePath = $merchant->getRawOriginal('uae_id_back');
+                $imageTitle = 'UAE ID Back';
+                break;
+            case 'logo':
+                $imagePath = $merchant->getRawOriginal('logo');
+                $imageTitle = 'Business Logo';
+                break;
+        }
+
+        // Check if image exists
+        if (!$imagePath) {
+            abort(404, 'No image found for this type.');
+        }
+
+        // Get full image URL
+        $imageUrl = \App\Helpers\ImageHelper::getFullImageUrl($imagePath);
+
+        // Get image metadata if possible
+        $imageMetadata = $this->getImageMetadata($imagePath);
+
+        return view('admin.merchant-licenses.image-view', compact(
+            'merchant',
+            'type',
+            'imagePath',
+            'imageTitle',
+            'imageUrl',
+            'imageMetadata'
+        ));
+    }
+
+    /**
+     * Get image metadata for display.
+     */
+    private function getImageMetadata($imagePath)
+    {
+        $metadata = [
+            'filename' => basename($imagePath),
+            'size' => null,
+            'dimensions' => null,
+        ];
+
+        try {
+            // Try to get file from storage
+            $fullPath = storage_path('app/public/' . $imagePath);
+
+            if (file_exists($fullPath)) {
+                // Get file size
+                $metadata['size'] = $this->formatFileSize(filesize($fullPath));
+
+                // Get image dimensions
+                $imageInfo = getimagesize($fullPath);
+                if ($imageInfo) {
+                    $metadata['dimensions'] = $imageInfo[0] . ' × ' . $imageInfo[1] . ' pixels';
+                }
+            }
+        } catch (\Exception $e) {
+            // If we can't get metadata, that's okay - we'll just show what we can
+        }
+
+        return $metadata;
+    }
+
+    /**
+     * Format file size in human readable format.
+     */
+    private function formatFileSize($bytes)
+    {
+        if ($bytes >= 1073741824) {
+            return number_format($bytes / 1073741824, 2) . ' GB';
+        } elseif ($bytes >= 1048576) {
+            return number_format($bytes / 1048576, 2) . ' MB';
+        } elseif ($bytes >= 1024) {
+            return number_format($bytes / 1024, 2) . ' KB';
+        } else {
+            return $bytes . ' bytes';
+        }
+    }
 }

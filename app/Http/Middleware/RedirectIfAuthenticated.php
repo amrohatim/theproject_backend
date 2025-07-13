@@ -23,13 +23,31 @@ class RedirectIfAuthenticated
         foreach ($guards as $guard) {
             if (Auth::guard($guard)->check()) {
                 $user = Auth::user();
+
+                // Debug logging
+                \Illuminate\Support\Facades\Log::info('🔍 RedirectIfAuthenticated middleware triggered', [
+                    'user_id' => $user->id,
+                    'user_email' => $user->email,
+                    'user_role' => $user->role,
+                    'request_url' => $request->url(),
+                ]);
+
                 if ($user->role === 'admin') {
+                    \Illuminate\Support\Facades\Log::info('🔄 Redirecting to admin dashboard');
                     return redirect()->route('admin.dashboard');
                 } elseif ($user->role === 'vendor') {
+                    \Illuminate\Support\Facades\Log::info('🔄 Redirecting to vendor dashboard');
                     return redirect()->route('vendor.dashboard');
                 } elseif ($user->role === 'provider') {
+                    \Illuminate\Support\Facades\Log::info('🔄 Redirecting to provider dashboard');
                     return redirect()->route('provider.dashboard');
+                } elseif ($user->role === 'merchant') {
+                    \Illuminate\Support\Facades\Log::info('🔄 Redirecting to merchant dashboard');
+                    return redirect()->route('merchant.dashboard');
                 } else {
+                    \Illuminate\Support\Facades\Log::info('🔄 Redirecting to home page - unknown role', [
+                        'role' => $user->role
+                    ]);
                     return redirect('/');
                 }
             }

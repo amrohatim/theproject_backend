@@ -217,10 +217,22 @@ class ImageHelper
             return route('images.services', ['filename' => $filename]);
         }
 
+        if (str_contains($normalizedPath, 'images/merchants/')) {
+            // Use Laravel route for serving merchant logo images to avoid 403 errors
+            Log::info("Using Laravel route for merchant logo image: {$imagePath}");
+            return route('images.merchants', ['filename' => $filename]);
+        }
+
         if (str_contains($normalizedPath, 'merchant-logos/')) {
             // Use Laravel route for serving merchant logo images to avoid 403 errors
             Log::info("Using Laravel route for merchant logo image: {$imagePath}");
             return route('images.storage', ['folder' => 'merchant-logos', 'filename' => $filename]);
+        }
+
+        if (str_contains($normalizedPath, 'uae_ids/')) {
+            // Use Laravel route for serving UAE ID images to avoid 403 errors
+            Log::info("Using Laravel route for UAE ID image: {$imagePath}");
+            return route('images.uae_ids', ['filename' => $filename]);
         }
 
         // Create an array of possible paths to check

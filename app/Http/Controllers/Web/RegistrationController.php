@@ -503,8 +503,16 @@ class RegistrationController extends Controller
             $validator = Validator::make($request->all(), [
                 'user_id' => 'required|exists:users,id',
                 'license_file' => 'required|file|mimes:pdf|max:10240', // 10MB max
-                'duration_days' => 'nullable|integer|min:1|max:3650',
+                'license_start_date' => 'required|date|after_or_equal:today',
+                'license_end_date' => 'required|date|after:license_start_date',
                 'notes' => 'nullable|string|max:500',
+            ], [
+                'license_start_date.required' => 'License start date is required.',
+                'license_start_date.date' => 'License start date must be a valid date.',
+                'license_start_date.after_or_equal' => 'License start date cannot be in the past.',
+                'license_end_date.required' => 'License end date is required.',
+                'license_end_date.date' => 'License end date must be a valid date.',
+                'license_end_date.after' => 'License end date must be after the start date.',
             ]);
 
             if ($validator->fails()) {
@@ -514,7 +522,8 @@ class RegistrationController extends Controller
             $user = User::findOrFail($request->user_id);
             $result = $this->registrationService->uploadMerchantLicense($user, [
                 'license_file' => $request->file('license_file'),
-                'duration_days' => $request->duration_days,
+                'license_start_date' => $request->license_start_date,
+                'license_end_date' => $request->license_end_date,
                 'notes' => $request->notes,
             ]);
 

@@ -68,6 +68,76 @@
     </div>
 </div>
 
+<!-- License Status Alert -->
+@if($merchant->license_status !== 'verified' || $merchant->needsLicenseRenewal())
+<div class="mb-6">
+    <div class="bg-white rounded-xl shadow-sm border-l-4 {{ $merchant->license_status === 'checking' ? 'border-yellow-400' : ($merchant->license_status === 'rejected' ? 'border-red-400' : ($merchant->license_status === 'expired' ? 'border-gray-400' : 'border-orange-400')) }} p-6">
+        <div class="flex items-start">
+            <div class="flex-shrink-0">
+                <div class="w-8 h-8 {{ $merchant->license_status === 'checking' ? 'bg-yellow-100' : ($merchant->license_status === 'rejected' ? 'bg-red-100' : ($merchant->license_status === 'expired' ? 'bg-gray-100' : 'bg-orange-100')) }} rounded-full flex items-center justify-center">
+                    @if($merchant->license_status === 'checking')
+                        <svg class="w-5 h-5 text-yellow-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                        </svg>
+                    @elseif($merchant->license_status === 'rejected')
+                        <svg class="w-5 h-5 text-red-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+                        </svg>
+                    @elseif($merchant->license_status === 'expired')
+                        <svg class="w-5 h-5 text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                        </svg>
+                    @else
+                        <svg class="w-5 h-5 text-orange-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-2.5L13.732 4c-.77-.833-1.964-.833-2.732 0L3.732 16.5c-.77.833.192 2.5 1.732 2.5z"></path>
+                        </svg>
+                    @endif
+                </div>
+            </div>
+            <div class="ml-4 flex-1">
+                <h3 class="text-sm font-medium {{ $merchant->license_status === 'checking' ? 'text-yellow-800' : ($merchant->license_status === 'rejected' ? 'text-red-800' : ($merchant->license_status === 'expired' ? 'text-gray-800' : 'text-orange-800')) }}">
+                    @if($merchant->license_status === 'checking')
+                        License Under Review
+                    @elseif($merchant->license_status === 'rejected')
+                        License Rejected
+                    @elseif($merchant->license_status === 'expired')
+                        License Expired
+                    @elseif($merchant->needsLicenseRenewal())
+                        License Renewal Required
+                    @else
+                        License Status Update
+                    @endif
+                </h3>
+                <div class="mt-1 text-sm {{ $merchant->license_status === 'checking' ? 'text-yellow-700' : ($merchant->license_status === 'rejected' ? 'text-red-700' : ($merchant->license_status === 'expired' ? 'text-gray-700' : 'text-orange-700')) }}">
+                    @if($merchant->license_status === 'checking')
+                        <p>Your license is currently under review. You will receive an email notification once approved.</p>
+                    @elseif($merchant->license_status === 'rejected')
+                        <p>Your license has been rejected. Please upload a new license to continue.</p>
+                        @if($merchant->license_rejection_reason)
+                            <p class="mt-1 font-medium">Reason: {{ $merchant->license_rejection_reason }}</p>
+                        @endif
+                    @elseif($merchant->license_status === 'expired')
+                        <p>Your license has expired. Please upload a renewed license to continue using the platform.</p>
+                    @elseif($merchant->needsLicenseRenewal())
+                        <p>Your license expires in {{ $merchant->daysUntilLicenseExpiration() }} days. Please renew your license soon.</p>
+                    @endif
+                </div>
+                <div class="mt-3">
+                    @if(in_array($merchant->license_status, ['rejected', 'expired']) || $merchant->needsLicenseRenewal())
+                        <a href="{{ route('merchant.settings.global') }}" class="inline-flex items-center px-3 py-2 border border-transparent text-sm leading-4 font-medium rounded-md text-white {{ $merchant->license_status === 'rejected' ? 'bg-red-600 hover:bg-red-700' : ($merchant->license_status === 'expired' ? 'bg-gray-600 hover:bg-gray-700' : 'bg-orange-600 hover:bg-orange-700') }} focus:outline-none focus:ring-2 focus:ring-offset-2 {{ $merchant->license_status === 'rejected' ? 'focus:ring-red-500' : ($merchant->license_status === 'expired' ? 'focus:ring-gray-500' : 'focus:ring-orange-500') }} transition-colors">
+                            <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12"></path>
+                            </svg>
+                            {{ $merchant->needsLicenseRenewal() ? 'Renew License' : 'Upload New License' }}
+                        </a>
+                    @endif
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+@endif
+
 <!-- Statistics Cards -->
 <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-3 gap-4 sm:gap-6 mb-8">
     <!-- Products Card -->
@@ -402,13 +472,21 @@
                 <div class="text-sm font-medium {{ $merchant->status === 'active' ? 'text-orange-700' : 'text-red-700' }}">Account Status</div>
             </div>
 
-            <!-- Verification Status -->
-            <div class="bg-gradient-to-br {{ $merchant->is_verified ? 'from-green-50 to-green-100' : 'from-yellow-50 to-yellow-100' }} rounded-xl p-6 border {{ $merchant->is_verified ? 'border-green-200' : 'border-yellow-200' }}">
+            <!-- License Status -->
+            <div class="bg-gradient-to-br {{ $merchant->license_status === 'verified' ? 'from-green-50 to-green-100' : ($merchant->license_status === 'checking' ? 'from-yellow-50 to-yellow-100' : ($merchant->license_status === 'rejected' ? 'from-red-50 to-red-100' : 'from-gray-50 to-gray-100')) }} rounded-xl p-6 border {{ $merchant->license_status === 'verified' ? 'border-green-200' : ($merchant->license_status === 'checking' ? 'border-yellow-200' : ($merchant->license_status === 'rejected' ? 'border-red-200' : 'border-gray-200')) }}">
                 <div class="flex items-center justify-between mb-4">
-                    <div class="p-3 {{ $merchant->is_verified ? 'bg-green-500' : 'bg-yellow-500' }} rounded-lg">
-                        @if($merchant->is_verified)
+                    <div class="p-3 {{ $merchant->license_status === 'verified' ? 'bg-green-500' : ($merchant->license_status === 'checking' ? 'bg-yellow-500' : ($merchant->license_status === 'rejected' ? 'bg-red-500' : 'bg-gray-500')) }} rounded-lg">
+                        @if($merchant->license_status === 'verified')
                             <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"></path>
+                            </svg>
+                        @elseif($merchant->license_status === 'checking')
+                            <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                            </svg>
+                        @elseif($merchant->license_status === 'rejected')
+                            <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
                             </svg>
                         @else
                             <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -417,12 +495,17 @@
                         @endif
                     </div>
                     <div class="text-right">
-                        <div class="text-2xl font-bold {{ $merchant->is_verified ? 'text-green-700' : 'text-yellow-700' }}">
-                            {{ $merchant->is_verified ? 'Verified' : 'Pending' }}
+                        <div class="text-2xl font-bold {{ $merchant->license_status === 'verified' ? 'text-green-700' : ($merchant->license_status === 'checking' ? 'text-yellow-700' : ($merchant->license_status === 'rejected' ? 'text-red-700' : 'text-gray-700')) }}">
+                            {{ ucfirst($merchant->license_status) }}
                         </div>
+                        @if($merchant->license_status === 'verified' && $merchant->license_expiry_date)
+                            <div class="text-xs {{ $merchant->needsLicenseRenewal() ? 'text-orange-600' : 'text-green-600' }} font-medium">
+                                {{ $merchant->needsLicenseRenewal() ? 'Expires in ' . $merchant->daysUntilLicenseExpiration() . ' days' : 'Valid until ' . $merchant->license_expiry_date->format('d-m-Y') }}
+                            </div>
+                        @endif
                     </div>
                 </div>
-                <div class="text-sm font-medium {{ $merchant->is_verified ? 'text-green-700' : 'text-yellow-700' }}">Verification Status</div>
+                <div class="text-sm font-medium {{ $merchant->license_status === 'verified' ? 'text-green-700' : ($merchant->license_status === 'checking' ? 'text-yellow-700' : ($merchant->license_status === 'rejected' ? 'text-red-700' : 'text-gray-700')) }}">License Status</div>
             </div>
 
             <!-- Location -->

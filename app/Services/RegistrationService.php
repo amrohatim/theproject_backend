@@ -285,7 +285,26 @@ class RegistrationService
     private function getTemporaryFiles(string $registrationToken): array
     {
         $cacheKey = "temp_files_{$registrationToken}";
-        return Cache::get($cacheKey, []);
+        $tempFiles = Cache::get($cacheKey, []);
+
+        Log::info("Retrieved temporary files for registration", [
+            'registration_token' => $registrationToken,
+            'cache_key' => $cacheKey,
+            'files_found' => array_keys($tempFiles),
+            'files_count' => count($tempFiles),
+        ]);
+
+        // Log details of each file
+        foreach ($tempFiles as $fieldName => $fileInfo) {
+            Log::info("Temporary file details", [
+                'field' => $fieldName,
+                'storage_path' => $fileInfo['storage_path'] ?? 'not set',
+                'original_name' => $fileInfo['original_name'] ?? 'not set',
+                'file_exists' => isset($fileInfo['storage_path']) ? Storage::disk('local')->exists($fileInfo['storage_path']) : false,
+            ]);
+        }
+
+        return $tempFiles;
     }
 
     /**
@@ -686,11 +705,15 @@ class RegistrationService
             // Upload license file
             $licensePath = $this->uploadLicenseFile($licenseData['license_file'], $user->id);
 
-            // Calculate dates
-            $startDate = Carbon::now()->toDateString();
-            $duration = (int)($licenseData['duration_days'] ?? 365);
-            $endDate = Carbon::now()->addDays($duration)->toDateString();
+            // Use provided dates
+            $startDate = $licenseData['license_start_date'];
+            $endDate = $licenseData['license_end_date'];
             $renewalDate = $endDate;
+
+            // Calculate duration in days
+            $startCarbon = Carbon::parse($startDate);
+            $endCarbon = Carbon::parse($endDate);
+            $duration = $startCarbon->diffInDays($endCarbon);
 
             // Create license record
             $license = License::create([
@@ -716,9 +739,20 @@ class RegistrationService
                 'status' => $userStatus,
             ]);
 
-            // Update merchant status if exists
+            // Update merchant status and license information if exists
             if ($user->merchant) {
-                $user->merchant()->update(['status' => $merchantStatus]);
+                $user->merchant()->update([
+                    'status' => $merchantStatus,
+                    'license_file' => $licensePath,
+                    'license_start_date' => $startDate,
+                    'license_expiry_date' => $endDate,
+                    'license_status' => $licenseStatus === 'active' ? 'verified' : 'checking',
+                    'license_verified' => $licenseStatus === 'active',
+                    'license_uploaded_at' => now(),
+                    'license_rejection_reason' => null,
+                    'license_approved_at' => $licenseStatus === 'active' ? now() : null,
+                    'license_approved_by' => null,
+                ]);
             }
 
             DB::commit();
@@ -822,6 +856,13 @@ class RegistrationService
      */
     private function createMerchantProfile(User $user, array $userData, array $tempFiles = []): void
     {
+        Log::info("Creating merchant profile", [
+            'user_id' => $user->id,
+            'business_name' => $userData['name'],
+            'temp_files_count' => count($tempFiles),
+            'temp_files_fields' => array_keys($tempFiles),
+        ]);
+
         $merchantData = [
             'user_id' => $user->id,
             'business_name' => $userData['name'],
@@ -846,21 +887,58 @@ class RegistrationService
 
         // Handle temporary file uploads
         foreach ($tempFiles as $fieldName => $fileInfo) {
-            if (file_exists($fileInfo['path'])) {
-                switch ($fieldName) {
-                    case 'logo':
-                        $logoPath = $this->moveTemporaryFileToFinal($fileInfo, 'images/merchants', 'merchant_' . $merchant->id . '_logo');
-                        $merchant->update(['logo' => $logoPath]);
-                        break;
-                    case 'uae_id_front':
-                        $frontPath = $this->moveTemporaryFileToFinal($fileInfo, 'images/uae_ids', 'uae_id_front_' . $user->id);
-                        $merchant->update(['uae_id_front' => $frontPath]);
-                        break;
-                    case 'uae_id_back':
-                        $backPath = $this->moveTemporaryFileToFinal($fileInfo, 'images/uae_ids', 'uae_id_back_' . $user->id);
-                        $merchant->update(['uae_id_back' => $backPath]);
-                        break;
+            // Check if file exists using Laravel Storage system (consistent with moveTemporaryFileToFinal)
+            if (isset($fileInfo['storage_path']) && Storage::disk('local')->exists($fileInfo['storage_path'])) {
+                Log::info("Processing temporary file for merchant", [
+                    'field' => $fieldName,
+                    'storage_path' => $fileInfo['storage_path'],
+                    'merchant_id' => $merchant->id,
+                    'user_id' => $user->id,
+                ]);
+
+                try {
+                    switch ($fieldName) {
+                        case 'logo':
+                            $logoPath = $this->moveTemporaryFileToFinal($fileInfo, 'images/merchants', 'merchant_' . $merchant->id . '_logo');
+                            $merchant->update(['logo' => $logoPath]);
+                            Log::info("Merchant logo updated", [
+                                'merchant_id' => $merchant->id,
+                                'logo_path' => $logoPath,
+                            ]);
+                            break;
+                        case 'uae_id_front':
+                            $frontPath = $this->moveTemporaryFileToFinal($fileInfo, 'images/uae_ids', 'uae_id_front_' . $user->id);
+                            $merchant->update(['uae_id_front' => $frontPath]);
+                            Log::info("Merchant UAE ID front updated", [
+                                'merchant_id' => $merchant->id,
+                                'uae_id_front_path' => $frontPath,
+                            ]);
+                            break;
+                        case 'uae_id_back':
+                            $backPath = $this->moveTemporaryFileToFinal($fileInfo, 'images/uae_ids', 'uae_id_back_' . $user->id);
+                            $merchant->update(['uae_id_back' => $backPath]);
+                            Log::info("Merchant UAE ID back updated", [
+                                'merchant_id' => $merchant->id,
+                                'uae_id_back_path' => $backPath,
+                            ]);
+                            break;
+                    }
+                } catch (Exception $e) {
+                    Log::error("Failed to process temporary file for merchant", [
+                        'field' => $fieldName,
+                        'merchant_id' => $merchant->id,
+                        'error' => $e->getMessage(),
+                        'file_info' => $fileInfo,
+                    ]);
+                    // Continue with other files, don't fail the entire registration
                 }
+            } else {
+                Log::warning("Temporary file not found for merchant", [
+                    'field' => $fieldName,
+                    'storage_path' => $fileInfo['storage_path'] ?? 'not set',
+                    'merchant_id' => $merchant->id,
+                    'file_info' => $fileInfo,
+                ]);
             }
         }
     }

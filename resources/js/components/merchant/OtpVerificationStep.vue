@@ -9,7 +9,7 @@
         We've sent a verification code to <strong>{{ phone }}</strong>
       </p>
       <p class="step-subdescription">
-        Please enter the 4-digit code below
+        Please enter the 6-digit code below
       </p>
     </div>
 
@@ -60,7 +60,7 @@
       </div>
       <div class="help-item">
         <i class="fas fa-clock"></i>
-        <span>The OTP code expires in 5 minutes</span>
+        <span>The OTP code expires in 10 minutes</span>
       </div>
     </div>
   </div>
@@ -86,7 +86,7 @@ export default {
   emits: ['submit', 'resend'],
   data() {
     return {
-      otpDigits: ['', '', '', ''],
+      otpDigits: ['', '', '', '', '', ''],
       errors: {},
       resendCooldown: 0,
       resendTimer: null
@@ -105,7 +105,6 @@ export default {
       this.errors = {};
       if (this.isOtpComplete) {
         this.$emit('submit', {
-          phone_number: this.phone,
           otp_code: this.otpCode
         });
       }
@@ -117,7 +116,7 @@ export default {
         this.otpDigits[index] = value;
         
         // Move to next input
-        if (index < 3) {
+        if (index < 5) {
           this.$refs[`otpInput${index + 1}`][0].focus();
         }
         
@@ -139,24 +138,24 @@ export default {
       if (event.key === 'ArrowLeft' && index > 0) {
         this.$refs[`otpInput${index - 1}`][0].focus();
       }
-      if (event.key === 'ArrowRight' && index < 3) {
+      if (event.key === 'ArrowRight' && index < 5) {
         this.$refs[`otpInput${index + 1}`][0].focus();
       }
     },
     handlePaste(event) {
       event.preventDefault();
       const pastedData = event.clipboardData.getData('text').replace(/\D/g, '');
-      
-      if (pastedData.length === 4) {
-        for (let i = 0; i < 4; i++) {
+
+      if (pastedData.length === 6) {
+        for (let i = 0; i < 6; i++) {
           this.otpDigits[i] = pastedData[i] || '';
         }
-        
+
         // Focus last input or submit if complete
         if (this.isOtpComplete) {
           this.handleSubmit();
         } else {
-          this.$refs[`otpInput3`][0].focus();
+          this.$refs[`otpInput5`][0].focus();
         }
       }
     },
@@ -243,20 +242,25 @@ export default {
 .otp-input-container {
   display: flex;
   justify-content: center;
-  gap: 1rem;
+  gap: 0.5rem;
   margin-bottom: 1rem;
+  flex-wrap: wrap;
+  max-width: 400px;
+  margin-left: auto;
+  margin-right: auto;
 }
 
 .otp-digit-input {
-  width: 60px;
-  height: 60px;
+  width: 50px;
+  height: 50px;
   text-align: center;
-  font-size: 1.5rem;
+  font-size: 1.25rem;
   font-weight: 600;
   border: 2px solid #e1e5e9;
-  border-radius: 12px;
+  border-radius: 8px;
   background: white;
   transition: all 0.3s ease;
+  flex-shrink: 0;
 }
 
 .otp-digit-input:focus {
@@ -317,5 +321,19 @@ export default {
   margin-right: 0.75rem;
   color: #667eea;
   width: 16px;
+}
+
+/* Responsive design for smaller screens */
+@media (max-width: 480px) {
+  .otp-input-container {
+    gap: 0.25rem;
+    max-width: 320px;
+  }
+
+  .otp-digit-input {
+    width: 40px;
+    height: 40px;
+    font-size: 1rem;
+  }
 }
 </style>

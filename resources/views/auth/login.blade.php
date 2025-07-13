@@ -114,7 +114,7 @@
                 </div>
             </div>
 
-            <div class="mt-6 grid grid-cols-2 gap-3">
+            <div class="mt-6 grid grid-cols-3 gap-3">
                 <form action="{{ route('login.attempt') }}" method="POST">
                     @csrf
                     <input type="hidden" name="email" value="admin@example.com">
@@ -130,6 +130,15 @@
                     <input type="hidden" name="password" value="password123">
                     <button type="submit" class="w-full flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500">
                         Vendor Login
+                    </button>
+                </form>
+
+                <form action="{{ route('login.attempt') }}" method="POST">
+                    @csrf
+                    <input type="hidden" name="email" value="merchant@test.com">
+                    <input type="hidden" name="password" value="password123">
+                    <button type="submit" class="w-full flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-green-600 hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500">
+                        Merchant Login
                     </button>
                 </form>
             </div>

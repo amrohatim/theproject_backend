@@ -69,6 +69,7 @@ class Kernel extends HttpKernel
         'vendor' => \App\Http\Middleware\VendorMiddleware::class,
         'provider' => \App\Http\Middleware\ProviderMiddleware::class,
         'merchant' => \App\Http\Middleware\MerchantMiddleware::class,
+        'merchant.license' => \App\Http\Middleware\MerchantLicenseAccessMiddleware::class,
         'approved' => \App\Http\Middleware\ApprovedUserMiddleware::class,
     ];
 }

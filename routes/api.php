@@ -135,6 +135,10 @@ Route::prefix('merchant-registration')->group(function () {
     Route::post('/license', [MerchantRegistrationController::class, 'uploadLicense']);
     Route::post('/send-otp', [MerchantRegistrationController::class, 'sendOtp']);
     Route::post('/verify-otp', [MerchantRegistrationController::class, 'verifyOtp']);
+    Route::post('/resend-otp', [MerchantRegistrationController::class, 'resendOtp']);
+    Route::post('/send-phone-otp', [MerchantRegistrationController::class, 'sendPhoneOtp']);
+    Route::post('/verify-phone-otp', [MerchantRegistrationController::class, 'verifyPhoneOtp']);
+    Route::post('/resend-phone-otp', [MerchantRegistrationController::class, 'resendPhoneOtp']);
     Route::get('/status', [MerchantRegistrationController::class, 'getRegistrationStatus']);
     Route::post('/resend-email-verification', [MerchantRegistrationController::class, 'resendEmailVerification']);
 });

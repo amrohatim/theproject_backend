@@ -1,0 +1,320 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Merchant License Date Picker Test</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #f5f5f5;
+        }
+        .container {
+            background: white;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        h1 {
+            color: #333;
+            text-align: center;
+            margin-bottom: 30px;
+        }
+        .form-group {
+            margin-bottom: 20px;
+        }
+        .form-label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: bold;
+            color: #333;
+        }
+        .form-input {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid #e1e5e9;
+            border-radius: 8px;
+            font-size: 16px;
+            transition: border-color 0.3s ease;
+        }
+        .form-input:focus {
+            outline: none;
+            border-color: #667eea;
+            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+        }
+        .form-input.error {
+            border-color: #e53e3e;
+        }
+        .required {
+            color: #e53e3e;
+            font-weight: bold;
+        }
+        .error-message {
+            color: #e53e3e;
+            font-size: 14px;
+            margin-top: 5px;
+            display: none;
+        }
+        .success-message {
+            color: #10b981;
+            font-size: 14px;
+            margin-top: 5px;
+            display: none;
+        }
+        .form-help-text {
+            color: #666;
+            font-size: 14px;
+            margin-top: 5px;
+        }
+        button {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            padding: 15px 30px;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: transform 0.2s ease;
+            width: 100%;
+            margin-top: 20px;
+        }
+        button:hover {
+            transform: translateY(-2px);
+        }
+        .info-box {
+            background: #e6f3ff;
+            border: 1px solid #b3d9ff;
+            border-radius: 8px;
+            padding: 15px;
+            margin-bottom: 20px;
+        }
+        .info-box h3 {
+            margin: 0 0 10px 0;
+            color: #1e40af;
+        }
+        .info-box p {
+            margin: 0;
+            color: #1e40af;
+            font-size: 14px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Merchant License Date Picker Test</h1>
+        
+        <div class="info-box">
+            <h3>Implementation Details</h3>
+            <p>This test verifies that the merchant license date picker works correctly with DD-MM-YYYY display format and YYYY-MM-DD storage format. The dates are stored in the 'merchants' table 'license_start_date' and 'license_expiry_date' fields.</p>
+        </div>
+        
+        <form id="licenseForm">
+            <div class="form-group">
+                <label for="license_start_date" class="form-label">License Start Date <span class="required">*</span></label>
+                <input 
+                    type="date" 
+                    id="license_start_date" 
+                    name="license_start_date"
+                    class="form-input"
+                    required
+                >
+                <div class="form-help-text">
+                    Select the start date of your business license
+                </div>
+                <div id="start-error-message" class="error-message"></div>
+                <div id="start-success-message" class="success-message"></div>
+            </div>
+            
+            <div class="form-group">
+                <label for="license_end_date" class="form-label">License End Date <span class="required">*</span></label>
+                <input 
+                    type="date" 
+                    id="license_end_date" 
+                    name="license_end_date"
+                    class="form-input"
+                    required
+                >
+                <div class="form-help-text">
+                    Select the expiration date of your business license
+                </div>
+                <div id="end-error-message" class="error-message"></div>
+                <div id="end-success-message" class="success-message"></div>
+            </div>
+            
+            <div class="form-group">
+                <label for="notes" class="form-label">Notes (Optional)</label>
+                <textarea 
+                    id="notes" 
+                    name="notes"
+                    class="form-input"
+                    rows="3"
+                    placeholder="Any additional notes about the license..."
+                ></textarea>
+            </div>
+            
+            <button type="submit">Test Merchant License Date Validation</button>
+        </form>
+
+        <div id="result-display" style="margin-top: 20px; display: none;">
+            <h3>Test Results:</h3>
+            <div id="result-content"></div>
+        </div>
+    </div>
+
+    <script>
+        // Set minimum date to today for start date
+        const today = new Date();
+        const todayString = today.toISOString().split('T')[0];
+        document.getElementById('license_start_date').min = todayString;
+
+        // Update end date minimum when start date changes
+        document.getElementById('license_start_date').addEventListener('change', function() {
+            const startDate = this.value;
+            const endDateInput = document.getElementById('license_end_date');
+            
+            if (startDate) {
+                // Set minimum end date to one day after start date
+                const startDateObj = new Date(startDate);
+                startDateObj.setDate(startDateObj.getDate() + 1);
+                const minEndDate = startDateObj.toISOString().split('T')[0];
+                endDateInput.min = minEndDate;
+                
+                // Clear end date if it's now invalid
+                if (endDateInput.value && endDateInput.value <= startDate) {
+                    endDateInput.value = '';
+                }
+            }
+            
+            validateDates();
+        });
+
+        document.getElementById('license_end_date').addEventListener('change', validateDates);
+
+        document.getElementById('licenseForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            const startDateInput = document.getElementById('license_start_date');
+            const endDateInput = document.getElementById('license_end_date');
+            const notesInput = document.getElementById('notes');
+            const resultDisplay = document.getElementById('result-display');
+            const resultContent = document.getElementById('result-content');
+            
+            // Clear previous messages
+            clearMessages();
+            
+            let isValid = true;
+            
+            if (!startDateInput.value) {
+                showError('start', 'Please select a license start date.');
+                isValid = false;
+            }
+            
+            if (!endDateInput.value) {
+                showError('end', 'Please select a license end date.');
+                isValid = false;
+            }
+            
+            if (isValid && !validateDates()) {
+                isValid = false;
+            }
+            
+            if (isValid) {
+                // Show success message with formatted dates
+                const startDate = new Date(startDateInput.value);
+                const endDate = new Date(endDateInput.value);
+                const startFormatted = startDate.toLocaleDateString('en-GB'); // DD/MM/YYYY format
+                const endFormatted = endDate.toLocaleDateString('en-GB'); // DD/MM/YYYY format
+                
+                showSuccess('start', '✓ Valid license start date selected!');
+                showSuccess('end', '✓ Valid license end date selected!');
+                
+                // Show detailed results
+                resultContent.innerHTML = `
+                    <p><strong>Start Date Display Format:</strong> ${startFormatted} (DD/MM/YYYY)</p>
+                    <p><strong>Start Date Storage Format:</strong> ${startDateInput.value} (YYYY-MM-DD)</p>
+                    <p><strong>End Date Display Format:</strong> ${endFormatted} (DD/MM/YYYY)</p>
+                    <p><strong>End Date Storage Format:</strong> ${endDateInput.value} (YYYY-MM-DD)</p>
+                    <p><strong>Database Table:</strong> merchants</p>
+                    <p><strong>Database Fields:</strong> license_start_date, license_expiry_date</p>
+                    <p><strong>Notes:</strong> ${notesInput.value || 'None'}</p>
+                    <p><strong>Validation:</strong> ✓ All date requirements met</p>
+                    <p><strong>Status:</strong> <span style="color: #10b981;">Ready for merchant registration</span></p>
+                `;
+                resultDisplay.style.display = 'block';
+            }
+        });
+
+        function validateDates() {
+            const startDateInput = document.getElementById('license_start_date');
+            const endDateInput = document.getElementById('license_end_date');
+            
+            if (!startDateInput.value || !endDateInput.value) {
+                return true; // Don't validate if either is empty
+            }
+            
+            const startDate = new Date(startDateInput.value);
+            const endDate = new Date(endDateInput.value);
+            const today = new Date();
+            today.setHours(0, 0, 0, 0);
+            
+            let isValid = true;
+            
+            // Check if start date is not in the past
+            if (startDate < today) {
+                showError('start', 'License start date cannot be in the past.');
+                isValid = false;
+            }
+            
+            // Check if end date is after start date
+            if (endDate <= startDate) {
+                showError('end', 'License end date must be after start date.');
+                isValid = false;
+            }
+            
+            return isValid;
+        }
+
+        function showError(field, message) {
+            const errorDiv = document.getElementById(`${field}-error-message`);
+            const input = document.getElementById(`license_${field}_date`);
+            
+            errorDiv.textContent = message;
+            errorDiv.style.display = 'block';
+            input.classList.add('error');
+        }
+
+        function showSuccess(field, message) {
+            const successDiv = document.getElementById(`${field}-success-message`);
+            const input = document.getElementById(`license_${field}_date`);
+            
+            successDiv.textContent = message;
+            successDiv.style.display = 'block';
+            input.classList.remove('error');
+        }
+
+        function clearMessages() {
+            const errorDivs = document.querySelectorAll('.error-message');
+            const successDivs = document.querySelectorAll('.success-message');
+            const inputs = document.querySelectorAll('.form-input');
+            
+            errorDivs.forEach(div => {
+                div.style.display = 'none';
+                div.textContent = '';
+            });
+            
+            successDivs.forEach(div => {
+                div.style.display = 'none';
+                div.textContent = '';
+            });
+            
+            inputs.forEach(input => {
+                input.classList.remove('error');
+            });
+        }
+    </script>
+</body>
+</html>

@@ -77,10 +77,17 @@ class LicenseManagementService
                 'license_verified' => false,
                 'license_status' => 'expired',
                 'is_verified' => false,
+                'status' => 'pending', // Set merchant status to pending when license expires
+            ]);
+
+            // Also update the user status to pending and registration step to license_completed
+            $merchant->user->update([
+                'status' => 'pending',
+                'registration_step' => 'license_completed',
             ]);
 
             Log::info("License expired for merchant: {$merchant->business_name} (ID: {$merchant->id})");
-            
+
             // TODO: Send notification to merchant about expired license
             // $this->sendLicenseExpirationNotification($merchant);
 
@@ -104,10 +111,17 @@ class LicenseManagementService
                 'license_approved_at' => now(),
                 'license_approved_by' => $approvedBy->id,
                 'is_verified' => true,
+                'status' => 'active', // Automatically set merchant status to active when license is approved
+            ]);
+
+            // Also update the user status to active and registration step to verified
+            $merchant->user->update([
+                'status' => 'active',
+                'registration_step' => 'verified',
             ]);
 
             Log::info("License approved for merchant: {$merchant->business_name} (ID: {$merchant->id}) by admin: {$approvedBy->name}");
-            
+
             // TODO: Send approval notification to merchant
             // $this->sendLicenseApprovalNotification($merchant, $message);
 
@@ -131,10 +145,17 @@ class LicenseManagementService
                 'license_approved_at' => null,
                 'license_approved_by' => null,
                 'is_verified' => false,
+                'status' => 'pending', // Set merchant status to pending when license is rejected
+            ]);
+
+            // Also update the user status to pending and registration step to license_completed
+            $merchant->user->update([
+                'status' => 'pending',
+                'registration_step' => 'license_completed',
             ]);
 
             Log::info("License rejected for merchant: {$merchant->business_name} (ID: {$merchant->id}) by admin: {$rejectedBy->name}");
-            
+
             // TODO: Send rejection notification to merchant
             // $this->sendLicenseRejectionNotification($merchant, $reason);
 

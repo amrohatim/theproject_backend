@@ -50,22 +50,34 @@
         <div v-if="errors.license_file" class="error-message">{{ errors.license_file[0] }}</div>
       </div>
 
-      <!-- License Duration -->
+      <!-- License Start Date -->
       <div class="form-group">
-        <label for="duration_days" class="form-label">License Duration (Days)</label>
-        <select 
-          id="duration_days" 
-          v-model="formData.duration_days"
+        <label for="license_start_date" class="form-label">License Start Date <span class="required">*</span></label>
+        <input
+          type="date"
+          id="license_start_date"
+          v-model="formData.license_start_date"
           class="form-input"
-          :class="{ 'error': errors.duration_days }"
-        >
-          <option value="">Select duration</option>
-          <option value="365">1 Year (365 days)</option>
-          <option value="730">2 Years (730 days)</option>
-          <option value="1095">3 Years (1095 days)</option>
-          <option value="1825">5 Years (1825 days)</option>
-        </select>
-        <div v-if="errors.duration_days" class="error-message">{{ errors.duration_days[0] }}</div>
+          :class="{ 'error': errors.license_start_date }"
+          :min="minStartDate"
+          required
+        />
+        <div v-if="errors.license_start_date" class="error-message">{{ errors.license_start_date[0] }}</div>
+      </div>
+
+      <!-- License End Date -->
+      <div class="form-group">
+        <label for="license_end_date" class="form-label">License End Date <span class="required">*</span></label>
+        <input
+          type="date"
+          id="license_end_date"
+          v-model="formData.license_end_date"
+          class="form-input"
+          :class="{ 'error': errors.license_end_date }"
+          :min="minEndDate"
+          required
+        />
+        <div v-if="errors.license_end_date" class="error-message">{{ errors.license_end_date[0] }}</div>
       </div>
 
       <!-- Notes -->
@@ -122,7 +134,8 @@ export default {
   data() {
     return {
       formData: {
-        duration_days: '',
+        license_start_date: '',
+        license_end_date: '',
         notes: ''
       },
       licenseFile: null,
@@ -130,17 +143,77 @@ export default {
       isDragOver: false
     };
   },
+  computed: {
+    minStartDate() {
+      // Start date cannot be in the past
+      const today = new Date();
+      return today.toISOString().split('T')[0];
+    },
+    minEndDate() {
+      // End date must be after start date
+      if (this.formData.license_start_date) {
+        const startDate = new Date(this.formData.license_start_date);
+        startDate.setDate(startDate.getDate() + 1); // At least one day after start date
+        return startDate.toISOString().split('T')[0];
+      }
+      return this.minStartDate;
+    }
+  },
   methods: {
     handleSubmit() {
       this.errors = {};
+
+      // Validate dates
+      if (!this.validateDates()) {
+        return;
+      }
+
       if (this.licenseFile) {
         this.$emit('submit', {
           user_id: this.userId,
           license_file: this.licenseFile,
-          duration_days: this.formData.duration_days,
+          license_start_date: this.formData.license_start_date,
+          license_end_date: this.formData.license_end_date,
           notes: this.formData.notes
         });
       }
+    },
+    validateDates() {
+      let isValid = true;
+
+      // Check if start date is provided
+      if (!this.formData.license_start_date) {
+        this.errors.license_start_date = ['License start date is required'];
+        isValid = false;
+      }
+
+      // Check if end date is provided
+      if (!this.formData.license_end_date) {
+        this.errors.license_end_date = ['License end date is required'];
+        isValid = false;
+      }
+
+      // Check if both dates are provided for further validation
+      if (this.formData.license_start_date && this.formData.license_end_date) {
+        const startDate = new Date(this.formData.license_start_date);
+        const endDate = new Date(this.formData.license_end_date);
+        const today = new Date();
+        today.setHours(0, 0, 0, 0);
+
+        // Check if start date is not in the past
+        if (startDate < today) {
+          this.errors.license_start_date = ['License start date cannot be in the past'];
+          isValid = false;
+        }
+
+        // Check if end date is after start date
+        if (endDate <= startDate) {
+          this.errors.license_end_date = ['License end date must be after start date'];
+          isValid = false;
+        }
+      }
+
+      return isValid;
     },
     handleLicenseUpload(event) {
       const file = event.target.files[0];
@@ -182,6 +255,24 @@ export default {
     },
     setErrors(errors) {
       this.errors = errors;
+    }
+  },
+  watch: {
+    'formData.license_start_date'() {
+      // Clear start date error when changed
+      if (this.errors.license_start_date) {
+        delete this.errors.license_start_date;
+      }
+      // Clear end date error if it was due to date comparison
+      if (this.errors.license_end_date && this.formData.license_end_date) {
+        delete this.errors.license_end_date;
+      }
+    },
+    'formData.license_end_date'() {
+      // Clear end date error when changed
+      if (this.errors.license_end_date) {
+        delete this.errors.license_end_date;
+      }
     }
   }
 };
@@ -362,5 +453,10 @@ export default {
   margin-right: 0.75rem;
   color: #667eea;
   width: 16px;
+}
+
+.required {
+  color: #e53e3e;
+  font-weight: bold;
 }
 </style>

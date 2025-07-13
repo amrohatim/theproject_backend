@@ -16,11 +16,17 @@ class DashboardController extends Controller
     /**
      * Display the merchant dashboard.
      *
-     * @return \Illuminate\View\View
+     * @return \Illuminate\View\View|\Illuminate\Http\RedirectResponse
      */
     public function index()
     {
         $user = Auth::user();
+
+        // Check if user needs to upload license (additional safety check)
+        if ($user->registration_step === 'phone_verified') {
+            return redirect()->route('merchant.license.upload')
+                ->with('info', 'Please upload your business license to complete registration and access your dashboard.');
+        }
 
         // Get the merchant record
         $merchant = $user->merchantRecord;

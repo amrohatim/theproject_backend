@@ -149,6 +149,17 @@ Route::get('/login', function () {
 })->name('login')->middleware('guest');
 
 Route::post('/login', function (\Illuminate\Http\Request $request) {
+    // Enhanced debugging - log all request data
+    \Illuminate\Support\Facades\Log::info('🚀 LOGIN ROUTE HIT - Request received', [
+        'timestamp' => now()->toDateTimeString(),
+        'all_data' => $request->all(),
+        'method' => $request->method(),
+        'url' => $request->url(),
+        'user_agent' => $request->userAgent(),
+        'ip' => $request->ip(),
+        'headers' => $request->headers->all(),
+    ]);
+
     $credentials = $request->validate([
         'email' => ['required', 'email'],
         'password' => ['required'],
@@ -158,6 +169,9 @@ Route::post('/login', function (\Illuminate\Http\Request $request) {
     $user = \App\Models\User::where('email', $credentials['email'])->first();
 
     if (!$user) {
+        \Illuminate\Support\Facades\Log::warning('Login failed - user not found', [
+            'email' => $credentials['email'],
+        ]);
         return back()->withErrors([
             'email' => 'No user found with this email address.',
         ]);
@@ -168,21 +182,67 @@ Route::post('/login', function (\Illuminate\Http\Request $request) {
         'email' => $credentials['email'],
         'user_exists' => $user ? 'Yes' : 'No',
         'password_provided' => $credentials['password'] ? 'Yes' : 'No',
+        'password_length' => strlen($credentials['password']),
+        'user_id' => $user->id,
+        'user_role' => $user->role,
+        'user_status' => $user->status,
+    ]);
+
+    // Test manual password verification before Auth::attempt
+    $manualPasswordCheck = \Illuminate\Support\Facades\Hash::check($credentials['password'], $user->password);
+    \Illuminate\Support\Facades\Log::info('Manual password verification', [
+        'email' => $credentials['email'],
+        'manual_check_result' => $manualPasswordCheck ? 'SUCCESS' : 'FAILED',
+        'stored_password_hash' => substr($user->password, 0, 20) . '...',
+        'provided_password_length' => strlen($credentials['password']),
+    ]);
+
+    \Illuminate\Support\Facades\Log::info('About to attempt Auth::attempt', [
+        'email' => $credentials['email'],
+        'remember' => $request->boolean('remember'),
+        'session_id' => session()->getId(),
     ]);
 
     if (Auth::attempt($credentials, $request->boolean('remember'))) {
         $request->session()->regenerate();
 
         $user = Auth::user();
+
+        // Enhanced logging for debugging
+        \Illuminate\Support\Facades\Log::info('🎉 LOGIN SUCCESSFUL - Auth::attempt worked!', [
+            'user_id' => $user->id,
+            'user_role' => $user->role,
+            'user_name' => $user->name,
+            'email' => $user->email,
+            'session_id' => session()->getId(),
+        ]);
+
         if ($user->role === 'admin') {
+            $redirectUrl = route('admin.dashboard');
+            \Illuminate\Support\Facades\Log::info('Redirecting admin to: ' . $redirectUrl);
             return redirect()->route('admin.dashboard');
         } elseif ($user->role === 'vendor') {
+            $redirectUrl = route('vendor.dashboard');
+            \Illuminate\Support\Facades\Log::info('Redirecting vendor to: ' . $redirectUrl);
             return redirect()->route('vendor.dashboard');
         } elseif ($user->role === 'provider') {
+            $redirectUrl = route('provider.dashboard');
+            \Illuminate\Support\Facades\Log::info('Redirecting provider to: ' . $redirectUrl);
             return redirect()->route('provider.dashboard');
+        } elseif ($user->role === 'merchant') {
+            $redirectUrl = route('merchant.dashboard');
+            \Illuminate\Support\Facades\Log::info('🏪 MERCHANT LOGIN - Redirecting to: ' . $redirectUrl);
+            return redirect()->route('merchant.dashboard');
         } else {
+            \Illuminate\Support\Facades\Log::info('Redirecting user with unknown role to home: ' . $user->role);
             return redirect('/');
         }
+    } else {
+        \Illuminate\Support\Facades\Log::warning('Auth::attempt failed', [
+            'email' => $credentials['email'],
+            'password_length' => strlen($credentials['password']),
+            'manual_password_check' => $manualPasswordCheck ? 'SUCCESS' : 'FAILED',
+        ]);
     }
 
     // If we get here, the password was incorrect
@@ -234,6 +294,11 @@ Route::middleware('guest')->group(function () {
     Route::post('/register/merchant', [RegistrationController::class, 'registerMerchant'])->name('register.merchant.submit');
     Route::get('/register/merchant/license', [RegistrationController::class, 'showMerchantLicenseForm'])->name('merchant.registration.license');
     Route::post('/register/merchant/license', [RegistrationController::class, 'uploadMerchantLicense'])->name('merchant.registration.license.submit');
+
+    // Test route for OTP component
+    Route::get('/test-otp', function () {
+        return view('test-otp');
+    });
 
     // Temporary registration email verification routes (public)
     Route::get('/vendor/email/verify/temp/{token}', [RegistrationController::class, 'showTempVendorEmailVerification'])->name('vendor.email.verify.temp');
@@ -965,6 +1030,7 @@ Route::prefix('admin')->name('admin.')->middleware(['auth', \App\Http\Middleware
     // Merchant License Management
     Route::get('/merchant-licenses', [App\Http\Controllers\Admin\MerchantLicenseController::class, 'index'])->name('merchant-licenses.index');
     Route::get('/merchant-licenses/{id}', [App\Http\Controllers\Admin\MerchantLicenseController::class, 'show'])->name('merchant-licenses.show');
+    Route::get('/merchant-licenses/{id}/image/{type}', [App\Http\Controllers\Admin\MerchantLicenseController::class, 'viewImage'])->name('merchant-licenses.image');
     Route::post('/merchant-licenses/{id}/approve', [App\Http\Controllers\Admin\MerchantLicenseController::class, 'approve'])->name('merchant-licenses.approve');
     Route::post('/merchant-licenses/{id}/reject', [App\Http\Controllers\Admin\MerchantLicenseController::class, 'reject'])->name('merchant-licenses.reject');
     Route::get('/merchant-licenses/{id}/download', [App\Http\Controllers\Admin\MerchantLicenseController::class, 'downloadLicense'])->name('merchant-licenses.download');
@@ -1673,6 +1739,17 @@ Route::prefix('provider')->name('provider.')->middleware(['auth', \App\Http\Midd
     Route::delete('/provider-products/{id}', [App\Http\Controllers\Provider\ProviderProductController::class, 'destroy'])->name('provider-products.destroy');
 });
 
+// Merchant license status routes (accessible without active license)
+Route::prefix('merchant')->name('merchant.')->middleware(['auth'])->group(function () {
+    // License status pages - accessible even with inactive license
+    Route::get('/license/status/{status?}', [App\Http\Controllers\Merchant\LicenseStatusController::class, 'show'])->name('license.status');
+
+    // License upload routes - accessible for merchants who completed phone verification but need to upload license
+    Route::get('/license/upload', [App\Http\Controllers\Merchant\LicenseUploadController::class, 'show'])->name('license.upload');
+    Route::post('/license/upload', [App\Http\Controllers\Merchant\LicenseUploadController::class, 'upload'])->name('license.upload.submit');
+    Route::get('/license/upload-status', [App\Http\Controllers\Merchant\LicenseUploadController::class, 'status'])->name('license.upload.status');
+});
+
 // Merchant routes
 Route::prefix('merchant')->name('merchant.')->middleware(['auth', \App\Http\Middleware\MerchantMiddleware::class])->group(function () {
     // Dashboard
@@ -1799,6 +1876,8 @@ Route::prefix('merchant')->name('merchant.')->middleware(['auth', \App\Http\Midd
 Route::get('/images/products/{filename}', [App\Http\Controllers\ImageController::class, 'serveProductImage'])->name('images.products');
 Route::get('/images/products/colors/{filename}', [App\Http\Controllers\ImageController::class, 'serveProductColorImage'])->name('images.products.colors');
 Route::get('/images/services/{filename}', [App\Http\Controllers\ImageController::class, 'serveServiceImage'])->name('images.services');
+Route::get('/images/merchants/{filename}', [App\Http\Controllers\ImageController::class, 'serveMerchantImage'])->name('images.merchants');
+Route::get('/images/uae_ids/{filename}', [App\Http\Controllers\ImageController::class, 'serveUaeIdImage'])->name('images.uae_ids');
 Route::get('/images/{folder}/{filename}', [App\Http\Controllers\ImageController::class, 'serveStorageImage'])->name('images.storage');
 
 require __DIR__.'/test.php';

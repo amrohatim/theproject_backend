@@ -41,16 +41,24 @@
       <!-- Phone -->
       <div class="form-group">
         <label for="phone" class="form-label">Phone Number *</label>
-        <input
-          type="tel"
-          id="phone"
-          v-model="formData.phone"
-          class="form-input"
-          :class="{ 'error': errors.phone }"
-          placeholder="+971 50 123 4567"
-          required
-          @input="updateField('phone', $event.target.value)"
-        >
+        <div class="phone-input-container">
+          <div class="country-code-display">
+            <img src="data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMjQiIGhlaWdodD0iMTgiIHZpZXdCb3g9IjAgMCAyNCAxOCIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KPHJlY3Qgd2lkdGg9IjI0IiBoZWlnaHQ9IjYiIGZpbGw9IiMwMDczMzMiLz4KPHJlY3QgeT0iNiIgd2lkdGg9IjI0IiBoZWlnaHQ9IjYiIGZpbGw9IiNGRkZGRkYiLz4KPHJlY3QgeT0iMTIiIHdpZHRoPSIyNCIgaGVpZ2h0PSI2IiBmaWxsPSIjRkYwMDAwIi8+Cjwvc3ZnPgo=" alt="UAE Flag" class="flag-icon">
+            <span class="country-code">+971</span>
+          </div>
+          <input
+            type="tel"
+            id="phone"
+            v-model="phoneNumber"
+            class="form-input phone-input"
+            :class="{ 'error': errors.phone }"
+            placeholder="50 123 4567"
+            required
+            maxlength="11"
+            @input="handlePhoneInput"
+            @keypress="validatePhoneKeypress"
+          >
+        </div>
         <div v-if="errors.phone" class="error-message">{{ errors.phone[0] }}</div>
       </div>
 
@@ -277,6 +285,63 @@
         <span class="button-text">{{ loading ? 'Creating Account...' : 'Continue to Verification' }}</span>
       </button>
     </form>
+
+    <!-- Validation Error Modal -->
+    <div v-if="showValidationModal" class="modal-overlay" @click="closeValidationModal">
+      <div class="modal-container" @click.stop>
+        <div class="modal-header">
+          <h3 class="modal-title">
+            <i class="fas fa-exclamation-triangle"></i>
+            Validation Errors
+          </h3>
+          <button type="button" class="modal-close" @click="closeValidationModal">
+            <i class="fas fa-times"></i>
+          </button>
+        </div>
+        <div class="modal-body">
+          <p class="modal-description">Please fix the following errors before submitting:</p>
+          <ul class="error-list">
+            <li v-for="error in validationErrors" :key="error.field">
+              <i class="fas fa-exclamation-circle"></i>
+              <div>
+                <strong>{{ getFieldDisplayName(error.field) }}:</strong> {{ error.message }}
+              </div>
+            </li>
+          </ul>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="modal-btn modal-btn-primary" @click="closeValidationModal">
+            Fix Errors
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Login Dialog Modal -->
+    <div v-if="showLoginModal" class="modal-overlay" @click="closeLoginModal">
+      <div class="modal-container" @click.stop>
+        <div class="modal-header">
+          <h3 class="modal-title">
+            <i class="fas fa-user-check"></i>
+            Account Already Exists
+          </h3>
+          <button type="button" class="modal-close" @click="closeLoginModal">
+            <i class="fas fa-times"></i>
+          </button>
+        </div>
+        <div class="modal-body">
+          <p class="modal-description">{{ loginModalMessage }}</p>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="modal-btn modal-btn-secondary" @click="closeLoginModal">
+            Cancel
+          </button>
+          <button type="button" class="modal-btn modal-btn-primary" @click="redirectToLogin">
+            Go to Login
+          </button>
+        </div>
+      </div>
+    </div>
   </div>
 </template>
 
@@ -320,6 +385,7 @@ export default {
         }
       },
       errors: {},
+      phoneNumber: '',
       logoFileName: '',
       uaeIdFrontFileName: '',
       uaeIdBackFileName: '',
@@ -327,6 +393,10 @@ export default {
       showMap: false,
       mapLoading: false,
       mapError: null,
+      showValidationModal: false,
+      showLoginModal: false,
+      validationErrors: [],
+      loginModalMessage: '',
       map: null,
       marker: null,
       autocomplete: null,
@@ -350,6 +420,10 @@ export default {
           // Use a flag to prevent recursive updates
           this._updatingFromParent = true;
           this.formData = { ...this.formData, ...newData };
+          // Update phone number display
+          if (newData.phone) {
+            this.phoneNumber = this.extractPhoneNumber(newData.phone);
+          }
           this.$nextTick(() => {
             this._updatingFromParent = false;
           });
@@ -378,9 +452,172 @@ export default {
         delete this.errors[fieldName];
       }
     },
+    handlePhoneInput(event) {
+      let value = event.target.value;
+
+      // Remove any non-digit characters
+      value = value.replace(/\D/g, '');
+
+      // Limit to 9 digits
+      if (value.length > 9) {
+        value = value.substring(0, 9);
+      }
+
+      // Format the display value with spaces
+      let formattedValue = value;
+      if (value.length > 2) {
+        formattedValue = value.substring(0, 2) + ' ' + value.substring(2);
+      }
+      if (value.length > 5) {
+        formattedValue = value.substring(0, 2) + ' ' + value.substring(2, 5) + ' ' + value.substring(5);
+      }
+
+      // Update the display value
+      this.phoneNumber = formattedValue;
+
+      // Update the actual form data with full international format
+      if (value.length === 9) {
+        this.formData.phone = '+971' + value;
+      } else {
+        this.formData.phone = value ? '+971' + value : '';
+      }
+
+      this.$emit('update', this.formData);
+
+      // Clear phone error when user starts typing
+      if (this.errors.phone) {
+        this.errors = { ...this.errors };
+        delete this.errors.phone;
+      }
+    },
+    validatePhoneKeypress(event) {
+      // Only allow digits
+      const char = String.fromCharCode(event.which);
+      if (!/[0-9]/.test(char)) {
+        event.preventDefault();
+      }
+    },
+    extractPhoneNumber(fullPhone) {
+      // Extract the 9-digit number from +971XXXXXXXXX format
+      if (fullPhone && fullPhone.startsWith('+971')) {
+        const digits = fullPhone.substring(4);
+        // Format with spaces for display
+        if (digits.length > 2) {
+          let formatted = digits.substring(0, 2) + ' ' + digits.substring(2);
+          if (digits.length > 5) {
+            formatted = digits.substring(0, 2) + ' ' + digits.substring(2, 5) + ' ' + digits.substring(5);
+          }
+          return formatted;
+        }
+        return digits;
+      }
+      return '';
+    },
     handleSubmit() {
       this.errors = {};
+
+      // Perform client-side validation
+      const validationErrors = this.validateForm();
+
+      if (validationErrors.length > 0) {
+        this.showValidationErrorModal(this.convertValidationErrorsToObject(validationErrors));
+        return;
+      }
+
       this.$emit('submit', this.formData);
+    },
+    validateForm() {
+      const errors = [];
+
+      // Business name validation
+      if (!this.formData.name || this.formData.name.trim() === '') {
+        errors.push({ field: 'name', message: 'Business name is required' });
+      } else if (this.formData.name.length > 255) {
+        errors.push({ field: 'name', message: 'Business name cannot exceed 255 characters' });
+      }
+
+      // Email validation
+      if (!this.formData.email || this.formData.email.trim() === '') {
+        errors.push({ field: 'email', message: 'Email address is required' });
+      } else if (!this.isValidEmail(this.formData.email)) {
+        errors.push({ field: 'email', message: 'Please enter a valid email address' });
+      }
+
+      // Phone validation
+      if (!this.formData.phone || this.formData.phone.trim() === '') {
+        errors.push({ field: 'phone', message: 'Phone number is required' });
+      } else if (!this.isValidUAEPhone(this.formData.phone)) {
+        errors.push({ field: 'phone', message: 'Please enter a valid 9-digit UAE phone number' });
+      }
+
+      // Password validation
+      if (!this.formData.password || this.formData.password.trim() === '') {
+        errors.push({ field: 'password', message: 'Password is required' });
+      } else if (this.formData.password.length < 8) {
+        errors.push({ field: 'password', message: 'Password must be at least 8 characters' });
+      }
+
+      // Password confirmation validation
+      if (!this.formData.password_confirmation || this.formData.password_confirmation.trim() === '') {
+        errors.push({ field: 'password_confirmation', message: 'Password confirmation is required' });
+      } else if (this.formData.password !== this.formData.password_confirmation) {
+        errors.push({ field: 'password_confirmation', message: 'Password confirmation does not match' });
+      }
+
+      // UAE ID validation
+      if (!this.formData.uae_id_front) {
+        errors.push({ field: 'uae_id_front', message: 'UAE ID front side is required' });
+      }
+
+      if (!this.formData.uae_id_back) {
+        errors.push({ field: 'uae_id_back', message: 'UAE ID back side is required' });
+      }
+
+      // Delivery fees validation
+      if (this.formData.delivery_capability) {
+        const requiredEmirates = ['dubai', 'abu_dhabi', 'sharjah', 'ajman', 'ras_al_khaimah', 'fujairah', 'umm_al_quwain'];
+        requiredEmirates.forEach(emirate => {
+          if (!this.formData.delivery_fees[emirate] || this.formData.delivery_fees[emirate] === '') {
+            errors.push({
+              field: `delivery_fees.${emirate}`,
+              message: `Delivery fee for ${this.getEmirateDisplayName(emirate)} is required when delivery capability is enabled`
+            });
+          }
+        });
+      }
+
+      return errors;
+    },
+    convertValidationErrorsToObject(errors) {
+      const errorObject = {};
+      errors.forEach(error => {
+        if (!errorObject[error.field]) {
+          errorObject[error.field] = [];
+        }
+        errorObject[error.field].push(error.message);
+      });
+      return errorObject;
+    },
+    isValidEmail(email) {
+      const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+      return emailRegex.test(email);
+    },
+    isValidUAEPhone(phone) {
+      // Check if phone is in +971XXXXXXXXX format with exactly 9 digits after +971
+      const phoneRegex = /^\+971[0-9]{9}$/;
+      return phoneRegex.test(phone);
+    },
+    getEmirateDisplayName(emirate) {
+      const emirateNames = {
+        'dubai': 'Dubai',
+        'abu_dhabi': 'Abu Dhabi',
+        'sharjah': 'Sharjah',
+        'ajman': 'Ajman',
+        'ras_al_khaimah': 'Ras Al Khaimah',
+        'fujairah': 'Fujairah',
+        'umm_al_quwain': 'Umm Al Quwain'
+      };
+      return emirateNames[emirate] || emirate;
     },
     handleLogoUpload(event) {
       const file = event.target.files[0];
@@ -686,6 +923,67 @@ export default {
     setErrors(errors) {
       this.errors = errors;
     },
+    showValidationErrorModal(errors) {
+      this.validationErrors = [];
+
+      // Convert Laravel validation errors to our format
+      if (errors) {
+        Object.keys(errors).forEach(field => {
+          const messages = Array.isArray(errors[field]) ? errors[field] : [errors[field]];
+          messages.forEach(message => {
+            this.validationErrors.push({
+              field: field,
+              message: message
+            });
+          });
+        });
+      }
+
+      this.showValidationModal = true;
+      document.body.style.overflow = 'hidden';
+    },
+    closeValidationModal() {
+      this.showValidationModal = false;
+      this.validationErrors = [];
+      document.body.style.overflow = 'auto';
+    },
+    showLoginDialog(message) {
+      this.loginModalMessage = message;
+      this.showLoginModal = true;
+      document.body.style.overflow = 'hidden';
+    },
+    closeLoginModal() {
+      this.showLoginModal = false;
+      this.loginModalMessage = '';
+      document.body.style.overflow = 'auto';
+    },
+    redirectToLogin() {
+      // Redirect to login page
+      window.location.href = '/login';
+    },
+    getFieldDisplayName(field) {
+      const fieldNames = {
+        'name': 'Business Name',
+        'email': 'Email Address',
+        'phone': 'Phone Number',
+        'password': 'Password',
+        'password_confirmation': 'Confirm Password',
+        'logo': 'Business Logo',
+        'uae_id_front': 'UAE ID Front Side',
+        'uae_id_back': 'UAE ID Back Side',
+        'store_location_address': 'Store Location',
+        'delivery_capability': 'Delivery Capability',
+        'delivery_fees.dubai': 'Dubai Delivery Fee',
+        'delivery_fees.abu_dhabi': 'Abu Dhabi Delivery Fee',
+        'delivery_fees.sharjah': 'Sharjah Delivery Fee',
+        'delivery_fees.ajman': 'Ajman Delivery Fee',
+        'delivery_fees.ras_al_khaimah': 'Ras Al Khaimah Delivery Fee',
+        'delivery_fees.fujairah': 'Fujairah Delivery Fee',
+        'delivery_fees.umm_al_quwain': 'Umm Al Quwain Delivery Fee'
+      };
+
+      return fieldNames[field] || field.charAt(0).toUpperCase() + field.slice(1);
+    },
     handleGoogleMapsLoaded() {
       // Google Maps has loaded successfully
       if (this.showMap && this.mapLoading) {
@@ -830,6 +1128,61 @@ export default {
 .file-upload-label i {
   margin-right: 0.5rem;
   color: #667eea;
+}
+
+.phone-input-container {
+  display: flex;
+  align-items: center;
+  border: 2px solid #e1e5e9;
+  border-radius: 8px;
+  background: white;
+  transition: all 0.3s ease;
+}
+
+.phone-input-container:focus-within {
+  border-color: #667eea;
+  box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+}
+
+.phone-input-container.error {
+  border-color: #e53e3e;
+}
+
+.country-code-display {
+  display: flex;
+  align-items: center;
+  padding: 12px 16px;
+  background-color: #f8f9fa;
+  border-right: 1px solid #e1e5e9;
+  border-radius: 6px 0 0 6px;
+  white-space: nowrap;
+}
+
+.flag-icon {
+  width: 20px;
+  height: 15px;
+  margin-right: 8px;
+  border-radius: 2px;
+}
+
+.country-code {
+  font-weight: 600;
+  color: #333;
+  font-size: 0.95rem;
+}
+
+.phone-input {
+  border: none !important;
+  border-radius: 0 6px 6px 0 !important;
+  box-shadow: none !important;
+  flex: 1;
+  padding-left: 16px !important;
+}
+
+.phone-input:focus {
+  outline: none;
+  border: none !important;
+  box-shadow: none !important;
 }
 
 .location-search-container {
@@ -1164,6 +1517,153 @@ export default {
   100% { transform: rotate(360deg); }
 }
 
+/* Modal Styles */
+.modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, 0.5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+  padding: 20px;
+}
+
+.modal-container {
+  background: white;
+  border-radius: 12px;
+  box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+  max-width: 500px;
+  width: 100%;
+  max-height: 90vh;
+  overflow-y: auto;
+}
+
+.modal-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 20px 24px;
+  border-bottom: 1px solid #e5e7eb;
+}
+
+.modal-title {
+  display: flex;
+  align-items: center;
+  font-size: 1.25rem;
+  font-weight: 600;
+  color: #111827;
+  margin: 0;
+}
+
+.modal-title i {
+  margin-right: 8px;
+  color: #f59e0b;
+}
+
+.modal-close {
+  background: none;
+  border: none;
+  color: #6b7280;
+  cursor: pointer;
+  padding: 4px;
+  border-radius: 4px;
+  transition: all 0.2s ease;
+}
+
+.modal-close:hover {
+  background-color: #f3f4f6;
+  color: #374151;
+}
+
+.modal-body {
+  padding: 20px 24px;
+}
+
+.modal-description {
+  color: #6b7280;
+  margin-bottom: 16px;
+  line-height: 1.5;
+}
+
+.error-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.error-list li {
+  display: flex;
+  align-items: flex-start;
+  padding: 12px;
+  background-color: #fef2f2;
+  border: 1px solid #fecaca;
+  border-radius: 6px;
+  margin-bottom: 8px;
+}
+
+.error-list li:last-child {
+  margin-bottom: 0;
+}
+
+.error-list li i {
+  color: #ef4444;
+  margin-right: 8px;
+  margin-top: 2px;
+  flex-shrink: 0;
+}
+
+.error-list li div {
+  flex: 1;
+  color: #dc2626;
+  font-size: 0.9rem;
+  line-height: 1.4;
+}
+
+.error-list li strong {
+  color: #991b1b;
+}
+
+.modal-footer {
+  display: flex;
+  justify-content: flex-end;
+  gap: 12px;
+  padding: 20px 24px;
+  border-top: 1px solid #e5e7eb;
+}
+
+.modal-btn {
+  padding: 10px 20px;
+  border-radius: 6px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  border: none;
+  font-size: 0.9rem;
+}
+
+.modal-btn-primary {
+  background-color: #3b82f6;
+  color: white;
+}
+
+.modal-btn-primary:hover {
+  background-color: #2563eb;
+}
+
+.modal-btn-secondary {
+  background-color: #f3f4f6;
+  color: #374151;
+  border: 1px solid #d1d5db;
+}
+
+.modal-btn-secondary:hover {
+  background-color: #e5e7eb;
+}
+
 /* Responsive design for mobile */
 @media (max-width: 768px) {
   #google-map {
@@ -1178,6 +1678,28 @@ export default {
 
   .clear-location-btn {
     right: 35px;
+  }
+
+  .modal-overlay {
+    padding: 10px;
+  }
+
+  .modal-container {
+    max-height: 95vh;
+  }
+
+  .modal-header,
+  .modal-body,
+  .modal-footer {
+    padding: 16px 20px;
+  }
+
+  .modal-footer {
+    flex-direction: column;
+  }
+
+  .modal-btn {
+    width: 100%;
   }
 }
 </style>

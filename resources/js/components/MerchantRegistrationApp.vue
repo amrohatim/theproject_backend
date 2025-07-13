@@ -141,6 +141,7 @@ export default {
       success: null,
       registrationToken: null,
       userId: null,
+      otpRequestId: null,
       steps: [
         { name: 'Business Info' },
         { name: 'Email Verification' },
@@ -196,13 +197,21 @@ export default {
         }
       } catch (error) {
         console.error('Merchant info submission error:', error);
-        
+
         if (error.message.includes('422')) {
           // Handle validation errors
           try {
             const errorData = JSON.parse(error.message);
             if (errorData.errors) {
-              this.$refs.merchantInfoStep.setErrors(errorData.errors);
+              // Check if we should show login dialog
+              if (errorData.show_login_dialog) {
+                this.$refs.merchantInfoStep.showLoginDialog(
+                  errorData.errors.email?.[0] || errorData.errors.phone?.[0] || 'Account already exists'
+                );
+              } else {
+                // Show validation error modal
+                this.$refs.merchantInfoStep.showValidationErrorModal(errorData.errors);
+              }
             }
           } catch (parseError) {
             this.error = 'Please check your input and try again.';
@@ -254,7 +263,11 @@ export default {
 
     async sendOtp() {
       try {
-        await merchantRegistrationApi.sendOtp(this.formData.merchantInfo.phone);
+        const response = await merchantRegistrationApi.sendPhoneOtp(this.registrationToken);
+        if (response.success) {
+          // Store request_id for verification
+          this.otpRequestId = response.request_id;
+        }
       } catch (error) {
         console.error('Send OTP error:', error);
         // Don't show error for OTP sending, as it's automatic
@@ -266,15 +279,16 @@ export default {
       this.error = null;
 
       try {
-        const response = await merchantRegistrationApi.verifyOtp(
-          otpData.phone_number,
+        const response = await merchantRegistrationApi.verifyPhoneOtp(
+          this.registrationToken,
           otpData.otp_code
         );
-        
+
         if (response.success) {
           this.success = response.message;
+          this.userId = response.user_id;
           this.currentStep = 4;
-          
+
           // Clear success message after 3 seconds
           setTimeout(() => {
             this.success = null;
@@ -285,7 +299,7 @@ export default {
       } catch (error) {
         console.error('OTP verification error:', error);
         this.error = error.message || 'OTP verification failed. Please try again.';
-        
+
         if (this.$refs.otpVerificationStep) {
           this.$refs.otpVerificationStep.setErrors({ otp_code: [error.message] });
           this.$refs.otpVerificationStep.clearOtp();
@@ -353,11 +367,15 @@ export default {
       this.error = null;
 
       try {
-        const response = await merchantRegistrationApi.sendOtp(phoneNumber);
-        
+        const response = await merchantRegistrationApi.resendPhoneOtp(this.registrationToken);
+
         if (response.success) {
           this.success = response.message || 'OTP sent successfully.';
-          
+          // Store new request_id if provided
+          if (response.request_id) {
+            this.otpRequestId = response.request_id;
+          }
+
           // Clear success message after 3 seconds
           setTimeout(() => {
             this.success = null;

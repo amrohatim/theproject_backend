@@ -3,6 +3,69 @@
 @section('title', 'License Details - ' . $merchant->business_name)
 @section('page-title', 'License Details')
 
+@push('styles')
+<style>
+    /* Enhanced Image Modal Styles */
+    #image-modal {
+        backdrop-filter: blur(4px);
+    }
+
+    #image-modal-img {
+        max-width: none;
+        max-height: none;
+        user-select: none;
+        -webkit-user-select: none;
+        -moz-user-select: none;
+        -ms-user-select: none;
+    }
+
+    #image-container {
+        cursor: grab;
+    }
+
+    #image-container:active {
+        cursor: grabbing;
+    }
+
+    /* Smooth transitions for zoom controls */
+    .zoom-control {
+        transition: all 0.2s ease;
+    }
+
+    .zoom-control:hover {
+        transform: scale(1.1);
+    }
+
+    /* Custom scrollbar for image container */
+    #image-container::-webkit-scrollbar {
+        width: 8px;
+        height: 8px;
+    }
+
+    #image-container::-webkit-scrollbar-track {
+        background: rgba(0, 0, 0, 0.1);
+        border-radius: 4px;
+    }
+
+    #image-container::-webkit-scrollbar-thumb {
+        background: rgba(0, 0, 0, 0.3);
+        border-radius: 4px;
+    }
+
+    #image-container::-webkit-scrollbar-thumb:hover {
+        background: rgba(0, 0, 0, 0.5);
+    }
+
+    /* Prevent text selection during drag */
+    .no-select {
+        -webkit-user-select: none;
+        -moz-user-select: none;
+        -ms-user-select: none;
+        user-select: none;
+    }
+</style>
+@endpush
+
 @section('content')
 <div class="container mx-auto px-4 py-6">
     <!-- Header -->
@@ -109,6 +172,106 @@
                             </div>
                         </div>
                         @endif
+                    </div>
+
+                    <!-- UAE ID Images and Logo -->
+                    <div class="mt-6">
+                        <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-4">Merchant Documentation</label>
+
+                        <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
+                            <!-- UAE ID Front -->
+                            <div class="border border-gray-300 dark:border-gray-600 rounded-lg p-4">
+                                <h4 class="text-sm font-medium text-gray-900 dark:text-gray-100 mb-2">UAE ID Front</h4>
+                                @if($merchant->uae_id_front)
+                                    <div class="relative group">
+                                        <img src="{{ \App\Helpers\ImageHelper::getFullImageUrl($merchant->uae_id_front) }}"
+                                             alt="UAE ID Front"
+                                             class="w-full h-32 object-cover rounded cursor-pointer hover:opacity-75 transition-opacity"
+                                             onclick="showImageModal('{{ \App\Helpers\ImageHelper::getFullImageUrl($merchant->uae_id_front) }}', 'UAE ID Front')">
+                                        <div class="absolute inset-0 bg-black bg-opacity-0 group-hover:bg-opacity-20 transition-all duration-200 rounded flex items-center justify-center">
+                                            <svg class="w-8 h-8 text-white opacity-0 group-hover:opacity-100 transition-opacity" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0zM10 7v3m0 0v3m0-3h3m-3 0H7"></path>
+                                            </svg>
+                                        </div>
+                                    </div>
+                                    <div class="mt-3">
+                                        <a href="{{ route('admin.merchant-licenses.image', ['id' => $merchant->id, 'type' => 'uae_front']) }}"
+                                           class="inline-flex items-center px-3 py-2 bg-indigo-600 border border-transparent rounded-md font-semibold text-xs text-white uppercase tracking-widest hover:bg-indigo-700 focus:outline-none focus:border-indigo-900 focus:ring ring-indigo-300 disabled:opacity-25 transition ease-in-out duration-150">
+                                            <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 8V4a1 1 0 011-1h4m0 0l-3 3m3-3v3m6-3h4a1 1 0 011 1v4m0 0l-3-3m3 3h-3m-3 6v4a1 1 0 01-1 1H8m0 0l3-3m-3 3h3m3-3v-4a1 1 0 011-1h4"></path>
+                                            </svg>
+                                            Full Preview
+                                        </a>
+                                    </div>
+                                @else
+                                    <div class="w-full h-32 bg-gray-100 dark:bg-gray-700 rounded flex items-center justify-center">
+                                        <span class="text-gray-500 dark:text-gray-400 text-sm">No image uploaded</span>
+                                    </div>
+                                @endif
+                            </div>
+
+                            <!-- UAE ID Back -->
+                            <div class="border border-gray-300 dark:border-gray-600 rounded-lg p-4">
+                                <h4 class="text-sm font-medium text-gray-900 dark:text-gray-100 mb-2">UAE ID Back</h4>
+                                @if($merchant->uae_id_back)
+                                    <div class="relative group">
+                                        <img src="{{ \App\Helpers\ImageHelper::getFullImageUrl($merchant->uae_id_back) }}"
+                                             alt="UAE ID Back"
+                                             class="w-full h-32 object-cover rounded cursor-pointer hover:opacity-75 transition-opacity"
+                                             onclick="showImageModal('{{ \App\Helpers\ImageHelper::getFullImageUrl($merchant->uae_id_back) }}', 'UAE ID Back')">
+                                        <div class="absolute inset-0 bg-black bg-opacity-0 group-hover:bg-opacity-20 transition-all duration-200 rounded flex items-center justify-center">
+                                            <svg class="w-8 h-8 text-white opacity-0 group-hover:opacity-100 transition-opacity" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0zM10 7v3m0 0v3m0-3h3m-3 0H7"></path>
+                                            </svg>
+                                        </div>
+                                    </div>
+                                    <div class="mt-3">
+                                        <a href="{{ route('admin.merchant-licenses.image', ['id' => $merchant->id, 'type' => 'uae_back']) }}"
+                                           class="inline-flex items-center px-3 py-2 bg-indigo-600 border border-transparent rounded-md font-semibold text-xs text-white uppercase tracking-widest hover:bg-indigo-700 focus:outline-none focus:border-indigo-900 focus:ring ring-indigo-300 disabled:opacity-25 transition ease-in-out duration-150">
+                                            <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 8V4a1 1 0 011-1h4m0 0l-3 3m3-3v3m6-3h4a1 1 0 011 1v4m0 0l-3-3m3 3h-3m-3 6v4a1 1 0 01-1 1H8m0 0l3-3m-3 3h3m3-3v-4a1 1 0 011-1h4"></path>
+                                            </svg>
+                                            Full Preview
+                                        </a>
+                                    </div>
+                                @else
+                                    <div class="w-full h-32 bg-gray-100 dark:bg-gray-700 rounded flex items-center justify-center">
+                                        <span class="text-gray-500 dark:text-gray-400 text-sm">No image uploaded</span>
+                                    </div>
+                                @endif
+                            </div>
+
+                            <!-- Merchant Logo -->
+                            <div class="border border-gray-300 dark:border-gray-600 rounded-lg p-4">
+                                <h4 class="text-sm font-medium text-gray-900 dark:text-gray-100 mb-2">Business Logo</h4>
+                                @if($merchant->logo)
+                                    <div class="relative group">
+                                        <img src="{{ \App\Helpers\ImageHelper::getFullImageUrl($merchant->logo) }}"
+                                             alt="Business Logo"
+                                             class="w-full h-32 object-cover rounded cursor-pointer hover:opacity-75 transition-opacity"
+                                             onclick="showImageModal('{{ \App\Helpers\ImageHelper::getFullImageUrl($merchant->logo) }}', 'Business Logo')">
+                                        <div class="absolute inset-0 bg-black bg-opacity-0 group-hover:bg-opacity-20 transition-all duration-200 rounded flex items-center justify-center">
+                                            <svg class="w-8 h-8 text-white opacity-0 group-hover:opacity-100 transition-opacity" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0zM10 7v3m0 0v3m0-3h3m-3 0H7"></path>
+                                            </svg>
+                                        </div>
+                                    </div>
+                                    <div class="mt-3">
+                                        <a href="{{ route('admin.merchant-licenses.image', ['id' => $merchant->id, 'type' => 'logo']) }}"
+                                           class="inline-flex items-center px-3 py-2 bg-indigo-600 border border-transparent rounded-md font-semibold text-xs text-white uppercase tracking-widest hover:bg-indigo-700 focus:outline-none focus:border-indigo-900 focus:ring ring-indigo-300 disabled:opacity-25 transition ease-in-out duration-150">
+                                            <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 8V4a1 1 0 011-1h4m0 0l-3 3m3-3v3m6-3h4a1 1 0 011 1v4m0 0l-3-3m3 3h-3m-3 6v4a1 1 0 01-1 1H8m0 0l3-3m-3 3h3m3-3v-4a1 1 0 011-1h4"></path>
+                                            </svg>
+                                            Full Preview
+                                        </a>
+                                    </div>
+                                @else
+                                    <div class="w-full h-32 bg-gray-100 dark:bg-gray-700 rounded flex items-center justify-center">
+                                        <span class="text-gray-500 dark:text-gray-400 text-sm">No logo uploaded</span>
+                                    </div>
+                                @endif
+                            </div>
+                        </div>
                     </div>
 
                     <!-- License File -->
@@ -284,7 +447,7 @@
                     <label for="rejection_reason" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
                         Rejection Reason *
                     </label>
-                    <textarea id="rejection_reason" name="rejection_reason" rows="4" required 
+                    <textarea id="rejection_reason" name="rejection_reason" rows="4" required
                               class="w-full rounded-md border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-gray-300 focus:border-indigo-500 focus:ring-indigo-500"
                               placeholder="Please provide a detailed reason for rejecting this license..."></textarea>
                 </div>
@@ -301,6 +464,69 @@
     </div>
 </div>
 
+<!-- Enhanced Image Modal -->
+<div id="image-modal" class="fixed inset-0 bg-black bg-opacity-90 overflow-auto h-full w-full hidden z-50" onclick="hideImageModal()">
+    <div class="relative min-h-screen flex items-center justify-center p-4">
+        <!-- Modal Content -->
+        <div class="relative bg-white dark:bg-gray-800 rounded-lg shadow-2xl max-w-7xl max-h-full overflow-hidden" onclick="event.stopPropagation()">
+            <!-- Header -->
+            <div class="flex justify-between items-center p-4 border-b border-gray-200 dark:border-gray-700">
+                <h3 id="image-modal-title" class="text-lg font-semibold text-gray-900 dark:text-gray-100"></h3>
+                <div class="flex items-center space-x-2">
+                    <!-- Zoom Controls -->
+                    <button onclick="zoomOut()" class="p-2 text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200 transition-colors" title="Zoom Out">
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0zM13 10H7"></path>
+                        </svg>
+                    </button>
+                    <span id="zoom-level" class="text-sm text-gray-600 dark:text-gray-400 min-w-12 text-center">100%</span>
+                    <button onclick="zoomIn()" class="p-2 text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200 transition-colors" title="Zoom In">
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0zM10 7v3m0 0v3m0-3h3m-3 0H7"></path>
+                        </svg>
+                    </button>
+                    <button onclick="resetZoom()" class="p-2 text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200 transition-colors" title="Reset Zoom">
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"></path>
+                        </svg>
+                    </button>
+                    <!-- Download Button -->
+                    <a id="download-image" href="" download="" class="p-2 text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200 transition-colors" title="Download Image">
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
+                        </svg>
+                    </a>
+                    <!-- Close Button -->
+                    <button onclick="hideImageModal()" class="p-2 text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200 transition-colors" title="Close">
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+                        </svg>
+                    </button>
+                </div>
+            </div>
+
+            <!-- Image Container -->
+            <div id="image-container" class="relative overflow-auto bg-gray-50 dark:bg-gray-900" style="max-height: 80vh; max-width: 90vw;">
+                <img id="image-modal-img"
+                     src=""
+                     alt=""
+                     class="block mx-auto transition-transform duration-200 cursor-move"
+                     style="transform-origin: center center;"
+                     draggable="false"
+                     onload="resetImagePosition()">
+            </div>
+
+            <!-- Footer with Image Info -->
+            <div class="p-3 bg-gray-50 dark:bg-gray-700 border-t border-gray-200 dark:border-gray-600">
+                <div class="flex justify-between items-center text-sm text-gray-600 dark:text-gray-400">
+                    <span id="image-info">Loading image information...</span>
+                    <span class="text-xs">Click and drag to pan • Scroll to zoom • ESC to close</span>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
 <script>
 function showRejectModal() {
     document.getElementById('reject-modal').classList.remove('hidden');
@@ -309,6 +535,151 @@ function showRejectModal() {
 function hideRejectModal() {
     document.getElementById('reject-modal').classList.add('hidden');
 }
+
+// Image Modal Variables
+let currentZoom = 1;
+let isDragging = false;
+let startX, startY, scrollLeft, scrollTop;
+
+function showImageModal(imageSrc, title) {
+    const modal = document.getElementById('image-modal');
+    const img = document.getElementById('image-modal-img');
+    const titleElement = document.getElementById('image-modal-title');
+    const downloadLink = document.getElementById('download-image');
+    const imageInfo = document.getElementById('image-info');
+
+    // Set image source and title
+    img.src = imageSrc;
+    titleElement.textContent = title;
+
+    // Set download link
+    downloadLink.href = imageSrc;
+    downloadLink.download = title.replace(/\s+/g, '_').toLowerCase() + '.jpg';
+
+    // Reset zoom and position
+    currentZoom = 1;
+    updateZoomDisplay();
+
+    // Show modal
+    modal.classList.remove('hidden');
+
+    // Update image info when image loads
+    img.onload = function() {
+        const naturalWidth = this.naturalWidth;
+        const naturalHeight = this.naturalHeight;
+        const fileSize = 'Unknown size'; // We can't get file size from img element
+        imageInfo.textContent = `${naturalWidth} × ${naturalHeight} pixels`;
+    };
+
+    // Add keyboard event listener
+    document.addEventListener('keydown', handleKeyPress);
+}
+
+function hideImageModal() {
+    const modal = document.getElementById('image-modal');
+    modal.classList.add('hidden');
+
+    // Remove keyboard event listener
+    document.removeEventListener('keydown', handleKeyPress);
+
+    // Reset zoom
+    currentZoom = 1;
+    updateZoomDisplay();
+}
+
+function handleKeyPress(event) {
+    if (event.key === 'Escape') {
+        hideImageModal();
+    } else if (event.key === '+' || event.key === '=') {
+        zoomIn();
+    } else if (event.key === '-') {
+        zoomOut();
+    } else if (event.key === '0') {
+        resetZoom();
+    }
+}
+
+function zoomIn() {
+    if (currentZoom < 3) {
+        currentZoom += 0.25;
+        applyZoom();
+    }
+}
+
+function zoomOut() {
+    if (currentZoom > 0.25) {
+        currentZoom -= 0.25;
+        applyZoom();
+    }
+}
+
+function resetZoom() {
+    currentZoom = 1;
+    applyZoom();
+    resetImagePosition();
+}
+
+function applyZoom() {
+    const img = document.getElementById('image-modal-img');
+    img.style.transform = `scale(${currentZoom})`;
+    updateZoomDisplay();
+}
+
+function updateZoomDisplay() {
+    const zoomLevel = document.getElementById('zoom-level');
+    zoomLevel.textContent = Math.round(currentZoom * 100) + '%';
+}
+
+function resetImagePosition() {
+    const container = document.getElementById('image-container');
+    container.scrollLeft = 0;
+    container.scrollTop = 0;
+}
+
+// Mouse wheel zoom functionality
+document.getElementById('image-container').addEventListener('wheel', function(e) {
+    if (e.ctrlKey) {
+        e.preventDefault();
+        if (e.deltaY < 0) {
+            zoomIn();
+        } else {
+            zoomOut();
+        }
+    }
+});
+
+// Drag to pan functionality
+document.getElementById('image-modal-img').addEventListener('mousedown', function(e) {
+    if (currentZoom > 1) {
+        isDragging = true;
+        const container = document.getElementById('image-container');
+        startX = e.pageX - container.offsetLeft;
+        startY = e.pageY - container.offsetTop;
+        scrollLeft = container.scrollLeft;
+        scrollTop = container.scrollTop;
+        this.style.cursor = 'grabbing';
+    }
+});
+
+document.addEventListener('mousemove', function(e) {
+    if (!isDragging) return;
+    e.preventDefault();
+    const container = document.getElementById('image-container');
+    const x = e.pageX - container.offsetLeft;
+    const y = e.pageY - container.offsetTop;
+    const walkX = (x - startX) * 2;
+    const walkY = (y - startY) * 2;
+    container.scrollLeft = scrollLeft - walkX;
+    container.scrollTop = scrollTop - walkY;
+});
+
+document.addEventListener('mouseup', function() {
+    if (isDragging) {
+        isDragging = false;
+        const img = document.getElementById('image-modal-img');
+        img.style.cursor = currentZoom > 1 ? 'grab' : 'default';
+    }
+});
 
 function togglePdfViewer() {
     const container = document.getElementById('pdf-viewer-container');
@@ -325,9 +696,23 @@ function togglePdfViewer() {
     }
 }
 
-// Close modal when clicking outside
+// Close modals when clicking outside
 document.getElementById('reject-modal').addEventListener('click', function(e) {
     if (e.target === this) {
+        hideRejectModal();
+    }
+});
+
+document.getElementById('image-modal').addEventListener('click', function(e) {
+    if (e.target === this) {
+        hideImageModal();
+    }
+});
+
+// Close image modal with Escape key
+document.addEventListener('keydown', function(e) {
+    if (e.key === 'Escape') {
+        hideImageModal();
         hideRejectModal();
     }
 });
