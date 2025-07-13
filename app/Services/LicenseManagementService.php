@@ -4,9 +4,12 @@ namespace App\Services;
 
 use App\Models\Merchant;
 use App\Models\User;
+use App\Models\License;
+use App\Models\Provider;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Facades\DB;
 
 class LicenseManagementService
 {
@@ -376,5 +379,120 @@ class LicenseManagementService
         }
 
         return $cleanedCount;
+    }
+
+    /**
+     * Get provider license status summary for dashboard.
+     */
+    public function getProviderLicenseStatusSummary(): array
+    {
+        return [
+            'pending_review' => License::where('status', 'pending')->count(),
+            'approved' => License::where('status', 'active')->count(),
+            'rejected' => License::where('status', 'rejected')->count(),
+            'expired' => License::where('status', 'expired')->count(),
+            'total_licenses' => License::count(),
+        ];
+    }
+
+    /**
+     * Approve a provider license.
+     */
+    public function approveProviderLicense(License $license, User $approvedBy, ?string $message = null): bool
+    {
+        try {
+            DB::beginTransaction();
+
+            // Update license status to active
+            $license->update([
+                'status' => 'active',
+            ]);
+
+            // Update user status to active
+            $user = $license->user;
+            $user->update([
+                'status' => 'active',
+            ]);
+
+            // Update provider status to active if provider exists
+            if ($user->provider) {
+                $user->provider->update([
+                    'status' => 'active',
+                    'is_verified' => true,
+                ]);
+            }
+
+            DB::commit();
+
+            Log::info("Provider license approved for user: {$user->name} (ID: {$user->id}) by admin: {$approvedBy->name}");
+
+            // TODO: Send approval notification to provider
+            // $this->sendProviderLicenseApprovalNotification($license, $message);
+
+            return true;
+        } catch (\Exception $e) {
+            DB::rollBack();
+            Log::error("Failed to approve provider license {$license->id}: " . $e->getMessage());
+            return false;
+        }
+    }
+
+    /**
+     * Reject a provider license.
+     */
+    public function rejectProviderLicense(License $license, User $rejectedBy, string $reason): bool
+    {
+        try {
+            DB::beginTransaction();
+
+            // Update license status to rejected
+            $license->update([
+                'status' => 'rejected',
+                'notes' => $reason, // Store rejection reason in notes field
+            ]);
+
+            // Keep user and provider status as pending (they can reupload)
+            // No need to update user/provider status for rejection
+
+            DB::commit();
+
+            Log::info("Provider license rejected for user: {$license->user->name} (ID: {$license->user_id}) by admin: {$rejectedBy->name}");
+
+            // TODO: Send rejection notification to provider
+            // $this->sendProviderLicenseRejectionNotification($license, $reason);
+
+            return true;
+        } catch (\Exception $e) {
+            DB::rollBack();
+            Log::error("Failed to reject provider license {$license->id}: " . $e->getMessage());
+            return false;
+        }
+    }
+
+    /**
+     * Bulk approve multiple provider licenses.
+     */
+    public function bulkApproveProviderLicenses(array $licenseIds, User $approvedBy, ?string $message = null): array
+    {
+        $results = [
+            'approved' => 0,
+            'failed' => 0,
+            'errors' => []
+        ];
+
+        $licenses = License::whereIn('id', $licenseIds)
+            ->where('status', 'pending')
+            ->get();
+
+        foreach ($licenses as $license) {
+            if ($this->approveProviderLicense($license, $approvedBy, $message)) {
+                $results['approved']++;
+            } else {
+                $results['failed']++;
+                $results['errors'][] = "Failed to approve license for {$license->user->name}";
+            }
+        }
+
+        return $results;
     }
 }

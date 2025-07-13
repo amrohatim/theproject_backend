@@ -29,6 +29,8 @@ class Provider extends Model
         'website',
         'logo',
         'delivery_capability',
+        'delivery_fees',
+        'stock_locations',
         'status',
         'is_verified',
         'average_rating',
@@ -50,6 +52,9 @@ class Provider extends Model
      */
     protected $casts = [
         'is_verified' => 'boolean',
+        'delivery_capability' => 'boolean',
+        'delivery_fees' => 'array',
+        'stock_locations' => 'array',
     ];
 
     /**
@@ -90,5 +95,33 @@ class Provider extends Model
     public function ratings()
     {
         return $this->hasMany(ProviderRating::class, 'provider_id');
+    }
+
+    /**
+     * Get delivery fee for a specific emirate.
+     *
+     * @param string $emirate
+     * @return float|null
+     */
+    public function getDeliveryFeeForEmirate(string $emirate): ?float
+    {
+        if (!$this->delivery_capability || !$this->delivery_fees) {
+            return null;
+        }
+
+        // Handle different emirate name formats
+        $emirateKey = strtolower(str_replace(' ', '_', $emirate));
+
+        return $this->delivery_fees[$emirateKey] ?? null;
+    }
+
+    /**
+     * Check if provider offers delivery services.
+     *
+     * @return bool
+     */
+    public function offersDelivery(): bool
+    {
+        return (bool) $this->delivery_capability;
     }
 }

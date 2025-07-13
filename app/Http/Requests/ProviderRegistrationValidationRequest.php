@@ -37,6 +37,7 @@ class ProviderRegistrationValidationRequest extends FormRequest
             'description' => 'nullable|string|max:1000',
             'logo' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
             'delivery_capability' => 'boolean',
+            'delivery_fee_by_emirate' => 'nullable|string', // JSON string from frontend
             'delivery_fees' => 'nullable|array',
             'stock_locations' => 'nullable|array',
             'stock_locations.*.name' => 'required_with:stock_locations|string|max:255',
@@ -63,6 +64,9 @@ class ProviderRegistrationValidationRequest extends FormRequest
 
             // Phone registration status checks
             $this->validatePhoneRegistrationStatus($validator);
+
+            // Delivery fees validation
+            $this->validateDeliveryFees($validator);
         });
     }
 
@@ -76,6 +80,18 @@ class ProviderRegistrationValidationRequest extends FormRequest
             $this->merge([
                 'phone' => $this->normalizePhoneNumber($this->input('phone'))
             ]);
+        }
+
+        // Parse delivery fees JSON string if provided
+        if ($this->has('delivery_fee_by_emirate') && is_string($this->input('delivery_fee_by_emirate'))) {
+            $deliveryFeesJson = $this->input('delivery_fee_by_emirate');
+            $deliveryFees = json_decode($deliveryFeesJson, true);
+
+            if (json_last_error() === JSON_ERROR_NONE && is_array($deliveryFees)) {
+                $this->merge([
+                    'delivery_fees' => $deliveryFees
+                ]);
+            }
         }
     }
 
@@ -159,6 +175,39 @@ class ProviderRegistrationValidationRequest extends FormRequest
     }
 
     /**
+     * Validate delivery fees structure and values.
+     */
+    protected function validateDeliveryFees($validator)
+    {
+        $deliveryCapability = $this->input('delivery_capability');
+        $deliveryFees = $this->input('delivery_fees');
+
+        // If delivery capability is enabled, validate delivery fees
+        if ($deliveryCapability && $deliveryFees) {
+            if (!is_array($deliveryFees)) {
+                $validator->errors()->add('delivery_fees', 'Delivery fees must be an array');
+                return;
+            }
+
+            $validEmirates = [
+                'abu_dhabi', 'dubai', 'sharjah', 'ajman', 'uaq', 'rak', 'fujairah'
+            ];
+
+            foreach ($deliveryFees as $emirate => $fee) {
+                // Validate emirate name
+                if (!in_array($emirate, $validEmirates)) {
+                    $validator->errors()->add('delivery_fees', "Invalid emirate: {$emirate}");
+                }
+
+                // Validate fee value
+                if (!is_numeric($fee) || $fee < 0) {
+                    $validator->errors()->add('delivery_fees', "Delivery fee for {$emirate} must be a positive number");
+                }
+            }
+        }
+    }
+
+    /**
      * Normalize phone number for database storage and comparison.
      */
     protected function normalizePhoneNumber($phone)
@@ -217,7 +266,10 @@ class ProviderRegistrationValidationRequest extends FormRequest
             'logo.max' => 'Logo file size cannot exceed 2MB',
             
             'delivery_capability.boolean' => 'Delivery capability must be true or false',
-            
+
+            'delivery_fees.array' => 'Delivery fees must be an array',
+            'delivery_fee_by_emirate.string' => 'Delivery fees data must be a valid JSON string',
+
             'stock_locations.array' => 'Stock locations must be an array',
             'stock_locations.*.name.required_with' => 'Stock location name is required',
             'stock_locations.*.name.max' => 'Stock location name cannot exceed 255 characters',

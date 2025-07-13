@@ -93,6 +93,24 @@ class User extends Authenticatable
     }
 
     /**
+     * Get the user's active license.
+     */
+    public function activeLicense()
+    {
+        return $this->hasOne(License::class)->where('status', 'active')->latest();
+    }
+
+    /**
+     * Get the user's latest license regardless of status.
+     */
+    public function latestLicense()
+    {
+        return $this->hasOne(License::class)->latest();
+    }
+
+
+
+    /**
      * Get the vendor locations associated with the user.
      */
     public function vendorLocations()
@@ -150,6 +168,37 @@ class User extends Authenticatable
     public function isCustomer(): bool
     {
         return $this->role === 'customer';
+    }
+
+    /**
+     * Check if the user has an active license.
+     *
+     * @return bool
+     */
+    public function hasActiveLicense(): bool
+    {
+        return $this->licenses()->where('status', 'active')->exists();
+    }
+
+    /**
+     * Get the user's license status.
+     *
+     * @return string|null
+     */
+    public function getLicenseStatus(): ?string
+    {
+        $license = $this->latestLicense;
+        return $license ? $license->status : null;
+    }
+
+    /**
+     * Check if the user has any license record.
+     *
+     * @return bool
+     */
+    public function hasLicense(): bool
+    {
+        return $this->licenses()->exists();
     }
 
     /**

@@ -101,12 +101,23 @@
 
             <!-- Status Card -->
             <div class="status-container rounded-2xl shadow-xl p-8">
+                @php
+                    $license = $user->latestLicense;
+                    $licenseStatus = $license ? $license->status : null;
+                @endphp
+
                 <!-- Current Status -->
                 <div class="text-center mb-8">
-                    <div class="inline-block p-6 rounded-full {{ $user->registration_status === 'pending' ? 'status-pending' : ($user->registration_status === 'approved' ? 'status-approved' : 'status-rejected') }} text-white mb-4 {{ $user->registration_status === 'pending' ? 'pulse-animation' : '' }}">
-                        @if($user->registration_status === 'pending')
+                    <div class="inline-block p-6 rounded-full {{
+                        !$user->hasLicense() ? 'status-pending' :
+                        ($licenseStatus === 'pending' ? 'status-pending' :
+                        ($licenseStatus === 'active' ? 'status-approved' : 'status-rejected'))
+                    }} text-white mb-4 {{ (!$user->hasLicense() || $licenseStatus === 'pending') ? 'pulse-animation' : '' }}">
+                        @if(!$user->hasLicense())
+                            <i class="fas fa-upload text-4xl"></i>
+                        @elseif($licenseStatus === 'pending')
                             <i class="fas fa-clock text-4xl"></i>
-                        @elseif($user->registration_status === 'approved')
+                        @elseif($licenseStatus === 'active')
                             <i class="fas fa-check-circle text-4xl"></i>
                         @else
                             <i class="fas fa-times-circle text-4xl"></i>
@@ -114,30 +125,50 @@
                     </div>
 
                     <h2 class="text-2xl font-bold text-gray-900 mb-2">
-                        @if($user->registration_status === 'pending')
-                            Registration Under Review
-                        @elseif($user->registration_status === 'approved')
-                            Registration Approved!
+                        @if(!$user->hasLicense())
+                            License Required
+                        @elseif($licenseStatus === 'pending')
+                            License Under Review
+                        @elseif($licenseStatus === 'active')
+                            License Approved!
+                        @elseif($licenseStatus === 'expired')
+                            License Expired
                         @else
-                            Registration Rejected
+                            License Rejected
                         @endif
                     </h2>
 
                     <p class="text-gray-600 mb-4">
-                        @if($user->registration_status === 'pending')
-                            Your service provider registration is currently being reviewed by our team. This process typically takes 1-3 business days.
-                        @elseif($user->registration_status === 'approved')
-                            Congratulations! Your service provider registration has been approved. You can now access your provider dashboard.
+                        @if(!$user->hasLicense())
+                            Please upload your professional license to access the provider dashboard.
+                        @elseif($licenseStatus === 'pending')
+                            Your license is currently being reviewed by our team. This process typically takes 1-3 business days.
+                        @elseif($licenseStatus === 'active')
+                            Congratulations! Your license has been approved. You can now access your provider dashboard.
+                        @elseif($licenseStatus === 'expired')
+                            Your license has expired. Please upload a renewed license to continue.
                         @else
-                            Unfortunately, your service provider registration has been rejected. Please contact our support team for more information.
+                            Your license application was rejected. Please contact support or upload updated documentation.
                         @endif
                     </p>
 
-                    @if($user->registration_status === 'approved')
+                    @if(!$user->hasLicense())
+                        <a href="{{ route('provider.license.upload') }}"
+                           class="inline-flex items-center px-6 py-3 bg-gradient-to-r from-blue-600 to-blue-700 text-white font-semibold rounded-lg hover:from-blue-700 hover:to-blue-800 transition-all duration-300 transform hover:scale-105">
+                            <i class="fas fa-upload mr-2"></i>
+                            Upload License
+                        </a>
+                    @elseif($licenseStatus === 'active')
                         <a href="{{ route('provider.dashboard') }}"
-                           class="inline-flex items-center px-6 py-3 bg-gradient-to-r from-pink-600 to-rose-600 text-white font-semibold rounded-lg hover:from-pink-700 hover:to-rose-700 transition-all duration-300 transform hover:scale-105">
+                           class="inline-flex items-center px-6 py-3 bg-gradient-to-r from-green-600 to-green-700 text-white font-semibold rounded-lg hover:from-green-700 hover:to-green-800 transition-all duration-300 transform hover:scale-105">
                             <i class="fas fa-tachometer-alt mr-2"></i>
                             Go to Dashboard
+                        </a>
+                    @elseif($licenseStatus === 'expired' || $licenseStatus === 'rejected')
+                        <a href="{{ route('provider.license.upload') }}"
+                           class="inline-flex items-center px-6 py-3 bg-gradient-to-r from-orange-600 to-orange-700 text-white font-semibold rounded-lg hover:from-orange-700 hover:to-orange-800 transition-all duration-300 transform hover:scale-105">
+                            <i class="fas fa-upload mr-2"></i>
+                            Upload New License
                         </a>
                     @endif
                 </div>
@@ -208,24 +239,34 @@
                             </div>
                         </div>
 
-                        <!-- Step 4: Admin Review -->
-                        <div class="timeline-item {{ $user->registration_status === 'approved' ? 'completed' : ($user->email_verified_at && $user->phone_verified_at ? 'current' : '') }}">
+                        <!-- Step 4: License Upload & Review -->
+                        <div class="timeline-item {{
+                            $licenseStatus === 'active' ? 'completed' :
+                            ($user->hasLicense() ? 'current' : ($user->email_verified_at && $user->phone_verified_at ? 'current' : ''))
+                        }}">
                             <div class="flex items-center justify-between">
                                 <div>
-                                    <h4 class="font-medium text-gray-900">Admin Review</h4>
+                                    <h4 class="font-medium text-gray-900">License Upload & Review</h4>
                                     <p class="text-sm text-gray-600">
-                                        @if($user->registration_status === 'approved')
-                                            Application approved by admin
-                                        @elseif($user->registration_status === 'rejected')
-                                            Application rejected by admin
+                                        @if(!$user->hasLicense())
+                                            Upload your professional license
+                                        @elseif($licenseStatus === 'pending')
+                                            License under admin review
+                                        @elseif($licenseStatus === 'active')
+                                            License approved by admin
+                                        @elseif($licenseStatus === 'expired')
+                                            License expired - renewal required
                                         @else
-                                            Waiting for admin review
+                                            License rejected by admin
                                         @endif
                                     </p>
                                 </div>
                                 <span class="text-sm text-gray-500">
-                                    @if($user->registration_status !== 'pending')
-                                        {{ $user->updated_at->format('M d, Y') }}
+                                    @if($license)
+                                        {{ $license->created_at->format('M d, Y') }}
+                                    @elseif($user->email_verified_at && $user->phone_verified_at)
+                                        <a href="{{ route('provider.license.upload') }}"
+                                           class="text-blue-600 hover:text-blue-700 font-medium">Upload Now</a>
                                     @else
                                         Pending
                                     @endif
@@ -268,8 +309,8 @@
     </div>
 
     <script>
-        // Auto-refresh page every 30 seconds if status is pending
-        @if($user->registration_status === 'pending')
+        // Auto-refresh page every 30 seconds if license status is pending
+        @if($licenseStatus === 'pending')
             setTimeout(() => {
                 location.reload();
             }, 30000);

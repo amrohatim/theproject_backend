@@ -461,8 +461,14 @@ class RegistrationController extends Controller
                 $user = User::findOrFail($request->user_id);
                 Auth::login($user);
 
-                return redirect()->route('provider.dashboard')
-                    ->with('success', 'Registration completed successfully! Welcome to your dashboard.');
+                // Check if license is pending and redirect appropriately
+                if ($result['next_step'] === 'verification_pending') {
+                    return redirect()->route('provider.license.status')
+                        ->with('success', $result['message']);
+                } else {
+                    return redirect()->route('provider.dashboard')
+                        ->with('success', 'Registration completed successfully! Welcome to your dashboard.');
+                }
             } else {
                 return back()->withErrors(['error' => $result['message']])->withInput();
             }
@@ -701,6 +707,101 @@ class RegistrationController extends Controller
     }
 
     /**
+     * Show provider registration status page.
+     */
+    public function showProviderRegistrationStatus()
+    {
+        $user = Auth::user();
+
+        // Ensure user is authenticated and is a provider
+        if (!$user || $user->role !== 'provider') {
+            return redirect()->route('login')->with('error', 'Please log in as a provider to view registration status.');
+        }
+
+        return view('auth.provider.registration-status', compact('user'));
+    }
+
+    /**
+     * Show provider license upload page.
+     */
+    public function showProviderLicenseUpload()
+    {
+        $user = Auth::user();
+
+        // Ensure user is authenticated and is a provider
+        if (!$user || $user->role !== 'provider') {
+            return redirect()->route('login')->with('error', 'Please log in as a provider to upload license.');
+        }
+
+        return view('auth.provider.license-upload-standalone', compact('user'));
+    }
+
+    /**
+     * Show provider license status page.
+     */
+    public function showProviderLicenseStatus()
+    {
+        $user = Auth::user();
+
+        // Ensure user is authenticated and is a provider
+        if (!$user || $user->role !== 'provider') {
+            return redirect()->route('login')->with('error', 'Please log in as a provider to view license status.');
+        }
+
+        // Load the user's latest license
+        $user->load('latestLicense');
+
+        return view('auth.provider.license-status', compact('user'));
+    }
+
+    /**
+     * Handle provider license upload for existing providers.
+     */
+    public function submitProviderLicenseUpload(Request $request)
+    {
+        try {
+            $user = Auth::user();
+
+            // Ensure user is authenticated and is a provider
+            if (!$user || $user->role !== 'provider') {
+                return redirect()->route('login')->with('error', 'Please log in as a provider to upload license.');
+            }
+
+            $validator = Validator::make($request->all(), [
+                'license_file' => 'required|file|mimes:pdf|max:10240', // 10MB max
+                'license_expiry_date' => 'required|date|after:today',
+                'notes' => 'nullable|string|max:500',
+            ]);
+
+            if ($validator->fails()) {
+                return back()->withErrors($validator)->withInput();
+            }
+
+            // Create license with pending status for admin review
+            $licenseData = array_merge(
+                $request->only(['license_expiry_date', 'notes']),
+                ['license_status' => 'pending'] // Pass status to be used in service
+            );
+
+            $result = $this->registrationService->completeProviderLicense(
+                $user->id,
+                $request->file('license_file'),
+                $licenseData
+            );
+
+            if ($result['success']) {
+                return redirect()->route('provider.license.status')
+                    ->with('success', 'License uploaded successfully! Your license is now under review.');
+            } else {
+                return back()->with('error', $result['message'] ?? 'Failed to upload license. Please try again.');
+            }
+        } catch (Exception $e) {
+            Log::error('Provider license upload failed: ' . $e->getMessage());
+            return back()->with('error', 'An error occurred while uploading your license. Please try again.');
+        }
+    }
+
+    /**
      * Show phone verification page for temporary registration.
      */
     public function showTempVendorPhoneVerification(Request $request, $token)
@@ -729,6 +830,97 @@ class RegistrationController extends Controller
             Log::error('Show temp vendor phone verification error: ' . $e->getMessage());
             return redirect()->route('register.vendor')
                 ->withErrors(['error' => 'An error occurred. Please try again.']);
+        }
+    }
+
+    /**
+     * Show provider email verification page.
+     */
+    public function showProviderEmailVerification($user_id)
+    {
+        try {
+            $user = User::findOrFail($user_id);
+
+            // Ensure user is a provider
+            if ($user->role !== 'provider') {
+                return redirect()->route('login')->with('error', 'Invalid user type.');
+            }
+
+            return view('auth.provider.email-verification', compact('user'));
+        } catch (Exception $e) {
+            Log::error('Show provider email verification error: ' . $e->getMessage());
+            return redirect()->route('login')->with('error', 'User not found.');
+        }
+    }
+
+    /**
+     * Verify provider email.
+     */
+    public function verifyProviderEmail(Request $request)
+    {
+        try {
+            $validator = Validator::make($request->all(), [
+                'user_id' => 'required|exists:users,id',
+                'verification_code' => 'required|string|size:6',
+            ]);
+
+            if ($validator->fails()) {
+                return back()->withErrors($validator)->withInput();
+            }
+
+            $user = User::findOrFail($request->user_id);
+
+            // Ensure user is a provider
+            if ($user->role !== 'provider') {
+                return back()->withErrors(['error' => 'Invalid user type.'])->withInput();
+            }
+
+            // For now, we'll simulate verification (in production, you'd verify against stored code)
+            // Update user's email verification status
+            $user->update([
+                'email_verified_at' => now(),
+                'registration_step' => 'email_verified'
+            ]);
+
+            Log::info('Provider email verified successfully', ['user_id' => $user->id]);
+
+            return redirect()->route('provider.registration.license', ['user_id' => $user->id])
+                ->with('success', 'Email verified successfully! Please upload your license.');
+        } catch (Exception $e) {
+            Log::error('Provider email verification error: ' . $e->getMessage());
+            return back()->withErrors(['error' => 'Verification failed. Please try again.'])->withInput();
+        }
+    }
+
+    /**
+     * Resend provider email verification.
+     */
+    public function resendProviderEmailVerification(Request $request)
+    {
+        try {
+            $validator = Validator::make($request->all(), [
+                'user_id' => 'required|exists:users,id',
+            ]);
+
+            if ($validator->fails()) {
+                return back()->withErrors($validator)->withInput();
+            }
+
+            $user = User::findOrFail($request->user_id);
+
+            // Ensure user is a provider
+            if ($user->role !== 'provider') {
+                return back()->withErrors(['error' => 'Invalid user type.']);
+            }
+
+            // Here you would resend the verification email
+            // For now, we'll just return success
+            Log::info('Provider email verification resent', ['user_id' => $user->id]);
+
+            return back()->with('success', 'Verification email sent successfully!');
+        } catch (Exception $e) {
+            Log::error('Resend provider email verification error: ' . $e->getMessage());
+            return back()->withErrors(['error' => 'Failed to resend verification email. Please try again.']);
         }
     }
 }

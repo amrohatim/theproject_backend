@@ -639,26 +639,35 @@ class RegistrationService
                 'start_date' => $startDate,
                 'end_date' => $endDate,
                 'duration_days' => $duration,
-                'status' => 'active',
+                'status' => $licenseData['license_status'] ?? 'pending', // Use passed status or default to pending for admin review
                 'renewal_date' => $renewalDate,
                 'notes' => $licenseData['notes'] ?? null,
             ]);
 
-            // Update user and provider status
+            // Update user and provider status based on license status
+            $licenseStatus = $licenseData['license_status'] ?? 'pending';
+            $userStatus = $licenseStatus === 'active' ? 'active' : 'pending';
+            $providerStatus = $licenseStatus === 'active' ? 'active' : 'pending';
+
             $user->update([
                 'registration_step' => 'license_completed',
-                'status' => 'active',
+                'status' => $userStatus,
             ]);
 
-            $user->provider()->update(['status' => 'active']);
+            $user->provider()->update(['status' => $providerStatus]);
 
             DB::commit();
 
+            // Prepare response message based on license status
+            $message = $licenseStatus === 'active'
+                ? 'License uploaded successfully. Registration completed!'
+                : 'License uploaded successfully. Your license is now under review by our admin team.';
+
             return [
                 'success' => true,
-                'message' => 'License uploaded successfully. Registration completed!',
+                'message' => $message,
                 'license_id' => $license->id,
-                'next_step' => 'verification_pending',
+                'next_step' => $licenseStatus === 'active' ? 'registration_complete' : 'verification_pending',
             ];
         } catch (Exception $e) {
             DB::rollBack();
@@ -692,29 +701,38 @@ class RegistrationService
                 'start_date' => $startDate,
                 'end_date' => $endDate,
                 'duration_days' => $duration,
-                'status' => 'active',
+                'status' => $licenseData['license_status'] ?? 'pending', // Use passed status or default to pending for admin review
                 'renewal_date' => $renewalDate,
                 'notes' => $licenseData['notes'] ?? null,
             ]);
 
-            // Update user registration step
+            // Update user and merchant status based on license status
+            $licenseStatus = $licenseData['license_status'] ?? 'pending';
+            $userStatus = $licenseStatus === 'active' ? 'active' : 'pending';
+            $merchantStatus = $licenseStatus === 'active' ? 'active' : 'pending';
+
             $user->update([
                 'registration_step' => 'license_completed',
-                'status' => 'active',
+                'status' => $userStatus,
             ]);
 
             // Update merchant status if exists
             if ($user->merchant) {
-                $user->merchant()->update(['status' => 'active']);
+                $user->merchant()->update(['status' => $merchantStatus]);
             }
 
             DB::commit();
 
+            // Prepare response message based on license status
+            $message = $licenseStatus === 'active'
+                ? 'License uploaded successfully. Registration completed!'
+                : 'License uploaded successfully. Your license is now under review by our admin team.';
+
             return [
                 'success' => true,
-                'message' => 'License uploaded successfully. Registration completed!',
+                'message' => $message,
                 'license_id' => $license->id,
-                'next_step' => 'verification_pending',
+                'next_step' => $licenseStatus === 'active' ? 'registration_complete' : 'verification_pending',
             ];
         } catch (Exception $e) {
             DB::rollBack();
@@ -862,6 +880,18 @@ class RegistrationService
             'is_verified' => false,
         ];
 
+        // Handle delivery fees if delivery capability is enabled
+        if (isset($userData['delivery_capability']) && $userData['delivery_capability']) {
+            if (isset($userData['delivery_fees']) && is_array($userData['delivery_fees'])) {
+                $providerData['delivery_fees'] = $userData['delivery_fees'];
+            }
+        }
+
+        // Handle stock locations if provided
+        if (isset($userData['stock_locations']) && is_array($userData['stock_locations'])) {
+            $providerData['stock_locations'] = $userData['stock_locations'];
+        }
+
         // Handle logo upload if provided
         if (isset($userData['logo']) && $userData['logo'] instanceof \Illuminate\Http\UploadedFile) {
             // Direct UploadedFile object (for backward compatibility)
@@ -879,6 +909,9 @@ class RegistrationService
             'user_id' => $user->id,
             'business_name' => $userData['business_name'],
             'business_type' => $userData['business_type'],
+            'delivery_capability' => $userData['delivery_capability'] ?? false,
+            'delivery_fees_count' => isset($userData['delivery_fees']) ? count($userData['delivery_fees']) : 0,
+            'stock_locations_count' => isset($userData['stock_locations']) ? count($userData['stock_locations']) : 0,
             'logo_uploaded' => isset($providerData['logo']),
         ]);
     }

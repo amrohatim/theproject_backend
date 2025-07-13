@@ -28,23 +28,26 @@ class ProviderMiddleware
             return redirect('/')->with('error', 'You do not have provider access.');
         }
 
-        // Check if provider registration is approved
-        if ($user->registration_status !== 'approved') {
-            $message = match($user->registration_status) {
-                'pending' => 'Your provider registration is pending approval. Please wait for admin approval.',
-                'rejected' => 'Your provider registration has been rejected. Please contact support for more information.',
-                default => 'Your account status does not allow access to the provider area.'
+        // Check license status for provider access
+        if (!$user->hasLicense()) {
+            // No license record - redirect to license upload
+            return redirect()->route('provider.license.upload')->with('error', 'Please upload your license documentation to continue.');
+        }
+
+        $licenseStatus = $user->getLicenseStatus();
+
+        if ($licenseStatus !== 'active') {
+            $message = match($licenseStatus) {
+                'pending' => 'Your license is under review. Please wait for approval before accessing the provider dashboard.',
+                'expired' => 'Your license has expired. Please renew your license to continue accessing the provider area.',
+                'rejected' => 'Your license application was rejected. Please contact support or reapply with updated documentation.',
+                default => 'Your license status does not allow access to the provider area.'
             };
 
-            return redirect()->route('provider.registration.status')->with('error', $message);
+            return redirect()->route('provider.license.status')->with('error', $message);
         }
 
-        // Check if email and phone are verified
-        if (!$user->email_verified_at) {
-            return redirect()->route('provider.email.verify', ['user_id' => $user->id])
-                ->with('error', 'Please verify your email address to continue.');
-        }
-
+        // Check if phone is verified
         if (!$user->phone_verified_at) {
             return redirect()->route('provider.otp.verify', ['user_id' => $user->id])
                 ->with('error', 'Please verify your phone number to continue.');

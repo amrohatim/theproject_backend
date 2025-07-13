@@ -20,7 +20,7 @@ return new class extends Migration
             $table->date('start_date');
             $table->date('end_date');
             $table->integer('duration_days'); // Duration in days
-            $table->enum('status', ['active', 'expired', 'pending', 'rejected'])->default('active');
+            $table->enum('status', ['active', 'expired', 'pending', 'rejected'])->default('pending');
             $table->date('renewal_date');
             $table->text('notes')->nullable();
             $table->timestamps();

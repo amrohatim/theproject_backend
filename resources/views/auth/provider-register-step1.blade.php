@@ -731,7 +731,6 @@
                                    value=""
                                    placeholder="50 123 4567"
                                    maxlength="11" aria-describedby="phone-error" autocomplete="tel"
-                                   pattern="[0-9]{9}"
                                    title="Please enter a valid 9-digit UAE phone number">
                             <input type="hidden" id="phone" name="phone" class="form-input" value="{{ old('phone', '') }}" required>
                         </div>
@@ -850,8 +849,8 @@
                 </h3>
                 
                 <div class="checkbox-group">
-                    <input type="checkbox" id="delivery_capability" name="delivery_capability" 
-                           class="checkbox-input" value="1">
+                    <input type="checkbox" id="delivery_capability" name="delivery_capability"
+                           class="checkbox-input" value="1" {{ old('delivery_capability') ? 'checked' : '' }}>
                     <label for="delivery_capability" class="checkbox-label">
                         We offer delivery services to vendors
                     </label>
@@ -862,44 +861,44 @@
                     
                     <div class="emirate-fee">
                         <span class="emirate-name">Abu Dhabi</span>
-                        <input type="number" name="delivery_fee_abu_dhabi" class="fee-input" 
-                               placeholder="0.00" step="0.01" min="0">
+                        <input type="number" name="delivery_fee_abu_dhabi" class="fee-input"
+                               placeholder="0.00" step="0.01" min="0" value="{{ old('delivery_fee_abu_dhabi') }}">
                     </div>
-                    
+
                     <div class="emirate-fee">
                         <span class="emirate-name">Dubai</span>
-                        <input type="number" name="delivery_fee_dubai" class="fee-input" 
-                               placeholder="0.00" step="0.01" min="0">
+                        <input type="number" name="delivery_fee_dubai" class="fee-input"
+                               placeholder="0.00" step="0.01" min="0" value="{{ old('delivery_fee_dubai') }}">
                     </div>
-                    
+
                     <div class="emirate-fee">
                         <span class="emirate-name">Sharjah</span>
-                        <input type="number" name="delivery_fee_sharjah" class="fee-input" 
-                               placeholder="0.00" step="0.01" min="0">
+                        <input type="number" name="delivery_fee_sharjah" class="fee-input"
+                               placeholder="0.00" step="0.01" min="0" value="{{ old('delivery_fee_sharjah') }}">
                     </div>
-                    
+
                     <div class="emirate-fee">
                         <span class="emirate-name">Ajman</span>
-                        <input type="number" name="delivery_fee_ajman" class="fee-input" 
-                               placeholder="0.00" step="0.01" min="0">
+                        <input type="number" name="delivery_fee_ajman" class="fee-input"
+                               placeholder="0.00" step="0.01" min="0" value="{{ old('delivery_fee_ajman') }}">
                     </div>
-                    
+
                     <div class="emirate-fee">
                         <span class="emirate-name">Umm Al Quwain</span>
-                        <input type="number" name="delivery_fee_uaq" class="fee-input" 
-                               placeholder="0.00" step="0.01" min="0">
+                        <input type="number" name="delivery_fee_uaq" class="fee-input"
+                               placeholder="0.00" step="0.01" min="0" value="{{ old('delivery_fee_uaq') }}">
                     </div>
-                    
+
                     <div class="emirate-fee">
                         <span class="emirate-name">Ras Al Khaimah</span>
-                        <input type="number" name="delivery_fee_rak" class="fee-input" 
-                               placeholder="0.00" step="0.01" min="0">
+                        <input type="number" name="delivery_fee_rak" class="fee-input"
+                               placeholder="0.00" step="0.01" min="0" value="{{ old('delivery_fee_rak') }}">
                     </div>
-                    
+
                     <div class="emirate-fee">
                         <span class="emirate-name">Fujairah</span>
-                        <input type="number" name="delivery_fee_fujairah" class="fee-input" 
-                               placeholder="0.00" step="0.01" min="0">
+                        <input type="number" name="delivery_fee_fujairah" class="fee-input"
+                               placeholder="0.00" step="0.01" min="0" value="{{ old('delivery_fee_fujairah') }}">
                     </div>
                 </div>
             </div>
@@ -957,6 +956,15 @@
         document.getElementById('delivery_capability').addEventListener('change', function() {
             const deliverySection = document.getElementById('deliverySection');
             deliverySection.style.display = this.checked ? 'block' : 'none';
+        });
+
+        // Initialize delivery section visibility on page load
+        document.addEventListener('DOMContentLoaded', function() {
+            const deliveryCapability = document.getElementById('delivery_capability');
+            const deliverySection = document.getElementById('deliverySection');
+            if (deliveryCapability && deliveryCapability.checked) {
+                deliverySection.style.display = 'block';
+            }
         });
 
         // File upload preview

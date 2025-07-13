@@ -287,6 +287,11 @@ Route::middleware('auth')->group(function () {
 
     Route::get('/provider/registration/status', [RegistrationController::class, 'showProviderRegistrationStatus'])->name('provider.registration.status');
 
+    // Provider license management routes
+    Route::get('/provider/license/upload', [RegistrationController::class, 'showProviderLicenseUpload'])->name('provider.license.upload');
+    Route::post('/provider/license/upload', [RegistrationController::class, 'submitProviderLicenseUpload'])->name('provider.license.upload.submit');
+    Route::get('/provider/license/status', [RegistrationController::class, 'showProviderLicenseStatus'])->name('provider.license.status');
+
     // Merchant verification routes
     Route::get('/merchant/email/verify/{user_id}', [RegistrationController::class, 'showMerchantEmailVerification'])->name('merchant.email.verify');
     Route::post('/merchant/email/verify', [RegistrationController::class, 'verifyMerchantEmail'])->name('merchant.email.verify.submit');
@@ -965,6 +970,13 @@ Route::prefix('admin')->name('admin.')->middleware(['auth', \App\Http\Middleware
     Route::get('/merchant-licenses/{id}/download', [App\Http\Controllers\Admin\MerchantLicenseController::class, 'downloadLicense'])->name('merchant-licenses.download');
     Route::get('/merchant-licenses/{id}/view', [App\Http\Controllers\Admin\MerchantLicenseController::class, 'viewLicense'])->name('merchant-licenses.view');
     Route::post('/merchant-licenses/bulk-approve', [App\Http\Controllers\Admin\MerchantLicenseController::class, 'bulkApprove'])->name('merchant-licenses.bulk-approve');
+
+    // Provider License Management
+    Route::get('/provider-licenses', [App\Http\Controllers\Admin\ProviderLicenseController::class, 'index'])->name('provider-licenses.index');
+    Route::get('/provider-licenses/{id}', [App\Http\Controllers\Admin\ProviderLicenseController::class, 'show'])->name('provider-licenses.show');
+    Route::post('/provider-licenses/{id}/approve', [App\Http\Controllers\Admin\ProviderLicenseController::class, 'approve'])->name('provider-licenses.approve');
+    Route::post('/provider-licenses/{id}/reject', [App\Http\Controllers\Admin\ProviderLicenseController::class, 'reject'])->name('provider-licenses.reject');
+    Route::post('/provider-licenses/bulk-approve', [App\Http\Controllers\Admin\ProviderLicenseController::class, 'bulkApprove'])->name('provider-licenses.bulk-approve');
 
     // Settings
     Route::get('/settings', function () {
