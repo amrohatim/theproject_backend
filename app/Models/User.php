@@ -30,6 +30,7 @@ class User extends Authenticatable
         'total_ratings',
         'phone_verified',
         'phone_verified_at',
+        'email_verified_at',
         'registration_step',
         'registration_data',
     ];

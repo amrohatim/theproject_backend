@@ -65,19 +65,17 @@
           @update="updatePersonalInfo"
         />
 
-        <EmailVerificationStep 
+        <EmailVerificationStep
           v-if="currentStep === 2"
           :email="formData.personalInfo.email"
-          :registration-token="registrationToken"
           :loading="loading"
           @submit="handleEmailVerification"
           @resend="resendEmailVerification"
         />
 
-        <PhoneVerificationStep 
+        <PhoneVerificationStep
           v-if="currentStep === 3"
           :phone="formData.personalInfo.phone"
-          :user-id="userId"
           :loading="loading"
           @submit="handlePhoneVerification"
           @resend="resendPhoneVerification"
@@ -155,8 +153,7 @@ export default {
       loading: false,
       error: null,
       success: null,
-      registrationToken: null,
-      userId: null,
+      userId: null, // Will be set after company info is completed
       steps: [
         { name: 'Personal Info' },
         { name: 'Email Verification' },
@@ -210,9 +207,8 @@ export default {
 
       try {
         const response = await registrationApi.submitPersonalInfo(this.formData.personalInfo);
-        
+
         if (response.success) {
-          this.registrationToken = response.registration_token;
           this.success = response.message;
           this.currentStep = 2;
         } else {
@@ -230,13 +226,9 @@ export default {
       this.loading = true;
 
       try {
-        const response = await registrationApi.verifyEmail(
-          verificationData.registration_token,
-          verificationData.verification_code
-        );
+        const response = await registrationApi.verifyEmail(verificationData.verification_code);
 
         if (response.success) {
-          this.userId = response.user_id;
           this.success = response.message;
           this.currentStep = 3;
         } else {
@@ -254,8 +246,8 @@ export default {
       this.loading = true;
 
       try {
-        const response = await registrationApi.verifyOtp(this.formData.personalInfo.phone, otpCode);
-        
+        const response = await registrationApi.verifyOtp(otpCode);
+
         if (response.success) {
           this.success = response.message;
           this.currentStep = 4;
@@ -274,11 +266,13 @@ export default {
       this.loading = true;
 
       try {
-        const response = await registrationApi.submitCompanyInfo(this.userId, this.formData.companyInfo);
-        
+        const response = await registrationApi.submitCompanyInfo(this.formData.companyInfo);
+
         if (response.success) {
           this.success = response.message;
           this.currentStep = 5;
+          // Store user_id for license upload step
+          this.userId = response.user_id;
         } else {
           this.error = response.message || 'Company information submission failed. Please try again.';
         }
@@ -300,10 +294,18 @@ export default {
           this.success = response.message;
           this.currentStep = 6;
         } else {
-          this.error = response.message || 'License upload failed. Please try again.';
+          // Handle specific error cases
+          if (response.error_code === 'LICENSE_UPLOAD_ERROR') {
+            this.error = 'Server error during license upload. Please try again or contact support.';
+          } else if (response.errors && response.errors.session) {
+            this.error = 'Registration session expired. Please restart the registration process.';
+          } else {
+            this.error = response.message || 'License upload failed. Please check your file and try again.';
+          }
         }
       } catch (error) {
-        this.error = error.message || 'An error occurred. Please try again.';
+        console.error('License upload error:', error);
+        this.error = 'Network error occurred. Please check your connection and try again.';
       } finally {
         this.loading = false;
       }
@@ -314,8 +316,8 @@ export default {
       this.loading = true;
 
       try {
-        const response = await registrationApi.resendEmailVerification(this.registrationToken);
-        
+        const response = await registrationApi.resendEmailVerification();
+
         if (response.success) {
           this.success = response.message;
         } else {
@@ -333,8 +335,8 @@ export default {
       this.loading = true;
 
       try {
-        const response = await registrationApi.sendOtp(this.formData.personalInfo.phone);
-        
+        const response = await registrationApi.sendOtp();
+
         if (response.success) {
           this.success = response.message;
         } else {

@@ -258,6 +258,211 @@ Route::post('/logout', function () {
     return redirect('/');
 })->name('logout');
 
+// Test route for session-based vendor registration (remove in production)
+Route::get('/test-vendor-registration', function () {
+    $html = '<!DOCTYPE html>
+<html>
+<head>
+    <title>Test Vendor Registration</title>
+    <meta name="csrf-token" content="' . csrf_token() . '">
+    <style>
+        body { font-family: Arial, sans-serif; margin: 20px; }
+        .step { margin: 20px 0; padding: 15px; border: 1px solid #ddd; }
+        .success { background: #d4edda; border-color: #c3e6cb; }
+        .error { background: #f8d7da; border-color: #f5c6cb; }
+        button { padding: 10px 15px; margin: 5px; }
+        input { padding: 8px; margin: 5px; width: 200px; }
+    </style>
+</head>
+<body>
+    <h1>Test Session-Based Vendor Registration</h1>
+
+    <div class="step">
+        <h3>Step 1: Personal Information</h3>
+        <button onclick="submitPersonalInfo()">Submit Personal Info</button>
+        <div id="step1-result"></div>
+    </div>
+
+    <div class="step">
+        <h3>Step 2: Email Verification</h3>
+        <input type="text" id="email-code" placeholder="Enter verification code">
+        <button onclick="verifyEmail()">Verify Email</button>
+        <div id="step2-result"></div>
+    </div>
+
+    <div class="step">
+        <h3>Step 3: Phone Verification</h3>
+        <button onclick="sendOtp()">Send OTP</button>
+        <input type="text" id="phone-code" placeholder="Enter OTP code">
+        <button onclick="verifyOtp()">Verify OTP</button>
+        <div id="step3-result"></div>
+    </div>
+
+    <div class="step">
+        <h3>Step 4: Company Information</h3>
+        <button onclick="submitCompanyInfo()">Submit Company Info</button>
+        <div id="step4-result"></div>
+    </div>
+
+    <div class="step">
+        <h3>Session Status</h3>
+        <button onclick="checkStatus()">Check Session Status</button>
+        <div id="status-result"></div>
+    </div>
+
+    <script>
+        const csrfToken = document.querySelector("meta[name=csrf-token]").getAttribute("content");
+
+        async function makeRequest(url, data = {}) {
+            const response = await fetch(url, {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                    "Accept": "application/json",
+                    "X-CSRF-TOKEN": csrfToken
+                },
+                body: JSON.stringify(data)
+            });
+            return await response.json();
+        }
+
+        async function submitPersonalInfo() {
+            const data = {
+                name: "Test Vendor Session",
+                email: "test.session@vendor.com",
+                phone: "971501234567",
+                password: "password123",
+                password_confirmation: "password123"
+            };
+
+            try {
+                const result = await makeRequest("/api/vendor-registration/info", data);
+                document.getElementById("step1-result").innerHTML =
+                    `<div class="${result.success ? "success" : "error"}">
+                        ${result.message}
+                    </div>`;
+            } catch (error) {
+                document.getElementById("step1-result").innerHTML =
+                    `<div class="error">Error: ${error.message}</div>`;
+            }
+        }
+
+        async function verifyEmail() {
+            const code = document.getElementById("email-code").value;
+            if (!code) {
+                alert("Please enter verification code");
+                return;
+            }
+
+            try {
+                const result = await makeRequest("/api/vendor-registration/verify-email", {
+                    verification_code: code
+                });
+                document.getElementById("step2-result").innerHTML =
+                    `<div class="${result.success ? "success" : "error"}">
+                        ${result.message}
+                    </div>`;
+            } catch (error) {
+                document.getElementById("step2-result").innerHTML =
+                    `<div class="error">Error: ${error.message}</div>`;
+            }
+        }
+
+        async function sendOtp() {
+            try {
+                const response = await fetch("/api/vendor-registration/send-otp", {
+                    method: "POST",
+                    headers: {
+                        "Accept": "application/json",
+                        "X-CSRF-TOKEN": csrfToken
+                    }
+                });
+                const result = await response.json();
+                document.getElementById("step3-result").innerHTML =
+                    `<div class="${result.success ? "success" : "error"}">
+                        ${result.message}
+                    </div>`;
+            } catch (error) {
+                document.getElementById("step3-result").innerHTML =
+                    `<div class="error">Error: ${error.message}</div>`;
+            }
+        }
+
+        async function verifyOtp() {
+            const code = document.getElementById("phone-code").value;
+            if (!code) {
+                alert("Please enter OTP code");
+                return;
+            }
+
+            try {
+                const result = await makeRequest("/api/vendor-registration/verify-otp", {
+                    otp_code: code
+                });
+                document.getElementById("step3-result").innerHTML +=
+                    `<div class="${result.success ? "success" : "error"}">
+                        ${result.message}
+                    </div>`;
+            } catch (error) {
+                document.getElementById("step3-result").innerHTML +=
+                    `<div class="error">Error: ${error.message}</div>`;
+            }
+        }
+
+        async function submitCompanyInfo() {
+            const data = {
+                name: "Test Company Session",
+                email: "company.session@vendor.com",
+                contact_number_1: "971501234568",
+                contact_number_2: "971501234569",
+                address: "123 Test Street, Dubai",
+                emirate: "Dubai",
+                city: "Dubai",
+                street: "Test Street",
+                delivery_capability: true,
+                delivery_areas: ["Dubai", "Sharjah"],
+                description: "Test company for session-based registration"
+            };
+
+            try {
+                const result = await makeRequest("/api/vendor-registration/company", data);
+                document.getElementById("step4-result").innerHTML =
+                    `<div class="${result.success ? "success" : "error"}">
+                        ${result.message}<br>
+                        ${result.user_id ? "User ID: " + result.user_id + "<br>" : ""}
+                        ${result.company_id ? "Company ID: " + result.company_id : ""}
+                    </div>`;
+            } catch (error) {
+                document.getElementById("step4-result").innerHTML =
+                    `<div class="error">Error: ${error.message}</div>`;
+            }
+        }
+
+        async function checkStatus() {
+            try {
+                const response = await fetch("/api/vendor-registration/status", {
+                    headers: {
+                        "Accept": "application/json",
+                        "X-CSRF-TOKEN": csrfToken
+                    }
+                });
+                const result = await response.json();
+                document.getElementById("status-result").innerHTML =
+                    `<div class="${result.success ? "success" : "error"}">
+                        <pre>${JSON.stringify(result, null, 2)}</pre>
+                    </div>`;
+            } catch (error) {
+                document.getElementById("status-result").innerHTML =
+                    `<div class="error">Error: ${error.message}</div>`;
+            }
+        }
+    </script>
+</body>
+</html>';
+
+    return $html;
+});
+
 // Registration routes
 Route::middleware('guest')->group(function () {
     Route::get('/register', [RegistrationController::class, 'showRegistrationChoice'])->name('register');
@@ -1044,6 +1249,16 @@ Route::prefix('admin')->name('admin.')->middleware(['auth', \App\Http\Middleware
     Route::post('/provider-licenses/{id}/reject', [App\Http\Controllers\Admin\ProviderLicenseController::class, 'reject'])->name('provider-licenses.reject');
     Route::post('/provider-licenses/bulk-approve', [App\Http\Controllers\Admin\ProviderLicenseController::class, 'bulkApprove'])->name('provider-licenses.bulk-approve');
 
+    // Vendor License Management
+    Route::get('/vendor-licenses', [App\Http\Controllers\Admin\VendorLicenseController::class, 'index'])->name('vendor-licenses.index');
+    Route::get('/vendor-licenses/{id}', [App\Http\Controllers\Admin\VendorLicenseController::class, 'show'])->name('vendor-licenses.show');
+    Route::get('/vendor-licenses/{id}/image', [App\Http\Controllers\Admin\VendorLicenseController::class, 'viewImage'])->name('vendor-licenses.image');
+    Route::post('/vendor-licenses/{id}/approve', [App\Http\Controllers\Admin\VendorLicenseController::class, 'approve'])->name('vendor-licenses.approve');
+    Route::post('/vendor-licenses/{id}/reject', [App\Http\Controllers\Admin\VendorLicenseController::class, 'reject'])->name('vendor-licenses.reject');
+    Route::get('/vendor-licenses/{id}/download', [App\Http\Controllers\Admin\VendorLicenseController::class, 'downloadLicense'])->name('vendor-licenses.download');
+    Route::get('/vendor-licenses/{id}/view', [App\Http\Controllers\Admin\VendorLicenseController::class, 'viewLicense'])->name('vendor-licenses.view');
+    Route::post('/vendor-licenses/bulk-approve', [App\Http\Controllers\Admin\VendorLicenseController::class, 'bulkApprove'])->name('vendor-licenses.bulk-approve');
+
     // Settings
     Route::get('/settings', function () {
         return view('admin.settings');
@@ -1696,6 +1911,23 @@ Route::prefix('vendor')->name('vendor.')->middleware(['auth', \App\Http\Middlewa
     Route::get('/settings/delete', function () {
         return redirect()->route('login')->with('success', 'Account deleted successfully');
     })->name('settings.delete');
+
+    // License Management
+    Route::get('/dashboard/license', [\App\Http\Controllers\Vendor\LicenseController::class, 'index'])->name('license.index');
+    Route::get('/dashboard/license/renewal', [\App\Http\Controllers\Vendor\LicenseController::class, 'showRenewal'])->name('license.renewal');
+    Route::post('/dashboard/license/renewal', [\App\Http\Controllers\Vendor\LicenseController::class, 'storeRenewal'])->name('license.renewal.store');
+    Route::get('/dashboard/license/{id}/view', [\App\Http\Controllers\Vendor\LicenseController::class, 'viewDocument'])->name('license.view');
+    Route::get('/dashboard/license/{id}/preview', [\App\Http\Controllers\Vendor\LicenseController::class, 'preview'])->name('license.preview');
+});
+
+// Vendor license status routes (accessible without active license)
+Route::prefix('vendor')->name('vendor.')->middleware(['auth'])->group(function () {
+    // License status pages - accessible even with inactive license
+    Route::get('/license/status/{status?}', [App\Http\Controllers\Vendor\LicenseStatusController::class, 'show'])->name('license.status');
+
+    // License upload routes - accessible for vendors who completed company registration but need to upload license
+    Route::get('/license/upload', [App\Http\Controllers\Vendor\LicenseUploadController::class, 'show'])->name('license.upload');
+    Route::post('/license/upload', [App\Http\Controllers\Vendor\LicenseUploadController::class, 'upload'])->name('license.upload.submit');
 });
 
 // Provider routes

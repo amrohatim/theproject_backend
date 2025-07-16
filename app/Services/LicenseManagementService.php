@@ -516,4 +516,127 @@ class LicenseManagementService
 
         return $results;
     }
+
+    /**
+     * Approve a vendor license.
+     */
+    public function approveVendorLicense(License $license, User $approvedBy, ?string $message = null): bool
+    {
+        try {
+            DB::beginTransaction();
+
+            // Update license status to active
+            $license->update([
+                'status' => 'active',
+                'notes' => $message ? ($license->notes ? $license->notes . "\n\nAdmin: " . $message : "Admin: " . $message) : $license->notes,
+            ]);
+
+            // Update user status to active
+            $license->user->update([
+                'status' => 'active',
+                'registration_step' => 'verified'
+            ]);
+
+            // Update company status to active if exists
+            if ($license->user->company) {
+                $license->user->company->update(['status' => 'active']);
+            }
+
+            DB::commit();
+
+            Log::info("Vendor license approved", [
+                'license_id' => $license->id,
+                'vendor_id' => $license->user->id,
+                'vendor_name' => $license->user->name,
+                'approved_by' => $approvedBy->id,
+                'admin_message' => $message
+            ]);
+
+            return true;
+        } catch (\Exception $e) {
+            DB::rollBack();
+            Log::error("Failed to approve vendor license: " . $e->getMessage(), [
+                'license_id' => $license->id,
+                'vendor_id' => $license->user->id,
+                'approved_by' => $approvedBy->id
+            ]);
+            return false;
+        }
+    }
+
+    /**
+     * Reject a vendor license.
+     */
+    public function rejectVendorLicense(License $license, User $rejectedBy, string $reason): bool
+    {
+        try {
+            DB::beginTransaction();
+
+            // Update license status to rejected
+            $license->update([
+                'status' => 'rejected',
+                'notes' => $license->notes ? $license->notes . "\n\nRejection reason: " . $reason : "Rejection reason: " . $reason,
+            ]);
+
+            // Update user status to pending
+            $license->user->update([
+                'status' => 'pending'
+            ]);
+
+            // Update company status to pending if exists
+            if ($license->user->company) {
+                $license->user->company->update(['status' => 'pending']);
+            }
+
+            DB::commit();
+
+            Log::info("Vendor license rejected", [
+                'license_id' => $license->id,
+                'vendor_id' => $license->user->id,
+                'vendor_name' => $license->user->name,
+                'rejected_by' => $rejectedBy->id,
+                'rejection_reason' => $reason
+            ]);
+
+            return true;
+        } catch (\Exception $e) {
+            DB::rollBack();
+            Log::error("Failed to reject vendor license: " . $e->getMessage(), [
+                'license_id' => $license->id,
+                'vendor_id' => $license->user->id,
+                'rejected_by' => $rejectedBy->id
+            ]);
+            return false;
+        }
+    }
+
+    /**
+     * Bulk approve multiple vendor licenses.
+     */
+    public function bulkApproveVendorLicenses(array $licenseIds, User $approvedBy, ?string $message = null): array
+    {
+        $results = [
+            'approved' => 0,
+            'failed' => 0,
+            'errors' => []
+        ];
+
+        $licenses = License::whereIn('id', $licenseIds)
+            ->where('status', 'pending')
+            ->whereHas('user', function($q) {
+                $q->where('role', 'vendor');
+            })
+            ->get();
+
+        foreach ($licenses as $license) {
+            if ($this->approveVendorLicense($license, $approvedBy, $message)) {
+                $results['approved']++;
+            } else {
+                $results['failed']++;
+                $results['errors'][] = "Failed to approve license for {$license->user->name}";
+            }
+        }
+
+        return $results;
+    }
 }

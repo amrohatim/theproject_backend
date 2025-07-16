@@ -11,6 +11,7 @@ use App\Models\VendorLocation;
 use App\Services\TemporaryRegistrationService;
 use App\Services\EmailVerificationService;
 use App\Services\SMSalaService;
+use App\Services\OtpService;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Log;
@@ -25,15 +26,65 @@ class RegistrationService
     protected $tempRegistrationService;
     protected $emailVerificationService;
     protected $smsalaService;
+    protected $otpService;
 
     public function __construct(
         TemporaryRegistrationService $tempRegistrationService = null,
         EmailVerificationService $emailVerificationService = null,
-        SMSalaService $smsalaService = null
+        SMSalaService $smsalaService = null,
+        OtpService $otpService = null
     ) {
         $this->tempRegistrationService = $tempRegistrationService ?? new TemporaryRegistrationService();
         $this->emailVerificationService = $emailVerificationService ?? new EmailVerificationService();
         $this->smsalaService = $smsalaService ?? new SMSalaService();
+        $this->otpService = $otpService ?? new OtpService();
+    }
+
+    /**
+     * Start vendor registration process - Step 1: Store data in session and send email verification.
+     */
+    public function startVendorRegistrationSession(array $userData): array
+    {
+        try {
+            // Validate unique fields before storing in session
+            $this->validateUniqueFields($userData);
+
+            // Generate verification code
+            $verificationCode = $this->generateVerificationCode();
+
+            // Store registration data in session
+            session([
+                'vendor_registration' => [
+                    'step' => 1,
+                    'personal_info' => $userData,
+                    'email_verification_code' => $verificationCode,
+                    'email_verification_code_expires' => now()->addHours(24)->timestamp,
+                    'email_verified' => false,
+                    'phone_verified' => false,
+                    'created_at' => now()->timestamp,
+                ]
+            ]);
+
+            // Send email verification
+            $emailResult = $this->emailVerificationService->sendVerificationEmailForTempRegistration(
+                $userData['email'],
+                $userData['name'],
+                $verificationCode,
+                'vendor'
+            );
+
+            if (!$emailResult['success']) {
+                throw new Exception('Failed to send verification email');
+            }
+
+            return [
+                'success' => true,
+                'message' => 'Registration information received. Please check your email for verification.',
+                'next_step' => 'email_verification',
+            ];
+        } catch (Exception $e) {
+            throw $e;
+        }
     }
 
     /**
@@ -72,6 +123,56 @@ class RegistrationService
             ];
         } catch (Exception $e) {
             throw $e;
+        }
+    }
+
+    /**
+     * Verify email using session-based storage.
+     */
+    public function verifyEmailSession(string $verificationCode): array
+    {
+        try {
+            $vendorData = session('vendor_registration');
+
+            if (!$vendorData) {
+                return [
+                    'success' => false,
+                    'message' => 'Registration session expired. Please start again.',
+                ];
+            }
+
+            // Check if verification code has expired
+            if (now()->timestamp > $vendorData['email_verification_code_expires']) {
+                return [
+                    'success' => false,
+                    'message' => 'Verification code has expired. Please request a new one.',
+                ];
+            }
+
+            // Verify the code
+            if ($vendorData['email_verification_code'] !== $verificationCode) {
+                return [
+                    'success' => false,
+                    'message' => 'Invalid verification code. Please try again.',
+                ];
+            }
+
+            // Mark email as verified in session
+            $vendorData['email_verified'] = true;
+            $vendorData['step'] = 2;
+            session(['vendor_registration' => $vendorData]);
+
+            return [
+                'success' => true,
+                'message' => 'Email verified successfully. You can now proceed to phone verification.',
+                'next_step' => 'phone_verification',
+            ];
+        } catch (Exception $e) {
+            Log::error('Session email verification error: ' . $e->getMessage());
+            return [
+                'success' => false,
+                'message' => 'Email verification failed. Please try again.',
+            ];
         }
     }
 
@@ -133,6 +234,150 @@ class RegistrationService
             return [
                 'success' => false,
                 'message' => 'Email verification failed. Please try again.',
+            ];
+        }
+    }
+
+    /**
+     * Resend email verification using session data.
+     */
+    public function resendEmailVerificationSession(): array
+    {
+        try {
+            $vendorData = session('vendor_registration');
+
+            if (!$vendorData) {
+                return [
+                    'success' => false,
+                    'message' => 'Registration session expired. Please start again.',
+                ];
+            }
+
+            $personalInfo = $vendorData['personal_info'];
+
+            // Generate new verification code
+            $verificationCode = $this->generateVerificationCode();
+
+            // Update session with new code
+            $vendorData['email_verification_code'] = $verificationCode;
+            $vendorData['email_verification_code_expires'] = now()->addHours(24)->timestamp;
+            session(['vendor_registration' => $vendorData]);
+
+            // Send email verification
+            $emailResult = $this->emailVerificationService->sendVerificationEmailForTempRegistration(
+                $personalInfo['email'],
+                $personalInfo['name'],
+                $verificationCode,
+                'vendor'
+            );
+
+            if (!$emailResult['success']) {
+                throw new Exception('Failed to send verification email');
+            }
+
+            return [
+                'success' => true,
+                'message' => 'Verification email sent successfully.',
+            ];
+        } catch (Exception $e) {
+            Log::error('Session email verification resend error: ' . $e->getMessage());
+            return [
+                'success' => false,
+                'message' => 'Failed to send verification email',
+            ];
+        }
+    }
+
+    /**
+     * Send phone verification OTP using session data.
+     */
+    public function sendPhoneVerificationOTPSession(): array
+    {
+        try {
+            $vendorData = session('vendor_registration');
+
+            if (!$vendorData) {
+                return [
+                    'success' => false,
+                    'message' => 'Registration session expired. Please start again.',
+                ];
+            }
+
+            if (!$vendorData['email_verified']) {
+                return [
+                    'success' => false,
+                    'message' => 'Please verify your email first.',
+                ];
+            }
+
+            $phoneNumber = $vendorData['personal_info']['phone'];
+
+            // Send OTP using the OTP service
+            $result = $this->otpService->sendOtp($phoneNumber, 'registration');
+
+            if ($result['success']) {
+                // Store OTP verification status in session
+                $vendorData['phone_otp_sent'] = true;
+                $vendorData['phone_otp_sent_at'] = now()->timestamp;
+                session(['vendor_registration' => $vendorData]);
+            }
+
+            return $result;
+        } catch (Exception $e) {
+            Log::error('Session phone OTP send error: ' . $e->getMessage());
+            return [
+                'success' => false,
+                'message' => 'Failed to send phone verification OTP',
+            ];
+        }
+    }
+
+    /**
+     * Verify phone OTP using session data.
+     */
+    public function verifyPhoneOTPSession(string $otpCode): array
+    {
+        try {
+            $vendorData = session('vendor_registration');
+
+            if (!$vendorData) {
+                return [
+                    'success' => false,
+                    'message' => 'Registration session expired. Please start again.',
+                ];
+            }
+
+            if (!$vendorData['email_verified']) {
+                return [
+                    'success' => false,
+                    'message' => 'Please verify your email first.',
+                ];
+            }
+
+            $phoneNumber = $vendorData['personal_info']['phone'];
+
+            // Verify OTP using the OTP service
+            $result = $this->otpService->verifyOtp($phoneNumber, $otpCode);
+
+            if ($result['success']) {
+                // Mark phone as verified in session
+                $vendorData['phone_verified'] = true;
+                $vendorData['step'] = 3;
+                session(['vendor_registration' => $vendorData]);
+
+                return [
+                    'success' => true,
+                    'message' => 'Phone verified successfully. You can now proceed to company information.',
+                    'next_step' => 'company_information',
+                ];
+            }
+
+            return $result;
+        } catch (Exception $e) {
+            Log::error('Session phone OTP verification error: ' . $e->getMessage());
+            return [
+                'success' => false,
+                'message' => 'Failed to verify phone OTP',
             ];
         }
     }
@@ -392,6 +637,92 @@ class RegistrationService
     }
 
     /**
+     * Complete vendor registration using session data - creates user and company in single transaction.
+     */
+    public function completeVendorRegistrationSession(array $companyData): array
+    {
+        try {
+            $vendorData = session('vendor_registration');
+
+            if (!$vendorData) {
+                return [
+                    'success' => false,
+                    'message' => 'Registration session expired. Please start again.',
+                ];
+            }
+
+            if (!$vendorData['email_verified'] || !$vendorData['phone_verified']) {
+                return [
+                    'success' => false,
+                    'message' => 'Please complete email and phone verification first.',
+                ];
+            }
+
+            $personalInfo = $vendorData['personal_info'];
+
+            // Validate unique fields again (in case they were taken during the session)
+            $this->validateUniqueFields($personalInfo);
+            $this->validateCompanyUniqueFields($companyData);
+
+            DB::beginTransaction();
+
+            // Create the user
+            $user = User::create([
+                'name' => $personalInfo['name'],
+                'email' => $personalInfo['email'],
+                'password' => Hash::make($personalInfo['password']),
+                'phone' => $personalInfo['phone'],
+                'role' => 'vendor',
+                'status' => 'inactive',
+                'registration_step' => 'company_completed',
+                'email_verified_at' => now(),
+                'phone_verified' => true,
+                'phone_verified_at' => now(),
+            ]);
+
+            // Create company
+            $company = Company::create([
+                'user_id' => $user->id,
+                'name' => $companyData['name'],
+                'email' => $companyData['email'],
+                'contact_number_1' => $companyData['contact_number_1'],
+                'contact_number_2' => $companyData['contact_number_2'] ?? null,
+                'address' => $companyData['address'],
+                'emirate' => $companyData['emirate'],
+                'city' => $companyData['city'],
+                'street' => $companyData['street'] ?? null,
+                'delivery_capability' => $companyData['delivery_capability'] ?? false,
+                'delivery_areas' => $companyData['delivery_areas'] ?? null,
+                'description' => $companyData['description'] ?? null,
+                'status' => 'pending',
+            ]);
+
+            // Handle logo upload if provided
+            if (isset($companyData['logo']) && $companyData['logo'] instanceof UploadedFile) {
+                $logoPath = $this->uploadCompanyLogo($companyData['logo'], $company->id);
+                $company->update(['logo' => $logoPath]);
+            }
+
+            DB::commit();
+
+            // Clear session data
+            session()->forget('vendor_registration');
+
+            return [
+                'success' => true,
+                'message' => 'Registration completed successfully! You can now proceed to license upload.',
+                'user_id' => $user->id,
+                'company_id' => $company->id,
+                'next_step' => 'license_upload',
+            ];
+        } catch (Exception $e) {
+            DB::rollBack();
+            Log::error('Session vendor registration completion error: ' . $e->getMessage());
+            throw $e;
+        }
+    }
+
+    /**
      * Complete vendor license upload.
      */
     public function completeVendorLicense(int $userId, UploadedFile $licenseFile, array $licenseData = []): array
@@ -404,10 +735,17 @@ class RegistrationService
             // Upload license file
             $licensePath = $this->uploadLicenseFile($licenseFile, $userId);
 
-            // Calculate dates
-            $startDate = Carbon::now()->toDateString();
-            $duration = (int)($licenseData['duration_days'] ?? 365); // Default 1 year, cast to int
-            $endDate = Carbon::now()->addDays($duration)->toDateString();
+            // Use provided dates or calculate defaults
+            $startDate = $licenseData['license_start_date'] ?? Carbon::now()->toDateString();
+            $endDate = $licenseData['license_expiry_date'] ?? Carbon::now()->addYear()->toDateString();
+
+            // Validate that start date is not after end date
+            if (Carbon::parse($startDate)->gt(Carbon::parse($endDate))) {
+                throw new \InvalidArgumentException('License start date cannot be after the expiration date.');
+            }
+
+            // Calculate duration in days
+            $duration = Carbon::parse($startDate)->diffInDays(Carbon::parse($endDate));
             $renewalDate = $endDate;
 
             // Create license record
@@ -419,7 +757,7 @@ class RegistrationService
                 'start_date' => $startDate,
                 'end_date' => $endDate,
                 'duration_days' => $duration,
-                'status' => 'active',
+                'status' => 'pending', // Set to pending for admin review
                 'renewal_date' => $renewalDate,
                 'notes' => $licenseData['notes'] ?? null,
             ]);
@@ -427,7 +765,7 @@ class RegistrationService
             // Update user registration step
             $user->update([
                 'registration_step' => 'license_completed',
-                'status' => 'active', // Activate user after license upload
+                'status' => 'pending', // Set to pending for admin review
             ]);
 
             // Update company status
@@ -852,6 +1190,100 @@ class RegistrationService
     }
 
     /**
+     * Upload user profile image.
+     */
+    private function uploadUserProfileImage(UploadedFile $file, int $userId): string
+    {
+        try {
+            // Use the storage/users directory to match ImageHelper expectations
+            $destinationPath = public_path('storage/users');
+            if (!file_exists($destinationPath)) {
+                mkdir($destinationPath, 0755, true);
+            }
+
+            $fileName = time() . '_' . $file->getClientOriginalName();
+
+            // Move the file directly to the public directory
+            $file->move($destinationPath, $fileName);
+
+            // Return the relative path for database storage (storage/users pattern)
+            return "storage/users/{$fileName}";
+        } catch (Exception $e) {
+            Log::error("Failed to upload user profile image", [
+                'user_id' => $userId,
+                'error' => $e->getMessage(),
+            ]);
+            throw $e;
+        }
+    }
+
+    /**
+     * Move temporary file to user profile directory.
+     */
+    private function moveTemporaryFileToUserProfile(array $fileInfo, int $userId): string
+    {
+        try {
+            // Normalize the path to handle mixed separators
+            $tempFilePath = str_replace(['\\', '/'], DIRECTORY_SEPARATOR, $fileInfo['path']);
+
+            Log::info("Starting moveTemporaryFileToUserProfile", [
+                'user_id' => $userId,
+                'fileInfo' => $fileInfo,
+                'original_path' => $fileInfo['path'],
+                'normalized_path' => $tempFilePath,
+                'temp_file_exists' => file_exists($tempFilePath),
+                'storage_exists' => Storage::disk('local')->exists($fileInfo['storage_path'] ?? ''),
+            ]);
+
+            // Check if file exists using Laravel Storage (more reliable)
+            if (!isset($fileInfo['storage_path']) || !Storage::disk('local')->exists($fileInfo['storage_path'])) {
+                throw new Exception("Temporary file not found in storage: " . ($fileInfo['storage_path'] ?? 'not set'));
+            }
+
+            // Use the storage/users directory to match ImageHelper expectations
+            $destinationPath = public_path('storage/users');
+            if (!file_exists($destinationPath)) {
+                mkdir($destinationPath, 0755, true);
+                Log::info("Created users directory", ['path' => $destinationPath]);
+            }
+
+            $extension = pathinfo($fileInfo['original_name'], PATHINFO_EXTENSION);
+            $fileName = time() . "_user_{$userId}_profile.{$extension}";
+            $destinationFile = "{$destinationPath}/{$fileName}";
+
+            Log::info("Attempting to move file using Storage", [
+                'storage_path' => $fileInfo['storage_path'],
+                'destination' => $destinationFile,
+                'destination_dir_exists' => file_exists($destinationPath),
+                'destination_dir_writable' => is_writable($destinationPath),
+            ]);
+
+            // Get file contents from storage and write to destination
+            $fileContents = Storage::disk('local')->get($fileInfo['storage_path']);
+            if (file_put_contents($destinationFile, $fileContents) !== false) {
+                Log::info("File moved successfully using Storage", [
+                    'destination' => $destinationFile,
+                    'relative_path' => "storage/users/{$fileName}",
+                ]);
+                // Return the relative path for database storage (storage/users pattern)
+                return "storage/users/{$fileName}";
+            } else {
+                throw new Exception("Failed to write file to user profile directory");
+            }
+        } catch (Exception $e) {
+            Log::error("Failed to move temporary file to user profile", [
+                'user_id' => $userId,
+                'temp_file' => $fileInfo['path'] ?? 'not set',
+                'storage_path' => $fileInfo['storage_path'] ?? 'not set',
+                'storage_exists' => isset($fileInfo['storage_path']) ? Storage::disk('local')->exists($fileInfo['storage_path']) : false,
+                'error' => $e->getMessage(),
+                'fileInfo' => $fileInfo,
+            ]);
+            throw $e;
+        }
+    }
+
+    /**
      * Create merchant profile.
      */
     private function createMerchantProfile(User $user, array $userData, array $tempFiles = []): void
@@ -970,15 +1402,49 @@ class RegistrationService
             $providerData['stock_locations'] = $userData['stock_locations'];
         }
 
-        // Handle logo upload if provided
-        if (isset($userData['logo']) && $userData['logo'] instanceof \Illuminate\Http\UploadedFile) {
+        // Handle logo upload if provided - save to user's profile_image
+        $logoPath = null;
+
+        Log::info("Processing logo upload for provider", [
+            'user_id' => $user->id,
+            'has_userData_logo' => isset($userData['logo']),
+            'userData_logo_type' => isset($userData['logo']) ? get_class($userData['logo']) : 'not set',
+            'has_tempFiles_logo' => isset($tempFiles['logo']),
+            'tempFiles_logo_path' => isset($tempFiles['logo']['path']) ? $tempFiles['logo']['path'] : 'not set',
+            'tempFiles_logo_exists' => isset($tempFiles['logo']['path']) ? file_exists($tempFiles['logo']['path']) : false,
+        ]);
+
+        if (isset($userData['logo']) && $userData['logo'] instanceof UploadedFile) {
             // Direct UploadedFile object (for backward compatibility)
-            $logoPath = $userData['logo']->store('logos', 'public');
-            $providerData['logo'] = $logoPath;
-        } elseif (isset($tempFiles['logo']) && file_exists($tempFiles['logo']['path'])) {
+            Log::info("Using direct UploadedFile for logo upload");
+            $logoPath = $this->uploadUserProfileImage($userData['logo'], $user->id);
+        } elseif (isset($tempFiles['logo']) && isset($tempFiles['logo']['path'])) {
             // Temporary file from registration process
-            $logoPath = $this->moveTemporaryFileToFinal($tempFiles['logo'], 'logos', 'provider_' . $user->id . '_logo');
+            Log::info("Using temporary file for logo upload", [
+                'temp_file_path' => $tempFiles['logo']['path'],
+                'original_name' => $tempFiles['logo']['original_name'] ?? 'unknown',
+            ]);
+            $logoPath = $this->moveTemporaryFileToUserProfile($tempFiles['logo'], $user->id);
+        } else {
+            Log::warning("No valid logo file found for upload", [
+                'tempFiles_keys' => array_keys($tempFiles),
+                'userData_keys' => array_keys($userData),
+            ]);
+        }
+
+        // Update user's profile_image if logo was uploaded
+        if ($logoPath) {
+            Log::info("Updating user profile_image", [
+                'user_id' => $user->id,
+                'logo_path' => $logoPath,
+            ]);
+            $user->update(['profile_image' => $logoPath]);
+            // Also save to provider's logo field for backward compatibility
             $providerData['logo'] = $logoPath;
+        } else {
+            Log::warning("No logo path generated, skipping profile_image update", [
+                'user_id' => $user->id,
+            ]);
         }
 
         Provider::create($providerData);

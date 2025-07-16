@@ -1,0 +1,281 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8"/>
+    <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+    <title>Registration Cards Preview - Background Images</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap" rel="stylesheet"/>
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet"/>
+    <style>
+        body {
+            font-family: 'Roboto', sans-serif;
+        }
+        
+        /* Background image card styles */
+        .card-with-bg {
+            position: relative;
+            min-height: 500px;
+        }
+        
+        .card-bg-image {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
+            border-radius: 0.75rem; /* rounded-xl */
+        }
+        
+        .card-bg-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(135deg, rgba(0, 0, 0, 0.7) 0%, rgba(0, 0, 0, 0.4) 100%);
+            border-radius: 0.75rem; /* rounded-xl */
+        }
+        
+        .card-content {
+            position: relative;
+            z-index: 10;
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .card-header {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border-radius: 0.75rem 0.75rem 0 0;
+        }
+        
+        .card-body {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border-radius: 0 0 0.75rem 0.75rem;
+            flex-grow: 1;
+        }
+        
+        /* Vendor card background */
+        .vendor-bg {
+            background-image: url('./public/assets/vendor.jpg');
+        }
+        
+        /* Provider card background */
+        .provider-bg {
+            background-image: url('./public/assets/provider.jpg');
+        }
+        
+        /* Merchant card background */
+        .merchant-bg {
+            background-image: url('./public/assets/merchant.jpg');
+        }
+        
+        /* Enhanced hover effects */
+        .card-with-bg:hover .card-bg-image {
+            transform: scale(1.05);
+            transition: transform 0.3s ease;
+        }
+        
+        .card-with-bg:hover .card-bg-overlay {
+            background: linear-gradient(135deg, rgba(0, 0, 0, 0.6) 0%, rgba(0, 0, 0, 0.3) 100%);
+            transition: background 0.3s ease;
+        }
+        
+        /* Responsive design improvements */
+        @media (max-width: 768px) {
+            .card-with-bg {
+                min-height: 450px;
+            }
+            
+            .card-header {
+                padding: 1rem;
+            }
+            
+            .card-body {
+                padding: 1rem;
+            }
+            
+            .card-header h2 {
+                font-size: 1.5rem;
+            }
+        }
+        
+        @media (max-width: 640px) {
+            .card-with-bg {
+                min-height: 400px;
+            }
+            
+            .card-bg-overlay {
+                background: linear-gradient(135deg, rgba(0, 0, 0, 0.8) 0%, rgba(0, 0, 0, 0.6) 100%);
+            }
+        }
+        
+        /* Accessibility improvements */
+        .card-with-bg:focus-within {
+            outline: 2px solid #3b82f6;
+            outline-offset: 2px;
+        }
+        
+        /* Text shadow for better readability */
+        .card-header h2,
+        .card-header p {
+            text-shadow: 0 1px 3px rgba(0, 0, 0, 0.3);
+        }
+    </style>
+</head>
+<body class="bg-gray-50 font-sans">
+    <div class="container mx-auto px-4 py-8">
+        <header class="text-center mb-12">
+            <h1 class="text-4xl font-bold text-gray-800 mb-4">Choose Registration Type</h1>
+            <p class="text-lg text-gray-600 max-w-3xl mx-auto">Whether you're selling products or supplying to vendors, we have the perfect solution for you.</p>
+        </header>
+
+        <main class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+            <!-- Vendor Registration Card -->
+            <div class="card-with-bg rounded-xl shadow-lg overflow-hidden transform hover:scale-105 transition-transform duration-300" onclick="selectChoice('vendor')" data-testid="vendor-registration-link">
+                <!-- Background Image -->
+                <div class="card-bg-image vendor-bg"></div>
+                <!-- Overlay -->
+                <div class="card-bg-overlay"></div>
+                
+                <!-- Content -->
+                <div class="card-content">
+                    <div class="card-header bg-blue-600 text-white p-6">
+                        <div class="flex justify-between items-center">
+                            <h2 class="text-2xl font-bold">Vendor Registration</h2>
+                            <span class="material-icons text-3xl">store</span>
+                        </div>
+                        <p class="mt-2 text-blue-200">Perfect for businesses selling physical products.</p>
+                    </div>
+                    <div class="card-body p-6 flex-grow">
+                        <ul class="space-y-4 text-gray-700">
+                            <li class="flex items-center">
+                                <span class="material-icons text-blue-500 mr-3">check_circle</span>
+                                <span class="font-medium">Product catalog management</span>
+                            </li>
+                            <li class="flex items-center">
+                                <span class="material-icons text-blue-500 mr-3">check_circle</span>
+                                <span class="font-medium">Inventory tracking</span>
+                            </li>
+                            <li class="flex items-center">
+                                <span class="material-icons text-blue-500 mr-3">check_circle</span>
+                                <span class="font-medium">Order management</span>
+                            </li>
+                            <li class="flex items-center">
+                                <span class="material-icons text-blue-500 mr-3">check_circle</span>
+                                <span class="font-medium">Delivery options</span>
+                            </li>
+                        </ul>
+                    </div>
+                    <div class="card-body p-6 mt-auto">
+                        <button class="w-full bg-blue-600 text-white font-bold py-3 px-6 rounded-lg hover:bg-blue-700 transition-colors duration-300 shadow-lg">Register as Vendor</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Provider Registration Card -->
+            <div class="card-with-bg rounded-xl shadow-lg overflow-hidden transform hover:scale-105 transition-transform duration-300" onclick="selectChoice('provider')" data-testid="provider-registration-link">
+                <!-- Background Image -->
+                <div class="card-bg-image provider-bg"></div>
+                <!-- Overlay -->
+                <div class="card-bg-overlay"></div>
+                
+                <!-- Content -->
+                <div class="card-content">
+                    <div class="card-header bg-purple-600 text-white p-6">
+                        <div class="flex justify-between items-center">
+                            <h2 class="text-2xl font-bold">Provider Registration</h2>
+                            <span class="material-icons text-3xl">local_shipping</span>
+                        </div>
+                        <p class="mt-2 text-purple-200">Perfect for suppliers providing products to vendors.</p>
+                    </div>
+                    <div class="card-body p-6 flex-grow">
+                        <ul class="space-y-4 text-gray-700">
+                            <li class="flex items-center">
+                                <span class="material-icons text-purple-500 mr-3">check_circle</span>
+                                <span class="font-medium">Wholesale product catalog</span>
+                            </li>
+                            <li class="flex items-center">
+                                <span class="material-icons text-purple-500 mr-3">check_circle</span>
+                                <span class="font-medium">Bulk order management</span>
+                            </li>
+                            <li class="flex items-center">
+                                <span class="material-icons text-purple-500 mr-3">check_circle</span>
+                                <span class="font-medium">Vendor relationship management</span>
+                            </li>
+                            <li class="flex items-center">
+                                <span class="material-icons text-purple-500 mr-3">check_circle</span>
+                                <span class="font-medium">Supply chain tracking</span>
+                            </li>
+                        </ul>
+                    </div>
+                    <div class="card-body p-6 mt-auto">
+                        <button class="w-full bg-purple-600 text-white font-bold py-3 px-6 rounded-lg hover:bg-purple-700 transition-colors duration-300 shadow-lg">Register as Provider</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Merchant Registration Card -->
+            <div class="card-with-bg rounded-xl shadow-lg overflow-hidden transform hover:scale-105 transition-transform duration-300" onclick="selectChoice('merchant')" data-testid="merchant-registration-link">
+                <!-- Background Image -->
+                <div class="card-bg-image merchant-bg"></div>
+                <!-- Overlay -->
+                <div class="card-bg-overlay"></div>
+                
+                <!-- Content -->
+                <div class="card-content">
+                    <div class="card-header bg-orange-500 text-white p-6">
+                        <div class="flex justify-between items-center">
+                            <h2 class="text-2xl font-bold">Merchant Registration</h2>
+                            <span class="material-icons text-3xl">person</span>
+                        </div>
+                        <p class="mt-2 text-orange-200">Perfect for individual women merchants.</p>
+                    </div>
+                    <div class="card-body p-6 flex-grow">
+                        <ul class="space-y-4 text-gray-700">
+                            <li class="flex items-center">
+                                <span class="material-icons text-orange-500 mr-3">check_circle</span>
+                                <span class="font-medium">Individual business setup</span>
+                            </li>
+                            <li class="flex items-center">
+                                <span class="material-icons text-orange-500 mr-3">check_circle</span>
+                                <span class="font-medium">Direct customer sales</span>
+                            </li>
+                            <li class="flex items-center">
+                                <span class="material-icons text-orange-500 mr-3">check_circle</span>
+                                <span class="font-medium">Delivery capability</span>
+                            </li>
+                            <li class="flex items-center">
+                                <span class="material-icons text-orange-500 mr-3">check_circle</span>
+                                <span class="font-medium">Small store location</span>
+                            </li>
+                        </ul>
+                    </div>
+                    <div class="card-body p-6 mt-auto">
+                        <button class="w-full bg-orange-500 text-white font-bold py-3 px-6 rounded-lg hover:bg-orange-600 transition-colors duration-300 shadow-lg">Register as Merchant</button>
+                    </div>
+                </div>
+            </div>
+        </main>
+
+        <footer class="text-center mt-12">
+            <a class="inline-flex items-center bg-gray-200 text-gray-700 py-2 px-4 rounded-lg text-sm" href="#">
+                Built with Magic Patterns
+                <span class="material-icons ml-2 text-base">auto_awesome</span>
+            </a>
+        </footer>
+    </div>
+
+    <script>
+        function selectChoice(type) {
+            alert(`Selected: ${type} registration`);
+        }
+    </script>
+</body>
+</html>

@@ -65,6 +65,29 @@
         </div>
       </div>
 
+      <!-- License Start Date -->
+      <div>
+        <label for="license_start_date" class="block text-sm font-medium text-gray-700 mb-2">
+          License Start Date *
+        </label>
+        <input
+          type="date"
+          id="license_start_date"
+          v-model="formData.license_start_date"
+          class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors"
+          :class="{ 'border-red-500': errors.license_start_date }"
+          :min="todayDate"
+          :disabled="loading"
+          required
+        />
+        <div v-if="errors.license_start_date" class="mt-1 text-sm text-red-600">
+          {{ errors.license_start_date[0] }}
+        </div>
+        <div class="mt-1 text-sm text-gray-500">
+          Select the start date of your business license (cannot be in the past)
+        </div>
+      </div>
+
       <!-- License Expiry Date -->
       <div>
         <label for="license_expiry_date" class="block text-sm font-medium text-gray-700 mb-2">
@@ -76,7 +99,7 @@
           v-model="formData.license_expiry_date"
           class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors"
           :class="{ 'border-red-500': errors.license_expiry_date }"
-          :min="minDate"
+          :min="formData.license_start_date || minDate"
           :disabled="loading"
           required
         />
@@ -84,7 +107,7 @@
           {{ errors.license_expiry_date[0] }}
         </div>
         <div class="mt-1 text-sm text-gray-500">
-          Select the expiration date of your business license
+          Select the expiration date of your business license (must be after start date)
         </div>
       </div>
 
@@ -127,7 +150,7 @@
       <div class="pt-4">
         <button
           type="submit"
-          :disabled="loading || !selectedFile"
+          :disabled="loading || !selectedFile || !formData.license_start_date || !formData.license_expiry_date"
           class="w-full px-6 py-3 bg-green-600 text-white rounded-lg font-semibold hover:bg-green-700 focus:ring-2 focus:ring-green-500 focus:ring-offset-2 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
         >
           <span v-if="loading" class="flex items-center justify-center">
@@ -150,7 +173,8 @@ export default {
   props: {
     userId: {
       type: [String, Number],
-      required: true,
+      required: false,
+      default: null,
     },
     loading: {
       type: Boolean,
@@ -163,6 +187,7 @@ export default {
       selectedFile: null,
       isDragging: false,
       formData: {
+        license_start_date: '',
         license_expiry_date: '',
         notes: '',
       },
@@ -170,8 +195,13 @@ export default {
     };
   },
   computed: {
+    todayDate() {
+      // Set minimum date to today for start date
+      const today = new Date();
+      return today.toISOString().split('T')[0];
+    },
     minDate() {
-      // Set minimum date to tomorrow
+      // Set minimum date to tomorrow for expiry date
       const tomorrow = new Date();
       tomorrow.setDate(tomorrow.getDate() + 1);
       return tomorrow.toISOString().split('T')[0];
@@ -261,23 +291,36 @@ export default {
         return;
       }
 
+      if (!this.formData.license_start_date) {
+        this.errors.license_start_date = ['Please select a license start date.'];
+        return;
+      }
+
       if (!this.formData.license_expiry_date) {
         this.errors.license_expiry_date = ['Please select a license expiration date.'];
         return;
       }
 
-      // Validate that the date is in the future
-      const selectedDate = new Date(this.formData.license_expiry_date);
+      // Validate that the start date is not in the past
+      const startDate = new Date(this.formData.license_start_date);
       const today = new Date();
       today.setHours(0, 0, 0, 0);
 
-      if (selectedDate <= today) {
-        this.errors.license_expiry_date = ['License expiration date must be in the future.'];
+      if (startDate < today) {
+        this.errors.license_start_date = ['License start date cannot be in the past.'];
+        return;
+      }
+
+      // Validate that the expiry date is after the start date
+      const expiryDate = new Date(this.formData.license_expiry_date);
+      if (expiryDate <= startDate) {
+        this.errors.license_expiry_date = ['License expiration date must be after the start date.'];
         return;
       }
 
       const licenseData = {
         license_file: this.selectedFile,
+        license_start_date: this.formData.license_start_date,
         license_expiry_date: this.formData.license_expiry_date,
         notes: this.formData.notes || null,
       };

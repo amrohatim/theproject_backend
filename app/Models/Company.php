@@ -38,6 +38,13 @@ class Company extends Model
         'rating_count',
         'vendor_score',
         'last_score_calculation',
+        // New registration fields
+        'contact_number_1',
+        'contact_number_2',
+        'emirate',
+        'street',
+        'delivery_capability',
+        'delivery_areas',
     ];
 
     /**
@@ -54,6 +61,8 @@ class Company extends Model
         'rating_count' => 'integer',
         'vendor_score' => 'integer',
         'last_score_calculation' => 'datetime',
+        'delivery_capability' => 'boolean',
+        'delivery_areas' => 'array',
     ];
 
     /**

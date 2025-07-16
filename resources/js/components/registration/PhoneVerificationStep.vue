@@ -140,10 +140,6 @@ export default {
       type: String,
       required: true,
     },
-    userId: {
-      type: [String, Number],
-      required: true,
-    },
     loading: {
       type: Boolean,
       default: false,

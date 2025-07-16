@@ -811,6 +811,21 @@ class RegistrationController extends Controller
     }
 
     /**
+     * Show vendor registration status page.
+     */
+    public function showVendorRegistrationStatus()
+    {
+        $user = Auth::user();
+
+        // Ensure user is authenticated and is a vendor
+        if (!$user || $user->role !== 'vendor') {
+            return redirect()->route('login')->withErrors(['error' => 'Please log in as a vendor to access this page.']);
+        }
+
+        return view('auth.vendor.registration-status', compact('user'));
+    }
+
+    /**
      * Show phone verification page for temporary registration.
      */
     public function showTempVendorPhoneVerification(Request $request, $token)

@@ -86,55 +86,55 @@ class RegistrationApi {
     });
   }
 
-  // Step 2: Verify email
-  async verifyEmail(registrationToken, verificationCode) {
+  // Step 2: Verify email (session-based)
+  async verifyEmail(verificationCode) {
     return await this.makeRequest('/verify-email', {
       method: 'POST',
       body: JSON.stringify({
-        registration_token: registrationToken,
         verification_code: verificationCode,
       }),
     });
   }
 
-  // Step 3: Send OTP for phone verification
-  async sendOtp(phoneNumber, type = 'registration') {
+  // Step 3: Send OTP for phone verification (session-based)
+  async sendOtp() {
     return await this.makeRequest('/send-otp', {
       method: 'POST',
-      body: JSON.stringify({
-        phone_number: phoneNumber,
-        type: type,
-      }),
     });
   }
 
-  // Step 3: Verify OTP
-  async verifyOtp(phoneNumber, otpCode) {
+  // Step 3: Verify OTP (session-based)
+  async verifyOtp(otpCode) {
     return await this.makeRequest('/verify-otp', {
       method: 'POST',
       body: JSON.stringify({
-        phone_number: phoneNumber,
         otp_code: otpCode,
       }),
     });
   }
 
-  // Step 4: Submit company information
-  async submitCompanyInfo(userId, companyData) {
+  // Step 4: Submit company information (session-based)
+  async submitCompanyInfo(companyData) {
     return await this.makeRequest('/company', {
       method: 'POST',
-      body: JSON.stringify({
-        user_id: userId,
-        ...companyData,
-      }),
+      body: JSON.stringify(companyData),
     });
   }
 
   // Step 5: Upload license
   async uploadLicense(userId, licenseData) {
     const formData = new FormData();
-    formData.append('user_id', userId);
+
+    // Only append user_id if it's provided (for backward compatibility)
+    if (userId) {
+      formData.append('user_id', userId);
+    }
+
     formData.append('license_file', licenseData.license_file);
+
+    if (licenseData.license_start_date) {
+      formData.append('license_start_date', licenseData.license_start_date);
+    }
 
     if (licenseData.license_expiry_date) {
       formData.append('license_expiry_date', licenseData.license_expiry_date);
@@ -147,19 +147,16 @@ class RegistrationApi {
     return await this.makeFormRequest('/license', formData);
   }
 
-  // Resend email verification
-  async resendEmailVerification(registrationToken) {
+  // Resend email verification (session-based)
+  async resendEmailVerification() {
     return await this.makeRequest('/resend-email-verification', {
       method: 'POST',
-      body: JSON.stringify({
-        registration_token: registrationToken,
-      }),
     });
   }
 
-  // Get registration status
-  async getRegistrationStatus(registrationToken) {
-    return await this.makeRequest(`/status?registration_token=${registrationToken}`, {
+  // Get registration status (session-based)
+  async getRegistrationStatus() {
+    return await this.makeRequest('/status', {
       method: 'GET',
     });
   }

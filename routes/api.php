@@ -95,8 +95,8 @@ Route::prefix('validate')->group(function () {
     Route::post('/phone-status', [ValidationController::class, 'validatePhoneStatus']);
 });
 
-// Vendor Registration routes (public)
-Route::prefix('vendor-registration')->group(function () {
+// Vendor Registration routes (public) - with session middleware for session-based flow
+Route::prefix('vendor-registration')->middleware(['web'])->group(function () {
     Route::post('/info', [VendorRegistrationController::class, 'registerVendorInfo']);
     Route::post('/verify-email', [VendorRegistrationController::class, 'verifyEmail']);
     Route::post('/company', [VendorRegistrationController::class, 'registerCompanyInfo']);
