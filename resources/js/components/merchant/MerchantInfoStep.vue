@@ -1079,8 +1079,8 @@ export default {
 
 .form-input:focus {
   outline: none;
-  border-color: #667eea;
-  box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+  border-color: #f59e0b;
+  box-shadow: 0 0 0 3px rgba(245, 158, 11, 0.1);
 }
 
 .form-input.error {
@@ -1140,7 +1140,7 @@ export default {
 }
 
 .phone-input-container:focus-within {
-  border-color: #667eea;
+  border-color: #f59e0b;
   box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
 }
 
@@ -1322,7 +1322,7 @@ export default {
 .form-button {
   width: 100%;
   padding: 15px 20px;
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%);
   color: white;
   border: none;
   border-radius: 8px;
@@ -1335,7 +1335,7 @@ export default {
 
 .form-button:hover:not(:disabled) {
   transform: translateY(-2px);
-  box-shadow: 0 8px 20px rgba(102, 126, 234, 0.3);
+  box-shadow: 0 8px 20px rgba(245, 158, 11, 0.3);
 }
 
 .form-button:disabled {

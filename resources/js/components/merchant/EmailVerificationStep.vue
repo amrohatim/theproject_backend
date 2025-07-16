@@ -147,7 +147,7 @@ export default {
 .verification-icon {
   width: 80px;
   height: 80px;
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%);
   border-radius: 50%;
   display: flex;
   align-items: center;
@@ -202,7 +202,7 @@ export default {
 .resend-button {
   background: none;
   border: none;
-  color: #667eea;
+  color: #f59e0b;
   font-weight: 600;
   cursor: pointer;
   text-decoration: underline;
@@ -233,7 +233,7 @@ export default {
 
 .help-item i {
   margin-right: 0.75rem;
-  color: #667eea;
+  color: #f59e0b;
   width: 16px;
 }
 </style>

@@ -29,15 +29,18 @@
             font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
         }
 
-        /* Modern foreground image card styles */
+        /* Modern background image card styles */
         .modern-card {
             position: relative;
-            background: linear-gradient(145deg, #ffffff 0%, #f8fafc 100%);
             border-radius: 1.5rem;
             overflow: hidden;
             box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
             transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
             border: 1px solid rgba(255, 255, 255, 0.2);
+            min-height: 500px;
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
         }
 
         .modern-card:hover {
@@ -45,37 +48,33 @@
             box-shadow: 0 35px 80px -12px rgba(0, 0, 0, 0.35);
         }
 
-        .card-image-section {
-            position: relative;
-            height: 200px;
-            overflow: hidden;
-            border-radius: 1.5rem 1.5rem 0 0;
+        /* Background images for each card type */
+        .vendor-card {
+            background-image: url('{{ asset("assets/vendor.jpg") }}');
         }
 
-        .card-foreground-image {
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-            transition: transform 0.6s cubic-bezier(0.4, 0, 0.2, 1);
-            filter: brightness(1.1) contrast(1.1) saturate(1.2);
+        .provider-card {
+            background-image: url('{{ asset("assets/provider.jpg") }}');
         }
 
-        .modern-card:hover .card-foreground-image {
-            transform: scale(1.1);
+        .merchant-card {
+            background-image: url('{{ asset("assets/merchant.jpg") }}');
         }
 
-        .image-overlay {
+        /* Semi-transparent overlay for text readability */
+        .card-overlay {
             position: absolute;
             top: 0;
             left: 0;
             right: 0;
             bottom: 0;
-            background: linear-gradient(135deg, rgba(0, 0, 0, 0.3) 0%, rgba(0, 0, 0, 0.1) 50%, rgba(0, 0, 0, 0.4) 100%);
-            transition: opacity 0.3s ease;
+            background: linear-gradient(135deg, rgba(0, 0, 0, 0.4) 0%, rgba(0, 0, 0, 0.2) 50%, rgba(0, 0, 0, 0.6) 100%);
+            transition: all 0.3s ease;
+            border-radius: 1.5rem;
         }
 
-        .modern-card:hover .image-overlay {
-            opacity: 0.7;
+        .modern-card:hover .card-overlay {
+            background: linear-gradient(135deg, rgba(0, 0, 0, 0.5) 0%, rgba(0, 0, 0, 0.3) 50%, rgba(0, 0, 0, 0.7) 100%);
         }
 
         .card-badge {
@@ -92,6 +91,7 @@
             justify-content: center;
             box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
             transition: all 0.3s ease;
+            z-index: 10;
         }
 
         .modern-card:hover .card-badge {
@@ -100,25 +100,30 @@
         }
 
         .card-content-modern {
+            position: relative;
+            z-index: 5;
             padding: 2rem;
-            background: linear-gradient(145deg, #ffffff 0%, #f8fafc 100%);
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+            justify-content: flex-end;
+            background: transparent;
         }
 
         .card-title-modern {
             font-size: 1.5rem;
             font-weight: 700;
             margin-bottom: 0.5rem;
-            background: linear-gradient(135deg, #1e293b 0%, #475569 100%);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
+            color: #ffffff;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.7);
         }
 
         .card-subtitle-modern {
-            color: #64748b;
+            color: #f1f5f9;
             font-size: 0.95rem;
             margin-bottom: 1.5rem;
             line-height: 1.5;
+            text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.7);
         }
 
         .feature-list-modern {
@@ -131,7 +136,7 @@
             display: flex;
             align-items: center;
             padding: 0.75rem 0;
-            border-bottom: 1px solid rgba(226, 232, 240, 0.5);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.2);
             transition: all 0.3s ease;
         }
 
@@ -141,7 +146,7 @@
 
         .feature-item-modern:hover {
             transform: translateX(4px);
-            background: rgba(248, 250, 252, 0.5);
+            background: rgba(255, 255, 255, 0.1);
             border-radius: 0.5rem;
             padding-left: 0.5rem;
             margin: 0 -0.5rem;
@@ -152,6 +157,8 @@
             height: 1.25rem;
             margin-right: 0.75rem;
             transition: all 0.3s ease;
+            color: #ffffff;
+            text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.7);
         }
 
         .feature-item-modern:hover .feature-icon-modern {
@@ -160,8 +167,9 @@
 
         .feature-text-modern {
             font-weight: 500;
-            color: #475569;
+            color: #f1f5f9;
             font-size: 0.9rem;
+            text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.7);
         }
 
         .modern-button {
@@ -244,10 +252,7 @@
         @media (max-width: 768px) {
             .modern-card {
                 margin-bottom: 2rem;
-            }
-
-            .card-image-section {
-                height: 160px;
+                min-height: 450px;
             }
 
             .card-content-modern {
@@ -267,8 +272,8 @@
         }
 
         @media (max-width: 640px) {
-            .card-image-section {
-                height: 140px;
+            .modern-card {
+                min-height: 400px;
             }
 
             .card-content-modern {
@@ -435,36 +440,35 @@
 
         <main class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
             <!-- Vendor Registration Card -->
-            <div class="modern-card cursor-pointer" onclick="selectChoice('vendor')" data-testid="vendor-registration-link">
-                <!-- Image Section -->
-                <div class="card-image-section">
-                    <img src="{{ asset('assets/vendor.jpg') }}" alt="Vendor business" class="card-foreground-image">
-                    <div class="image-overlay"></div>
-                    <div class="card-badge">
-                        <span class="material-icons text-2xl vendor-icon">store</span>
-                    </div>
+            <div class="modern-card vendor-card cursor-pointer" onclick="selectChoice('vendor')" data-testid="vendor-registration-link">
+                <!-- Semi-transparent overlay -->
+                <div class="card-overlay"></div>
+
+                <!-- Badge -->
+                <div class="card-badge">
+                    <span class="material-icons text-2xl vendor-icon">store</span>
                 </div>
 
-                <!-- Content Section -->
+                <!-- Content Section with text overlay -->
                 <div class="card-content-modern">
                     <h2 class="card-title-modern">Vendor Registration</h2>
                     <p class="card-subtitle-modern">Perfect for businesses selling physical products and managing inventory.</p>
 
                     <ul class="feature-list-modern">
                         <li class="feature-item-modern">
-                            <span class="material-icons feature-icon-modern vendor-icon">check_circle</span>
+                            <span class="material-icons feature-icon-modern">check_circle</span>
                             <span class="feature-text-modern">Product catalog management</span>
                         </li>
                         <li class="feature-item-modern">
-                            <span class="material-icons feature-icon-modern vendor-icon">check_circle</span>
+                            <span class="material-icons feature-icon-modern">check_circle</span>
                             <span class="feature-text-modern">Inventory tracking & analytics</span>
                         </li>
                         <li class="feature-item-modern">
-                            <span class="material-icons feature-icon-modern vendor-icon">check_circle</span>
+                            <span class="material-icons feature-icon-modern">check_circle</span>
                             <span class="feature-text-modern">Order management system</span>
                         </li>
                         <li class="feature-item-modern">
-                            <span class="material-icons feature-icon-modern vendor-icon">check_circle</span>
+                            <span class="material-icons feature-icon-modern">check_circle</span>
                             <span class="feature-text-modern">Multi-channel delivery options</span>
                         </li>
                     </ul>
@@ -476,36 +480,35 @@
             </div>
 
             <!-- Provider Registration Card -->
-            <div class="modern-card cursor-pointer" onclick="selectChoice('provider')" data-testid="provider-registration-link">
-                <!-- Image Section -->
-                <div class="card-image-section">
-                    <img src="{{ asset('assets/provider.jpg') }}" alt="Provider business" class="card-foreground-image">
-                    <div class="image-overlay"></div>
-                    <div class="card-badge">
-                        <span class="material-icons text-2xl provider-icon">local_shipping</span>
-                    </div>
+            <div class="modern-card provider-card cursor-pointer" onclick="selectChoice('provider')" data-testid="provider-registration-link">
+                <!-- Semi-transparent overlay -->
+                <div class="card-overlay"></div>
+
+                <!-- Badge -->
+                <div class="card-badge">
+                    <span class="material-icons text-2xl provider-icon">local_shipping</span>
                 </div>
 
-                <!-- Content Section -->
+                <!-- Content Section with text overlay -->
                 <div class="card-content-modern">
                     <h2 class="card-title-modern">Provider Registration</h2>
                     <p class="card-subtitle-modern">Perfect for suppliers providing wholesale products to vendors.</p>
 
                     <ul class="feature-list-modern">
                         <li class="feature-item-modern">
-                            <span class="material-icons feature-icon-modern provider-icon">check_circle</span>
+                            <span class="material-icons feature-icon-modern">check_circle</span>
                             <span class="feature-text-modern">Wholesale product catalog</span>
                         </li>
                         <li class="feature-item-modern">
-                            <span class="material-icons feature-icon-modern provider-icon">check_circle</span>
+                            <span class="material-icons feature-icon-modern">check_circle</span>
                             <span class="feature-text-modern">Bulk order management</span>
                         </li>
                         <li class="feature-item-modern">
-                            <span class="material-icons feature-icon-modern provider-icon">check_circle</span>
+                            <span class="material-icons feature-icon-modern">check_circle</span>
                             <span class="feature-text-modern">Vendor relationship management</span>
                         </li>
                         <li class="feature-item-modern">
-                            <span class="material-icons feature-icon-modern provider-icon">check_circle</span>
+                            <span class="material-icons feature-icon-modern">check_circle</span>
                             <span class="feature-text-modern">Supply chain tracking</span>
                         </li>
                     </ul>
@@ -517,36 +520,35 @@
             </div>
 
             <!-- Merchant Registration Card -->
-            <div class="modern-card cursor-pointer" onclick="selectChoice('merchant')" data-testid="merchant-registration-link">
-                <!-- Image Section -->
-                <div class="card-image-section">
-                    <img src="{{ asset('assets/merchant.jpg') }}" alt="Merchant business" class="card-foreground-image">
-                    <div class="image-overlay"></div>
-                    <div class="card-badge">
-                        <span class="material-icons text-2xl merchant-icon">person</span>
-                    </div>
+            <div class="modern-card merchant-card cursor-pointer" onclick="selectChoice('merchant')" data-testid="merchant-registration-link">
+                <!-- Semi-transparent overlay -->
+                <div class="card-overlay"></div>
+
+                <!-- Badge -->
+                <div class="card-badge">
+                    <span class="material-icons text-2xl merchant-icon">person</span>
                 </div>
 
-                <!-- Content Section -->
+                <!-- Content Section with text overlay -->
                 <div class="card-content-modern">
                     <h2 class="card-title-modern">Merchant Registration</h2>
                     <p class="card-subtitle-modern">Perfect for individual women merchants and small business owners.</p>
 
                     <ul class="feature-list-modern">
                         <li class="feature-item-modern">
-                            <span class="material-icons feature-icon-modern merchant-icon">check_circle</span>
+                            <span class="material-icons feature-icon-modern">check_circle</span>
                             <span class="feature-text-modern">Individual business setup</span>
                         </li>
                         <li class="feature-item-modern">
-                            <span class="material-icons feature-icon-modern merchant-icon">check_circle</span>
+                            <span class="material-icons feature-icon-modern">check_circle</span>
                             <span class="feature-text-modern">Direct customer sales</span>
                         </li>
                         <li class="feature-item-modern">
-                            <span class="material-icons feature-icon-modern merchant-icon">check_circle</span>
+                            <span class="material-icons feature-icon-modern">check_circle</span>
                             <span class="feature-text-modern">Flexible delivery options</span>
                         </li>
                         <li class="feature-item-modern">
-                            <span class="material-icons feature-icon-modern merchant-icon">check_circle</span>
+                            <span class="material-icons feature-icon-modern">check_circle</span>
                             <span class="feature-text-modern">Small store management</span>
                         </li>
                     </ul>
