@@ -85,13 +85,13 @@ class LicenseController extends Controller
         }
 
         $validator = Validator::make($request->all(), [
-            'license_file' => 'required|file|mimes:pdf,jpg,jpeg,png|max:10240', // 10MB max
+            'license_file' => 'required|file|mimes:pdf|max:10240', // 10MB max, PDF only
             'start_date' => 'required|date|after_or_equal:today',
             'end_date' => 'required|date|after:start_date',
             'notes' => 'nullable|string|max:1000',
         ], [
             'license_file.required' => 'License file is required.',
-            'license_file.mimes' => 'License file must be a PDF, JPG, JPEG, or PNG file.',
+            'license_file.mimes' => 'License file must be a PDF file only.',
             'license_file.max' => 'License file size cannot exceed 10MB.',
             'start_date.required' => 'Start date is required.',
             'start_date.date' => 'Start date must be a valid date.',

@@ -3,44 +3,98 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="description" content="Provider Registration Step 1 - Basic Information">
-    <meta name="robots" content="noindex, nofollow">
-    <title>Provider Registration - Step 1 | Dala3Chic</title>
-    
+    <meta name="csrf-token" content="{{ csrf_token() }}">
+    <title>Data3Chic - Provider Registration</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        purple: {
+                            50: '#faf5ff',
+                            100: '#f3e8ff',
+                            200: '#e9d5ff',
+                            300: '#d8b4fe',
+                            400: '#c084fc',
+                            500: '#a855f7',
+                            600: '#9333ea',
+                            700: '#7c3aed',
+                            800: '#6b21a8',
+                            900: '#581c87'
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+
     <!-- Fonts -->
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    
-    <!-- CSRF Token -->
-    <meta name="csrf-token" content="{{ csrf_token() }}">
-    
-    <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
 
-        body {
-            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-            background: linear-gradient(135deg, #8b5cf6 0%, #a855f7 50%, #c084fc 100%);
-            min-height: 100vh;
+    <style>
+        .step-content {
+            display: none;
+        }
+        .step-content.active {
+            display: block;
+        }
+        .progress-line {
+            transition: all 0.3s ease;
+        }
+        .step-circle {
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            cursor: pointer;
+        }
+        .step-circle:hover {
+            transform: scale(1.05);
+            box-shadow: 0 4px 12px rgba(139, 92, 246, 0.3);
+        }
+        .step-circle.completed {
+            animation: checkmark-bounce 0.6s ease-in-out;
+        }
+        @keyframes checkmark-bounce {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.1); }
+            100% { transform: scale(1); }
+        }
+        .step-circle.clickable:hover {
+            background-color: rgba(139, 92, 246, 0.1);
+        }
+        .step-circle:focus {
+            outline: 2px solid #8b5cf6;
+            outline-offset: 2px;
+        }
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 1000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5);
+        }
+        .modal.show {
             display: flex;
             align-items: center;
             justify-content: center;
-            padding: 20px;
+        }
+        .loading {
+            display: inline-block;
+            width: 16px;
+            height: 16px;
+            border: 2px solid #ffffff;
+            border-radius: 50%;
+            border-top-color: transparent;
+            animation: spin 1s ease-in-out infinite;
+        }
+        @keyframes spin {
+            to { transform: rotate(360deg); }
         }
 
-        .registration-container {
-            background: white;
-            border-radius: 16px;
-            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
-            width: 100%;
-            max-width: 600px;
-            padding: 40px;
-            position: relative;
-        }
-
+        /* Step Indicator Styles - Matching Vendor Registration */
         .progress-bar {
             display: flex;
             justify-content: space-between;
@@ -72,7 +126,11 @@
         }
 
         .progress-step.active::after {
-            background: #7c3aed;
+            background: #8b5cf6;
+        }
+
+        .progress-step.completed::after {
+            background: #10b981;
         }
 
         .step-circle {
@@ -88,10 +146,11 @@
             color: #6b7280;
             position: relative;
             z-index: 2;
+            transition: all 0.2s ease;
         }
 
         .progress-step.active .step-circle {
-            background: #7c3aed;
+            background: #8b5cf6;
             color: white;
         }
 
@@ -108,920 +167,518 @@
         }
 
         .progress-step.active .step-label {
-            color: #7c3aed;
+            color: #8b5cf6;
             font-weight: 600;
         }
 
-        .form-header {
-            text-align: center;
-            margin-bottom: 30px;
-        }
-
-        .form-title {
-            font-size: 24px;
-            font-weight: 700;
-            color: #111827;
-            margin-bottom: 8px;
-        }
-
-        .form-subtitle {
-            color: #6b7280;
-            font-size: 14px;
-        }
-
-        .form-section {
-            margin-bottom: 30px;
-        }
-
-        .section-title {
-            font-size: 16px;
+        .progress-step.completed .step-label {
+            color: #10b981;
             font-weight: 600;
-            color: #374151;
-            margin-bottom: 15px;
-            display: flex;
-            align-items: center;
         }
 
-        .section-title i {
-            margin-right: 8px;
-            color: #7c3aed;
-        }
-
-        .form-row {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 20px;
-            margin-bottom: 20px;
-        }
-
-        .form-group {
-            margin-bottom: 20px;
-        }
-
-        .form-group.full-width {
-            grid-column: 1 / -1;
-        }
-
-        .form-label {
-            display: block;
-            margin-bottom: 6px;
-            font-weight: 500;
-            color: #374151;
-            font-size: 14px;
-        }
-
-        .form-input, .form-select {
-            width: 100%;
-            padding: 12px 16px;
-            border: 2px solid #e5e7eb;
-            border-radius: 8px;
-            font-size: 14px;
-            transition: all 0.3s ease;
-            background: #f9fafb;
-        }
-
-        .form-input:focus, .form-select:focus {
-            outline: none;
-            border-color: #7c3aed;
-            background: white;
-            box-shadow: 0 0 0 3px rgba(124, 58, 237, 0.1);
-        }
-
-        .form-help {
-            font-size: 12px;
-            color: #6b7280;
-            margin-top: 5px;
-            line-height: 1.4;
-        }
-
-        textarea.form-input {
-            resize: vertical;
-            min-height: 100px;
-        }
-
-        .password-container {
-            position: relative;
-        }
-
-        .password-toggle {
-            position: absolute;
-            right: 12px;
-            top: 50%;
-            transform: translateY(-50%);
-            background: none;
-            border: none;
-            color: #6b7280;
-            cursor: pointer;
-            padding: 4px;
-        }
-
-        .password-toggle:hover {
-            color: #374151;
-        }
-
-        .file-upload {
-            position: relative;
-            display: inline-block;
-            width: 100%;
-        }
-
-        .file-upload-input {
-            position: absolute;
-            opacity: 0;
-            width: 100%;
-            height: 100%;
-            cursor: pointer;
-        }
-
-        .file-upload-label {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            padding: 20px;
-            border: 2px dashed #d1d5db;
-            border-radius: 8px;
-            background: #f9fafb;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            text-align: center;
-        }
-
-        .file-upload-label:hover {
-            border-color: #7c3aed;
-            background: #faf5ff;
-        }
-
-        .file-upload-label i {
-            margin-right: 8px;
-            color: #6b7280;
-        }
-
-        .file-upload-text {
-            color: #6b7280;
-            font-size: 14px;
-        }
-
-        .checkbox-group {
-            display: flex;
-            align-items: center;
-            margin-bottom: 20px;
-        }
-
-        .checkbox-input {
-            margin-right: 12px;
-            width: 18px;
-            height: 18px;
-            accent-color: #7c3aed;
-        }
-
-        .checkbox-label {
-            font-size: 14px;
-            color: #374151;
-            cursor: pointer;
-        }
-
-        .form-button {
-            width: 100%;
-            padding: 14px;
-            background: linear-gradient(135deg, #7c3aed 0%, #5b21b6 100%);
-            color: white;
-            border: none;
-            border-radius: 8px;
-            font-weight: 600;
-            font-size: 16px;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            margin-top: 10px;
-        }
-
-        .form-button:hover {
-            background: linear-gradient(135deg, #5b21b6 0%, #4c1d95 100%);
-            transform: translateY(-1px);
-            box-shadow: 0 4px 12px rgba(124, 58, 237, 0.3);
-        }
-
-        /* Modal Styles */
-        .modal-overlay {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background-color: rgba(0, 0, 0, 0.5);
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            z-index: 1000;
-            backdrop-filter: blur(4px);
-        }
-
-        .modal-container {
-            background: white;
-            border-radius: 12px;
-            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
-            max-width: 500px;
-            width: 90%;
-            max-height: 80vh;
-            overflow-y: auto;
-            animation: modalSlideIn 0.3s ease-out;
-        }
-
-        @keyframes modalSlideIn {
-            from {
-                opacity: 0;
-                transform: translateY(-20px) scale(0.95);
-            }
-            to {
-                opacity: 1;
-                transform: translateY(0) scale(1);
-            }
-        }
-
-        .modal-header {
-            padding: 24px 24px 16px;
-            border-bottom: 1px solid #e5e7eb;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-
-        .modal-title {
-            font-size: 18px;
-            font-weight: 600;
-            color: #1f2937;
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            margin: 0;
-        }
-
-        .modal-title i {
-            color: #ef4444;
-        }
-
-        .modal-close {
-            background: none;
-            border: none;
-            font-size: 18px;
-            color: #6b7280;
-            cursor: pointer;
-            padding: 4px;
-            border-radius: 4px;
-            transition: all 0.2s;
-        }
-
-        .modal-close:hover {
-            background-color: #f3f4f6;
-            color: #374151;
-        }
-
-        .modal-body {
-            padding: 16px 24px;
-        }
-
-        .modal-description {
-            color: #6b7280;
-            margin-bottom: 16px;
-            line-height: 1.5;
-        }
-
-        .error-list {
-            list-style: none;
-            padding: 0;
-            margin: 0;
-        }
-
-        .error-list li {
-            background: #fef2f2;
-            border: 1px solid #fecaca;
-            border-radius: 6px;
-            padding: 12px;
-            margin-bottom: 8px;
-            color: #dc2626;
-            display: flex;
-            align-items: flex-start;
-            gap: 8px;
-            font-size: 14px;
-        }
-
-        .error-list li:last-child {
-            margin-bottom: 0;
-        }
-
-        .error-list li i {
-            margin-top: 2px;
-            flex-shrink: 0;
-        }
-
-        .modal-footer {
-            padding: 16px 24px 24px;
-            display: flex;
-            justify-content: flex-end;
-            gap: 12px;
-        }
-
-        .modal-btn {
-            padding: 10px 20px;
-            border-radius: 6px;
-            font-weight: 500;
-            cursor: pointer;
-            transition: all 0.2s;
-            border: none;
-            font-size: 14px;
-        }
-
-        .modal-btn-primary {
-            background: #3b82f6;
-            color: white;
-        }
-
-        .modal-btn-primary:hover {
-            background: #2563eb;
-        }
-
-        /* Enhanced error message styles */
-        .error-message {
-            color: #ef4444;
-            font-size: 14px;
-            margin-top: 4px;
-            display: flex;
-            align-items: center;
-            gap: 4px;
-        }
-
-        .form-input.error {
-            border-color: #ef4444;
-            background-color: #fef2f2;
-        }
-
-        .form-help {
-            color: #6b7280;
-            font-size: 12px;
-            margin-top: 4px;
-            display: block;
-            line-height: 1.4;
-        }
-
-        .form-button:disabled {
-            background: #9ca3af;
-            cursor: not-allowed;
-            transform: none;
-            box-shadow: none;
-        }
-
-        .back-link {
-            display: inline-flex;
-            align-items: center;
-            color: #6b7280;
-            text-decoration: none;
-            font-size: 14px;
-            margin-bottom: 20px;
-            transition: color 0.3s ease;
-        }
-
-        .back-link:hover {
-            color: #374151;
-        }
-
-        .back-link i {
-            margin-right: 8px;
-        }
-
-        .loading-spinner {
-            display: none;
-            width: 20px;
-            height: 20px;
-            border: 2px solid #ffffff;
-            border-top: 2px solid transparent;
-            border-radius: 50%;
-            animation: spin 1s linear infinite;
-            margin-right: 8px;
-        }
-
-        @keyframes spin {
-            0% { transform: rotate(0deg); }
-            100% { transform: rotate(360deg); }
-        }
-
-        .form-button.loading .loading-spinner {
-            display: inline-block;
-        }
-
-        .error-message {
-            color: #ef4444;
-            font-size: 12px;
-            margin-top: 4px;
-        }
-
-        .delivery-section {
-            background: #faf5ff;
-            border: 1px solid #e9d5ff;
-            border-radius: 12px;
-            padding: 20px;
-            margin-bottom: 20px;
-        }
-
-        .emirate-fee {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            margin-bottom: 10px;
-            padding: 8px 12px;
-            background: white;
-            border-radius: 6px;
-            border: 1px solid #e5e7eb;
-        }
-
-        .emirate-fee:last-child {
-            margin-bottom: 0;
-        }
-
-        .emirate-name {
-            font-weight: 500;
-            color: #374151;
-        }
-
-        .fee-input {
-            width: 100px;
-            padding: 6px 8px;
-            border: 1px solid #d1d5db;
-            border-radius: 4px;
-            font-size: 13px;
-        }
-
-        /* Enhanced Phone Input Styles */
-        .phone-input-container {
-            display: flex;
-            align-items: center;
-            border: 2px solid #e5e7eb;
-            border-radius: 8px;
-            background: #f9fafb;
-            transition: all 0.3s ease;
-            overflow: hidden;
-        }
-
-        .phone-input-container:focus-within {
-            border-color: #8b5cf6;
-            background: white;
-            box-shadow: 0 0 0 3px rgba(139, 92, 246, 0.1);
-        }
-
-        .phone-input-container:hover:not(:focus-within) {
-            border-color: #d1d5db;
-            background: white;
-        }
-
-        .country-code-section {
-            display: flex;
-            align-items: center;
-            padding: 12px 16px;
-            background: #f3f4f6;
-            border-right: 1px solid #e5e7eb;
-            gap: 8px;
-            min-width: 100px;
-            flex-shrink: 0;
-        }
-
-        .uae-flag {
-            font-size: 20px;
-            line-height: 1;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            width: 24px;
-            height: 18px;
-            border-radius: 2px;
-            overflow: hidden;
-        }
-
-        .country-code {
-            font-weight: 600;
-            color: #374151;
-            font-size: 14px;
-            user-select: none;
-        }
-
-        .phone-number-input {
-            flex: 1;
-            border: none;
-            outline: none;
-            padding: 12px 16px;
-            font-size: 14px;
-            background: transparent;
-            color: #1f2937;
-            font-weight: 400;
-        }
-
-        .phone-number-input::placeholder {
-            color: #9ca3af;
-        }
-
-        .phone-input-container.error {
-            border-color: #ef4444;
-            background: #fef2f2;
-        }
-
-        .phone-input-container.error .country-code-section {
-            background: #fee2e2;
-        }
-
-        @media (max-width: 768px) {
-            .form-row {
-                grid-template-columns: 1fr;
-                gap: 0;
-            }
-            
-            .registration-container {
-                margin: 10px;
-                padding: 30px 20px;
-            }
-            
-            .form-title {
-                font-size: 20px;
-            }
-            
+        /* Responsive adjustments for step indicator */
+        @media (max-width: 640px) {
             .step-circle {
                 width: 25px;
                 height: 25px;
                 font-size: 12px;
             }
-            
+
             .step-label {
                 font-size: 10px;
             }
         }
+
     </style>
 </head>
-<body>
-    <div class="registration-container">
-        <a href="{{ route('register') }}" class="back-link">
-            <i class="fas fa-arrow-left"></i>
-            Back to Registration Options
-        </a>
+<body class="min-h-screen bg-gray-50">
+    <div class="min-h-screen flex">
+        <!-- Left Side - Marketing Content -->
+        <div class="hidden lg:flex lg:w-1/2 text-white p-12 flex-col justify-top" style="background: linear-gradient(135deg, #8b5cf6 0%, #7c3aed 100%);">
+            <div class="max-w-md mx-auto space-y-8">
+                <div class="text-center">
+                    <h1 class="text-3xl font-bold mb-8">Data3Chic</h1>
+                </div>
 
-        <!-- Progress Bar -->
-        <div class="progress-bar">
-            <div class="progress-step active">
-                <div class="step-circle">1</div>
-                <div class="step-label">Provider Info</div>
-            </div>
-            <div class="progress-step">
-                <div class="step-circle">2</div>
-                <div class="step-label">Email Verification</div>
-            </div>
-            <div class="progress-step">
-                <div class="step-circle">3</div>
-                <div class="step-label">Phone Verification</div>
-            </div>
-            <div class="progress-step">
-                <div class="step-circle">4</div>
-                <div class="step-label">License</div>
-            </div>
-        </div>
+                <!-- Main Heading -->
+                <div class="text-center space-y-4">
+                    <h2 class="text-4xl font-bold leading-tight">
+                        Join Our Provider<br>Network
+                    </h2>
+                    <p class="text-purple-100 text-lg">
+                        Expand your sales network and provide  your products widly to variety of vendors
+                    </p>
+                </div>
 
-        <div class="form-header">
-            <h2 class="form-title">Provider Registration</h2>
-            <p class="form-subtitle">Step 1: Enter your provider information</p>
-        </div>
-
-        <form id="providerStep1Form" method="POST" action="/api/provider/register/validate-info" enctype="multipart/form-data">
-            @csrf
-            
-            <!-- Basic Information Section -->
-            <div class="form-section">
-                <h3 class="section-title">
-                    <i class="fas fa-user"></i>
-                    Basic Information
-                </h3>
-                
-                <div class="form-row">
-                    <div class="form-group">
-                        <label for="name" class="form-label">Full Name *</label>
-                        <input type="text" id="name" name="name" class="form-input" required
-                               value="{{ old('name') }}" placeholder="Enter your full name"
-                               minlength="2" maxlength="255"
-                               aria-describedby="name-error" autocomplete="name">
-                        @error('name')
-                            <div class="error-message">{{ $message }}</div>
-                        @enderror
+                <!-- Features -->
+                <div class="space-y-6 mt-12">
+                    <div class="flex items-start space-x-4">
+                        <div class="flex-shrink-0">
+                            <svg class="w-6 h-6 text-purple-200" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"></path>
+                            </svg>
+                        </div>
+                        <div>
+                            <h3 class="font-semibold text-lg mb-1">Grow Your Business</h3>
+                            <p class="text-purple-100 text-sm">Access to a large vendors base and increase your sales.</p>
+                        </div>
                     </div>
-                    
-                    <div class="form-group">
-                        <label for="email" class="form-label">Email Address *</label>
-                        <input type="email" id="email" name="email" class="form-input" required
-                               value="{{ old('email') }}" placeholder="Enter your email address"
-                               maxlength="255" aria-describedby="email-error" autocomplete="email"
-                               pattern="[a-z0-9._%+\-]+@[a-z0-9.\-]+\.[a-z]{2,}$"
-                               title="Please enter a valid email address">
-                        @error('email')
-                            <div class="error-message">{{ $message }}</div>
-                        @enderror
+
+                    <div class="flex items-start space-x-4">
+                        <div class="flex-shrink-0">
+                            <svg class="w-6 h-6 text-purple-200" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                            </svg>
+                        </div>
+                        <div>
+                            <h3 class="font-semibold text-lg mb-1">Professional Tools</h3>
+                            <p class="text-purple-100 text-sm">Easy-to-use dashboard to manage your orders and products.</p>
+                        </div>
+                    </div>
+
+                    <div class="flex items-start space-x-4">
+                        <div class="flex-shrink-0">
+                            <svg class="w-6 h-6 text-purple-200" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M18.364 5.636l-3.536 3.536m0 5.656l3.536 3.536M9.172 9.172L5.636 5.636m3.536 9.192L5.636 18.364M21 12a9 9 0 11-18 0 9 9 0 0118 0zm-5 0a4 4 0 11-8 0 4 4 0 018 0z"></path>
+                            </svg>
+                        </div>
+                        <div>
+                            <h3 class="font-semibold text-lg mb-1">Dedicated Support</h3>
+                            <p class="text-purple-100 text-sm">Our team is here to help you succeed on our platform.</p>
+                        </div>
                     </div>
                 </div>
-                
-                <div class="form-row">
-                    <div class="form-group">
-                        <label for="phone" class="form-label">Phone Number *</label>
-                        <div class="phone-input-container">
-                            <div class="country-code-section">
-                                <div class="uae-flag">🇦🇪</div>
-                                <span class="country-code">+971</span>
+            </div>
+        </div>
+
+        <!-- Right Side - Registration Form -->
+        <div class="w-full lg:w-1/2 bg-white p-8 lg:p-12 flex items-center justify-center">
+            <div class="w-full max-w-md space-y-6">
+                <div class="text-center space-y-2">
+                    <h2 class="text-2xl font-bold text-gray-900">Create Provider Account</h2>
+                    <p class="text-gray-600">Step 1 of 4: Provider Information</p>
+                </div>
+
+                <!-- Step Indicator -->
+                <div class="progress-bar">
+                    <div class="progress-step active">
+                        <div class="step-circle">1</div>
+                        <div class="step-label">Provider Info</div>
+                    </div>
+                    <div class="progress-step">
+                        <div class="step-circle">2</div>
+                        <div class="step-label">Verification</div>
+                    </div>
+                    <div class="progress-step">
+                        <div class="step-circle">3</div>
+                        <div class="step-label">Phone</div>
+                    </div>
+                    <div class="progress-step">
+                        <div class="step-circle">4</div>
+                        <div class="step-label">License</div>
+                    </div>
+                </div>
+
+                <!-- Back Link -->
+                <div class="mb-4">
+                    <a href="{{ route('register') }}" class="text-purple-600 hover:text-purple-700 transition-colors duration-300 text-sm font-medium">
+                        <i class="fas fa-arrow-left mr-2"></i>
+                        Back to Registration Options
+                    </a>
+                </div>
+                <form method="POST" action="/api/provider/register/validate-info" enctype="multipart/form-data" class="space-y-4">
+                    @csrf
+
+                    <!-- Name Field -->
+                    <div class="space-y-2">
+                        <label for="name" class="text-sm font-medium text-gray-700">Full Name</label>
+                        <div class="relative">
+                            <input id="name" name="name" type="text" placeholder="Enter your full name" value="{{ old('name') }}" required class="w-full pl-10 pr-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent">
+                            <svg class="absolute left-3 top-1/2 transform -translate-y-1/2 w-4 h-4 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"></path>
+                            </svg>
+                        </div>
+                    </div>
+
+                    <!-- Email Field -->
+                    <div class="space-y-2">
+                        <label for="email" class="text-sm font-medium text-gray-700">Email Address</label>
+                        <div class="relative">
+                            <input id="email" name="email" type="email" placeholder="Enter your email" value="{{ old('email') }}" required class="w-full pl-10 pr-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent">
+                            <svg class="absolute left-3 top-1/2 transform -translate-y-1/2 w-4 h-4 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 4.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"></path>
+                            </svg>
+                        </div>
+                    </div>
+
+                    <!-- Phone Field -->
+                    <div class="space-y-2">
+                        <label for="phone" class="text-sm font-medium text-gray-700">Phone Number</label>
+                        <div class="flex border border-gray-300 rounded-md focus-within:ring-2 focus-within:ring-purple-500 focus-within:border-transparent">
+                            <div class="flex items-center px-3 bg-gray-50 border-r border-gray-300 rounded-l-md">
+                                <img src="data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMjQiIGhlaWdodD0iMTgiIHZpZXdCb3g9IjAgMCAyNCAxOCIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KPHJlY3Qgd2lkdGg9IjI0IiBoZWlnaHQ9IjYiIGZpbGw9IiMwMDczMzMiLz4KPHJlY3QgeT0iNiIgd2lkdGg9IjI0IiBoZWlnaHQ9IjYiIGZpbGw9IiNGRkZGRkYiLz4KPHJlY3QgeT0iMTIiIHdpZHRoPSIyNCIgaGVpZ2h0PSI2IiBmaWxsPSIjRkYwMDAwIi8+Cjwvc3ZnPgo=" alt="UAE Flag" class="w-5 h-4 mr-2">
+                                <span class="text-sm font-medium text-gray-700">+971</span>
                             </div>
-                            <input type="tel" id="phone-display" class="phone-number-input"
-                                   value=""
-                                   placeholder="50 123 4567"
-                                   maxlength="11" aria-describedby="phone-error" autocomplete="tel"
-                                   title="Please enter a valid 9-digit UAE phone number">
-                            <input type="hidden" id="phone" name="phone" class="form-input" value="{{ old('phone', '') }}" required>
-                        </div>
-                        @error('phone')
-                            <div class="error-message">{{ $message }}</div>
-                        @enderror
-                    </div>
-                    
-                    <div class="form-group">
-                        <label for="logo" class="form-label">Company Logo</label>
-                        <div class="file-upload">
-                            <input type="file" id="logo" name="logo" class="file-upload-input" 
-                                   accept="image/jpeg,image/png,image/jpg,image/gif">
-                            <label for="logo" class="file-upload-label">
-                                <i class="fas fa-cloud-upload-alt"></i>
-                                <div class="file-upload-text">Upload Logo</div>
-                            </label>
+                            <input id="phone" name="phone" type="tel" placeholder="50 123 4567" value="{{ old('phone') }}" required class="flex-1 px-3 py-2 border-0 rounded-r-md focus:outline-none focus:ring-0" maxlength="11">
                         </div>
                     </div>
-                </div>
-                
-                <div class="form-row">
-                    <div class="form-group">
-                        <label for="password" class="form-label">Password *</label>
-                        <div class="password-container">
-                            <input type="password" id="password" name="password" class="form-input" required
-                                   placeholder="Create a strong password" minlength="8"
-                                   aria-describedby="password-error" autocomplete="new-password"
-                                   title="Password must be at least 8 characters long">
-                            <button type="button" class="password-toggle" onclick="togglePassword('password')">
-                                <i class="fas fa-eye" id="password-eye"></i>
-                            </button>
+
+                    <!-- Password Field -->
+                    <div class="space-y-2">
+                        <label for="password" class="text-sm font-medium text-gray-700">Password</label>
+                        <div class="relative">
+                            <input id="password" name="password" type="password" placeholder="Create a strong password" required class="w-full pl-10 pr-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent">
+                            <svg class="absolute left-3 top-1/2 transform -translate-y-1/2 w-4 h-4 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"></path>
+                            </svg>
                         </div>
-                        @error('password')
-                            <div class="error-message">{{ $message }}</div>
-                        @enderror
                     </div>
-                    
-                    <div class="form-group">
-                        <label for="password_confirmation" class="form-label">Confirm Password *</label>
-                        <div class="password-container">
-                            <input type="password" id="password_confirmation" name="password_confirmation"
-                                   class="form-input" required placeholder="Confirm your password"
-                                   minlength="8" aria-describedby="password_confirmation-error"
-                                   autocomplete="new-password" title="Please confirm your password">
-                            <button type="button" class="password-toggle" onclick="togglePassword('password_confirmation')">
-                                <i class="fas fa-eye" id="password_confirmation-eye"></i>
-                            </button>
+
+                    <!-- Confirm Password Field -->
+                    <div class="space-y-2">
+                        <label for="password_confirmation" class="text-sm font-medium text-gray-700">Confirm Password</label>
+                        <div class="relative">
+                            <input id="password_confirmation" name="password_confirmation" type="password" placeholder="Confirm your password" required class="w-full pl-10 pr-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent">
+                            <svg class="absolute left-3 top-1/2 transform -translate-y-1/2 w-4 h-4 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"></path>
+                            </svg>
                         </div>
-                        @error('password_confirmation')
-                            <div class="error-message">{{ $message }}</div>
-                        @enderror
                     </div>
-                </div>
+
+                    <!-- Business Name Field -->
+                    <div class="space-y-2">
+                        <label for="business_name" class="text-sm font-medium text-gray-700">Business Name</label>
+                        <div class="relative">
+                            <input id="business_name" name="business_name" type="text" placeholder="Enter your business name" value="{{ old('business_name') }}" class="w-full pl-10 pr-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent">
+                            <svg class="absolute left-3 top-1/2 transform -translate-y-1/2 w-4 h-4 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"></path>
+                            </svg>
+                        </div>
+                    </div>
+
+                    <!-- Provider Logo Upload Field -->
+                    <div class="space-y-2">
+                        <label for="logo" class="text-sm font-medium text-gray-700">Company Logo (Optional)</label>
+                        <div class="logo-upload-container border-2 border-dashed border-gray-300 rounded-md p-6 text-center hover:border-purple-500 transition-colors duration-300 cursor-pointer" id="logoUploadContainer">
+                            <!-- Upload Placeholder -->
+                            <div class="upload-placeholder" id="logoUploadPlaceholder">
+                                <svg class="mx-auto h-12 w-12 text-gray-400 mb-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12"></path>
+                                </svg>
+                                <p class="text-sm text-gray-600 mb-2">Click to upload or drag and drop</p>
+                                <p class="text-xs text-gray-500">PNG, JPG, GIF up to 5MB</p>
+                            </div>
+                            <!-- Image Preview -->
+                            <div class="image-preview hidden" id="logoImagePreview">
+                                <img class="mx-auto max-h-32 rounded-md mb-3" id="logoPreviewImg" alt="Logo preview">
+                                <div class="flex justify-center space-x-2">
+                                    <button type="button" class="text-sm text-purple-600 hover:text-purple-700" onclick="changeLogo()">Change</button>
+                                    <button type="button" class="text-sm text-red-600 hover:text-red-700" onclick="removeLogo()">Remove</button>
+                                </div>
+                            </div>
+                            <input type="file" id="logo" name="logo" accept="image/jpeg,image/png,image/jpg,image/gif" class="hidden">
+                        </div>
+                    </div>
+
+                    <!-- Description Field -->
+                    <div class="space-y-2">
+                        <label for="description" class="text-sm font-medium text-gray-700">Description (Optional)</label>
+                        <textarea id="description" name="description" rows="3" placeholder="Describe your business..." class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent">{{ old('description') }}</textarea>
+                    </div>
+
+                    <!-- Delivery Capability & Emirates Fee Options -->
+                    <div class="space-y-4">
+                        <div class="border-t pt-4">
+                            <h3 class="text-lg font-medium text-gray-900 mb-4">Delivery Service Configuration</h3>
+
+                            <!-- Delivery Capability Toggle -->
+                            <div class="space-y-3">
+                                <label class="flex items-center">
+                                    <input type="checkbox" id="delivery_capability" name="delivery_capability" value="1" class="rounded border-gray-300 text-purple-600 focus:ring-purple-500">
+                                    <span class="ml-2 text-sm font-medium text-gray-700">I provide delivery services</span>
+                                </label>
+                            </div>
+
+                            <!-- Emirates Selection and Fee Configuration -->
+                            <div class="delivery-config hidden mt-4" id="deliveryConfig">
+                                <label class="text-sm font-medium text-gray-700 mb-3 block">Select Emirates and Set Delivery Fees *</label>
+                                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                    <!-- Abu Dhabi -->
+                                    <div class="emirate-option">
+                                        <label class="flex items-center mb-2">
+                                            <input type="checkbox" class="emirate-checkbox rounded border-gray-300 text-purple-600 focus:ring-purple-500" data-emirate="abu_dhabi">
+                                            <span class="ml-2 text-sm font-medium text-gray-700">Abu Dhabi</span>
+                                        </label>
+                                        <div class="fee-input-container hidden">
+                                            <div class="relative">
+                                                <input type="number" step="0.01" min="0" placeholder="0.00" class="w-full pl-8 pr-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent" data-fee-input="abu_dhabi">
+                                                <span class="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-500 text-sm">AED</span>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <!-- Dubai -->
+                                    <div class="emirate-option">
+                                        <label class="flex items-center mb-2">
+                                            <input type="checkbox" class="emirate-checkbox rounded border-gray-300 text-purple-600 focus:ring-purple-500" data-emirate="dubai">
+                                            <span class="ml-2 text-sm font-medium text-gray-700">Dubai</span>
+                                        </label>
+                                        <div class="fee-input-container hidden">
+                                            <div class="relative">
+                                                <input type="number" step="0.01" min="0" placeholder="0.00" class="w-full pl-8 pr-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent" data-fee-input="dubai">
+                                                <span class="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-500 text-sm">AED</span>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <!-- Sharjah -->
+                                    <div class="emirate-option">
+                                        <label class="flex items-center mb-2">
+                                            <input type="checkbox" class="emirate-checkbox rounded border-gray-300 text-purple-600 focus:ring-purple-500" data-emirate="sharjah">
+                                            <span class="ml-2 text-sm font-medium text-gray-700">Sharjah</span>
+                                        </label>
+                                        <div class="fee-input-container hidden">
+                                            <div class="relative">
+                                                <input type="number" step="0.01" min="0" placeholder="0.00" class="w-full pl-8 pr-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent" data-fee-input="sharjah">
+                                                <span class="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-500 text-sm">AED</span>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <!-- Ajman -->
+                                    <div class="emirate-option">
+                                        <label class="flex items-center mb-2">
+                                            <input type="checkbox" class="emirate-checkbox rounded border-gray-300 text-purple-600 focus:ring-purple-500" data-emirate="ajman">
+                                            <span class="ml-2 text-sm font-medium text-gray-700">Ajman</span>
+                                        </label>
+                                        <div class="fee-input-container hidden">
+                                            <div class="relative">
+                                                <input type="number" step="0.01" min="0" placeholder="0.00" class="w-full pl-8 pr-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent" data-fee-input="ajman">
+                                                <span class="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-500 text-sm">AED</span>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <!-- Umm Al Quwain -->
+                                    <div class="emirate-option">
+                                        <label class="flex items-center mb-2">
+                                            <input type="checkbox" class="emirate-checkbox rounded border-gray-300 text-purple-600 focus:ring-purple-500" data-emirate="uaq">
+                                            <span class="ml-2 text-sm font-medium text-gray-700">Umm Al Quwain</span>
+                                        </label>
+                                        <div class="fee-input-container hidden">
+                                            <div class="relative">
+                                                <input type="number" step="0.01" min="0" placeholder="0.00" class="w-full pl-8 pr-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent" data-fee-input="uaq">
+                                                <span class="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-500 text-sm">AED</span>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <!-- Ras Al Khaimah -->
+                                    <div class="emirate-option">
+                                        <label class="flex items-center mb-2">
+                                            <input type="checkbox" class="emirate-checkbox rounded border-gray-300 text-purple-600 focus:ring-purple-500" data-emirate="rak">
+                                            <span class="ml-2 text-sm font-medium text-gray-700">Ras Al Khaimah</span>
+                                        </label>
+                                        <div class="fee-input-container hidden">
+                                            <div class="relative">
+                                                <input type="number" step="0.01" min="0" placeholder="0.00" class="w-full pl-8 pr-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent" data-fee-input="rak">
+                                                <span class="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-500 text-sm">AED</span>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <!-- Fujairah -->
+                                    <div class="emirate-option">
+                                        <label class="flex items-center mb-2">
+                                            <input type="checkbox" class="emirate-checkbox rounded border-gray-300 text-purple-600 focus:ring-purple-500" data-emirate="fujairah">
+                                            <span class="ml-2 text-sm font-medium text-gray-700">Fujairah</span>
+                                        </label>
+                                        <div class="fee-input-container hidden">
+                                            <div class="relative">
+                                                <input type="number" step="0.01" min="0" placeholder="0.00" class="w-full pl-8 pr-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent" data-fee-input="fujairah">
+                                                <span class="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-500 text-sm">AED</span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <input type="hidden" id="delivery_fee_by_emirate" name="delivery_fee_by_emirate">
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Submit Button -->
+                    <button type="submit" class="w-full text-white py-3 px-4 rounded-md font-semibold transition-all duration-300 transform hover:scale-105 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:ring-offset-2" style="background: linear-gradient(135deg, #8b5cf6 0%, #7c3aed 100%);">
+                        Continue to Email Verification
+                        <i class="fas fa-arrow-right ml-2"></i>
+                    </button>
+                </form>
             </div>
-
-            <!-- Business Information Section -->
-            <div class="form-section">
-                <h3 class="section-title">
-                    <i class="fas fa-building"></i>
-                    Business Information
-                </h3>
-
-                <div class="form-row">
-                    <div class="form-group">
-                        <label for="business_name" class="form-label">Business Name *</label>
-                        <input type="text" id="business_name" name="business_name" class="form-input" required
-                               value="{{ old('business_name') }}" placeholder="Enter your business name"
-                               minlength="2" maxlength="255" aria-describedby="business_name-error business_name-help"
-                               autocomplete="organization">
-                        <small id="business_name-help" class="form-help">This should match your official business registration name</small>
-                        @error('business_name')
-                            <div class="error-message">{{ $message }}</div>
-                        @enderror
-                    </div>
-
-                    <div class="form-group">
-                        <label for="business_type" class="form-label">Business Type *</label>
-                        <select id="business_type" name="business_type" class="form-input" required
-                                aria-describedby="business_type-error">
-                            <option value="">Select business type</option>
-                            <option value="Food & Beverages" {{ old('business_type') == 'Food & Beverages' ? 'selected' : '' }}>Food & Beverages</option>
-                            <option value="Electronics" {{ old('business_type') == 'Electronics' ? 'selected' : '' }}>Electronics</option>
-                            <option value="Fashion & Clothing" {{ old('business_type') == 'Fashion & Clothing' ? 'selected' : '' }}>Fashion & Clothing</option>
-                            <option value="Health & Beauty" {{ old('business_type') == 'Health & Beauty' ? 'selected' : '' }}>Health & Beauty</option>
-                            <option value="Home & Garden" {{ old('business_type') == 'Home & Garden' ? 'selected' : '' }}>Home & Garden</option>
-                            <option value="Sports & Recreation" {{ old('business_type') == 'Sports & Recreation' ? 'selected' : '' }}>Sports & Recreation</option>
-                            <option value="Automotive" {{ old('business_type') == 'Automotive' ? 'selected' : '' }}>Automotive</option>
-                            <option value="Books & Media" {{ old('business_type') == 'Books & Media' ? 'selected' : '' }}>Books & Media</option>
-                            <option value="Toys & Games" {{ old('business_type') == 'Toys & Games' ? 'selected' : '' }}>Toys & Games</option>
-                            <option value="Services" {{ old('business_type') == 'Services' ? 'selected' : '' }}>Services</option>
-                            <option value="Other" {{ old('business_type') == 'Other' ? 'selected' : '' }}>Other</option>
-                        </select>
-                        @error('business_type')
-                            <div class="error-message">{{ $message }}</div>
-                        @enderror
-                    </div>
-                </div>
-
-                <div class="form-group">
-                    <label for="description" class="form-label">Business Description</label>
-                    <textarea id="description" name="description" class="form-input" rows="4"
-                              placeholder="Describe your business, products, and services...">{{ old('description') }}</textarea>
-                    <div class="form-help">Tell customers about your business and what makes you unique.</div>
-                    @error('description')
-                        <div class="error-message">{{ $message }}</div>
-                    @enderror
-                </div>
-            </div>
-
-            <!-- Delivery Configuration Section -->
-            <div class="form-section">
-                <h3 class="section-title">
-                    <i class="fas fa-truck"></i>
-                    Delivery Configuration
-                </h3>
-                
-                <div class="checkbox-group">
-                    <input type="checkbox" id="delivery_capability" name="delivery_capability"
-                           class="checkbox-input" value="1" {{ old('delivery_capability') ? 'checked' : '' }}>
-                    <label for="delivery_capability" class="checkbox-label">
-                        We offer delivery services to vendors
-                    </label>
-                </div>
-                
-                <div class="delivery-section" id="deliverySection" style="display: none;">
-                    <h4 style="margin-bottom: 15px; color: #374151; font-weight: 600;">Delivery Fees by Emirate (AED)</h4>
-                    
-                    <div class="emirate-fee">
-                        <span class="emirate-name">Abu Dhabi</span>
-                        <input type="number" name="delivery_fee_abu_dhabi" class="fee-input"
-                               placeholder="0.00" step="0.01" min="0" value="{{ old('delivery_fee_abu_dhabi') }}">
-                    </div>
-
-                    <div class="emirate-fee">
-                        <span class="emirate-name">Dubai</span>
-                        <input type="number" name="delivery_fee_dubai" class="fee-input"
-                               placeholder="0.00" step="0.01" min="0" value="{{ old('delivery_fee_dubai') }}">
-                    </div>
-
-                    <div class="emirate-fee">
-                        <span class="emirate-name">Sharjah</span>
-                        <input type="number" name="delivery_fee_sharjah" class="fee-input"
-                               placeholder="0.00" step="0.01" min="0" value="{{ old('delivery_fee_sharjah') }}">
-                    </div>
-
-                    <div class="emirate-fee">
-                        <span class="emirate-name">Ajman</span>
-                        <input type="number" name="delivery_fee_ajman" class="fee-input"
-                               placeholder="0.00" step="0.01" min="0" value="{{ old('delivery_fee_ajman') }}">
-                    </div>
-
-                    <div class="emirate-fee">
-                        <span class="emirate-name">Umm Al Quwain</span>
-                        <input type="number" name="delivery_fee_uaq" class="fee-input"
-                               placeholder="0.00" step="0.01" min="0" value="{{ old('delivery_fee_uaq') }}">
-                    </div>
-
-                    <div class="emirate-fee">
-                        <span class="emirate-name">Ras Al Khaimah</span>
-                        <input type="number" name="delivery_fee_rak" class="fee-input"
-                               placeholder="0.00" step="0.01" min="0" value="{{ old('delivery_fee_rak') }}">
-                    </div>
-
-                    <div class="emirate-fee">
-                        <span class="emirate-name">Fujairah</span>
-                        <input type="number" name="delivery_fee_fujairah" class="fee-input"
-                               placeholder="0.00" step="0.01" min="0" value="{{ old('delivery_fee_fujairah') }}">
-                    </div>
-                </div>
-            </div>
-
-            <button type="submit" class="form-button" id="submitBtn">
-                <div class="loading-spinner"></div>
-                <span class="button-text">Continue to Verification</span>
-            </button>
-        </form>
+        </div>
     </div>
 
-    <!-- Validation Error Modal -->
-    <div id="validationErrorModal" class="modal-overlay" style="display: none;">
-        <div class="modal-container">
-            <div class="modal-header">
-                <h3 class="modal-title">
-                    <i class="fas fa-exclamation-triangle"></i>
-                    Validation Errors
-                </h3>
-                <button type="button" class="modal-close" onclick="closeValidationErrorModal()">
-                    <i class="fas fa-times"></i>
-                </button>
-            </div>
-            <div class="modal-body">
-                <p class="modal-description">Please fix the following errors before continuing:</p>
-                <ul id="validationErrorList" class="error-list"></ul>
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="modal-btn modal-btn-primary" onclick="closeValidationErrorModal()">
-                    Fix Errors
-                </button>
+    <!-- Modal for validation errors -->
+    <div id="validationModal" class="fixed inset-0 bg-gray-600 bg-opacity-50 overflow-y-auto h-full w-full hidden z-50">
+        <div class="relative top-20 mx-auto p-5 border w-96 shadow-lg rounded-md bg-white">
+            <div class="mt-3 text-center">
+                <div class="mx-auto flex items-center justify-center h-12 w-12 rounded-full bg-red-100">
+                    <svg class="h-6 w-6 text-red-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-2.5L13.732 4c-.77-.833-1.732-.833-2.5 0L3.732 16.5c-.77.833.192 2.5 1.732 2.5z"></path>
+                    </svg>
+                </div>
+                <h3 class="text-lg leading-6 font-medium text-gray-900 mt-2">Validation Error</h3>
+                <div class="mt-2 px-7 py-3">
+                    <p class="text-sm text-gray-500" id="validationMessage"></p>
+                </div>
+                <div class="items-center px-4 py-3">
+                    <button id="closeValidationModal" class="px-4 py-2 bg-red-500 text-white text-base font-medium rounded-md w-full shadow-sm hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-red-300">
+                        Close
+                    </button>
+                    <button id="loginButton" class="mt-2 px-4 py-2 bg-blue-500 text-white text-base font-medium rounded-md w-full shadow-sm hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-300 hidden">
+                        Go to Login
+                    </button>
+                </div>
             </div>
         </div>
     </div>
 
     <script>
+        // Logo upload functionality
+        const logoUploadContainer = document.getElementById('logoUploadContainer');
+        const logoInput = document.getElementById('logo');
+        const logoUploadPlaceholder = document.getElementById('logoUploadPlaceholder');
+        const logoImagePreview = document.getElementById('logoImagePreview');
+        const logoPreviewImg = document.getElementById('logoPreviewImg');
 
+        // Click to upload logo
+        logoUploadContainer.addEventListener('click', function(e) {
+            if (!e.target.closest('.image-preview')) {
+                logoInput.click();
+            }
+        });
 
-        function togglePassword(fieldId) {
-            const field = document.getElementById(fieldId);
-            const eye = document.getElementById(fieldId + '-eye');
-            
-            if (field.type === 'password') {
-                field.type = 'text';
-                eye.classList.remove('fa-eye');
-                eye.classList.add('fa-eye-slash');
+        // Drag and drop for logo
+        logoUploadContainer.addEventListener('dragover', function(e) {
+            e.preventDefault();
+            this.classList.add('border-purple-500', 'bg-purple-50');
+        });
+
+        logoUploadContainer.addEventListener('dragleave', function(e) {
+            e.preventDefault();
+            this.classList.remove('border-purple-500', 'bg-purple-50');
+        });
+
+        logoUploadContainer.addEventListener('drop', function(e) {
+            e.preventDefault();
+            this.classList.remove('border-purple-500', 'bg-purple-50');
+
+            const files = e.dataTransfer.files;
+            if (files.length > 0) {
+                handleLogoFile(files[0]);
+            }
+        });
+
+        // Handle logo file selection
+        logoInput.addEventListener('change', function(e) {
+            if (e.target.files.length > 0) {
+                handleLogoFile(e.target.files[0]);
+            }
+        });
+
+        function handleLogoFile(file) {
+            // Validate file type
+            const allowedTypes = ['image/jpeg', 'image/png', 'image/jpg', 'image/gif'];
+            if (!allowedTypes.includes(file.type)) {
+                showValidationModal('Please select a valid image file (PNG, JPG, GIF)');
+                return;
+            }
+
+            // Validate file size (5MB)
+            if (file.size > 5 * 1024 * 1024) {
+                showValidationModal('File size must be less than 5MB');
+                return;
+            }
+
+            // Create file reader to preview image
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                logoPreviewImg.src = e.target.result;
+                logoUploadPlaceholder.classList.add('hidden');
+                logoImagePreview.classList.remove('hidden');
+            };
+            reader.readAsDataURL(file);
+        }
+
+        function changeLogo() {
+            logoInput.click();
+        }
+
+        function removeLogo() {
+            logoInput.value = '';
+            logoUploadPlaceholder.classList.remove('hidden');
+            logoImagePreview.classList.add('hidden');
+        }
+
+        // Delivery capability functionality
+        const deliveryCapabilityCheckbox = document.getElementById('delivery_capability');
+        const deliveryConfig = document.getElementById('deliveryConfig');
+        const emirateCheckboxes = document.querySelectorAll('.emirate-checkbox');
+        const deliveryFeeInput = document.getElementById('delivery_fee_by_emirate');
+
+        deliveryCapabilityCheckbox.addEventListener('change', function() {
+            if (this.checked) {
+                deliveryConfig.classList.remove('hidden');
             } else {
-                field.type = 'password';
-                eye.classList.remove('fa-eye-slash');
-                eye.classList.add('fa-eye');
+                deliveryConfig.classList.add('hidden');
+                // Clear all emirate selections
+                emirateCheckboxes.forEach(checkbox => {
+                    checkbox.checked = false;
+                    const feeContainer = checkbox.closest('.emirate-option').querySelector('.fee-input-container');
+                    feeContainer.classList.add('hidden');
+                });
+                updateDeliveryFees();
             }
+        });
+
+        // Handle emirate checkbox changes
+        emirateCheckboxes.forEach(checkbox => {
+            checkbox.addEventListener('change', function() {
+                const emirate = this.dataset.emirate;
+                const feeContainer = this.closest('.emirate-option').querySelector('.fee-input-container');
+                const feeInput = feeContainer.querySelector(`[data-fee-input="${emirate}"]`);
+
+                if (this.checked) {
+                    feeContainer.classList.remove('hidden');
+                    feeInput.required = true;
+                } else {
+                    feeContainer.classList.add('hidden');
+                    feeInput.required = false;
+                    feeInput.value = '';
+                }
+                updateDeliveryFees();
+            });
+        });
+
+        // Handle fee input changes
+        document.querySelectorAll('[data-fee-input]').forEach(input => {
+            input.addEventListener('input', updateDeliveryFees);
+        });
+
+        function updateDeliveryFees() {
+            const fees = {};
+            emirateCheckboxes.forEach(checkbox => {
+                if (checkbox.checked) {
+                    const emirate = checkbox.dataset.emirate;
+                    const feeInput = document.querySelector(`[data-fee-input="${emirate}"]`);
+                    fees[emirate] = parseFloat(feeInput.value) || 0;
+                }
+            });
+            deliveryFeeInput.value = JSON.stringify(fees);
         }
 
-        // Toggle delivery section
-        document.getElementById('delivery_capability').addEventListener('change', function() {
-            const deliverySection = document.getElementById('deliverySection');
-            deliverySection.style.display = this.checked ? 'block' : 'none';
-        });
+        // Phone number formatting for UAE
+        const phoneInput = document.getElementById('phone');
 
-        // Initialize delivery section visibility on page load
-        document.addEventListener('DOMContentLoaded', function() {
-            const deliveryCapability = document.getElementById('delivery_capability');
-            const deliverySection = document.getElementById('deliverySection');
-            if (deliveryCapability && deliveryCapability.checked) {
-                deliverySection.style.display = 'block';
-            }
-        });
-
-        // File upload preview
-        document.getElementById('logo').addEventListener('change', function(e) {
-            const file = e.target.files[0];
-            const label = document.querySelector('.file-upload-label .file-upload-text');
-            
-            if (file) {
-                label.textContent = file.name;
-            }
-        });
-
-        // Enhanced Phone number formatting for new input structure
-        const phoneDisplayInput = document.getElementById('phone-display');
-        const phoneHiddenInput = document.getElementById('phone');
-        const phoneContainer = document.querySelector('.phone-input-container');
-
-        // Initialize phone input on page load
-        function initializePhoneInput() {
-            // Get the current display value (might be set from old() in HTML)
-            let displayValue = phoneDisplayInput.value;
-            const hiddenValue = phoneHiddenInput.value;
-
-            // If we have a hidden value, use it as the source of truth
-            if (hiddenValue && hiddenValue.startsWith('+971')) {
-                const digits = hiddenValue.substring(4);
-                if (digits.length === 9) {
-                    let formatted = digits.substring(0, 2);
-                    if (digits.length > 2) {
-                        formatted += ' ' + digits.substring(2, 5);
-                    }
-                    if (digits.length > 5) {
-                        formatted += ' ' + digits.substring(5, 9);
-                    }
-                    phoneDisplayInput.value = formatted;
-                }
-            } else if (displayValue) {
-                // If we only have a display value, format it and update hidden
-                const digits = displayValue.replace(/\D/g, '');
-                if (digits.length === 9) {
-                    let formatted = digits.substring(0, 2);
-                    if (digits.length > 2) {
-                        formatted += ' ' + digits.substring(2, 5);
-                    }
-                    if (digits.length > 5) {
-                        formatted += ' ' + digits.substring(5, 9);
-                    }
-                    phoneDisplayInput.value = formatted;
-                    phoneHiddenInput.value = '+971' + digits;
-                }
-            }
-        }
-
-        // Call initialization
-        initializePhoneInput();
-
-        phoneDisplayInput.addEventListener('input', function(e) {
+        phoneInput.addEventListener('input', function(e) {
             let value = e.target.value.replace(/\D/g, ''); // Remove non-digits
 
             // Limit to 9 digits
@@ -1029,661 +686,115 @@
                 value = value.substring(0, 9);
             }
 
-            // Format with spaces for readability (XX XXX XXXX)
-            let formatted = '';
-            if (value.length > 0) {
-                formatted = value.substring(0, 2);
-                if (value.length > 2) {
-                    formatted += ' ' + value.substring(2, 5);
-                }
-                if (value.length > 5) {
-                    formatted += ' ' + value.substring(5, 9);
-                }
+            // Format the display value with spaces for readability
+            let formattedValue = value;
+            if (value.length > 2) {
+                formattedValue = value.substring(0, 2) + ' ' + value.substring(2);
+            }
+            if (value.length > 5) {
+                formattedValue = value.substring(0, 2) + ' ' + value.substring(2, 5) + ' ' + value.substring(5);
             }
 
-            e.target.value = formatted;
-
-            // Update the hidden phone field with +971 prefix for form submission
-            // Only set the full phone if we have exactly 9 digits
-            const fullPhone = value.length === 9 ? '+971' + value : '';
-            phoneHiddenInput.value = fullPhone;
-
-            console.log('Phone input updated:', {
-                display: formatted,
-                digits: value,
-                hidden: fullPhone,
-                length: value.length
-            });
-
-            // Clear any error states immediately when user types
-            phoneContainer.classList.remove('error');
-            clearFieldError('phone-display');
+            e.target.value = formattedValue;
         });
 
-        // Enhanced focus handling for new phone input
-        phoneDisplayInput.addEventListener('focus', function(e) {
-            // No need to add +971 as it's already displayed in the UI
-            // Just ensure the container shows focus state
-            phoneContainer.classList.add('focused');
+        phoneInput.addEventListener('focus', function(e) {
+            if (!e.target.value || e.target.value.trim() === '') {
+                e.target.value = '';
+            }
         });
 
-        phoneDisplayInput.addEventListener('blur', function(e) {
-            phoneContainer.classList.remove('focused');
-            // Trigger validation for the phone input
-            validateField(phoneHiddenInput);
+        // Validation modal functions
+        function showValidationModal(message, showLogin = false) {
+            document.getElementById('validationMessage').textContent = message;
+            const loginButton = document.getElementById('loginButton');
+            if (showLogin) {
+                loginButton.classList.remove('hidden');
+            } else {
+                loginButton.classList.add('hidden');
+            }
+            document.getElementById('validationModal').classList.remove('hidden');
+        }
+
+        document.getElementById('closeValidationModal').addEventListener('click', function() {
+            document.getElementById('validationModal').classList.add('hidden');
         });
 
-        // Simplified input validation - just clear errors when user types
-        phoneDisplayInput.addEventListener('input', function(e) {
-            // Clear any error states immediately when user types
-            phoneContainer.classList.remove('error');
-            clearFieldError('phone-display');
+        document.getElementById('loginButton').addEventListener('click', function() {
+            window.location.href = '/login';
         });
 
-        // Validation timeouts for debouncing
-        let validationTimeouts = {};
-
-        // Real-time validation functions
-        function validateField(input) {
-            const value = input.value.trim();
-            const fieldName = input.name;
-
-            switch (fieldName) {
-                case 'name':
-                    if (!value) {
-                        showFieldError(input.id, 'Full name is required');
-                        return false;
-                    }
-                    if (value.length < 2) {
-                        showFieldError(input.id, 'Full name must be at least 2 characters');
-                        return false;
-                    }
-                    if (value.length > 255) {
-                        showFieldError(input.id, 'Full name cannot exceed 255 characters');
-                        return false;
-                    }
-                    break;
-
-                case 'business_name':
-                    if (!value) {
-                        showFieldError(input.id, 'Business name is required');
-                        return false;
-                    }
-                    if (value.length < 2) {
-                        showFieldError(input.id, 'Business name must be at least 2 characters');
-                        return false;
-                    }
-                    if (value.length > 255) {
-                        showFieldError(input.id, 'Business name cannot exceed 255 characters');
-                        return false;
-                    }
-                    // Skip async validation for now - backend will handle uniqueness
-                    clearFieldError(input.id);
-                    return true;
-                    break;
-
-                case 'email':
-                    if (!value) {
-                        showFieldError(input.id, 'Email address is required');
-                        return false;
-                    }
-                    if (!isValidEmail(value)) {
-                        showFieldError(input.id, 'Please enter a valid email address');
-                        return false;
-                    }
-                    if (value.length > 255) {
-                        showFieldError(input.id, 'Email address cannot exceed 255 characters');
-                        return false;
-                    }
-                    // Skip async validation for now - backend will handle registration status
-                    clearFieldError(input.id);
-                    return true;
-                    break;
-
-                case 'phone':
-                    // Simple validation for the hidden phone input only
-                    if (input.id === 'phone-display') {
-                        return true; // Skip validation for display input
-                    }
-
-                    // Validate the hidden phone input - keep it simple
-                    if (!value || value.length === 0) {
-                        showFieldError('phone-display', 'Phone number is required');
-                        phoneContainer.classList.add('error');
-                        return false;
-                    }
-
-                    // Basic format check - should start with +971 and be 13 characters
-                    if (!value.startsWith('+971') || value.length !== 13) {
-                        showFieldError('phone-display', 'Please enter a valid 9-digit UAE phone number');
-                        phoneContainer.classList.add('error');
-                        return false;
-                    }
-
-                    // Additional check: ensure the remaining 9 digits are all numeric
-                    const phoneDigits = value.substring(4); // Remove +971
-                    if (!/^[0-9]{9}$/.test(phoneDigits)) {
-                        showFieldError('phone-display', 'Please enter a valid 9-digit UAE phone number');
-                        phoneContainer.classList.add('error');
-                        return false;
-                    }
-
-                    // Remove error state if validation passes
-                    phoneContainer.classList.remove('error');
-                    clearFieldError('phone-display');
-                    return true; // Return true immediately, skip async validation
-                    break;
-
-                case 'password':
-                    if (!value) {
-                        showFieldError(input.id, 'Password is required');
-                        return false;
-                    }
-                    if (value.length < 8) {
-                        showFieldError(input.id, 'Password must be at least 8 characters');
-                        return false;
-                    }
-                    // Check password strength
-                    const passwordStrength = checkPasswordStrength(value);
-                    if (!passwordStrength.isValid) {
-                        showFieldError(input.id, passwordStrength.message);
-                        return false;
-                    }
-                    break;
-
-                case 'password_confirmation':
-                    const passwordField = document.getElementById('password');
-                    if (!value) {
-                        showFieldError(input.id, 'Password confirmation is required');
-                        return false;
-                    }
-                    if (value !== passwordField.value) {
-                        showFieldError(input.id, 'Password confirmation does not match');
-                        return false;
-                    }
-                    break;
-
-                case 'business_type':
-                    if (!value) {
-                        showFieldError(input.id, 'Business type is required');
-                        return false;
-                    }
-                    break;
-
-                case 'description':
-                    if (value && value.length > 1000) {
-                        showFieldError(input.id, 'Description cannot exceed 1000 characters');
-                        return false;
-                    }
-                    break;
-            }
-
-            clearFieldError(input.id);
-            return true;
+        // Email validation utility function (kept for potential future use)
+        function isValidEmail(email) {
+            const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+            return emailRegex.test(email);
         }
 
-        // Async validation functions
-        function validateBusinessNameUniqueness(input, businessName) {
-            // Clear previous timeout
-            if (validationTimeouts.business_name) {
-                clearTimeout(validationTimeouts.business_name);
-            }
-
-            // Debounce the validation
-            validationTimeouts.business_name = setTimeout(async () => {
-                try {
-                    const response = await fetch('/api/validate/business-name', {
-                        method: 'POST',
-                        headers: {
-                            'Content-Type': 'application/json',
-                            'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
-                        },
-                        body: JSON.stringify({ business_name: businessName })
-                    });
-
-                    const data = await response.json();
-
-                    if (!data.available) {
-                        showFieldError(input.id, 'Business name is already taken');
-                    } else {
-                        clearFieldError(input.id);
-                    }
-                } catch (error) {
-                    console.error('Business name validation error:', error);
-                }
-            }, 500);
-        }
-
-        function validateEmailRegistrationStatus(input, email) {
-            // Clear previous timeout
-            if (validationTimeouts.email) {
-                clearTimeout(validationTimeouts.email);
-            }
-
-            // Debounce the validation
-            validationTimeouts.email = setTimeout(async () => {
-                try {
-                    const response = await fetch('/api/validate/email-status', {
-                        method: 'POST',
-                        headers: {
-                            'Content-Type': 'application/json',
-                            'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
-                        },
-                        body: JSON.stringify({ email: email })
-                    });
-
-                    const data = await response.json();
-
-                    if (!data.available) {
-                        showFieldError(input.id, data.message);
-                    } else {
-                        clearFieldError(input.id);
-                    }
-                } catch (error) {
-                    console.error('Email validation error:', error);
-                }
-            }, 500);
-        }
-
-        function validatePhoneRegistrationStatus(input, phone) {
-            // Clear previous timeout
-            if (validationTimeouts.phone) {
-                clearTimeout(validationTimeouts.phone);
-            }
-
-            // Debounce the validation
-            validationTimeouts.phone = setTimeout(async () => {
-                try {
-                    const response = await fetch('/api/validate/phone-status', {
-                        method: 'POST',
-                        headers: {
-                            'Content-Type': 'application/json',
-                            'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
-                        },
-                        body: JSON.stringify({ phone: phone })
-                    });
-
-                    const data = await response.json();
-
-                    if (!data.available) {
-                        showFieldError(input.id, data.message);
-                    } else {
-                        clearFieldError(input.id);
-                    }
-                } catch (error) {
-                    console.error('Phone validation error:', error);
-                }
-            }, 500);
-        }
-
-        // Enhanced form submission with proper validation
-        document.addEventListener('DOMContentLoaded', function() {
-            const form = document.getElementById('providerStep1Form');
-            if (!form) {
-                console.error('Form not found!');
-                return;
-            }
-
-            form.addEventListener('submit', function(e) {
+        // Form submission - server-side validation only
+        document.querySelector('form').addEventListener('submit', async function(e) {
             e.preventDefault();
 
-            console.log('Form submission started...');
-
-            // Ensure phone field is properly set
-            const phoneHidden = document.getElementById('phone');
-            const phoneDisplay = document.getElementById('phone-display');
-
-            if (phoneDisplay && phoneDisplay.value) {
-                const digits = phoneDisplay.value.replace(/\D/g, '');
-                console.log('Phone digits extracted:', digits);
-                if (digits.length === 9) {
-                    phoneHidden.value = '+971' + digits;
-                    console.log('Phone hidden field set to:', phoneHidden.value);
-                } else {
-                    console.log('Invalid phone digits length:', digits.length);
-                }
-            }
-
-            // Enhanced required field validation
-            const requiredFields = [
-                { id: 'name', name: 'Full Name' },
-                { id: 'email', name: 'Email' },
-                { id: 'password', name: 'Password' },
-                { id: 'password_confirmation', name: 'Confirm Password' },
-                { id: 'business_name', name: 'Business Name' },
-                { id: 'business_type', name: 'Business Type' }
-            ];
-
-            let missingFields = [];
-
-            requiredFields.forEach(field => {
-                const input = document.getElementById(field.id);
-                console.log(`Checking field ${field.id}:`, input ? input.value : 'not found');
-
-                if (!input) {
-                    console.log(`Field ${field.id} not found in DOM`);
-                    missingFields.push(field.name);
-                } else if (!input.value || !input.value.trim()) {
-                    console.log(`Field ${field.id} is empty`);
-                    missingFields.push(field.name);
-                } else if (field.id === 'business_type' && input.value === 'Select business type') {
-                    console.log('Business type not selected');
-                    missingFields.push(field.name);
-                }
-            });
-
-            // Enhanced phone validation
-            if (!phoneHidden || !phoneHidden.value) {
-                console.log('Phone hidden field is empty');
-                missingFields.push('Phone Number');
-            } else if (phoneHidden.value.length !== 13 || !phoneHidden.value.startsWith('+971')) {
-                console.log('Phone format invalid:', phoneHidden.value);
-                missingFields.push('Phone Number (invalid format)');
-            }
-
-            if (missingFields.length > 0) {
-                console.log('Validation failed. Missing fields:', missingFields);
-                showValidationErrorModal([{
-                    field: 'general',
-                    message: 'Please fill in all required fields: ' + missingFields.join(', ')
-                }]);
-                return;
-            }
-
-            console.log('All validation passed, submitting form...');
-
-            const submitBtn = document.querySelector('button[type="submit"], .submit-btn, #submitBtn');
-            if (submitBtn) {
-                submitBtn.classList.add('loading');
-                submitBtn.disabled = true;
-                console.log('Submit button found and disabled');
-            } else {
-                console.log('Submit button not found, looking for Continue button');
-                const continueBtn = document.querySelector('button:contains("Continue")');
-                if (continueBtn) {
-                    continueBtn.disabled = true;
-                    console.log('Continue button disabled');
-                }
-            }
-
+            // Submit form via AJAX for server-side validation
             const formData = new FormData(this);
+            const submitButton = this.querySelector('button[type="submit"]');
+            const originalText = submitButton.innerHTML;
 
-            console.log('Form data created, checking contents...');
-            for (let [key, value] of formData.entries()) {
-                console.log(`FormData: ${key} = ${value}`);
-            }
+            // Show loading state
+            submitButton.disabled = true;
+            submitButton.innerHTML = '<i class="fas fa-spinner fa-spin mr-2"></i>Processing...';
 
-            // Collect delivery fees
-            if (document.getElementById('delivery_capability') && document.getElementById('delivery_capability').checked) {
-                const deliveryFees = {};
-                document.querySelectorAll('.fee-input').forEach(input => {
-                    const emirate = input.name.replace('delivery_fee_', '');
-                    if (input.value) {
-                        deliveryFees[emirate] = parseFloat(input.value);
+            try {
+                const response = await fetch(this.action, {
+                    method: 'POST',
+                    body: formData,
+                    headers: {
+                        'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content'),
+                        'Accept': 'application/json',
+                        'X-Requested-With': 'XMLHttpRequest'
                     }
                 });
-                formData.append('delivery_fee_by_emirate', JSON.stringify(deliveryFees));
-                console.log('Delivery fees added:', deliveryFees);
-            }
 
-            // Ensure CSRF token is included in FormData
-            const csrfToken = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
-            if (csrfToken) {
-                formData.append('_token', csrfToken);
-                console.log('CSRF token added:', csrfToken);
-            } else {
-                console.error('CSRF token not found!');
-            }
+                const result = await response.json();
 
-            fetch('/api/provider/register/validate-info', {
-                method: 'POST',
-                body: formData,
-                headers: {
-                    'X-CSRF-TOKEN': csrfToken,
-                    'Accept': 'application/json'
-                }
-            })
-            .then(async response => {
-                const contentType = response.headers.get('content-type');
-                if (!contentType || !contentType.includes('application/json')) {
-                    throw new Error('Server returned non-JSON response');
-                }
-
-                const data = await response.json();
-
-                if (response.ok && data.success) {
+                if (response.ok && result.success) {
                     // Store registration token for step 2
-                    if (data.registration_token) {
-                        localStorage.setItem('provider_registration_token', data.registration_token);
+                    if (result.registration_token) {
+                        localStorage.setItem('provider_registration_token', result.registration_token);
+                        console.log('Registration token stored:', result.registration_token.substring(0, 20) + '...');
                     }
-                    window.location.href = '/register/provider/step2';
-                } else if (response.status === 422) {
-                    // Handle validation errors (422 Unprocessable Entity)
-                    if (data.errors) {
-                        const serverErrors = [];
-                        Object.keys(data.errors).forEach(field => {
-                            data.errors[field].forEach(message => {
-                                serverErrors.push({ field, message });
-                            });
-                        });
-                        showValidationErrorModal(serverErrors);
+
+                    // Success - redirect to next step
+                    if (result.redirect_url) {
+                        window.location.href = result.redirect_url;
                     } else {
-                        showValidationErrorModal([{
-                            field: 'general',
-                            message: data.message || 'Please check your input and try again.'
-                        }]);
+                        window.location.href = '/register/provider/step2';
                     }
                 } else {
-                    // Handle other errors
-                    showValidationErrorModal([{
-                        field: 'general',
-                        message: data.message || `Server error (${response.status}). Please try again.`
-                    }]);
+                    // Handle server validation errors
+                    if (result.errors) {
+                        const firstError = Object.values(result.errors)[0];
+                        const errorMessage = Array.isArray(firstError) ? firstError[0] : firstError;
+
+                        // Check if it's a login-related error
+                        const loginErrors = [
+                            'You have a registered company with this email you cannot create two accounts with the same email',
+                            'You have a registered company with this phone you cannot create two accounts with the same phone',
+                            'You have a submit company information wait for admin approval you will receive an email or a call from our support team , Thank you for your patience.'
+                        ];
+
+                        const showLogin = loginErrors.some(error => errorMessage.includes(error));
+                        showValidationModal(errorMessage, showLogin);
+                    } else {
+                        showValidationModal(result.message || 'Registration failed. Please try again.');
+                    }
                 }
-            })
-            .catch(error => {
-                console.error('Error:', error);
-                showValidationErrorModal([{
-                    field: 'general',
-                    message: 'Network error. Please check your connection and try again.'
-                }]);
-            })
-            .finally(() => {
-                submitBtn.classList.remove('loading');
-                submitBtn.disabled = false;
-            });
-        });
-        }); // Close DOMContentLoaded
-
-        // Modal functions
-        function showValidationErrorModal(errors) {
-            const modal = document.getElementById('validationErrorModal');
-            const errorList = document.getElementById('validationErrorList');
-
-            // Clear previous errors
-            errorList.innerHTML = '';
-
-            // Add each error to the list
-            errors.forEach(error => {
-                const li = document.createElement('li');
-                li.innerHTML = `
-                    <i class="fas fa-exclamation-circle"></i>
-                    <div>
-                        <strong>${getFieldDisplayName(error.field)}:</strong> ${error.message}
-                    </div>
-                `;
-                errorList.appendChild(li);
-            });
-
-            // Show modal
-            modal.style.display = 'flex';
-            document.body.style.overflow = 'hidden';
-
-            // Focus first error field
-            if (errors.length > 0) {
-                const firstErrorField = document.getElementById(errors[0].field) ||
-                                      document.querySelector(`[name="${errors[0].field}"]`);
-                if (firstErrorField) {
-                    setTimeout(() => {
-                        firstErrorField.focus();
-                        firstErrorField.scrollIntoView({ behavior: 'smooth', block: 'center' });
-                    }, 300);
-                }
-            }
-        }
-
-        function closeValidationErrorModal() {
-            const modal = document.getElementById('validationErrorModal');
-            modal.style.display = 'none';
-            document.body.style.overflow = 'auto';
-        }
-
-        function getFieldDisplayName(fieldName) {
-            const fieldNames = {
-                'name': 'Full Name',
-                'business_name': 'Business Name',
-                'email': 'Email Address',
-                'phone': 'Phone Number',
-                'password': 'Password',
-                'password_confirmation': 'Password Confirmation',
-                'business_type': 'Business Type',
-                'description': 'Description',
-                'general': 'General Error'
-            };
-
-            return fieldNames[fieldName] || fieldName.replace('_', ' ').replace(/\b\w/g, l => l.toUpperCase());
-        }
-
-        function showFieldError(fieldId, message) {
-            const input = document.getElementById(fieldId);
-            let errorElement = document.getElementById(fieldId + '-error');
-
-            // Handle phone input container error state
-            if (fieldId === 'phone-display' || fieldId === 'phone') {
-                phoneContainer.classList.add('error');
-                // Use phone-error as the error element ID for consistency
-                errorElement = document.getElementById('phone-error');
-                fieldId = 'phone'; // Use phone for error element consistency
-            } else {
-                input.classList.add('error');
-            }
-
-            if (!errorElement) {
-                // Create error element if it doesn't exist
-                errorElement = document.createElement('div');
-                errorElement.id = fieldId + '-error';
-                errorElement.className = 'error-message';
-                errorElement.setAttribute('role', 'alert');
-                errorElement.setAttribute('aria-live', 'polite');
-
-                // For phone input, append to the form group, not the container
-                if (fieldId === 'phone') {
-                    phoneContainer.parentNode.appendChild(errorElement);
-                } else {
-                    input.parentNode.appendChild(errorElement);
-                }
-            }
-
-            errorElement.innerHTML = `<i class="fas fa-exclamation-circle"></i> ${message}`;
-        }
-
-        function clearFieldError(fieldId) {
-            const input = document.getElementById(fieldId);
-            let errorElement = document.getElementById(fieldId + '-error');
-
-            // Handle phone input container error state
-            if (fieldId === 'phone-display' || fieldId === 'phone') {
-                phoneContainer.classList.remove('error');
-                errorElement = document.getElementById('phone-error');
-            } else {
-                input.classList.remove('error');
-            }
-
-            if (errorElement) {
-                errorElement.innerHTML = '';
-            }
-        }
-
-        function checkPasswordStrength(password) {
-            const minLength = 8;
-            const hasUpperCase = /[A-Z]/.test(password);
-            const hasLowerCase = /[a-z]/.test(password);
-            const hasNumbers = /\d/.test(password);
-            const hasSpecialChar = /[!@#$%^&*(),.?":{}|<>]/.test(password);
-
-            if (password.length < minLength) {
-                return { isValid: false, message: 'Password must be at least 8 characters long' };
-            }
-
-            let strength = 0;
-            if (hasUpperCase) strength++;
-            if (hasLowerCase) strength++;
-            if (hasNumbers) strength++;
-            if (hasSpecialChar) strength++;
-
-            if (strength < 2) {
-                return {
-                    isValid: false,
-                    message: 'Password must contain at least 2 of: uppercase letters, lowercase letters, numbers, special characters'
-                };
-            }
-
-            return { isValid: true, message: 'Password strength is good' };
-        }
-
-        // Utility functions
-        function isValidEmail(email) {
-            return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
-        }
-
-        function isValidPhone(phone) {
-            // Remove spaces for validation
-            const cleanPhone = phone.replace(/\s/g, '');
-
-            // UAE phone number validation patterns (matching backend)
-            const validPatterns = [
-                /^\+971[0-9]{9}$/,  // +971XXXXXXXXX (13 chars) - preferred format
-                /^971[0-9]{9}$/,    // 971XXXXXXXXX (12 chars)
-                /^0[0-9]{9}$/,      // 0XXXXXXXXX (10 chars)
-                /^[0-9]{9}$/        // XXXXXXXXX (9 chars)
-            ];
-
-            return validPatterns.some(pattern => pattern.test(cleanPhone));
-        }
-
-        // Add real-time validation event listeners
-        document.addEventListener('DOMContentLoaded', function() {
-            const formInputs = document.querySelectorAll('.form-input, select');
-
-            formInputs.forEach(input => {
-                // Add blur event for validation
-                input.addEventListener('blur', function() {
-                    validateField(this);
-                });
-
-                // Add input event for some fields
-                if (input.type === 'email' || input.type === 'text' || input.type === 'password') {
-                    input.addEventListener('input', function() {
-                        // Clear error on input if field was previously invalid
-                        if (this.classList.contains('error')) {
-                            clearFieldError(this.id);
-                        }
-                    });
-                }
-            });
-        });
-
-        // Close modal when clicking outside
-        document.addEventListener('click', function(e) {
-            if (e.target.classList.contains('modal-overlay')) {
-                closeValidationErrorModal();
-            }
-        });
-
-        // Close modal with Escape key
-        document.addEventListener('keydown', function(e) {
-            if (e.key === 'Escape') {
-                closeValidationErrorModal();
+            } catch (error) {
+                console.error('Registration error:', error);
+                showValidationModal('Network error. Please check your connection and try again.');
+            } finally {
+                // Reset button state
+                submitButton.disabled = false;
+                submitButton.innerHTML = originalText;
             }
         });
     </script>

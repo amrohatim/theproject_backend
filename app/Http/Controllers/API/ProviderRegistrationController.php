@@ -122,9 +122,16 @@ class ProviderRegistrationController extends Controller
             $validator = Validator::make($request->all(), [
                 'user_id' => 'required|exists:users,id',
                 'license_file' => 'required|file|mimes:pdf|max:10240', // 10MB max
-                'license_start_date' => 'nullable|date',
+                'license_start_date' => 'required|date|after_or_equal:today',
                 'license_expiry_date' => 'required|date|after:license_start_date',
                 'notes' => 'nullable|string|max:500',
+            ], [
+                'license_start_date.required' => 'License start date is required.',
+                'license_start_date.date' => 'License start date must be a valid date.',
+                'license_start_date.after_or_equal' => 'License start date cannot be in the past.',
+                'license_expiry_date.required' => 'License expiry date is required.',
+                'license_expiry_date.date' => 'License expiry date must be a valid date.',
+                'license_expiry_date.after' => 'License expiry date must be after the start date.',
             ]);
 
             if ($validator->fails()) {

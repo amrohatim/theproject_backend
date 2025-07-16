@@ -5,7 +5,30 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="description" content="Provider Registration Step 3 - Phone Verification">
     <meta name="robots" content="noindex, nofollow">
-    <title>Provider Registration - Step 3 | Dala3Chic</title>
+    <title>Data3Chic - Provider Registration</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        purple: {
+                            50: '#faf5ff',
+                            100: '#f3e8ff',
+                            200: '#e9d5ff',
+                            300: '#d8b4fe',
+                            400: '#c084fc',
+                            500: '#a855f7',
+                            600: '#9333ea',
+                            700: '#7c3aed',
+                            800: '#6b21a8',
+                            900: '#581c87'
+                        }
+                    }
+                }
+            }
+        }
+    </script>
 
     <!-- Fonts -->
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
@@ -14,34 +37,21 @@
     <!-- CSRF Token -->
     <meta name="csrf-token" content="{{ csrf_token() }}">
 
-
     <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
+        .loading {
+            display: inline-block;
+            width: 16px;
+            height: 16px;
+            border: 2px solid #ffffff;
+            border-radius: 50%;
+            border-top-color: transparent;
+            animation: spin 1s ease-in-out infinite;
+        }
+        @keyframes spin {
+            to { transform: rotate(360deg); }
         }
 
-        body {
-            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-            background: linear-gradient(135deg, #8b5cf6 0%, #a855f7 50%, #c084fc 100%);
-            min-height: 100vh;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            padding: 20px;
-        }
-
-        .registration-container {
-            background: white;
-            border-radius: 16px;
-            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
-            width: 100%;
-            max-width: 500px;
-            padding: 40px;
-            position: relative;
-        }
-
+        /* Step Indicator Styles - Matching Vendor Registration */
         .progress-bar {
             display: flex;
             justify-content: space-between;
@@ -72,9 +82,12 @@
             display: none;
         }
 
-        .progress-step.active::after,
+        .progress-step.active::after {
+            background: #8b5cf6;
+        }
+
         .progress-step.completed::after {
-            background: #7c3aed;
+            background: #10b981;
         }
 
         .step-circle {
@@ -90,10 +103,11 @@
             color: #6b7280;
             position: relative;
             z-index: 2;
+            transition: all 0.2s ease;
         }
 
         .progress-step.active .step-circle {
-            background: #7c3aed;
+            background: #8b5cf6;
             color: white;
         }
 
@@ -110,227 +124,17 @@
         }
 
         .progress-step.active .step-label {
-            color: #7c3aed;
+            color: #8b5cf6;
             font-weight: 600;
         }
 
-        .form-header {
-            text-align: center;
-            margin-bottom: 30px;
-        }
-
-        .form-title {
-            font-size: 24px;
-            font-weight: 700;
-            color: #111827;
-            margin-bottom: 8px;
-        }
-
-        .form-subtitle {
-            color: #6b7280;
-            font-size: 14px;
-        }
-
-        .verification-section {
-            margin-bottom: 30px;
-            padding: 20px;
-            background: #faf5ff;
-            border-radius: 12px;
-            border: 1px solid #e9d5ff;
-            text-align: center;
-        }
-
-        .verification-icon {
-            width: 60px;
-            height: 60px;
-            background: #f3e8ff;
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            margin: 0 auto 20px;
-            animation: pulse 2s infinite;
-        }
-
-        @keyframes pulse {
-            0%, 100% { transform: scale(1); }
-            50% { transform: scale(1.05); }
-        }
-
-        .verification-icon i {
-            font-size: 24px;
-            color: #7c3aed;
-        }
-
-        .verification-title {
-            font-size: 18px;
-            font-weight: 600;
-            color: #581c87;
-            margin-bottom: 8px;
-        }
-
-        .verification-text {
-            color: #7c3aed;
-            font-size: 14px;
-            line-height: 1.5;
-            margin-bottom: 16px;
-        }
-
-        .phone-display {
-            font-size: 16px;
-            font-weight: 600;
-            color: #7c3aed;
-            margin-bottom: 16px;
-        }
-
-        .form-group {
-            margin-bottom: 20px;
-        }
-
-        .form-label {
-            display: block;
-            margin-bottom: 6px;
-            font-weight: 500;
-            color: #374151;
-            font-size: 14px;
-            text-align: center;
-        }
-
-        .form-input {
-            width: 100%;
-            padding: 12px 16px;
-            border: 2px solid #e5e7eb;
-            border-radius: 8px;
-            font-size: 18px;
-            text-align: center;
-            letter-spacing: 0.5rem;
-            transition: all 0.3s ease;
-            background: #f9fafb;
+        .progress-step.completed .step-label {
+            color: #10b981;
             font-weight: 600;
         }
 
-        .form-input:focus {
-            outline: none;
-            border-color: #7c3aed;
-            background: white;
-            box-shadow: 0 0 0 3px rgba(124, 58, 237, 0.1);
-        }
-
-        .form-button {
-            width: 100%;
-            padding: 14px;
-            background: linear-gradient(135deg, #7c3aed 0%, #5b21b6 100%);
-            color: white;
-            border: none;
-            border-radius: 8px;
-            font-weight: 600;
-            font-size: 16px;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            margin-bottom: 15px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
-
-        .form-button:hover {
-            background: linear-gradient(135deg, #5b21b6 0%, #4c1d95 100%);
-            transform: translateY(-1px);
-            box-shadow: 0 4px 12px rgba(124, 58, 237, 0.3);
-        }
-
-        .form-button:disabled {
-            background: #9ca3af;
-            cursor: not-allowed;
-            transform: none;
-            box-shadow: none;
-        }
-
-        .form-button.secondary {
-            background: transparent;
-            color: #7c3aed;
-            border: 2px solid #7c3aed;
-        }
-
-        .form-button.secondary:hover {
-            background: #7c3aed;
-            color: white;
-            transform: translateY(-1px);
-            box-shadow: 0 4px 12px rgba(124, 58, 237, 0.3);
-        }
-
-        .back-link {
-            display: inline-flex;
-            align-items: center;
-            color: #6b7280;
-            text-decoration: none;
-            font-size: 14px;
-            margin-bottom: 20px;
-            transition: color 0.3s ease;
-        }
-
-        .back-link:hover {
-            color: #374151;
-        }
-
-        .back-link i {
-            margin-right: 8px;
-        }
-
-        .loading-spinner {
-            display: none;
-            width: 20px;
-            height: 20px;
-            border: 2px solid #ffffff;
-            border-top: 2px solid transparent;
-            border-radius: 50%;
-            animation: spin 1s linear infinite;
-            margin-right: 8px;
-        }
-
-        @keyframes spin {
-            0% { transform: rotate(0deg); }
-            100% { transform: rotate(360deg); }
-        }
-
-        .form-button.loading .loading-spinner {
-            display: inline-block;
-        }
-
-        .alert {
-            padding: 12px 16px;
-            border-radius: 8px;
-            margin-bottom: 20px;
-            font-size: 14px;
-            font-weight: 500;
-        }
-
-        .alert.success {
-            background: #f0fdf4;
-            color: #166534;
-            border: 1px solid #bbf7d0;
-        }
-
-        .alert.error {
-            background: #fef2f2;
-            color: #dc2626;
-            border: 1px solid #fecaca;
-        }
-
-        .hidden {
-            display: none;
-        }
-
+        /* Responsive adjustments for step indicator */
         @media (max-width: 640px) {
-            .registration-container {
-                margin: 10px;
-                padding: 30px 20px;
-            }
-
-            .form-title {
-                font-size: 20px;
-            }
-
             .step-circle {
                 width: 25px;
                 height: 25px;
@@ -340,104 +144,171 @@
             .step-label {
                 font-size: 10px;
             }
-
-            .verification-icon {
-                width: 50px;
-                height: 50px;
-            }
-
-            .verification-icon i {
-                font-size: 20px;
-            }
         }
     </style>
 </head>
-<body>
-    <div class="registration-container">
-        <a href="/register/provider/step2" class="back-link">
-            <i class="fas fa-arrow-left"></i>
-            Back to Email Verification
-        </a>
+<body class="min-h-screen bg-gray-50">
+    <div class="min-h-screen flex">
+        <!-- Left Side - Marketing Content -->
+        <div class="hidden lg:flex lg:w-1/2 text-white p-12 flex-col justify-top" style="background: linear-gradient(135deg, #8b5cf6 0%, #7c3aed 100%);">
+            <div class="max-w-md mx-auto space-y-8">
+                <div class="text-center">
+                    <h1 class="text-3xl font-bold mb-8">Data3Chic</h1>
+                </div>
 
-        <!-- Progress Bar -->
-        <div class="progress-bar">
-            <div class="progress-step completed">
-                <div class="step-circle"><i class="fas fa-check"></i></div>
-                <div class="step-label">Provider Info</div>
-            </div>
-            <div class="progress-step completed">
-                <div class="step-circle"><i class="fas fa-check"></i></div>
-                <div class="step-label">Email Verification</div>
-            </div>
-            <div class="progress-step active">
-                <div class="step-circle">3</div>
-                <div class="step-label">Phone Verification</div>
-            </div>
-            <div class="progress-step">
-                <div class="step-circle">4</div>
-                <div class="step-label">License</div>
+                <!-- Main Heading -->
+                <div class="text-center space-y-4">
+                    <h2 class="text-4xl font-bold leading-tight">
+                        Phone<br>Verification
+                    </h2>
+                    <p class="text-purple-100 text-lg">
+                        We'll send a verification code to your phone number to ensure account security.
+                    </p>
+                </div>
+
+                <!-- Features -->
+                <div class="space-y-6 mt-12">
+                    <div class="flex items-start space-x-4">
+                        <div class="flex-shrink-0">
+                            <svg class="w-6 h-6 text-purple-200" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z"></path>
+                            </svg>
+                        </div>
+                        <div>
+                            <h3 class="font-semibold text-lg mb-1">SMS Verification</h3>
+                            <p class="text-purple-100 text-sm">Secure verification code sent directly to your phone.</p>
+                        </div>
+                    </div>
+
+                    <div class="flex items-start space-x-4">
+                        <div class="flex-shrink-0">
+                            <svg class="w-6 h-6 text-purple-200" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"></path>
+                            </svg>
+                        </div>
+                        <div>
+                            <h3 class="font-semibold text-lg mb-1">Account Security</h3>
+                            <p class="text-purple-100 text-sm">Phone verification adds an extra layer of security.</p>
+                        </div>
+                    </div>
+
+                    <div class="flex items-start space-x-4">
+                        <div class="flex-shrink-0">
+                            <svg class="w-6 h-6 text-purple-200" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                            </svg>
+                        </div>
+                        <div>
+                            <h3 class="font-semibold text-lg mb-1">Almost Complete</h3>
+                            <p class="text-purple-100 text-sm">Just one more step to complete your registration.</p>
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
 
-        <div class="form-header">
-            <h2 class="form-title">Phone Verification</h2>
-            <p class="form-subtitle">Step 3 of 4: Verify your phone number</p>
-        </div>
+        <!-- Right Side - Verification Form -->
+        <div class="w-full lg:w-1/2 bg-white p-8 lg:p-12 flex items-center justify-center">
+            <div class="w-full max-w-md space-y-6">
+                <div class="text-center space-y-2">
+                    <h2 class="text-2xl font-bold text-gray-900">Phone Verification</h2>
+                    <p class="text-gray-600">Step 3 of 4: Verify your phone number</p>
+                </div>
 
-        <!-- Alert Messages -->
-        <div id="alert-container" class="hidden"></div>
+                <!-- Step Indicator -->
+                <div class="progress-bar">
+                    <div class="progress-step completed">
+                        <div class="step-circle"><i class="fas fa-check"></i></div>
+                        <div class="step-label">Provider Info</div>
+                    </div>
+                    <div class="progress-step completed">
+                        <div class="step-circle"><i class="fas fa-check"></i></div>
+                        <div class="step-label">Verification</div>
+                    </div>
+                    <div class="progress-step active">
+                        <div class="step-circle">3</div>
+                        <div class="step-label">Phone</div>
+                    </div>
+                    <div class="progress-step">
+                        <div class="step-circle">4</div>
+                        <div class="step-label">License</div>
+                    </div>
+                </div>
 
-        <!-- Verification Section -->
-        <div class="verification-section">
-            <div class="verification-icon">
-                <i class="fas fa-mobile-alt"></i>
-            </div>
-            <div class="verification-title">Check Your Phone</div>
-            <div class="verification-text">
-                We'll send a verification code to your phone number.
-            </div>
-            <div class="phone-display" id="phone-display">{{ $phoneNumber ?? 'Your Phone' }}</div>
-            <div class="verification-text">
-                Enter the 6-digit code to continue your registration.
-            </div>
-        </div>
+                <!-- Back Link -->
+                <div class="mb-4">
+                    <a href="/register/provider/step2" class="text-purple-600 hover:text-purple-700 transition-colors duration-300 text-sm font-medium">
+                        <i class="fas fa-arrow-left mr-2"></i>
+                        Back to Email Verification
+                    </a>
+                </div>
 
-        <!-- Send OTP Section -->
-        <div id="send-otp-section">
-            <button type="button" onclick="sendPhoneOTP()" id="send-otp-btn" class="form-button">
-                <div class="loading-spinner"></div>
-                <i class="fas fa-paper-plane" style="margin-right: 8px;"></i>
-                <span class="button-text">Send Verification Code</span>
-            </button>
-        </div>
+                <!-- Alert Messages -->
+                <div id="alert-container" class="hidden mb-4"></div>
 
-        <!-- OTP Form Section (hidden initially) -->
-        <div id="otp-form-section" class="hidden">
-            <div class="form-group">
-                <label for="otp_code" class="form-label">Enter OTP Code</label>
-                <input
-                    id="otp_code"
-                    name="otp_code"
-                    type="text"
-                    required
-                    maxlength="6"
-                    placeholder="000000"
-                    class="form-input"
-                >
-            </div>
+                <!-- Phone Verification Section -->
+                <div class="bg-purple-50 border border-purple-200 rounded-lg p-6 mb-6">
+                    <div class="text-center">
+                        <div class="w-16 h-16 bg-purple-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                            <i class="fas fa-mobile-alt text-purple-600 text-2xl"></i>
+                        </div>
+                        <h3 class="font-semibold text-gray-900 mb-2">Check Your Phone</h3>
+                        <p class="text-gray-600 text-sm mb-4">
+                            We'll send a verification code to your phone number.
+                        </p>
+                        <div class="font-semibold text-purple-600 mb-4" id="phone-display">{{ $phoneNumber ?? 'Your Phone' }}</div>
+                        <p class="text-gray-600 text-sm">
+                            Enter the 6-digit code to continue your registration.
+                        </p>
+                    </div>
+                </div>
 
-            <button type="button" onclick="verifyPhoneOTP()" id="verify-otp-btn" class="form-button">
-                <div class="loading-spinner"></div>
-                <i class="fas fa-check" style="margin-right: 8px;"></i>
-                <span class="button-text">Verify Phone Number</span>
-            </button>
+                <!-- Send OTP Section -->
+                <div id="send-otp-section">
+                    <button type="button" onclick="sendPhoneOTP()" id="send-otp-btn" class="w-full text-white py-3 px-4 rounded-md font-semibold transition-all duration-300 transform hover:scale-105 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:ring-offset-2" style="background: linear-gradient(135deg, #8b5cf6 0%, #7c3aed 100%);">
+                        <span class="loading hidden">
+                            <i class="fas fa-spinner fa-spin mr-2"></i>
+                        </span>
+                        <i class="fas fa-paper-plane mr-2"></i>
+                        <span class="button-text">Send Verification Code</span>
+                    </button>
+                </div>
 
-            <div style="text-align: center; margin-top: 15px;">
-                <p style="color: #6b7280; font-size: 14px; margin-bottom: 8px;">Didn't receive the code?</p>
-                <button type="button" onclick="resendPhoneOTP()" id="resend-otp-btn" class="form-button secondary">
-                    <div class="loading-spinner"></div>
-                    <span class="button-text">Resend OTP</span>
-                </button>
+                <!-- OTP Form Section (hidden initially) -->
+                <div id="otp-form-section" class="hidden space-y-4">
+                    <!-- OTP Code Field -->
+                    <div class="space-y-2">
+                        <label for="otp_code" class="text-sm font-medium text-gray-700">Enter OTP Code</label>
+                        <div class="relative">
+                            <input id="otp_code" name="otp_code" type="text"
+                                   placeholder="000000" required maxlength="6"
+                                   class="w-full pl-10 pr-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent text-center text-lg font-mono tracking-widest">
+                            <svg class="absolute left-3 top-1/2 transform -translate-y-1/2 w-4 h-4 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"></path>
+                            </svg>
+                        </div>
+                    </div>
+
+                    <!-- Verify Button -->
+                    <button type="button" onclick="verifyPhoneOTP()" id="verify-otp-btn" class="w-full text-white py-3 px-4 rounded-md font-semibold transition-all duration-300 transform hover:scale-105 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:ring-offset-2" style="background: linear-gradient(135deg, #8b5cf6 0%, #7c3aed 100%);">
+                        <span class="loading hidden">
+                            <i class="fas fa-spinner fa-spin mr-2"></i>
+                        </span>
+                        <i class="fas fa-check mr-2"></i>
+                        <span class="button-text">Verify Phone Number</span>
+                    </button>
+
+                    <!-- Resend Section -->
+                    <div class="text-center">
+                        <p class="text-gray-600 text-sm mb-2">Didn't receive the code?</p>
+                        <button type="button" onclick="resendPhoneOTP()" id="resend-otp-btn" class="text-purple-600 hover:text-purple-700 font-medium underline">
+                            <span class="loading hidden">
+                                <i class="fas fa-spinner fa-spin mr-2"></i>
+                            </span>
+                            <span class="button-text">Resend OTP</span>
+                        </button>
+                    </div>
+                </div>
             </div>
         </div>
     </div>
@@ -448,7 +319,9 @@
 
         function showAlert(message, type = 'error') {
             const alertContainer = document.getElementById('alert-container');
-            const alertClass = type === 'success' ? 'alert success' : 'alert error';
+            const alertClass = type === 'success'
+                ? 'bg-green-50 border border-green-200 text-green-800 px-4 py-3 rounded-md'
+                : 'bg-red-50 border border-red-200 text-red-800 px-4 py-3 rounded-md';
 
             alertContainer.innerHTML = `<div class="${alertClass}">${message}</div>`;
             alertContainer.classList.remove('hidden');
@@ -463,11 +336,13 @@
 
         function setLoading(elementId, loading) {
             const element = document.getElementById(elementId);
+            const loadingSpan = element.querySelector('.loading');
+
             if (loading) {
-                element.classList.add('loading');
+                loadingSpan.classList.remove('hidden');
                 element.disabled = true;
             } else {
-                element.classList.remove('loading');
+                loadingSpan.classList.add('hidden');
                 element.disabled = false;
             }
         }

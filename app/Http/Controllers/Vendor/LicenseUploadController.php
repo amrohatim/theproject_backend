@@ -39,7 +39,7 @@ class LicenseUploadController extends Controller
         }
 
         $validator = Validator::make($request->all(), [
-            'license_file' => 'required|file|mimes:pdf,jpg,jpeg,png|max:10240', // 10MB max
+            'license_file' => 'required|file|mimes:pdf|max:10240', // 10MB max, PDF only
             'start_date' => 'required|date|after_or_equal:today',
             'end_date' => 'required|date|after:start_date',
             'notes' => 'nullable|string|max:1000',

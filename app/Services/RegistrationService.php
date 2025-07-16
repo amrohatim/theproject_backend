@@ -697,10 +697,10 @@ class RegistrationService
                 'status' => 'pending',
             ]);
 
-            // Handle logo upload if provided
+            // Handle logo upload if provided (save to companies.logo)
             if (isset($companyData['logo']) && $companyData['logo'] instanceof UploadedFile) {
                 $logoPath = $this->uploadCompanyLogo($companyData['logo'], $company->id);
-                $company->update(['logo' => $logoPath]);
+                $company->update(['logo' => $logoPath]); // Save to companies.logo
             }
 
             DB::commit();
@@ -735,9 +735,9 @@ class RegistrationService
             // Upload license file
             $licensePath = $this->uploadLicenseFile($licenseFile, $userId);
 
-            // Use provided dates or calculate defaults
-            $startDate = $licenseData['license_start_date'] ?? Carbon::now()->toDateString();
-            $endDate = $licenseData['license_expiry_date'] ?? Carbon::now()->addYear()->toDateString();
+            // Use provided dates or calculate defaults (updated field names)
+            $startDate = $licenseData['start_date'] ?? Carbon::now()->toDateString();
+            $endDate = $licenseData['end_date'] ?? Carbon::now()->addYear()->toDateString();
 
             // Validate that start date is not after end date
             if (Carbon::parse($startDate)->gt(Carbon::parse($endDate))) {
@@ -1382,8 +1382,8 @@ class RegistrationService
     {
         $providerData = [
             'user_id' => $user->id,
-            'business_name' => $userData['business_name'],
-            'business_type' => $userData['business_type'],
+            'business_name' => $userData['business_name'] ?? $user->name,
+            'business_type' => $userData['business_type'] ?? 'general',
             'description' => $userData['description'] ?? null,
             'delivery_capability' => $userData['delivery_capability'] ?? false,
             'status' => 'pending',
@@ -1451,8 +1451,8 @@ class RegistrationService
 
         Log::info("Provider profile created", [
             'user_id' => $user->id,
-            'business_name' => $userData['business_name'],
-            'business_type' => $userData['business_type'],
+            'business_name' => $userData['business_name'] ?? $user->name,
+            'business_type' => $userData['business_type'] ?? 'general',
             'delivery_capability' => $userData['delivery_capability'] ?? false,
             'delivery_fees_count' => isset($userData['delivery_fees']) ? count($userData['delivery_fees']) : 0,
             'stock_locations_count' => isset($userData['stock_locations']) ? count($userData['stock_locations']) : 0,

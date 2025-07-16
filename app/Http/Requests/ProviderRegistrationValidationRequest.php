@@ -35,7 +35,7 @@ class ProviderRegistrationValidationRequest extends FormRequest
             // Optional fields
             'business_type' => 'nullable|string|max:255',
             'description' => 'nullable|string|max:1000',
-            'logo' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
+            'logo' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:5120',
             'delivery_capability' => 'boolean',
             'delivery_fee_by_emirate' => 'nullable|string', // JSON string from frontend
             'delivery_fees' => 'nullable|array',
@@ -55,6 +55,9 @@ class ProviderRegistrationValidationRequest extends FormRequest
         $validator->after(function ($validator) {
             // Phone format validation (UAE format) - must be first
             $this->validatePhoneFormat($validator);
+
+            // Full name uniqueness check
+            $this->validateFullNameUniqueness($validator);
 
             // Business name uniqueness check
             $this->validateBusinessNameUniqueness($validator);
@@ -96,15 +99,31 @@ class ProviderRegistrationValidationRequest extends FormRequest
     }
 
     /**
+     * Validate full name uniqueness in users table.
+     */
+    protected function validateFullNameUniqueness($validator)
+    {
+        $fullName = $this->input('name');
+
+        if ($fullName) {
+            $existingUser = User::where('name', $fullName)->first();
+
+            if ($existingUser) {
+                $validator->errors()->add('name', 'Full name is already taken');
+            }
+        }
+    }
+
+    /**
      * Validate business name uniqueness in providers table.
      */
     protected function validateBusinessNameUniqueness($validator)
     {
         $businessName = $this->input('business_name');
-        
+
         if ($businessName) {
             $existingProvider = Provider::where('business_name', $businessName)->first();
-            
+
             if ($existingProvider) {
                 $validator->errors()->add('business_name', 'Business name is already taken');
             }
@@ -263,7 +282,7 @@ class ProviderRegistrationValidationRequest extends FormRequest
             
             'logo.image' => 'Logo must be an image file',
             'logo.mimes' => 'Logo must be a JPEG, PNG, JPG, or GIF file',
-            'logo.max' => 'Logo file size cannot exceed 2MB',
+            'logo.max' => 'Logo file size cannot exceed 5MB',
             
             'delivery_capability.boolean' => 'Delivery capability must be true or false',
 

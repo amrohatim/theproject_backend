@@ -3,44 +3,55 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="description" content="Provider Registration Step 3 - License Upload">
+    <meta name="description" content="Provider Registration Step 4 - License Upload">
     <meta name="robots" content="noindex, nofollow">
-    <title>Provider Registration - Step 3 | Dala3Chic</title>
-    
+    <title>Data3Chic - Provider Registration</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        purple: {
+                            50: '#faf5ff',
+                            100: '#f3e8ff',
+                            200: '#e9d5ff',
+                            300: '#d8b4fe',
+                            400: '#c084fc',
+                            500: '#a855f7',
+                            600: '#9333ea',
+                            700: '#7c3aed',
+                            800: '#6b21a8',
+                            900: '#581c87'
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+
     <!-- Fonts -->
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    
+
     <!-- CSRF Token -->
     <meta name="csrf-token" content="{{ csrf_token() }}">
-    
+
     <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
+        .loading {
+            display: inline-block;
+            width: 16px;
+            height: 16px;
+            border: 2px solid #ffffff;
+            border-radius: 50%;
+            border-top-color: transparent;
+            animation: spin 1s ease-in-out infinite;
+        }
+        @keyframes spin {
+            to { transform: rotate(360deg); }
         }
 
-        body {
-            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-            background: linear-gradient(135deg, #8b5cf6 0%, #a855f7 50%, #c084fc 100%);
-            min-height: 100vh;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            padding: 20px;
-        }
-
-        .registration-container {
-            background: white;
-            border-radius: 16px;
-            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
-            width: 100%;
-            max-width: 500px;
-            padding: 40px;
-            position: relative;
-        }
-
+        /* Step Indicator Styles - Matching Vendor Registration */
         .progress-bar {
             display: flex;
             justify-content: space-between;
@@ -71,9 +82,12 @@
             display: none;
         }
 
-        .progress-step.active::after,
+        .progress-step.active::after {
+            background: #8b5cf6;
+        }
+
         .progress-step.completed::after {
-            background: #7c3aed;
+            background: #10b981;
         }
 
         .step-circle {
@@ -89,10 +103,11 @@
             color: #6b7280;
             position: relative;
             z-index: 2;
+            transition: all 0.2s ease;
         }
 
         .progress-step.active .step-circle {
-            background: #7c3aed;
+            background: #8b5cf6;
             color: white;
         }
 
@@ -109,352 +124,207 @@
         }
 
         .progress-step.active .step-label {
-            color: #7c3aed;
+            color: #8b5cf6;
             font-weight: 600;
         }
 
-        .form-header {
-            text-align: center;
-            margin-bottom: 30px;
-        }
-
-        .form-title {
-            font-size: 24px;
-            font-weight: 700;
-            color: #111827;
-            margin-bottom: 8px;
-        }
-
-        .form-subtitle {
-            color: #6b7280;
-            font-size: 14px;
-        }
-
-        .info-card {
-            background: #faf5ff;
-            border: 1px solid #e9d5ff;
-            border-radius: 12px;
-            padding: 20px;
-            margin-bottom: 30px;
-        }
-
-        .info-card-header {
-            display: flex;
-            align-items: center;
-            margin-bottom: 12px;
-        }
-
-        .info-card-header i {
-            color: #7c3aed;
-            margin-right: 8px;
-            font-size: 18px;
-        }
-
-        .info-card-title {
+        .progress-step.completed .step-label {
+            color: #10b981;
             font-weight: 600;
-            color: #581c87;
         }
 
-        .info-card-text {
-            color: #7c3aed;
-            font-size: 14px;
-            line-height: 1.5;
-        }
-
-        .form-group {
-            margin-bottom: 20px;
-        }
-
-        .form-label {
-            display: block;
-            margin-bottom: 6px;
-            font-weight: 500;
-            color: #374151;
-            font-size: 14px;
-        }
-
-        .form-input, .form-select {
-            width: 100%;
-            padding: 12px 16px;
-            border: 2px solid #e5e7eb;
-            border-radius: 8px;
-            font-size: 14px;
-            transition: all 0.3s ease;
-            background: #f9fafb;
-        }
-
-        .form-input:focus, .form-select:focus {
-            outline: none;
-            border-color: #7c3aed;
-            background: white;
-            box-shadow: 0 0 0 3px rgba(124, 58, 237, 0.1);
-        }
-
-        .file-upload {
-            position: relative;
-            display: inline-block;
-            width: 100%;
-        }
-
-        .file-upload-input {
-            position: absolute;
-            opacity: 0;
-            width: 100%;
-            height: 100%;
-            cursor: pointer;
-        }
-
-        .file-upload-label {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            padding: 40px 20px;
-            border: 2px dashed #d1d5db;
-            border-radius: 12px;
-            background: #f9fafb;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            text-align: center;
-        }
-
-        .file-upload-label:hover {
-            border-color: #7c3aed;
-            background: #faf5ff;
-        }
-
-        .file-upload-icon {
-            font-size: 48px;
-            color: #6b7280;
-            margin-bottom: 16px;
-        }
-
-        .file-upload-text {
-            color: #374151;
-            font-weight: 500;
-            margin-bottom: 4px;
-        }
-
-        .file-upload-subtext {
-            color: #6b7280;
-            font-size: 12px;
-        }
-
-        .form-button {
-            width: 100%;
-            padding: 14px;
-            background: linear-gradient(135deg, #7c3aed 0%, #5b21b6 100%);
-            color: white;
-            border: none;
-            border-radius: 8px;
-            font-weight: 600;
-            font-size: 16px;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            margin-top: 10px;
-        }
-
-        .form-button:hover {
-            background: linear-gradient(135deg, #5b21b6 0%, #4c1d95 100%);
-            transform: translateY(-1px);
-            box-shadow: 0 4px 12px rgba(124, 58, 237, 0.3);
-        }
-
-        .form-button:disabled {
-            background: #9ca3af;
-            cursor: not-allowed;
-            transform: none;
-            box-shadow: none;
-        }
-
-        .back-link {
-            display: inline-flex;
-            align-items: center;
-            color: #6b7280;
-            text-decoration: none;
-            font-size: 14px;
-            margin-bottom: 20px;
-            transition: color 0.3s ease;
-        }
-
-        .back-link:hover {
-            color: #374151;
-        }
-
-        .back-link i {
-            margin-right: 8px;
-        }
-
-        .loading-spinner {
-            display: none;
-            width: 20px;
-            height: 20px;
-            border: 2px solid #ffffff;
-            border-top: 2px solid transparent;
-            border-radius: 50%;
-            animation: spin 1s linear infinite;
-            margin-right: 8px;
-        }
-
-        @keyframes spin {
-            0% { transform: rotate(0deg); }
-            100% { transform: rotate(360deg); }
-        }
-
-        .form-button.loading .loading-spinner {
-            display: inline-block;
-        }
-
-        .error-message {
-            color: #ef4444;
-            font-size: 12px;
-            margin-top: 4px;
-        }
-
-        .license-requirements {
-            background: #fefce8;
-            border: 1px solid #fde047;
-            border-radius: 8px;
-            padding: 16px;
-            margin-bottom: 20px;
-        }
-
-        .license-requirements h4 {
-            color: #a16207;
-            font-size: 14px;
-            font-weight: 600;
-            margin-bottom: 8px;
-        }
-
-        .license-requirements ul {
-            color: #a16207;
-            font-size: 13px;
-            margin-left: 16px;
-        }
-
-        .license-requirements li {
-            margin-bottom: 4px;
-        }
-
+        /* Responsive adjustments for step indicator */
         @media (max-width: 640px) {
-            .registration-container {
-                margin: 10px;
-                padding: 30px 20px;
-            }
-            
-            .form-title {
-                font-size: 20px;
-            }
-            
             .step-circle {
                 width: 25px;
                 height: 25px;
                 font-size: 12px;
             }
-            
+
             .step-label {
                 font-size: 10px;
-            }
-            
-            .file-upload-label {
-                padding: 30px 15px;
-            }
-            
-            .file-upload-icon {
-                font-size: 36px;
             }
         }
     </style>
 </head>
-<body>
-    <div class="registration-container">
-        <a href="/register/provider/phone-verification" class="back-link">
-            <i class="fas fa-arrow-left"></i>
-            Back to Phone Verification
-        </a>
+<body class="min-h-screen bg-gray-50">
+    <div class="min-h-screen flex">
+        <!-- Left Side - Marketing Content -->
+        <div class="hidden lg:flex lg:w-1/2 text-white p-12 flex-col justify-top" style="background: linear-gradient(135deg, #8b5cf6 0%, #7c3aed 100%);">
+            <div class="max-w-md mx-auto space-y-8">
+                <div class="text-center">
+                    <h1 class="text-3xl font-bold mb-8">Data3Chic</h1>
+                </div>
 
-        <!-- Progress Bar -->
-        <div class="progress-bar">
-            <div class="progress-step completed">
-                <div class="step-circle"><i class="fas fa-check"></i></div>
-                <div class="step-label">Provider Info</div>
-            </div>
-            <div class="progress-step completed">
-                <div class="step-circle"><i class="fas fa-check"></i></div>
-                <div class="step-label">Email Verification</div>
-            </div>
-            <div class="progress-step completed">
-                <div class="step-circle"><i class="fas fa-check"></i></div>
-                <div class="step-label">Phone Verification</div>
-            </div>
-            <div class="progress-step active">
-                <div class="step-circle">4</div>
-                <div class="step-label">License</div>
-            </div>
-        </div>
+                <!-- Main Heading -->
+                <div class="text-center space-y-4">
+                    <h2 class="text-4xl font-bold leading-tight">
+                        License<br>Upload
+                    </h2>
+                    <p class="text-purple-100 text-lg">
+                        Upload your business license to complete your provider registration and start selling.
+                    </p>
+                </div>
 
-        <div class="form-header">
-            <h2 class="form-title">Upload Business License</h2>
-            <p class="form-subtitle">Step 4: Upload your business registration documents</p>
-        </div>
-
-        <!-- Info Card -->
-        <div class="info-card">
-            <div class="info-card-header">
-                <i class="fas fa-info-circle"></i>
-                <div class="info-card-title">License Information</div>
-            </div>
-            <div class="info-card-text">
-                Please upload your valid business license or trade registration document. 
-                This helps us verify your business and ensures compliance with local regulations.
-            </div>
-        </div>
-
-        <!-- License Requirements -->
-        <div class="license-requirements">
-            <h4><i class="fas fa-exclamation-triangle"></i> Requirements:</h4>
-            <ul>
-                <li>Valid business license or trade registration</li>
-                <li>Document must be in PDF format</li>
-                <li>File size should not exceed 10MB</li>
-                <li>Document should be clear and readable</li>
-                <li>License should be currently valid</li>
-            </ul>
-        </div>
-
-        <form id="licenseForm" method="POST" enctype="multipart/form-data">
-            @csrf
-            
-            <div class="form-group">
-                <label for="license_start_date" class="form-label">License Start Date *</label>
-                <input type="date" id="license_start_date" name="license_start_date" class="form-input" required>
-            </div>
-
-            <div class="form-group">
-                <label for="license_expiry_date" class="form-label">License Expiry Date *</label>
-                <input type="date" id="license_expiry_date" name="license_expiry_date" class="form-input" required>
-            </div>
-
-            <div class="form-group">
-                <label for="license_file" class="form-label">Business License Document *</label>
-                <div class="file-upload">
-                    <input type="file" id="license_file" name="license_file" class="file-upload-input" 
-                           accept=".pdf" required>
-                    <label for="license_file" class="file-upload-label">
-                        <div class="file-upload-icon">
-                            <i class="fas fa-file-pdf"></i>
+                <!-- Features -->
+                <div class="space-y-6 mt-12">
+                    <div class="flex items-start space-x-4">
+                        <div class="flex-shrink-0">
+                            <svg class="w-6 h-6 text-purple-200" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
+                            </svg>
                         </div>
-                        <div class="file-upload-text">Click to upload license document</div>
-                        <div class="file-upload-subtext">PDF format, max 10MB</div>
-                    </label>
+                        <div>
+                            <h3 class="font-semibold text-lg mb-1">Secure Upload</h3>
+                            <p class="text-purple-100 text-sm">Your business documents are encrypted and stored securely.</p>
+                        </div>
+                    </div>
+
+                    <div class="flex items-start space-x-4">
+                        <div class="flex-shrink-0">
+                            <svg class="w-6 h-6 text-purple-200" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                            </svg>
+                        </div>
+                        <div>
+                            <h3 class="font-semibold text-lg mb-1">Quick Verification</h3>
+                            <p class="text-purple-100 text-sm">Our team will review your license within 24-48 hours.</p>
+                        </div>
+                    </div>
+
+                    <div class="flex items-start space-x-4">
+                        <div class="flex-shrink-0">
+                            <svg class="w-6 h-6 text-purple-200" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"></path>
+                            </svg>
+                        </div>
+                        <div>
+                            <h3 class="font-semibold text-lg mb-1">Start Selling</h3>
+                            <p class="text-purple-100 text-sm">Once approved, you can immediately start listing products.</p>
+                        </div>
+                    </div>
                 </div>
             </div>
+        </div>
 
-            <button type="submit" class="form-button" id="submitBtn">
-                <div class="loading-spinner"></div>
-                <span class="button-text">Complete Registration</span>
-            </button>
-        </form>
+        <!-- Right Side - License Upload Form -->
+        <div class="w-full lg:w-1/2 bg-white p-8 lg:p-12 flex items-center justify-center">
+            <div class="w-full max-w-md space-y-6">
+                <div class="text-center space-y-2">
+                    <h2 class="text-2xl font-bold text-gray-900">Upload Business License</h2>
+                    <p class="text-gray-600">Step 4 of 4: Upload your business registration documents</p>
+                </div>
+
+                <!-- Step Indicator -->
+                <div class="progress-bar">
+                    <div class="progress-step completed">
+                        <div class="step-circle"><i class="fas fa-check"></i></div>
+                        <div class="step-label">Provider Info</div>
+                    </div>
+                    <div class="progress-step completed">
+                        <div class="step-circle"><i class="fas fa-check"></i></div>
+                        <div class="step-label">Verification</div>
+                    </div>
+                    <div class="progress-step completed">
+                        <div class="step-circle"><i class="fas fa-check"></i></div>
+                        <div class="step-label">Phone</div>
+                    </div>
+                    <div class="progress-step active">
+                        <div class="step-circle">4</div>
+                        <div class="step-label">License</div>
+                    </div>
+                </div>
+
+                <!-- Back Link -->
+                <div class="mb-4">
+                    <a href="/register/provider/phone-verification" class="text-purple-600 hover:text-purple-700 transition-colors duration-300 text-sm font-medium">
+                        <i class="fas fa-arrow-left mr-2"></i>
+                        Back to Phone Verification
+                    </a>
+                </div>
+
+                <!-- License Information Card -->
+                <div class="bg-purple-50 border border-purple-200 rounded-lg p-6 mb-6">
+                    <div class="flex items-center mb-4">
+                        <i class="fas fa-info-circle text-purple-600 mr-2"></i>
+                        <h3 class="font-semibold text-gray-900">License Information</h3>
+                    </div>
+                    <p class="text-gray-600 text-sm">
+                        Please upload your valid business license or trade registration document.
+                        This helps us verify your business and ensures compliance with local regulations.
+                    </p>
+                </div>
+
+                <!-- License Requirements -->
+                <div class="bg-yellow-50 border border-yellow-200 rounded-lg p-4 mb-6">
+                    <h4 class="flex items-center text-yellow-800 font-semibold text-sm mb-2">
+                        <i class="fas fa-exclamation-triangle mr-2"></i>
+                        Requirements:
+                    </h4>
+                    <ul class="text-yellow-700 text-sm space-y-1 ml-4">
+                        <li>• Valid business license or trade registration</li>
+                        <li>• Document must be in PDF format</li>
+                        <li>• File size should not exceed 10MB</li>
+                        <li>• Document should be clear and readable</li>
+                        <li>• License should be currently valid</li>
+                    </ul>
+                </div>
+
+                <!-- License Upload Form -->
+                <form id="licenseForm" method="POST" enctype="multipart/form-data" class="space-y-4">
+                    @csrf
+
+                    <!-- License Start Date -->
+                    <div class="space-y-2">
+                        <label for="license_start_date" class="text-sm font-medium text-gray-700">License Start Date</label>
+                        <div class="relative">
+                            <input id="license_start_date" name="license_start_date" type="date" required
+                                   class="w-full pl-10 pr-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent">
+                            <svg class="absolute left-3 top-1/2 transform -translate-y-1/2 w-4 h-4 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path>
+                            </svg>
+                        </div>
+                    </div>
+
+                    <!-- License Expiry Date -->
+                    <div class="space-y-2">
+                        <label for="license_expiry_date" class="text-sm font-medium text-gray-700">License Expiry Date</label>
+                        <div class="relative">
+                            <input id="license_expiry_date" name="license_expiry_date" type="date" required
+                                   class="w-full pl-10 pr-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent">
+                            <svg class="absolute left-3 top-1/2 transform -translate-y-1/2 w-4 h-4 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path>
+                            </svg>
+                        </div>
+                    </div>
+
+                    <!-- File Upload -->
+                    <div class="space-y-2">
+                        <label for="license_file" class="text-sm font-medium text-gray-700">Business License Document</label>
+                        <div class="relative">
+                            <input type="file" id="license_file" name="license_file" accept=".pdf" required class="hidden">
+                            <label for="license_file" id="file-upload-label" class="flex flex-col items-center justify-center w-full h-32 border-2 border-gray-300 border-dashed rounded-lg cursor-pointer bg-gray-50 hover:bg-purple-50 hover:border-purple-300 transition-colors">
+                                <div class="flex flex-col items-center justify-center pt-5 pb-6">
+                                    <i class="fas fa-file-pdf text-4xl text-gray-400 mb-3"></i>
+                                    <p class="mb-2 text-sm text-gray-500">
+                                        <span class="font-semibold">Click to upload</span> license document
+                                    </p>
+                                    <p class="text-xs text-gray-500">PDF format, max 10MB</p>
+                                </div>
+                            </label>
+                        </div>
+                    </div>
+
+                    <!-- Submit Button -->
+                    <button type="submit" id="submitBtn" class="w-full text-white py-3 px-4 rounded-md font-semibold transition-all duration-300 transform hover:scale-105 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:ring-offset-2" style="background: linear-gradient(135deg, #8b5cf6 0%, #7c3aed 100%);">
+                        <span class="loading hidden">
+                            <i class="fas fa-spinner fa-spin mr-2"></i>
+                        </span>
+                        <span class="button-text">Complete Registration</span>
+                    </button>
+                </form>
+            </div>
+        </div>
     </div>
 
     <script>
@@ -467,16 +337,30 @@
         // File upload preview
         document.getElementById('license_file').addEventListener('change', function(e) {
             const file = e.target.files[0];
-            const label = document.querySelector('.file-upload-label');
+            const label = document.getElementById('file-upload-label');
 
             if (file) {
+                if (file.type !== 'application/pdf') {
+                    alert('Please select a PDF file.');
+                    e.target.value = '';
+                    return;
+                }
+
+                if (file.size > 10 * 1024 * 1024) { // 10MB
+                    alert('File size must be less than 10MB.');
+                    e.target.value = '';
+                    return;
+                }
+
                 label.innerHTML = `
-                    <div class="file-upload-icon" style="color: #10b981;">
-                        <i class="fas fa-check-circle"></i>
+                    <div class="flex flex-col items-center justify-center pt-5 pb-6">
+                        <i class="fas fa-check-circle text-4xl text-green-500 mb-3"></i>
+                        <p class="mb-2 text-sm text-green-600 font-semibold">${file.name}</p>
+                        <p class="text-xs text-green-500">File selected successfully - Click to change</p>
                     </div>
-                    <div class="file-upload-text" style="color: #10b981;">${file.name}</div>
-                    <div class="file-upload-subtext">Click to change document</div>
                 `;
+                label.classList.remove('border-gray-300', 'bg-gray-50', 'hover:bg-purple-50', 'hover:border-purple-300');
+                label.classList.add('border-green-300', 'bg-green-50');
             }
         });
 
@@ -517,7 +401,8 @@
             }
 
             const submitBtn = document.getElementById('submitBtn');
-            submitBtn.classList.add('loading');
+            const loadingSpan = submitBtn.querySelector('.loading');
+            loadingSpan.classList.remove('hidden');
             submitBtn.disabled = true;
 
             const formData = new FormData(this);
@@ -547,7 +432,8 @@
                 alert(error.message || 'An error occurred. Please try again.');
             })
             .finally(() => {
-                submitBtn.classList.remove('loading');
+                const loadingSpan = submitBtn.querySelector('.loading');
+                loadingSpan.classList.add('hidden');
                 submitBtn.disabled = false;
             });
         });

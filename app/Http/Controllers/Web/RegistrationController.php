@@ -364,6 +364,26 @@ class RegistrationController extends Controller
 
             $result = $this->registrationService->startProviderRegistration($registrationData);
 
+            // Check if this is an AJAX request
+            if ($request->expectsJson() || $request->ajax()) {
+                if ($result['success']) {
+                    return response()->json([
+                        'success' => true,
+                        'message' => $result['message'],
+                        'redirect_url' => route('register.provider.step2'),
+                        'registration_token' => $result['registration_token'] ?? null,
+                        'user_id' => $result['user_id'] ?? null,
+                        'next_step' => $result['next_step'] ?? 'email_verification'
+                    ]);
+                } else {
+                    return response()->json([
+                        'success' => false,
+                        'message' => $result['message']
+                    ], 422);
+                }
+            }
+
+            // Handle traditional form submission (non-AJAX)
             if ($result['success']) {
                 return redirect()->route('provider.registration.license', ['user_id' => $result['user_id']])
                     ->with('success', $result['message']);
@@ -372,6 +392,15 @@ class RegistrationController extends Controller
             }
         } catch (Exception $e) {
             Log::error('Web provider registration error: ' . $e->getMessage());
+
+            // Check if this is an AJAX request
+            if ($request->expectsJson() || $request->ajax()) {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'Registration failed. Please try again.'
+                ], 500);
+            }
+
             return back()->withErrors(['error' => 'Registration failed. Please try again.'])->withInput();
         }
     }
@@ -442,8 +471,16 @@ class RegistrationController extends Controller
             $validator = Validator::make($request->all(), [
                 'user_id' => 'required|exists:users,id',
                 'license_file' => 'required|file|mimes:pdf|max:10240', // 10MB max
-                'license_expiry_date' => 'required|date|after:today',
+                'license_start_date' => 'required|date|after_or_equal:today',
+                'license_expiry_date' => 'required|date|after:license_start_date',
                 'notes' => 'nullable|string|max:500',
+            ], [
+                'license_start_date.required' => 'License start date is required.',
+                'license_start_date.date' => 'License start date must be a valid date.',
+                'license_start_date.after_or_equal' => 'License start date cannot be in the past.',
+                'license_expiry_date.required' => 'License expiry date is required.',
+                'license_expiry_date.date' => 'License expiry date must be a valid date.',
+                'license_expiry_date.after' => 'License expiry date must be after the start date.',
             ]);
 
             if ($validator->fails()) {
@@ -453,7 +490,7 @@ class RegistrationController extends Controller
             $result = $this->registrationService->completeProviderLicense(
                 $request->user_id,
                 $request->file('license_file'),
-                $request->only(['license_expiry_date', 'notes'])
+                $request->only(['license_start_date', 'license_expiry_date', 'notes'])
             );
 
             if ($result['success']) {
@@ -778,8 +815,16 @@ class RegistrationController extends Controller
 
             $validator = Validator::make($request->all(), [
                 'license_file' => 'required|file|mimes:pdf|max:10240', // 10MB max
-                'license_expiry_date' => 'required|date|after:today',
+                'license_start_date' => 'required|date|after_or_equal:today',
+                'license_expiry_date' => 'required|date|after:license_start_date',
                 'notes' => 'nullable|string|max:500',
+            ], [
+                'license_start_date.required' => 'License start date is required.',
+                'license_start_date.date' => 'License start date must be a valid date.',
+                'license_start_date.after_or_equal' => 'License start date cannot be in the past.',
+                'license_expiry_date.required' => 'License expiry date is required.',
+                'license_expiry_date.date' => 'License expiry date must be a valid date.',
+                'license_expiry_date.after' => 'License expiry date must be after the start date.',
             ]);
 
             if ($validator->fails()) {
@@ -788,7 +833,7 @@ class RegistrationController extends Controller
 
             // Create license with pending status for admin review
             $licenseData = array_merge(
-                $request->only(['license_expiry_date', 'notes']),
+                $request->only(['license_start_date', 'license_expiry_date', 'notes']),
                 ['license_status' => 'pending'] // Pass status to be used in service
             );
 

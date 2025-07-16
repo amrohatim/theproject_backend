@@ -144,20 +144,39 @@
                     </div>
                 </div>
 
-                <!-- License Expiry Date -->
-                <div>
-                    <label for="license_expiry_date" class="block text-sm font-medium text-gray-700 mb-2">
-                        License Expiry Date *
-                    </label>
-                    <input
-                        type="date"
-                        id="license_expiry_date"
-                        name="license_expiry_date"
-                        required
-                        min="{{ date('Y-m-d', strtotime('+1 day')) }}"
-                        value="{{ old('license_expiry_date') }}"
-                        class="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500"
-                    >
+                <!-- License Dates -->
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <!-- License Start Date -->
+                    <div>
+                        <label for="license_start_date" class="block text-sm font-medium text-gray-700 mb-2">
+                            License Start Date *
+                        </label>
+                        <input
+                            type="date"
+                            id="license_start_date"
+                            name="license_start_date"
+                            required
+                            min="{{ date('Y-m-d') }}"
+                            value="{{ old('license_start_date') }}"
+                            class="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500"
+                        >
+                    </div>
+
+                    <!-- License Expiry Date -->
+                    <div>
+                        <label for="license_expiry_date" class="block text-sm font-medium text-gray-700 mb-2">
+                            License Expiry Date *
+                        </label>
+                        <input
+                            type="date"
+                            id="license_expiry_date"
+                            name="license_expiry_date"
+                            required
+                            min="{{ date('Y-m-d', strtotime('+1 day')) }}"
+                            value="{{ old('license_expiry_date') }}"
+                            class="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500"
+                        >
+                    </div>
                 </div>
 
                 <!-- Notes -->
@@ -277,6 +296,96 @@
             const sizes = ['Bytes', 'KB', 'MB', 'GB'];
             const i = Math.floor(Math.log(bytes) / Math.log(k));
             return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + ' ' + sizes[i];
+        }
+
+        // Date validation
+        const startDateInput = document.getElementById('license_start_date');
+        const endDateInput = document.getElementById('license_expiry_date');
+
+        // Set minimum start date to today
+        const today = new Date().toISOString().split('T')[0];
+        startDateInput.min = today;
+
+        // Validate start date and update end date minimum
+        startDateInput.addEventListener('change', function() {
+            const startDate = new Date(this.value);
+            const today = new Date();
+            today.setHours(0, 0, 0, 0);
+
+            // Check if start date is in the past
+            if (startDate < today) {
+                showValidationModal('License start date cannot be in the past.');
+                this.value = '';
+                return;
+            }
+
+            // Set minimum end date to be after start date
+            const minEndDate = new Date(startDate);
+            minEndDate.setDate(minEndDate.getDate() + 1);
+            endDateInput.min = minEndDate.toISOString().split('T')[0];
+
+            // Clear end date if it's before or equal to start date
+            if (endDateInput.value && new Date(endDateInput.value) <= startDate) {
+                endDateInput.value = '';
+            }
+        });
+
+        // Validate end date
+        endDateInput.addEventListener('change', function() {
+            const startDate = new Date(startDateInput.value);
+            const endDate = new Date(this.value);
+
+            if (startDateInput.value && endDate <= startDate) {
+                showValidationModal('License end date must be after the start date.');
+                this.value = '';
+                return;
+            }
+        });
+
+        // Modal for validation errors
+        function showValidationModal(message) {
+            // Create modal if it doesn't exist
+            let modal = document.getElementById('validationModal');
+            if (!modal) {
+                modal = document.createElement('div');
+                modal.id = 'validationModal';
+                modal.className = 'fixed inset-0 bg-gray-600 bg-opacity-50 overflow-y-auto h-full w-full z-50';
+                modal.innerHTML = `
+                    <div class="relative top-20 mx-auto p-5 border w-96 shadow-lg rounded-md bg-white">
+                        <div class="mt-3 text-center">
+                            <div class="mx-auto flex items-center justify-center h-12 w-12 rounded-full bg-red-100">
+                                <i class="fas fa-exclamation-triangle text-red-600"></i>
+                            </div>
+                            <h3 class="text-lg font-medium text-gray-900 mt-2">Validation Error</h3>
+                            <div class="mt-2 px-7 py-3">
+                                <p class="text-sm text-gray-500" id="modalMessage"></p>
+                            </div>
+                            <div class="items-center px-4 py-3">
+                                <button id="modalCloseBtn" class="px-4 py-2 bg-red-500 text-white text-base font-medium rounded-md w-full shadow-sm hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-red-300">
+                                    OK
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                `;
+                document.body.appendChild(modal);
+
+                // Close modal event
+                document.getElementById('modalCloseBtn').addEventListener('click', function() {
+                    modal.style.display = 'none';
+                });
+
+                // Close modal when clicking outside
+                modal.addEventListener('click', function(e) {
+                    if (e.target === modal) {
+                        modal.style.display = 'none';
+                    }
+                });
+            }
+
+            // Show modal with message
+            document.getElementById('modalMessage').textContent = message;
+            modal.style.display = 'block';
         }
     </script>
 </body>
