@@ -72,7 +72,7 @@
                 </p>
             </div>
             <div class="ms-auto">
-                <a href="{{ route('merchant.settings.global') }}" class="discord-btn-secondary p-1 rounded-md">
+                <a href="{{ route('merchant.license.upload') }}" class="discord-btn-secondary p-1 rounded-md">
                     <i class="fas fa-upload me-1"></i> Upload License
                 </a>
             </div>

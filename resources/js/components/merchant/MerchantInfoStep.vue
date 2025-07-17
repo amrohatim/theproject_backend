@@ -97,18 +97,27 @@
       <!-- Logo Upload -->
       <div class="form-group">
         <label for="logo" class="form-label">Business Logo (Optional)</label>
-        <div class="file-upload">
-          <input 
-            type="file" 
-            id="logo" 
+        <div class="file-upload" :class="{ 'has-image': logoPreviewUrl }">
+          <input
+            type="file"
+            id="logo"
             ref="logoInput"
             @change="handleLogoUpload"
             accept="image/*"
             class="file-input"
           >
           <label for="logo" class="file-upload-label">
-            <i class="fas fa-cloud-upload-alt"></i>
-            <span>{{ logoFileName || 'Click to upload logo' }}</span>
+            <div v-if="logoPreviewUrl" class="image-preview">
+              <img :src="logoPreviewUrl" :alt="logoFileName" class="preview-thumbnail">
+              <div class="image-info">
+                <span class="file-name">{{ logoFileName }}</span>
+                <span class="change-text">Click to change</span>
+              </div>
+            </div>
+            <div v-else class="upload-placeholder">
+              <i class="fas fa-cloud-upload-alt"></i>
+              <span>Click to upload logo</span>
+            </div>
           </label>
         </div>
         <div v-if="errors.logo" class="error-message">{{ errors.logo[0] }}</div>
@@ -117,10 +126,10 @@
       <!-- UAE ID Front -->
       <div class="form-group">
         <label for="uae_id_front" class="form-label">UAE ID Front Side *</label>
-        <div class="file-upload">
-          <input 
-            type="file" 
-            id="uae_id_front" 
+        <div class="file-upload" :class="{ 'has-image': uaeIdFrontPreviewUrl }">
+          <input
+            type="file"
+            id="uae_id_front"
             ref="uaeIdFrontInput"
             @change="handleUaeIdFrontUpload"
             accept="image/*"
@@ -128,8 +137,17 @@
             required
           >
           <label for="uae_id_front" class="file-upload-label">
-            <i class="fas fa-id-card"></i>
-            <span>{{ uaeIdFrontFileName || 'Upload front side of UAE ID' }}</span>
+            <div v-if="uaeIdFrontPreviewUrl" class="image-preview">
+              <img :src="uaeIdFrontPreviewUrl" :alt="uaeIdFrontFileName" class="preview-thumbnail">
+              <div class="image-info">
+                <span class="file-name">{{ uaeIdFrontFileName }}</span>
+                <span class="change-text">Click to change</span>
+              </div>
+            </div>
+            <div v-else class="upload-placeholder">
+              <i class="fas fa-id-card"></i>
+              <span>Upload front side of UAE ID</span>
+            </div>
           </label>
         </div>
         <div v-if="errors.uae_id_front" class="error-message">{{ errors.uae_id_front[0] }}</div>
@@ -138,10 +156,10 @@
       <!-- UAE ID Back -->
       <div class="form-group">
         <label for="uae_id_back" class="form-label">UAE ID Back Side *</label>
-        <div class="file-upload">
-          <input 
-            type="file" 
-            id="uae_id_back" 
+        <div class="file-upload" :class="{ 'has-image': uaeIdBackPreviewUrl }">
+          <input
+            type="file"
+            id="uae_id_back"
             ref="uaeIdBackInput"
             @change="handleUaeIdBackUpload"
             accept="image/*"
@@ -149,8 +167,17 @@
             required
           >
           <label for="uae_id_back" class="file-upload-label">
-            <i class="fas fa-id-card"></i>
-            <span>{{ uaeIdBackFileName || 'Upload back side of UAE ID' }}</span>
+            <div v-if="uaeIdBackPreviewUrl" class="image-preview">
+              <img :src="uaeIdBackPreviewUrl" :alt="uaeIdBackFileName" class="preview-thumbnail">
+              <div class="image-info">
+                <span class="file-name">{{ uaeIdBackFileName }}</span>
+                <span class="change-text">Click to change</span>
+              </div>
+            </div>
+            <div v-else class="upload-placeholder">
+              <i class="fas fa-id-card"></i>
+              <span>Upload back side of UAE ID</span>
+            </div>
           </label>
         </div>
         <div v-if="errors.uae_id_back" class="error-message">{{ errors.uae_id_back[0] }}</div>
@@ -389,6 +416,9 @@ export default {
       logoFileName: '',
       uaeIdFrontFileName: '',
       uaeIdBackFileName: '',
+      logoPreviewUrl: '',
+      uaeIdFrontPreviewUrl: '',
+      uaeIdBackPreviewUrl: '',
       locationSearch: '',
       showMap: false,
       mapLoading: false,
@@ -624,6 +654,12 @@ export default {
       if (file) {
         this.formData.logo = file;
         this.logoFileName = file.name;
+
+        // Create image preview URL
+        if (this.logoPreviewUrl) {
+          URL.revokeObjectURL(this.logoPreviewUrl);
+        }
+        this.logoPreviewUrl = URL.createObjectURL(file);
       }
     },
     handleUaeIdFrontUpload(event) {
@@ -631,6 +667,12 @@ export default {
       if (file) {
         this.formData.uae_id_front = file;
         this.uaeIdFrontFileName = file.name;
+
+        // Create image preview URL
+        if (this.uaeIdFrontPreviewUrl) {
+          URL.revokeObjectURL(this.uaeIdFrontPreviewUrl);
+        }
+        this.uaeIdFrontPreviewUrl = URL.createObjectURL(file);
       }
     },
     handleUaeIdBackUpload(event) {
@@ -638,6 +680,12 @@ export default {
       if (file) {
         this.formData.uae_id_back = file;
         this.uaeIdBackFileName = file.name;
+
+        // Create image preview URL
+        if (this.uaeIdBackPreviewUrl) {
+          URL.revokeObjectURL(this.uaeIdBackPreviewUrl);
+        }
+        this.uaeIdBackPreviewUrl = URL.createObjectURL(file);
       }
     },
     handleLocationFocus() {
@@ -1021,6 +1069,17 @@ export default {
     if (this.marker) {
       google.maps.event.clearInstanceListeners(this.marker);
     }
+
+    // Clean up image preview URLs to prevent memory leaks
+    if (this.logoPreviewUrl) {
+      URL.revokeObjectURL(this.logoPreviewUrl);
+    }
+    if (this.uaeIdFrontPreviewUrl) {
+      URL.revokeObjectURL(this.uaeIdFrontPreviewUrl);
+    }
+    if (this.uaeIdBackPreviewUrl) {
+      URL.revokeObjectURL(this.uaeIdBackPreviewUrl);
+    }
   }
 };
 </script>
@@ -1067,24 +1126,35 @@ export default {
 .form-input {
   width: 100%;
   padding: 12px 16px;
-  border: 2px solid #e1e5e9;
-  border-radius: 8px;
+  border: 2px solid #e1e5e9 !important;
+  border-radius: 8px !important;
   font-size: 1rem;
   transition: all 0.3s ease;
-  background: white;
+  background: white !important;
   box-sizing: border-box;
   position: relative;
   z-index: 1;
+  min-height: auto !important;
+  transform: none !important;
+  box-shadow: none !important;
 }
 
 .form-input:focus {
-  outline: none;
-  border-color: #f59e0b;
-  box-shadow: 0 0 0 3px rgba(245, 158, 11, 0.1);
+  outline: none !important;
+  border-color: #f59e0b !important;
+  box-shadow: 0 0 0 3px rgba(245, 158, 11, 0.1) !important;
+  transform: none !important;
+}
+
+.form-input:hover {
+  border-color: #f59e0b !important;
+  background: white !important;
+  transform: none !important;
 }
 
 .form-input.error {
-  border-color: #e53e3e;
+  border-color: #e53e3e !important;
+  box-shadow: 0 0 0 3px rgba(229, 62, 62, 0.1) !important;
 }
 
 .error-message {
@@ -1701,5 +1771,72 @@ export default {
   .modal-btn {
     width: 100%;
   }
+}
+
+/* Image Preview Styles */
+.file-upload.has-image .file-upload-label {
+  padding: 0;
+  border: 2px solid #e5e7eb;
+  border-radius: 8px;
+  overflow: hidden;
+}
+
+.image-preview {
+  display: flex;
+  align-items: center;
+  padding: 12px;
+  background: #f9fafb;
+  transition: all 0.2s ease;
+}
+
+.image-preview:hover {
+  background: #f3f4f6;
+}
+
+.preview-thumbnail {
+  width: 60px;
+  height: 60px;
+  object-fit: cover;
+  border-radius: 6px;
+  border: 1px solid #e5e7eb;
+  margin-right: 12px;
+  flex-shrink: 0;
+}
+
+.image-info {
+  display: flex;
+  flex-direction: column;
+  flex-grow: 1;
+  min-width: 0;
+}
+
+.file-name {
+  font-weight: 500;
+  color: #374151;
+  font-size: 0.9rem;
+  margin-bottom: 2px;
+  word-break: break-word;
+}
+
+.change-text {
+  font-size: 0.8rem;
+  color: #6b7280;
+}
+
+.upload-placeholder {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+}
+
+.upload-placeholder i {
+  font-size: 1.5rem;
+  color: #9ca3af;
+}
+
+.upload-placeholder span {
+  color: #6b7280;
+  font-size: 0.9rem;
 }
 </style>

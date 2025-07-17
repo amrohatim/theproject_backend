@@ -32,19 +32,27 @@ class LicenseUploadController extends Controller
         }
 
         // Check if user should be on this page
-        if ($user->registration_step !== 'phone_verified') {
-            // If they already have a license uploaded, redirect to dashboard
-            if ($user->registration_step === 'verified' || $user->registration_step === 'license_completed') {
-                return redirect()->route('merchant.dashboard');
-            }
-            
+        // Allow access if:
+        // 1. User has completed phone verification (registration_step = 'phone_verified')
+        // 2. User has license_completed but license is rejected or expired (needs to re-upload)
+        $allowedSteps = ['phone_verified', 'license_completed'];
+
+        if (!in_array($user->registration_step, $allowedSteps)) {
             // If they haven't completed phone verification, redirect to registration
             return redirect()->route('merchant.registration.status')
                 ->with('error', 'Please complete your registration steps first.');
         }
 
-        // Check if they already have a license (shouldn't happen, but safety check)
-        if ($merchant->license_file && $merchant->license_status !== 'rejected') {
+        // If user has license_completed status, only allow if license is rejected or expired
+        if ($user->registration_step === 'license_completed') {
+            if (!in_array($merchant->license_status, ['rejected', 'expired'])) {
+                // If license is active, pending, or checking, redirect to dashboard
+                return redirect()->route('merchant.dashboard');
+            }
+        }
+
+        // For phone_verified users, check if they already have an active license
+        if ($user->registration_step === 'phone_verified' && $merchant->license_file && !in_array($merchant->license_status, ['rejected', 'expired'])) {
             return redirect()->route('merchant.dashboard');
         }
 

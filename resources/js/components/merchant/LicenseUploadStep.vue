@@ -282,6 +282,92 @@ export default {
 .license-upload-step {
   max-width: 600px;
   margin: 0 auto;
+  padding: 1rem;
+}
+
+/* Override global styles that might interfere */
+.license-upload-step .form-group {
+  margin-bottom: 1.5rem;
+  position: relative;
+  z-index: 1;
+}
+
+.license-upload-step .form-label {
+  display: block;
+  margin-bottom: 0.5rem;
+  font-weight: 600;
+  color: #333;
+  font-size: 0.95rem;
+}
+
+.license-upload-step .form-input {
+  width: 100%;
+  padding: 12px 16px;
+  border: 2px solid #e1e5e9 !important;
+  border-radius: 8px !important;
+  font-size: 1rem;
+  transition: all 0.3s ease;
+  background: white !important;
+  box-sizing: border-box;
+  position: relative;
+  z-index: 1;
+  min-height: auto !important;
+  transform: none !important;
+  box-shadow: none !important;
+}
+
+.license-upload-step .form-input:focus {
+  outline: none !important;
+  border-color: #f59e0b !important;
+  box-shadow: 0 0 0 3px rgba(245, 158, 11, 0.1) !important;
+  transform: none !important;
+}
+
+.license-upload-step .form-input:hover {
+  border-color: #f59e0b !important;
+  background: white !important;
+  transform: none !important;
+}
+
+.license-upload-step .form-input.error {
+  border-color: #e53e3e !important;
+  box-shadow: 0 0 0 3px rgba(229, 62, 62, 0.1) !important;
+}
+
+.license-upload-step .form-button {
+  width: 100%;
+  padding: 12px 24px;
+  background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%);
+  color: white;
+  border: none;
+  border-radius: 8px;
+  font-size: 1rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 48px;
+}
+
+.license-upload-step .form-button:hover:not(:disabled) {
+  background: linear-gradient(135deg, #d97706 0%, #b45309 100%);
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(245, 158, 11, 0.3);
+}
+
+.license-upload-step .form-button:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+  transform: none;
+}
+
+.license-upload-step .error-message {
+  color: #e53e3e;
+  font-size: 0.85rem;
+  margin-top: 0.5rem;
+  text-align: left;
 }
 
 .step-header {

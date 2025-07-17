@@ -44,19 +44,37 @@
                     </a>
                 </div>
             @elseif($registrationStep === 'license_completed')
-                <i class="fas fa-hourglass-half fa-3x mb-3" style="color: var(--discord-yellow);"></i>
-                <h4 style="color: var(--discord-lightest);">Pending Admin Verification</h4>
-                <p style="color: var(--discord-light);">Your registration is complete and pending admin verification. You will be notified once approved.</p>
-
                 @if($merchant && $merchant->license_status === 'rejected')
+                    <i class="fas fa-times-circle fa-3x mb-3" style="color: var(--discord-red);"></i>
+                    <h4 style="color: var(--discord-red);">License Rejected</h4>
+                    <p style="color: var(--discord-light);">Your license has been rejected by our admin team. Please review the reason below and upload a new license.</p>
+
                     <div class="mt-3 p-3 bg-red-100 border border-red-300 rounded" style="color: var(--discord-red);">
-                        <strong>License Rejected:</strong> {{ $merchant->license_rejection_reason ?? 'Please contact support for details.' }}
+                        <strong>Rejection Reason:</strong> {{ $merchant->license_rejection_reason ?? 'Please contact support for details.' }}
                     </div>
                     <div class="mt-4">
-                        <a href="{{ route('merchant.settings.global') }}" class="discord-btn">
+                        <a href="{{ route('merchant.license.upload') }}" class="discord-btn" style="background-color: var(--discord-red);">
                             <i class="fas fa-upload me-1"></i> Upload New License
                         </a>
                     </div>
+                @elseif($merchant && $merchant->license_status === 'expired')
+                    <i class="fas fa-calendar-times fa-3x mb-3" style="color: var(--discord-gray);"></i>
+                    <h4 style="color: var(--discord-gray);">License Expired</h4>
+                    <p style="color: var(--discord-light);">Your license has expired. Please upload a renewed license to continue using the platform.</p>
+
+                    <div class="mt-4">
+                        <a href="{{ route('merchant.license.upload') }}" class="discord-btn" style="background-color: var(--discord-gray);">
+                            <i class="fas fa-upload me-1"></i> Upload Renewed License
+                        </a>
+                    </div>
+                @elseif($merchant && $merchant->license_status === 'checking')
+                    <i class="fas fa-hourglass-half fa-3x mb-3" style="color: var(--discord-yellow);"></i>
+                    <h4 style="color: var(--discord-lightest);">Pending Admin Verification</h4>
+                    <p style="color: var(--discord-light);">Your registration is complete and pending admin verification. You will be notified once approved.</p>
+                @else
+                    <i class="fas fa-hourglass-half fa-3x mb-3" style="color: var(--discord-yellow);"></i>
+                    <h4 style="color: var(--discord-lightest);">Pending Admin Verification</h4>
+                    <p style="color: var(--discord-light);">Your registration is complete and pending admin verification. You will be notified once approved.</p>
                 @endif
             @else
                 <i class="fas fa-check-circle fa-3x mb-3" style="color: var(--discord-green);"></i>

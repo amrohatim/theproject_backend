@@ -96,14 +96,14 @@
                         <label class="block text-sm font-medium text-gray-700 mb-3">Business License Document *</label>
                         <div class="border-2 border-dashed border-gray-300 rounded-lg p-8 text-center cursor-pointer hover:border-blue-400 hover:bg-blue-50/50 transition-all duration-200"
                              onclick="document.getElementById('license_file').click()" id="upload-area">
-                            <input type="file" id="license_file" name="license_file" accept=".pdf,.jpg,.jpeg,.png" class="hidden" required onchange="handleFileSelect(this)">
+                            <input type="file" id="license_file" name="license_file" accept=".pdf" class="hidden" required onchange="handleFileSelect(this)">
                             <div id="upload-content">
                                 <svg class="mx-auto w-12 h-12 text-gray-400 mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12"></path>
                                 </svg>
                                 <p class="text-lg font-medium text-gray-800 mb-2">Click to upload your license file</p>
                                 <p class="text-sm text-gray-500 mb-2">or drag and drop it here</p>
-                                <p class="text-xs text-gray-400">PDF, JPG, JPEG, PNG files only (max 10MB)</p>
+                                <p class="text-xs text-gray-400">PDF files only (max 10MB)</p>
                             </div>
                             <div id="file-selected" class="hidden">
                                 <svg class="mx-auto w-12 h-12 text-green-500 mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -219,14 +219,29 @@
 function handleFileSelect(input) {
     const file = input.files[0];
     if (file) {
+        // Validate file type - only PDF allowed
+        if (file.type !== 'application/pdf') {
+            showValidationModal('Please select a PDF file only. Other file formats are not allowed.');
+            input.value = ''; // Clear the input
+            return;
+        }
+
+        // Validate file size (10MB max)
+        const maxSize = 10 * 1024 * 1024; // 10MB in bytes
+        if (file.size > maxSize) {
+            showValidationModal('File size must be less than 10MB. Please select a smaller file.');
+            input.value = ''; // Clear the input
+            return;
+        }
+
         const uploadContent = document.getElementById('upload-content');
         const fileSelected = document.getElementById('file-selected');
         const fileName = document.getElementById('file-name');
         const fileSize = document.getElementById('file-size');
-        
+
         uploadContent.classList.add('hidden');
         fileSelected.classList.remove('hidden');
-        
+
         fileName.textContent = file.name;
         fileSize.textContent = formatFileSize(file.size);
     }
@@ -251,11 +266,32 @@ function formatFileSize(bytes) {
 }
 
 // Form submission handling
-document.getElementById('license-upload-form').addEventListener('submit', function() {
+document.getElementById('license-upload-form').addEventListener('submit', function(e) {
+    const fileInput = document.getElementById('license_file');
+    const file = fileInput.files[0];
+
+    // Validate file before submission
+    if (file) {
+        // Check file type
+        if (file.type !== 'application/pdf') {
+            e.preventDefault();
+            showValidationModal('Please select a PDF file only. Other file formats are not allowed.');
+            return;
+        }
+
+        // Check file size (10MB max)
+        const maxSize = 10 * 1024 * 1024; // 10MB in bytes
+        if (file.size > maxSize) {
+            e.preventDefault();
+            showValidationModal('File size must be less than 10MB. Please select a smaller file.');
+            return;
+        }
+    }
+
     const submitBtn = document.getElementById('submit-btn');
     const submitText = document.getElementById('submit-text');
     const submitLoading = document.getElementById('submit-loading');
-    
+
     submitBtn.disabled = true;
     submitText.classList.add('hidden');
     submitLoading.classList.remove('hidden');
@@ -279,5 +315,51 @@ document.getElementById('license_start_date').addEventListener('change', functio
 
 // Set minimum start date to today
 document.getElementById('license_start_date').min = new Date().toISOString().split('T')[0];
+
+// Modal for validation errors
+function showValidationModal(message) {
+    // Create modal if it doesn't exist
+    let modal = document.getElementById('validationModal');
+    if (!modal) {
+        modal = document.createElement('div');
+        modal.id = 'validationModal';
+        modal.className = 'fixed inset-0 bg-gray-600 bg-opacity-50 overflow-y-auto h-full w-full z-50';
+        modal.innerHTML = `
+            <div class="relative top-20 mx-auto p-5 border w-96 shadow-lg rounded-md bg-white">
+                <div class="mt-3 text-center">
+                    <div class="mx-auto flex items-center justify-center h-12 w-12 rounded-full bg-red-100">
+                        <i class="fas fa-exclamation-triangle text-red-600"></i>
+                    </div>
+                    <h3 class="text-lg font-medium text-gray-900 mt-2">File Upload Error</h3>
+                    <div class="mt-2 px-7 py-3">
+                        <p class="text-sm text-gray-500" id="modalMessage"></p>
+                    </div>
+                    <div class="items-center px-4 py-3">
+                        <button id="modalCloseBtn" class="px-4 py-2 bg-red-500 text-white text-base font-medium rounded-md w-full shadow-sm hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-red-300">
+                            OK
+                        </button>
+                    </div>
+                </div>
+            </div>
+        `;
+        document.body.appendChild(modal);
+
+        // Close modal event
+        document.getElementById('modalCloseBtn').addEventListener('click', function() {
+            modal.style.display = 'none';
+        });
+
+        // Close modal when clicking outside
+        modal.addEventListener('click', function(e) {
+            if (e.target === modal) {
+                modal.style.display = 'none';
+            }
+        });
+    }
+
+    // Show modal with message
+    document.getElementById('modalMessage').textContent = message;
+    modal.style.display = 'block';
+}
 </script>
 @endsection
