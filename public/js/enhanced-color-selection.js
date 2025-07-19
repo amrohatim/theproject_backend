@@ -126,13 +126,13 @@ class EnhancedColorSelection {
                 }
 
                 .custom-color-dropdown-trigger:hover {
-                    border-color: #6366f1;
+                    border-color: #f59e0b;
                 }
 
                 .custom-color-dropdown-trigger:focus {
                     outline: none;
-                    border-color: #6366f1;
-                    box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.1);
+                    border-color: #f59e0b;
+                    box-shadow: 0 0 0 3px rgba(245, 158, 11, 0.1);
                 }
 
                 .custom-color-dropdown-arrow {
@@ -186,8 +186,8 @@ class EnhancedColorSelection {
                 }
 
                 .color-search-input:focus {
-                    border-color: #6366f1;
-                    box-shadow: 0 0 0 2px rgba(99, 102, 241, 0.1);
+                    border-color: #f59e0b;
+                    box-shadow: 0 0 0 2px rgba(245, 158, 11, 0.1);
                 }
 
                 .color-options-container {
@@ -270,16 +270,16 @@ class EnhancedColorSelection {
                 }
 
                 .custom-color-dropdown-option:hover {
-                    background-color: #f9fafb;
-                    border-color: #6366f1;
+                    background-color: #fef3c7;
+                    border-color: #f59e0b;
                     transform: translateY(-1px);
                     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
                 }
 
                 .custom-color-dropdown-option.selected {
-                    background-color: #eef2ff;
-                    border-color: #6366f1;
-                    box-shadow: 0 0 0 2px rgba(99, 102, 241, 0.2);
+                    background-color: #fef3c7;
+                    border-color: #f59e0b;
+                    box-shadow: 0 0 0 2px rgba(245, 158, 11, 0.2);
                 }
 
                 .color-swatch {
@@ -367,8 +367,8 @@ class EnhancedColorSelection {
                 }
 
                 .dark .color-search-input:focus {
-                    border-color: #6366f1;
-                    box-shadow: 0 0 0 2px rgba(99, 102, 241, 0.2);
+                    border-color: #f59e0b;
+                    box-shadow: 0 0 0 2px rgba(245, 158, 11, 0.2);
                 }
 
                 .dark .custom-color-dropdown-option {
@@ -378,14 +378,14 @@ class EnhancedColorSelection {
 
                 .dark .custom-color-dropdown-option:hover {
                     background-color: #4b5563;
-                    border-color: #6366f1;
+                    border-color: #f59e0b;
                     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
                 }
 
                 .dark .custom-color-dropdown-option.selected {
-                    background-color: #4338ca;
-                    border-color: #6366f1;
-                    box-shadow: 0 0 0 2px rgba(99, 102, 241, 0.3);
+                    background-color: #92400e;
+                    border-color: #f59e0b;
+                    box-shadow: 0 0 0 2px rgba(245, 158, 11, 0.3);
                 }
 
                 .dark .color-name {
@@ -418,6 +418,45 @@ class EnhancedColorSelection {
                     pointer-events: none;
                     z-index: -1;
                 }
+
+                /* Enhanced form field styling for better consistency */
+                .color-item .vue-form-control {
+                    transition: all 0.2s ease;
+                }
+
+                .color-item .vue-form-control:focus {
+                    border-color: #f59e0b;
+                    box-shadow: 0 0 0 2px rgba(245, 158, 11, 0.1);
+                }
+
+                /* Stock allocation form improvements */
+                .color-stock-input {
+                    min-width: 0; /* Prevent flex item overflow */
+                }
+
+                /* Color code input field improvements */
+                .color-item input[name*="[color_code]"] {
+                    font-family: 'Courier New', monospace;
+                    font-size: 14px;
+                }
+
+                /* Responsive grid improvements for color form sections */
+                @media (max-width: 640px) {
+                    .color-item .grid.grid-cols-2 {
+                        grid-template-columns: 1fr;
+                        gap: 1rem;
+                    }
+
+                    .color-item .flex.gap-2 {
+                        flex-direction: column;
+                        gap: 0.5rem;
+                    }
+
+                    .color-item .flex.gap-2 input[type="color"] {
+                        width: 100%;
+                        height: 40px;
+                    }
+                }
             `;
             document.head.appendChild(style);
         }
@@ -443,6 +482,30 @@ class EnhancedColorSelection {
 
                 // Update color swatch if it exists
                 this.updateColorSwatch(colorCodeInput, hexCode);
+            }
+
+            // Update the color picker input (HTML5 color input)
+            const colorPickerInput = colorItem.querySelector('input[type="color"]');
+            if (colorPickerInput) {
+                colorPickerInput.value = hexCode;
+
+                // Trigger change event to ensure any listeners are notified
+                colorPickerInput.dispatchEvent(new Event('change', { bubbles: true }));
+            }
+
+            // Update the visual color preview in the header
+            const colorPreview = colorItem.querySelector('.w-6.h-6.rounded-full');
+            if (colorPreview) {
+                colorPreview.style.backgroundColor = hexCode;
+            }
+
+            // Update any Coloris color picker instances
+            if (window.Coloris && colorCodeInput) {
+                // Force Coloris to update its internal state
+                colorCodeInput.dispatchEvent(new Event('coloris:pick', {
+                    bubbles: true,
+                    detail: { color: hexCode }
+                }));
             }
         }
     }

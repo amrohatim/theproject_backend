@@ -33,6 +33,7 @@ class Product extends Model
         'rating',
         'is_available',
         'is_multi_branch',
+        'display_order',
     ];
 
     /**
@@ -48,6 +49,7 @@ class Product extends Model
         'rating' => 'float',
         'is_available' => 'boolean',
         'is_multi_branch' => 'boolean',
+        'display_order' => 'integer',
     ];
 
     /**

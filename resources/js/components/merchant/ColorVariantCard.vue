@@ -18,10 +18,11 @@
           </h4>
         </div>
         <div class="flex items-center gap-2">
-          <button v-if="!isDefault" 
-                  type="button" 
-                  class="vue-btn vue-btn-secondary text-sm"
+          <button v-if="!isDefault"
+                  type="button"
+                  class="vue-btn-blue-solid text-sm font-medium"
                   @click="$emit('set-default', index)">
+            <i class="fas fa-star mr-2"></i>
             Set as Default
           </button>
           <button type="button" 
@@ -104,42 +105,123 @@
               </select>
             </div>
 
-            <div class="space-y-2">
-              <label class="block vue-text-sm">Color Code</label>
-              <div class="flex gap-2">
-                <input type="color" 
-                       :value="color.color_code || '#000000'"
-                       @input="updateColor('color_code', $event.target.value)"
-                       class="w-12 h-10 p-1 border border-slate-300 rounded-lg">
-                <input type="text" 
-                       :value="color.color_code"
-                       @input="updateColor('color_code', $event.target.value)"
-                       placeholder="#000000"
-                       class="vue-form-control flex-1">
+            <div class="space-y-2 mt-2">
+              <label class="block vue-text-sm font-medium">
+                <i class="fas fa-palette w-4 h-4 mr-2 text-blue-500"></i>
+                Color Code
+              </label>
+              <div class="flex gap-3">
+                <div class="relative">
+                  <input  type="color"
+                         :value="color.color_code || '#000000'"
+                         @input="updateColor('color_code', $event.target.value)"
+                         class="w-14 h-12  p-1 border-2 border-blue-200 rounded-md shadow-sm hover:border-blue-400 focus:border-blue-500 focus:ring-2 focus:ring-blue-200 transition-all duration-200 cursor-pointer">
+                  <div class="absolute -bottom-1 -right-1 w-4 h-4 bg-blue-500 rounded-full flex items-center justify-center">
+                    <i class="fas fa-eye-dropper  text-white text-xs"></i>
+                  </div>
+                </div>
+                <div class="flex-1 relative">
+                  <input type="text"
+                         :value="color.color_code"
+                         @input="updateColor('color_code', $event.target.value)"
+                         placeholder="#000000"
+                         class="vue-form-control-enhanced-blue w-full font-mono text-sm tracking-wider">
+                </div>
               </div>
             </div>
           </div>
 
-          <div class="grid grid-cols-2 gap-4">
+          <div class="grid grid-cols-3 gap-4">
             <div class="space-y-2">
-              <label class="block vue-text-sm">Price Adjustment</label>
+              <div class="flex items-center justify-between">
+                <label class="block vue-text-sm font-medium">
+                  <i class="fas fa-coins w-4 h-4 mr-2 text-blue-500"></i>
+                  Price 
+                </label>
+                
+              </div>
               <div class="relative">
-                <i class="fas fa-dollar-sign absolute left-3 top-1/2 transform -translate-y-1/2 w-4 h-4 text-slate-400"></i>
-                <input type="number" 
-                       step="0.01" 
+                <div class="absolute left-3 top-1/2 transform -translate-y-1/2 flex items-center">
+                 <span class="text-xs text-slate-500 bg-slate-100 px-2 py-1 rounded">AED</span>
+                </div>
+                <input type="number"
+                       step="1"
                        :value="color.price_adjustment"
                        @input="updateColor('price_adjustment', parseFloat($event.target.value) || 0)"
-                       class="vue-form-control pl-10">
+                       class="vue-form-control-enhanced-blue pl-8 text-right font-medium"
+                       placeholder="0.00">
+              </div>
+              <p class="text-xs text-slate-500 mt-1">
+                <i class="fas fa-info-circle mr-1"></i>
+                Additional cost for this color variant
+              </p>
+            </div>
+
+            <div class="space-y-2">
+              <label class="block vue-text-xs font-medium">
+                <i class="fas fa-boxes w-4 h-4 mr-2 text-blue-500"></i>
+                Stock 
+              </label>
+              <div class="relative">
+                <input type="number"
+                       :value="color.stock"
+                       @input="updateColor('stock', parseInt($event.target.value) || 0)"
+                       min="0"
+                       class="vue-form-control-enhanced-blue pr-16 text-center font-semibold"
+                       placeholder="0">
+                <div class="absolute right-3 top-1/2 transform -translate-y-1/2">
+                  <span class="text-xs text-slate-500 bg-slate-100 px-2 py-1 rounded">units</span>
+                </div>
+              </div>
+              <div class="flex items-center justify-between text-xs mt-1">
+
+                <span class="text-blue-600 font-medium" v-if="color.stock > 0">
+                  {{ color.stock }} in stock
+                </span>
+                <span class="text-red-500 font-medium" v-else>
+                  Out of stock
+                </span>
+              </div>
+
+              <!-- Stock Correction Feedback -->
+              <div v-if="showStockCorrection"
+                   class="mt-2 p-2 bg-amber-50 border border-amber-200 rounded-md">
+                <div class="flex items-start gap-2">
+                  <i class="fas fa-exclamation-triangle text-amber-500 text-sm mt-0.5"></i>
+                  <div class="flex-1">
+                    <p class="text-xs text-amber-700 font-medium">Stock Auto-Corrected</p>
+                    <p class="text-xs text-amber-600 mt-1">{{ stockCorrectionMessage }}</p>
+                  </div>
+                  <button type="button"
+                          @click="hideStockCorrectionFeedback"
+                          class="text-amber-400 hover:text-amber-600 text-xs">
+                    <i class="fas fa-times"></i>
+                  </button>
+                </div>
               </div>
             </div>
 
             <div class="space-y-2">
-              <label class="block vue-text-sm">Stock Allocation</label>
-              <input type="number" 
-                     :value="color.stock"
-                     @input="updateColor('stock', parseInt($event.target.value) || 0)"
-                     min="0"
-                     class="vue-form-control color-stock-input">
+              <label class="block vue-text-sm font-medium">
+                <i class="fas fa-sort-numeric-down w-4 h-4 mr-2 text-blue-500"></i>
+                Display Order
+              </label>
+              <div class="relative">
+                <input type="number"
+                       :value="color.display_order || 0"
+                       @input="updateColor('display_order', parseInt($event.target.value) || 0)"
+                       min="0"
+                       class="vue-form-control-enhanced-blue text-center font-semibold text-lg"
+                       title="Order in which this color variant appears"
+                       placeholder="0">
+                <div class="absolute right-3 top-1/2 transform -translate-y-1/2">
+                  <i class="fas fa-arrows-alt-v text-blue-400 text-sm"></i>
+                </div>
+              </div>
+              <p class="text-xs text-slate-500 mt-1">
+                <i class="fas fa-info-circle mr-1"></i>
+                Lower numbers appear first
+              </p>
             </div>
           </div>
         </div>
@@ -210,11 +292,20 @@
       <!-- Size Management Section -->
       <div class="col-span-full">
         <SizeManagement
-          v-if="color.id"
+          v-if="shouldShowSizeManagement"
+          :key="`size-mgmt-${index}-${color.id || 'new'}`"
           :color-id="color.id"
           :product-id="productId"
+          :color-stock="parseInt(color.stock) || 0"
           @sizes-updated="handleSizesUpdated"
+          @save-color-first="handleSaveColorFirst"
         />
+        <div v-else-if="!color.name || !color.stock" class="text-center py-8" style="border-top: 1px solid var(--gray-200); margin-top: 1.5rem; padding-top: 1.5rem;">
+          <i class="fas fa-info-circle w-6 h-6 mb-2" style="color: var(--gray-400);"></i>
+          <p class="text-sm" style="color: var(--gray-600);">
+            Set color name and stock quantity to manage sizes
+          </p>
+        </div>
         <div v-else class="text-center py-8" style="border-top: 1px solid var(--gray-200); margin-top: 1.5rem; padding-top: 1.5rem;">
           <i class="fas fa-info-circle w-6 h-6 mb-2" style="color: var(--gray-400);"></i>
           <p class="text-sm" style="color: var(--gray-600);">
@@ -251,9 +342,17 @@ export default {
     productId: {
       type: [String, Number],
       required: true
+    },
+    generalStock: {
+      type: Number,
+      default: 0
+    },
+    allColors: {
+      type: Array,
+      default: () => []
     }
   },
-  emits: ['update', 'remove', 'set-default', 'image-upload', 'sizes-updated'],
+  emits: ['update', 'remove', 'set-default', 'image-upload', 'sizes-updated', 'stock-corrected'],
   setup(props, { emit }) {
     const fileInput = ref(null)
     const imageError = ref('')
@@ -320,10 +419,74 @@ export default {
       return null
     })
 
+    // Stock validation computed properties
+    const otherColorsStock = computed(() => {
+      return props.allColors
+        .filter((_, index) => index !== props.index)
+        .reduce((total, color) => total + (parseInt(color.stock) || 0), 0)
+    })
+
+    const availableStock = computed(() => {
+      return Math.max(0, props.generalStock - otherColorsStock.value)
+    })
+
+    const isStockExceeded = computed(() => {
+      return (parseInt(props.color.stock) || 0) > availableStock.value
+    })
+
+    // Computed property to determine when to show size management
+    const shouldShowSizeManagement = computed(() => {
+      // Show size management if:
+      // 1. Color has an ID (existing color), OR
+      // 2. Color has both name and stock > 0 (new color with required fields set)
+      return props.color.id || (props.color.name && (parseInt(props.color.stock) || 0) > 0)
+    })
+
+    // Reactive refs for user feedback
+    const stockCorrectionMessage = ref('')
+    const showStockCorrection = ref(false)
+
     // Methods
     const updateColor = (field, value) => {
-      const updatedColor = { ...props.color, [field]: value }
+      let finalValue = value
+
+      // Special handling for stock field with validation and auto-correction
+      if (field === 'stock') {
+        const stockValue = parseInt(value) || 0
+        const maxAllowed = availableStock.value
+
+        if (stockValue > maxAllowed) {
+          finalValue = maxAllowed
+          showStockCorrectionFeedback(stockValue, maxAllowed)
+          emit('stock-corrected', {
+            colorIndex: props.index,
+            attempted: stockValue,
+            corrected: maxAllowed,
+            available: maxAllowed
+          })
+        } else {
+          // Clear any previous correction message
+          hideStockCorrectionFeedback()
+        }
+      }
+
+      const updatedColor = { ...props.color, [field]: finalValue }
       emit('update', props.index, updatedColor)
+    }
+
+    const showStockCorrectionFeedback = (attempted, corrected) => {
+      stockCorrectionMessage.value = `Stock automatically adjusted from ${attempted} to ${corrected} units. Available stock: ${availableStock.value} units.`
+      showStockCorrection.value = true
+
+      // Auto-hide the message after 5 seconds
+      setTimeout(() => {
+        hideStockCorrectionFeedback()
+      }, 5000)
+    }
+
+    const hideStockCorrectionFeedback = () => {
+      showStockCorrection.value = false
+      stockCorrectionMessage.value = ''
     }
 
     const getColorCode = (colorName) => {
@@ -340,12 +503,10 @@ export default {
 
     const selectColor = (colorName) => {
       updateColor('name', colorName)
-      // Auto-update color code if not already set
-      if (!props.color.color_code) {
-        const colorCode = getColorCode(colorName)
-        if (colorCode) {
-          updateColor('color_code', colorCode)
-        }
+      // Always auto-update color code when a color is selected
+      const colorCode = getColorCode(colorName)
+      if (colorCode) {
+        updateColor('color_code', colorCode)
       }
       showColorDropdown.value = false
     }
@@ -414,6 +575,49 @@ export default {
       emit('sizes-updated', props.index, sizes)
     }
 
+    const handleSaveColorFirst = async ({ resolve, reject }) => {
+      try {
+        // Validate that the color has required fields
+        if (!props.color.name || !props.color.stock) {
+          reject(new Error('Color must have name and stock before adding sizes'))
+          return
+        }
+
+        // Call the API to save the color
+        const response = await window.axios.post('/merchant/api/colors/save', {
+          product_id: props.productId,
+          name: props.color.name,
+          color_code: props.color.color_code || '#000000',
+          price_adjustment: props.color.price_adjustment || 0,
+          stock: props.color.stock,
+          display_order: props.color.display_order || props.index,
+          is_default: props.color.is_default || false
+        })
+
+        if (response.data.success) {
+          // Update the color with the new ID from the server
+          const savedColor = response.data.color
+          
+          // Update all relevant fields from the server response
+          Object.keys(savedColor).forEach(key => {
+            updateColor(key, savedColor[key])
+          })
+
+          // Force a re-render by updating the key for SizeManagement component
+          // This ensures the component re-mounts with the new colorId
+          const sizeManagementKey = `size-mgmt-${props.index}-${savedColor.id}`
+          
+          // Resolve with the saved color data
+          resolve(savedColor)
+        } else {
+          reject(new Error(response.data.message || 'Failed to save color'))
+        }
+      } catch (error) {
+        console.error('Error saving color:', error)
+        reject(error)
+      }
+    }
+
     return {
       fileInput,
       imageError,
@@ -423,6 +627,12 @@ export default {
       filteredColorOptions,
       hasImage,
       imagePreviewUrl,
+      otherColorsStock,
+      availableStock,
+      isStockExceeded,
+      shouldShowSizeManagement,
+      stockCorrectionMessage,
+      showStockCorrection,
       updateColor,
       getColorCode,
       toggleColorDropdown,
@@ -431,7 +641,10 @@ export default {
       handleFileSelect,
       handleDrop,
       handleImageError,
-      handleSizesUpdated
+      handleSizesUpdated,
+      handleSaveColorFirst,
+      showStockCorrectionFeedback,
+      hideStockCorrectionFeedback
     }
   }
 }
@@ -440,6 +653,110 @@ export default {
 <style scoped>
 .color-item {
   transition: all 0.3s ease;
+}
+
+/* Enhanced Form Controls */
+.vue-form-control-enhanced {
+  width: 100%;
+  padding: 0.75rem;
+  border: 2px solid #e5e7eb;
+  border-radius: 0.75rem;
+  background-color: white;
+  color: #1f2937;
+  font-size: 0.875rem;
+  transition: all 0.2s ease;
+  box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1);
+}
+
+.vue-form-control-enhanced:focus {
+  outline: none;
+  border-color: #f59e0b;
+  box-shadow: 0 0 0 3px rgba(245, 158, 11, 0.1), 0 1px 3px 0 rgba(0, 0, 0, 0.1);
+  background-color: #fffbeb;
+}
+
+.vue-form-control-enhanced:hover {
+  border-color: #d1d5db;
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+}
+
+/* Enhanced Form Controls with Blue Theme */
+.vue-form-control-enhanced-blue {
+  width: 100%;
+  padding: 0.75rem;
+  border: 2px solid #e5e7eb;
+  border-radius: 0.75rem;
+  background-color: white;
+  color: #1f2937;
+  font-size: 0.875rem;
+  transition: all 0.2s ease;
+  box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1);
+}
+
+.vue-form-control-enhanced-blue:focus {
+  outline: none;
+  border-color: #3b82f6;
+  box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1), 0 1px 3px 0 rgba(0, 0, 0, 0.1);
+  background-color: #eff6ff;
+}
+
+.vue-form-control-enhanced-blue:hover {
+  border-color: #3b82f6;
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+}
+
+/* Enhanced blue Button */
+.vue-btn-blue {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.5rem 1rem;
+  background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%);
+  color: white;
+  border: none;
+  border-radius: 0.5rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  box-shadow: 0 2px 4px rgba(245, 158, 11, 0.2);
+}
+
+.vue-btn-blue:hover {
+  background: linear-gradient(135deg, #d97706 0%, #b45309 100%);
+  transform: translateY(-1px);
+  box-shadow: 0 4px 8px rgba(245, 158, 11, 0.3);
+}
+
+.vue-btn-blue:active {
+  transform: translateY(0);
+  box-shadow: 0 2px 4px rgba(245, 158, 11, 0.2);
+}
+
+/* Solid Blue Button */
+.vue-btn-blue-solid {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.5rem 1rem;
+  background: #3b82f6;
+  color: white;
+  border: none;
+  border-radius: 0.5rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  box-shadow: 0 2px 4px rgba(59, 130, 246, 0.2);
+}
+
+.vue-btn-blue-solid:hover {
+  background: #2563eb;
+  transform: translateY(-1px);
+  box-shadow: 0 4px 8px rgba(59, 130, 246, 0.3);
+}
+
+.vue-btn-blue-solid:active {
+  transform: translateY(0);
+  box-shadow: 0 2px 4px rgba(59, 130, 246, 0.2);
 }
 
 /* Color Selection Interface Styles */
@@ -524,6 +841,8 @@ export default {
   margin-top: 0.25rem;
   max-height: 20rem;
   overflow: hidden;
+  min-width: 320px;
+  width: max-content;
 }
 
 .color-search {
@@ -548,11 +867,21 @@ export default {
 
 .color-grid {
   display: grid;
-  grid-template-columns: repeat(3, 1fr);
+  grid-template-columns: repeat(4, 1fr);
   gap: 0.5rem;
   padding: 0.75rem;
   max-height: 15rem;
   overflow-y: auto;
+}
+
+@media (max-width: 768px) {
+  .color-grid {
+    grid-template-columns: repeat(3, 1fr);
+  }
+
+  .color-dropdown {
+    min-width: 280px;
+  }
 }
 
 .color-option {
@@ -568,16 +897,16 @@ export default {
 }
 
 .color-option:hover {
-  border-color: var(--primary-blue);
-  background-color: var(--primary-50);
+  border-color: #3b82f6;
+  background-color: #eff6ff;
   transform: translateY(-1px);
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
 }
 
 .color-option.selected {
-  border-color: var(--primary-blue);
-  background-color: var(--primary-100);
-  box-shadow: 0 0 0 2px var(--primary-blue-light);
+  border-color: #3b82f6;
+  background-color: #eff6ff;
+  box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.2);
 }
 
 .color-option .color-swatch {

@@ -577,19 +577,36 @@
                                     </div>
                                 </div>
 
-                                <div class="space-y-2">
-                                    <label for="stock" class="block vue-text-sm">
-                                        Total Stock <span class="text-red-500">*</span>
-                                    </label>
-                                    <div class="relative">
-                                        <i class="fas fa-warehouse absolute left-3 top-1/2 transform -translate-y-1/2 w-4 h-4 text-slate-400"></i>
-                                        <input type="number" name="stock" id="stock" min="0" value="{{ old('stock', $product->stock) }}"
-                                               class="vue-form-control pl-10 @error('stock') border-red-500 @enderror" required>
+                                <div class="grid grid-cols-2 gap-4">
+                                    <div class="space-y-2">
+                                        <label for="stock" class="block vue-text-sm">
+                                            Total Stock <span class="text-red-500">*</span>
+                                        </label>
+                                        <div class="relative">
+                                            <i class="fas fa-warehouse absolute left-3 top-1/2 transform -translate-y-1/2 w-4 h-4 text-slate-400"></i>
+                                            <input type="number" name="stock" id="stock" min="0" value="{{ old('stock', $product->stock) }}"
+                                                   class="vue-form-control pl-10 @error('stock') border-red-500 @enderror" required>
+                                        </div>
+                                        <p class="text-xs text-slate-500">Total inventory to be allocated across color variants</p>
+                                        @error('stock')
+                                            <div class="text-red-500 text-xs mt-1">{{ $message }}</div>
+                                        @enderror
                                     </div>
-                                    <p class="text-xs text-slate-500">Total inventory to be allocated across color variants</p>
-                                    @error('stock')
-                                        <div class="text-red-500 text-xs mt-1">{{ $message }}</div>
-                                    @enderror
+
+                                    <div class="space-y-2">
+                                        <label for="display_order" class="block vue-text-sm">
+                                            Display Order
+                                        </label>
+                                        <div class="relative">
+                                            <i class="fas fa-sort-numeric-up absolute left-3 top-1/2 transform -translate-y-1/2 w-4 h-4 text-slate-400"></i>
+                                            <input type="number" name="display_order" id="display_order" min="0" value="{{ old('display_order', $product->display_order ?? 0) }}"
+                                                   class="vue-form-control pl-10 @error('display_order') border-red-500 @enderror">
+                                        </div>
+                                        <p class="text-xs text-slate-500">Order in which this product appears in listings</p>
+                                        @error('display_order')
+                                            <div class="text-red-500 text-xs mt-1">{{ $message }}</div>
+                                        @enderror
+                                    </div>
                                 </div>
 
                                 <div class="flex items-center space-x-2">
@@ -711,12 +728,12 @@
                                             </div>
                                         </div>
 
-                                        <div class="grid grid-cols-2 gap-4">
+                                        <div class="grid grid-cols-3 gap-4">
                                             <div class="space-y-2">
                                                 <label class="block vue-text-sm">Price Adjustment</label>
                                                 <div class="relative">
                                                     <i class="fas fa-dollar-sign absolute left-3 top-1/2 transform -translate-y-1/2 w-4 h-4 text-slate-400"></i>
-                                                    <input type="number" step="0.01" name="colors[{{ $index }}][price_adjustment]" value="{{ $color->price_adjustment }}"
+                                                    <input type="number" step="1" name="colors[{{ $index }}][price_adjustment]" value="{{ $color->price_adjustment }}"
                                                            class="vue-form-control pl-10">
                                                 </div>
                                             </div>
@@ -726,9 +743,13 @@
                                                 <input type="number" name="colors[{{ $index }}][stock]" value="{{ $color->stock }}" min="0"
                                                        class="vue-form-control color-stock-input">
                                             </div>
-                                        </div>
 
-                                        <input type="hidden" name="colors[{{ $index }}][display_order]" value="{{ $color->display_order }}">
+                                            <div class="space-y-2">
+                                                <label class="block vue-text-sm">Display Order</label>
+                                                <input type="number" name="colors[{{ $index }}][display_order]" value="{{ $color->display_order }}" min="0"
+                                                       class="vue-form-control" title="Order in which this color variant appears">
+                                            </div>
+                                        </div>
                                     </div>
                                     <!-- Image Upload -->
                                     <div class="space-y-4">
@@ -865,7 +886,7 @@
                                             </div>
                                         </div>
 
-                                        <div class="grid grid-cols-2 gap-4">
+                                        <div class="grid grid-cols-3 gap-4">
                                             <div class="space-y-2">
                                                 <label class="block vue-text-sm">Price Adjustment</label>
                                                 <div class="relative">
@@ -880,9 +901,13 @@
                                                 <input type="number" name="colors[0][stock]" value="0" min="0"
                                                        class="vue-form-control color-stock-input">
                                             </div>
-                                        </div>
 
-                                        <input type="hidden" name="colors[0][display_order]" value="0">
+                                            <div class="space-y-2">
+                                                <label class="block vue-text-sm">Display Order</label>
+                                                <input type="number" name="colors[0][display_order]" value="0" min="0"
+                                                       class="vue-form-control" title="Order in which this color variant appears">
+                                            </div>
+                                        </div>
                                     </div>
                                     <!-- Image Upload -->
                                     <div class="space-y-4">
@@ -1242,12 +1267,12 @@ function createNewColorFormHTML(index) {
                             </div>
                         </div>
 
-                        <div class="grid grid-cols-2 gap-4">
+                        <div class="grid grid-cols-3 gap-4">
                             <div class="space-y-2">
                                 <label class="block vue-text-sm">Price Adjustment</label>
                                 <div class="relative">
                                     <i class="fas fa-dollar-sign absolute left-3 top-1/2 transform -translate-y-1/2 w-4 h-4 text-slate-400"></i>
-                                    <input type="number" step="0.01" name="colors[${index}][price_adjustment]" value="0"
+                                    <input type="number" step="1" name="colors[${index}][price_adjustment]" value="0"
                                            class="vue-form-control pl-10">
                                 </div>
                             </div>
@@ -1257,9 +1282,13 @@ function createNewColorFormHTML(index) {
                                 <input type="number" name="colors[${index}][stock]" value="0" min="0"
                                        class="vue-form-control color-stock-input">
                             </div>
-                        </div>
 
-                        <input type="hidden" name="colors[${index}][display_order]" value="${index}">
+                            <div class="space-y-2">
+                                <label class="block vue-text-sm">Display Order</label>
+                                <input type="number" name="colors[${index}][display_order]" value="${index}" min="0"
+                                       class="vue-form-control" title="Order in which this color variant appears">
+                            </div>
+                        </div>
                     </div>
 
                     <!-- Image Upload -->

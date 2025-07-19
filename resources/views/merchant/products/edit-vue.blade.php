@@ -37,8 +37,26 @@
 @vite(['resources/js/product-edit.js'])
 
 <script>
-// Add CSRF token to axios defaults for Vue app
-window.axios.defaults.headers.common['X-CSRF-TOKEN'] = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
+// Ensure axios is available before configuring it
+document.addEventListener('DOMContentLoaded', function() {
+    // Wait for axios to be available
+    const waitForAxios = () => {
+        if (window.axios && window.axios.defaults) {
+            // Add CSRF token to axios defaults for Vue app
+            const csrfTokenElement = document.querySelector('meta[name="csrf-token"]');
+            if (csrfTokenElement) {
+                window.axios.defaults.headers.common['X-CSRF-TOKEN'] = csrfTokenElement.getAttribute('content');
+            } else {
+                console.warn('CSRF token meta tag not found');
+            }
+        } else {
+            // Retry after a short delay
+            setTimeout(waitForAxios, 50);
+        }
+    };
+
+    waitForAxios();
+});
 
 // Add any global configuration needed for the Vue app
 window.productEditConfig = {

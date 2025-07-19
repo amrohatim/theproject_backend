@@ -130,23 +130,7 @@ class ProductController extends Controller
             ->orderBy('name')
             ->get();
 
-        // Get user's branches
-        $user = Auth::user();
-        $branches = $user->branches()->where('status', 'active')->get();
-
-        // If no branches exist, we'll create one in the store method
-        if ($branches->isEmpty()) {
-            $merchant = $user->merchantRecord;
-            $branchName = $merchant ? $merchant->business_name : $user->name . "'s Store";
-            $branches = collect([
-                (object) [
-                    'id' => 'auto',
-                    'name' => $branchName . ' (Auto-created)',
-                ]
-            ]);
-        }
-
-        return view('merchant.products.create', compact('parentCategories', 'branches'));
+        return view('merchant.products.create', compact('parentCategories'));
     }
 
     /**
@@ -157,7 +141,7 @@ class ProductController extends Controller
         $request->validate([
             'name' => 'required|string|max:255',
             'category_id' => 'required|exists:categories,id',
-            'branch_id' => 'required|exists:branches,id',
+            'branch_id' => 'nullable|exists:branches,id',
             'price' => 'required|numeric|min:0',
             'original_price' => 'nullable|numeric|min:0',
             'stock' => 'required|integer|min:0',
@@ -205,8 +189,8 @@ class ProductController extends Controller
         $data['is_available'] = $request->has('is_available') ? true : false;
         $data['user_id'] = Auth::id();
 
-        // Handle branch assignment
-        if ($request->branch_id === 'auto') {
+        // Handle branch assignment - auto-create if no branch is provided
+        if (!$request->branch_id || $request->branch_id === 'auto') {
             // Get or create a branch for the merchant
             $user = Auth::user();
             $userBranch = $user->branches()->first();
@@ -517,7 +501,7 @@ class ProductController extends Controller
         $request->validate([
             'name' => 'required|string|max:255',
             'category_id' => 'required|exists:categories,id',
-            'branch_id' => 'required|exists:branches,id',
+            'branch_id' => 'nullable|exists:branches,id',
             'price' => 'required|numeric|min:0',
             'original_price' => 'nullable|numeric|min:0',
             'stock' => 'required|integer|min:0',
@@ -576,11 +560,11 @@ class ProductController extends Controller
         // Update basic product information
         $product->update($data);
 
-        // Clear existing related data (except sizes - they will be managed intelligently)
+        // Clear existing related data (except colors - they will be managed intelligently)
         $product->specifications()->delete();
-        $product->colors()->delete();
+        // Note: We don't delete colors here anymore - they will be preserved and managed intelligently
         // Note: We don't delete sizes here anymore - they will be preserved and managed in processColorSizeAllocations
-        ProductColorSize::where('product_id', $product->id)->delete();
+        // Note: We don't delete ProductColorSize records here anymore - they will be managed safely with updateOrCreate
 
         // Validate that only one color is marked as default
         $defaultCount = 0;
@@ -596,89 +580,25 @@ class ProductController extends Controller
                 ->withErrors(['colors' => 'Only one color can be marked as default.']);
         }
 
-        // Process colors with their images (same logic as store method)
-        $defaultColorImage = null;
-        $hasDefaultColor = false;
+        // Process colors intelligently - update existing, create new, delete removed
+        $this->processColorsIntelligently($request, $product);
 
-        foreach ($request->colors as $index => $colorData) {
-            $isDefault = isset($colorData['is_default']) ? true : false;
-
-            // If this is marked as default or no default has been set yet
-            if ($isDefault) {
-                $hasDefaultColor = true;
-            }
-
-            // Handle color image upload
-            $colorImagePath = null;
-            if ($request->hasFile("color_images.{$index}")) {
-                try {
-                    $image = $request->file("color_images.{$index}");
-
-                    // Validate image
-                    if (!$image->isValid()) {
-                        return redirect()->back()
-                            ->withInput()
-                            ->withErrors(["color_images.{$index}" => 'The uploaded color image is corrupted or invalid.']);
-                    }
-
-                    // Generate unique filename
-                    $imageName = time() . '_' . Str::random(10) . '.' . $image->getClientOriginalExtension();
-
-                    // Store the image
-                    $colorImagePath = $image->storeAs('products/colors', $imageName, 'public');
-
-                    if (!$colorImagePath) {
-                        return redirect()->back()
-                            ->withInput()
-                            ->withErrors(["color_images.{$index}" => 'Failed to upload color image. Please try again.']);
-                    }
-
-                    // Sync to public storage
-                    ImageHelper::syncUploadedImage($colorImagePath);
-
-                    // Set as default product image if this is the default color
-                    if ($isDefault) {
-                        $defaultColorImage = $colorImagePath;
-                    }
-
-                } catch (\Exception $e) {
-                    \Log::error('Color image upload failed: ' . $e->getMessage());
-                    return redirect()->back()
-                        ->withInput()
-                        ->withErrors(["color_images.{$index}" => 'Failed to upload color image. Please try again.']);
-                }
-            } else {
-                // Use existing image from hidden input if available
-                if (isset($colorData['image']) && !empty($colorData['image'])) {
-                    $colorImagePath = $colorData['image'];
-                    if ($isDefault) {
-                        $defaultColorImage = $colorData['image'];
-                    }
-                }
-            }
-
-            // Create the color
-            $color = ProductColor::create([
-                'product_id' => $product->id,
-                'name' => $colorData['name'],
-                'color_code' => $colorData['color_code'] ?? null,
-                'image' => $colorImagePath,
-                'price_adjustment' => $colorData['price_adjustment'] ?? 0,
-                'stock' => $colorData['stock'] ?? 0,
-                'display_order' => $colorData['display_order'] ?? $index,
-                'is_default' => $isDefault,
-            ]);
-        }
+        // Get the default color image for the product
+        $defaultColor = $product->colors()->where('is_default', true)->first();
+        $defaultColorImage = $defaultColor ? $defaultColor->image : null;
 
         // Set the default color image as the main product image
         if ($defaultColorImage) {
             $product->update(['image' => $defaultColorImage]);
-        } elseif (!$hasDefaultColor && $request->colors) {
-            // If no default was explicitly set, use the first color's image
-            $firstColor = ProductColor::where('product_id', $product->id)->first();
+        } else {
+            // If no default color has an image, use the first color's image
+            $firstColor = $product->colors()->orderBy('display_order')->first();
             if ($firstColor && $firstColor->image) {
                 $product->update(['image' => $firstColor->image]);
-                $firstColor->update(['is_default' => true]);
+                // Set first color as default if no default is set
+                if (!$product->colors()->where('is_default', true)->exists()) {
+                    $firstColor->update(['is_default' => true]);
+                }
             }
         }
 
@@ -855,16 +775,20 @@ class ProductController extends Controller
                     'is_default' => $sizeData['is_default'] ?? false,
                 ]);
 
-                // Create the color-size combination
+                // Create or update the color-size combination safely
                 if ($sizeData['stock'] > 0) {
-                    ProductColorSize::create([
-                        'product_id' => $product->id,
-                        'product_color_id' => $color->id,
-                        'product_size_id' => $size->id,
-                        'stock' => $sizeData['stock'],
-                        'price_adjustment' => $sizeData['price_adjustment'] ?? 0,
-                        'is_available' => true,
-                    ]);
+                    ProductColorSize::updateOrCreate(
+                        [
+                            'product_id' => $product->id,
+                            'product_color_id' => $color->id,
+                            'product_size_id' => $size->id,
+                        ],
+                        [
+                            'stock' => $sizeData['stock'],
+                            'price_adjustment' => $sizeData['price_adjustment'] ?? 0,
+                            'is_available' => true,
+                        ]
+                    );
                 }
             }
         }
@@ -907,19 +831,120 @@ class ProductController extends Controller
                     'is_default' => isset($sizeData['is_default']) ? true : false,
                 ]);
 
-                // Create the color-size combination if stock is provided and > 0
+                // Create or update the color-size combination safely if stock is provided and > 0
                 $stock = isset($sizeData['stock']) ? (int)$sizeData['stock'] : 0;
                 if ($stock > 0) {
-                    ProductColorSize::create([
-                        'product_id' => $product->id,
-                        'product_color_id' => $color->id,
-                        'product_size_id' => $size->id,
-                        'stock' => $stock,
-                        'price_adjustment' => $sizeData['price_adjustment'] ?? 0,
-                        'is_available' => isset($sizeData['is_available']) ? true : true,
-                    ]);
+                    ProductColorSize::updateOrCreate(
+                        [
+                            'product_id' => $product->id,
+                            'product_color_id' => $color->id,
+                            'product_size_id' => $size->id,
+                        ],
+                        [
+                            'stock' => $stock,
+                            'price_adjustment' => $sizeData['price_adjustment'] ?? 0,
+                            'is_available' => isset($sizeData['is_available']) ? true : true,
+                        ]
+                    );
                 }
             }
+        }
+    }
+
+    /**
+     * Process colors intelligently - update existing, create new, delete removed.
+     *
+     * @param Request $request
+     * @param Product $product
+     * @return void
+     */
+    private function processColorsIntelligently(Request $request, Product $product)
+    {
+        // Get existing colors indexed by ID
+        $existingColors = $product->colors()->get()->keyBy('id');
+        $submittedColorIds = [];
+
+        foreach ($request->colors as $index => $colorData) {
+            $colorId = isset($colorData['id']) ? (int)$colorData['id'] : null;
+            $isDefault = isset($colorData['is_default']) && $colorData['is_default'];
+
+            // Handle color image upload or preserve existing
+            $colorImagePath = null;
+            if ($request->hasFile("color_images.{$index}")) {
+                // New image uploaded
+                try {
+                    $image = $request->file("color_images.{$index}");
+
+                    // Validate image
+                    if (!$image->isValid()) {
+                        throw new \Exception('The uploaded color image is corrupted or invalid.');
+                    }
+
+                    // Generate unique filename
+                    $imageName = time() . '_' . Str::random(10) . '.' . $image->getClientOriginalExtension();
+
+                    // Store the image
+                    $colorImagePath = $image->storeAs('products/colors', $imageName, 'public');
+
+                    if (!$colorImagePath) {
+                        throw new \Exception('Failed to upload color image.');
+                    }
+
+                    // Sync to public storage
+                    ImageHelper::syncUploadedImage($colorImagePath);
+
+                } catch (\Exception $e) {
+                    \Log::error('Color image upload failed: ' . $e->getMessage());
+                    // Continue with existing image if upload fails
+                    if ($colorId && isset($existingColors[$colorId])) {
+                        $colorImagePath = $existingColors[$colorId]->image;
+                    }
+                }
+            } else {
+                // Use existing image from form data or preserve current image
+                if (isset($colorData['image']) && !empty($colorData['image'])) {
+                    $colorImagePath = $colorData['image'];
+                } elseif ($colorId && isset($existingColors[$colorId])) {
+                    $colorImagePath = $existingColors[$colorId]->image;
+                }
+            }
+
+            if ($colorId && isset($existingColors[$colorId])) {
+                // Update existing color
+                $existingColors[$colorId]->update([
+                    'name' => $colorData['name'],
+                    'color_code' => $colorData['color_code'] ?? null,
+                    'image' => $colorImagePath,
+                    'price_adjustment' => $colorData['price_adjustment'] ?? 0,
+                    'stock' => $colorData['stock'] ?? 0,
+                    'display_order' => $colorData['display_order'] ?? $index,
+                    'is_default' => $isDefault,
+                ]);
+                $submittedColorIds[] = $colorId;
+            } else {
+                // Create new color
+                $newColor = ProductColor::create([
+                    'product_id' => $product->id,
+                    'name' => $colorData['name'],
+                    'color_code' => $colorData['color_code'] ?? null,
+                    'image' => $colorImagePath,
+                    'price_adjustment' => $colorData['price_adjustment'] ?? 0,
+                    'stock' => $colorData['stock'] ?? 0,
+                    'display_order' => $colorData['display_order'] ?? $index,
+                    'is_default' => $isDefault,
+                ]);
+                $submittedColorIds[] = $newColor->id;
+            }
+        }
+
+        // Delete colors that were not submitted (removed from the form)
+        $colorsToDelete = $existingColors->whereNotIn('id', $submittedColorIds);
+        foreach ($colorsToDelete as $colorToDelete) {
+            // Clean up image file if it exists
+            if ($colorToDelete->image) {
+                Storage::disk('public')->delete($colorToDelete->image);
+            }
+            $colorToDelete->delete();
         }
     }
 }

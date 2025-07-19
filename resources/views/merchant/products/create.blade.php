@@ -160,23 +160,7 @@
                             @enderror
                         </div>
 
-                        <!-- Branch -->
-                        <div class="mb-3">
-                            <label for="branch_id" class="form-label" style="color: var(--discord-lightest); font-weight: 600;">
-                                Branch <span style="color: var(--discord-red);">*</span>
-                            </label>
-                            <select id="branch_id" name="branch_id" class="form-select @error('branch_id') is-invalid @enderror" required>
-                                <option value="">Select Branch</option>
-                                @foreach($branches ?? [] as $branch)
-                                    <option value="{{ $branch->id }}" {{ old('branch_id') == $branch->id ? 'selected' : '' }}>
-                                        {{ $branch->name }}
-                                    </option>
-                                @endforeach
-                            </select>
-                            @error('branch_id')
-                                <div style="color: var(--discord-red); font-size: 12px; margin-top: 4px;">{{ $message }}</div>
-                            @enderror
-                        </div>
+
 
                         <!-- Description -->
                         <div class="mb-3">
@@ -368,7 +352,7 @@
                             </div>
                             <div class="col-md-2 mb-3">
                                 <label class="form-label" style="color: var(--discord-lightest); font-weight: 600;">Price Adjustment</label>
-                                <input type="number" step="0.01" name="colors[0][price_adjustment]" placeholder="0.00" value="0" class="form-control">
+                                <input type="number" step="1" name="colors[0][price_adjustment]" placeholder="0.00" value="0" class="form-control">
                             </div>
                             <div class="col-md-2 mb-3">
                                 <label class="form-label" style="color: var(--discord-lightest); font-weight: 600;">Total Stock</label>

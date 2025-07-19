@@ -117,24 +117,7 @@
                       <div v-if="errors.category_id" class="text-red-500 text-xs mt-1">{{ errors.category_id }}</div>
                     </div>
 
-                    <div class="space-y-2">
-                      <label for="branch_id" class="block vue-text-sm">
-                        Branch <span class="text-red-500">*</span>
-                      </label>
-                      <select id="branch_id" 
-                              v-model="productData.branch_id" 
-                              class="vue-form-control"
-                              :class="{ 'border-red-500': errors.branch_id }"
-                              required>
-                        <option value="">Select branch</option>
-                        <option v-for="branch in branches" 
-                                :key="branch.id" 
-                                :value="branch.id">
-                          {{ branch.name }}
-                        </option>
-                      </select>
-                      <div v-if="errors.branch_id" class="text-red-500 text-xs mt-1">{{ errors.branch_id }}</div>
-                    </div>
+
                   </div>
 
                   <div class="space-y-2">
@@ -198,22 +181,41 @@
                     </div>
                   </div>
 
-                  <div class="space-y-2">
-                    <label for="stock" class="block vue-text-sm">
-                      Total Stock <span class="text-red-500">*</span>
-                    </label>
-                    <div class="relative">
-                      <i class="fas fa-warehouse absolute left-3 top-1/2 transform -translate-y-1/2 w-4 h-4" style="color: var(--gray-400);"></i>
-                      <input type="number" 
-                             id="stock" 
-                             v-model.number="productData.stock"
-                             min="0"
-                             class="vue-form-control pl-10"
-                             :class="{ 'border-red-500': errors.stock }"
-                             required>
+                  <div class="grid grid-cols-2 gap-4">
+                    <div class="space-y-2">
+                      <label for="stock" class="block vue-text-sm">
+                        Total Stock <span class="text-red-500">*</span>
+                      </label>
+                      <div class="relative">
+                        <i class="fas fa-warehouse absolute left-3 top-1/2 transform -translate-y-1/2 w-4 h-4" style="color: var(--gray-400);"></i>
+                        <input type="number"
+                               id="stock"
+                               v-model.number="productData.stock"
+                               min="0"
+                               class="vue-form-control pl-10"
+                               :class="{ 'border-red-500': errors.stock }"
+                               required>
+                      </div>
+                      <p class="text-xs" style="color: var(--gray-500);">Total inventory to be allocated across color variants</p>
+                      <div v-if="errors.stock" class="text-red-500 text-xs mt-1">{{ errors.stock }}</div>
                     </div>
-                    <p class="text-xs" style="color: var(--gray-500);">Total inventory to be allocated across color variants</p>
-                    <div v-if="errors.stock" class="text-red-500 text-xs mt-1">{{ errors.stock }}</div>
+
+                    <div class="space-y-2">
+                      <label for="display_order" class="block vue-text-sm">
+                        Display Order
+                      </label>
+                      <div class="relative">
+                        <i class="fas fa-sort-numeric-up absolute left-3 top-1/2 transform -translate-y-1/2 w-4 h-4" style="color: var(--gray-400);"></i>
+                        <input type="number"
+                               id="display_order"
+                               v-model.number="productData.display_order"
+                               min="0"
+                               class="vue-form-control pl-10"
+                               :class="{ 'border-red-500': errors.display_order }">
+                      </div>
+                      <p class="text-xs" style="color: var(--gray-500);">Order in which this product appears in listings</p>
+                      <div v-if="errors.display_order" class="text-red-500 text-xs mt-1">{{ errors.display_order }}</div>
+                    </div>
                   </div>
 
                   <div class="flex items-center space-x-2">
@@ -282,11 +284,14 @@
                 :index="index"
                 :is-default="color.is_default"
                 :product-id="productId"
+                :general-stock="productData.stock"
+                :all-colors="productData.colors"
                 @update="updateColor"
                 @remove="removeColor"
                 @set-default="setDefaultColor"
                 @image-upload="handleImageUpload"
                 @sizes-updated="handleColorSizesUpdated"
+                @stock-corrected="handleStockCorrected"
               />
             </div>
           </div>
@@ -335,6 +340,40 @@
       </div>
     </div>
   </div>
+
+  <!-- Success Modal -->
+  <div v-if="showSuccessModal" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+    <div class="bg-white rounded-lg p-6 max-w-md w-full mx-4 shadow-xl">
+      <div class="text-center">
+        <div class="mx-auto flex items-center justify-center h-12 w-12 rounded-full bg-green-100 mb-4">
+          <i class="fas fa-check text-green-600 text-xl"></i>
+        </div>
+        <h3 class="text-lg font-medium text-gray-900 mb-2">Success!</h3>
+        <p class="text-sm text-gray-500 mb-6">Product updated successfully!</p>
+        <button @click="closeSuccessModal"
+                class="w-full bg-blue-500 hover:bg-blue-600 text-white font-medium py-2 px-4 rounded-lg transition-colors">
+          Continue
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Error Modal -->
+  <div v-if="showErrorModal" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+    <div class="bg-white rounded-lg p-6 max-w-md w-full mx-4 shadow-xl">
+      <div class="text-center">
+        <div class="mx-auto flex items-center justify-center h-12 w-12 rounded-full bg-red-100 mb-4">
+          <i class="fas fa-exclamation-triangle text-red-600 text-xl"></i>
+        </div>
+        <h3 class="text-lg font-medium text-gray-900 mb-2">Error</h3>
+        <p class="text-sm text-gray-500 mb-6">{{ errorMessage }}</p>
+        <button @click="closeErrorModal"
+                class="w-full bg-red-500 hover:bg-red-600 text-white font-medium py-2 px-4 rounded-lg transition-colors">
+          Close
+        </button>
+      </div>
+    </div>
+  </div>
 </template>
 
 <script>
@@ -369,18 +408,23 @@ export default {
       id: null,
       name: '',
       category_id: '',
-      branch_id: '',
       price: 0,
       original_price: null,
       stock: 0,
       description: '',
       is_available: true,
+      display_order: 0,
       colors: [],
       specifications: []
     })
 
     const categories = ref([])
     const branches = ref([])
+
+    // Modal states
+    const showSuccessModal = ref(false)
+    const showErrorModal = ref(false)
+    const errorMessage = ref('')
 
     // Tab configuration
     const tabs = [
@@ -472,11 +516,6 @@ export default {
         isValid = false
       }
 
-      if (!productData.branch_id) {
-        errors.branch_id = 'Branch is required'
-        isValid = false
-      }
-
       if (!productData.price || productData.price <= 0) {
         errors.price = 'Price must be greater than 0'
         isValid = false
@@ -506,7 +545,7 @@ export default {
     const saveProduct = async () => {
       if (!validateForm()) {
         // Switch to the tab with errors
-        if (errors.name || errors.category_id || errors.branch_id || errors.price || errors.stock) {
+        if (errors.name || errors.category_id || errors.price || errors.stock) {
           activeTab.value = 'basic'
         } else if (errors.colors) {
           activeTab.value = 'colors'
@@ -521,30 +560,94 @@ export default {
         const formData = new FormData()
 
         // Add basic product data
-        Object.keys(productData).forEach(key => {
-          if (key !== 'colors' && key !== 'specifications' && productData[key] !== null) {
-            formData.append(key, productData[key])
+        const basicFields = {
+          id: productData.id,
+          name: productData.name || '',
+          category_id: productData.category_id || '',
+          price: productData.price || 0,
+          original_price: productData.original_price || null,
+          stock: productData.stock || 0,
+          description: productData.description || '',
+          is_available: productData.is_available ? 1 : 0,
+          display_order: productData.display_order || 0
+        }
+
+        Object.keys(basicFields).forEach(key => {
+          if (basicFields[key] !== null && basicFields[key] !== undefined) {
+            formData.append(key, basicFields[key])
           }
         })
 
         // Add colors data
         productData.colors.forEach((color, index) => {
-          Object.keys(color).forEach(key => {
-            if (key === 'imageFile' && color[key]) {
-              formData.append(`color_images[${index}]`, color[key])
-            } else if (key !== 'imageFile' && color[key] !== null) {
-              formData.append(`colors[${index}][${key}]`, color[key])
+          // Only include essential color fields and handle null/undefined values
+          const colorFields = {
+            id: color.id || null,
+            name: color.name || '',
+            color_code: color.color_code || '#000000',
+            price_adjustment: color.price_adjustment || 0,
+            stock: color.stock || 0,
+            display_order: color.display_order || index,
+            is_default: color.is_default ? 1 : 0
+          }
+
+          // Include existing image path if no new image file is being uploaded
+          if (!color.imageFile && color.image) {
+            colorFields.image = color.image
+          }
+
+          Object.keys(colorFields).forEach(key => {
+            if (colorFields[key] !== null && colorFields[key] !== undefined) {
+              formData.append(`colors[${index}][${key}]`, colorFields[key])
             }
           })
+
+          // Handle image file separately (for new uploads)
+          if (color.imageFile) {
+            formData.append(`color_images[${index}]`, color.imageFile)
+          }
+
+          // Handle sizes data if present
+          if (color.sizes && Array.isArray(color.sizes) && color.sizes.length > 0) {
+            color.sizes.forEach((size, sizeIndex) => {
+              const sizeFields = {
+                id: size.id || null,
+                name: size.name || '',
+                value: size.value || '',
+                category: size.category || 'clothes', // Default category
+                additional_info: size.additional_info || '',
+                stock: size.stock || 0,
+                price_adjustment: size.price_adjustment || 0,
+                display_order: size.display_order || sizeIndex,
+                is_default: size.is_default ? 1 : 0
+              }
+
+              Object.keys(sizeFields).forEach(sizeKey => {
+                if (sizeFields[sizeKey] !== null && sizeFields[sizeKey] !== undefined) {
+                  formData.append(`colors[${index}][sizes][${sizeIndex}][${sizeKey}]`, sizeFields[sizeKey])
+                }
+              })
+            })
+          }
         })
 
         // Add specifications data
         productData.specifications.forEach((spec, index) => {
-          Object.keys(spec).forEach(key => {
-            if (spec[key] !== null) {
-              formData.append(`specifications[${index}][${key}]`, spec[key])
+          // Only include specifications with both key and value
+          if (spec.key && spec.key.trim() && spec.value && spec.value.trim()) {
+            const specFields = {
+              id: spec.id || null,
+              key: spec.key.trim(),
+              value: spec.value.trim(),
+              display_order: spec.display_order || index
             }
-          })
+
+            Object.keys(specFields).forEach(key => {
+              if (specFields[key] !== null && specFields[key] !== undefined) {
+                formData.append(`specifications[${index}][${key}]`, specFields[key])
+              }
+            })
+          }
         })
 
         // Add method override for PUT request
@@ -558,10 +661,8 @@ export default {
 
         // Handle success
         if (response.data.success || response.status === 200) {
-          // Show success message
-          alert('Product updated successfully!')
-          // Optionally redirect or refresh data
-          window.location.href = props.backUrl
+          // Show success modal
+          showSuccessModal.value = true
         }
 
       } catch (error) {
@@ -570,9 +671,11 @@ export default {
         // Handle validation errors
         if (error.response?.data?.errors) {
           Object.assign(errors, error.response.data.errors)
+          errorMessage.value = 'Please fix the validation errors and try again.'
         } else {
-          alert('An error occurred while saving the product. Please try again.')
+          errorMessage.value = error.response?.data?.message || 'An error occurred while saving the product. Please try again.'
         }
+        showErrorModal.value = true
       } finally {
         saving.value = false
       }
@@ -654,9 +757,16 @@ export default {
         // Store sizes data in the color object
         productData.colors[colorIndex].sizes = sizes
 
-        // Optionally, you could trigger a save or validation here
         console.log(`Sizes updated for color ${colorIndex}:`, sizes)
       }
+    }
+
+    const handleStockCorrected = (correctionData) => {
+      console.log('Stock corrected:', correctionData)
+      // You can add additional logic here if needed, such as:
+      // - Logging the correction for analytics
+      // - Showing a global notification
+      // - Updating other related data
     }
 
     // Specification management methods
@@ -690,6 +800,17 @@ export default {
       }
     })
 
+    // Modal methods
+    const closeSuccessModal = () => {
+      showSuccessModal.value = false
+      // Redirect to products listing after closing success modal
+      window.location.href = props.backUrl
+    }
+
+    const closeErrorModal = () => {
+      showErrorModal.value = false
+    }
+
     // Lifecycle
     onMounted(() => {
       fetchProductData()
@@ -705,6 +826,9 @@ export default {
       categories,
       branches,
       tabs,
+      showSuccessModal,
+      showErrorModal,
+      errorMessage,
 
       // Computed
       totalAllocatedStock,
@@ -725,9 +849,12 @@ export default {
       setDefaultColor,
       handleImageUpload,
       handleColorSizesUpdated,
+      handleStockCorrected,
       addNewSpecification,
       updateSpecification,
-      removeSpecification
+      removeSpecification,
+      closeSuccessModal,
+      closeErrorModal
     }
   }
 }

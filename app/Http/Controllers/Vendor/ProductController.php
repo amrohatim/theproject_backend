@@ -442,12 +442,22 @@ class ProductController extends Controller
         // Update basic product information
         $product->update($data);
 
-        // Clear existing related data
+        // Clear existing related data - BUT PRESERVE COLOR-SIZE COMBINATIONS
         $product->specifications()->delete();
+        $product->productBranches()->delete();
+        
+        // Store existing color-size combinations for preservation
+        $existingColorSizes = \App\Models\ProductColorSize::where('product_id', $product->id)->get();
+        $existingColorSizeMap = [];
+        
+        foreach ($existingColorSizes as $colorSize) {
+            $key = $colorSize->product_color_id . '_' . $colorSize->product_size_id;
+            $existingColorSizeMap[$key] = $colorSize;
+        }
+        
+        // Clear colors and sizes but preserve the mapping data
         $product->colors()->delete();
         $product->sizes()->delete();
-        \App\Models\ProductColorSize::where('product_id', $product->id)->delete();
-        $product->productBranches()->delete();
 
         // Process colors with their images (same logic as store method)
         $defaultColorImage = null;
@@ -524,16 +534,36 @@ class ProductController extends Controller
                             'is_default' => isset($sizeData['is_default']) ? true : false,
                         ]);
 
-                        // Create the color-size combination
+                        // Create or restore the color-size combination
+                        $colorSizeKey = $color->id . '_' . $size->id;
+                        
+                        // Check if this combination existed before
+                        $existingColorSize = $existingColorSizeMap[$colorSizeKey] ?? null;
+                        
                         if ($sizeData['stock'] > 0) {
-                            \App\Models\ProductColorSize::create([
-                                'product_id' => $product->id,
-                                'product_color_id' => $color->id,
-                                'product_size_id' => $size->id,
-                                'stock' => $sizeData['stock'],
-                                'price_adjustment' => $sizeData['price_adjustment'] ?? 0,
-                                'is_available' => true,
-                            ]);
+                            if ($existingColorSize) {
+                                // Restore existing combination with updated data
+                                \App\Models\ProductColorSize::create([
+                                    'product_id' => $product->id,
+                                    'product_color_id' => $color->id,
+                                    'product_size_id' => $size->id,
+                                    'stock' => $sizeData['stock'],
+                                    'price_adjustment' => $sizeData['price_adjustment'] ?? $existingColorSize->price_adjustment,
+                                    'is_available' => true,
+                                    'created_at' => $existingColorSize->created_at, // Preserve original creation time
+                                    'updated_at' => now(),
+                                ]);
+                            } else {
+                                // Create new combination
+                                \App\Models\ProductColorSize::create([
+                                    'product_id' => $product->id,
+                                    'product_color_id' => $color->id,
+                                    'product_size_id' => $size->id,
+                                    'stock' => $sizeData['stock'],
+                                    'price_adjustment' => $sizeData['price_adjustment'] ?? 0,
+                                    'is_available' => true,
+                                ]);
+                            }
                         }
                     }
                 }
@@ -672,14 +702,20 @@ class ProductController extends Controller
 
                 // Create the color-size combination if stock > 0
                 if (isset($sizeData['stock']) && $sizeData['stock'] > 0) {
-                    \App\Models\ProductColorSize::create([
-                        'product_id' => $product->id,
-                        'product_color_id' => $color->id,
-                        'product_size_id' => $size->id,
-                        'stock' => $sizeData['stock'],
-                        'price_adjustment' => $sizeData['price_adjustment'] ?? 0,
-                        'is_available' => true,
-                    ]);
+                    // Use updateOrCreate to prevent data corruption
+                    \App\Models\ProductColorSize::updateOrCreate(
+                        [
+                            'product_id' => $product->id,
+                            'product_color_id' => $color->id,
+                            'product_size_id' => $size->id,
+                        ],
+                        [
+                            'stock' => $sizeData['stock'],
+                            'price_adjustment' => $sizeData['price_adjustment'] ?? 0,
+                            'is_available' => true,
+                            'updated_at' => now(),
+                        ]
+                    );
                 }
             }
         }

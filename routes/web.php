@@ -2019,6 +2019,9 @@ Route::prefix('merchant')->name('merchant.')->middleware(['auth', \App\Http\Midd
     Route::post('/api/color-sizes/get-color-stock-info', [\App\Http\Controllers\Merchant\ProductColorSizeController::class, 'getColorStockInfo'])->name('api.color-sizes.get-color-stock-info');
     Route::post('/api/color-sizes/save-combinations', [\App\Http\Controllers\Merchant\ProductColorSizeController::class, 'saveColorSizeCombinations'])->name('api.color-sizes.save-combinations');
 
+    // Color Management API routes
+    Route::post('/api/colors/save', [\App\Http\Controllers\Merchant\ProductColorSizeController::class, 'saveColor'])->name('api.colors.save');
+
     // Size Management API routes
     Route::post('/api/sizes/create', [\App\Http\Controllers\Merchant\ProductColorSizeController::class, 'createSize'])->name('api.sizes.create');
     Route::post('/api/sizes/update', [\App\Http\Controllers\Merchant\ProductColorSizeController::class, 'updateSize'])->name('api.sizes.update');
