@@ -1996,6 +1996,7 @@ Route::prefix('merchant')->name('merchant.')->middleware(['auth', \App\Http\Midd
     // Products
     Route::get('/products', [App\Http\Controllers\Merchant\ProductController::class, 'index'])->name('products.index');
     Route::get('/products/create', [App\Http\Controllers\Merchant\ProductController::class, 'create'])->middleware('valid.license')->name('products.create');
+    Route::get('/products/create-data', [App\Http\Controllers\Merchant\ProductController::class, 'getCreateData'])->middleware('valid.license')->name('products.create.data');
     Route::post('/products', [App\Http\Controllers\Merchant\ProductController::class, 'store'])->middleware('valid.license')->name('products.store');
     Route::get('/products/{id}', [App\Http\Controllers\Merchant\ProductController::class, 'show'])->name('products.show');
     Route::get('/products/{id}/edit', [App\Http\Controllers\Merchant\ProductController::class, 'edit'])->name('products.edit');

@@ -15,7 +15,8 @@ export default defineConfig({
                 'resources/js/modern-interactions.js',
                 'resources/js/vendor-registration.js',
                 'resources/js/merchant-registration.js',
-                'resources/js/product-edit.js'
+                'resources/js/product-edit.js',
+                'resources/js/product-create.js'
             ],
             refresh: true,
         }),

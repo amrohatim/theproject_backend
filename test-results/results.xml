@@ -1,25 +1,448 @@
-<testsuites id="" name="" tests="14" failures="0" skipped="14" errors="0" time="5.087496999999999">
-<testsuite name="merchant-new-color-first-size-fix.spec.js" timestamp="2025-07-19T01:12:50.092Z" hostname="chromium" tests="2" failures="0" skipped="2" time="0.002" errors="0">
-<testcase name="Size Management UI Refresh Fix › should successfully add first size to new color variant and refresh UI" classname="merchant-new-color-first-size-fix.spec.js" time="0.001">
-<skipped>
-</skipped>
+<testsuites id="" name="" tests="350" failures="7" skipped="343" errors="0" time="82.671773">
+<testsuite name="merchant-add-color-functionality.spec.js" timestamp="2025-07-19T13:04:00.583Z" hostname="chromium" tests="2" failures="2" skipped="0" time="78.388" errors="0">
+<testcase name="Merchant Product Edit - Add Color Functionality › should investigate and fix Add Color button functionality" classname="merchant-add-color-functionality.spec.js" time="37.429">
+<failure message="merchant-add-color-functionality.spec.js:28:5 should investigate and fix Add Color button functionality" type="FAILURE">
+<![CDATA[  [chromium] › merchant-add-color-functionality.spec.js:28:5 › Merchant Product Edit - Add Color Functionality › should investigate and fix Add Color button functionality 
+
+    TimeoutError: page.fill: Timeout 30000ms exceeded.
+    Call log:
+      - waiting for locator('input[name="email"]')
+
+
+      34 |         if (currentUrl.includes('/login')) {
+      35 |             // Fill login form - we'll need to use test credentials
+    > 36 |             await page.fill('input[name="email"]', 'merchant@test.com'); // Replace with actual test merchant email
+         |                        ^
+      37 |             await page.fill('input[name="password"]', 'password'); // Replace with actual test password
+      38 |             await page.click('button[type="submit"]');
+      39 |             await page.waitForLoadState('networkidle');
+        at C:\Users\Admin\Desktop\TheProject\Production\theproject_backend\tests\playwright\merchant-add-color-functionality.spec.js:36:24
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    test-results\merchant-add-color-functio-13cbe--Color-button-functionality-chromium\test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: ..\..\test-results\merchant-add-color-functio-13cbe--Color-button-functionality-chromium\error-context.md
+]]>
+</failure>
+<system-out>
+<![CDATA[❌ Console Error: Failed to load resource: the server responded with a status of 404 ()
+🔐 Attempting merchant login...
+
+[[ATTACHMENT|merchant-add-color-functio-13cbe--Color-button-functionality-chromium\test-failed-1.png]]
+
+[[ATTACHMENT|merchant-add-color-functio-13cbe--Color-button-functionality-chromium\error-context.md]]
+]]>
+</system-out>
+</testcase>
+<testcase name="Merchant Product Edit - Add Color Functionality › should test Add Color functionality on mobile viewport" classname="merchant-add-color-functionality.spec.js" time="40.959">
+<failure message="merchant-add-color-functionality.spec.js:142:5 should test Add Color functionality on mobile viewport" type="FAILURE">
+<![CDATA[  [chromium] › merchant-add-color-functionality.spec.js:142:5 › Merchant Product Edit - Add Color Functionality › should test Add Color functionality on mobile viewport 
+
+    TimeoutError: page.click: Timeout 30000ms exceeded.
+    Call log:
+      - waiting for locator('button[data-tab="colors"]')
+
+
+      155 |
+      156 |         // Switch to colors tab
+    > 157 |         await page.click('button[data-tab="colors"]');
+          |                    ^
+      158 |         await page.waitForTimeout(1000);
+      159 |
+      160 |         // Take mobile screenshot
+        at C:\Users\Admin\Desktop\TheProject\Production\theproject_backend\tests\playwright\merchant-add-color-functionality.spec.js:157:20
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    test-results\merchant-add-color-functio-3e2f7-ionality-on-mobile-viewport-chromium\test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: ..\..\test-results\merchant-add-color-functio-3e2f7-ionality-on-mobile-viewport-chromium\error-context.md
+]]>
+</failure>
+<system-out>
+<![CDATA[❌ Console Error: Failed to load resource: the server responded with a status of 404 ()
+📱 Testing on mobile viewport...
+❌ Console Error: Failed to load resource: the server responded with a status of 404 ()
+
+[[ATTACHMENT|merchant-add-color-functio-3e2f7-ionality-on-mobile-viewport-chromium\test-failed-1.png]]
+
+[[ATTACHMENT|merchant-add-color-functio-3e2f7-ionality-on-mobile-viewport-chromium\error-context.md]]
+]]>
+</system-out>
+</testcase>
+</testsuite>
+<testsuite name="merchant-new-color-first-size-fix.spec.js" timestamp="2025-07-19T13:04:00.583Z" hostname="chromium" tests="2" failures="2" skipped="0" time="0.001" errors="0">
+<testcase name="Size Management UI Refresh Fix › should successfully add first size to new color variant and refresh UI" classname="merchant-new-color-first-size-fix.spec.js" time="0">
+<failure message="merchant-new-color-first-size-fix.spec.js:53:5 should successfully add first size to new color variant and refresh UI" type="FAILURE">
+<![CDATA[  [chromium] › merchant-new-color-first-size-fix.spec.js:53:5 › Size Management UI Refresh Fix › should successfully add first size to new color variant and refresh UI 
+
+    TimeoutError: page.fill: Timeout 30000ms exceeded.
+    Call log:
+      - waiting for locator('#email')
+
+
+      15 |         // Login as merchant
+      16 |         await page.goto('/merchant/login');
+    > 17 |         await page.fill('#email', 'merchant@example.com');
+         |                    ^
+      18 |         await page.fill('#password', 'password');
+      19 |         await page.click('button[type="submit"]');
+      20 |         await page.waitForURL('**/merchant/dashboard');
+        at C:\Users\Admin\Desktop\TheProject\Production\theproject_backend\tests\playwright\merchant-new-color-first-size-fix.spec.js:17:20
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    test-results\merchant-new-color-first-s-1640b-olor-variant-and-refresh-UI-chromium\test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: ..\..\test-results\merchant-new-color-first-s-1640b-olor-variant-and-refresh-UI-chromium\error-context.md
+
+    attachment #3: screenshot (image/png) ──────────────────────────────────────────────────────────
+    test-results\merchant-new-color-first-s-1640b-olor-variant-and-refresh-UI-chromium\test-failed-2.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+]]>
+</failure>
+<system-out>
+<![CDATA[
+[[ATTACHMENT|merchant-new-color-first-s-1640b-olor-variant-and-refresh-UI-chromium\test-failed-1.png]]
+
+[[ATTACHMENT|merchant-new-color-first-s-1640b-olor-variant-and-refresh-UI-chromium\error-context.md]]
+
+[[ATTACHMENT|merchant-new-color-first-s-1640b-olor-variant-and-refresh-UI-chromium\test-failed-2.png]]
+]]>
+</system-out>
 </testcase>
 <testcase name="Size Management UI Refresh Fix › should handle errors gracefully and show error state" classname="merchant-new-color-first-size-fix.spec.js" time="0.001">
+<failure message="merchant-new-color-first-size-fix.spec.js:166:5 should handle errors gracefully and show error state" type="FAILURE">
+<![CDATA[  [chromium] › merchant-new-color-first-size-fix.spec.js:166:5 › Size Management UI Refresh Fix › should handle errors gracefully and show error state 
+
+    TimeoutError: page.fill: Timeout 30000ms exceeded.
+    Call log:
+      - waiting for locator('#email')
+
+
+      15 |         // Login as merchant
+      16 |         await page.goto('/merchant/login');
+    > 17 |         await page.fill('#email', 'merchant@example.com');
+         |                    ^
+      18 |         await page.fill('#password', 'password');
+      19 |         await page.click('button[type="submit"]');
+      20 |         await page.waitForURL('**/merchant/dashboard');
+        at C:\Users\Admin\Desktop\TheProject\Production\theproject_backend\tests\playwright\merchant-new-color-first-size-fix.spec.js:17:20
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    test-results\merchant-new-color-first-s-b1d29-efully-and-show-error-state-chromium\test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: ..\..\test-results\merchant-new-color-first-s-b1d29-efully-and-show-error-state-chromium\error-context.md
+
+    attachment #3: screenshot (image/png) ──────────────────────────────────────────────────────────
+    test-results\merchant-new-color-first-s-b1d29-efully-and-show-error-state-chromium\test-failed-2.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+]]>
+</failure>
+<system-out>
+<![CDATA[
+[[ATTACHMENT|merchant-new-color-first-s-b1d29-efully-and-show-error-state-chromium\test-failed-1.png]]
+
+[[ATTACHMENT|merchant-new-color-first-s-b1d29-efully-and-show-error-state-chromium\error-context.md]]
+
+[[ATTACHMENT|merchant-new-color-first-s-b1d29-efully-and-show-error-state-chromium\test-failed-2.png]]
+]]>
+</system-out>
+</testcase>
+</testsuite>
+<testsuite name="merchant-new-color-size-refresh-test.spec.js" timestamp="2025-07-19T13:04:00.583Z" hostname="chromium" tests="2" failures="1" skipped="1" time="52.272" errors="0">
+<testcase name="Merchant New Color Size Management Refresh Fix › should immediately show newly added size for a brand new color variant" classname="merchant-new-color-size-refresh-test.spec.js" time="26.253">
+<failure message="merchant-new-color-size-refresh-test.spec.js:51:5 should immediately show newly added size for a brand new color variant" type="FAILURE">
+<![CDATA[  [chromium] › merchant-new-color-size-refresh-test.spec.js:51:5 › Merchant New Color Size Management Refresh Fix › should immediately show newly added size for a brand new color variant 
+
+    Error: page.click: Target page, context or browser has been closed
+    Call log:
+      - waiting for locator('button:has-text("Add Color")')
+        - locator resolved to <button type="button" data-v-cae5635c="" class="vue-btn vue-btn-primary">…</button>
+      - attempting click action
+        2 × waiting for element to be visible, enabled and stable
+          - element is not visible
+        - retrying click action
+        - waiting 20ms
+        2 × waiting for element to be visible, enabled and stable
+          - element is not visible
+        - retrying click action
+          - waiting 100ms
+        16 × waiting for element to be visible, enabled and stable
+           - element is not visible
+         - retrying click action
+           - waiting 500ms
+
+
+      26 |
+      27 |         // Add a basic color variant first (required for product creation)
+    > 28 |         await page.click('button:has-text("Add Color")');
+         |                    ^
+      29 |         await page.waitForTimeout(1000);
+      30 |
+      31 |         // Fill color information
+        at C:\Users\Admin\Desktop\TheProject\Production\theproject_backend\tests\playwright\merchant-new-color-size-refresh-test.spec.js:28:20
+]]>
+</failure>
+</testcase>
+<testcase name="Merchant New Color Size Management Refresh Fix › should handle multiple new colors with sizes correctly" classname="merchant-new-color-size-refresh-test.spec.js" time="26.019">
 <skipped>
 </skipped>
 </testcase>
 </testsuite>
-<testsuite name="merchant-new-color-first-size-fix.spec.js" timestamp="2025-07-19T01:12:50.092Z" hostname="firefox" tests="2" failures="0" skipped="2" time="0.002" errors="0">
-<testcase name="Size Management UI Refresh Fix › should successfully add first size to new color variant and refresh UI" classname="merchant-new-color-first-size-fix.spec.js" time="0.001">
+<testsuite name="merchant-product-images.spec.cjs" timestamp="2025-07-19T13:04:00.583Z" hostname="chromium" tests="9" failures="2" skipped="7" time="48.105" errors="0">
+<testcase name="Merchant Product Images › Desktop Viewport › should display product images correctly on listing page" classname="merchant-product-images.spec.cjs" time="25.745">
+<failure message="merchant-product-images.spec.cjs:28:5 should display product images correctly on listing page" type="FAILURE">
+<![CDATA[  [chromium] › merchant-product-images.spec.cjs:28:5 › Merchant Product Images › Desktop Viewport › should display product images correctly on listing page 
+
+    Error: page.waitForURL: Target page, context or browser has been closed
+    =========================== logs ===========================
+    waiting for navigation until "load"
+    ============================================================
+
+      14 |     
+      15 |     // Wait for redirect after login
+    > 16 |     await page.waitForURL(/dashboard|products/);
+         |                ^
+      17 |   });
+      18 |
+      19 |   test.afterEach(async () => {
+        at C:\Users\Admin\Desktop\TheProject\Production\theproject_backend\tests\playwright\merchant-product-images.spec.cjs:16:16
+
+    Error: page.setViewportSize: Target page, context or browser has been closed
+
+      23 |   test.describe('Desktop Viewport', () => {
+      24 |     test.beforeEach(async () => {
+    > 25 |       await page.setViewportSize({ width: 1280, height: 720 });
+         |                  ^
+      26 |     });
+      27 |
+      28 |     test('should display product images correctly on listing page', async () => {
+        at C:\Users\Admin\Desktop\TheProject\Production\theproject_backend\tests\playwright\merchant-product-images.spec.cjs:25:18
+]]>
+</failure>
+</testcase>
+<testcase name="Merchant Product Images › Desktop Viewport › should display product image correctly on detail page" classname="merchant-product-images.spec.cjs" time="22.36">
+<failure message="merchant-product-images.spec.cjs:61:5 should display product image correctly on detail page" type="FAILURE">
+<![CDATA[  [chromium] › merchant-product-images.spec.cjs:61:5 › Merchant Product Images › Desktop Viewport › should display product image correctly on detail page 
+
+    Error: page.waitForURL: Target page, context or browser has been closed
+    =========================== logs ===========================
+    waiting for navigation until "load"
+    ============================================================
+
+      14 |     
+      15 |     // Wait for redirect after login
+    > 16 |     await page.waitForURL(/dashboard|products/);
+         |                ^
+      17 |   });
+      18 |
+      19 |   test.afterEach(async () => {
+        at C:\Users\Admin\Desktop\TheProject\Production\theproject_backend\tests\playwright\merchant-product-images.spec.cjs:16:16
+
+    Error: page.setViewportSize: Target page, context or browser has been closed
+
+      23 |   test.describe('Desktop Viewport', () => {
+      24 |     test.beforeEach(async () => {
+    > 25 |       await page.setViewportSize({ width: 1280, height: 720 });
+         |                  ^
+      26 |     });
+      27 |
+      28 |     test('should display product images correctly on listing page', async () => {
+        at C:\Users\Admin\Desktop\TheProject\Production\theproject_backend\tests\playwright\merchant-product-images.spec.cjs:25:18
+]]>
+</failure>
+</testcase>
+<testcase name="Merchant Product Images › Desktop Viewport › should display current image in edit form" classname="merchant-product-images.spec.cjs" time="0">
 <skipped>
 </skipped>
 </testcase>
-<testcase name="Size Management UI Refresh Fix › should handle errors gracefully and show error state" classname="merchant-new-color-first-size-fix.spec.js" time="0.001">
+<testcase name="Merchant Product Images › Desktop Viewport › should show placeholder for products without images" classname="merchant-product-images.spec.cjs" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Merchant Product Images › Desktop Viewport › should handle image upload form on create page" classname="merchant-product-images.spec.cjs" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Merchant Product Images › Mobile Viewport › should display product images correctly on mobile listing page" classname="merchant-product-images.spec.cjs" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Merchant Product Images › Mobile Viewport › should display product image correctly on mobile detail page" classname="merchant-product-images.spec.cjs" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Merchant Product Images › Mobile Viewport › should handle image upload form on mobile create page" classname="merchant-product-images.spec.cjs" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Merchant Product Images › Image URL Validation › should not have malformed URLs with double prefixes" classname="merchant-product-images.spec.cjs" time="0">
 <skipped>
 </skipped>
 </testcase>
 </testsuite>
-<testsuite name="merchant-new-color-first-size-fix.spec.js" timestamp="2025-07-19T01:12:50.092Z" hostname="webkit" tests="2" failures="0" skipped="2" time="0" errors="0">
+<testsuite name="merchant-registration.spec.cjs" timestamp="2025-07-19T13:04:00.583Z" hostname="chromium" tests="7" failures="0" skipped="7" time="0" errors="0">
+<testcase name="Merchant Registration with Google Maps › Complete merchant registration flow with Google Maps integration" classname="merchant-registration.spec.cjs" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Merchant Registration with Google Maps › Google Maps location selection and clearing functionality" classname="merchant-registration.spec.cjs" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Merchant Registration with Google Maps › Form validation with missing required fields" classname="merchant-registration.spec.cjs" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Merchant Registration with Google Maps › Google Maps fallback when API fails" classname="merchant-registration.spec.cjs" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Merchant Registration with Google Maps › Responsive design on mobile viewport" classname="merchant-registration.spec.cjs" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Merchant Registration with Google Maps › Verify other registration flows remain unaffected" classname="merchant-registration.spec.cjs" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Merchant Registration with Google Maps › Location data persistence on form errors" classname="merchant-registration.spec.cjs" time="0">
+<skipped>
+</skipped>
+</testcase>
+</testsuite>
+<testsuite name="merchant-service-images.spec.cjs" timestamp="2025-07-19T13:04:00.583Z" hostname="chromium" tests="6" failures="0" skipped="6" time="0" errors="0">
+<testcase name="Merchant Service Images › should display service images correctly on merchant services page - desktop" classname="merchant-service-images.spec.cjs" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Merchant Service Images › should display service images correctly on merchant services page - mobile" classname="merchant-service-images.spec.cjs" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Merchant Service Images › should display service image correctly on service detail page" classname="merchant-service-images.spec.cjs" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Merchant Service Images › should show placeholder for services without images" classname="merchant-service-images.spec.cjs" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Merchant Service Images › should not have broken image placeholders" classname="merchant-service-images.spec.cjs" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Merchant Service Images › should have properly formatted image URLs" classname="merchant-service-images.spec.cjs" time="0">
+<skipped>
+</skipped>
+</testcase>
+</testsuite>
+<testsuite name="merchant-stock-allocation.spec.cjs" timestamp="2025-07-19T13:04:00.583Z" hostname="chromium" tests="4" failures="0" skipped="4" time="0" errors="0">
+<testcase name="Merchant Product Stock Allocation Validation › should validate stock allocation between general and color-specific stock" classname="merchant-stock-allocation.spec.cjs" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Merchant Product Stock Allocation Validation › should show real-time stock calculation and visual feedback" classname="merchant-stock-allocation.spec.cjs" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Merchant Product Stock Allocation Validation › should handle mobile responsive design for stock validation" classname="merchant-stock-allocation.spec.cjs" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Merchant Product Stock Allocation Validation › should verify current implementation status" classname="merchant-stock-allocation.spec.cjs" time="0">
+<skipped>
+</skipped>
+</testcase>
+</testsuite>
+<testsuite name="provider-registration.spec.js" timestamp="2025-07-19T13:04:00.583Z" hostname="chromium" tests="18" failures="0" skipped="18" time="0" errors="0">
+<testcase name="Provider Registration Form Validation › should load the registration form correctly" classname="provider-registration.spec.js" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Provider Registration Form Validation › should show validation errors for empty required fields" classname="provider-registration.spec.js" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Provider Registration Form Validation › should validate field lengths and formats" classname="provider-registration.spec.js" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Provider Registration Form Validation › should validate password confirmation match" classname="provider-registration.spec.js" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Provider Registration Form Validation › should validate UAE phone number formats" classname="provider-registration.spec.js" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Provider Registration Form Validation › should validate delivery capability selection" classname="provider-registration.spec.js" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Provider Registration Form Validation › should validate terms and conditions" classname="provider-registration.spec.js" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Provider Registration Form Validation › should test business name uniqueness validation" classname="provider-registration.spec.js" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Provider Registration Form Validation › should handle successful form submission" classname="provider-registration.spec.js" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Provider Registration Form Validation › should test modal accessibility features" classname="provider-registration.spec.js" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Provider Registration Form Validation › should test form field accessibility" classname="provider-registration.spec.js" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Provider Registration Form Validation › should test real-time validation feedback" classname="provider-registration.spec.js" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Provider Registration Form Validation › should test password strength indicator" classname="provider-registration.spec.js" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Provider Registration Form Validation › should test form responsiveness on mobile" classname="provider-registration.spec.js" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Provider Registration Form Validation › should test email registration status validation - verified user" classname="provider-registration.spec.js" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Provider Registration Form Validation › should test email registration status validation - license completed user" classname="provider-registration.spec.js" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Provider Registration Form Validation › should test phone registration status validation - verified user" classname="provider-registration.spec.js" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Provider Registration Form Validation › should test comprehensive validation flow" classname="provider-registration.spec.js" time="0">
+<skipped>
+</skipped>
+</testcase>
+</testsuite>
+<testsuite name="merchant-add-color-functionality.spec.js" timestamp="2025-07-19T13:04:00.583Z" hostname="firefox" tests="2" failures="0" skipped="2" time="0" errors="0">
+<testcase name="Merchant Product Edit - Add Color Functionality › should investigate and fix Add Color button functionality" classname="merchant-add-color-functionality.spec.js" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Merchant Product Edit - Add Color Functionality › should test Add Color functionality on mobile viewport" classname="merchant-add-color-functionality.spec.js" time="0">
+<skipped>
+</skipped>
+</testcase>
+</testsuite>
+<testsuite name="merchant-new-color-first-size-fix.spec.js" timestamp="2025-07-19T13:04:00.583Z" hostname="firefox" tests="2" failures="0" skipped="2" time="0" errors="0">
 <testcase name="Size Management UI Refresh Fix › should successfully add first size to new color variant and refresh UI" classname="merchant-new-color-first-size-fix.spec.js" time="0">
 <skipped>
 </skipped>
@@ -29,7 +452,213 @@
 </skipped>
 </testcase>
 </testsuite>
-<testsuite name="merchant-new-color-first-size-fix.spec.js" timestamp="2025-07-19T01:12:50.092Z" hostname="Mobile Chrome" tests="2" failures="0" skipped="2" time="0" errors="0">
+<testsuite name="merchant-new-color-size-refresh-test.spec.js" timestamp="2025-07-19T13:04:00.583Z" hostname="firefox" tests="2" failures="0" skipped="2" time="0" errors="0">
+<testcase name="Merchant New Color Size Management Refresh Fix › should immediately show newly added size for a brand new color variant" classname="merchant-new-color-size-refresh-test.spec.js" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Merchant New Color Size Management Refresh Fix › should handle multiple new colors with sizes correctly" classname="merchant-new-color-size-refresh-test.spec.js" time="0">
+<skipped>
+</skipped>
+</testcase>
+</testsuite>
+<testsuite name="merchant-product-images.spec.cjs" timestamp="2025-07-19T13:04:00.583Z" hostname="firefox" tests="9" failures="0" skipped="9" time="0" errors="0">
+<testcase name="Merchant Product Images › Desktop Viewport › should display product images correctly on listing page" classname="merchant-product-images.spec.cjs" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Merchant Product Images › Desktop Viewport › should display product image correctly on detail page" classname="merchant-product-images.spec.cjs" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Merchant Product Images › Desktop Viewport › should display current image in edit form" classname="merchant-product-images.spec.cjs" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Merchant Product Images › Desktop Viewport › should show placeholder for products without images" classname="merchant-product-images.spec.cjs" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Merchant Product Images › Desktop Viewport › should handle image upload form on create page" classname="merchant-product-images.spec.cjs" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Merchant Product Images › Mobile Viewport › should display product images correctly on mobile listing page" classname="merchant-product-images.spec.cjs" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Merchant Product Images › Mobile Viewport › should display product image correctly on mobile detail page" classname="merchant-product-images.spec.cjs" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Merchant Product Images › Mobile Viewport › should handle image upload form on mobile create page" classname="merchant-product-images.spec.cjs" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Merchant Product Images › Image URL Validation › should not have malformed URLs with double prefixes" classname="merchant-product-images.spec.cjs" time="0">
+<skipped>
+</skipped>
+</testcase>
+</testsuite>
+<testsuite name="merchant-registration.spec.cjs" timestamp="2025-07-19T13:04:00.583Z" hostname="firefox" tests="7" failures="0" skipped="7" time="0" errors="0">
+<testcase name="Merchant Registration with Google Maps › Complete merchant registration flow with Google Maps integration" classname="merchant-registration.spec.cjs" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Merchant Registration with Google Maps › Google Maps location selection and clearing functionality" classname="merchant-registration.spec.cjs" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Merchant Registration with Google Maps › Form validation with missing required fields" classname="merchant-registration.spec.cjs" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Merchant Registration with Google Maps › Google Maps fallback when API fails" classname="merchant-registration.spec.cjs" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Merchant Registration with Google Maps › Responsive design on mobile viewport" classname="merchant-registration.spec.cjs" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Merchant Registration with Google Maps › Verify other registration flows remain unaffected" classname="merchant-registration.spec.cjs" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Merchant Registration with Google Maps › Location data persistence on form errors" classname="merchant-registration.spec.cjs" time="0">
+<skipped>
+</skipped>
+</testcase>
+</testsuite>
+<testsuite name="merchant-service-images.spec.cjs" timestamp="2025-07-19T13:04:00.583Z" hostname="firefox" tests="6" failures="0" skipped="6" time="0" errors="0">
+<testcase name="Merchant Service Images › should display service images correctly on merchant services page - desktop" classname="merchant-service-images.spec.cjs" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Merchant Service Images › should display service images correctly on merchant services page - mobile" classname="merchant-service-images.spec.cjs" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Merchant Service Images › should display service image correctly on service detail page" classname="merchant-service-images.spec.cjs" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Merchant Service Images › should show placeholder for services without images" classname="merchant-service-images.spec.cjs" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Merchant Service Images › should not have broken image placeholders" classname="merchant-service-images.spec.cjs" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Merchant Service Images › should have properly formatted image URLs" classname="merchant-service-images.spec.cjs" time="0">
+<skipped>
+</skipped>
+</testcase>
+</testsuite>
+<testsuite name="merchant-stock-allocation.spec.cjs" timestamp="2025-07-19T13:04:00.583Z" hostname="firefox" tests="4" failures="0" skipped="4" time="0" errors="0">
+<testcase name="Merchant Product Stock Allocation Validation › should validate stock allocation between general and color-specific stock" classname="merchant-stock-allocation.spec.cjs" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Merchant Product Stock Allocation Validation › should show real-time stock calculation and visual feedback" classname="merchant-stock-allocation.spec.cjs" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Merchant Product Stock Allocation Validation › should handle mobile responsive design for stock validation" classname="merchant-stock-allocation.spec.cjs" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Merchant Product Stock Allocation Validation › should verify current implementation status" classname="merchant-stock-allocation.spec.cjs" time="0">
+<skipped>
+</skipped>
+</testcase>
+</testsuite>
+<testsuite name="provider-registration.spec.js" timestamp="2025-07-19T13:04:00.583Z" hostname="firefox" tests="18" failures="0" skipped="18" time="0" errors="0">
+<testcase name="Provider Registration Form Validation › should load the registration form correctly" classname="provider-registration.spec.js" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Provider Registration Form Validation › should show validation errors for empty required fields" classname="provider-registration.spec.js" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Provider Registration Form Validation › should validate field lengths and formats" classname="provider-registration.spec.js" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Provider Registration Form Validation › should validate password confirmation match" classname="provider-registration.spec.js" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Provider Registration Form Validation › should validate UAE phone number formats" classname="provider-registration.spec.js" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Provider Registration Form Validation › should validate delivery capability selection" classname="provider-registration.spec.js" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Provider Registration Form Validation › should validate terms and conditions" classname="provider-registration.spec.js" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Provider Registration Form Validation › should test business name uniqueness validation" classname="provider-registration.spec.js" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Provider Registration Form Validation › should handle successful form submission" classname="provider-registration.spec.js" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Provider Registration Form Validation › should test modal accessibility features" classname="provider-registration.spec.js" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Provider Registration Form Validation › should test form field accessibility" classname="provider-registration.spec.js" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Provider Registration Form Validation › should test real-time validation feedback" classname="provider-registration.spec.js" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Provider Registration Form Validation › should test password strength indicator" classname="provider-registration.spec.js" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Provider Registration Form Validation › should test form responsiveness on mobile" classname="provider-registration.spec.js" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Provider Registration Form Validation › should test email registration status validation - verified user" classname="provider-registration.spec.js" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Provider Registration Form Validation › should test email registration status validation - license completed user" classname="provider-registration.spec.js" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Provider Registration Form Validation › should test phone registration status validation - verified user" classname="provider-registration.spec.js" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Provider Registration Form Validation › should test comprehensive validation flow" classname="provider-registration.spec.js" time="0">
+<skipped>
+</skipped>
+</testcase>
+</testsuite>
+<testsuite name="merchant-add-color-functionality.spec.js" timestamp="2025-07-19T13:04:00.583Z" hostname="webkit" tests="2" failures="0" skipped="2" time="0" errors="0">
+<testcase name="Merchant Product Edit - Add Color Functionality › should investigate and fix Add Color button functionality" classname="merchant-add-color-functionality.spec.js" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Merchant Product Edit - Add Color Functionality › should test Add Color functionality on mobile viewport" classname="merchant-add-color-functionality.spec.js" time="0">
+<skipped>
+</skipped>
+</testcase>
+</testsuite>
+<testsuite name="merchant-new-color-first-size-fix.spec.js" timestamp="2025-07-19T13:04:00.583Z" hostname="webkit" tests="2" failures="0" skipped="2" time="0" errors="0">
 <testcase name="Size Management UI Refresh Fix › should successfully add first size to new color variant and refresh UI" classname="merchant-new-color-first-size-fix.spec.js" time="0">
 <skipped>
 </skipped>
@@ -39,7 +668,213 @@
 </skipped>
 </testcase>
 </testsuite>
-<testsuite name="merchant-new-color-first-size-fix.spec.js" timestamp="2025-07-19T01:12:50.092Z" hostname="Mobile Safari" tests="2" failures="0" skipped="2" time="0" errors="0">
+<testsuite name="merchant-new-color-size-refresh-test.spec.js" timestamp="2025-07-19T13:04:00.583Z" hostname="webkit" tests="2" failures="0" skipped="2" time="0" errors="0">
+<testcase name="Merchant New Color Size Management Refresh Fix › should immediately show newly added size for a brand new color variant" classname="merchant-new-color-size-refresh-test.spec.js" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Merchant New Color Size Management Refresh Fix › should handle multiple new colors with sizes correctly" classname="merchant-new-color-size-refresh-test.spec.js" time="0">
+<skipped>
+</skipped>
+</testcase>
+</testsuite>
+<testsuite name="merchant-product-images.spec.cjs" timestamp="2025-07-19T13:04:00.583Z" hostname="webkit" tests="9" failures="0" skipped="9" time="0" errors="0">
+<testcase name="Merchant Product Images › Desktop Viewport › should display product images correctly on listing page" classname="merchant-product-images.spec.cjs" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Merchant Product Images › Desktop Viewport › should display product image correctly on detail page" classname="merchant-product-images.spec.cjs" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Merchant Product Images › Desktop Viewport › should display current image in edit form" classname="merchant-product-images.spec.cjs" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Merchant Product Images › Desktop Viewport › should show placeholder for products without images" classname="merchant-product-images.spec.cjs" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Merchant Product Images › Desktop Viewport › should handle image upload form on create page" classname="merchant-product-images.spec.cjs" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Merchant Product Images › Mobile Viewport › should display product images correctly on mobile listing page" classname="merchant-product-images.spec.cjs" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Merchant Product Images › Mobile Viewport › should display product image correctly on mobile detail page" classname="merchant-product-images.spec.cjs" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Merchant Product Images › Mobile Viewport › should handle image upload form on mobile create page" classname="merchant-product-images.spec.cjs" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Merchant Product Images › Image URL Validation › should not have malformed URLs with double prefixes" classname="merchant-product-images.spec.cjs" time="0">
+<skipped>
+</skipped>
+</testcase>
+</testsuite>
+<testsuite name="merchant-registration.spec.cjs" timestamp="2025-07-19T13:04:00.583Z" hostname="webkit" tests="7" failures="0" skipped="7" time="0" errors="0">
+<testcase name="Merchant Registration with Google Maps › Complete merchant registration flow with Google Maps integration" classname="merchant-registration.spec.cjs" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Merchant Registration with Google Maps › Google Maps location selection and clearing functionality" classname="merchant-registration.spec.cjs" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Merchant Registration with Google Maps › Form validation with missing required fields" classname="merchant-registration.spec.cjs" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Merchant Registration with Google Maps › Google Maps fallback when API fails" classname="merchant-registration.spec.cjs" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Merchant Registration with Google Maps › Responsive design on mobile viewport" classname="merchant-registration.spec.cjs" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Merchant Registration with Google Maps › Verify other registration flows remain unaffected" classname="merchant-registration.spec.cjs" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Merchant Registration with Google Maps › Location data persistence on form errors" classname="merchant-registration.spec.cjs" time="0">
+<skipped>
+</skipped>
+</testcase>
+</testsuite>
+<testsuite name="merchant-service-images.spec.cjs" timestamp="2025-07-19T13:04:00.583Z" hostname="webkit" tests="6" failures="0" skipped="6" time="0" errors="0">
+<testcase name="Merchant Service Images › should display service images correctly on merchant services page - desktop" classname="merchant-service-images.spec.cjs" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Merchant Service Images › should display service images correctly on merchant services page - mobile" classname="merchant-service-images.spec.cjs" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Merchant Service Images › should display service image correctly on service detail page" classname="merchant-service-images.spec.cjs" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Merchant Service Images › should show placeholder for services without images" classname="merchant-service-images.spec.cjs" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Merchant Service Images › should not have broken image placeholders" classname="merchant-service-images.spec.cjs" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Merchant Service Images › should have properly formatted image URLs" classname="merchant-service-images.spec.cjs" time="0">
+<skipped>
+</skipped>
+</testcase>
+</testsuite>
+<testsuite name="merchant-stock-allocation.spec.cjs" timestamp="2025-07-19T13:04:00.583Z" hostname="webkit" tests="4" failures="0" skipped="4" time="0" errors="0">
+<testcase name="Merchant Product Stock Allocation Validation › should validate stock allocation between general and color-specific stock" classname="merchant-stock-allocation.spec.cjs" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Merchant Product Stock Allocation Validation › should show real-time stock calculation and visual feedback" classname="merchant-stock-allocation.spec.cjs" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Merchant Product Stock Allocation Validation › should handle mobile responsive design for stock validation" classname="merchant-stock-allocation.spec.cjs" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Merchant Product Stock Allocation Validation › should verify current implementation status" classname="merchant-stock-allocation.spec.cjs" time="0">
+<skipped>
+</skipped>
+</testcase>
+</testsuite>
+<testsuite name="provider-registration.spec.js" timestamp="2025-07-19T13:04:00.583Z" hostname="webkit" tests="18" failures="0" skipped="18" time="0" errors="0">
+<testcase name="Provider Registration Form Validation › should load the registration form correctly" classname="provider-registration.spec.js" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Provider Registration Form Validation › should show validation errors for empty required fields" classname="provider-registration.spec.js" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Provider Registration Form Validation › should validate field lengths and formats" classname="provider-registration.spec.js" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Provider Registration Form Validation › should validate password confirmation match" classname="provider-registration.spec.js" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Provider Registration Form Validation › should validate UAE phone number formats" classname="provider-registration.spec.js" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Provider Registration Form Validation › should validate delivery capability selection" classname="provider-registration.spec.js" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Provider Registration Form Validation › should validate terms and conditions" classname="provider-registration.spec.js" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Provider Registration Form Validation › should test business name uniqueness validation" classname="provider-registration.spec.js" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Provider Registration Form Validation › should handle successful form submission" classname="provider-registration.spec.js" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Provider Registration Form Validation › should test modal accessibility features" classname="provider-registration.spec.js" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Provider Registration Form Validation › should test form field accessibility" classname="provider-registration.spec.js" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Provider Registration Form Validation › should test real-time validation feedback" classname="provider-registration.spec.js" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Provider Registration Form Validation › should test password strength indicator" classname="provider-registration.spec.js" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Provider Registration Form Validation › should test form responsiveness on mobile" classname="provider-registration.spec.js" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Provider Registration Form Validation › should test email registration status validation - verified user" classname="provider-registration.spec.js" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Provider Registration Form Validation › should test email registration status validation - license completed user" classname="provider-registration.spec.js" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Provider Registration Form Validation › should test phone registration status validation - verified user" classname="provider-registration.spec.js" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Provider Registration Form Validation › should test comprehensive validation flow" classname="provider-registration.spec.js" time="0">
+<skipped>
+</skipped>
+</testcase>
+</testsuite>
+<testsuite name="merchant-add-color-functionality.spec.js" timestamp="2025-07-19T13:04:00.583Z" hostname="Mobile Chrome" tests="2" failures="0" skipped="2" time="0" errors="0">
+<testcase name="Merchant Product Edit - Add Color Functionality › should investigate and fix Add Color button functionality" classname="merchant-add-color-functionality.spec.js" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Merchant Product Edit - Add Color Functionality › should test Add Color functionality on mobile viewport" classname="merchant-add-color-functionality.spec.js" time="0">
+<skipped>
+</skipped>
+</testcase>
+</testsuite>
+<testsuite name="merchant-new-color-first-size-fix.spec.js" timestamp="2025-07-19T13:04:00.583Z" hostname="Mobile Chrome" tests="2" failures="0" skipped="2" time="0" errors="0">
 <testcase name="Size Management UI Refresh Fix › should successfully add first size to new color variant and refresh UI" classname="merchant-new-color-first-size-fix.spec.js" time="0">
 <skipped>
 </skipped>
@@ -49,7 +884,213 @@
 </skipped>
 </testcase>
 </testsuite>
-<testsuite name="merchant-new-color-first-size-fix.spec.js" timestamp="2025-07-19T01:12:50.092Z" hostname="Microsoft Edge" tests="2" failures="0" skipped="2" time="0" errors="0">
+<testsuite name="merchant-new-color-size-refresh-test.spec.js" timestamp="2025-07-19T13:04:00.583Z" hostname="Mobile Chrome" tests="2" failures="0" skipped="2" time="0" errors="0">
+<testcase name="Merchant New Color Size Management Refresh Fix › should immediately show newly added size for a brand new color variant" classname="merchant-new-color-size-refresh-test.spec.js" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Merchant New Color Size Management Refresh Fix › should handle multiple new colors with sizes correctly" classname="merchant-new-color-size-refresh-test.spec.js" time="0">
+<skipped>
+</skipped>
+</testcase>
+</testsuite>
+<testsuite name="merchant-product-images.spec.cjs" timestamp="2025-07-19T13:04:00.583Z" hostname="Mobile Chrome" tests="9" failures="0" skipped="9" time="0" errors="0">
+<testcase name="Merchant Product Images › Desktop Viewport › should display product images correctly on listing page" classname="merchant-product-images.spec.cjs" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Merchant Product Images › Desktop Viewport › should display product image correctly on detail page" classname="merchant-product-images.spec.cjs" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Merchant Product Images › Desktop Viewport › should display current image in edit form" classname="merchant-product-images.spec.cjs" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Merchant Product Images › Desktop Viewport › should show placeholder for products without images" classname="merchant-product-images.spec.cjs" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Merchant Product Images › Desktop Viewport › should handle image upload form on create page" classname="merchant-product-images.spec.cjs" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Merchant Product Images › Mobile Viewport › should display product images correctly on mobile listing page" classname="merchant-product-images.spec.cjs" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Merchant Product Images › Mobile Viewport › should display product image correctly on mobile detail page" classname="merchant-product-images.spec.cjs" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Merchant Product Images › Mobile Viewport › should handle image upload form on mobile create page" classname="merchant-product-images.spec.cjs" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Merchant Product Images › Image URL Validation › should not have malformed URLs with double prefixes" classname="merchant-product-images.spec.cjs" time="0">
+<skipped>
+</skipped>
+</testcase>
+</testsuite>
+<testsuite name="merchant-registration.spec.cjs" timestamp="2025-07-19T13:04:00.583Z" hostname="Mobile Chrome" tests="7" failures="0" skipped="7" time="0" errors="0">
+<testcase name="Merchant Registration with Google Maps › Complete merchant registration flow with Google Maps integration" classname="merchant-registration.spec.cjs" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Merchant Registration with Google Maps › Google Maps location selection and clearing functionality" classname="merchant-registration.spec.cjs" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Merchant Registration with Google Maps › Form validation with missing required fields" classname="merchant-registration.spec.cjs" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Merchant Registration with Google Maps › Google Maps fallback when API fails" classname="merchant-registration.spec.cjs" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Merchant Registration with Google Maps › Responsive design on mobile viewport" classname="merchant-registration.spec.cjs" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Merchant Registration with Google Maps › Verify other registration flows remain unaffected" classname="merchant-registration.spec.cjs" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Merchant Registration with Google Maps › Location data persistence on form errors" classname="merchant-registration.spec.cjs" time="0">
+<skipped>
+</skipped>
+</testcase>
+</testsuite>
+<testsuite name="merchant-service-images.spec.cjs" timestamp="2025-07-19T13:04:00.583Z" hostname="Mobile Chrome" tests="6" failures="0" skipped="6" time="0" errors="0">
+<testcase name="Merchant Service Images › should display service images correctly on merchant services page - desktop" classname="merchant-service-images.spec.cjs" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Merchant Service Images › should display service images correctly on merchant services page - mobile" classname="merchant-service-images.spec.cjs" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Merchant Service Images › should display service image correctly on service detail page" classname="merchant-service-images.spec.cjs" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Merchant Service Images › should show placeholder for services without images" classname="merchant-service-images.spec.cjs" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Merchant Service Images › should not have broken image placeholders" classname="merchant-service-images.spec.cjs" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Merchant Service Images › should have properly formatted image URLs" classname="merchant-service-images.spec.cjs" time="0">
+<skipped>
+</skipped>
+</testcase>
+</testsuite>
+<testsuite name="merchant-stock-allocation.spec.cjs" timestamp="2025-07-19T13:04:00.583Z" hostname="Mobile Chrome" tests="4" failures="0" skipped="4" time="0" errors="0">
+<testcase name="Merchant Product Stock Allocation Validation › should validate stock allocation between general and color-specific stock" classname="merchant-stock-allocation.spec.cjs" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Merchant Product Stock Allocation Validation › should show real-time stock calculation and visual feedback" classname="merchant-stock-allocation.spec.cjs" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Merchant Product Stock Allocation Validation › should handle mobile responsive design for stock validation" classname="merchant-stock-allocation.spec.cjs" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Merchant Product Stock Allocation Validation › should verify current implementation status" classname="merchant-stock-allocation.spec.cjs" time="0">
+<skipped>
+</skipped>
+</testcase>
+</testsuite>
+<testsuite name="provider-registration.spec.js" timestamp="2025-07-19T13:04:00.583Z" hostname="Mobile Chrome" tests="18" failures="0" skipped="18" time="0" errors="0">
+<testcase name="Provider Registration Form Validation › should load the registration form correctly" classname="provider-registration.spec.js" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Provider Registration Form Validation › should show validation errors for empty required fields" classname="provider-registration.spec.js" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Provider Registration Form Validation › should validate field lengths and formats" classname="provider-registration.spec.js" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Provider Registration Form Validation › should validate password confirmation match" classname="provider-registration.spec.js" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Provider Registration Form Validation › should validate UAE phone number formats" classname="provider-registration.spec.js" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Provider Registration Form Validation › should validate delivery capability selection" classname="provider-registration.spec.js" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Provider Registration Form Validation › should validate terms and conditions" classname="provider-registration.spec.js" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Provider Registration Form Validation › should test business name uniqueness validation" classname="provider-registration.spec.js" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Provider Registration Form Validation › should handle successful form submission" classname="provider-registration.spec.js" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Provider Registration Form Validation › should test modal accessibility features" classname="provider-registration.spec.js" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Provider Registration Form Validation › should test form field accessibility" classname="provider-registration.spec.js" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Provider Registration Form Validation › should test real-time validation feedback" classname="provider-registration.spec.js" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Provider Registration Form Validation › should test password strength indicator" classname="provider-registration.spec.js" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Provider Registration Form Validation › should test form responsiveness on mobile" classname="provider-registration.spec.js" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Provider Registration Form Validation › should test email registration status validation - verified user" classname="provider-registration.spec.js" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Provider Registration Form Validation › should test email registration status validation - license completed user" classname="provider-registration.spec.js" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Provider Registration Form Validation › should test phone registration status validation - verified user" classname="provider-registration.spec.js" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Provider Registration Form Validation › should test comprehensive validation flow" classname="provider-registration.spec.js" time="0">
+<skipped>
+</skipped>
+</testcase>
+</testsuite>
+<testsuite name="merchant-add-color-functionality.spec.js" timestamp="2025-07-19T13:04:00.583Z" hostname="Mobile Safari" tests="2" failures="0" skipped="2" time="0" errors="0">
+<testcase name="Merchant Product Edit - Add Color Functionality › should investigate and fix Add Color button functionality" classname="merchant-add-color-functionality.spec.js" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Merchant Product Edit - Add Color Functionality › should test Add Color functionality on mobile viewport" classname="merchant-add-color-functionality.spec.js" time="0">
+<skipped>
+</skipped>
+</testcase>
+</testsuite>
+<testsuite name="merchant-new-color-first-size-fix.spec.js" timestamp="2025-07-19T13:04:00.583Z" hostname="Mobile Safari" tests="2" failures="0" skipped="2" time="0" errors="0">
 <testcase name="Size Management UI Refresh Fix › should successfully add first size to new color variant and refresh UI" classname="merchant-new-color-first-size-fix.spec.js" time="0">
 <skipped>
 </skipped>
@@ -59,12 +1100,630 @@
 </skipped>
 </testcase>
 </testsuite>
-<testsuite name="merchant-new-color-first-size-fix.spec.js" timestamp="2025-07-19T01:12:50.092Z" hostname="Google Chrome" tests="2" failures="0" skipped="2" time="0" errors="0">
+<testsuite name="merchant-new-color-size-refresh-test.spec.js" timestamp="2025-07-19T13:04:00.583Z" hostname="Mobile Safari" tests="2" failures="0" skipped="2" time="0" errors="0">
+<testcase name="Merchant New Color Size Management Refresh Fix › should immediately show newly added size for a brand new color variant" classname="merchant-new-color-size-refresh-test.spec.js" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Merchant New Color Size Management Refresh Fix › should handle multiple new colors with sizes correctly" classname="merchant-new-color-size-refresh-test.spec.js" time="0">
+<skipped>
+</skipped>
+</testcase>
+</testsuite>
+<testsuite name="merchant-product-images.spec.cjs" timestamp="2025-07-19T13:04:00.583Z" hostname="Mobile Safari" tests="9" failures="0" skipped="9" time="0" errors="0">
+<testcase name="Merchant Product Images › Desktop Viewport › should display product images correctly on listing page" classname="merchant-product-images.spec.cjs" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Merchant Product Images › Desktop Viewport › should display product image correctly on detail page" classname="merchant-product-images.spec.cjs" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Merchant Product Images › Desktop Viewport › should display current image in edit form" classname="merchant-product-images.spec.cjs" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Merchant Product Images › Desktop Viewport › should show placeholder for products without images" classname="merchant-product-images.spec.cjs" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Merchant Product Images › Desktop Viewport › should handle image upload form on create page" classname="merchant-product-images.spec.cjs" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Merchant Product Images › Mobile Viewport › should display product images correctly on mobile listing page" classname="merchant-product-images.spec.cjs" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Merchant Product Images › Mobile Viewport › should display product image correctly on mobile detail page" classname="merchant-product-images.spec.cjs" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Merchant Product Images › Mobile Viewport › should handle image upload form on mobile create page" classname="merchant-product-images.spec.cjs" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Merchant Product Images › Image URL Validation › should not have malformed URLs with double prefixes" classname="merchant-product-images.spec.cjs" time="0">
+<skipped>
+</skipped>
+</testcase>
+</testsuite>
+<testsuite name="merchant-registration.spec.cjs" timestamp="2025-07-19T13:04:00.583Z" hostname="Mobile Safari" tests="7" failures="0" skipped="7" time="0" errors="0">
+<testcase name="Merchant Registration with Google Maps › Complete merchant registration flow with Google Maps integration" classname="merchant-registration.spec.cjs" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Merchant Registration with Google Maps › Google Maps location selection and clearing functionality" classname="merchant-registration.spec.cjs" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Merchant Registration with Google Maps › Form validation with missing required fields" classname="merchant-registration.spec.cjs" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Merchant Registration with Google Maps › Google Maps fallback when API fails" classname="merchant-registration.spec.cjs" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Merchant Registration with Google Maps › Responsive design on mobile viewport" classname="merchant-registration.spec.cjs" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Merchant Registration with Google Maps › Verify other registration flows remain unaffected" classname="merchant-registration.spec.cjs" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Merchant Registration with Google Maps › Location data persistence on form errors" classname="merchant-registration.spec.cjs" time="0">
+<skipped>
+</skipped>
+</testcase>
+</testsuite>
+<testsuite name="merchant-service-images.spec.cjs" timestamp="2025-07-19T13:04:00.583Z" hostname="Mobile Safari" tests="6" failures="0" skipped="6" time="0" errors="0">
+<testcase name="Merchant Service Images › should display service images correctly on merchant services page - desktop" classname="merchant-service-images.spec.cjs" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Merchant Service Images › should display service images correctly on merchant services page - mobile" classname="merchant-service-images.spec.cjs" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Merchant Service Images › should display service image correctly on service detail page" classname="merchant-service-images.spec.cjs" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Merchant Service Images › should show placeholder for services without images" classname="merchant-service-images.spec.cjs" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Merchant Service Images › should not have broken image placeholders" classname="merchant-service-images.spec.cjs" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Merchant Service Images › should have properly formatted image URLs" classname="merchant-service-images.spec.cjs" time="0">
+<skipped>
+</skipped>
+</testcase>
+</testsuite>
+<testsuite name="merchant-stock-allocation.spec.cjs" timestamp="2025-07-19T13:04:00.583Z" hostname="Mobile Safari" tests="4" failures="0" skipped="4" time="0" errors="0">
+<testcase name="Merchant Product Stock Allocation Validation › should validate stock allocation between general and color-specific stock" classname="merchant-stock-allocation.spec.cjs" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Merchant Product Stock Allocation Validation › should show real-time stock calculation and visual feedback" classname="merchant-stock-allocation.spec.cjs" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Merchant Product Stock Allocation Validation › should handle mobile responsive design for stock validation" classname="merchant-stock-allocation.spec.cjs" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Merchant Product Stock Allocation Validation › should verify current implementation status" classname="merchant-stock-allocation.spec.cjs" time="0">
+<skipped>
+</skipped>
+</testcase>
+</testsuite>
+<testsuite name="provider-registration.spec.js" timestamp="2025-07-19T13:04:00.583Z" hostname="Mobile Safari" tests="18" failures="0" skipped="18" time="0" errors="0">
+<testcase name="Provider Registration Form Validation › should load the registration form correctly" classname="provider-registration.spec.js" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Provider Registration Form Validation › should show validation errors for empty required fields" classname="provider-registration.spec.js" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Provider Registration Form Validation › should validate field lengths and formats" classname="provider-registration.spec.js" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Provider Registration Form Validation › should validate password confirmation match" classname="provider-registration.spec.js" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Provider Registration Form Validation › should validate UAE phone number formats" classname="provider-registration.spec.js" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Provider Registration Form Validation › should validate delivery capability selection" classname="provider-registration.spec.js" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Provider Registration Form Validation › should validate terms and conditions" classname="provider-registration.spec.js" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Provider Registration Form Validation › should test business name uniqueness validation" classname="provider-registration.spec.js" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Provider Registration Form Validation › should handle successful form submission" classname="provider-registration.spec.js" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Provider Registration Form Validation › should test modal accessibility features" classname="provider-registration.spec.js" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Provider Registration Form Validation › should test form field accessibility" classname="provider-registration.spec.js" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Provider Registration Form Validation › should test real-time validation feedback" classname="provider-registration.spec.js" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Provider Registration Form Validation › should test password strength indicator" classname="provider-registration.spec.js" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Provider Registration Form Validation › should test form responsiveness on mobile" classname="provider-registration.spec.js" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Provider Registration Form Validation › should test email registration status validation - verified user" classname="provider-registration.spec.js" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Provider Registration Form Validation › should test email registration status validation - license completed user" classname="provider-registration.spec.js" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Provider Registration Form Validation › should test phone registration status validation - verified user" classname="provider-registration.spec.js" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Provider Registration Form Validation › should test comprehensive validation flow" classname="provider-registration.spec.js" time="0">
+<skipped>
+</skipped>
+</testcase>
+</testsuite>
+<testsuite name="merchant-add-color-functionality.spec.js" timestamp="2025-07-19T13:04:00.583Z" hostname="Microsoft Edge" tests="2" failures="0" skipped="2" time="0" errors="0">
+<testcase name="Merchant Product Edit - Add Color Functionality › should investigate and fix Add Color button functionality" classname="merchant-add-color-functionality.spec.js" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Merchant Product Edit - Add Color Functionality › should test Add Color functionality on mobile viewport" classname="merchant-add-color-functionality.spec.js" time="0">
+<skipped>
+</skipped>
+</testcase>
+</testsuite>
+<testsuite name="merchant-new-color-first-size-fix.spec.js" timestamp="2025-07-19T13:04:00.583Z" hostname="Microsoft Edge" tests="2" failures="0" skipped="2" time="0" errors="0">
 <testcase name="Size Management UI Refresh Fix › should successfully add first size to new color variant and refresh UI" classname="merchant-new-color-first-size-fix.spec.js" time="0">
 <skipped>
 </skipped>
 </testcase>
 <testcase name="Size Management UI Refresh Fix › should handle errors gracefully and show error state" classname="merchant-new-color-first-size-fix.spec.js" time="0">
+<skipped>
+</skipped>
+</testcase>
+</testsuite>
+<testsuite name="merchant-new-color-size-refresh-test.spec.js" timestamp="2025-07-19T13:04:00.583Z" hostname="Microsoft Edge" tests="2" failures="0" skipped="2" time="0" errors="0">
+<testcase name="Merchant New Color Size Management Refresh Fix › should immediately show newly added size for a brand new color variant" classname="merchant-new-color-size-refresh-test.spec.js" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Merchant New Color Size Management Refresh Fix › should handle multiple new colors with sizes correctly" classname="merchant-new-color-size-refresh-test.spec.js" time="0">
+<skipped>
+</skipped>
+</testcase>
+</testsuite>
+<testsuite name="merchant-product-images.spec.cjs" timestamp="2025-07-19T13:04:00.583Z" hostname="Microsoft Edge" tests="9" failures="0" skipped="9" time="0" errors="0">
+<testcase name="Merchant Product Images › Desktop Viewport › should display product images correctly on listing page" classname="merchant-product-images.spec.cjs" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Merchant Product Images › Desktop Viewport › should display product image correctly on detail page" classname="merchant-product-images.spec.cjs" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Merchant Product Images › Desktop Viewport › should display current image in edit form" classname="merchant-product-images.spec.cjs" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Merchant Product Images › Desktop Viewport › should show placeholder for products without images" classname="merchant-product-images.spec.cjs" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Merchant Product Images › Desktop Viewport › should handle image upload form on create page" classname="merchant-product-images.spec.cjs" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Merchant Product Images › Mobile Viewport › should display product images correctly on mobile listing page" classname="merchant-product-images.spec.cjs" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Merchant Product Images › Mobile Viewport › should display product image correctly on mobile detail page" classname="merchant-product-images.spec.cjs" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Merchant Product Images › Mobile Viewport › should handle image upload form on mobile create page" classname="merchant-product-images.spec.cjs" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Merchant Product Images › Image URL Validation › should not have malformed URLs with double prefixes" classname="merchant-product-images.spec.cjs" time="0">
+<skipped>
+</skipped>
+</testcase>
+</testsuite>
+<testsuite name="merchant-registration.spec.cjs" timestamp="2025-07-19T13:04:00.583Z" hostname="Microsoft Edge" tests="7" failures="0" skipped="7" time="0" errors="0">
+<testcase name="Merchant Registration with Google Maps › Complete merchant registration flow with Google Maps integration" classname="merchant-registration.spec.cjs" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Merchant Registration with Google Maps › Google Maps location selection and clearing functionality" classname="merchant-registration.spec.cjs" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Merchant Registration with Google Maps › Form validation with missing required fields" classname="merchant-registration.spec.cjs" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Merchant Registration with Google Maps › Google Maps fallback when API fails" classname="merchant-registration.spec.cjs" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Merchant Registration with Google Maps › Responsive design on mobile viewport" classname="merchant-registration.spec.cjs" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Merchant Registration with Google Maps › Verify other registration flows remain unaffected" classname="merchant-registration.spec.cjs" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Merchant Registration with Google Maps › Location data persistence on form errors" classname="merchant-registration.spec.cjs" time="0">
+<skipped>
+</skipped>
+</testcase>
+</testsuite>
+<testsuite name="merchant-service-images.spec.cjs" timestamp="2025-07-19T13:04:00.583Z" hostname="Microsoft Edge" tests="6" failures="0" skipped="6" time="0" errors="0">
+<testcase name="Merchant Service Images › should display service images correctly on merchant services page - desktop" classname="merchant-service-images.spec.cjs" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Merchant Service Images › should display service images correctly on merchant services page - mobile" classname="merchant-service-images.spec.cjs" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Merchant Service Images › should display service image correctly on service detail page" classname="merchant-service-images.spec.cjs" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Merchant Service Images › should show placeholder for services without images" classname="merchant-service-images.spec.cjs" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Merchant Service Images › should not have broken image placeholders" classname="merchant-service-images.spec.cjs" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Merchant Service Images › should have properly formatted image URLs" classname="merchant-service-images.spec.cjs" time="0">
+<skipped>
+</skipped>
+</testcase>
+</testsuite>
+<testsuite name="merchant-stock-allocation.spec.cjs" timestamp="2025-07-19T13:04:00.583Z" hostname="Microsoft Edge" tests="4" failures="0" skipped="4" time="0" errors="0">
+<testcase name="Merchant Product Stock Allocation Validation › should validate stock allocation between general and color-specific stock" classname="merchant-stock-allocation.spec.cjs" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Merchant Product Stock Allocation Validation › should show real-time stock calculation and visual feedback" classname="merchant-stock-allocation.spec.cjs" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Merchant Product Stock Allocation Validation › should handle mobile responsive design for stock validation" classname="merchant-stock-allocation.spec.cjs" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Merchant Product Stock Allocation Validation › should verify current implementation status" classname="merchant-stock-allocation.spec.cjs" time="0">
+<skipped>
+</skipped>
+</testcase>
+</testsuite>
+<testsuite name="provider-registration.spec.js" timestamp="2025-07-19T13:04:00.583Z" hostname="Microsoft Edge" tests="18" failures="0" skipped="18" time="0" errors="0">
+<testcase name="Provider Registration Form Validation › should load the registration form correctly" classname="provider-registration.spec.js" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Provider Registration Form Validation › should show validation errors for empty required fields" classname="provider-registration.spec.js" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Provider Registration Form Validation › should validate field lengths and formats" classname="provider-registration.spec.js" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Provider Registration Form Validation › should validate password confirmation match" classname="provider-registration.spec.js" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Provider Registration Form Validation › should validate UAE phone number formats" classname="provider-registration.spec.js" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Provider Registration Form Validation › should validate delivery capability selection" classname="provider-registration.spec.js" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Provider Registration Form Validation › should validate terms and conditions" classname="provider-registration.spec.js" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Provider Registration Form Validation › should test business name uniqueness validation" classname="provider-registration.spec.js" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Provider Registration Form Validation › should handle successful form submission" classname="provider-registration.spec.js" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Provider Registration Form Validation › should test modal accessibility features" classname="provider-registration.spec.js" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Provider Registration Form Validation › should test form field accessibility" classname="provider-registration.spec.js" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Provider Registration Form Validation › should test real-time validation feedback" classname="provider-registration.spec.js" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Provider Registration Form Validation › should test password strength indicator" classname="provider-registration.spec.js" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Provider Registration Form Validation › should test form responsiveness on mobile" classname="provider-registration.spec.js" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Provider Registration Form Validation › should test email registration status validation - verified user" classname="provider-registration.spec.js" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Provider Registration Form Validation › should test email registration status validation - license completed user" classname="provider-registration.spec.js" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Provider Registration Form Validation › should test phone registration status validation - verified user" classname="provider-registration.spec.js" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Provider Registration Form Validation › should test comprehensive validation flow" classname="provider-registration.spec.js" time="0">
+<skipped>
+</skipped>
+</testcase>
+</testsuite>
+<testsuite name="merchant-add-color-functionality.spec.js" timestamp="2025-07-19T13:04:00.583Z" hostname="Google Chrome" tests="2" failures="0" skipped="2" time="0" errors="0">
+<testcase name="Merchant Product Edit - Add Color Functionality › should investigate and fix Add Color button functionality" classname="merchant-add-color-functionality.spec.js" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Merchant Product Edit - Add Color Functionality › should test Add Color functionality on mobile viewport" classname="merchant-add-color-functionality.spec.js" time="0">
+<skipped>
+</skipped>
+</testcase>
+</testsuite>
+<testsuite name="merchant-new-color-first-size-fix.spec.js" timestamp="2025-07-19T13:04:00.583Z" hostname="Google Chrome" tests="2" failures="0" skipped="2" time="0" errors="0">
+<testcase name="Size Management UI Refresh Fix › should successfully add first size to new color variant and refresh UI" classname="merchant-new-color-first-size-fix.spec.js" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Size Management UI Refresh Fix › should handle errors gracefully and show error state" classname="merchant-new-color-first-size-fix.spec.js" time="0">
+<skipped>
+</skipped>
+</testcase>
+</testsuite>
+<testsuite name="merchant-new-color-size-refresh-test.spec.js" timestamp="2025-07-19T13:04:00.583Z" hostname="Google Chrome" tests="2" failures="0" skipped="2" time="0" errors="0">
+<testcase name="Merchant New Color Size Management Refresh Fix › should immediately show newly added size for a brand new color variant" classname="merchant-new-color-size-refresh-test.spec.js" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Merchant New Color Size Management Refresh Fix › should handle multiple new colors with sizes correctly" classname="merchant-new-color-size-refresh-test.spec.js" time="0">
+<skipped>
+</skipped>
+</testcase>
+</testsuite>
+<testsuite name="merchant-product-images.spec.cjs" timestamp="2025-07-19T13:04:00.583Z" hostname="Google Chrome" tests="9" failures="0" skipped="9" time="0" errors="0">
+<testcase name="Merchant Product Images › Desktop Viewport › should display product images correctly on listing page" classname="merchant-product-images.spec.cjs" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Merchant Product Images › Desktop Viewport › should display product image correctly on detail page" classname="merchant-product-images.spec.cjs" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Merchant Product Images › Desktop Viewport › should display current image in edit form" classname="merchant-product-images.spec.cjs" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Merchant Product Images › Desktop Viewport › should show placeholder for products without images" classname="merchant-product-images.spec.cjs" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Merchant Product Images › Desktop Viewport › should handle image upload form on create page" classname="merchant-product-images.spec.cjs" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Merchant Product Images › Mobile Viewport › should display product images correctly on mobile listing page" classname="merchant-product-images.spec.cjs" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Merchant Product Images › Mobile Viewport › should display product image correctly on mobile detail page" classname="merchant-product-images.spec.cjs" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Merchant Product Images › Mobile Viewport › should handle image upload form on mobile create page" classname="merchant-product-images.spec.cjs" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Merchant Product Images › Image URL Validation › should not have malformed URLs with double prefixes" classname="merchant-product-images.spec.cjs" time="0">
+<skipped>
+</skipped>
+</testcase>
+</testsuite>
+<testsuite name="merchant-registration.spec.cjs" timestamp="2025-07-19T13:04:00.583Z" hostname="Google Chrome" tests="7" failures="0" skipped="7" time="0" errors="0">
+<testcase name="Merchant Registration with Google Maps › Complete merchant registration flow with Google Maps integration" classname="merchant-registration.spec.cjs" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Merchant Registration with Google Maps › Google Maps location selection and clearing functionality" classname="merchant-registration.spec.cjs" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Merchant Registration with Google Maps › Form validation with missing required fields" classname="merchant-registration.spec.cjs" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Merchant Registration with Google Maps › Google Maps fallback when API fails" classname="merchant-registration.spec.cjs" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Merchant Registration with Google Maps › Responsive design on mobile viewport" classname="merchant-registration.spec.cjs" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Merchant Registration with Google Maps › Verify other registration flows remain unaffected" classname="merchant-registration.spec.cjs" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Merchant Registration with Google Maps › Location data persistence on form errors" classname="merchant-registration.spec.cjs" time="0">
+<skipped>
+</skipped>
+</testcase>
+</testsuite>
+<testsuite name="merchant-service-images.spec.cjs" timestamp="2025-07-19T13:04:00.583Z" hostname="Google Chrome" tests="6" failures="0" skipped="6" time="0" errors="0">
+<testcase name="Merchant Service Images › should display service images correctly on merchant services page - desktop" classname="merchant-service-images.spec.cjs" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Merchant Service Images › should display service images correctly on merchant services page - mobile" classname="merchant-service-images.spec.cjs" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Merchant Service Images › should display service image correctly on service detail page" classname="merchant-service-images.spec.cjs" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Merchant Service Images › should show placeholder for services without images" classname="merchant-service-images.spec.cjs" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Merchant Service Images › should not have broken image placeholders" classname="merchant-service-images.spec.cjs" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Merchant Service Images › should have properly formatted image URLs" classname="merchant-service-images.spec.cjs" time="0">
+<skipped>
+</skipped>
+</testcase>
+</testsuite>
+<testsuite name="merchant-stock-allocation.spec.cjs" timestamp="2025-07-19T13:04:00.583Z" hostname="Google Chrome" tests="4" failures="0" skipped="4" time="0" errors="0">
+<testcase name="Merchant Product Stock Allocation Validation › should validate stock allocation between general and color-specific stock" classname="merchant-stock-allocation.spec.cjs" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Merchant Product Stock Allocation Validation › should show real-time stock calculation and visual feedback" classname="merchant-stock-allocation.spec.cjs" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Merchant Product Stock Allocation Validation › should handle mobile responsive design for stock validation" classname="merchant-stock-allocation.spec.cjs" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Merchant Product Stock Allocation Validation › should verify current implementation status" classname="merchant-stock-allocation.spec.cjs" time="0">
+<skipped>
+</skipped>
+</testcase>
+</testsuite>
+<testsuite name="provider-registration.spec.js" timestamp="2025-07-19T13:04:00.583Z" hostname="Google Chrome" tests="18" failures="0" skipped="18" time="0" errors="0">
+<testcase name="Provider Registration Form Validation › should load the registration form correctly" classname="provider-registration.spec.js" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Provider Registration Form Validation › should show validation errors for empty required fields" classname="provider-registration.spec.js" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Provider Registration Form Validation › should validate field lengths and formats" classname="provider-registration.spec.js" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Provider Registration Form Validation › should validate password confirmation match" classname="provider-registration.spec.js" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Provider Registration Form Validation › should validate UAE phone number formats" classname="provider-registration.spec.js" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Provider Registration Form Validation › should validate delivery capability selection" classname="provider-registration.spec.js" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Provider Registration Form Validation › should validate terms and conditions" classname="provider-registration.spec.js" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Provider Registration Form Validation › should test business name uniqueness validation" classname="provider-registration.spec.js" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Provider Registration Form Validation › should handle successful form submission" classname="provider-registration.spec.js" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Provider Registration Form Validation › should test modal accessibility features" classname="provider-registration.spec.js" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Provider Registration Form Validation › should test form field accessibility" classname="provider-registration.spec.js" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Provider Registration Form Validation › should test real-time validation feedback" classname="provider-registration.spec.js" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Provider Registration Form Validation › should test password strength indicator" classname="provider-registration.spec.js" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Provider Registration Form Validation › should test form responsiveness on mobile" classname="provider-registration.spec.js" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Provider Registration Form Validation › should test email registration status validation - verified user" classname="provider-registration.spec.js" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Provider Registration Form Validation › should test email registration status validation - license completed user" classname="provider-registration.spec.js" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Provider Registration Form Validation › should test phone registration status validation - verified user" classname="provider-registration.spec.js" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Provider Registration Form Validation › should test comprehensive validation flow" classname="provider-registration.spec.js" time="0">
 <skipped>
 </skipped>
 </testcase>

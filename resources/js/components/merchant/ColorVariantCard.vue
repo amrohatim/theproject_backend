@@ -472,6 +472,17 @@ export default {
 
       const updatedColor = { ...props.color, [field]: finalValue }
       emit('update', props.index, updatedColor)
+
+      // Auto-update color name when color code changes
+      if (field === 'color_code' && finalValue) {
+        const matchingColor = colorOptionsWithCodes.find(color =>
+          color.code.toLowerCase() === finalValue.toLowerCase()
+        )
+        if (matchingColor && matchingColor.name !== props.color.name) {
+          const updatedColorWithName = { ...updatedColor, name: matchingColor.name }
+          emit('update', props.index, updatedColorWithName)
+        }
+      }
     }
 
     const showStockCorrectionFeedback = (attempted, corrected) => {
@@ -502,17 +513,25 @@ export default {
     }
 
     const selectColor = (colorName) => {
+      // Update the color name first
       updateColor('name', colorName)
-      // Always auto-update color code when a color is selected
+
+      // Then update the color code
       const colorCode = getColorCode(colorName)
       if (colorCode) {
         updateColor('color_code', colorCode)
       }
+
       showColorDropdown.value = false
     }
 
     // Close dropdown when clicking outside
     const handleClickOutside = (event) => {
+      // Don't close if clicking on a color option
+      if (event.target.closest('.color-option')) {
+        return
+      }
+
       if (!event.target.closest('.color-selection-container')) {
         showColorDropdown.value = false
       }
@@ -524,6 +543,19 @@ export default {
         document.addEventListener('click', handleClickOutside)
       } else {
         document.removeEventListener('click', handleClickOutside)
+      }
+    })
+
+    // Watch for color code changes and auto-update color name
+    watch(() => props.color.color_code, (newColorCode) => {
+      if (newColorCode) {
+        // Find the color name that matches this color code
+        const matchingColor = colorOptionsWithCodes.find(color =>
+          color.code.toLowerCase() === newColorCode.toLowerCase()
+        )
+        if (matchingColor && matchingColor.name !== props.color.name) {
+          updateColor('name', matchingColor.name)
+        }
       }
     })
 

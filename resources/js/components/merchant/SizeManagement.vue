@@ -61,7 +61,12 @@
       <i class="fas fa-ruler w-8 h-8 mb-3" style="color: var(--gray-400);"></i>
       <h6 class="vue-text-sm mb-2">No sizes added</h6>
       <p class="text-xs mb-4" style="color: var(--gray-500);">
-        Add sizes to this color variant to manage stock allocation
+        <span v-if="isProductCreationMode">
+          Add sizes to this color variant for better inventory management
+        </span>
+        <span v-else>
+          Add sizes to this color variant to manage stock allocation
+        </span>
       </p>
       <button type="button"
               class="vue-btn vue-btn-primary text-sm"
@@ -404,6 +409,11 @@ export default {
       errors: {}
     })
 
+    // Computed property to determine if we're in product creation mode
+    const isProductCreationMode = computed(() => {
+      return !props.productId || props.productId === null || props.productId === undefined || props.productId === 'null' || props.productId === 'new'
+    })
+
     // Methods
     const fetchSizeOptions = async () => {
       try {
@@ -444,6 +454,13 @@ export default {
     }
 
     const fetchSizes = async () => {
+      // Skip API calls during product creation mode
+      if (isProductCreationMode.value) {
+        console.log('📝 Skipping fetchSizes during product creation mode')
+        loading.value = false
+        return
+      }
+
       try {
         loading.value = true
         errorMessage.value = null // Clear any previous error
@@ -539,6 +556,13 @@ export default {
     }
 
     const fetchSizesWithColorId = async (colorId) => {
+      // Skip API calls during product creation mode
+      if (isProductCreationMode.value) {
+        console.log('📝 Skipping fetchSizesWithColorId during product creation mode')
+        loading.value = false
+        return
+      }
+
       try {
         loading.value = true
         errorMessage.value = null // Clear any previous error
@@ -634,6 +658,12 @@ export default {
     }
 
     const refreshSizes = async (forceColorId = null) => {
+      // Skip refresh during product creation mode
+      if (isProductCreationMode.value) {
+        console.log('📝 Skipping refreshSizes during product creation mode')
+        return
+      }
+
       // Check if we have a valid colorId (either from props, parameter, or recently updated)
       const colorIdToUse = forceColorId || props.colorId
 
@@ -811,6 +841,20 @@ export default {
         return
       }
 
+      // Handle product creation mode (local size management)
+      if (isProductCreationMode.value) {
+        console.log('💾 Saving size locally during product creation')
+        size.editing = false
+        size.errors = {}
+
+        // Update the original data for cancel functionality
+        size.originalData = { ...size }
+
+        emit('sizes-updated', sizes.value)
+        return
+      }
+
+      // Handle existing product mode (API-based management)
       try {
         saving.value = true
 
@@ -872,6 +916,15 @@ export default {
 
       const size = sizes.value[index]
 
+      // Handle product creation mode (local size management)
+      if (isProductCreationMode.value) {
+        console.log('🗑️ Removing size locally during product creation')
+        sizes.value.splice(index, 1)
+        emit('sizes-updated', sizes.value)
+        return
+      }
+
+      // Handle existing product mode (API-based management)
       try {
         // Call the API to delete the size
         const response = await window.axios.post('/merchant/api/sizes/delete', {
@@ -936,6 +989,50 @@ export default {
 
       try {
         saving.value = true
+
+        // Handle product creation mode (local size management)
+        if (isProductCreationMode.value) {
+          console.log('📝 Adding size locally during product creation')
+
+          // Create a new size object with a temporary ID
+          const newSizeData = {
+            id: `temp_${Date.now()}_${Math.random().toString(36).substring(2, 11)}`, // Temporary ID
+            name: newSize.name,
+            value: newSize.value,
+            category: newSize.category || 'clothes',
+            additional_info: newSize.additional_info,
+            stock: newSize.stock || 0,
+            price_adjustment: newSize.price_adjustment || 0,
+            is_available: newSize.is_available !== false,
+            display_order: sizes.value.length,
+            editing: false,
+            errors: {},
+            originalData: {
+              name: newSize.name,
+              value: newSize.value,
+              category: newSize.category || 'clothes',
+              additional_info: newSize.additional_info,
+              stock: newSize.stock || 0,
+              price_adjustment: newSize.price_adjustment || 0,
+              is_available: newSize.is_available !== false,
+              display_order: sizes.value.length
+            }
+          }
+
+          // Add the new size to the local array
+          sizes.value.push(newSizeData)
+
+          // Close the modal
+          closeAddSizeModal()
+
+          // Emit the updated sizes to parent component
+          emit('sizes-updated', sizes.value)
+
+          console.log('✅ Size added locally for product creation')
+          return
+        }
+
+        // Handle existing product mode (API-based management)
         let colorId = props.colorId
         let wasNewColor = false
 
@@ -1049,15 +1146,16 @@ export default {
     // Lifecycle
     onMounted(() => {
       fetchSizeOptions()
-      if (props.colorId) {
+      // Only fetch sizes if we're not in product creation mode
+      if (props.colorId && !isProductCreationMode.value) {
         fetchSizes()
       }
     })
 
     // Watch for color changes
     watch(() => props.colorId, (newColorId, oldColorId) => {
-      // Fetch sizes whenever we have a valid colorId and it's different from the old one
-      if (newColorId && newColorId !== oldColorId) {
+      // Only fetch sizes if we're not in product creation mode
+      if (!isProductCreationMode.value && newColorId && newColorId !== oldColorId) {
         // Clear existing sizes first to show loading state
         sizes.value = []
         fetchSizes()
@@ -1066,7 +1164,8 @@ export default {
 
     // Additional watch for immediate updates when colorId changes from null/undefined to a value
     watch(() => props.colorId, (newColorId) => {
-      if (newColorId && !loading.value) {
+      // Only fetch sizes if we're not in product creation mode
+      if (!isProductCreationMode.value && newColorId && !loading.value) {
         // If we have a colorId and we're not currently loading, fetch sizes
         fetchSizes()
       }
@@ -1084,6 +1183,7 @@ export default {
       sizeNameOptions,
       totalSizeStock,
       availableSizeStock,
+      isProductCreationMode,
       fetchSizeOptions,
       fetchSizes,
       fetchSizesWithColorId,

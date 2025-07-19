@@ -121,6 +121,14 @@ class ProductController extends Controller
      */
     public function create()
     {
+        return view('merchant.products.create-vue');
+    }
+
+    /**
+     * Get initial data for Vue.js product creation component (API endpoint)
+     */
+    public function getCreateData()
+    {
         // Get categories with parent-child relationships for enhanced form
         $parentCategories = Category::where('is_active', true)
             ->whereNull('parent_id')
@@ -130,7 +138,14 @@ class ProductController extends Controller
             ->orderBy('name')
             ->get();
 
-        return view('merchant.products.create', compact('parentCategories'));
+        // Get user's branches
+        $user = Auth::user();
+        $branches = $user->branches()->where('status', 'active')->get();
+
+        return response()->json([
+            'categories' => $parentCategories,
+            'branches' => $branches
+        ]);
     }
 
     /**
@@ -138,6 +153,11 @@ class ProductController extends Controller
      */
     public function store(Request $request)
     {
+        \Log::info('Product creation request received', [
+            'user_id' => auth()->id(),
+            'request_data' => $request->all()
+        ]);
+
         $request->validate([
             'name' => 'required|string|max:255',
             'category_id' => 'required|exists:categories,id',
@@ -296,6 +316,11 @@ class ProductController extends Controller
                 'display_order' => $colorData['display_order'] ?? $index,
                 'is_default' => $isDefault,
             ]);
+
+            // Process sizes for this color if provided
+            if (isset($colorData['sizes']) && is_array($colorData['sizes']) && !empty($colorData['sizes'])) {
+                $this->processColorSizes($colorData['sizes'], $product, $color);
+            }
         }
 
         // Set the default color image as the main product image
@@ -945,6 +970,58 @@ class ProductController extends Controller
                 Storage::disk('public')->delete($colorToDelete->image);
             }
             $colorToDelete->delete();
+        }
+    }
+
+    /**
+     * Process sizes data for a specific color during product creation.
+     *
+     * @param array $sizesData
+     * @param Product $product
+     * @param ProductColor $color
+     * @return void
+     */
+    private function processColorSizes(array $sizesData, Product $product, ProductColor $color)
+    {
+        foreach ($sizesData as $sizeData) {
+            // Skip if essential data is missing
+            if (empty($sizeData['name'])) {
+                continue;
+            }
+
+            // Determine size category (default to 'clothes' if not provided)
+            $sizeCategory = $sizeData['category'] ?? 'clothes';
+
+            // Find or create the size category
+            $sizeCategoryModel = \App\Models\SizeCategory::firstOrCreate([
+                'name' => $sizeCategory
+            ], [
+                'display_order' => 0,
+                'is_active' => true
+            ]);
+
+            // Create the product size
+            $productSize = \App\Models\ProductSize::create([
+                'product_id' => $product->id,
+                'size_category_id' => $sizeCategoryModel->id,
+                'name' => $sizeData['name'],
+                'value' => $sizeData['value'] ?? $sizeData['name'],
+                'additional_info' => $sizeData['additional_info'] ?? null,
+                'price_adjustment' => $sizeData['price_adjustment'] ?? 0,
+                'stock' => $sizeData['stock'] ?? 0,
+                'display_order' => $sizeData['display_order'] ?? 0,
+                'is_default' => isset($sizeData['is_default']) ? (bool)$sizeData['is_default'] : false,
+            ]);
+
+            // Create the color-size relationship
+            \App\Models\ProductColorSize::create([
+                'product_id' => $product->id,
+                'product_color_id' => $color->id,
+                'product_size_id' => $productSize->id,
+                'stock' => $sizeData['stock'] ?? 0,
+                'price_adjustment' => $sizeData['price_adjustment'] ?? 0,
+                'is_available' => true,
+            ]);
         }
     }
 }
