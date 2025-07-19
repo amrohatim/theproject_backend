@@ -1,30 +1,30 @@
 <template>
-  <div class="specification-item grid grid-cols-12 gap-4 items-center p-4 rounded-lg" style="background-color: var(--gray-50);">
+  <div class="specification-item grid grid-cols-12 gap-4 items-center p-4 rounded-lg">
     <div class="col-span-4">
       <label class="block vue-text-sm mb-2">Key</label>
-      <input type="text" 
+      <input type="text"
              :value="specification.key"
              @input="updateSpecification('key', $event.target.value)"
              placeholder="e.g., Material"
-             class="vue-form-control">
+             class="vue-form-control  bg-white border p-2 border-amber-50 rounded-md">
     </div>
     <div class="col-span-6">
       <label class="block vue-text-sm mb-2">Value</label>
-      <input type="text" 
+      <input type="text"
              :value="specification.value"
              @input="updateSpecification('value', $event.target.value)"
              placeholder="e.g., 100% Cotton"
-             class="vue-form-control">
+             class="vue-form-control  bg-white border p-2 border-amber-50 rounded-md" >
     </div>
     <div class="col-span-1">
       <label class="block vue-text-sm mb-2">Order</label>
-      <input type="number" 
+      <input type="number"
              :value="specification.display_order"
              @input="updateSpecification('display_order', parseInt($event.target.value) || 0)"
              class="vue-form-control">
     </div>
     <div class="col-span-1 flex justify-center">
-      <button type="button" 
+      <button type="button"
               class="remove-item p-2 text-red-600 hover:text-red-700 hover:bg-red-50 rounded-lg transition-colors"
               @click="$emit('remove', index)">
         <i class="fas fa-trash w-4 h-4"></i>
@@ -62,11 +62,13 @@ export default {
 
 <style scoped>
 .specification-item {
+  background-color: var(--gray-50, #f9fafb);
+  border: 1px solid var(--gray-200, #e5e7eb);
   transition: all 0.3s ease;
 }
 
 .specification-item:hover {
-  background-color: var(--slate-100);
+  background-color: var(--gray-100, #f3f4f6);
 }
 
 .col-span-1 { grid-column: span 1 / span 1; }

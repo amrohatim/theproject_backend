@@ -147,8 +147,14 @@
                                 <option value="">Select Category</option>
                                 @foreach($parentCategories ?? [] as $parentCategory)
                                     <optgroup label="{{ $parentCategory->name }}">
+                                        <option value="{{ $parentCategory->id }}" disabled style="color: #6c757d; font-weight: bold;">
+                                            {{ $parentCategory->name }} (Category Group)
+                                        </option>
                                         @foreach($parentCategory->children as $childCategory)
-                                            <option value="{{ $childCategory->id }}" {{ old('category_id') == $childCategory->id ? 'selected' : '' }}>
+                                            <option value="{{ $childCategory->id }}"
+                                                    {{ old('category_id') == $childCategory->id ? 'selected' : '' }}
+                                                    {{ !$childCategory->canBeSelectedForProducts() ? 'disabled' : '' }}
+                                                    style="{{ !$childCategory->canBeSelectedForProducts() ? 'color: #6c757d;' : '' }}">
                                                 &nbsp;&nbsp;{{ $childCategory->name }}
                                             </option>
                                         @endforeach
@@ -781,11 +787,45 @@
                 categorySelect.addEventListener('change', function() {
                     const selectedOption = this.options[this.selectedIndex];
                     if (selectedOption && selectedOption.disabled) {
-                        alert('Please select a subcategory, not a main category.');
+                        // Show modal error instead of alert
+                        showErrorModal('Please select a specific subcategory, not a category group.');
                         this.value = '';
                     }
                 });
             }
+        }
+
+        // Enhanced error modal function
+        function showErrorModal(message) {
+            // Create modal if it doesn't exist
+            let modal = document.getElementById('categoryErrorModal');
+            if (!modal) {
+                modal = document.createElement('div');
+                modal.id = 'categoryErrorModal';
+                modal.className = 'modal fade';
+                modal.innerHTML = `
+                    <div class="modal-dialog modal-dialog-centered">
+                        <div class="modal-content" style="background: var(--discord-dark); border: 1px solid var(--discord-border);">
+                            <div class="modal-header" style="border-bottom: 1px solid var(--discord-border);">
+                                <h5 class="modal-title" style="color: var(--discord-lightest);">Category Selection Error</h5>
+                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close" style="filter: invert(1);"></button>
+                            </div>
+                            <div class="modal-body">
+                                <p id="categoryErrorMessage" style="color: var(--discord-lightest); margin: 0;"></p>
+                            </div>
+                            <div class="modal-footer" style="border-top: 1px solid var(--discord-border);">
+                                <button type="button" class="btn btn-primary" data-bs-dismiss="modal" style="background: var(--discord-blurple); border: none;">OK</button>
+                            </div>
+                        </div>
+                    </div>
+                `;
+                document.body.appendChild(modal);
+            }
+
+            // Update message and show modal
+            document.getElementById('categoryErrorMessage').textContent = message;
+            const bootstrapModal = new bootstrap.Modal(modal);
+            bootstrapModal.show();
         }
 
         setupCategoryValidation();

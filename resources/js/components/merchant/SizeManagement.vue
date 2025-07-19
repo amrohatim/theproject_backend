@@ -1054,6 +1054,7 @@ export default {
           color_id: colorId,
           name: newSize.name,
           value: newSize.value,
+          category: newSize.category || 'clothes', // Include the category
           additional_info: newSize.additional_info,
           price_adjustment: newSize.price_adjustment || 0,
           stock: newSize.stock || 0,

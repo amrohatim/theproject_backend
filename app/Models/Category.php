@@ -82,6 +82,47 @@ class Category extends Model
     }
 
     /**
+     * Check if this category is a leaf category (has no children).
+     *
+     * @return bool
+     */
+    public function isLeafCategory()
+    {
+        return $this->children()->count() === 0;
+    }
+
+    /**
+     * Check if this category is a parent category (has children).
+     *
+     * @return bool
+     */
+    public function isParentCategory()
+    {
+        return $this->children()->count() > 0;
+    }
+
+    /**
+     * Check if this category is a root category (has no parent).
+     *
+     * @return bool
+     */
+    public function isRootCategory()
+    {
+        return is_null($this->parent_id);
+    }
+
+    /**
+     * Check if this category can be selected for products.
+     * Only leaf categories (categories with a parent and no children) can be selected.
+     *
+     * @return bool
+     */
+    public function canBeSelectedForProducts()
+    {
+        return !$this->isRootCategory() && $this->isLeafCategory();
+    }
+
+    /**
      * Get the image attribute with full URL.
      *
      * @param  string|null  $value

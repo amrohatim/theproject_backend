@@ -13,6 +13,7 @@ use App\Models\Branch;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Str;
 use App\Helpers\ImageHelper;
 
@@ -138,6 +139,14 @@ class ProductController extends Controller
             ->orderBy('name')
             ->get();
 
+        // Add hierarchy information to categories
+        $parentCategories->each(function ($parent) {
+            $parent->is_selectable = false; // Parent categories are not selectable
+            $parent->children->each(function ($child) {
+                $child->is_selectable = $child->canBeSelectedForProducts();
+            });
+        });
+
         // Get user's branches
         $user = Auth::user();
         $branches = $user->branches()->where('status', 'active')->get();
@@ -153,6 +162,7 @@ class ProductController extends Controller
      */
     public function store(Request $request)
     {
+        error_log('=== PRODUCT STORE METHOD CALLED ===');
         \Log::info('Product creation request received', [
             'user_id' => auth()->id(),
             'request_data' => $request->all()
@@ -160,7 +170,7 @@ class ProductController extends Controller
 
         $request->validate([
             'name' => 'required|string|max:255',
-            'category_id' => 'required|exists:categories,id',
+            'category_id' => ['required', 'exists:categories,id', new \App\Rules\LeafCategoryRule()],
             'branch_id' => 'nullable|exists:branches,id',
             'price' => 'required|numeric|min:0',
             'original_price' => 'nullable|numeric|min:0',
@@ -174,7 +184,7 @@ class ProductController extends Controller
             'colors.*.stock' => 'nullable|integer|min:0',
             'colors.*.display_order' => 'nullable|integer',
             'colors.*.is_default' => 'nullable|boolean',
-            'color_images.*' => 'required|image|mimes:jpeg,png,jpg,gif|max:2048',
+            'color_images.*' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
             // Color-specific sizes validation
             'colors.*.sizes' => 'nullable|array',
             'colors.*.sizes.*.category' => 'required_with:colors.*.sizes|string|in:clothes,shoes,hats',
@@ -266,15 +276,15 @@ class ProductController extends Controller
 
             // Handle color image upload
             $colorImagePath = null;
-            if ($request->hasFile("color_images.{$index}")) {
+            if (isset($colorData['image']) && $colorData['image'] instanceof \Illuminate\Http\UploadedFile) {
                 try {
-                    $image = $request->file("color_images.{$index}");
+                    $image = $colorData['image'];
 
                     // Validate image
                     if (!$image->isValid()) {
                         return redirect()->back()
                             ->withInput()
-                            ->withErrors(["color_images.{$index}" => 'The uploaded color image is corrupted or invalid.']);
+                            ->withErrors(["colors.{$index}.image" => 'The uploaded color image is corrupted or invalid.']);
                     }
 
                     // Generate unique filename
@@ -286,8 +296,14 @@ class ProductController extends Controller
                     if (!$colorImagePath) {
                         return redirect()->back()
                             ->withInput()
-                            ->withErrors(["color_images.{$index}" => 'Failed to upload color image. Please try again.']);
+                            ->withErrors(["colors.{$index}.image" => 'Failed to upload color image. Please try again.']);
                     }
+
+                    \Log::info('Color image uploaded successfully', [
+                        'color_index' => $index,
+                        'image_path' => $colorImagePath,
+                        'is_default' => $isDefault
+                    ]);
 
                     // Sync to public storage
                     ImageHelper::syncUploadedImage($colorImagePath);
@@ -301,7 +317,7 @@ class ProductController extends Controller
                     \Log::error('Color image upload failed: ' . $e->getMessage());
                     return redirect()->back()
                         ->withInput()
-                        ->withErrors(["color_images.{$index}" => 'Failed to upload color image. Please try again.']);
+                        ->withErrors(["colors.{$index}.image" => 'Failed to upload color image. Please try again.']);
                 }
             }
 
@@ -318,22 +334,42 @@ class ProductController extends Controller
             ]);
 
             // Process sizes for this color if provided
+            \Log::info('Checking for sizes in color data', [
+                'has_sizes' => isset($colorData['sizes']),
+                'is_array' => isset($colorData['sizes']) ? is_array($colorData['sizes']) : false,
+                'is_empty' => isset($colorData['sizes']) ? empty($colorData['sizes']) : true,
+                'sizes_data' => $colorData['sizes'] ?? null
+            ]);
+
             if (isset($colorData['sizes']) && is_array($colorData['sizes']) && !empty($colorData['sizes'])) {
+                \Log::info('Processing sizes for color', ['color_id' => $color->id, 'sizes_count' => count($colorData['sizes'])]);
                 $this->processColorSizes($colorData['sizes'], $product, $color);
+            } else {
+                \Log::info('No sizes to process for color', ['color_id' => $color->id]);
             }
         }
 
-        // Set the default color image as the main product image
-        if ($defaultColorImage) {
-            $product->update(['image' => $defaultColorImage]);
-        } elseif (!$hasDefaultColor && $request->colors) {
-            // If no default was explicitly set, use the first color's image
+        // The ProductColor model event handlers will automatically set the product's main image
+        // when a default color is created. If no default was set, make the first color default.
+        if (!$hasDefaultColor && $request->colors) {
             $firstColor = ProductColor::where('product_id', $product->id)->first();
-            if ($firstColor && $firstColor->image) {
-                $product->update(['image' => $firstColor->image]);
+            if ($firstColor) {
+                \Log::info('No default color set, making first color default', [
+                    'product_id' => $product->id,
+                    'color_id' => $firstColor->id,
+                    'color_name' => $firstColor->name
+                ]);
+                // This will trigger the ProductColor event handler to update the product image
                 $firstColor->update(['is_default' => true]);
             }
         }
+
+        // Refresh the product to get the updated image from the event handlers
+        $product->refresh();
+        \Log::info('Product image after color processing', [
+            'product_id' => $product->id,
+            'image_path' => $product->getRawOriginal('image')
+        ]);
 
         // Add specifications if provided
         if ($request->has('specifications') && is_array($request->specifications)) {
@@ -480,6 +516,14 @@ class ProductController extends Controller
             ->orderBy('name')
             ->get();
 
+        // Add hierarchy information to categories
+        $parentCategories->each(function ($parent) {
+            $parent->is_selectable = false; // Parent categories are not selectable
+            $parent->children->each(function ($child) {
+                $child->is_selectable = $child->canBeSelectedForProducts();
+            });
+        });
+
         // Get user's branches
         $user = Auth::user();
         $branches = $user->branches()->where('status', 'active')->get();
@@ -520,12 +564,14 @@ class ProductController extends Controller
      */
     public function update(Request $request, $id)
     {
+
+
         $product = Product::where('user_id', Auth::id())->findOrFail($id);
 
         // Enhanced validation to match create method
         $request->validate([
             'name' => 'required|string|max:255',
-            'category_id' => 'required|exists:categories,id',
+            'category_id' => ['required', 'exists:categories,id', new \App\Rules\LeafCategoryRule()],
             'branch_id' => 'nullable|exists:branches,id',
             'price' => 'required|numeric|min:0',
             'original_price' => 'nullable|numeric|min:0',
@@ -584,12 +630,30 @@ class ProductController extends Controller
 
         // Update basic product information
         $product->update($data);
-
         // Clear existing related data (except colors - they will be managed intelligently)
-        $product->specifications()->delete();
         // Note: We don't delete colors here anymore - they will be preserved and managed intelligently
         // Note: We don't delete sizes here anymore - they will be preserved and managed in processColorSizeAllocations
         // Note: We don't delete ProductColorSize records here anymore - they will be managed safely with updateOrCreate
+
+        // Process specifications in a transaction to ensure data consistency
+        DB::transaction(function () use ($product, $request) {
+            $product->specifications()->delete();
+
+            // Add specifications if provided
+            if ($request->has('specifications') && is_array($request->specifications)) {
+                foreach ($request->specifications as $index => $specData) {
+                    // Check if specData is an array and has the required keys
+                    if (is_array($specData) && !empty($specData['key']) && !empty($specData['value'])) {
+                        ProductSpecification::create([
+                            'product_id' => $product->id,
+                            'key' => trim($specData['key']),
+                            'value' => trim($specData['value']),
+                            'display_order' => $specData['display_order'] ?? $index,
+                        ]);
+                    }
+                }
+            }
+        });
 
         // Validate that only one color is marked as default
         $defaultCount = 0;
@@ -627,19 +691,7 @@ class ProductController extends Controller
             }
         }
 
-        // Add specifications if provided
-        if ($request->has('specifications') && is_array($request->specifications)) {
-            foreach ($request->specifications as $index => $specData) {
-                if (!empty($specData['key']) && !empty($specData['value'])) {
-                    ProductSpecification::create([
-                        'product_id' => $product->id,
-                        'key' => $specData['key'],
-                        'value' => $specData['value'],
-                        'display_order' => $specData['display_order'] ?? $index,
-                    ]);
-                }
-            }
-        }
+
 
         // Process color-size allocations if provided (legacy format)
         if ($request->has('color_size_allocations') && is_array($request->color_size_allocations)) {
@@ -983,45 +1035,70 @@ class ProductController extends Controller
      */
     private function processColorSizes(array $sizesData, Product $product, ProductColor $color)
     {
+        \Log::info('processColorSizes called', [
+            'sizesData' => $sizesData,
+            'product_id' => $product->id,
+            'color_id' => $color->id
+        ]);
+
         foreach ($sizesData as $sizeData) {
+            \Log::info('Processing size data', ['sizeData' => $sizeData]);
+
             // Skip if essential data is missing
             if (empty($sizeData['name'])) {
+                \Log::warning('Skipping size - missing name', ['sizeData' => $sizeData]);
                 continue;
             }
 
-            // Determine size category (default to 'clothes' if not provided)
-            $sizeCategory = $sizeData['category'] ?? 'clothes';
+            try {
+                // Determine size category (default to 'clothes' if not provided)
+                $sizeCategory = $sizeData['category'] ?? 'clothes';
+                \Log::info('Size category determined', ['category' => $sizeCategory]);
 
-            // Find or create the size category
-            $sizeCategoryModel = \App\Models\SizeCategory::firstOrCreate([
-                'name' => $sizeCategory
-            ], [
-                'display_order' => 0,
-                'is_active' => true
-            ]);
+                // Find or create the size category
+                $sizeCategoryModel = \App\Models\SizeCategory::firstOrCreate([
+                    'name' => $sizeCategory
+                ], [
+                    'display_name' => ucfirst($sizeCategory),
+                    'description' => "Auto-created category for {$sizeCategory}",
+                    'display_order' => 0,
+                    'is_active' => true
+                ]);
+                \Log::info('Size category found/created', ['category_id' => $sizeCategoryModel->id]);
 
-            // Create the product size
-            $productSize = \App\Models\ProductSize::create([
-                'product_id' => $product->id,
-                'size_category_id' => $sizeCategoryModel->id,
-                'name' => $sizeData['name'],
-                'value' => $sizeData['value'] ?? $sizeData['name'],
-                'additional_info' => $sizeData['additional_info'] ?? null,
-                'price_adjustment' => $sizeData['price_adjustment'] ?? 0,
-                'stock' => $sizeData['stock'] ?? 0,
-                'display_order' => $sizeData['display_order'] ?? 0,
-                'is_default' => isset($sizeData['is_default']) ? (bool)$sizeData['is_default'] : false,
-            ]);
+                // Create the product size
+                $productSize = \App\Models\ProductSize::create([
+                    'product_id' => $product->id,
+                    'size_category_id' => $sizeCategoryModel->id,
+                    'name' => $sizeData['name'],
+                    'value' => $sizeData['value'] ?? $sizeData['name'],
+                    'additional_info' => $sizeData['additional_info'] ?? null,
+                    'price_adjustment' => $sizeData['price_adjustment'] ?? 0,
+                    'stock' => $sizeData['stock'] ?? 0,
+                    'display_order' => $sizeData['display_order'] ?? 0,
+                    'is_default' => isset($sizeData['is_default']) ? (bool)$sizeData['is_default'] : false,
+                ]);
+                \Log::info('Product size created', ['size_id' => $productSize->id]);
 
-            // Create the color-size relationship
-            \App\Models\ProductColorSize::create([
-                'product_id' => $product->id,
-                'product_color_id' => $color->id,
-                'product_size_id' => $productSize->id,
-                'stock' => $sizeData['stock'] ?? 0,
-                'price_adjustment' => $sizeData['price_adjustment'] ?? 0,
-                'is_available' => true,
-            ]);
+                // Create the color-size relationship
+                $colorSize = \App\Models\ProductColorSize::create([
+                    'product_id' => $product->id,
+                    'product_color_id' => $color->id,
+                    'product_size_id' => $productSize->id,
+                    'stock' => $sizeData['stock'] ?? 0,
+                    'price_adjustment' => $sizeData['price_adjustment'] ?? 0,
+                    'is_available' => true,
+                ]);
+                \Log::info('Color-size relationship created', ['color_size_id' => $colorSize->id]);
+
+            } catch (\Exception $e) {
+                \Log::error('Error processing size', [
+                    'sizeData' => $sizeData,
+                    'error' => $e->getMessage(),
+                    'trace' => $e->getTraceAsString()
+                ]);
+                throw $e; // Re-throw to stop the transaction
+            }
         }
     }
 }

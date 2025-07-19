@@ -68,16 +68,25 @@
                   <label for="category_id" class="block vue-text-sm">
                     Category <span class="text-red-500">*</span>
                   </label>
-                  <select id="category_id" 
+                  <select id="category_id"
                           v-model="productData.category_id"
                           class="vue-form-control"
                           :class="{ 'border-red-500': errors.category_id }"
-                          required>
+                          required
+                          @change="validateCategorySelection">
                     <option value="">Select Category</option>
                     <optgroup v-for="parent in categories" :key="parent.id" :label="parent.name">
-                      <option :value="parent.id">{{ parent.name }}</option>
-                      <option v-for="child in parent.children" :key="child.id" :value="child.id">
-                        {{ child.name }}
+                      <!-- <option :value="parent.id"
+                              disabled
+                              class="text-gray-400 font-semibold">
+                        {{ parent.name }} (Category Group)
+                      </option> -->
+                      <option v-for="child in parent.children"
+                              :key="child.id"
+                              :value="child.id"
+                              :disabled="!child.is_selectable"
+                              :class="{ 'text-gray-400': !child.is_selectable }">
+                        &nbsp;&nbsp;{{ child.name }}
                       </option>
                     </optgroup>
                   </select>
@@ -471,6 +480,13 @@ export default {
       if (!productData.category_id) {
         errors.category_id = 'Category is required'
         isValid = false
+      } else {
+        // Validate that selected category is a leaf category
+        const selectedCategory = findCategoryById(productData.category_id)
+        if (selectedCategory && !selectedCategory.is_selectable) {
+          errors.category_id = 'Please select a specific subcategory, not a category group'
+          isValid = false
+        }
       }
 
       if (!productData.price || productData.price <= 0) {
@@ -545,6 +561,7 @@ export default {
           // Add sizes data if available
           if (color.sizes && color.sizes.length > 0) {
             color.sizes.forEach((size, sizeIndex) => {
+              formData.append(`colors[${index}][sizes][${sizeIndex}][category]`, size.category || 'clothes')
               formData.append(`colors[${index}][sizes][${sizeIndex}][name]`, size.name)
               formData.append(`colors[${index}][sizes][${sizeIndex}][value]`, size.value || '')
               formData.append(`colors[${index}][sizes][${sizeIndex}][stock]`, size.stock || 0)
@@ -695,6 +712,35 @@ export default {
       showSuccessModal.value = false
     }
 
+    // Category validation helpers
+    const findCategoryById = (categoryId) => {
+      for (const parent of categories.value) {
+        if (parent.id == categoryId) {
+          return parent
+        }
+        for (const child of parent.children) {
+          if (child.id == categoryId) {
+            return child
+          }
+        }
+      }
+      return null
+    }
+
+    const validateCategorySelection = () => {
+      if (productData.category_id) {
+        const selectedCategory = findCategoryById(productData.category_id)
+        if (selectedCategory && !selectedCategory.is_selectable) {
+          // Clear the invalid selection
+          productData.category_id = ''
+          errors.category_id = 'Please select a specific subcategory, not a category group'
+        } else {
+          // Clear any previous error
+          delete errors.category_id
+        }
+      }
+    }
+
     // Lifecycle
     onMounted(() => {
       fetchInitialData()
@@ -738,7 +784,9 @@ export default {
       removeSpecification,
       closeSuccessModal,
       closeErrorModal,
-      createAnother
+      createAnother,
+      findCategoryById,
+      validateCategorySelection
     }
   }
 }

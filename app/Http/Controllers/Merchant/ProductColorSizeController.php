@@ -112,6 +112,7 @@ class ProductColorSizeController extends Controller
 
             $allSizes = ProductSize::where('product_id', $request->product_id)
                 ->whereIn('id', $sizeIds)
+                ->with('sizeCategory')
                 ->orderBy('display_order')
                 ->get();
 
@@ -121,8 +122,9 @@ class ProductColorSizeController extends Controller
                 'sizes_found' => $allSizes->count()
             ]);
         } else {
-            // Get all sizes for the product (original behavior)
+            // Get all sizes for the product (original behavior) with size category relationship
             $allSizes = ProductSize::where('product_id', $request->product_id)
+                ->with('sizeCategory')
                 ->orderBy('display_order')
                 ->get();
 
@@ -135,11 +137,17 @@ class ProductColorSizeController extends Controller
         $sizesData = $allSizes->map(function ($size) use ($existingCombinations) {
             $combination = $existingCombinations->get($size->id);
 
+            // Get the actual category name from the size's relationship, fallback to 'clothes' for backward compatibility
+            $categoryName = 'clothes'; // Default fallback
+            if ($size->sizeCategory) {
+                $categoryName = $size->sizeCategory->name;
+            }
+
             return [
                 'id' => $size->id,
                 'name' => $size->name,
                 'value' => $size->value,
-                'category' => 'clothes', // Default category for backward compatibility
+                'category' => $categoryName,
                 'additional_info' => $size->additional_info,
                 'display_order' => $size->display_order,
                 'allocated_stock' => $combination ? $combination->stock : 0,
@@ -431,6 +439,7 @@ class ProductColorSizeController extends Controller
             'color_id' => 'required|exists:product_colors,id',
             'name' => 'required|string|max:255',
             'value' => 'nullable|string|max:255',
+            'category' => 'nullable|string|in:clothes,shoes,hats',
             'additional_info' => 'nullable|string|max:255',
             'price_adjustment' => 'nullable|numeric',
             'stock' => 'nullable|integer|min:0',
@@ -458,6 +467,15 @@ class ProductColorSizeController extends Controller
         try {
             // Use database transaction to ensure data consistency
             $result = DB::transaction(function () use ($product, $color, $request) {
+                // Determine the size category ID
+                $sizeCategoryId = null;
+                if ($request->category) {
+                    $sizeCategory = \App\Models\SizeCategory::where('name', $request->category)->first();
+                    if ($sizeCategory) {
+                        $sizeCategoryId = $sizeCategory->id;
+                    }
+                }
+
                 // If size doesn't exist, create it
                 $existingSize = ProductSize::where('product_id', $product->id)
                     ->where('name', $request->name)
@@ -468,6 +486,7 @@ class ProductColorSizeController extends Controller
 
                     $existingSize = ProductSize::create([
                         'product_id' => $product->id,
+                        'size_category_id' => $sizeCategoryId,
                         'name' => $request->name,
                         'value' => $request->value,
                         'additional_info' => $request->additional_info,

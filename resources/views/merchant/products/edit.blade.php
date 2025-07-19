@@ -494,9 +494,15 @@
                                             <option value="">Select category</option>
                                             @foreach($parentCategories ?? [] as $parentCategory)
                                                 <optgroup label="{{ $parentCategory->name }}">
+                                                    <option value="{{ $parentCategory->id }}" disabled style="color: #6c757d; font-weight: bold;">
+                                                        {{ $parentCategory->name }} (Category Group)
+                                                    </option>
                                                     @foreach($parentCategory->children as $childCategory)
-                                                        <option value="{{ $childCategory->id }}" {{ old('category_id', $product->category_id) == $childCategory->id ? 'selected' : '' }}>
-                                                            {{ $childCategory->name }}
+                                                        <option value="{{ $childCategory->id }}"
+                                                                {{ old('category_id', $product->category_id) == $childCategory->id ? 'selected' : '' }}
+                                                                {{ !$childCategory->canBeSelectedForProducts() ? 'disabled' : '' }}
+                                                                style="{{ !$childCategory->canBeSelectedForProducts() ? 'color: #6c757d;' : '' }}">
+                                                            &nbsp;&nbsp;{{ $childCategory->name }}
                                                         </option>
                                                     @endforeach
                                                 </optgroup>
