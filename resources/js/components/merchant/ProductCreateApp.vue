@@ -545,6 +545,9 @@ export default {
         formData.append('is_available', productData.is_available ? '1' : '0')
         formData.append('display_order', productData.display_order || 0)
 
+        // Add branch_id - use 'auto' to trigger auto-assignment in backend
+        formData.append('branch_id', 'auto')
+
         // Add colors data
         productData.colors.forEach((color, index) => {
           formData.append(`colors[${index}][name]`, color.name)

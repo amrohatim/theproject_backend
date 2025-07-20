@@ -89,7 +89,125 @@ class ProductController extends Controller
                 ->with('warning', 'No product categories found. Please contact the administrator.');
         }
 
-        return view('vendor.products.create', compact('parentCategories', 'branches'));
+        return view('vendor.products.create-vue', compact('parentCategories', 'branches'));
+    }
+
+    /**
+     * Get data for Vue.js product creation interface
+     */
+    public function getCreateData()
+    {
+        try {
+            // Get product categories with their children
+            $parentCategories = Category::where('type', 'product')
+                ->whereNull('parent_id')
+                ->with(['children' => function($query) {
+                    $query->orderBy('name');
+                }])
+                ->orderBy('name')
+                ->get();
+
+            // Get branches that belong to the vendor's company
+            $branches = Branch::whereHas('company', function ($query) {
+                $query->where('user_id', Auth::id());
+            })->orderBy('name')->get();
+
+            // Check if the vendor has any branches
+            if ($branches->isEmpty()) {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'You need to create a branch before adding products.',
+                    'redirect' => route('vendor.branches.create')
+                ]);
+            }
+
+            // Check if there are any categories
+            if ($parentCategories->isEmpty()) {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'No product categories found. Please contact the administrator.',
+                    'redirect' => route('vendor.products.index')
+                ]);
+            }
+
+            return response()->json([
+                'success' => true,
+                'categories' => $parentCategories,
+                'branches' => $branches
+            ]);
+        } catch (\Exception $e) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Failed to load data: ' . $e->getMessage()
+            ], 500);
+        }
+    }
+
+    /**
+     * Store session data for multi-tab form
+     */
+    public function storeSessionData(Request $request)
+    {
+        try {
+            $tabData = $request->input('tabData', []);
+            $currentTab = $request->input('currentTab', 'basic');
+
+            // Store the data in session
+            session(['vendor_product_create_data' => $tabData]);
+            session(['vendor_product_create_current_tab' => $currentTab]);
+
+            return response()->json([
+                'success' => true,
+                'message' => 'Data saved successfully'
+            ]);
+        } catch (\Exception $e) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Failed to save data: ' . $e->getMessage()
+            ], 500);
+        }
+    }
+
+    /**
+     * Get session data for multi-tab form
+     */
+    public function getSessionData()
+    {
+        try {
+            $tabData = session('vendor_product_create_data', []);
+            $currentTab = session('vendor_product_create_current_tab', 'basic');
+
+            return response()->json([
+                'success' => true,
+                'tabData' => $tabData,
+                'currentTab' => $currentTab
+            ]);
+        } catch (\Exception $e) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Failed to load session data: ' . $e->getMessage()
+            ], 500);
+        }
+    }
+
+    /**
+     * Clear session data for multi-tab form
+     */
+    public function clearSessionData()
+    {
+        try {
+            session()->forget(['vendor_product_create_data', 'vendor_product_create_current_tab']);
+
+            return response()->json([
+                'success' => true,
+                'message' => 'Session data cleared'
+            ]);
+        } catch (\Exception $e) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Failed to clear session data: ' . $e->getMessage()
+            ], 500);
+        }
     }
 
     /**
@@ -97,7 +215,8 @@ class ProductController extends Controller
      */
     public function store(Request $request)
     {
-        $request->validate([
+        try {
+            $request->validate([
             'name' => 'required|string|max:255',
             'category_id' => 'required|exists:categories,id',
             'branch_id' => 'required|exists:branches,id',
@@ -113,7 +232,7 @@ class ProductController extends Controller
             'colors.*.stock' => 'nullable|integer|min:0',
             'colors.*.display_order' => 'nullable|integer',
             'colors.*.is_default' => 'nullable|boolean',
-            'color_images.*' => 'required|image|mimes:jpeg,png,jpg,gif|max:2048',
+            'color_images.*' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
             // Color-specific sizes validation
             'colors.*.sizes' => 'nullable|array',
             'colors.*.sizes.*.category' => 'required_with:colors.*.sizes|string|in:clothes,shoes,hats',
@@ -149,6 +268,29 @@ class ProductController extends Controller
             'branches.*.price' => 'nullable|numeric|min:0',
             'branches.*.is_available' => 'nullable|boolean',
         ]);
+
+        // Custom validation: Ensure each color has an image
+        $colorImageErrors = [];
+        if ($request->has('colors') && is_array($request->colors)) {
+            foreach ($request->colors as $index => $colorData) {
+                if (!$request->hasFile("color_images.$index")) {
+                    $colorImageErrors["color_images.$index"] = "Image is required for color: " . ($colorData['name'] ?? "Color " . ($index + 1));
+                }
+            }
+        }
+
+        if (!empty($colorImageErrors)) {
+            if ($request->expectsJson() || $request->ajax()) {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'Validation failed.',
+                    'errors' => $colorImageErrors
+                ], 422);
+            }
+            return redirect()->back()
+                ->withInput()
+                ->withErrors($colorImageErrors);
+        }
 
         // Verify that the branch belongs to the vendor's company
         $branch = Branch::findOrFail($request->branch_id);
@@ -211,11 +353,6 @@ class ProductController extends Controller
                     copy($sourceFile, $publicFile);
                     \Illuminate\Support\Facades\Log::debug("Copied image from {$sourceFile} to {$publicFile}");
                 }
-            } else {
-                // Return with error if image is missing
-                return redirect()->back()
-                    ->withInput()
-                    ->with('error', 'Each color must have an associated image.');
             }
 
             $color = $product->colors()->create([
@@ -317,8 +454,44 @@ class ProductController extends Controller
             }
         }
 
+        // Clear session data after successful creation
+        session()->forget(['vendor_product_create_data', 'vendor_product_create_current_tab']);
+
+        // Check if this is an AJAX request (from Vue.js)
+        if ($request->expectsJson() || $request->ajax()) {
+            return response()->json([
+                'success' => true,
+                'message' => 'Product created successfully.',
+                'product' => $product,
+                'redirect' => route('vendor.products.index')
+            ]);
+        }
+
         return redirect()->route('vendor.products.index')
             ->with('success', 'Product created successfully.');
+
+        } catch (\Illuminate\Validation\ValidationException $e) {
+            // Handle validation errors for AJAX requests
+            if ($request->expectsJson() || $request->ajax()) {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'Validation failed.',
+                    'errors' => $e->errors()
+                ], 422);
+            }
+            throw $e;
+        } catch (\Exception $e) {
+            // Handle general errors
+            if ($request->expectsJson() || $request->ajax()) {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'Failed to create product: ' . $e->getMessage()
+                ], 500);
+            }
+            return redirect()->back()
+                ->withInput()
+                ->with('error', 'Failed to create product: ' . $e->getMessage());
+        }
     }
 
     /**

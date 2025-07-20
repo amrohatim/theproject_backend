@@ -1815,6 +1815,12 @@ Route::prefix('vendor')->name('vendor.')->middleware(['auth', \App\Http\Middlewa
         return redirect()->route('vendor.branches.index')->with('success', 'Branch deleted successfully');
     })->name('branches.destroy');
 
+    // Additional routes for Vue.js product creation interface (must be before resource routes)
+    Route::get('/products/create-data', [\App\Http\Controllers\Vendor\ProductController::class, 'getCreateData'])->name('products.create.data');
+    Route::post('/products/session/store', [\App\Http\Controllers\Vendor\ProductController::class, 'storeSessionData'])->name('products.session.store');
+    Route::get('/products/session/get', [\App\Http\Controllers\Vendor\ProductController::class, 'getSessionData'])->name('products.session.get');
+    Route::delete('/products/session/clear', [\App\Http\Controllers\Vendor\ProductController::class, 'clearSessionData'])->name('products.session.clear');
+
     // Products
     Route::resource('products', \App\Http\Controllers\Vendor\ProductController::class);
 

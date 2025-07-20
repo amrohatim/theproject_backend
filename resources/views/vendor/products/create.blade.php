@@ -5,6 +5,7 @@
 
 @section('styles')
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/mdbassit/Coloris@latest/dist/coloris.min.css"/>
+<link rel="stylesheet" href="{{ asset('css/enhanced-color-management.css') }}"/>
 <style>
     .image-preview-container {
         transition: all 0.3s ease;
@@ -316,9 +317,9 @@
                 <div id="colors-container" class="space-y-6">
                     <div class="color-item border border-gray-200 dark:border-gray-700 rounded-lg p-4">
                         <div class="grid grid-cols-12 gap-4">
-                            <div class="col-span-3">
+                            <div class="col-span-4">
                                 <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Color Name <span class="text-red-500">*</span></label>
-                                <select name="colors[0][name]" class="color-name-select focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-white rounded-md" required>
+                                <select name="colors[0][name]" class="color-name-select focus:ring-amber-500 focus:border-amber-500 block w-full shadow-sm sm:text-sm border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-white rounded-md" required>
                                     <option value="">Select Color</option>
                                     <option value="Red">Red</option>
                                     <option value="Crimson">Crimson</option>
@@ -398,22 +399,25 @@
                                     <option value="White">White</option>
                                 </select>
                             </div>
-                            <div class="col-span-2">
+                            <div class="col-span-3">
                                 <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Color Code</label>
-                                <input type="text" name="colors[0][color_code]" placeholder="#FF0000" class="focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-white rounded-md">
+                                <div class="relative">
+                                    <input type="text" name="colors[0][color_code]" placeholder="#FF0000" class="color-code-input focus:ring-amber-500 focus:border-amber-500 block w-full shadow-sm sm:text-sm border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-white rounded-md pr-12" data-coloris>
+                                    <div class="color-preview absolute right-2 top-1/2 transform -translate-y-1/2 w-8 h-8 rounded border border-gray-300 dark:border-gray-600 cursor-pointer" style="background-color: #ffffff;"></div>
+                                </div>
                             </div>
                             <div class="col-span-2">
                                 <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Price Adjustment</label>
-                                <input type="number" step="0.01" name="colors[0][price_adjustment]" placeholder="0.00" value="0" class="focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-white rounded-md">
+                                <input type="number" step="0.01" name="colors[0][price_adjustment]" placeholder="0.00" value="0" class="focus:ring-amber-500 focus:border-amber-500 block w-full shadow-sm sm:text-sm border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-white rounded-md">
                             </div>
                             <div class="col-span-2">
                                 <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Total Stock</label>
-                                <input type="number" name="colors[0][stock]" placeholder="10" value="0" min="0" class="color-stock-input focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-white rounded-md transition-colors duration-200">
+                                <input type="number" name="colors[0][stock]" placeholder="10" value="0" min="0" class="color-stock-input focus:ring-amber-500 focus:border-amber-500 block w-full shadow-sm sm:text-sm border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-white rounded-md transition-colors duration-200">
                                 <p class="mt-1 text-xs text-gray-500 dark:text-gray-400">Total stock to allocate across sizes</p>
                             </div>
-                            <div class="col-span-2">
+                            <div class="col-span-1">
                                 <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Display Order</label>
-                                <input type="number" name="colors[0][display_order]" placeholder="0" value="0" class="focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-white rounded-md">
+                                <input type="number" name="colors[0][display_order]" placeholder="0" value="0" class="focus:ring-amber-500 focus:border-amber-500 block w-full shadow-sm sm:text-sm border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-white rounded-md">
                             </div>
                             <div class="col-span-1 flex items-end justify-center">
                                 <button type="button" class="remove-item text-red-500 hover:text-red-700">
@@ -961,9 +965,9 @@
                 newItem.className = 'color-item border border-gray-200 dark:border-gray-700 rounded-lg p-4';
                 newItem.innerHTML = `
                     <div class="grid grid-cols-12 gap-4">
-                        <div class="col-span-3">
+                        <div class="col-span-4">
                             <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Color Name</label>
-                            <select name="colors[${newIndex}][name]" class="color-name-select focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-white rounded-md" required>
+                            <select name="colors[${newIndex}][name]" class="color-name-select focus:ring-amber-500 focus:border-amber-500 block w-full shadow-sm sm:text-sm border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-white rounded-md" required>
                                 <option value="">Select Color</option>
                                 <option value="Red">Red</option>
                                 <option value="Crimson">Crimson</option>
@@ -1043,22 +1047,25 @@
                                 <option value="White">White</option>
                             </select>
                         </div>
-                        <div class="col-span-2">
+                        <div class="col-span-3">
                             <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Color Code</label>
-                            <input type="text" name="colors[${newIndex}][color_code]" placeholder="#FF0000" class="focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-white rounded-md">
+                            <div class="relative">
+                                <input type="text" name="colors[${newIndex}][color_code]" placeholder="#FF0000" class="color-code-input focus:ring-amber-500 focus:border-amber-500 block w-full shadow-sm sm:text-sm border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-white rounded-md pr-12" data-coloris>
+                                <div class="color-preview absolute right-2 top-1/2 transform -translate-y-1/2 w-8 h-8 rounded border border-gray-300 dark:border-gray-600 cursor-pointer" style="background-color: #ffffff;"></div>
+                            </div>
                         </div>
                         <div class="col-span-2">
                             <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Price Adjustment</label>
-                            <input type="number" step="0.01" name="colors[${newIndex}][price_adjustment]" placeholder="0.00" value="0" class="focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-white rounded-md">
+                            <input type="number" step="0.01" name="colors[${newIndex}][price_adjustment]" placeholder="0.00" value="0" class="focus:ring-amber-500 focus:border-amber-500 block w-full shadow-sm sm:text-sm border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-white rounded-md">
                         </div>
                         <div class="col-span-2">
                             <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Total Stock</label>
-                            <input type="number" name="colors[${newIndex}][stock]" placeholder="10" value="0" min="0" class="color-stock-input focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-white rounded-md transition-colors duration-200">
+                            <input type="number" name="colors[${newIndex}][stock]" placeholder="10" value="0" min="0" class="color-stock-input focus:ring-amber-500 focus:border-amber-500 block w-full shadow-sm sm:text-sm border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-white rounded-md transition-colors duration-200">
                             <p class="mt-1 text-xs text-gray-500 dark:text-gray-400">Total stock to allocate across sizes</p>
                         </div>
-                        <div class="col-span-2">
+                        <div class="col-span-1">
                             <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Display Order</label>
-                            <input type="number" name="colors[${newIndex}][display_order]" placeholder="0" value="${newIndex}" class="focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-white rounded-md">
+                            <input type="number" name="colors[${newIndex}][display_order]" placeholder="0" value="${newIndex}" class="focus:ring-amber-500 focus:border-amber-500 block w-full shadow-sm sm:text-sm border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-white rounded-md">
                         </div>
                         <div class="col-span-1 flex items-end justify-center">
                             <button type="button" class="remove-item text-red-500 hover:text-red-700">

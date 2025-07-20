@@ -45,17 +45,25 @@ document.addEventListener('DOMContentLoaded', function() {
  */
 function initializeColorPickers() {
     // Find all color code inputs in the colors section
-    const colorInputs = document.querySelectorAll('input[name$="[color_code]"]');
-    
+    const colorInputs = document.querySelectorAll('input[name$="[color_code]"], .color-code-input');
+
     colorInputs.forEach(input => {
         // Add data-coloris attribute to enable the color picker
         input.setAttribute('data-coloris', '');
-        
+
         // Add event listener to update visual feedback when color changes
         input.addEventListener('input', updateColorVisualFeedback);
-        
+
         // Initialize visual feedback for existing values
         updateColorVisualFeedback.call(input);
+
+        // Add click listener to color preview to open color picker
+        const colorPreview = input.parentElement.querySelector('.color-preview');
+        if (colorPreview) {
+            colorPreview.addEventListener('click', () => {
+                input.click();
+            });
+        }
     });
 }
 
@@ -65,26 +73,39 @@ function initializeColorPickers() {
 function updateColorVisualFeedback() {
     // 'this' refers to the input element
     const colorValue = this.value;
-    
-    // If there's no color swatch yet, create one
-    let colorSwatch = this.parentElement.querySelector('.color-swatch');
-    
-    if (!colorSwatch) {
-        colorSwatch = document.createElement('div');
-        colorSwatch.className = 'color-swatch absolute right-10 top-1/2 transform -translate-y-1/2 w-6 h-6 rounded-full border border-gray-300 dark:border-gray-600';
-        this.parentElement.style.position = 'relative';
-        this.parentElement.appendChild(colorSwatch);
-        
-        // Adjust input padding to make room for the swatch
-        this.style.paddingRight = '3rem';
-    }
-    
-    // Update the color swatch background
-    if (colorValue) {
-        colorSwatch.style.backgroundColor = colorValue;
-        colorSwatch.style.display = 'block';
+
+    // Check if we have the new layout with color-preview
+    let colorPreview = this.parentElement.querySelector('.color-preview');
+
+    if (colorPreview) {
+        // New layout with dedicated color preview
+        if (colorValue) {
+            colorPreview.style.backgroundColor = colorValue;
+            colorPreview.style.display = 'block';
+        } else {
+            colorPreview.style.backgroundColor = '#ffffff';
+        }
     } else {
-        colorSwatch.style.display = 'none';
+        // Fallback to old layout - create color swatch if needed
+        let colorSwatch = this.parentElement.querySelector('.color-swatch');
+
+        if (!colorSwatch) {
+            colorSwatch = document.createElement('div');
+            colorSwatch.className = 'color-swatch absolute right-10 top-1/2 transform -translate-y-1/2 w-6 h-6 rounded-full border border-gray-300 dark:border-gray-600';
+            this.parentElement.style.position = 'relative';
+            this.parentElement.appendChild(colorSwatch);
+
+            // Adjust input padding to make room for the swatch
+            this.style.paddingRight = '3rem';
+        }
+
+        // Update the color swatch background
+        if (colorValue) {
+            colorSwatch.style.backgroundColor = colorValue;
+            colorSwatch.style.display = 'block';
+        } else {
+            colorSwatch.style.display = 'none';
+        }
     }
 }
 
@@ -104,17 +125,25 @@ function setupColorPickerObserver() {
                 // New nodes were added, check if they contain color inputs
                 mutation.addedNodes.forEach(function(node) {
                     if (node.nodeType === 1) { // Element node
-                        const newColorInputs = node.querySelectorAll('input[name$="[color_code]"]');
-                        
+                        const newColorInputs = node.querySelectorAll('input[name$="[color_code]"], .color-code-input');
+
                         newColorInputs.forEach(input => {
                             // Add data-coloris attribute to enable the color picker
                             input.setAttribute('data-coloris', '');
-                            
+
                             // Add event listener to update visual feedback when color changes
                             input.addEventListener('input', updateColorVisualFeedback);
-                            
+
                             // Initialize visual feedback
                             updateColorVisualFeedback.call(input);
+
+                            // Add click listener to color preview to open color picker
+                            const colorPreview = input.parentElement.querySelector('.color-preview');
+                            if (colorPreview) {
+                                colorPreview.addEventListener('click', () => {
+                                    input.click();
+                                });
+                            }
                         });
                     }
                 });

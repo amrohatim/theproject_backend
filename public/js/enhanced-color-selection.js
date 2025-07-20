@@ -472,16 +472,23 @@ class EnhancedColorSelection {
         const hexCode = COLOR_DATA[selectedColorName];
 
         if (hexCode) {
-            // Update the color code input
-            const colorCodeInput = colorItem.querySelector('input[name*="[color_code]"]');
+            // Update the color code input (both old and new selectors)
+            const colorCodeInput = colorItem.querySelector('input[name*="[color_code]"], .color-code-input');
             if (colorCodeInput) {
                 colorCodeInput.value = hexCode;
 
                 // Trigger input event to update color picker and visual feedback
                 colorCodeInput.dispatchEvent(new Event('input', { bubbles: true }));
 
-                // Update color swatch if it exists
+                // Update color swatch if it exists (legacy)
                 this.updateColorSwatch(colorCodeInput, hexCode);
+
+                // Update color preview if it exists (new layout)
+                const colorPreview = colorCodeInput.parentElement.querySelector('.color-preview');
+                if (colorPreview) {
+                    colorPreview.style.backgroundColor = hexCode;
+                    colorPreview.setAttribute('title', `${selectedColorName}: ${hexCode}`);
+                }
             }
 
             // Update the color picker input (HTML5 color input)
