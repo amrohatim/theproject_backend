@@ -1821,6 +1821,9 @@ Route::prefix('vendor')->name('vendor.')->middleware(['auth', \App\Http\Middlewa
     Route::get('/products/session/get', [\App\Http\Controllers\Vendor\ProductController::class, 'getSessionData'])->name('products.session.get');
     Route::delete('/products/session/clear', [\App\Http\Controllers\Vendor\ProductController::class, 'clearSessionData'])->name('products.session.clear');
 
+    // Additional routes for Vue.js product edit interface (must be before resource routes)
+    Route::get('/products/{product}/edit-data', [\App\Http\Controllers\Vendor\ProductController::class, 'getEditData'])->name('products.edit.data');
+
     // Products
     Route::resource('products', \App\Http\Controllers\Vendor\ProductController::class);
 
@@ -1837,6 +1840,11 @@ Route::prefix('vendor')->name('vendor.')->middleware(['auth', \App\Http\Middlewa
     Route::post('/api/color-sizes/get-color-stock-info', [\App\Http\Controllers\Vendor\ProductColorSizeController::class, 'getColorStockInfo'])->name('api.color-sizes.get-color-stock-info');
     Route::post('/api/color-sizes/save-combinations', [\App\Http\Controllers\Vendor\ProductColorSizeController::class, 'saveColorSizeCombinations'])->name('api.color-sizes.save-combinations');
 
+    // Size Management API routes
+    Route::post('/api/sizes/create', [\App\Http\Controllers\Vendor\ProductColorSizeController::class, 'createSize'])->name('api.sizes.create');
+    Route::post('/api/sizes/update', [\App\Http\Controllers\Vendor\ProductColorSizeController::class, 'updateSize'])->name('api.sizes.update');
+    Route::post('/api/sizes/delete', [\App\Http\Controllers\Vendor\ProductColorSizeController::class, 'deleteSize'])->name('api.sizes.delete');
+
     // Services
     Route::resource('services', \App\Http\Controllers\Vendor\ServiceController::class);
 
@@ -1847,6 +1855,10 @@ Route::prefix('vendor')->name('vendor.')->middleware(['auth', \App\Http\Middlewa
     Route::get('/orders/export', [\App\Http\Controllers\Vendor\OrderController::class, 'export'])->name('orders.export');
     Route::get('/orders/{order}', [\App\Http\Controllers\Vendor\OrderController::class, 'show'])->name('orders.show');
     Route::get('/orders/{order}/edit', [\App\Http\Controllers\Vendor\OrderController::class, 'edit'])->name('orders.edit');
+
+    // Testing API routes for vendors
+    Route::get('/api/latest-product-id', [\App\Http\Controllers\Vendor\ProductController::class, 'getLatestProductId'])->name('api.latest-product-id');
+    Route::get('/api/products/{id}/verify-sizes', [\App\Http\Controllers\Vendor\ProductController::class, 'verifySizes'])->name('api.products.verify-sizes');
 
     // Image testing and fix routes for vendors
     Route::get('/image/test', [\App\Http\Controllers\ImageTestController::class, 'index'])->name('image.test');
@@ -2033,6 +2045,10 @@ Route::prefix('merchant')->name('merchant.')->middleware(['auth', \App\Http\Midd
     Route::post('/api/sizes/create', [\App\Http\Controllers\Merchant\ProductColorSizeController::class, 'createSize'])->name('api.sizes.create');
     Route::post('/api/sizes/update', [\App\Http\Controllers\Merchant\ProductColorSizeController::class, 'updateSize'])->name('api.sizes.update');
     Route::post('/api/sizes/delete', [\App\Http\Controllers\Merchant\ProductColorSizeController::class, 'deleteSize'])->name('api.sizes.delete');
+
+    // Testing API routes
+    Route::get('/api/latest-product-id', [\App\Http\Controllers\Merchant\ProductController::class, 'getLatestProductId'])->name('api.latest-product-id');
+    Route::get('/api/products/{id}/verify-sizes', [\App\Http\Controllers\Merchant\ProductController::class, 'verifySizes'])->name('api.products.verify-sizes');
 
     // Services
     Route::get('/services', [App\Http\Controllers\Merchant\ServiceController::class, 'index'])->name('services.index');

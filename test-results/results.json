@@ -11,7 +11,7 @@
     "grepInvert": null,
     "maxFailures": 0,
     "metadata": {
-      "actualWorkers": 1
+      "actualWorkers": 2
     },
     "preserveOutput": "always",
     "reporter": [
@@ -43,7 +43,7 @@
         "repeatEach": 1,
         "retries": 0,
         "metadata": {
-          "actualWorkers": 1
+          "actualWorkers": 2
         },
         "id": "chromium",
         "name": "chromium",
@@ -59,7 +59,7 @@
         "repeatEach": 1,
         "retries": 0,
         "metadata": {
-          "actualWorkers": 1
+          "actualWorkers": 2
         },
         "id": "firefox",
         "name": "firefox",
@@ -75,7 +75,7 @@
         "repeatEach": 1,
         "retries": 0,
         "metadata": {
-          "actualWorkers": 1
+          "actualWorkers": 2
         },
         "id": "webkit",
         "name": "webkit",
@@ -91,7 +91,7 @@
         "repeatEach": 1,
         "retries": 0,
         "metadata": {
-          "actualWorkers": 1
+          "actualWorkers": 2
         },
         "id": "Mobile Chrome",
         "name": "Mobile Chrome",
@@ -107,7 +107,7 @@
         "repeatEach": 1,
         "retries": 0,
         "metadata": {
-          "actualWorkers": 1
+          "actualWorkers": 2
         },
         "id": "Mobile Safari",
         "name": "Mobile Safari",
@@ -123,7 +123,7 @@
         "repeatEach": 1,
         "retries": 0,
         "metadata": {
-          "actualWorkers": 1
+          "actualWorkers": 2
         },
         "id": "Microsoft Edge",
         "name": "Microsoft Edge",
@@ -139,7 +139,7 @@
         "repeatEach": 1,
         "retries": 0,
         "metadata": {
-          "actualWorkers": 1
+          "actualWorkers": 2
         },
         "id": "Google Chrome",
         "name": "Google Chrome",
@@ -165,20 +165,20 @@
   },
   "suites": [
     {
-      "title": "merchant-product-creation-debug.spec.js",
-      "file": "merchant-product-creation-debug.spec.js",
+      "title": "vendor-product-edit-comprehensive.spec.js",
+      "file": "vendor-product-edit-comprehensive.spec.js",
       "column": 0,
       "line": 0,
       "specs": [],
       "suites": [
         {
-          "title": "Merchant Product Creation Debug",
-          "file": "merchant-product-creation-debug.spec.js",
-          "line": 10,
+          "title": "Vendor Product Edit - Comprehensive End-to-End Test (Fixed Authorization)",
+          "file": "vendor-product-edit-comprehensive.spec.js",
+          "line": 3,
           "column": 6,
           "specs": [
             {
-              "title": "should reproduce product creation issues with sizes and images",
+              "title": "Complete vendor product edit workflow with authorization fix verification",
               "ok": false,
               "tags": [],
               "tests": [
@@ -193,103 +193,137 @@
                       "workerIndex": 0,
                       "parallelIndex": 0,
                       "status": "failed",
-                      "duration": 39575,
+                      "duration": 33385,
                       "error": {
-                        "message": "TimeoutError: page.click: Timeout 30000ms exceeded.\nCall log:\n\u001b[2m  - waiting for locator('select[name=\"category_id\"]')\u001b[22m\n",
-                        "stack": "TimeoutError: page.click: Timeout 30000ms exceeded.\nCall log:\n\u001b[2m  - waiting for locator('select[name=\"category_id\"]')\u001b[22m\n\n    at C:\\Users\\Admin\\Desktop\\TheProject\\Production\\theproject_backend\\tests\\playwright\\merchant-product-creation-debug.spec.js:66:16",
+                        "message": "TimeoutError: page.fill: Timeout 30000ms exceeded.\nCall log:\n\u001b[2m  - waiting for locator('input[name=\"email\"]')\u001b[22m\n",
+                        "stack": "TimeoutError: page.fill: Timeout 30000ms exceeded.\nCall log:\n\u001b[2m  - waiting for locator('input[name=\"email\"]')\u001b[22m\n\n    at C:\\Users\\Admin\\Desktop\\TheProject\\Production\\theproject_backend\\tests\\playwright\\vendor-product-edit-comprehensive.spec.js:22:16",
                         "location": {
-                          "file": "C:\\Users\\Admin\\Desktop\\TheProject\\Production\\theproject_backend\\tests\\playwright\\merchant-product-creation-debug.spec.js",
+                          "file": "C:\\Users\\Admin\\Desktop\\TheProject\\Production\\theproject_backend\\tests\\playwright\\vendor-product-edit-comprehensive.spec.js",
                           "column": 16,
-                          "line": 66
+                          "line": 22
                         },
-                        "snippet": "\u001b[0m \u001b[90m 64 |\u001b[39m     \n \u001b[90m 65 |\u001b[39m     \u001b[90m// Select category\u001b[39m\n\u001b[31m\u001b[1m>\u001b[22m\u001b[39m\u001b[90m 66 |\u001b[39m     \u001b[36mawait\u001b[39m page\u001b[33m.\u001b[39mclick(\u001b[32m'select[name=\"category_id\"]'\u001b[39m)\u001b[33m;\u001b[39m\n \u001b[90m    |\u001b[39m                \u001b[31m\u001b[1m^\u001b[22m\u001b[39m\n \u001b[90m 67 |\u001b[39m     \u001b[36mawait\u001b[39m page\u001b[33m.\u001b[39mselectOption(\u001b[32m'select[name=\"category_id\"]'\u001b[39m\u001b[33m,\u001b[39m { index\u001b[33m:\u001b[39m \u001b[35m1\u001b[39m })\u001b[33m;\u001b[39m\n \u001b[90m 68 |\u001b[39m     \n \u001b[90m 69 |\u001b[39m     \u001b[90m// Fill price and stock\u001b[39m\u001b[0m"
+                        "snippet": "\u001b[0m \u001b[90m 20 |\u001b[39m     \n \u001b[90m 21 |\u001b[39m     \u001b[90m// Fill login form with the correct vendor credentials\u001b[39m\n\u001b[31m\u001b[1m>\u001b[22m\u001b[39m\u001b[90m 22 |\u001b[39m     \u001b[36mawait\u001b[39m page\u001b[33m.\u001b[39mfill(\u001b[32m'input[name=\"email\"]'\u001b[39m\u001b[33m,\u001b[39m \u001b[32m'gogoh3296@gmail.com'\u001b[39m)\u001b[33m;\u001b[39m\n \u001b[90m    |\u001b[39m                \u001b[31m\u001b[1m^\u001b[22m\u001b[39m\n \u001b[90m 23 |\u001b[39m     \u001b[36mawait\u001b[39m page\u001b[33m.\u001b[39mfill(\u001b[32m'input[name=\"password\"]'\u001b[39m\u001b[33m,\u001b[39m \u001b[32m'password123'\u001b[39m)\u001b[33m;\u001b[39m\n \u001b[90m 24 |\u001b[39m     \u001b[36mawait\u001b[39m page\u001b[33m.\u001b[39mclick(\u001b[32m'button[type=\"submit\"]'\u001b[39m)\u001b[33m;\u001b[39m\n \u001b[90m 25 |\u001b[39m     \u001b[0m"
                       },
                       "errors": [
                         {
                           "location": {
-                            "file": "C:\\Users\\Admin\\Desktop\\TheProject\\Production\\theproject_backend\\tests\\playwright\\merchant-product-creation-debug.spec.js",
+                            "file": "C:\\Users\\Admin\\Desktop\\TheProject\\Production\\theproject_backend\\tests\\playwright\\vendor-product-edit-comprehensive.spec.js",
                             "column": 16,
-                            "line": 66
+                            "line": 22
                           },
-                          "message": "TimeoutError: page.click: Timeout 30000ms exceeded.\nCall log:\n\u001b[2m  - waiting for locator('select[name=\"category_id\"]')\u001b[22m\n\n\n\u001b[0m \u001b[90m 64 |\u001b[39m     \n \u001b[90m 65 |\u001b[39m     \u001b[90m// Select category\u001b[39m\n\u001b[31m\u001b[1m>\u001b[22m\u001b[39m\u001b[90m 66 |\u001b[39m     \u001b[36mawait\u001b[39m page\u001b[33m.\u001b[39mclick(\u001b[32m'select[name=\"category_id\"]'\u001b[39m)\u001b[33m;\u001b[39m\n \u001b[90m    |\u001b[39m                \u001b[31m\u001b[1m^\u001b[22m\u001b[39m\n \u001b[90m 67 |\u001b[39m     \u001b[36mawait\u001b[39m page\u001b[33m.\u001b[39mselectOption(\u001b[32m'select[name=\"category_id\"]'\u001b[39m\u001b[33m,\u001b[39m { index\u001b[33m:\u001b[39m \u001b[35m1\u001b[39m })\u001b[33m;\u001b[39m\n \u001b[90m 68 |\u001b[39m     \n \u001b[90m 69 |\u001b[39m     \u001b[90m// Fill price and stock\u001b[39m\u001b[0m\n\u001b[2m    at C:\\Users\\Admin\\Desktop\\TheProject\\Production\\theproject_backend\\tests\\playwright\\merchant-product-creation-debug.spec.js:66:16\u001b[22m"
+                          "message": "TimeoutError: page.fill: Timeout 30000ms exceeded.\nCall log:\n\u001b[2m  - waiting for locator('input[name=\"email\"]')\u001b[22m\n\n\n\u001b[0m \u001b[90m 20 |\u001b[39m     \n \u001b[90m 21 |\u001b[39m     \u001b[90m// Fill login form with the correct vendor credentials\u001b[39m\n\u001b[31m\u001b[1m>\u001b[22m\u001b[39m\u001b[90m 22 |\u001b[39m     \u001b[36mawait\u001b[39m page\u001b[33m.\u001b[39mfill(\u001b[32m'input[name=\"email\"]'\u001b[39m\u001b[33m,\u001b[39m \u001b[32m'gogoh3296@gmail.com'\u001b[39m)\u001b[33m;\u001b[39m\n \u001b[90m    |\u001b[39m                \u001b[31m\u001b[1m^\u001b[22m\u001b[39m\n \u001b[90m 23 |\u001b[39m     \u001b[36mawait\u001b[39m page\u001b[33m.\u001b[39mfill(\u001b[32m'input[name=\"password\"]'\u001b[39m\u001b[33m,\u001b[39m \u001b[32m'password123'\u001b[39m)\u001b[33m;\u001b[39m\n \u001b[90m 24 |\u001b[39m     \u001b[36mawait\u001b[39m page\u001b[33m.\u001b[39mclick(\u001b[32m'button[type=\"submit\"]'\u001b[39m)\u001b[33m;\u001b[39m\n \u001b[90m 25 |\u001b[39m     \u001b[0m\n\u001b[2m    at C:\\Users\\Admin\\Desktop\\TheProject\\Production\\theproject_backend\\tests\\playwright\\vendor-product-edit-comprehensive.spec.js:22:16\u001b[22m"
                         }
                       ],
                       "stdout": [
                         {
-                          "text": "Step 1: Logging in as merchant...\n"
+                          "text": "🚀 Starting comprehensive vendor product edit test with authorization fix...\n"
                         },
                         {
-                          "text": "[BROWSER] warning: cdn.tailwindcss.com should not be used in production. To use Tailwind CSS in production, install it as a PostCSS plugin or use the Tailwind CLI: https://tailwindcss.com/docs/installation\n"
-                        },
-                        {
-                          "text": "[BROWSER] warning: cdn.tailwindcss.com should not be used in production. To use Tailwind CSS in production, install it as a PostCSS plugin or use the Tailwind CLI: https://tailwindcss.com/docs/installation\n"
-                        },
-                        {
-                          "text": "[BROWSER] warning: Search input not found\n"
-                        },
-                        {
-                          "text": "✓ Successfully logged in\n"
-                        },
-                        {
-                          "text": "Step 2: Navigating to product creation...\n"
-                        },
-                        {
-                          "text": "[REQUEST] GET http://localhost:8000/merchant/products/create\n"
-                        },
-                        {
-                          "text": "[RESPONSE] 200 http://localhost:8000/merchant/products/create\n"
-                        },
-                        {
-                          "text": "[BROWSER] warning: cdn.tailwindcss.com should not be used in production. To use Tailwind CSS in production, install it as a PostCSS plugin or use the Tailwind CLI: https://tailwindcss.com/docs/installation\n"
-                        },
-                        {
-                          "text": "[BROWSER] warning: Search input not found\n"
-                        },
-                        {
-                          "text": "[BROWSER] log: Merchant Stock Validation System initialized\n"
-                        },
-                        {
-                          "text": "[REQUEST] GET http://localhost:8000/merchant/products/create-data\n"
-                        },
-                        {
-                          "text": "[RESPONSE] 200 http://localhost:8000/merchant/products/create-data\n"
-                        },
-                        {
-                          "text": "✓ Product creation page loaded\n"
-                        },
-                        {
-                          "text": "Step 3: Filling basic product information...\n"
+                          "text": "📝 Step 1: Logging in as vendor Luffy...\n"
                         }
                       ],
                       "stderr": [],
                       "retry": 0,
-                      "startTime": "2025-07-19T18:24:15.974Z",
+                      "startTime": "2025-07-21T23:41:40.219Z",
                       "annotations": [],
                       "attachments": [
                         {
                           "name": "screenshot",
                           "contentType": "image/png",
-                          "path": "C:\\Users\\Admin\\Desktop\\TheProject\\Production\\theproject_backend\\test-results\\merchant-product-creation--8804a-ssues-with-sizes-and-images-chromium\\test-failed-1.png"
+                          "path": "C:\\Users\\Admin\\Desktop\\TheProject\\Production\\theproject_backend\\test-results\\vendor-product-edit-compre-ce772-horization-fix-verification-chromium\\test-failed-1.png"
                         },
                         {
                           "name": "error-context",
                           "contentType": "text/markdown",
-                          "path": "C:\\Users\\Admin\\Desktop\\TheProject\\Production\\theproject_backend\\test-results\\merchant-product-creation--8804a-ssues-with-sizes-and-images-chromium\\error-context.md"
+                          "path": "C:\\Users\\Admin\\Desktop\\TheProject\\Production\\theproject_backend\\test-results\\vendor-product-edit-compre-ce772-horization-fix-verification-chromium\\error-context.md"
                         }
                       ],
                       "errorLocation": {
-                        "file": "C:\\Users\\Admin\\Desktop\\TheProject\\Production\\theproject_backend\\tests\\playwright\\merchant-product-creation-debug.spec.js",
+                        "file": "C:\\Users\\Admin\\Desktop\\TheProject\\Production\\theproject_backend\\tests\\playwright\\vendor-product-edit-comprehensive.spec.js",
                         "column": 16,
-                        "line": 66
+                        "line": 22
                       }
                     }
                   ],
                   "status": "unexpected"
                 }
               ],
-              "id": "99e0eb4cd5a1de61b063-0dc514980c8a102367bd",
-              "file": "merchant-product-creation-debug.spec.js",
-              "line": 41,
+              "id": "277c15a55f65d782eb8d-400540056c76121d2d63",
+              "file": "vendor-product-edit-comprehensive.spec.js",
+              "line": 14,
+              "column": 3
+            },
+            {
+              "title": "Verify authorization fix - no 403 errors",
+              "ok": false,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 60000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "chromium",
+                  "projectName": "chromium",
+                  "results": [
+                    {
+                      "workerIndex": 1,
+                      "parallelIndex": 1,
+                      "status": "failed",
+                      "duration": 33329,
+                      "error": {
+                        "message": "TimeoutError: page.fill: Timeout 30000ms exceeded.\nCall log:\n\u001b[2m  - waiting for locator('input[name=\"email\"]')\u001b[22m\n",
+                        "stack": "TimeoutError: page.fill: Timeout 30000ms exceeded.\nCall log:\n\u001b[2m  - waiting for locator('input[name=\"email\"]')\u001b[22m\n\n    at C:\\Users\\Admin\\Desktop\\TheProject\\Production\\theproject_backend\\tests\\playwright\\vendor-product-edit-comprehensive.spec.js:200:16",
+                        "location": {
+                          "file": "C:\\Users\\Admin\\Desktop\\TheProject\\Production\\theproject_backend\\tests\\playwright\\vendor-product-edit-comprehensive.spec.js",
+                          "column": 16,
+                          "line": 200
+                        },
+                        "snippet": "\u001b[0m \u001b[90m 198 |\u001b[39m     \u001b[90m// Login as vendor\u001b[39m\n \u001b[90m 199 |\u001b[39m     \u001b[36mawait\u001b[39m page\u001b[33m.\u001b[39mgoto(\u001b[32m'/vendor/login'\u001b[39m)\u001b[33m;\u001b[39m\n\u001b[31m\u001b[1m>\u001b[22m\u001b[39m\u001b[90m 200 |\u001b[39m     \u001b[36mawait\u001b[39m page\u001b[33m.\u001b[39mfill(\u001b[32m'input[name=\"email\"]'\u001b[39m\u001b[33m,\u001b[39m \u001b[32m'gogoh3296@gmail.com'\u001b[39m)\u001b[33m;\u001b[39m\n \u001b[90m     |\u001b[39m                \u001b[31m\u001b[1m^\u001b[22m\u001b[39m\n \u001b[90m 201 |\u001b[39m     \u001b[36mawait\u001b[39m page\u001b[33m.\u001b[39mfill(\u001b[32m'input[name=\"password\"]'\u001b[39m\u001b[33m,\u001b[39m \u001b[32m'password123'\u001b[39m)\u001b[33m;\u001b[39m\n \u001b[90m 202 |\u001b[39m     \u001b[36mawait\u001b[39m page\u001b[33m.\u001b[39mclick(\u001b[32m'button[type=\"submit\"]'\u001b[39m)\u001b[33m;\u001b[39m\n \u001b[90m 203 |\u001b[39m     \u001b[36mawait\u001b[39m page\u001b[33m.\u001b[39mwaitForURL(\u001b[32m'**/vendor/dashboard'\u001b[39m\u001b[33m,\u001b[39m { timeout\u001b[33m:\u001b[39m \u001b[35m15000\u001b[39m })\u001b[33m;\u001b[39m\u001b[0m"
+                      },
+                      "errors": [
+                        {
+                          "location": {
+                            "file": "C:\\Users\\Admin\\Desktop\\TheProject\\Production\\theproject_backend\\tests\\playwright\\vendor-product-edit-comprehensive.spec.js",
+                            "column": 16,
+                            "line": 200
+                          },
+                          "message": "TimeoutError: page.fill: Timeout 30000ms exceeded.\nCall log:\n\u001b[2m  - waiting for locator('input[name=\"email\"]')\u001b[22m\n\n\n\u001b[0m \u001b[90m 198 |\u001b[39m     \u001b[90m// Login as vendor\u001b[39m\n \u001b[90m 199 |\u001b[39m     \u001b[36mawait\u001b[39m page\u001b[33m.\u001b[39mgoto(\u001b[32m'/vendor/login'\u001b[39m)\u001b[33m;\u001b[39m\n\u001b[31m\u001b[1m>\u001b[22m\u001b[39m\u001b[90m 200 |\u001b[39m     \u001b[36mawait\u001b[39m page\u001b[33m.\u001b[39mfill(\u001b[32m'input[name=\"email\"]'\u001b[39m\u001b[33m,\u001b[39m \u001b[32m'gogoh3296@gmail.com'\u001b[39m)\u001b[33m;\u001b[39m\n \u001b[90m     |\u001b[39m                \u001b[31m\u001b[1m^\u001b[22m\u001b[39m\n \u001b[90m 201 |\u001b[39m     \u001b[36mawait\u001b[39m page\u001b[33m.\u001b[39mfill(\u001b[32m'input[name=\"password\"]'\u001b[39m\u001b[33m,\u001b[39m \u001b[32m'password123'\u001b[39m)\u001b[33m;\u001b[39m\n \u001b[90m 202 |\u001b[39m     \u001b[36mawait\u001b[39m page\u001b[33m.\u001b[39mclick(\u001b[32m'button[type=\"submit\"]'\u001b[39m)\u001b[33m;\u001b[39m\n \u001b[90m 203 |\u001b[39m     \u001b[36mawait\u001b[39m page\u001b[33m.\u001b[39mwaitForURL(\u001b[32m'**/vendor/dashboard'\u001b[39m\u001b[33m,\u001b[39m { timeout\u001b[33m:\u001b[39m \u001b[35m15000\u001b[39m })\u001b[33m;\u001b[39m\u001b[0m\n\u001b[2m    at C:\\Users\\Admin\\Desktop\\TheProject\\Production\\theproject_backend\\tests\\playwright\\vendor-product-edit-comprehensive.spec.js:200:16\u001b[22m"
+                        }
+                      ],
+                      "stdout": [
+                        {
+                          "text": "🚀 Starting authorization fix verification test...\n"
+                        }
+                      ],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2025-07-21T23:41:40.268Z",
+                      "annotations": [],
+                      "attachments": [
+                        {
+                          "name": "screenshot",
+                          "contentType": "image/png",
+                          "path": "C:\\Users\\Admin\\Desktop\\TheProject\\Production\\theproject_backend\\test-results\\vendor-product-edit-compre-e739d-ization-fix---no-403-errors-chromium\\test-failed-1.png"
+                        },
+                        {
+                          "name": "error-context",
+                          "contentType": "text/markdown",
+                          "path": "C:\\Users\\Admin\\Desktop\\TheProject\\Production\\theproject_backend\\test-results\\vendor-product-edit-compre-e739d-ization-fix---no-403-errors-chromium\\error-context.md"
+                        }
+                      ],
+                      "errorLocation": {
+                        "file": "C:\\Users\\Admin\\Desktop\\TheProject\\Production\\theproject_backend\\tests\\playwright\\vendor-product-edit-comprehensive.spec.js",
+                        "column": 16,
+                        "line": 200
+                      }
+                    }
+                  ],
+                  "status": "unexpected"
+                }
+              ],
+              "id": "277c15a55f65d782eb8d-3a047dee9fe370973e05",
+              "file": "vendor-product-edit-comprehensive.spec.js",
+              "line": 195,
               "column": 3
             }
           ]
@@ -299,11 +333,11 @@
   ],
   "errors": [],
   "stats": {
-    "startTime": "2025-07-19T18:24:13.607Z",
-    "duration": 43857.803,
+    "startTime": "2025-07-21T23:41:37.110Z",
+    "duration": 38412.197,
     "expected": 0,
     "skipped": 0,
-    "unexpected": 1,
+    "unexpected": 2,
     "flaky": 0
   }
 }

@@ -1,73 +1,79 @@
 <template>
-  <div class="vue-page-container">
-    <div class="vue-content-container">
-      <!-- Header Section -->
-      <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
-        <div class="flex items-center gap-4">
-          <a :href="backUrl" class="vue-btn vue-btn-secondary">
-            <i class="fas fa-arrow-left w-4 h-4"></i>
-            Back to Products
-          </a>
-          <div>
-            <h1 class="vue-text-2xl">Edit Product</h1>
-            <p class="vue-text-muted mt-1">Update product information, colors, and specifications</p>
-          </div>
+  <div class="vendor-product-edit-app">
+    <!-- Loading State -->
+    <div v-if="loading" class="d-flex justify-content-center align-items-center" style="min-height: 50vh;">
+      <div class="text-center">
+        <div class="spinner-border text-primary" role="status">
+          <span class="visually-hidden">Loading...</span>
         </div>
-        <div class="flex gap-2">
-          <button type="button" class="vue-btn vue-btn-secondary" @click="previewProduct">
-            Preview
-          </button>
-          <button type="button" class="vue-btn vue-btn-primary" @click="saveProduct" :disabled="saving">
-            <i class="fas fa-save w-4 h-4"></i>
-            {{ saving ? 'Saving...' : 'Save Changes' }}
-          </button>
+        <p class="mt-3 text-muted">Loading product editor...</p>
+      </div>
+    </div>
+
+    <!-- Main Content -->
+    <div v-else class="container mx-auto">
+      <!-- Header -->
+      <div class="mb-6">
+        <div class="flex items-center justify-between">
+          <div>
+            <h2 class="text-2xl font-bold text-gray-800 dark:text-white">Edit Product</h2>
+            <p class="mt-1 text-gray-600 dark:text-gray-400">Update product information, colors, and specifications</p>
+          </div>
+          <div class="flex gap-2">
+            <a :href="backUrl" class="inline-flex items-center px-4 py-2 bg-gray-600 border border-transparent rounded-md font-semibold text-xs text-white uppercase tracking-widest hover:bg-gray-700 active:bg-gray-900 focus:outline-none focus:border-gray-900 focus:ring ring-gray-300 disabled:opacity-25 transition ease-in-out duration-150">
+              <i class="fas fa-arrow-left mr-2"></i> Back to Products
+            </a>
+            <button type="button" class="inline-flex items-center px-4 py-2 bg-blue-600 border border-transparent rounded-md font-semibold text-xs text-white uppercase tracking-widest hover:bg-blue-700 active:bg-blue-900 focus:outline-none focus:border-blue-900 focus:ring ring-blue-300 disabled:opacity-25 transition ease-in-out duration-150" @click="saveProduct" :disabled="saving">
+              <i class="fas fa-save mr-2"></i>
+              {{ saving ? 'Saving...' : 'Save Changes' }}
+            </button>
+          </div>
         </div>
       </div>
 
       <!-- Stock Progress Indicator -->
-      <div class="vue-card" style="background-color: var(--primary-blue-light); border-color: var(--gray-200);">
-        <div class="vue-card-body">
-          <div class="flex items-center justify-between mb-2">
-            <span class="vue-text-sm" style="color: var(--primary-blue-hover);">Stock Allocation Progress</span>
-            <span class="vue-text-sm" style="color: var(--primary-blue);">
-              <span>{{ totalAllocatedStock }}</span> / {{ productData.stock }} units allocated
-            </span>
+      <div class="bg-blue-50 dark:bg-blue-900/20 border border-blue-200 dark:border-blue-800 rounded-lg p-4 mb-6">
+        <div class="flex items-center justify-between mb-2">
+          <span class="text-sm font-medium text-blue-700 dark:text-blue-300">Stock Allocation Progress</span>
+          <span class="text-sm text-blue-600 dark:text-blue-400">
+            <span>{{ totalAllocatedStock }}</span> / {{ productData.stock }} units allocated
+          </span>
+        </div>
+        <div class="w-full bg-gray-200 dark:bg-gray-700 rounded-full h-2">
+          <div class="bg-blue-600 h-2 rounded-full transition-all duration-300"
+               :style="{ width: stockProgressPercentage + '%' }">
           </div>
-          <div class="w-full rounded-full h-2" style="background-color: var(--gray-200);">
-            <div class="h-2 rounded-full transition-all duration-300"
-                 style="background-color: var(--primary-blue);"
-                 :style="{ width: stockProgressPercentage + '%' }">
-            </div>
-          </div>
-          <div v-if="isStockOverAllocated" class="mt-3 p-3 rounded-lg"
-               style="background-color: var(--yellow-100); border: 1px solid var(--yellow-600);">
-            <div class="flex items-center gap-2">
-              <i class="fas fa-exclamation-triangle" style="color: var(--yellow-600);"></i>
-              <p style="color: var(--yellow-800); font-size: 0.875rem; margin: 0;">
-                You've allocated more stock than available. Please adjust color stock quantities.
-              </p>
-            </div>
+        </div>
+        <div v-if="isStockOverAllocated" class="mt-3 p-3 bg-yellow-50 dark:bg-yellow-900/20 border border-yellow-200 dark:border-yellow-800 rounded-lg">
+          <div class="flex items-center gap-2">
+            <i class="fas fa-exclamation-triangle text-yellow-600 dark:text-yellow-400"></i>
+            <p class="text-yellow-800 dark:text-yellow-200 text-sm">
+              You've allocated more stock than available. Please adjust color stock quantities.
+            </p>
           </div>
         </div>
       </div>
 
-      <!-- Main Content -->
-      <div class="space-y-6">
-        <!-- Tab Navigation -->
-        <div class="flex border-b bg-white rounded-t-lg" style="border-color: var(--gray-200);">
-          <button type="button"
-                  v-for="tab in tabs"
-                  :key="tab.id"
-                  class="vue-tab-button flex items-center gap-2 px-6 py-3 font-medium text-sm transition-colors"
-                  :class="getTabClasses(tab.id)"
-                  @click="activeTab = tab.id">
-            <i :class="tab.icon + ' w-4 h-4'"></i>
-            <span class="hidden sm:inline">{{ tab.label }}</span>
-          </button>
+      <!-- Tab Navigation -->
+      <div class="bg-white dark:bg-gray-800 rounded-lg shadow border border-gray-200 dark:border-gray-700 mb-6">
+        <div class="border-b border-gray-200 dark:border-gray-700">
+          <nav class="-mb-px flex space-x-8 px-6" aria-label="Tabs">
+            <button
+              v-for="tab in tabs"
+              :key="tab.id"
+              @click="activeTab = tab.id"
+              :class="getTabClasses(tab.id)"
+              class="whitespace-nowrap py-4 px-1 border-b-2 font-medium text-sm transition-colors duration-200"
+            >
+              <i :class="tab.icon" class="mr-2"></i>
+              {{ tab.label }}
+            </button>
+          </nav>
         </div>
 
-        <!-- Form Container -->
-        <form @submit.prevent="saveProduct">
+        <!-- Tab Content -->
+        <div class="p-6">
+
           <!-- Basic Information Tab -->
           <div v-show="activeTab === 'basic'" class="vue-tab-content space-y-6">
             <div class="grid lg:grid-cols-2 gap-6">
@@ -106,11 +112,6 @@
                               @change="validateCategorySelection">
                         <option value="">Select Category</option>
                         <optgroup v-for="parent in categories" :key="parent.id" :label="parent.name">
-                          <!-- <option :value="parent.id"
-                                  disabled
-                                  class="text-gray-400 font-semibold">
-                            {{ parent.name }} (Category Group)
-                          </option> -->
                           <option v-for="child in parent.children"
                                   :key="child.id"
                                   :value="child.id"
@@ -123,7 +124,24 @@
                       <div v-if="errors.category_id" class="text-red-500 text-xs mt-1">{{ errors.category_id }}</div>
                     </div>
 
-
+                    <div class="space-y-2">
+                      <label for="branch_id" class="block vue-text-sm">
+                        Branch <span class="text-red-500">*</span>
+                      </label>
+                      <select id="branch_id"
+                              v-model="productData.branch_id"
+                              class="vue-form-control"
+                              :class="{ 'border-red-500': errors.branch_id }"
+                              required>
+                        <option value="">Select Branch</option>
+                        <option v-for="branch in branches"
+                                :key="branch.id"
+                                :value="branch.id">
+                          {{ branch.name }}
+                        </option>
+                      </select>
+                      <div v-if="errors.branch_id" class="text-red-500 text-xs mt-1">{{ errors.branch_id }}</div>
+                    </div>
                   </div>
 
                   <div class="space-y-2">
@@ -283,7 +301,7 @@
 
             <!-- Color Cards Container -->
             <div class="grid gap-6">
-              <ColorVariantCard
+              <VendorColorVariantCard
                 v-for="(color, index) in productData.colors"
                 :key="color.id || index"
                 :color="color"
@@ -330,7 +348,7 @@
                     </button>
                   </div>
 
-                  <SpecificationItem
+                  <VendorSpecificationItem
                     v-for="(spec, index) in productData.specifications"
                     :key="spec.id || index"
                     :specification="spec"
@@ -342,7 +360,7 @@
               </div>
             </div>
           </div>
-        </form>
+        </div>
       </div>
     </div>
   </div>
@@ -384,14 +402,14 @@
 
 <script>
 import { ref, reactive, computed, onMounted, watch } from 'vue'
-import ColorVariantCard from './ColorVariantCard.vue'
-import SpecificationItem from './SpecificationItem.vue'
+import VendorColorVariantCard from './VendorColorVariantCard.vue'
+import VendorSpecificationItem from './VendorSpecificationItem.vue'
 
 export default {
-  name: 'ProductEditApp',
+  name: 'VendorProductEditApp',
   components: {
-    ColorVariantCard,
-    SpecificationItem
+    VendorColorVariantCard,
+    VendorSpecificationItem
   },
   props: {
     productId: {
@@ -400,7 +418,7 @@ export default {
     },
     backUrl: {
       type: String,
-      default: '/merchant/products'
+      default: '/vendor/products'
     }
   },
   setup(props) {
@@ -414,6 +432,7 @@ export default {
       id: null,
       name: '',
       category_id: '',
+      branch_id: '',
       price: 0,
       original_price: null,
       stock: 0,
@@ -442,7 +461,11 @@ export default {
     // Computed properties
     const totalAllocatedStock = computed(() => {
       return productData.colors.reduce((total, color) => {
-        return total + (parseInt(color.stock) || 0)
+        // Sum up stock from all sizes within this color
+        const colorSizesStock = (color.sizes || []).reduce((colorTotal, size) => {
+          return colorTotal + (parseInt(size.stock) || 0)
+        }, 0)
+        return total + colorSizesStock
       }, 0)
     })
 
@@ -468,17 +491,16 @@ export default {
 
     // Methods
     const getTabClasses = (tabId) => {
-      const baseClasses = 'vue-tab-button flex items-center gap-2 px-6 py-3 font-medium text-sm transition-colors'
       if (activeTab.value === tabId) {
-        return baseClasses + ' active'
+        return 'text-indigo-600 border-indigo-500'
       }
-      return baseClasses + ' text-gray-600 hover:text-gray-900 hover:bg-gray-50'
+      return 'text-gray-500 border-transparent hover:text-gray-700 hover:border-gray-300'
     }
 
     const fetchProductData = async () => {
       try {
         loading.value = true
-        const response = await window.axios.get(`/merchant/products/${props.productId}/edit-data`)
+        const response = await window.axios.get(`/vendor/products/${props.productId}/edit-data`)
 
         // Populate product data
         Object.assign(productData, response.data.product)
@@ -534,6 +556,11 @@ export default {
         isValid = false
       }
 
+      if (!productData.branch_id) {
+        errors.branch_id = 'Branch is required'
+        isValid = false
+      }
+
       if (!productData.price || productData.price <= 0) {
         errors.price = 'Price must be greater than 0'
         isValid = false
@@ -560,10 +587,11 @@ export default {
       return isValid
     }
 
+    // Save product method
     const saveProduct = async () => {
       if (!validateForm()) {
         // Switch to the tab with errors
-        if (errors.name || errors.category_id || errors.price || errors.stock) {
+        if (errors.name || errors.category_id || errors.branch_id || errors.price || errors.stock) {
           activeTab.value = 'basic'
         } else if (errors.colors) {
           activeTab.value = 'colors'
@@ -582,6 +610,7 @@ export default {
           id: productData.id,
           name: productData.name || '',
           category_id: productData.category_id || '',
+          branch_id: productData.branch_id || '',
           price: productData.price || 0,
           original_price: productData.original_price || null,
           stock: productData.stock || 0,
@@ -671,7 +700,7 @@ export default {
         // Add method override for PUT request
         formData.append('_method', 'PUT')
 
-        const response = await window.axios.post(`/merchant/products/${props.productId}`, formData, {
+        const response = await window.axios.post(`/vendor/products/${props.productId}`, formData, {
           headers: {
             'Content-Type': 'multipart/form-data'
           }
@@ -701,7 +730,7 @@ export default {
 
     const previewProduct = () => {
       // Open product preview in new tab
-      window.open(`/merchant/products/${props.productId}`, '_blank')
+      window.open(`/vendor/products/${props.productId}`, '_blank')
     }
 
     // Color management methods
@@ -721,9 +750,19 @@ export default {
       productData.colors.push(newColor)
     }
 
-    const updateColor = (index, updatedColor) => {
+    const updateColor = (index, field, value) => {
+      console.log('updateColor called:', { index, field, value })
       if (index >= 0 && index < productData.colors.length) {
-        Object.assign(productData.colors[index], updatedColor)
+        console.log('Before update:', productData.colors[index])
+        // Handle field-specific updates
+        if (typeof field === 'string') {
+          productData.colors[index][field] = value
+          console.log('After field update:', productData.colors[index])
+        } else {
+          // Handle object updates (backward compatibility)
+          Object.assign(productData.colors[index], field)
+          console.log('After object update:', productData.colors[index])
+        }
       }
     }
 
@@ -798,9 +837,9 @@ export default {
       productData.specifications.push(newSpec)
     }
 
-    const updateSpecification = (index, updatedSpec) => {
+    const updateSpecification = (index, field, value) => {
       if (index >= 0 && index < productData.specifications.length) {
-        Object.assign(productData.specifications[index], updatedSpec)
+        productData.specifications[index][field] = value
       }
     }
 
@@ -910,223 +949,165 @@ export default {
 </script>
 
 <style scoped>
-/* Use merchant dashboard color variables for consistency */
-
-/* Main page background with gradient */
-.vue-page-container {
+/* Vue component specific styles */
+.vendor-product-edit-app {
   min-height: 100vh;
-  background: linear-gradient(to bottom right, var(--gray-50), var(--gray-100));
-  padding: 1rem;
 }
 
-@media (min-width: 768px) {
-  .vue-page-container {
-    padding: 1.5rem;
-  }
-}
-
-/* Main content container */
-.vue-content-container {
-  max-width: 80rem; /* max-w-7xl */
-  margin: 0 auto;
-  display: flex;
-  flex-direction: column;
-  gap: 1.5rem; /* space-y-6 */
-}
-
-/* Modern card styling - use merchant dashboard card styles */
-.vue-card {
-  background-color: white;
-  border: 1px solid var(--gray-200);
-  border-radius: 0.5rem; /* rounded-lg */
-  box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px 0 rgba(0, 0, 0, 0.06);
-  overflow: hidden;
-}
-
-.vue-card-body {
-  padding: 1.5rem; /* p-6 */
-}
-
-/* Modern form controls - use merchant dashboard variables */
-.vue-form-control {
-  width: 100%;
-  padding: 0.5rem 0.75rem; /* px-3 py-2 */
-  border: 1px solid var(--gray-300);
-  border-radius: 0.5rem; /* rounded-lg */
-  background-color: white;
-  color: var(--gray-900);
-  font-size: 0.875rem;
-  transition: all 0.2s ease;
-}
-
-.vue-form-control:focus {
-  outline: none;
-  border-color: var(--primary-blue);
-  box-shadow: 0 0 0 2px var(--primary-blue-light);
-}
-
-.vue-form-control::placeholder {
-  color: var(--gray-400);
-}
-
-/* Modern buttons - use merchant dashboard button styles */
-.vue-btn {
-  display: inline-flex;
-  align-items: center;
-  gap: 0.5rem;
-  padding: 8px 16px;
-  font-size: 0.875rem;
-  font-weight: 500;
-  border-radius: 0.5rem; /* rounded-lg */
-  border: none;
-  cursor: pointer;
-  transition: all 0.2s ease;
-  text-decoration: none;
-}
-
-.vue-btn:disabled {
-  opacity: 0.6;
-  cursor: not-allowed;
-}
-
-.vue-btn-primary {
-  background-color: var(--primary-blue);
-  color: white;
-}
-
-.vue-btn-primary:hover:not(:disabled) {
-  background-color: var(--primary-blue-hover);
-  color: white;
-}
-
-.vue-btn-secondary {
-  background-color: var(--gray-300);
-  color: var(--gray-700);
-  border: 1px solid var(--gray-300);
-}
-
-.vue-btn-secondary:hover {
-  background-color: var(--gray-100);
-  color: var(--gray-700);
-}
-
-/* Tab Navigation Styling - use merchant dashboard colors */
-.vue-tab-button {
-  border: none;
-  background: none;
-  cursor: pointer;
-  outline: none;
-}
-
-.vue-tab-button.active {
-  color: var(--primary-blue) !important;
-  border-bottom: 2px solid var(--primary-blue) !important;
-  background-color: var(--primary-blue-light) !important;
-}
-
-.vue-tab-button:not(.active):hover {
-  color: var(--gray-900) !important;
-  background-color: var(--gray-50) !important;
-}
-
-/* Typography - use merchant dashboard colors */
-.vue-text-2xl {
-  font-size: 1.5rem;
-  font-weight: 700;
-  color: var(--gray-900);
-}
-
-@media (min-width: 768px) {
-  .vue-text-2xl {
-    font-size: 1.875rem; /* text-3xl on md+ */
-  }
+.vue-tab-content {
+  min-height: 400px;
 }
 
 .vue-text-lg {
   font-size: 1.125rem;
   font-weight: 600;
-  color: var(--gray-900);
+  color: #1f2937;
 }
 
 .vue-text-sm {
   font-size: 0.875rem;
   font-weight: 500;
-  color: var(--gray-700);
+  color: #374151;
 }
 
-.vue-text-muted {
-  color: var(--gray-600);
+.vue-form-control {
+  width: 100%;
+  padding: 0.5rem 0.75rem;
+  border: 1px solid #d1d5db;
+  border-radius: 0.375rem;
+  background-color: #ffffff;
+  color: #1f2937;
+  font-size: 0.875rem;
+  transition: border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
 }
 
-/* Utility classes for layout */
-.flex { display: flex; }
-.items-center { align-items: center; }
-.justify-between { justify-content: space-between; }
-.gap-2 { gap: 0.5rem; }
-.gap-4 { gap: 1rem; }
-.gap-6 { gap: 1.5rem; }
-.space-y-6 > * + * { margin-top: 1.5rem; }
-.space-y-4 > * + * { margin-top: 1rem; }
-.space-y-2 > * + * { margin-top: 0.5rem; }
-.space-x-2 > * + * { margin-left: 0.5rem; }
-.w-full { width: 100%; }
-.h-2 { height: 0.5rem; }
-.w-4 { width: 1rem; }
-.h-4 { height: 1rem; }
-.w-5 { width: 1.25rem; }
-.h-5 { height: 1.25rem; }
-.w-12 { width: 3rem; }
-.h-12 { height: 3rem; }
-.rounded-full { border-radius: 9999px; }
-.rounded-t-lg { border-top-left-radius: 0.5rem; border-top-right-radius: 0.5rem; }
-.border-b { border-bottom-width: 1px; }
-.border-slate-200 { border-color: var(--gray-200); }
-.px-6 { padding-left: 1.5rem; padding-right: 1.5rem; }
-.py-3 { padding-top: 0.75rem; padding-bottom: 0.75rem; }
-.p-6 { padding: 1.5rem; }
-.p-3 { padding: 0.75rem; }
-.mb-2 { margin-bottom: 0.5rem; }
-.mb-4 { margin-bottom: 1rem; }
-.mt-1 { margin-top: 0.25rem; }
-.mt-3 { margin-top: 0.75rem; }
-.mx-auto { margin-left: auto; margin-right: auto; }
-.transition-all { transition: all 0.2s ease; }
-.duration-300 { transition-duration: 300ms; }
-.grid { display: grid; }
-.grid-cols-2 { grid-template-columns: repeat(2, minmax(0, 1fr)); }
-.text-center { text-align: center; }
-.text-slate-400 { color: var(--gray-400); }
-.text-slate-500 { color: var(--gray-500); }
-.text-slate-600 { color: var(--gray-600); }
-.text-slate-700 { color: var(--gray-700); }
-.text-slate-900 { color: var(--gray-900); }
-.text-red-500 { color: var(--red-600); }
-.text-red-600 { color: var(--red-600); }
-.text-primary-600 { color: var(--primary-blue); }
-.text-primary-700 { color: var(--primary-blue-hover); }
-.text-primary-800 { color: var(--primary-blue-hover); }
-.text-xs { font-size: 0.75rem; }
-.text-sm { font-size: 0.875rem; }
-.font-medium { font-weight: 500; }
-.font-semibold { font-weight: 600; }
-.relative { position: relative; }
-.absolute { position: absolute; }
-.left-3 { left: 0.75rem; }
-.top-1\/2 { top: 50%; }
-.transform { transform: translateX(var(--tw-translate-x)) translateY(var(--tw-translate-y)); }
-.-translate-y-1\/2 { --tw-translate-y: -50%; }
-.pl-10 { padding-left: 2.5rem; }
-.hidden { display: none; }
-.block { display: block; }
-
-@media (min-width: 640px) {
-  .sm\:flex-row { flex-direction: row; }
-  .sm\:items-center { align-items: center; }
-  .sm\:justify-between { justify-content: space-between; }
-  .sm\:inline { display: inline; }
+.vue-form-control:focus {
+  outline: none;
+  border-color: #6366f1;
+  box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.1);
 }
 
-@media (min-width: 1024px) {
-  .lg\:grid-cols-2 { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+.vue-form-control::placeholder {
+  color: #9ca3af;
 }
+
+/* Modern buttons */
+.vue-btn {
+  display: inline-flex;
+  align-items: center;
+  padding: 0.5rem 1rem;
+  border-radius: 0.375rem;
+  font-size: 0.875rem;
+  font-weight: 500;
+  text-decoration: none;
+  transition: all 0.15s ease-in-out;
+  cursor: pointer;
+  border: 1px solid transparent;
+}
+
+.vue-btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.vue-btn-primary {
+  background-color: #6366f1;
+  color: #ffffff;
+  border-color: #6366f1;
+}
+
+.vue-btn-primary:hover:not(:disabled) {
+  background-color: #5b21b6;
+  border-color: #5b21b6;
+}
+
+.vue-btn-secondary {
+  background-color: #6b7280;
+  color: #ffffff;
+  border-color: #6b7280;
+}
+
+.vue-btn-secondary:hover:not(:disabled) {
+  background-color: #4b5563;
+  border-color: #4b5563;
+}
+
+.vue-btn-success {
+  background-color: #10b981;
+  color: #ffffff;
+  border-color: #10b981;
+}
+
+.vue-btn-success:hover:not(:disabled) {
+  background-color: #059669;
+  border-color: #059669;
+}
+
+.vue-card {
+  background-color: #ffffff;
+  border: 1px solid #e5e7eb;
+  border-radius: 0.5rem;
+  box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px 0 rgba(0, 0, 0, 0.06);
+}
+
+/* Dark mode support */
+@media (prefers-color-scheme: dark) {
+  .vue-text-lg {
+    color: #f9fafb;
+  }
+
+  .vue-text-sm {
+    color: #d1d5db;
+  }
+
+  .vue-form-control {
+    background-color: #374151;
+    border-color: #4b5563;
+    color: #f9fafb;
+  }
+
+  .vue-form-control:focus {
+    border-color: #6366f1;
+    box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.1);
+  }
+
+  .vue-card {
+    background-color: #1f2937;
+    border-color: #374151;
+  }
+}
+
+/* Animation classes */
+.fade-enter-active, .fade-leave-active {
+  transition: opacity 0.3s;
+}
+
+.fade-enter-from, .fade-leave-to {
+  opacity: 0;
+}
+
+/* Tab transition */
+.tab-transition-enter-active, .tab-transition-leave-active {
+  transition: all 0.3s ease;
+}
+
+.tab-transition-enter-from {
+  opacity: 0;
+  transform: translateX(10px);
+}
+
+.tab-transition-leave-to {
+  opacity: 0;
+  transform: translateX(-10px);
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+  .vue-app-container {
+    padding: 1rem;
+  }
+}
+
+
+
 </style>

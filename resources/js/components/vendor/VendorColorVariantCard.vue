@@ -96,7 +96,7 @@
               {{ errors[`colors.${index}.name`] }}
             </div>
 
-            <div class="space-y-2 ">
+            <div class="space-y-2">
               <label class="block vue-text-sm font-medium">
                 <i class="fas fa-palette w-4 h-4 mr-2 text-blue-500"></i>
                 Color Code
@@ -393,8 +393,10 @@ export default {
     }
 
     const selectColor = (colorName) => {
+      console.log('selectColor called with:', colorName)
       updateColor('name', colorName)
       const colorCode = getColorCode(colorName)
+      console.log('Color code for', colorName, ':', colorCode)
       if (colorCode) {
         updateColor('color_code', colorCode)
       }
@@ -403,6 +405,7 @@ export default {
     }
 
     const updateColor = (field, value) => {
+      console.log('updateColor called in child with:', { field, value, index: props.index })
       let finalValue = value
 
       // Special handling for stock field with validation and auto-correction
@@ -425,6 +428,7 @@ export default {
         }
       }
 
+      console.log('Emitting update event:', { index: props.index, field, finalValue })
       emit('update', props.index, field, finalValue)
     }
 
@@ -497,15 +501,19 @@ export default {
       document.addEventListener('click', handleClickOutside)
 
       // Set initial preview if image exists
-      if (props.color.image && props.color.image instanceof File) {
-        const reader = new FileReader()
-        reader.onload = (e) => {
-          imagePreviewUrl.value = e.target.result
+      if (props.color.image) {
+        if (props.color.image instanceof File) {
+          // Handle File objects (newly uploaded images)
+          const reader = new FileReader()
+          reader.onload = (e) => {
+            imagePreviewUrl.value = e.target.result
+          }
+          reader.readAsDataURL(props.color.image)
+        } else if (typeof props.color.image === 'string' && props.color.image.trim() !== '') {
+          // Handle existing image URLs from database
+          imagePreviewUrl.value = props.color.image
         }
-        reader.readAsDataURL(props.color.image)
       }
-
-
     })
 
     onUnmounted(() => {

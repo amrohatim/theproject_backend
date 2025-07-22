@@ -303,7 +303,7 @@
 </template>
 
 <script>
-import { ref, reactive, computed, onMounted } from 'vue'
+import { ref, reactive, computed, onMounted, watch } from 'vue'
 
 export default {
   name: 'VendorSizeManagement',
@@ -484,6 +484,64 @@ export default {
       validateNewSizeField('value')
     }
 
+    // Fetch existing sizes from API
+    const fetchSizes = async () => {
+      // Skip API calls during product creation mode
+      if (isProductCreationMode.value) {
+        console.log('📝 Skipping fetchSizes during product creation mode')
+        loading.value = false
+        return
+      }
+
+      try {
+        loading.value = true
+        errorMessage.value = null
+
+        // Validate inputs before making API call
+        if (!props.colorId || !props.productId) {
+          console.log('Missing colorId or productId, skipping fetchSizes')
+          return
+        }
+
+        console.log('Fetching sizes for colorId:', props.colorId, 'productId:', props.productId)
+
+        const response = await window.axios.post('/vendor/api/color-sizes/get-sizes-for-color', {
+          color_id: parseInt(props.colorId),
+          product_id: parseInt(props.productId),
+          only_allocated: true
+        })
+
+        if (response.data.success) {
+          const newSizes = response.data.sizes.map(size => ({
+            id: size.id,
+            name: size.name,
+            value: size.value,
+            category: size.category || 'clothes',
+            additional_info: size.additional_info,
+            stock: size.allocated_stock || 0,
+            price_adjustment: size.price_adjustment || 0,
+            is_available: size.is_available !== false,
+            display_order: size.display_order || 0,
+            editing: false,
+            errors: {}
+          }))
+
+          console.log('📊 Sizes fetched successfully:', newSizes.length, 'sizes found')
+          console.log('📋 Size details:', newSizes)
+
+          sizes.value = newSizes
+        } else {
+          console.error('API returned success=false:', response.data)
+          throw new Error(response.data.message || 'API returned unsuccessful response')
+        }
+      } catch (error) {
+        console.error('Error fetching sizes:', error)
+        errorMessage.value = 'Failed to load sizes. Please try again.'
+      } finally {
+        loading.value = false
+      }
+    }
+
     // Size management methods
     const editSize = (index) => {
       const size = sizes.value[index]
@@ -527,7 +585,9 @@ export default {
       try {
         saving.value = true
 
-        const response = await window.axios.put(`/vendor/api/sizes/${size.id}`, {
+        const response = await window.axios.post('/vendor/api/sizes/update', {
+          size_id: size.id,
+          color_id: props.colorId,
           name: size.name,
           value: size.value,
           stock: size.stock || 0,
@@ -568,7 +628,10 @@ export default {
       try {
         saving.value = true
 
-        const response = await window.axios.delete(`/vendor/api/sizes/${size.id}`)
+        const response = await window.axios.post('/vendor/api/sizes/delete', {
+          size_id: size.id,
+          color_id: props.colorId
+        })
 
         if (response.data.success) {
           sizes.value.splice(index, 1)
@@ -665,12 +728,30 @@ export default {
           // Close the modal first
           closeAddSizeModal()
 
-          // Add the new size to the list
+          // Add the new size to the list with proper stock mapping
           const newSizeData = {
-            ...response.data.size,
+            id: response.data.size.id,
+            name: response.data.size.name,
+            value: response.data.size.value,
+            category: response.data.size.category || 'clothes',
+            additional_info: response.data.size.additional_info,
+            stock: response.data.size.allocated_stock || response.data.size.stock || 0, // CRITICAL FIX: Map allocated_stock to stock
+            price_adjustment: response.data.size.price_adjustment || 0,
+            is_available: response.data.size.is_available !== false,
+            display_order: response.data.size.display_order || 0,
             editing: false,
             errors: {},
-            originalData: { ...response.data.size }
+            originalData: {
+              id: response.data.size.id,
+              name: response.data.size.name,
+              value: response.data.size.value,
+              category: response.data.size.category || 'clothes',
+              additional_info: response.data.size.additional_info,
+              stock: response.data.size.allocated_stock || response.data.size.stock || 0,
+              price_adjustment: response.data.size.price_adjustment || 0,
+              is_available: response.data.size.is_available !== false,
+              display_order: response.data.size.display_order || 0
+            }
           }
 
           sizes.value.push(newSizeData)
@@ -683,6 +764,33 @@ export default {
         saving.value = false
       }
     }
+
+    // Lifecycle hooks
+    onMounted(() => {
+      // Only fetch sizes if we're not in product creation mode
+      if (props.colorId && !isProductCreationMode.value) {
+        fetchSizes()
+      }
+    })
+
+    // Watch for color changes
+    watch(() => props.colorId, (newColorId, oldColorId) => {
+      // Only fetch sizes if we're not in product creation mode
+      if (!isProductCreationMode.value && newColorId && newColorId !== oldColorId) {
+        // Clear existing sizes first to show loading state
+        sizes.value = []
+        fetchSizes()
+      }
+    })
+
+    // Additional watch for immediate updates when colorId changes from null/undefined to a value
+    watch(() => props.colorId, (newColorId) => {
+      // Only fetch sizes if we're not in product creation mode
+      if (!isProductCreationMode.value && newColorId && !loading.value) {
+        // If we have a colorId and we're not currently loading, fetch sizes
+        fetchSizes()
+      }
+    }, { immediate: true })
 
     return {
       loading,
@@ -701,6 +809,7 @@ export default {
       validateNewSizeField,
       onCategoryChange,
       onSizeNameChange,
+      fetchSizes,
       editSize,
       cancelEdit,
       saveSize,

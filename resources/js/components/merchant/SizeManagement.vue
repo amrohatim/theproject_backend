@@ -1095,38 +1095,16 @@ export default {
 
           // Add the new size to the sizes array for immediate UI update
           sizes.value.push(newSizeData)
-          
+
           // Emit the updated sizes immediately
           emit('sizes-updated', sizes.value)
-          
-          console.log('✅ Size added to UI immediately')
 
-          // For newly created colors, force a complete refresh to ensure data consistency
-          if (wasNewColor) {
-            // Use a longer delay for newly created colors to ensure all prop updates are complete
-            setTimeout(async () => {
-              try {
-                console.log('🔄 Performing complete refresh for newly created color...')
-                await fetchSizesWithColorId(colorId)
-                console.log('✅ Complete refresh completed successfully')
-              } catch (refreshError) {
-                console.warn('⚠️ Complete refresh failed, but size was added successfully:', refreshError)
-                // The UI already shows the new size, so this is not critical
-              }
-            }, 1000) // Increased delay to 1 second for newly created colors
-          } else {
-            // For existing colors, use a shorter delay for better responsiveness
-            setTimeout(async () => {
-              try {
-                console.log('🔄 Refreshing sizes to ensure data consistency...')
-                await refreshSizes()
-                console.log('✅ Background refresh completed successfully')
-              } catch (refreshError) {
-                console.warn('⚠️ Background refresh failed, but size was added successfully:', refreshError)
-                // The UI already shows the new size, so this is not critical
-              }
-            }, 500)
-          }
+          console.log('✅ Size added to UI immediately with stock:', newSizeData.stock)
+
+          // CRITICAL FIX: Remove automatic refresh after size creation to prevent stock value override
+          // The size was already added to the local array with correct data from the API response
+          // Automatic refresh can cause timing issues and override the correct stock values
+          console.log('ℹ️ Skipping automatic refresh to preserve stock values')
           
         } else {
           alert(response.data.message || 'Failed to add size.')

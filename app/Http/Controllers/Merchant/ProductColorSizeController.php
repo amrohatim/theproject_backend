@@ -320,6 +320,12 @@ class ProductColorSizeController extends Controller
         }
 
         try {
+            Log::info('Starting color-size combination transaction', [
+                'color_id' => $color->id,
+                'product_id' => $product->id,
+                'allocations_count' => count($request->size_allocations)
+            ]);
+
             // Use database transaction with enhanced error handling
             $updatedRecords = DB::transaction(function () use ($request, $product, $color) {
                 $records = [];
@@ -522,11 +528,13 @@ class ProductColorSizeController extends Controller
                     'is_available' => $request->is_available ?? true,
                 ]);
 
-                Log::info('ProductColorSize created', [
+                Log::info('ProductColorSize created successfully', [
                     'color_size_id' => $colorSize->id,
                     'color_id' => $color->id,
                     'size_id' => $existingSize->id,
-                    'stock' => $colorSize->stock
+                    'stock' => $colorSize->stock,
+                    'price_adjustment' => $colorSize->price_adjustment,
+                    'is_available' => $colorSize->is_available
                 ]);
 
                 // Return both the size and color-size combination

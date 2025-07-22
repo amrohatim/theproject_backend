@@ -10,6 +10,7 @@ use App\Models\ProductColorSize;
 use App\Models\ProductSpecification;
 use App\Models\Category;
 use App\Models\Branch;
+use App\Models\SizeCategory;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
@@ -168,85 +169,108 @@ class ProductController extends Controller
             'request_data' => $request->all()
         ]);
 
-        $request->validate([
-            'name' => 'required|string|max:255',
-            'category_id' => ['required', 'exists:categories,id', new \App\Rules\LeafCategoryRule()],
-            'branch_id' => 'nullable|exists:branches,id',
-            'price' => 'required|numeric|min:0',
-            'original_price' => 'nullable|numeric|min:0',
-            'stock' => 'required|integer|min:0',
-            'description' => 'nullable|string',
-            // Colors validation - now required
-            'colors' => 'required|array|min:1',
-            'colors.*.name' => 'required|string|max:255',
-            'colors.*.color_code' => 'nullable|string|max:10',
-            'colors.*.price_adjustment' => 'nullable|numeric',
-            'colors.*.stock' => 'nullable|integer|min:0',
-            'colors.*.display_order' => 'nullable|integer',
-            'colors.*.is_default' => 'nullable|boolean',
-            'color_images.*' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
-            // Color-specific sizes validation
-            'colors.*.sizes' => 'nullable|array',
-            'colors.*.sizes.*.category' => 'required_with:colors.*.sizes|string|in:clothes,shoes,hats',
-            'colors.*.sizes.*.name' => 'required_with:colors.*.sizes|string|max:255',
-            'colors.*.sizes.*.value' => 'nullable|string',
-            'colors.*.sizes.*.additional_info' => 'nullable|string',
-            'colors.*.sizes.*.stock' => 'nullable|integer|min:0',
-            'colors.*.sizes.*.price_adjustment' => 'nullable|numeric',
-            'colors.*.sizes.*.display_order' => 'nullable|integer',
-            'colors.*.sizes.*.is_default' => 'nullable|boolean',
-            // Color-size allocations validation (alternative data structure)
-            'color_size_allocations' => 'nullable|array',
-            'color_size_allocations.*' => 'nullable|array',
-            'color_size_allocations.*.*' => 'nullable|array',
-            'color_size_allocations.*.*.category' => 'nullable|string|in:clothes,shoes,hats',
-            'color_size_allocations.*.*.size_name' => 'nullable|string|max:255',
-            'color_size_allocations.*.*.size_value' => 'nullable|string|max:255',
-            'color_size_allocations.*.*.stock' => 'nullable|integer|min:0',
-            'color_size_allocations.*.*.price_adjustment' => 'nullable|numeric',
-            'color_size_allocations.*.*.additional_info' => 'nullable|string',
-            'color_size_allocations.*.*.display_order' => 'nullable|integer',
-            'color_size_allocations.*.*.is_default' => 'nullable|boolean',
-            // Specifications validation - made optional
-            'specifications' => 'nullable|array',
-            'specifications.*.key' => 'nullable|string|max:255',
-            'specifications.*.value' => 'nullable|string|max:255',
-            'specifications.*.display_order' => 'nullable|integer',
-        ]);
+        try {
+            $request->validate([
+                'name' => 'required|string|max:255',
+                'category_id' => ['required', 'exists:categories,id', new \App\Rules\LeafCategoryRule()],
+                'branch_id' => 'nullable|string', // Allow 'auto' or existing branch ID
+                'price' => 'required|numeric|min:0',
+                'original_price' => 'nullable|numeric|min:0',
+                'stock' => 'required|integer|min:0',
+                'description' => 'nullable|string',
+                // Colors validation - now required
+                'colors' => 'required|array|min:1',
+                'colors.*.name' => 'required|string|max:255',
+                'colors.*.color_code' => 'nullable|string|max:10',
+                'colors.*.price_adjustment' => 'nullable|numeric',
+                'colors.*.stock' => 'nullable|integer|min:0',
+                'colors.*.display_order' => 'nullable|integer',
+                'colors.*.is_default' => 'nullable|boolean',
+                'color_images.*' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
+                // Color-specific sizes validation
+                'colors.*.sizes' => 'nullable|array',
+                'colors.*.sizes.*.category' => 'required_with:colors.*.sizes|string|in:clothes,shoes,hats',
+                'colors.*.sizes.*.name' => 'required_with:colors.*.sizes|string|max:255',
+                'colors.*.sizes.*.value' => 'nullable|string',
+                'colors.*.sizes.*.additional_info' => 'nullable|string',
+                'colors.*.sizes.*.stock' => 'nullable|integer|min:0',
+                'colors.*.sizes.*.price_adjustment' => 'nullable|numeric',
+                'colors.*.sizes.*.display_order' => 'nullable|integer',
+                'colors.*.sizes.*.is_default' => 'nullable|boolean',
+                // Color-size allocations validation (alternative data structure)
+                'color_size_allocations' => 'nullable|array',
+                'color_size_allocations.*' => 'nullable|array',
+                'color_size_allocations.*.*' => 'nullable|array',
+                'color_size_allocations.*.*.category' => 'nullable|string|in:clothes,shoes,hats',
+                'color_size_allocations.*.*.size_name' => 'nullable|string|max:255',
+                'color_size_allocations.*.*.size_value' => 'nullable|string|max:255',
+                'color_size_allocations.*.*.stock' => 'nullable|integer|min:0',
+                'color_size_allocations.*.*.price_adjustment' => 'nullable|numeric',
+                'color_size_allocations.*.*.additional_info' => 'nullable|string',
+                'color_size_allocations.*.*.display_order' => 'nullable|integer',
+                'color_size_allocations.*.*.is_default' => 'nullable|boolean',
+                // Specifications validation - made optional
+                'specifications' => 'nullable|array',
+                'specifications.*.key' => 'nullable|string|max:255',
+                'specifications.*.value' => 'nullable|string|max:255',
+                'specifications.*.display_order' => 'nullable|integer',
+            ]);
 
-        // Prepare data for product creation
-        $data = $request->except(['specifications', 'colors', 'sizes', 'branches', 'color_images']);
-        $data['is_available'] = $request->has('is_available') ? true : false;
-        $data['user_id'] = Auth::id();
-
-        // Handle branch assignment - auto-create if no branch is provided
-        if (!$request->branch_id || $request->branch_id === 'auto') {
-            // Get or create a branch for the merchant
-            $user = Auth::user();
-            $userBranch = $user->branches()->first();
-
-            // If no branch exists, create a default one for the merchant
-            if (!$userBranch) {
-                $merchant = $user->merchantRecord;
-                $branchName = $merchant ? $merchant->business_name : $user->name . "'s Store";
-
-                $userBranch = Branch::create([
-                    'user_id' => $user->id,
-                    'name' => $branchName,
-                    'address' => $merchant->store_location_address ?? 'Default Address',
-                    'emirate' => $merchant->emirate ?? 'Dubai',
-                    'lat' => $merchant->store_location_lat ?? 25.2048,
-                    'lng' => $merchant->store_location_lng ?? 55.2708,
-                    'status' => 'active',
-                    'phone' => $user->phone,
-                    'email' => $user->email,
-                ]);
-            }
-            $data['branch_id'] = $userBranch->id;
+            \Log::info('Validation passed, starting product creation');
+        } catch (\Illuminate\Validation\ValidationException $e) {
+            \Log::error('Validation failed', [
+                'errors' => $e->errors(),
+                'request_data' => $request->all()
+            ]);
+            throw $e;
+        } catch (\Exception $e) {
+            \Log::error('Unexpected error during validation', [
+                'error' => $e->getMessage(),
+                'trace' => $e->getTraceAsString()
+            ]);
+            throw $e;
         }
 
-        // Create the product
-        $product = Product::create($data);
+        // Use database transaction to ensure data consistency
+        try {
+            return \DB::transaction(function () use ($request) {
+            \Log::info('Starting database transaction for product creation');
+
+            // Prepare data for product creation
+            $data = $request->except(['specifications', 'colors', 'sizes', 'branches', 'color_images']);
+            $data['is_available'] = $request->has('is_available') ? true : false;
+            $data['user_id'] = Auth::id();
+
+            // Handle branch assignment - auto-create if no branch is provided
+            if (!$request->branch_id || $request->branch_id === 'auto') {
+                // Get or create a branch for the merchant
+                $user = Auth::user();
+                $userBranch = $user->branches()->first();
+
+                // If no branch exists, create a default one for the merchant
+                if (!$userBranch) {
+                    $merchant = $user->merchantRecord;
+                    $branchName = $merchant ? $merchant->business_name : $user->name . "'s Store";
+
+                    $userBranch = Branch::create([
+                        'user_id' => $user->id,
+                        'name' => $branchName,
+                        'address' => $merchant->store_location_address ?? 'Default Address',
+                        'emirate' => $merchant->emirate ?? 'Dubai',
+                        'lat' => $merchant->store_location_lat ?? 25.2048,
+                        'lng' => $merchant->store_location_lng ?? 55.2708,
+                        'status' => 'active',
+                        'phone' => $user->phone,
+                        'email' => $user->email,
+                    ]);
+                    \Log::info('Created new branch for merchant', ['branch_id' => $userBranch->id]);
+                }
+                $data['branch_id'] = $userBranch->id;
+            }
+
+            // Create the product
+            $product = Product::create($data);
+            \Log::info('Product created successfully', ['product_id' => $product->id]);
 
         // Validate that only one color is marked as default
         $defaultCount = 0;
@@ -385,13 +409,27 @@ class ProductController extends Controller
             }
         }
 
-        // Process color-size allocations if provided
-        if ($request->has('color_size_allocations') && is_array($request->color_size_allocations)) {
-            $this->processColorSizeAllocations($request->color_size_allocations, $product);
-        }
+            // Process color-size allocations if provided
+            if ($request->has('color_size_allocations') && is_array($request->color_size_allocations)) {
+                $this->processColorSizeAllocations($request->color_size_allocations, $product);
+            }
 
-        return redirect()->route('merchant.products.index')
-            ->with('success', 'Product created successfully with colors and specifications.');
+            \Log::info('Product creation completed successfully', ['product_id' => $product->id]);
+
+                return redirect()->route('merchant.products.index')
+                    ->with('success', 'Product created successfully with colors and specifications.');
+            });
+        } catch (\Exception $e) {
+            \Log::error('Product creation failed', [
+                'error' => $e->getMessage(),
+                'trace' => $e->getTraceAsString(),
+                'request_data' => $request->all()
+            ]);
+
+            return redirect()->back()
+                ->withInput()
+                ->withErrors(['error' => 'Failed to create product: ' . $e->getMessage()]);
+        }
     }
 
     /**
@@ -655,18 +693,32 @@ class ProductController extends Controller
             }
         });
 
-        // Validate that only one color is marked as default
+        // Validate and fix default color selection
         $defaultCount = 0;
-        foreach ($request->colors as $colorData) {
+        $defaultIndex = -1;
+        foreach ($request->colors as $index => $colorData) {
             if (isset($colorData['is_default']) && $colorData['is_default']) {
                 $defaultCount++;
+                if ($defaultIndex === -1) {
+                    $defaultIndex = $index; // Remember the first default
+                }
             }
         }
 
+        // Handle multiple defaults - keep only the first one
         if ($defaultCount > 1) {
-            return redirect()->back()
-                ->withInput()
-                ->withErrors(['colors' => 'Only one color can be marked as default.']);
+            $colors = $request->colors;
+            foreach ($colors as $index => &$colorData) {
+                $colorData['is_default'] = ($index === $defaultIndex);
+            }
+            $request->merge(['colors' => $colors]);
+        }
+
+        // Handle no defaults - set first color as default
+        if ($defaultCount === 0 && count($request->colors) > 0) {
+            $colors = $request->colors;
+            $colors[0]['is_default'] = true;
+            $request->merge(['colors' => $colors]);
         }
 
         // Process colors intelligently - update existing, create new, delete removed
@@ -840,12 +892,16 @@ class ProductController extends Controller
                     continue;
                 }
 
+                // Determine size category ID from size data
+                $sizeCategoryId = $this->getSizeCategoryId($sizeData);
+
                 // Create or find the size
                 $size = ProductSize::firstOrCreate([
                     'product_id' => $product->id,
                     'name' => $sizeData['size_name'],
                 ], [
                     'value' => $sizeData['size_value'] ?? null,
+                    'size_category_id' => $sizeCategoryId,
                     'price_adjustment' => $sizeData['price_adjustment'] ?? 0,
                     'stock' => 0, // Individual size stock is managed through color-size combinations
                     'display_order' => $sizeData['display_order'] ?? $sizeIndex,
@@ -896,12 +952,16 @@ class ProductController extends Controller
                     continue;
                 }
 
+                // Determine size category ID from size data
+                $sizeCategoryId = $this->getSizeCategoryId($sizeData);
+
                 // Create or find the size
                 $size = ProductSize::firstOrCreate([
                     'product_id' => $product->id,
                     'name' => $sizeData['size_name'],
                 ], [
                     'value' => $sizeData['size_value'] ?? null,
+                    'size_category_id' => $sizeCategoryId,
                     'price_adjustment' => $sizeData['price_adjustment'] ?? 0,
                     'stock' => 0, // Individual size stock is managed through color-size combinations
                     'display_order' => $sizeData['display_order'] ?? $sizeIndex,
@@ -1056,7 +1116,7 @@ class ProductController extends Controller
                 \Log::info('Size category determined', ['category' => $sizeCategory]);
 
                 // Find or create the size category
-                $sizeCategoryModel = \App\Models\SizeCategory::firstOrCreate([
+                $sizeCategoryModel = SizeCategory::firstOrCreate([
                     'name' => $sizeCategory
                 ], [
                     'display_name' => ucfirst($sizeCategory),
@@ -1067,7 +1127,7 @@ class ProductController extends Controller
                 \Log::info('Size category found/created', ['category_id' => $sizeCategoryModel->id]);
 
                 // Create the product size
-                $productSize = \App\Models\ProductSize::create([
+                $productSize = ProductSize::create([
                     'product_id' => $product->id,
                     'size_category_id' => $sizeCategoryModel->id,
                     'name' => $sizeData['name'],
@@ -1081,7 +1141,7 @@ class ProductController extends Controller
                 \Log::info('Product size created', ['size_id' => $productSize->id]);
 
                 // Create the color-size relationship
-                $colorSize = \App\Models\ProductColorSize::create([
+                $colorSize = ProductColorSize::create([
                     'product_id' => $product->id,
                     'product_color_id' => $color->id,
                     'product_size_id' => $productSize->id,
@@ -1100,5 +1160,113 @@ class ProductController extends Controller
                 throw $e; // Re-throw to stop the transaction
             }
         }
+    }
+
+    /**
+     * Get size category ID from size data.
+     *
+     * @param array $sizeData
+     * @return int|null
+     */
+    private function getSizeCategoryId(array $sizeData): ?int
+    {
+        // First, check if we have explicit category information from the form
+        if (!empty($sizeData['category'])) {
+            return $this->getSizeCategoryIdByName($sizeData['category']);
+        }
+
+        // Fallback: try to determine category from size name patterns
+        if (empty($sizeData['size_name'])) {
+            return null;
+        }
+
+        $sizeName = strtolower($sizeData['size_name']);
+
+        // Check for clothing sizes (S, M, L, XL, etc.)
+        if (preg_match('/^(xxs|xs|s|m|l|xl|xxl|xxxl)$/i', $sizeName)) {
+            return $this->getSizeCategoryIdByName('clothes');
+        }
+
+        // Check for shoe sizes (numbers)
+        if (preg_match('/^\d+(\.\d+)?$/', $sizeName) || preg_match('/^(eu\s*)?\d+$/i', $sizeName)) {
+            return $this->getSizeCategoryIdByName('shoes');
+        }
+
+        // Check for hat sizes
+        if (preg_match('/^(one\s*size|os|free\s*size|adjustable)$/i', $sizeName)) {
+            return $this->getSizeCategoryIdByName('hats');
+        }
+
+        // Default to clothes if we can't determine
+        return $this->getSizeCategoryIdByName('clothes');
+    }
+
+    /**
+     * Get size category ID by name.
+     *
+     * @param string $categoryName
+     * @return int|null
+     */
+    private function getSizeCategoryIdByName(string $categoryName): ?int
+    {
+        $sizeCategory = SizeCategory::where('name', $categoryName)->first();
+        return $sizeCategory ? $sizeCategory->id : null;
+    }
+
+    /**
+     * API endpoint to get the latest product ID for testing purposes.
+     */
+    public function getLatestProductId()
+    {
+        $latestProduct = Product::where('user_id', Auth::id())
+            ->orderBy('created_at', 'desc')
+            ->first();
+
+        return response()->json([
+            'product_id' => $latestProduct ? $latestProduct->id : null
+        ]);
+    }
+
+    /**
+     * API endpoint to verify product sizes for testing purposes.
+     */
+    public function verifySizes($id)
+    {
+        $product = Product::where('user_id', Auth::id())
+            ->with(['sizes.sizeCategory', 'colors.sizes.sizeCategory'])
+            ->findOrFail($id);
+
+        $sizesData = [];
+
+        // Get direct product sizes
+        foreach ($product->sizes as $size) {
+            $sizesData[] = [
+                'id' => $size->id,
+                'name' => $size->name,
+                'size_category_id' => $size->size_category_id,
+                'category_name' => $size->sizeCategory ? $size->sizeCategory->name : null,
+                'source' => 'direct'
+            ];
+        }
+
+        // Get sizes from colors
+        foreach ($product->colors as $color) {
+            foreach ($color->sizes as $size) {
+                $sizesData[] = [
+                    'id' => $size->id,
+                    'name' => $size->name,
+                    'size_category_id' => $size->size_category_id,
+                    'category_name' => $size->sizeCategory ? $size->sizeCategory->name : null,
+                    'source' => 'color',
+                    'color_name' => $color->name
+                ];
+            }
+        }
+
+        return response()->json([
+            'product_id' => $product->id,
+            'product_name' => $product->name,
+            'sizes' => $sizesData
+        ]);
     }
 }

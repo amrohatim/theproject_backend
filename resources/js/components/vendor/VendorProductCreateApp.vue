@@ -632,7 +632,7 @@ export default {
         // Add colors data
         productData.colors.forEach((color, index) => {
           Object.keys(color).forEach(key => {
-            if (key !== 'image') {
+            if (key !== 'image' && key !== 'sizes') {  // Exclude sizes - handle separately
               let value = color[key]
               // Convert boolean is_default to string
               if (key === 'is_default') {
@@ -645,6 +645,22 @@ export default {
           // Add color image if it exists
           if (color.image instanceof File) {
             formData.append(`color_images[${index}]`, color.image)
+          }
+        })
+
+        // Add size data for each color
+        productData.colors.forEach((color, colorIndex) => {
+          if (color.sizes && color.sizes.length > 0) {
+            color.sizes.forEach((size, sizeIndex) => {
+              // Map the size data to match backend validation rules
+              formData.append(`colors[${colorIndex}][sizes][${sizeIndex}][category]`, size.category || 'clothes')
+              formData.append(`colors[${colorIndex}][sizes][${sizeIndex}][name]`, size.name)
+              formData.append(`colors[${colorIndex}][sizes][${sizeIndex}][value]`, size.value)
+              formData.append(`colors[${colorIndex}][sizes][${sizeIndex}][stock]`, size.stock || 0)
+              formData.append(`colors[${colorIndex}][sizes][${sizeIndex}][price_adjustment]`, size.price_adjustment || 0)
+              formData.append(`colors[${colorIndex}][sizes][${sizeIndex}][display_order]`, size.display_order || 0)
+              formData.append(`colors[${colorIndex}][sizes][${sizeIndex}][is_default]`, size.is_default ? '1' : '0')
+            })
           }
         })
 

@@ -1,50 +1,71 @@
-<testsuites id="" name="" tests="1" failures="1" skipped="0" errors="0" time="43.857803">
-<testsuite name="merchant-product-creation-debug.spec.js" timestamp="2025-07-19T18:24:14.555Z" hostname="chromium" tests="1" failures="1" skipped="0" time="39.575" errors="0">
-<testcase name="Merchant Product Creation Debug › should reproduce product creation issues with sizes and images" classname="merchant-product-creation-debug.spec.js" time="39.575">
-<failure message="merchant-product-creation-debug.spec.js:41:3 should reproduce product creation issues with sizes and images" type="FAILURE">
-<![CDATA[  [chromium] › merchant-product-creation-debug.spec.js:41:3 › Merchant Product Creation Debug › should reproduce product creation issues with sizes and images 
+<testsuites id="" name="" tests="2" failures="2" skipped="0" errors="0" time="38.412197">
+<testsuite name="vendor-product-edit-comprehensive.spec.js" timestamp="2025-07-21T23:41:38.311Z" hostname="chromium" tests="2" failures="2" skipped="0" time="66.714" errors="0">
+<testcase name="Vendor Product Edit - Comprehensive End-to-End Test (Fixed Authorization) › Complete vendor product edit workflow with authorization fix verification" classname="vendor-product-edit-comprehensive.spec.js" time="33.385">
+<failure message="vendor-product-edit-comprehensive.spec.js:14:3 Complete vendor product edit workflow with authorization fix verification" type="FAILURE">
+<![CDATA[  [chromium] › vendor-product-edit-comprehensive.spec.js:14:3 › Vendor Product Edit - Comprehensive End-to-End Test (Fixed Authorization) › Complete vendor product edit workflow with authorization fix verification 
 
-    TimeoutError: page.click: Timeout 30000ms exceeded.
+    TimeoutError: page.fill: Timeout 30000ms exceeded.
     Call log:
-      - waiting for locator('select[name="category_id"]')
+      - waiting for locator('input[name="email"]')
 
 
-      64 |     
-      65 |     // Select category
-    > 66 |     await page.click('select[name="category_id"]');
+      20 |     
+      21 |     // Fill login form with the correct vendor credentials
+    > 22 |     await page.fill('input[name="email"]', 'gogoh3296@gmail.com');
          |                ^
-      67 |     await page.selectOption('select[name="category_id"]', { index: 1 });
-      68 |     
-      69 |     // Fill price and stock
-        at C:\Users\Admin\Desktop\TheProject\Production\theproject_backend\tests\playwright\merchant-product-creation-debug.spec.js:66:16
+      23 |     await page.fill('input[name="password"]', 'password123');
+      24 |     await page.click('button[type="submit"]');
+      25 |     
+        at C:\Users\Admin\Desktop\TheProject\Production\theproject_backend\tests\playwright\vendor-product-edit-comprehensive.spec.js:22:16
 
     attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
-    test-results\merchant-product-creation--8804a-ssues-with-sizes-and-images-chromium\test-failed-1.png
+    test-results\vendor-product-edit-compre-ce772-horization-fix-verification-chromium\test-failed-1.png
     ────────────────────────────────────────────────────────────────────────────────────────────────
 
-    Error Context: ..\..\test-results\merchant-product-creation--8804a-ssues-with-sizes-and-images-chromium\error-context.md
+    Error Context: ..\..\test-results\vendor-product-edit-compre-ce772-horization-fix-verification-chromium\error-context.md
 ]]>
 </failure>
 <system-out>
-<![CDATA[Step 1: Logging in as merchant...
-[BROWSER] warning: cdn.tailwindcss.com should not be used in production. To use Tailwind CSS in production, install it as a PostCSS plugin or use the Tailwind CLI: https://tailwindcss.com/docs/installation
-[BROWSER] warning: cdn.tailwindcss.com should not be used in production. To use Tailwind CSS in production, install it as a PostCSS plugin or use the Tailwind CLI: https://tailwindcss.com/docs/installation
-[BROWSER] warning: Search input not found
-✓ Successfully logged in
-Step 2: Navigating to product creation...
-[REQUEST] GET http://localhost:8000/merchant/products/create
-[RESPONSE] 200 http://localhost:8000/merchant/products/create
-[BROWSER] warning: cdn.tailwindcss.com should not be used in production. To use Tailwind CSS in production, install it as a PostCSS plugin or use the Tailwind CLI: https://tailwindcss.com/docs/installation
-[BROWSER] warning: Search input not found
-[BROWSER] log: Merchant Stock Validation System initialized
-[REQUEST] GET http://localhost:8000/merchant/products/create-data
-[RESPONSE] 200 http://localhost:8000/merchant/products/create-data
-✓ Product creation page loaded
-Step 3: Filling basic product information...
+<![CDATA[🚀 Starting comprehensive vendor product edit test with authorization fix...
+📝 Step 1: Logging in as vendor Luffy...
 
-[[ATTACHMENT|merchant-product-creation--8804a-ssues-with-sizes-and-images-chromium\test-failed-1.png]]
+[[ATTACHMENT|vendor-product-edit-compre-ce772-horization-fix-verification-chromium\test-failed-1.png]]
 
-[[ATTACHMENT|merchant-product-creation--8804a-ssues-with-sizes-and-images-chromium\error-context.md]]
+[[ATTACHMENT|vendor-product-edit-compre-ce772-horization-fix-verification-chromium\error-context.md]]
+]]>
+</system-out>
+</testcase>
+<testcase name="Vendor Product Edit - Comprehensive End-to-End Test (Fixed Authorization) › Verify authorization fix - no 403 errors" classname="vendor-product-edit-comprehensive.spec.js" time="33.329">
+<failure message="vendor-product-edit-comprehensive.spec.js:195:3 Verify authorization fix - no 403 errors" type="FAILURE">
+<![CDATA[  [chromium] › vendor-product-edit-comprehensive.spec.js:195:3 › Vendor Product Edit - Comprehensive End-to-End Test (Fixed Authorization) › Verify authorization fix - no 403 errors 
+
+    TimeoutError: page.fill: Timeout 30000ms exceeded.
+    Call log:
+      - waiting for locator('input[name="email"]')
+
+
+      198 |     // Login as vendor
+      199 |     await page.goto('/vendor/login');
+    > 200 |     await page.fill('input[name="email"]', 'gogoh3296@gmail.com');
+          |                ^
+      201 |     await page.fill('input[name="password"]', 'password123');
+      202 |     await page.click('button[type="submit"]');
+      203 |     await page.waitForURL('**/vendor/dashboard', { timeout: 15000 });
+        at C:\Users\Admin\Desktop\TheProject\Production\theproject_backend\tests\playwright\vendor-product-edit-comprehensive.spec.js:200:16
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    test-results\vendor-product-edit-compre-e739d-ization-fix---no-403-errors-chromium\test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: ..\..\test-results\vendor-product-edit-compre-e739d-ization-fix---no-403-errors-chromium\error-context.md
+]]>
+</failure>
+<system-out>
+<![CDATA[🚀 Starting authorization fix verification test...
+
+[[ATTACHMENT|vendor-product-edit-compre-e739d-ization-fix---no-403-errors-chromium\test-failed-1.png]]
+
+[[ATTACHMENT|vendor-product-edit-compre-e739d-ization-fix---no-403-errors-chromium\error-context.md]]
 ]]>
 </system-out>
 </testcase>
