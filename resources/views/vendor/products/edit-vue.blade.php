@@ -184,15 +184,6 @@
      class="vue-app-container"
      data-product-id="{{ $product->id }}"
      data-back-url="{{ route('vendor.products.index') }}">
-    <!-- Loading state while Vue app initializes -->
-    <div class="d-flex justify-content-center align-items-center" style="min-height: 50vh;">
-        <div class="text-center">
-            <div class="spinner-border text-primary" role="status">
-                <span class="visually-hidden">Loading...</span>
-            </div>
-            <p class="mt-3 text-muted">Loading product editor...</p>
-        </div>
-    </div>
 </div>
 @endsection
 

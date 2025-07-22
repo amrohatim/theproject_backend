@@ -13,6 +13,14 @@ use Illuminate\Support\Facades\Log;
 class ProviderLicenseController extends Controller
 {
     /**
+     * Create a new controller instance.
+     */
+    public function __construct()
+    {
+        // Middleware is applied in the routes file, not in the controller
+    }
+
+    /**
      * Display a listing of provider licenses pending review.
      */
     public function index(Request $request)
@@ -39,14 +47,35 @@ class ProviderLicenseController extends Controller
      */
     public function show($id)
     {
-        $license = License::with(['user', 'user.provider'])->findOrFail($id);
+        try {
+            $license = License::with(['user', 'user.provider'])->findOrFail($id);
 
-        // Ensure this is a provider license
-        if ($license->user->role !== 'provider') {
-            abort(404, 'Provider license not found.');
+            // Log for debugging
+            Log::info('License found', [
+                'license_id' => $license->id,
+                'user_id' => $license->user_id,
+                'user_role' => $license->user->role ?? 'no_role',
+                'user_name' => $license->user->name ?? 'no_name'
+            ]);
+
+            // Ensure this is a provider license
+            if ($license->user->role !== 'provider') {
+                Log::warning('License user is not a provider', [
+                    'license_id' => $id,
+                    'user_role' => $license->user->role
+                ]);
+                abort(404, 'Provider license not found.');
+            }
+
+            return view('admin.provider-licenses.show', compact('license'));
+        } catch (\Exception $e) {
+            Log::error('Error showing provider license', [
+                'license_id' => $id,
+                'error' => $e->getMessage(),
+                'trace' => $e->getTraceAsString()
+            ]);
+            abort(404, 'License not found.');
         }
-
-        return view('admin.provider-licenses.show', compact('license'));
     }
 
     /**

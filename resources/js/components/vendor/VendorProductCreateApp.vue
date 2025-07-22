@@ -1,12 +1,10 @@
 <template>
   <div class="vendor-product-create-app">
     <!-- Loading State -->
-    <div v-if="loading" class="d-flex justify-content-center align-items-center" style="min-height: 50vh;">
+    <div v-if="loading" class="fixed inset-0 bg-white bg-opacity-75 flex items-center justify-center z-50">
       <div class="text-center">
-        <div class="spinner-border text-primary" role="status">
-          <span class="visually-hidden">Loading...</span>
-        </div>
-        <p class="mt-3 text-muted">Loading product creation form...</p>
+        <div class="inline-block animate-spin rounded-full h-16 w-16 border-b-2 border-blue-600"></div>
+        <p class="mt-4 text-gray-600 text-lg">Loading...</p>
       </div>
     </div>
 

@@ -1294,6 +1294,16 @@ Route::prefix('admin')->name('admin.')->middleware(['auth', \App\Http\Middleware
     Route::patch('/registrations/{id}/approve', [\App\Http\Controllers\Admin\RegistrationController::class, 'approve'])->name('registrations.approve');
     Route::patch('/registrations/{id}/reject', [\App\Http\Controllers\Admin\RegistrationController::class, 'reject'])->name('registrations.reject');
     Route::get('/registrations/{id}/download-license', [\App\Http\Controllers\Admin\RegistrationController::class, 'downloadLicense'])->name('registrations.download-license');
+    
+    // Test route for admin access
+    Route::get('/test-admin', function() {
+        return response()->json([
+            'authenticated' => Auth::check(),
+            'user' => Auth::user() ? Auth::user()->only(['id', 'name', 'email', 'role']) : null,
+            'is_admin' => Auth::check() && Auth::user()->role === 'admin',
+            'license_8' => \App\Models\License::with('user')->find(8)
+        ]);
+    })->name('test.admin');
 });
 
 // Vendor routes

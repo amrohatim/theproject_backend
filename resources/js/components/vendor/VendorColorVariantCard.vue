@@ -81,10 +81,8 @@
                          @click="selectColor(colorOption.name)">
                       <div class="color-swatch"
                            :style="{ backgroundColor: colorOption.code }"></div>
-                      <div class="color-details">
-                        <span class="color-name">{{ colorOption.name }}</span>
-                        <span class="color-code">{{ colorOption.code }}</span>
-                      </div>
+                      <span class="color-name">{{ colorOption.name }}</span>
+                      <span class="color-code">{{ colorOption.code }}</span>
                     </div>
                   </div>
                 </div>
@@ -579,11 +577,25 @@ export default {
 }
 
 .color-swatch {
-  width: 1.5rem;
-  height: 1.5rem;
+  width: 2rem;
+  height: 2rem;
   border-radius: 50%;
-  border: 2px solid #ffffff;
-  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+  border: 2px solid #e5e7eb;
+  flex-shrink: 0;
+  margin-bottom: 0.25rem;
+}
+
+.color-option .color-name {
+  font-size: 0.75rem;
+  font-weight: 500;
+  color: #374151;
+  line-height: 1.2;
+}
+
+.color-option .color-code {
+  font-size: 0.625rem;
+  color: #6b7280;
+  font-family: monospace;
 }
 
 .color-info {
@@ -620,8 +632,10 @@ export default {
   border: 1px solid #d1d5db;
   border-radius: 0.375rem;
   box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
-  max-height: 300px;
+  max-height: 400px;
   overflow-y: auto;
+  min-width: 480px;
+  width: max-content;
 }
 
 .color-search {
@@ -645,25 +659,35 @@ export default {
 
 .color-grid {
   padding: 0.5rem;
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 0.5rem;
 }
 
 .color-option {
   display: flex;
+  flex-direction: column;
   align-items: center;
-  gap: 0.75rem;
-  padding: 0.5rem;
-  border-radius: 0.25rem;
+  gap: 0.5rem;
+  padding: 0.75rem 0.5rem;
+  border-radius: 0.375rem;
   cursor: pointer;
-  transition: background-color 0.15s ease;
+  transition: all 0.15s ease;
+  border: 1px solid transparent;
+  text-align: center;
 }
 
 .color-option:hover {
   background-color: #f3f4f6;
+  border-color: #d1d5db;
+  transform: translateY(-1px);
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
 
 .color-option.selected {
-  background-color: #eff6ff;
-  border: 1px solid #3b82f6;
+  background-color: #dbeafe;
+  border-color: #3b82f6;
+  box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.2);
 }
 
 .color-details {

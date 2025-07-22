@@ -188,15 +188,6 @@
      data-session-store-url="{{ route('vendor.products.session.store') }}"
      data-session-get-url="{{ route('vendor.products.session.get') }}"
      data-session-clear-url="{{ route('vendor.products.session.clear') }}">
-    <!-- Loading state while Vue app initializes -->
-    <div class="d-flex justify-content-center align-items-center" style="min-height: 50vh;">
-        <div class="text-center">
-            <div class="spinner-border text-primary" role="status">
-                <span class="visually-hidden">Loading...</span>
-            </div>
-            <p class="mt-3 text-muted">Loading product creation form...</p>
-        </div>
-    </div>
 </div>
 @endsection
 
