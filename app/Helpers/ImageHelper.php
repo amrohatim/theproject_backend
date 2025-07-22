@@ -515,6 +515,54 @@ class ImageHelper
             }
         }
 
+        // Handle company logo images
+        if (str_contains($normalizedPath, 'companies/')) {
+            // Try to ensure the directory exists
+            $dirPath = public_path('storage/companies');
+            if (!file_exists($dirPath)) {
+                try {
+                    mkdir($dirPath, 0755, true);
+                    Log::info("Created directory: {$dirPath}");
+                } catch (\Exception $e) {
+                    Log::error("Failed to create directory: " . $e->getMessage());
+                }
+            }
+
+            // First check if the file exists directly with the provided path
+            $directPath = public_path(ltrim($normalizedPath, '/'));
+            if (file_exists($directPath)) {
+                Log::info("Found company logo at direct path: {$directPath}");
+                return "{$appUrl}/{$normalizedPath}";
+            }
+
+            // Then check if it exists in the storage/companies directory
+            $fullPath = public_path("storage/companies/{$filename}");
+            if (file_exists($fullPath)) {
+                Log::info("Found company logo at: {$fullPath}");
+                return "{$appUrl}/storage/companies/{$filename}";
+            }
+
+            // If not found, try to copy from storage/app/public/companies
+            try {
+                $storageAppPublicPath = storage_path("app/public/companies/{$filename}");
+                if (file_exists($storageAppPublicPath)) {
+                    // Copy the file to the public directory
+                    copy($storageAppPublicPath, $fullPath);
+                    Log::info("Copied company logo from {$storageAppPublicPath} to {$fullPath}");
+                    return "{$appUrl}/storage/companies/{$filename}";
+                } else {
+                    // Create a placeholder image at this location
+                    self::createPlaceholderImage($fullPath);
+                    Log::info("Created placeholder image at: {$fullPath}");
+                    return "{$appUrl}/storage/companies/{$filename}";
+                }
+            } catch (\Exception $e) {
+                Log::error("Failed to handle company logo: " . $e->getMessage());
+                // Still try to return a valid path
+                return "{$appUrl}/storage/companies/{$filename}";
+            }
+        }
+
         if (str_contains($normalizedPath, 'users/')) {
             // Try to ensure the directory exists
             $dirPath = public_path('storage/users');
@@ -703,6 +751,8 @@ class ImageHelper
             public_path("storage/branches/{$filename}"),
             public_path("images/services/{$filename}"),
             public_path("storage/services/{$filename}"),
+            public_path("images/companies/{$filename}"),
+            public_path("storage/companies/{$filename}"),
             public_path($normalizedPath),
             public_path("storage/{$filename}"),
             public_path($filename),
@@ -714,6 +764,7 @@ class ImageHelper
             storage_path("app/public/services/{$filename}"),
             storage_path("app/public/deals/{$filename}"),
             storage_path("app/public/branches/{$filename}"),
+            storage_path("app/public/companies/{$filename}"),
             storage_path("app/public/product-colors/{$filename}"),
         ];
 

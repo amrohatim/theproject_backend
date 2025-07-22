@@ -1159,7 +1159,8 @@ class RegistrationService
     private function uploadCompanyLogo(UploadedFile $file, int $companyId): string
     {
         $filename = 'company_' . $companyId . '_' . time() . '.' . $file->getClientOriginalExtension();
-        return $file->storeAs('images/companies', $filename, 'public');
+        $file->storeAs('companies', $filename, 'public');
+        return 'storage/companies/' . $filename;
     }
 
     /**

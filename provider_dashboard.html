@@ -1,0 +1,218 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Provider Dashboard</title>
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="min-h-screen bg-gradient-to-br from-slate-50 to-gray-100 p-4 md:p-6 lg:p-8">
+  <div class="max-w-7xl mx-auto space-y-8">
+    <!-- Header -->
+    <header class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
+      <div>
+        <h1 class="text-3xl font-bold text-gray-900">Provider Dashboard</h1>
+        <p class="text-gray-600 mt-1">Welcome back! Here's what's happening with your store.</p>
+      </div>
+      <button class="flex items-center bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white shadow-lg hover:shadow-xl transition-all duration-300 transform hover:scale-105 px-4 py-2 rounded">
+        <span class="mr-2">＋</span>
+        Add New Product
+      </button>
+    </header>
+
+    <!-- Statistics Cards -->
+    <section class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+      <!-- Total Products -->
+      <div class="bg-white border-0 shadow-lg hover:shadow-xl transition-all duration-300 transform hover:scale-105 border-l-4 border-l-blue-500 rounded">
+        <div class="p-6 flex items-center justify-between">
+          <div>
+            <p class="text-sm font-medium text-gray-600 uppercase tracking-wide">Total Products</p>
+            <p class="text-3xl font-bold text-gray-900 mt-2">24</p>
+          </div>
+          <div class="bg-blue-100 p-3 rounded-full">
+            📦
+          </div>
+        </div>
+      </div>
+      <!-- Total Orders -->
+      <div class="bg-white border-0 shadow-lg hover:shadow-xl transition-all duration-300 transform hover:scale-105 border-l-4 border-l-emerald-500 rounded">
+        <div class="p-6 flex items-center justify-between">
+          <div>
+            <p class="text-sm font-medium text-gray-600 uppercase tracking-wide">Total Orders</p>
+            <p class="text-3xl font-bold text-gray-900 mt-2">156</p>
+          </div>
+          <div class="bg-emerald-100 p-3 rounded-full">
+            🛒
+          </div>
+        </div>
+      </div>
+      <!-- Revenue -->
+      <div class="bg-white border-0 shadow-lg hover:shadow-xl transition-all duration-300 transform hover:scale-105 border-l-4 border-l-amber-500 rounded">
+        <div class="p-6 flex items-center justify-between">
+          <div>
+            <p class="text-sm font-medium text-gray-600 uppercase tracking-wide">Revenue</p>
+            <p class="text-3xl font-bold text-gray-900 mt-2">$12,450.75</p>
+          </div>
+          <div class="bg-amber-100 p-3 rounded-full">
+            💲
+          </div>
+        </div>
+      </div>
+      <!-- Customers -->
+      <div class="bg-white border-0 shadow-lg hover:shadow-xl transition-all duration-300 transform hover:scale-105 border-l-4 border-l-purple-500 rounded">
+        <div class="p-6 flex items-center justify-between">
+          <div>
+            <p class="text-sm font-medium text-gray-600 uppercase tracking-wide">Customers</p>
+            <p class="text-3xl font-bold text-gray-900 mt-2">89</p>
+          </div>
+          <div class="bg-purple-100 p-3 rounded-full">
+            👥
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Main Content Area -->
+    <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+      <!-- Recent Products -->
+      <section class="bg-white border-0 shadow-lg hover:shadow-xl transition-all duration-300 rounded">
+        <header class="p-6 pb-4 border-b">
+          <h2 class="flex items-center text-gray-900 text-lg font-semibold">
+            📦 Recent Products
+          </h2>
+          <button class="mt-2 inline-flex items-center text-sm font-medium text-blue-600 hover:text-blue-800 hover:bg-blue-50 border border-blue-200 px-2 py-1 rounded">
+            👁️ View All
+          </button>
+        </header>
+        <div class="p-6 space-y-4">
+          <!-- Product 1 -->
+          <div class="flex items-center space-x-4 p-3 rounded-lg hover:bg-gray-50 transition-colors">
+            <img src="/placeholder.svg" alt="Premium Wireless Headphones" width="48" height="48" class="rounded-lg object-cover"/>
+            <div class="flex-1 min-w-0">
+              <p class="text-sm font-medium text-gray-900 truncate">Premium Wireless Headphones</p>
+              <p class="text-sm text-emerald-600 font-semibold">$199.99</p>
+            </div>
+            <span class="bg-emerald-100 text-emerald-800 px-2 py-1 rounded-xl text-xs">Available</span>
+          </div>
+          <!-- Product 2 -->
+          <div class="flex items-center space-x-4 p-3 rounded-lg hover:bg-gray-50 transition-colors">
+            <img src="/placeholder.svg" alt="Smart Fitness Tracker" width="48" height="48" class="rounded-lg object-cover"/>
+            <div class="flex-1 min-w-0">
+              <p class="text-sm font-medium text-gray-900 truncate">Smart Fitness Tracker</p>
+              <p class="text-sm text-emerald-600 font-semibold">$89.99</p>
+            </div>
+            <span class="bg-emerald-100 text-emerald-800 px-2 py-1 rounded-xl text-xs">Available</span>
+          </div>
+          <!-- Product 3 -->
+          <div class="flex items-center space-x-4 p-3 rounded-lg hover:bg-gray-50 transition-colors">
+            <div class="w-12 h-12 bg-gray-200 rounded-lg flex items-center justify-center">
+              📷
+            </div>
+            <div class="flex-1 min-w-0">
+              <p class="text-sm font-medium text-gray-900 truncate">Eco-Friendly Water Bottle</p>
+              <p class="text-sm text-emerald-600 font-semibold">$24.99</p>
+            </div>
+            <span class="bg-red-100 text-red-800 px-2 py-1 rounded-xl text-xs">Unavailable</span>
+          </div>
+        </div>
+      </section>
+
+      <!-- Recent Orders -->
+      <section class="bg-white border-0 shadow-lg hover:shadow-xl transition-all duration-300 rounded">
+        <header class="p-6 pb-4 border-b">
+          <h2 class="flex items-center text-gray-900 text-lg font-semibold">
+            🛒 Recent Orders
+          </h2>
+          <button class="mt-2 inline-flex items-center text-sm font-medium text-emerald-600 hover:text-emerald-800 hover:bg-emerald-50 border border-emerald-200 px-2 py-1 rounded">
+            👁️ View All
+          </button>
+        </header>
+        <div class="p-6 space-y-4">
+          <!-- Order 1 -->
+          <div class="flex items-center justify-between p-3 rounded-lg hover:bg-gray-50 transition-colors">
+            <div>
+              <a href="#" class="text-blue-600 font-medium hover:underline">ORD-2024-001</a>
+              <p class="text-sm text-gray-600 mt-1">John Smith</p>
+              <p class="text-sm text-emerald-600 font-semibold">$299.98</p>
+            </div>
+            <div class="text-right">
+              <span class="bg-emerald-100 text-emerald-800 px-2 py-1 rounded-xl text-xs">Completed</span>
+              <p class="text-xs text-gray-500 mt-1">Jan 15, 2024</p>
+            </div>
+          </div>
+          <!-- Order 2 -->
+          <div class="flex items-center justify-between p-3 rounded-lg hover:bg-gray-50 transition-colors">
+            <div>
+              <a href="#" class="text-blue-600 font-medium hover:underline">ORD-2024-002</a>
+              <p class="text-sm text-gray-600 mt-1">Sarah Johnson</p>
+              <p class="text-sm text-emerald-600 font-semibold">$149.99</p>
+            </div>
+            <div class="text-right">
+              <span class="bg-blue-100 text-blue-800 px-2 py-1 rounded-xl text-xs">Processing</span>
+              <p class="text-xs text-gray-500 mt-1">Jan 14, 2024</p>
+            </div>
+          </div>
+          <!-- Order 3 -->
+          <div class="flex items-center justify-between p-3 rounded-lg hover:bg-gray-50 transition-colors">
+            <div>
+              <a href="#" class="text-blue-600 font-medium hover:underline">ORD-2024-003</a>
+              <p class="text-sm text-gray-600 mt-1">Mike Davis</p>
+              <p class="text-sm text-emerald-600 font-semibold">$89.99</p>
+            </div>
+            <div class="text-right">
+              <span class="bg-amber-100 text-amber-800 px-2 py-1 rounded-xl text-xs">Pending</span>
+              <p class="text-xs text-gray-500 mt-1">Jan 13, 2024</p>
+            </div>
+          </div>
+        </div>
+      </section>
+    </div>
+
+    <!-- Activity Overview -->
+    <section class="bg-gradient-to-r from-blue-600 to-purple-600 border-0 shadow-xl text-white rounded">
+      <header class="p-6 border-b border-white/20 flex flex-col md:flex-row items-start md:items-center justify-between gap-4">
+        <div class="flex items-center gap-4">
+          <div class="bg-white/20 p-3 rounded-xl">
+            🚀
+          </div>
+          <div>
+            <h3 class="text-xl font-semibold">Welcome to your Dashboard!</h3>
+            <p class="text-blue-100">Manage your products, track orders, and grow your business</p>
+          </div>
+        </div>
+        <button class="inline-flex items-center bg-white text-blue-600 hover:bg-blue-50 shadow-lg hover:shadow-xl transition-all duration-300 transform hover:scale-105 px-4 py-2 rounded">
+          <span class="mr-2">＋</span>
+          Add New Product
+        </button>
+      </header>
+      <div class="p-6 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+        <!-- Views -->
+        <div class="bg-white/10 backdrop-blur-sm rounded-xl p-6 text-center hover:bg-white/20 transition-all duration-300 transform hover:scale-105">
+          👁️
+          <p class="text-2xl font-bold mb-1">1,234</p>
+          <p class="text-blue-100 text-sm">Product Views</p>
+        </div>
+        <!-- Conversion Rate -->
+        <div class="bg-white/10 backdrop-blur-sm rounded-xl p-6 text-center hover:bg-white/20 transition-all duration-300 transform hover:scale-105">
+          🛒
+          <p class="text-2xl font-bold mb-1">3.2%</p>
+          <p class="text-blue-100 text-sm">Conversion Rate</p>
+        </div>
+        <!-- Avg Rating -->
+        <div class="bg-white/10 backdrop-blur-sm rounded-xl p-6 text-center hover:bg-white/20 transition-all duration-300 transform hover:scale-105">
+          ⭐
+          <p class="text-2xl font-bold mb-1">4.7</p>
+          <p class="text-blue-100 text-sm">Avg. Rating</p>
+        </div>
+        <!-- Return Rate -->
+        <div class="bg-white/10 backdrop-blur-sm rounded-xl p-6 text-center hover:bg-white/20 transition-all duration-300 transform hover:scale-105">
+          🔄
+          <p class="text-2xl font-bold mb-1">2.1%</p>
+          <p class="text-blue-100 text-sm">Return Rate</p>
+        </div>
+      </div>
+    </section>
+  </div>
+</body>
+</html>

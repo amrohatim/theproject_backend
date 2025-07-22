@@ -114,11 +114,29 @@ class RegistrationApi {
   }
 
   // Step 4: Submit company information (session-based)
-  async submitCompanyInfo(companyData) {
-    return await this.makeRequest('/company', {
-      method: 'POST',
-      body: JSON.stringify(companyData),
-    });
+  async submitCompanyInfo(companyData, logoFile = null) {
+    if (logoFile) {
+      // Use FormData for file upload
+      const formData = new FormData();
+      
+      // Add all company data fields
+      Object.keys(companyData).forEach(key => {
+        if (companyData[key] !== null && companyData[key] !== undefined) {
+          formData.append(key, companyData[key]);
+        }
+      });
+      
+      // Add logo file
+      formData.append('logo', logoFile);
+      
+      return await this.makeFormRequest('/company', formData);
+    } else {
+      // Use JSON for regular data
+      return await this.makeRequest('/company', {
+        method: 'POST',
+        body: JSON.stringify(companyData),
+      });
+    }
   }
 
   // Step 5: Upload license

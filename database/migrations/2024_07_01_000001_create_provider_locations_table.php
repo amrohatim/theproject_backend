@@ -13,7 +13,7 @@ return new class extends Migration
     {
         Schema::create('provider_locations', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('provider_id')->constrained('provider_profiles')->onDelete('cascade');
+            $table->foreignId('provider_id')->constrained('providers')->onDelete('cascade');
             $table->string('label')->nullable();
             $table->string('emirate');
             $table->decimal('latitude', 10, 8);

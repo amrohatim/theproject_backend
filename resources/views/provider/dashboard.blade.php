@@ -5,279 +5,246 @@
 @section('header', 'Provider Dashboard')
 
 @section('content')
-<div class="row mb-4">
-    @if(isset($message))
-    <div class="col-12">
-        <div class="alert" style="background-color: var(--discord-darker); color: var(--discord-lightest); border-left: 4px solid var(--discord-primary);">
-            {{ $message }}
-        </div>
-    </div>
-    @endif
+<!-- Modern Dashboard Container -->
+<div class="min-h-screen bg-gradient-to-br from-slate-50 to-gray-100 p-4 md:p-6 lg:p-8">
+    <div class="max-w-7xl mx-auto space-y-8">
 
-    <!-- Statistics Cards -->
-    <div class="col-xl-3 col-md-6 mb-4">
-        <div class="discord-card" style="border-left: 4px solid var(--discord-primary);">
-            <div class="d-flex justify-content-between align-items-center">
-                <div>
-                    <div class="text-xs font-weight-bold mb-1" style="color: var(--discord-primary); text-transform: uppercase; letter-spacing: 0.05em;">
-                        Total Products
+        @if(isset($message))
+        <div class="bg-white border-l-4 border-l-blue-500 shadow-lg rounded-lg p-4">
+            <div class="flex items-center">
+                <div class="bg-blue-100 p-2 rounded-full mr-3">
+                    <i class="fas fa-info-circle text-blue-600"></i>
+                </div>
+                <p class="text-gray-800 font-medium">{{ $message }}</p>
+            </div>
+        </div>
+        @endif
+
+        <!-- Header Section -->
+        <header class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
+            <div>
+                <h1 class="text-3xl font-bold text-gray-900">Provider Dashboard</h1>
+                <p class="text-gray-600 mt-1">Welcome back! Here's what's happening with your store.</p>
+            </div>
+            <a href="{{ route('provider.provider-products.create') }}"
+               class="flex items-center bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white shadow-lg hover:shadow-xl transition-all duration-300 transform hover:scale-105 px-4 py-2 rounded-lg">
+                <span class="mr-2">＋</span>
+                Add New Product
+            </a>
+        </header>
+
+        <!-- Statistics Cards -->
+        <section class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+            <!-- Total Products -->
+            <div class="bg-white border-0 shadow-lg hover:shadow-xl transition-all duration-300 transform hover:scale-105 border-l-4 border-l-blue-500 rounded-lg">
+                <div class="p-6 flex items-center justify-between">
+                    <div>
+                        <p class="text-sm font-medium text-gray-600 uppercase tracking-wide">Total Products</p>
+                        <p class="text-3xl font-bold text-gray-900 mt-2">{{ $totalProducts }}</p>
                     </div>
-                    <div class="h3 mb-0 font-weight-bold">{{ $totalProducts }}</div>
-                </div>
-                <div>
-                    <i class="fas fa-box fa-2x" style="color: var(--discord-primary); opacity: 0.8;"></i>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <div class="col-xl-3 col-md-6 mb-4">
-        <div class="discord-card" style="border-left: 4px solid var(--discord-green);">
-            <div class="d-flex justify-content-between align-items-center">
-                <div>
-                    <div class="text-xs font-weight-bold mb-1" style="color: var(--discord-green); text-transform: uppercase; letter-spacing: 0.05em;">
-                        Total Orders
+                    <div class="bg-blue-100 p-3 rounded-full">
+                        <i class="fas fa-box text-blue-600 text-xl"></i>
                     </div>
-                    <div class="h3 mb-0 font-weight-bold">{{ $totalOrders }}</div>
-                </div>
-                <div>
-                    <i class="fas fa-shopping-cart fa-2x" style="color: var(--discord-green); opacity: 0.8;"></i>
                 </div>
             </div>
-        </div>
-    </div>
 
-    <div class="col-xl-3 col-md-6 mb-4">
-        <div class="discord-card" style="border-left: 4px solid var(--discord-yellow);">
-            <div class="d-flex justify-content-between align-items-center">
-                <div>
-                    <div class="text-xs font-weight-bold mb-1" style="color: var(--discord-yellow); text-transform: uppercase; letter-spacing: 0.05em;">
-                        Revenue
+            <!-- Total Orders -->
+            <div class="bg-white border-0 shadow-lg hover:shadow-xl transition-all duration-300 transform hover:scale-105 border-l-4 border-l-emerald-500 rounded-lg">
+                <div class="p-6 flex items-center justify-between">
+                    <div>
+                        <p class="text-sm font-medium text-gray-600 uppercase tracking-wide">Total Orders</p>
+                        <p class="text-3xl font-bold text-gray-900 mt-2">{{ $totalOrders }}</p>
                     </div>
-                    <div class="h3 mb-0 font-weight-bold">${{ isset($totalRevenue) ? number_format($totalRevenue, 2) : '0.00' }}</div>
-                </div>
-                <div>
-                    <i class="fas fa-dollar-sign fa-2x" style="color: var(--discord-yellow); opacity: 0.8;"></i>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <div class="col-xl-3 col-md-6 mb-4">
-        <div class="discord-card" style="border-left: 4px solid var(--discord-red);">
-            <div class="d-flex justify-content-between align-items-center">
-                <div>
-                    <div class="text-xs font-weight-bold mb-1" style="color: var(--discord-red); text-transform: uppercase; letter-spacing: 0.05em;">
-                        Customers
+                    <div class="bg-emerald-100 p-3 rounded-full">
+                        <i class="fas fa-shopping-cart text-emerald-600 text-xl"></i>
                     </div>
-                    <div class="h3 mb-0 font-weight-bold">{{ isset($totalCustomers) ? $totalCustomers : '0' }}</div>
-                </div>
-                <div>
-                    <i class="fas fa-users fa-2x" style="color: var(--discord-red); opacity: 0.8;"></i>
                 </div>
             </div>
-        </div>
-    </div>
-</div>
 
-<!-- Main Content Area -->
-<div class="row">
-    <!-- Recent Products -->
-    <div class="col-lg-6 mb-4">
-        <div class="discord-card">
-            <div class="discord-card-header d-flex justify-content-between align-items-center">
-                <div>
-                    <i class="fas fa-box me-2" style="color: var(--discord-primary);"></i>
-                    Recent Products
+            <!-- Revenue -->
+            <div class="bg-white border-0 shadow-lg hover:shadow-xl transition-all duration-300 transform hover:scale-105 border-l-4 border-l-yellow-500 rounded-lg">
+                <div class="p-6 flex items-center justify-between">
+                    <div>
+                        <p class="text-sm font-medium text-gray-600 uppercase tracking-wide">Revenue</p>
+                        <p class="text-3xl font-bold text-gray-900 mt-2">${{ isset($totalRevenue) ? number_format($totalRevenue, 2) : '0.00' }}</p>
+                    </div>
+                    <div class="bg-yellow-100 p-3 rounded-full">
+                        <i class="fas fa-dollar-sign text-yellow-600 text-xl"></i>
+                    </div>
                 </div>
-                <a href="{{ route('provider.provider-products.index') }}" class="discord-btn">
-                    <i class="fas fa-eye me-1"></i> View All
-                </a>
             </div>
-            <div class="table-responsive">
-                <table class="discord-table">
-                    <thead>
-                        <tr>
-                            <th style="width: 60px;">Image</th>
-                            <th>Name</th>
-                            <th>Price</th>
-                            <th style="width: 100px;">Status</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        @foreach($recentProducts as $product)
-                        <tr>
-                            <td>
-                                @if($product->image)
-                                    <img src="@providerProductImage($product->image)" alt="{{ $product->product_name }}" width="40" height="40" class="rounded" style="object-fit: cover;">
-                                @else
-                                    <div style="width: 40px; height: 40px; background-color: var(--discord-dark); border-radius: 4px; display: flex; align-items: center; justify-content: center;">
-                                        <i class="fas fa-image" style="color: var(--discord-light);"></i>
-                                    </div>
-                                @endif
-                            </td>
-                            <td style="font-weight: 500;">{{ $product->product_name }}</td>
-                            <td style="color: var(--discord-green)">${{ number_format($product->price, 2) }}</td>
-                            <td>
-                                @if($product->is_active)
-                                <span style="background-color: var(--discord-green); color: white; padding: 2px 8px; border-radius: 10px; font-size: 12px; display: inline-block;">
-                                    Available
-                                </span>
-                                @else
-                                <span style="background-color: var(--discord-red); color: white; padding: 2px 8px; border-radius: 10px; font-size: 12px; display: inline-block;">
-                                    Unavailable
-                                </span>
-                                @endif
-                            </td>
-                        </tr>
-                        @endforeach
 
-                        @if(count($recentProducts) == 0)
-                        <tr>
-                            <td colspan="4" class="text-center py-4">
-                                <div style="color: var(--discord-light);">
-                                    <i class="fas fa-box-open mb-2" style="font-size: 24px;"></i>
-                                    <p>No products yet</p>
-                                    <a href="{{ route('provider.provider-products.create') }}" class="discord-btn">
-                                        <i class="fas fa-plus me-1"></i> Add Product
+            <!-- Customers -->
+            <div class="bg-white border-0 shadow-lg hover:shadow-xl transition-all duration-300 transform hover:scale-105 border-l-4 border-l-red-500 rounded-lg">
+                <div class="p-6 flex items-center justify-between">
+                    <div>
+                        <p class="text-sm font-medium text-gray-600 uppercase tracking-wide">Customers</p>
+                        <p class="text-3xl font-bold text-gray-900 mt-2">{{ isset($totalCustomers) ? $totalCustomers : '0' }}</p>
+                    </div>
+                    <div class="bg-red-100 p-3 rounded-full">
+                        <i class="fas fa-users text-red-600 text-xl"></i>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Main Content Area -->
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+            <!-- Recent Products -->
+            <section class="bg-white border-0 shadow-lg hover:shadow-xl transition-all duration-300 rounded-lg">
+                <header class="p-6 pb-4 border-b border-gray-200">
+                    <div class="flex items-center justify-between">
+                        <h2 class="flex items-center text-gray-900 text-lg font-semibold">
+                            <i class="fas fa-box mr-2 text-blue-600"></i>
+                            Recent Products
+                        </h2>
+                        <a href="{{ route('provider.provider-products.index') }}"
+                           class="inline-flex items-center text-sm font-medium text-blue-600 hover:text-blue-800 hover:bg-blue-50 border border-blue-200 px-3 py-1 rounded-lg transition-all duration-200">
+                            <i class="fas fa-eye mr-1"></i> View All
+                        </a>
+                    </div>
+                </header>
+                <div class="p-6 space-y-4">
+                    @foreach($recentProducts as $product)
+                    <div class="flex items-center space-x-4 p-3 rounded-lg hover:bg-gray-50 transition-colors duration-200">
+                        @if($product->image)
+                            <img src="@providerProductImage($product->image)" alt="{{ $product->product_name }}"
+                                 class="w-12 h-12 rounded-lg object-cover">
+                        @else
+                            <div class="w-12 h-12 bg-gray-200 rounded-lg flex items-center justify-content-center">
+                                <i class="fas fa-image text-gray-400"></i>
+                            </div>
+                        @endif
+                        <div class="flex-1 min-w-0">
+                            <p class="text-sm font-medium text-gray-900 truncate">{{ $product->product_name }}</p>
+                            <p class="text-sm text-emerald-600 font-semibold">${{ number_format($product->price, 2) }}</p>
+                        </div>
+                        @if($product->is_active)
+                            <span class="bg-emerald-100 text-emerald-800 px-2 py-1 rounded-xl text-xs font-medium">Available</span>
+                        @else
+                            <span class="bg-red-100 text-red-800 px-2 py-1 rounded-xl text-xs font-medium">Unavailable</span>
+                        @endif
+                    </div>
+                    @endforeach
+
+                    @if(count($recentProducts) == 0)
+                    <div class="text-center py-8">
+                        <div class="bg-gray-100 rounded-full w-16 h-16 flex items-center justify-center mx-auto mb-4">
+                            <i class="fas fa-box-open text-gray-400 text-2xl"></i>
+                        </div>
+                        <p class="text-gray-500 mb-4">No products yet</p>
+                        <a href="{{ route('provider.provider-products.create') }}"
+                           class="inline-flex items-center bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg transition-colors duration-200">
+                            <i class="fas fa-plus mr-2"></i> Add Product
+                        </a>
+                    </div>
+                    @endif
+                </div>
+            </section>
+
+            <!-- Recent Orders -->
+            <section class="bg-white border-0 shadow-lg hover:shadow-xl transition-all duration-300 rounded-lg">
+                <header class="p-6 pb-4 border-b border-gray-200">
+                    <div class="flex items-center justify-between">
+                        <h2 class="flex items-center text-gray-900 text-lg font-semibold">
+                            <i class="fas fa-shopping-cart mr-2 text-emerald-600"></i>
+                            Recent Orders
+                        </h2>
+                        <a href="{{ route('provider.orders.index') }}"
+                           class="inline-flex items-center text-sm font-medium text-emerald-600 hover:text-emerald-800 hover:bg-emerald-50 border border-emerald-200 px-3 py-1 rounded-lg transition-all duration-200">
+                            <i class="fas fa-eye mr-1"></i> View All
+                        </a>
+                    </div>
+                </header>
+                <div class="p-6 space-y-4">
+                    @foreach($recentOrders as $order)
+                    <div class="flex items-center justify-between p-3 rounded-lg hover:bg-gray-50 transition-colors duration-200">
+                        <div class="flex-1">
+                            <div class="flex items-center space-x-4">
+                                <div>
+                                    <a href="{{ route('provider.orders.show', $order->id) }}"
+                                       class="text-sm font-medium text-blue-600 hover:text-blue-800">
+                                        {{ $order->order_number }}
                                     </a>
+                                    <p class="text-xs text-gray-500">{{ $order->created_at->format('M d, Y') }}</p>
                                 </div>
-                            </td>
-                        </tr>
-                        @endif
-                    </tbody>
-                </table>
-            </div>
-        </div>
-    </div>
+                                <div>
+                                    <p class="text-sm font-medium text-gray-900">{{ $order->customer_name }}</p>
+                                    <p class="text-sm text-emerald-600 font-semibold">${{ number_format($order->total, 2) }}</p>
+                                </div>
+                            </div>
+                        </div>
+                        <div>
+                            @if($order->status == 'completed')
+                                <span class="bg-emerald-100 text-emerald-800 px-2 py-1 rounded-xl text-xs font-medium">Completed</span>
+                            @elseif($order->status == 'processing')
+                                <span class="bg-blue-100 text-blue-800 px-2 py-1 rounded-xl text-xs font-medium">Processing</span>
+                            @elseif($order->status == 'pending')
+                                <span class="bg-yellow-100 text-yellow-800 px-2 py-1 rounded-xl text-xs font-medium">Pending</span>
+                            @elseif($order->status == 'cancelled')
+                                <span class="bg-red-100 text-red-800 px-2 py-1 rounded-xl text-xs font-medium">Cancelled</span>
+                            @endif
+                        </div>
+                    </div>
+                    @endforeach
 
-    <!-- Recent Orders -->
-    <div class="col-lg-6 mb-4">
-        <div class="discord-card">
-            <div class="discord-card-header d-flex justify-content-between align-items-center">
-                <div>
-                    <i class="fas fa-shopping-cart me-2" style="color: var(--discord-green);"></i>
-                    Recent Orders
+                    @if(count($recentOrders) == 0)
+                    <div class="text-center py-8">
+                        <div class="bg-gray-100 rounded-full w-16 h-16 flex items-center justify-center mx-auto mb-4">
+                            <i class="fas fa-shopping-cart text-gray-400 text-2xl"></i>
+                        </div>
+                        <p class="text-gray-500">No orders yet</p>
+                    </div>
+                    @endif
                 </div>
-                <a href="{{ route('provider.orders.index') }}" class="discord-btn">
-                    <i class="fas fa-eye me-1"></i> View All
-                </a>
-            </div>
-            <div class="table-responsive">
-                <table class="discord-table">
-                    <thead>
-                        <tr>
-                            <th>Order #</th>
-                            <th>Customer</th>
-                            <th>Total</th>
-                            <th>Status</th>
-                            <th>Date</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        @foreach($recentOrders as $order)
-                        <tr>
-                            <td>
-                                <a href="{{ route('provider.orders.show', $order->id) }}" style="color: var(--discord-primary); text-decoration: none;">
-                                    {{ $order->order_number }}
-                                </a>
-                            </td>
-                            <td style="font-weight: 500;">{{ $order->customer_name }}</td>
-                            <td style="color: var(--discord-green)">${{ number_format($order->total, 2) }}</td>
-                            <td>
-                                @if($order->status == 'completed')
-                                <span style="background-color: var(--discord-green); color: white; padding: 2px 8px; border-radius: 10px; font-size: 12px; display: inline-block;">
-                                    Completed
-                                </span>
-                                @elseif($order->status == 'processing')
-                                <span style="background-color: var(--discord-primary); color: white; padding: 2px 8px; border-radius: 10px; font-size: 12px; display: inline-block;">
-                                    Processing
-                                </span>
-                                @elseif($order->status == 'pending')
-                                <span style="background-color: var(--discord-yellow); color: white; padding: 2px 8px; border-radius: 10px; font-size: 12px; display: inline-block;">
-                                    Pending
-                                </span>
-                                @elseif($order->status == 'cancelled')
-                                <span style="background-color: var(--discord-red); color: white; padding: 2px 8px; border-radius: 10px; font-size: 12px; display: inline-block;">
-                                    Cancelled
-                                </span>
-                                @endif
-                            </td>
-                            <td>{{ $order->created_at->format('M d, Y') }}</td>
-                        </tr>
-                        @endforeach
-
-                        @if(count($recentOrders) == 0)
-                        <tr>
-                            <td colspan="5" class="text-center py-4">
-                                <div style="color: var(--discord-light);">
-                                    <i class="fas fa-shopping-cart mb-2" style="font-size: 24px;"></i>
-                                    <p>No orders yet</p>
-                                </div>
-                            </td>
-                        </tr>
-                        @endif
-                    </tbody>
-                </table>
-            </div>
+            </section>
         </div>
-    </div>
-</div>
 
-<!-- Activity Overview -->
-<div class="row">
-    <div class="col-12 mb-4">
-        <div class="discord-card">
-            <div class="discord-card-header">
-                <i class="fas fa-chart-line me-2" style="color: var(--discord-primary);"></i>
-                Store Activity
-            </div>
-            <div class="p-3">
-                <div class="d-flex align-items-center mb-3">
-                    <div style="width: 50px; height: 50px; background-color: var(--discord-darkest); border-radius: 12px; display: flex; align-items: center; justify-content: center; margin-right: 15px;">
-                        <i class="fas fa-rocket" style="color: var(--discord-primary); font-size: 20px;"></i>
+        <!-- Activity Overview -->
+        <section class="bg-gradient-to-r from-blue-600 to-purple-600 border-0 shadow-xl text-white rounded-lg">
+            <header class="p-6 border-b border-white/20 flex flex-col md:flex-row items-start md:items-center justify-between gap-4">
+                <div class="flex items-center gap-4">
+                    <div class="bg-white/20 p-3 rounded-xl">
+                        <i class="fas fa-rocket text-2xl"></i>
                     </div>
                     <div>
-                        <h5 style="margin: 0; font-size: 16px; font-weight: 600;">Welcome to your Dashboard!</h5>
-                        <p style="margin: 0; color: var(--discord-light); font-size: 14px;">Manage your products, track orders, and grow your business</p>
+                        <h3 class="text-xl font-semibold">Welcome to your Dashboard!</h3>
+                        <p class="text-blue-100">Manage your products, track orders, and grow your business</p>
                     </div>
-                    <a href="{{ route('provider.provider-products.create') }}" class="discord-btn ms-auto">
-                        <i class="fas fa-plus me-1"></i> Add New Product
-                    </a>
                 </div>
-
-                <div class="row text-center mt-4">
-                    <div class="col-md-3 mb-3">
-                        <div style="background-color: var(--discord-darkest); border-radius: 12px; padding: 15px;">
-                            <i class="fas fa-eye mb-2" style="color: var(--discord-primary); font-size: 24px;"></i>
-                            <h5 style="font-size: 24px; margin-bottom: 5px;">{{ isset($totalViews) ? $totalViews : '0' }}</h5>
-                            <p style="color: var(--discord-light); margin: 0;">Product Views</p>
-                        </div>
-                    </div>
-                    <div class="col-md-3 mb-3">
-                        <div style="background-color: var(--discord-darkest); border-radius: 12px; padding: 15px;">
-                            <i class="fas fa-shopping-bag mb-2" style="color: var(--discord-green); font-size: 24px;"></i>
-                            <h5 style="font-size: 24px; margin-bottom: 5px;">{{ isset($conversionRate) ? $conversionRate : '0' }}%</h5>
-                            <p style="color: var(--discord-light); margin: 0;">Conversion Rate</p>
-                        </div>
-                    </div>
-                    <div class="col-md-3 mb-3">
-                        <div style="background-color: var(--discord-darkest); border-radius: 12px; padding: 15px;">
-                            <i class="fas fa-star mb-2" style="color: var(--discord-yellow); font-size: 24px;"></i>
-                            <h5 style="font-size: 24px; margin-bottom: 5px;">{{ isset($avgRating) ? number_format($avgRating, 1) : '0.0' }}</h5>
-                            <p style="color: var(--discord-light); margin: 0;">Avg. Rating</p>
-                        </div>
-                    </div>
-                    <div class="col-md-3 mb-3">
-                        <div style="background-color: var(--discord-darkest); border-radius: 12px; padding: 15px;">
-                            <i class="fas fa-redo mb-2" style="color: var(--discord-red); font-size: 24px;"></i>
-                            <h5 style="font-size: 24px; margin-bottom: 5px;">{{ isset($returnRate) ? $returnRate : '0' }}%</h5>
-                            <p style="color: var(--discord-light); margin: 0;">Return Rate</p>
-                        </div>
-                    </div>
+                <a href="{{ route('provider.provider-products.create') }}"
+                   class="inline-flex items-center bg-white text-blue-600 hover:bg-blue-50 shadow-lg hover:shadow-xl transition-all duration-300 transform hover:scale-105 px-4 py-2 rounded-lg">
+                    <span class="mr-2">＋</span>
+                    Add New Product
+                </a>
+            </header>
+            <div class="p-6 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+                <!-- Views -->
+                <div class="bg-white/10 backdrop-blur-sm rounded-xl p-6 text-center hover:bg-white/20 transition-all duration-300 transform hover:scale-105">
+                    <i class="fas fa-eye text-3xl mb-3"></i>
+                    <p class="text-2xl font-bold mb-1">{{ isset($totalViews) ? $totalViews : '0' }}</p>
+                    <p class="text-blue-100 text-sm">Product Views</p>
+                </div>
+                <!-- Conversion Rate -->
+                <div class="bg-white/10 backdrop-blur-sm rounded-xl p-6 text-center hover:bg-white/20 transition-all duration-300 transform hover:scale-105">
+                    <i class="fas fa-shopping-bag text-3xl mb-3"></i>
+                    <p class="text-2xl font-bold mb-1">{{ isset($conversionRate) ? $conversionRate : '0' }}%</p>
+                    <p class="text-blue-100 text-sm">Conversion Rate</p>
+                </div>
+                <!-- Avg Rating -->
+                <div class="bg-white/10 backdrop-blur-sm rounded-xl p-6 text-center hover:bg-white/20 transition-all duration-300 transform hover:scale-105">
+                    <i class="fas fa-star text-3xl mb-3"></i>
+                    <p class="text-2xl font-bold mb-1">{{ isset($avgRating) ? number_format($avgRating, 1) : '0.0' }}</p>
+                    <p class="text-blue-100 text-sm">Avg. Rating</p>
+                </div>
+                <!-- Return Rate -->
+                <div class="bg-white/10 backdrop-blur-sm rounded-xl p-6 text-center hover:bg-white/20 transition-all duration-300 transform hover:scale-105">
+                    <i class="fas fa-redo text-3xl mb-3"></i>
+                    <p class="text-2xl font-bold mb-1">{{ isset($returnRate) ? $returnRate : '0' }}%</p>
+                    <p class="text-blue-100 text-sm">Return Rate</p>
                 </div>
             </div>
-        </div>
+        </section>
     </div>
 </div>
 @endsection

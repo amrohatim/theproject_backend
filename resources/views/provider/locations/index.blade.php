@@ -309,8 +309,10 @@
             animation: google.maps.Animation.DROP
         });
 
-        // Generate a unique ID for the marker
+        // Generate a unique ID for the marker and initialize data
         marker.markerId = 'marker_' + Date.now() + '_' + Math.floor(Math.random() * 1000);
+        marker.markerLabel = '';
+        marker.markerEmirate = 'Dubai';
 
         markers.push(marker);
 
@@ -325,12 +327,29 @@
         marker.addListener('click', function() {
             infoWindow.open(map, marker);
 
-            // Add event listener to the remove button after the info window is opened
+            // Add event listeners after the info window is opened
             setTimeout(() => {
                 const removeButton = document.querySelector(`button.remove-marker[data-marker-id="${marker.markerId}"]`);
                 if (removeButton) {
                     removeButton.addEventListener('click', function() {
                         removeMarker(marker);
+                        infoWindow.close();
+                    });
+                }
+
+                // Add event listeners for label and emirate inputs to save data to marker
+                const labelInput = document.querySelector('.marker-label');
+                const emirateSelect = document.querySelector('.marker-emirate');
+
+                if (labelInput) {
+                    labelInput.addEventListener('input', function() {
+                        marker.markerLabel = this.value;
+                    });
+                }
+
+                if (emirateSelect) {
+                    emirateSelect.addEventListener('change', function() {
+                        marker.markerEmirate = this.value;
                     });
                 }
             }, 100);
@@ -417,9 +436,11 @@
                 animation: google.maps.Animation.DROP
             });
 
-            // Generate a unique ID for the marker
+            // Generate a unique ID for the marker and store initial data
             marker.markerId = 'marker_' + Date.now() + '_' + Math.floor(Math.random() * 1000);
             marker.locationId = id;
+            marker.markerLabel = label;
+            marker.markerEmirate = emirate;
             markers.push(marker);
 
             // Add info window for the marker
@@ -433,12 +454,29 @@
             marker.addListener('click', function() {
                 infoWindow.open(map, marker);
 
-                // Add event listener to the remove button after the info window is opened
+                // Add event listeners after the info window is opened
                 setTimeout(() => {
                     const removeButton = document.querySelector(`button.remove-marker[data-marker-id="${marker.markerId}"]`);
                     if (removeButton) {
                         removeButton.addEventListener('click', function() {
                             removeMarker(marker);
+                            infoWindow.close();
+                        });
+                    }
+
+                    // Add event listeners for label and emirate inputs to save data to marker
+                    const labelInput = document.querySelector('.marker-label');
+                    const emirateSelect = document.querySelector('.marker-emirate');
+
+                    if (labelInput) {
+                        labelInput.addEventListener('input', function() {
+                            marker.markerLabel = this.value;
+                        });
+                    }
+
+                    if (emirateSelect) {
+                        emirateSelect.addEventListener('change', function() {
+                            marker.markerEmirate = this.value;
                         });
                     }
                 }, 100);
@@ -462,20 +500,9 @@
 
             const position = marker.getPosition();
 
-            // Try to get label and emirate from the DOM if the info window was opened
-            let label = '';
-            let emirate = document.getElementById('emirate').value || 'Dubai';
-
-            // Create a temporary div to parse the info window content
-            const tempDiv = document.createElement('div');
-            tempDiv.innerHTML = createInfoWindowContent(marker, null);
-
-            // Get the label and emirate values
-            const labelInput = tempDiv.querySelector('.marker-label');
-            const emirateSelect = tempDiv.querySelector('.marker-emirate');
-
-            if (labelInput) label = labelInput.value;
-            if (emirateSelect) emirate = emirateSelect.value;
+            // Get label and emirate from marker's stored data or defaults
+            let label = marker.markerLabel || '';
+            let emirate = marker.markerEmirate || 'Dubai';
 
             locationsData.push({
                 id: marker.locationId || null,

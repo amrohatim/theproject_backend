@@ -1989,6 +1989,11 @@ Route::prefix('provider')->name('provider.')->middleware(['auth', \App\Http\Midd
     Route::get('/profile/change-password', [App\Http\Controllers\Provider\ProfileController::class, 'showChangePasswordForm'])->name('profile.change-password');
     Route::put('/profile/change-password', [App\Http\Controllers\Provider\ProfileController::class, 'changePassword'])->name('profile.update-password');
 
+    // Settings
+    Route::get('/settings', [App\Http\Controllers\Provider\SettingsController::class, 'index'])->name('settings.index');
+    Route::post('/settings/delivery', [App\Http\Controllers\Provider\SettingsController::class, 'updateDelivery'])->name('settings.delivery');
+    Route::post('/settings/license', [App\Http\Controllers\Provider\SettingsController::class, 'uploadLicense'])->name('settings.license');
+
     // Provider Products
     Route::get('/provider-products', [App\Http\Controllers\Provider\ProviderProductController::class, 'index'])->name('provider-products.index');
     Route::get('/provider-products/create', [App\Http\Controllers\Provider\ProviderProductController::class, 'create'])->name('provider-products.create');

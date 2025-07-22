@@ -3,6 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="csrf-token" content="{{ csrf_token() }}">
     <title>@yield('title', 'Provider Dashboard') | Dala3Chic</title>
 
     <!-- Bootstrap CSS -->
@@ -564,7 +565,7 @@
                     <i class="fas fa-user channel-icon"></i>
                     <span class="channel-name">Profile</span>
                 </li>
-                <li class="channel-item" onclick="window.location.href='#'">
+                <li class="channel-item {{ request()->is('provider/settings*') ? 'active' : '' }}" onclick="window.location.href='{{ route('provider.settings.index') }}'">
                     <i class="fas fa-cog channel-icon"></i>
                     <span class="channel-name">Settings</span>
                 </li>

@@ -28,6 +28,16 @@ class ProviderMiddleware
             return redirect('/')->with('error', 'You do not have provider access.');
         }
 
+        // Allow access to settings page even without active license (for license management)
+        if ($request->routeIs('provider.settings.*')) {
+            // Still check if phone is verified for settings access
+            if (!$user->phone_verified_at) {
+                return redirect()->route('provider.otp.verify', ['user_id' => $user->id])
+                    ->with('error', 'Please verify your phone number to continue.');
+            }
+            return $next($request);
+        }
+
         // Check license status for provider access
         if (!$user->hasLicense()) {
             // No license record - redirect to license upload

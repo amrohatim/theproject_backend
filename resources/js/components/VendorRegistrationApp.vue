@@ -261,12 +261,12 @@ export default {
       }
     },
 
-    async handleCompanyInfoSubmit() {
+    async handleCompanyInfoSubmit(logoFile = null) {
       this.clearMessages();
       this.loading = true;
 
       try {
-        const response = await registrationApi.submitCompanyInfo(this.formData.companyInfo);
+        const response = await registrationApi.submitCompanyInfo(this.formData.companyInfo, logoFile);
 
         if (response.success) {
           this.success = response.message;

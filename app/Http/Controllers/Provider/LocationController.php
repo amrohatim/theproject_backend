@@ -20,14 +20,13 @@ class LocationController extends Controller
     public function index()
     {
         $user = Auth::user();
-        $provider = $user->providerRecord;
+        $provider = $user->provider;
 
         if (!$provider) {
             // Create a provider record if it doesn't exist
             $provider = Provider::create([
                 'user_id' => $user->id,
                 'business_name' => "{$user->name}'s Business",
-                'company_name' => "{$user->name}'s Company",
                 'status' => 'active',
                 'is_verified' => false
             ]);
@@ -48,6 +47,7 @@ class LocationController extends Controller
     {
         $validator = Validator::make($request->all(), [
             'locations' => 'required|array',
+            'locations.*.id' => 'nullable|integer|exists:provider_locations,id',
             'locations.*.label' => 'nullable|string|max:255',
             'locations.*.emirate' => 'required|string|max:255',
             'locations.*.latitude' => 'required|numeric',
@@ -59,14 +59,13 @@ class LocationController extends Controller
         }
 
         $user = Auth::user();
-        $provider = $user->providerRecord;
+        $provider = $user->provider;
 
         if (!$provider) {
             // Create a provider record if it doesn't exist
             $provider = Provider::create([
                 'user_id' => $user->id,
                 'business_name' => "{$user->name}'s Business",
-                'company_name' => "{$user->name}'s Company",
                 'status' => 'active',
                 'is_verified' => false
             ]);
@@ -75,15 +74,32 @@ class LocationController extends Controller
         $savedLocations = [];
 
         foreach ($request->locations as $locationData) {
-            $location = ProviderLocation::create([
-                'provider_id' => $provider->id,
-                'label' => $locationData['label'] ?? null,
-                'emirate' => $locationData['emirate'],
-                'latitude' => $locationData['latitude'],
-                'longitude' => $locationData['longitude'],
-            ]);
+            if (isset($locationData['id']) && $locationData['id']) {
+                // Update existing location
+                $location = ProviderLocation::where('id', $locationData['id'])
+                    ->where('provider_id', $provider->id)
+                    ->first();
 
-            $savedLocations[] = $location;
+                if ($location) {
+                    $location->update([
+                        'label' => $locationData['label'] ?? null,
+                        'emirate' => $locationData['emirate'],
+                        'latitude' => $locationData['latitude'],
+                        'longitude' => $locationData['longitude'],
+                    ]);
+                    $savedLocations[] = $location;
+                }
+            } else {
+                // Create new location
+                $location = ProviderLocation::create([
+                    'provider_id' => $provider->id,
+                    'label' => $locationData['label'] ?? null,
+                    'emirate' => $locationData['emirate'],
+                    'latitude' => $locationData['latitude'],
+                    'longitude' => $locationData['longitude'],
+                ]);
+                $savedLocations[] = $location;
+            }
         }
 
         return response()->json([
@@ -114,7 +130,7 @@ class LocationController extends Controller
         }
 
         $user = Auth::user();
-        $provider = $user->providerRecord;
+        $provider = $user->provider;
 
         if (!$provider) {
             return response()->json(['error' => 'Provider record not found'], 404);
@@ -151,7 +167,7 @@ class LocationController extends Controller
     public function destroy($id)
     {
         $user = Auth::user();
-        $provider = $user->providerRecord;
+        $provider = $user->provider;
 
         if (!$provider) {
             return response()->json(['error' => 'Provider record not found'], 404);
