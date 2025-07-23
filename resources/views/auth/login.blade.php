@@ -1,9 +1,12 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="{{ app()->getLocale() }}" dir="{{ app()->getLocale() === 'ar' ? 'rtl' : 'ltr' }}">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Login - Marketplace Admin</title>
+    <meta name="csrf-token" content="{{ csrf_token() }}">
+    <title>{{ __('messages.login') }} - {{ __('messages.marketplace_admin') }}</title>
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
     <!-- Font Awesome -->
@@ -36,10 +39,10 @@
                 </div>
             </div>
             <h2 class="mt-6 text-center text-3xl font-extrabold text-gray-900 dark:text-white">
-                Marketplace Admin
+                {{ __('messages.marketplace_admin') }}
             </h2>
             <p class="mt-2 text-center text-sm text-gray-600 dark:text-gray-300">
-                Sign in to your account
+                {{ __('messages.enter_credentials') }}
             </p>
         </div>
 
@@ -53,16 +56,16 @@
             @csrf
             <div class="rounded-md shadow-sm -space-y-px">
                 <div>
-                    <label for="email" class="sr-only">Email address</label>
+                    <label for="email" class="sr-only">{{ __('messages.email_address') }}</label>
                     <input id="email" name="email" type="email" autocomplete="email" required
                         class="appearance-none rounded-none relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 rounded-t-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 focus:z-10 sm:text-sm"
-                        placeholder="Email address" value="{{ old('email') }}">
+                        placeholder="{{ __('messages.enter_email_address') }}" value="{{ old('email') }}">
                 </div>
                 <div>
-                    <label for="password" class="sr-only">Password</label>
+                    <label for="password" class="sr-only">{{ __('messages.password') }}</label>
                     <input id="password" name="password" type="password" autocomplete="current-password" required
                         class="appearance-none rounded-none relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 rounded-b-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 focus:z-10 sm:text-sm"
-                        placeholder="Password">
+                        placeholder="{{ __('messages.enter_password') }}">
                 </div>
             </div>
 
@@ -81,13 +84,13 @@
                     <input id="remember_me" name="remember" type="checkbox"
                         class="h-4 w-4 text-indigo-600 focus:ring-indigo-500 border-gray-300 rounded">
                     <label for="remember_me" class="ml-2 block text-sm text-gray-900 dark:text-gray-300">
-                        Remember me
+                        {{ __('messages.remember_me') }}
                     </label>
                 </div>
 
                 <div class="text-sm">
                     <a href="#" class="font-medium text-indigo-600 hover:text-indigo-500">
-                        Forgot your password?
+                        {{ __('messages.forgot_password') }}
                     </a>
                 </div>
             </div>
@@ -98,7 +101,7 @@
                     <span class="absolute left-0 inset-y-0 flex items-center pl-3">
                         <i class="fas fa-lock"></i>
                     </span>
-                    Sign in
+                    {{ __('messages.sign_in') }}
                 </button>
             </div>
         </form>
@@ -145,6 +148,8 @@
         </div>
     </div>
 
+    <!-- Bootstrap JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
     <!-- Modern Forms JS -->
     <script src="{{ asset('js/modern-forms.js') }}"></script>
     <!-- Textarea Enhancements -->

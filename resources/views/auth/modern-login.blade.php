@@ -1,12 +1,19 @@
+@php
+    use App\Helpers\LanguageHelper;
+    $currentLocale = LanguageHelper::getCurrentLocale();
+    $isRtl = LanguageHelper::isRtl();
+    $direction = LanguageHelper::getDirection();
+@endphp
+
 <!DOCTYPE html>
-<html lang="en">
+<html lang="{{ $currentLocale }}" dir="{{ $direction }}">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="description" content="Login to your Dala3Chic account - Access your dashboard, orders, and more">
     <meta name="robots" content="noindex, nofollow">
-    
-    <title>Login - Dala3Chic</title>
+
+    <title>{{ __('messages.sign_in') }} - {{ __('messages.dala3chic') }}</title>
     
     <!-- Preconnect to external domains -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -24,7 +31,12 @@
     
     <!-- Custom Styles -->
     @vite(['resources/css/app.css', 'resources/css/animations.css', 'resources/css/modern-auth.css'])
-    
+
+    <!-- RTL CSS for Arabic -->
+    @if($isRtl)
+        <link href="{{ asset('css/rtl.css') }}" rel="stylesheet">
+    @endif
+
     <!-- CSRF Token -->
     <meta name="csrf-token" content="{{ csrf_token() }}">
 </head>
@@ -38,29 +50,28 @@
                
                 
                 <h1 class="auth-brand-title">
-                    Welcome Back to
+                    {{ __('messages.welcome_back_to') }}
                     <span class="bg-gradient-to-r from-pink-600 via-violet-400 to-pink-600 bg-clip-text text-white/40 font-bold">
-                        Dala3Chic
+                        {{ __('messages.dala3chic') }}
                     </span>
                 </h1>
-                
+
                 <p class="auth-brand-subtitle">
-                    Access your account to manage orders, track shipments, and discover amazing products 
-                    from trusted vendors worldwide.
+                    {{ __('messages.access_account_desc') }}
                 </p>
                 
                 <div class="auth-features">
                     <div class="auth-feature animate-fade-in-up animate-delay-200">
                         <i class="fas fa-shield-alt"></i>
-                        <span>Secure & Protected</span>
+                        <span>{{ __('messages.secure_protected') }}</span>
                     </div>
                     <div class="auth-feature animate-fade-in-up animate-delay-300">
                         <i class="fas fa-bolt"></i>
-                        <span>Lightning Fast</span>
+                        <span>{{ __('messages.lightning_fast') }}</span>
                     </div>
                     <div class="auth-feature animate-fade-in-up animate-delay-400">
                         <i class="fas fa-heart"></i>
-                        <span>Loved by Thousands</span>
+                        <span>{{ __('messages.loved_by_thousands') }}</span>
                     </div>
                 </div>
             </div>
@@ -70,8 +81,8 @@
         <div class="auth-form-container">
             <div class="auth-form-card scroll-reveal animate-fade-in-right">
                 <div class="auth-form-header">
-                    <h2 class="auth-form-title">Sign In</h2>
-                    <p class="auth-form-subtitle">Enter your credentials to access your account</p>
+                    <h2 class="auth-form-title">{{ __('messages.sign_in') }}</h2>
+                    <p class="auth-form-subtitle">{{ __('messages.enter_credentials') }}</p>
                 </div>
                 
                 <!-- Global errors removed - using individual field errors for stable layout -->
@@ -89,7 +100,7 @@
                     
                     <!-- Email Field -->
                     <div class="auth-form-group">
-                        <label for="email" class="auth-form-label">Email Address</label>
+                        <label for="email" class="auth-form-label">{{ __('messages.email_address') }}</label>
                         <div class="auth-input-group">
                             <i class="auth-input-icon fas fa-envelope"></i>
                             <input
@@ -97,7 +108,7 @@
                                 id="email"
                                 name="email"
                                 class="auth-form-input @error('email') error @enderror"
-                                placeholder="Enter your email address"
+                                placeholder="{{ __('messages.enter_email_address') }}"
                                 value="{{ old('email') }}"
                                 required
                                 autocomplete="email"
@@ -117,21 +128,37 @@
 
                     <!-- Password Field -->
                     <div class="auth-form-group">
-                        <label for="password" class="auth-form-label">Password</label>
-                        <div class="auth-input-group">
-                            <i class="auth-input-icon fas fa-lock"></i>
-                            <input
-                                type="password"
-                                id="password"
-                                name="password"
-                                class="auth-form-input @error('password') error @enderror"
-                                placeholder="Enter your password"
-                                required
-                                autocomplete="current-password"
-                            >
-                            <button type="button" class="auth-password-toggle" tabindex="-1">
-                                <i class="fas fa-eye"></i>
-                            </button>
+                        <label for="password" class="auth-form-label">{{ __('messages.password') }}</label>
+                        <div class="auth-input-group {{ $isRtl ? 'rtl-password-field' : '' }}">
+                            @if($isRtl)
+                                <button type="button" class="auth-password-toggle auth-password-toggle-rtl" tabindex="-1">
+                                    <i class="fas fa-eye"></i>
+                                </button>
+                                <input
+                                    type="password"
+                                    id="password"
+                                    name="password"
+                                    class="auth-form-input auth-form-input-rtl @error('password') error @enderror"
+                                    placeholder="{{ __('messages.enter_password') }}"
+                                    required
+                                    autocomplete="current-password"
+                                >
+                                <i class="auth-input-icon auth-input-icon-rtl fas fa-lock"></i>
+                            @else
+                                <i class="auth-input-icon fas fa-lock"></i>
+                                <input
+                                    type="password"
+                                    id="password"
+                                    name="password"
+                                    class="auth-form-input @error('password') error @enderror"
+                                    placeholder="{{ __('messages.enter_password') }}"
+                                    required
+                                    autocomplete="current-password"
+                                >
+                                <button type="button" class="auth-password-toggle" tabindex="-1">
+                                    <i class="fas fa-eye"></i>
+                                </button>
+                            @endif
                         </div>
                         <!-- Fixed height error container to prevent layout shifts -->
                         <div class="auth-error-container">
@@ -154,16 +181,16 @@
                                 class="auth-checkbox"
                                 {{ old('remember') ? 'checked' : '' }}
                             >
-                            <label for="remember" class="auth-checkbox-label">Remember me</label>
+                            <label for="remember" class="auth-checkbox-label">{{ __('messages.remember_me') }}</label>
                         </div>
-                        
-                        <a href="#" class="auth-link text-sm">Forgot password?</a>
+
+                        <a href="#" class="auth-link text-sm">{{ __('messages.forgot_password') }}</a>
                     </div>
                     
                     <!-- Submit Button -->
                     <button type="submit" class="auth-submit-btn w-full">
                         <i class="fas fa-sign-in-alt mr-2"></i>
-                        Sign In
+                        {{ __('messages.sign_in') }}
                     </button>
                 </form>
                 
@@ -192,8 +219,8 @@
                 <!-- Register Link -->
                 <div class="auth-form-footer">
                     <p class="text-sm text-gray-600">
-                        Don't have an account?
-                        <a href="{{ route('register') }}" class="auth-link">Create one now</a>
+                        {{ __('messages.dont_have_account') }}
+                        <a href="{{ route('register') }}" class="auth-link">{{ __('messages.create_one_now') }}</a>
                     </p>
                 </div>
             </div>
@@ -201,10 +228,10 @@
     </div>
     
     <!-- Back to Home Link -->
-    <div class="fixed top-4 left-4 z-50">
+    <div class="fixed top-4 {{ $isRtl ? 'right-4' : 'left-4' }} z-50">
         <a href="{{ url('/') }}" class="flex items-center gap-2 text-white/80 hover:text-white transition-colors">
-            <i class="fas fa-arrow-left"></i>
-            <span class="hidden sm:inline">Back to Home</span>
+            <i class="fas {{ $isRtl ? 'fa-arrow-right' : 'fa-arrow-left' }}"></i>
+            <span class="hidden sm:inline">{{ __('messages.back_to_home') }}</span>
         </a>
     </div>
     
@@ -298,17 +325,38 @@
             box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
         }
         
+        /* RTL Password Field Styles */
+        .rtl-password-field {
+            direction: rtl;
+        }
+
+        .auth-input-icon-rtl {
+            right: auto !important;
+            left: 1rem !important;
+        }
+
+        .auth-password-toggle-rtl {
+            left: auto !important;
+            right: 1rem !important;
+        }
+
+        .auth-form-input-rtl {
+            padding-left: 3rem !important;
+            padding-right: 3rem !important;
+            text-align: right;
+        }
+
         /* Mobile responsiveness */
         @media (max-width: 640px) {
             .auth-form-card {
                 margin: 1rem;
                 padding: 2rem 1.5rem;
             }
-            
+
             .auth-brand-title {
                 font-size: 1.75rem;
             }
-            
+
             .auth-features {
                 margin-top: 2rem;
             }

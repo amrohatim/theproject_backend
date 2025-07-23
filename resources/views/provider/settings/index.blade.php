@@ -8,14 +8,14 @@
 <!-- Lucide Icons -->
 <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.js"></script>
 
-<div class="min-h-screen bg-gradient-to-br from-slate-50 to-blue-50">
+<div class="min-h-screen ">
     <div class="container mx-auto px-4 py-8 max-w-6xl">
         <!-- Header -->
         <div class="mb-8">
             <div class="flex items-center gap-3 mb-2">
-                <div class="p-2 bg-blue-100 rounded-lg">
+                {{-- <div class="p-2 bg-blue-100 rounded-lg">
                     <i data-lucide="settings" class="w-6 h-6 text-blue-600"></i>
-                </div>
+                </div> --}}
                 <h1 class="text-3xl font-bold text-gray-900">Settings</h1>
             </div>
             <p class="text-gray-600">Manage your account settings and preferences</p>

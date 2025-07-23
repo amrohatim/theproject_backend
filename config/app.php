@@ -86,6 +86,31 @@ return [
 
     /*
     |--------------------------------------------------------------------------
+    | Supported Locales
+    |--------------------------------------------------------------------------
+    |
+    | This array contains all the locales supported by your application.
+    | You can add or remove locales as needed for your application.
+    |
+    */
+
+    'supported_locales' => [
+        'en' => [
+            'name' => 'English',
+            'native' => 'English',
+            'flag' => '🇺🇸',
+            'rtl' => false,
+        ],
+        'ar' => [
+            'name' => 'Arabic',
+            'native' => 'العربية',
+            'flag' => '🇸🇦',
+            'rtl' => true,
+        ],
+    ],
+
+    /*
+    |--------------------------------------------------------------------------
     | Encryption Key
     |--------------------------------------------------------------------------
     |

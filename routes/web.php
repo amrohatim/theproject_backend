@@ -7,12 +7,48 @@ use App\Http\Controllers\Vendor\DashboardController as VendorDashboardController
 use App\Http\Controllers\Vendor\SettingsController as VendorSettingsController;
 use App\Http\Controllers\LandingController;
 use App\Http\Controllers\Web\RegistrationController;
+use App\Http\Controllers\LanguageController;
 use App\Models\Category;
 
 // Include payment routes
 require __DIR__.'/payment.php';
 
 Route::get('/', [LandingController::class, 'index']);
+
+// Language switching routes
+Route::get('/language/{locale}', [LanguageController::class, 'switchLanguageWeb'])->name('language.switch');
+Route::post('/language/switch', [LanguageController::class, 'switchLanguage'])->name('language.switch.post');
+Route::get('/language/translations/landing', [LanguageController::class, 'getLandingPageTranslations'])->name('language.translations.landing');
+
+// Language demo page
+Route::get('/language-demo', function () {
+    return view('language-demo');
+})->name('language.demo');
+
+// Test route for debugging locale
+Route::get('/test-locale', function () {
+    \Log::info('TEST ROUTE EXECUTED - Before middleware check', [
+        'current_locale_before' => app()->getLocale(),
+        'lang_param' => request()->get('lang'),
+        'session_locale' => session()->get('locale'),
+        'timestamp' => now()->toDateTimeString(),
+        'session_id' => session()->getId(),
+        'middleware_stack' => request()->route() ? request()->route()->gatherMiddleware() : 'no route'
+    ]);
+    
+    // Test if session is working
+    session()->put('test_key', 'test_value_' . time());
+    
+    return response()->json([
+        'current_locale' => app()->getLocale(),
+        'lang_param' => request()->get('lang'),
+        'session_locale' => session()->get('locale'),
+        'supported_locales' => array_keys(config('app.supported_locales', [])),
+        'session_test' => session()->get('test_key'),
+        'session_id' => session()->getId(),
+        'middleware_applied' => request()->route() ? request()->route()->gatherMiddleware() : []
+    ]);
+})->middleware(['web', 'locale']);
 
 
 
@@ -146,7 +182,7 @@ Route::get('/fetch-service-categories', function () {
 // Authentication routes (these would normally be handled by Laravel Fortify or Laravel Breeze)
 Route::get('/login', function () {
     return view('auth.modern-login');
-})->name('login')->middleware('guest');
+})->name('login')->middleware(['web', 'guest']);
 
 Route::post('/login', function (\Illuminate\Http\Request $request) {
     // Enhanced debugging - log all request data
@@ -464,7 +500,7 @@ Route::get('/test-vendor-registration', function () {
 });
 
 // Registration routes
-Route::middleware('guest')->group(function () {
+Route::middleware(['web', 'guest'])->group(function () {
     Route::get('/register', [RegistrationController::class, 'showRegistrationChoice'])->name('register');
 
     // Vendor Registration - Vue.js Version

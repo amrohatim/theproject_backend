@@ -7,9 +7,9 @@
 @section('content')
 <div class="d-flex justify-content-between align-items-center mb-4">
     <div class="d-flex align-items-center">
-        <div style="width: 40px; height: 40px; background-color: var(--discord-primary); border-radius: 8px; display: flex; align-items: center; justify-content: center; margin-right: 15px;">
+        {{-- <div style="width: 40px; height: 40px; background-color: var(--discord-primary); border-radius: 8px; display: flex; align-items: center; justify-content: center; margin-right: 15px;">
             <i class="fas fa-box-open text-white"></i>
-        </div>
+        </div> --}}
         <div>
             <h4 class="mb-0">Product Inventory</h4>
             <p class="text-muted mb-0" style="font-size: 14px; color: var(--discord-light);">Manage your store products</p>

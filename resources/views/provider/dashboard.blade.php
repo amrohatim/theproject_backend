@@ -2,249 +2,259 @@
 
 @section('title', 'Dashboard')
 
-@section('header', 'Provider Dashboard')
+@section('styles')
+    <link rel="stylesheet" href="{{ asset('css/improved-dashboard.css') }}">
+@endsection
 
 @section('content')
-<!-- Modern Dashboard Container -->
-<div class="min-h-screen bg-gradient-to-br from-slate-50 to-gray-100 p-4 md:p-6 lg:p-8">
-    <div class="max-w-7xl mx-auto space-y-8">
+<div class="dashboard-container">
+    <div class="dashboard-header">
+        <h1>Provider Dashboard</h1>
+        <p>Welcome back! Here's an overview of your store performance.</p>
+    </div>
+    
+    @if(isset($message))
+    <div class="alert-message">
+        <div class="alert" style="background-color: var(--discord-darker); color: var(--discord-lightest); border-left: 4px solid var(--discord-primary);">
+            {{ $message }}
+        </div>
+    </div>
+    @endif
 
-        @if(isset($message))
-        <div class="bg-white border-l-4 border-l-blue-500 shadow-lg rounded-lg p-4">
-            <div class="flex items-center">
-                <div class="bg-blue-100 p-2 rounded-full mr-3">
-                    <i class="fas fa-info-circle text-blue-600"></i>
+    <!-- Statistics Cards -->
+    <div class="stats-grid">
+        <div class="stat-card">
+            <div class="stat-card-header">
+                <div class="stat-card-icon bg-primary-light">
+                    <i class="fas fa-box"></i>
                 </div>
-                <p class="text-gray-800 font-medium">{{ $message }}</p>
+                <p class="stat-card-title">Total Products</p>
+            </div>
+            <h2 class="stat-card-value">{{ $totalProducts }}</h2>
+            <div class="stat-card-comparison positive">
+                <i class="fas fa-arrow-up mr-1"></i> 12% from last month
             </div>
         </div>
-        @endif
-
-        <!-- Header Section -->
-        <header class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
-            <div>
-                <h1 class="text-3xl font-bold text-gray-900">Provider Dashboard</h1>
-                <p class="text-gray-600 mt-1">Welcome back! Here's what's happening with your store.</p>
-            </div>
-            <a href="{{ route('provider.provider-products.create') }}"
-               class="flex items-center bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white shadow-lg hover:shadow-xl transition-all duration-300 transform hover:scale-105 px-4 py-2 rounded-lg">
-                <span class="mr-2">＋</span>
-                Add New Product
-            </a>
-        </header>
-
-        <!-- Statistics Cards -->
-        <section class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-            <!-- Total Products -->
-            <div class="bg-white border-0 shadow-lg hover:shadow-xl transition-all duration-300 transform hover:scale-105 border-l-4 border-l-blue-500 rounded-lg">
-                <div class="p-6 flex items-center justify-between">
-                    <div>
-                        <p class="text-sm font-medium text-gray-600 uppercase tracking-wide">Total Products</p>
-                        <p class="text-3xl font-bold text-gray-900 mt-2">{{ $totalProducts }}</p>
-                    </div>
-                    <div class="bg-blue-100 p-3 rounded-full">
-                        <i class="fas fa-box text-blue-600 text-xl"></i>
-                    </div>
+        
+        <div class="stat-card">
+            <div class="stat-card-header">
+                <div class="stat-card-icon bg-secondary-light">
+                    <i class="fas fa-shopping-cart"></i>
                 </div>
+                <p class="stat-card-title">Total Orders</p>
             </div>
-
-            <!-- Total Orders -->
-            <div class="bg-white border-0 shadow-lg hover:shadow-xl transition-all duration-300 transform hover:scale-105 border-l-4 border-l-emerald-500 rounded-lg">
-                <div class="p-6 flex items-center justify-between">
-                    <div>
-                        <p class="text-sm font-medium text-gray-600 uppercase tracking-wide">Total Orders</p>
-                        <p class="text-3xl font-bold text-gray-900 mt-2">{{ $totalOrders }}</p>
-                    </div>
-                    <div class="bg-emerald-100 p-3 rounded-full">
-                        <i class="fas fa-shopping-cart text-emerald-600 text-xl"></i>
-                    </div>
-                </div>
+            <h2 class="stat-card-value">{{ $totalOrders }}</h2>
+            <div class="stat-card-comparison positive">
+                <i class="fas fa-arrow-up mr-1"></i> 8% from last month
             </div>
-
-            <!-- Revenue -->
-            <div class="bg-white border-0 shadow-lg hover:shadow-xl transition-all duration-300 transform hover:scale-105 border-l-4 border-l-yellow-500 rounded-lg">
-                <div class="p-6 flex items-center justify-between">
-                    <div>
-                        <p class="text-sm font-medium text-gray-600 uppercase tracking-wide">Revenue</p>
-                        <p class="text-3xl font-bold text-gray-900 mt-2">${{ isset($totalRevenue) ? number_format($totalRevenue, 2) : '0.00' }}</p>
-                    </div>
-                    <div class="bg-yellow-100 p-3 rounded-full">
-                        <i class="fas fa-dollar-sign text-yellow-600 text-xl"></i>
-                    </div>
+        </div>
+        
+        <div class="stat-card">
+            <div class="stat-card-header">
+                <div class="stat-card-icon bg-warning-light">
+                    <i class="fas fa-dollar-sign"></i>
                 </div>
+                <p class="stat-card-title">Revenue</p>
             </div>
-
-            <!-- Customers -->
-            <div class="bg-white border-0 shadow-lg hover:shadow-xl transition-all duration-300 transform hover:scale-105 border-l-4 border-l-red-500 rounded-lg">
-                <div class="p-6 flex items-center justify-between">
-                    <div>
-                        <p class="text-sm font-medium text-gray-600 uppercase tracking-wide">Customers</p>
-                        <p class="text-3xl font-bold text-gray-900 mt-2">{{ isset($totalCustomers) ? $totalCustomers : '0' }}</p>
-                    </div>
-                    <div class="bg-red-100 p-3 rounded-full">
-                        <i class="fas fa-users text-red-600 text-xl"></i>
-                    </div>
-                </div>
+            <h2 class="stat-card-value">${{ isset($totalRevenue) ? number_format($totalRevenue, 2) : '0.00' }}</h2>
+            <div class="stat-card-comparison positive">
+                <i class="fas fa-arrow-up mr-1"></i> 15% from last month
             </div>
-        </section>
-
-        <!-- Main Content Area -->
-        <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
-            <!-- Recent Products -->
-            <section class="bg-white border-0 shadow-lg hover:shadow-xl transition-all duration-300 rounded-lg">
-                <header class="p-6 pb-4 border-b border-gray-200">
-                    <div class="flex items-center justify-between">
-                        <h2 class="flex items-center text-gray-900 text-lg font-semibold">
-                            <i class="fas fa-box mr-2 text-blue-600"></i>
-                            Recent Products
-                        </h2>
-                        <a href="{{ route('provider.provider-products.index') }}"
-                           class="inline-flex items-center text-sm font-medium text-blue-600 hover:text-blue-800 hover:bg-blue-50 border border-blue-200 px-3 py-1 rounded-lg transition-all duration-200">
-                            <i class="fas fa-eye mr-1"></i> View All
-                        </a>
-                    </div>
-                </header>
-                <div class="p-6 space-y-4">
-                    @foreach($recentProducts as $product)
-                    <div class="flex items-center space-x-4 p-3 rounded-lg hover:bg-gray-50 transition-colors duration-200">
-                        @if($product->image)
-                            <img src="@providerProductImage($product->image)" alt="{{ $product->product_name }}"
-                                 class="w-12 h-12 rounded-lg object-cover">
-                        @else
-                            <div class="w-12 h-12 bg-gray-200 rounded-lg flex items-center justify-content-center">
-                                <i class="fas fa-image text-gray-400"></i>
-                            </div>
-                        @endif
-                        <div class="flex-1 min-w-0">
-                            <p class="text-sm font-medium text-gray-900 truncate">{{ $product->product_name }}</p>
-                            <p class="text-sm text-emerald-600 font-semibold">${{ number_format($product->price, 2) }}</p>
-                        </div>
-                        @if($product->is_active)
-                            <span class="bg-emerald-100 text-emerald-800 px-2 py-1 rounded-xl text-xs font-medium">Available</span>
-                        @else
-                            <span class="bg-red-100 text-red-800 px-2 py-1 rounded-xl text-xs font-medium">Unavailable</span>
-                        @endif
-                    </div>
-                    @endforeach
-
-                    @if(count($recentProducts) == 0)
-                    <div class="text-center py-8">
-                        <div class="bg-gray-100 rounded-full w-16 h-16 flex items-center justify-center mx-auto mb-4">
-                            <i class="fas fa-box-open text-gray-400 text-2xl"></i>
-                        </div>
-                        <p class="text-gray-500 mb-4">No products yet</p>
-                        <a href="{{ route('provider.provider-products.create') }}"
-                           class="inline-flex items-center bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg transition-colors duration-200">
-                            <i class="fas fa-plus mr-2"></i> Add Product
-                        </a>
-                    </div>
-                    @endif
+        </div>
+        
+        <div class="stat-card">
+            <div class="stat-card-header">
+                <div class="stat-card-icon bg-danger-light">
+                    <i class="fas fa-users"></i>
                 </div>
-            </section>
+                <p class="stat-card-title">Customers</p>
+            </div>
+            <h2 class="stat-card-value">{{ isset($totalCustomers) ? $totalCustomers : '0' }}</h2>
+            <div class="stat-card-comparison positive">
+                <i class="fas fa-arrow-up mr-1"></i> 5% from last month
+            </div>
+        </div>
+    </div>
 
-            <!-- Recent Orders -->
-            <section class="bg-white border-0 shadow-lg hover:shadow-xl transition-all duration-300 rounded-lg">
-                <header class="p-6 pb-4 border-b border-gray-200">
-                    <div class="flex items-center justify-between">
-                        <h2 class="flex items-center text-gray-900 text-lg font-semibold">
-                            <i class="fas fa-shopping-cart mr-2 text-emerald-600"></i>
-                            Recent Orders
-                        </h2>
-                        <a href="{{ route('provider.orders.index') }}"
-                           class="inline-flex items-center text-sm font-medium text-emerald-600 hover:text-emerald-800 hover:bg-emerald-50 border border-emerald-200 px-3 py-1 rounded-lg transition-all duration-200">
-                            <i class="fas fa-eye mr-1"></i> View All
-                        </a>
-                    </div>
-                </header>
-                <div class="p-6 space-y-4">
-                    @foreach($recentOrders as $order)
-                    <div class="flex items-center justify-between p-3 rounded-lg hover:bg-gray-50 transition-colors duration-200">
-                        <div class="flex-1">
-                            <div class="flex items-center space-x-4">
-                                <div>
-                                    <a href="{{ route('provider.orders.show', $order->id) }}"
-                                       class="text-sm font-medium text-blue-600 hover:text-blue-800">
-                                        {{ $order->order_number }}
+<!-- Main Content Sections -->
+<div class="row">
+    <!-- Recent Products -->
+    <div class="col-lg-6 mb-4">
+        <div class="content-section">
+            <div class="section-header">
+                <h3 class="section-title"><i class="fas fa-box me-2"></i> Recent Products</h3>
+                <a href="{{ route('provider.provider-products.index') }}" class="section-action">View All</a>
+            </div>
+            <div class="table-responsive">
+                <table class="modern-table">
+                    <thead>
+                        <tr>
+                            <th style="width: 60px;">Image</th>
+                            <th>Name</th>
+                            <th>Price</th>
+                            <th style="width: 100px;">Status</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach($recentProducts as $product)
+                        <tr>
+                            <td>
+                                @if($product->image)
+                                    <img src="@providerProductImage($product->image)" alt="{{ $product->product_name }}" width="40" height="40" class="rounded" style="object-fit: cover;">
+                                @else
+                                    <div class="empty-image-placeholder">
+                                        <i class="fas fa-image"></i>
+                                    </div>
+                                @endif
+                            </td>
+                            <td class="product-name">{{ $product->product_name }}</td>
+                            <td class="product-price">${{ number_format($product->price, 2) }}</td>
+                            <td>
+                                @if($product->is_active)
+                                <span class="status-badge status-available">Available</span>
+                                @else
+                                <span class="status-badge status-unavailable">Unavailable</span>
+                                @endif
+                            </td>
+                        </tr>
+                        @endforeach
+
+                        @if(count($recentProducts) == 0)
+                        <tr>
+                            <td colspan="4">
+                                <div class="empty-state">
+                                    <div class="empty-state-icon">
+                                        <i class="fas fa-box-open"></i>
+                                    </div>
+                                    <h4 class="empty-state-title">No products yet</h4>
+                                    <p class="empty-state-description">Start adding products to your store</p>
+                                    <a href="{{ route('provider.provider-products.create') }}" class="dashboard-btn btn-primary">
+                                        <i class="fas fa-plus me-1"></i> Add Product
                                     </a>
-                                    <p class="text-xs text-gray-500">{{ $order->created_at->format('M d, Y') }}</p>
                                 </div>
-                                <div>
-                                    <p class="text-sm font-medium text-gray-900">{{ $order->customer_name }}</p>
-                                    <p class="text-sm text-emerald-600 font-semibold">${{ number_format($order->total, 2) }}</p>
-                                </div>
-                            </div>
-                        </div>
-                        <div>
-                            @if($order->status == 'completed')
-                                <span class="bg-emerald-100 text-emerald-800 px-2 py-1 rounded-xl text-xs font-medium">Completed</span>
-                            @elseif($order->status == 'processing')
-                                <span class="bg-blue-100 text-blue-800 px-2 py-1 rounded-xl text-xs font-medium">Processing</span>
-                            @elseif($order->status == 'pending')
-                                <span class="bg-yellow-100 text-yellow-800 px-2 py-1 rounded-xl text-xs font-medium">Pending</span>
-                            @elseif($order->status == 'cancelled')
-                                <span class="bg-red-100 text-red-800 px-2 py-1 rounded-xl text-xs font-medium">Cancelled</span>
-                            @endif
-                        </div>
-                    </div>
-                    @endforeach
-
-                    @if(count($recentOrders) == 0)
-                    <div class="text-center py-8">
-                        <div class="bg-gray-100 rounded-full w-16 h-16 flex items-center justify-center mx-auto mb-4">
-                            <i class="fas fa-shopping-cart text-gray-400 text-2xl"></i>
-                        </div>
-                        <p class="text-gray-500">No orders yet</p>
-                    </div>
-                    @endif
-                </div>
-            </section>
+                            </td>
+                        </tr>
+                        @endif
+                    </tbody>
+                </table>
+            </div>
         </div>
+    </div>
 
-        <!-- Activity Overview -->
-        <section class="bg-gradient-to-r from-blue-600 to-purple-600 border-0 shadow-xl text-white rounded-lg">
-            <header class="p-6 border-b border-white/20 flex flex-col md:flex-row items-start md:items-center justify-between gap-4">
-                <div class="flex items-center gap-4">
-                    <div class="bg-white/20 p-3 rounded-xl">
-                        <i class="fas fa-rocket text-2xl"></i>
-                    </div>
-                    <div>
-                        <h3 class="text-xl font-semibold">Welcome to your Dashboard!</h3>
-                        <p class="text-blue-100">Manage your products, track orders, and grow your business</p>
-                    </div>
+    <!-- Recent Orders -->
+    <div class="col-lg-6 mb-4">
+        <div class="content-section">
+            <div class="section-header">
+                <h3 class="section-title"><i class="fas fa-shopping-cart me-2"></i> Recent Orders</h3>
+                <a href="{{ route('provider.orders.index') }}" class="section-action">View All</a>
+            </div>
+            <div class="table-responsive">
+                <table class="modern-table">
+                    <thead>
+                        <tr>
+                            <th>Order #</th>
+                            <th>Customer</th>
+                            <th>Total</th>
+                            <th>Status</th>
+                            <th>Date</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach($recentOrders as $order)
+                        <tr>
+                            <td>
+                                <a href="{{ route('provider.orders.show', $order->id) }}" class="order-link">
+                                    {{ $order->order_number }}
+                                </a>
+                            </td>
+                            <td class="customer-name">{{ $order->customer_name }}</td>
+                            <td class="order-total">${{ number_format($order->total, 2) }}</td>
+                            <td>
+                                @if($order->status == 'completed')
+                                <span class="status-badge status-completed">Completed</span>
+                                @elseif($order->status == 'processing')
+                                <span class="status-badge status-processing">Processing</span>
+                                @elseif($order->status == 'pending')
+                                <span class="status-badge status-pending">Pending</span>
+                                @elseif($order->status == 'cancelled')
+                                <span class="status-badge status-cancelled">Cancelled</span>
+                                @endif
+                            </td>
+                            <td>{{ $order->created_at->format('M d, Y') }}</td>
+                        </tr>
+                        @endforeach
+
+                        @if(count($recentOrders) == 0)
+                        <tr>
+                            <td colspan="5">
+                                <div class="empty-state">
+                                    <div class="empty-state-icon">
+                                        <i class="fas fa-shopping-cart"></i>
+                                    </div>
+                                    <h4 class="empty-state-title">No orders yet</h4>
+                                    <p class="empty-state-description">Orders will appear here once customers start purchasing</p>
+                                </div>
+                            </td>
+                        </tr>
+                        @endif
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Activity Overview -->
+<div class="row">
+    <div class="col-12 mb-4">
+        <div class="content-section">
+            <div class="section-header">
+                <h3 class="section-title"><i class="fas fa-chart-line me-2"></i> Store Activity</h3>
+            </div>
+            <div class="welcome-message">
+                <div class="welcome-icon">
+                    <i class="fas fa-rocket"></i>
                 </div>
-                <a href="{{ route('provider.provider-products.create') }}"
-                   class="inline-flex items-center bg-white text-blue-600 hover:bg-blue-50 shadow-lg hover:shadow-xl transition-all duration-300 transform hover:scale-105 px-4 py-2 rounded-lg">
-                    <span class="mr-2">＋</span>
-                    Add New Product
+                <div class="welcome-content">
+                    <h4>Welcome to your Dashboard!</h4>
+                    <p>Manage your products, track orders, and grow your business</p>
+                </div>
+                <a href="{{ route('provider.provider-products.create') }}" class="dashboard-btn btn-primary ms-auto">
+                    <i class="fas fa-plus me-1"></i> Add New Product
                 </a>
-            </header>
-            <div class="p-6 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-                <!-- Views -->
-                <div class="bg-white/10 backdrop-blur-sm rounded-xl p-6 text-center hover:bg-white/20 transition-all duration-300 transform hover:scale-105">
-                    <i class="fas fa-eye text-3xl mb-3"></i>
-                    <p class="text-2xl font-bold mb-1">{{ isset($totalViews) ? $totalViews : '0' }}</p>
-                    <p class="text-blue-100 text-sm">Product Views</p>
+            </div>
+
+            <div class="activity-grid">
+                <div class="activity-card">
+                    <div class="activity-icon bg-primary-light">
+                        <i class="fas fa-eye"></i>
+                    </div>
+                    <div class="activity-value">{{ isset($totalViews) ? $totalViews : '0' }}</div>
+                    <div class="activity-label">Product Views</div>
                 </div>
-                <!-- Conversion Rate -->
-                <div class="bg-white/10 backdrop-blur-sm rounded-xl p-6 text-center hover:bg-white/20 transition-all duration-300 transform hover:scale-105">
-                    <i class="fas fa-shopping-bag text-3xl mb-3"></i>
-                    <p class="text-2xl font-bold mb-1">{{ isset($conversionRate) ? $conversionRate : '0' }}%</p>
-                    <p class="text-blue-100 text-sm">Conversion Rate</p>
+                <div class="activity-card">
+                    <div class="activity-icon bg-success-light">
+                        <i class="fas fa-shopping-bag"></i>
+                    </div>
+                    <div class="activity-value">{{ isset($conversionRate) ? $conversionRate : '0' }}%</div>
+                    <div class="activity-label">Conversion Rate</div>
                 </div>
-                <!-- Avg Rating -->
-                <div class="bg-white/10 backdrop-blur-sm rounded-xl p-6 text-center hover:bg-white/20 transition-all duration-300 transform hover:scale-105">
-                    <i class="fas fa-star text-3xl mb-3"></i>
-                    <p class="text-2xl font-bold mb-1">{{ isset($avgRating) ? number_format($avgRating, 1) : '0.0' }}</p>
-                    <p class="text-blue-100 text-sm">Avg. Rating</p>
+                <div class="activity-card">
+                    <div class="activity-icon bg-warning-light">
+                        <i class="fas fa-star"></i>
+                    </div>
+                    <div class="activity-value">{{ isset($avgRating) ? number_format($avgRating, 1) : '0.0' }}</div>
+                    <div class="activity-label">Avg. Rating</div>
                 </div>
-                <!-- Return Rate -->
-                <div class="bg-white/10 backdrop-blur-sm rounded-xl p-6 text-center hover:bg-white/20 transition-all duration-300 transform hover:scale-105">
-                    <i class="fas fa-redo text-3xl mb-3"></i>
-                    <p class="text-2xl font-bold mb-1">{{ isset($returnRate) ? $returnRate : '0' }}%</p>
-                    <p class="text-blue-100 text-sm">Return Rate</p>
+                <div class="activity-card">
+                    <div class="activity-icon bg-danger-light">
+                        <i class="fas fa-redo"></i>
+                    </div>
+                    <div class="activity-value">{{ isset($returnRate) ? $returnRate : '0' }}%</div>
+                    <div class="activity-label">Return Rate</div>
                 </div>
             </div>
-        </section>
+        </div>
     </div>
 </div>
 @endsection

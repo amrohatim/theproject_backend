@@ -21,7 +21,7 @@
             /* Light theme color palette */
             --discord-primary: #5865F2;
             --discord-primary-hover: #4752c4;
-            --discord-dark: #f2f3f5;
+            --discord-dark: #fafdfdfd;
             --discord-darker: #ffffff;
             --discord-darkest: #e3e5e8;
             --discord-light: #747f8d;
@@ -592,9 +592,9 @@
 
         <!-- Main content area -->
         <div class="content-area">
-            <div class="content-header">
+            {{-- <div class="content-header">
                 <h1 class="content-header-title">@yield('header', 'Dashboard')</h1>
-            </div>
+            </div> --}}
 
             <div class="content-body">
                 @if(session('success'))

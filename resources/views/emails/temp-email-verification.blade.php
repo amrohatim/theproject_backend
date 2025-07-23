@@ -38,10 +38,13 @@
             font-weight: bold;
         }
         .logo.provider-logo {
-            background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+            background:linear-gradient(135deg, #8b5cf6 0%, #7c3aed 100%);
         }
         .logo.vendor-logo {
-            background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+            background: linear-gradient(135deg, #3b82f6 0%, #1d4ed8 100%);
+        }
+        .logo.merchant-logo {
+            background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%);
         }
         h1 {
             color: #2d3748;
@@ -54,7 +57,7 @@
             font-size: 16px;
         }
         .verification-code {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            background: linear-gradient(135deg, #3b82f6 0%, #1d4ed8 100%);
             color: white;
             font-size: 32px;
             font-weight: bold;
@@ -66,7 +69,10 @@
             font-family: 'Courier New', monospace;
         }
         .verification-code.provider-code {
-            background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+            background: linear-gradient(135deg, #8b5cf6 0%, #7c3aed 100%);
+        }
+        .verification-code.merchant-code {
+            background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%);
         }
         .instructions {
             background-color: #f7fafc;
@@ -114,7 +120,7 @@
     <div class="container">
         <!-- Header -->
         <div class="header">
-            <div class="logo {{ $userType === 'provider' ? 'provider-logo' : 'vendor-logo' }}">
+            <div class="logo {{ $userType === 'provider' ? 'provider-logo' : $userType === 'merchant' ? 'merchant-logo' : 'vendor-logo' }} justify-center items-center">
                 D3C
             </div>
             <h1>Email Verification</h1>
@@ -146,7 +152,7 @@
         </p>
 
         <!-- Verification Code -->
-        <div class="verification-code {{ $userType === 'provider' ? 'provider-code' : '' }}">
+        <div class="verification-code {{ $userType === 'provider' ? 'provider-code' : $userType === 'merchant' ? 'merchant-code' : '' }}">
             {{ $verificationCode }}
         </div>
 

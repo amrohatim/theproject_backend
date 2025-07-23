@@ -154,7 +154,7 @@
 @endsection
 
 @section('scripts')
-<script src="https://maps.googleapis.com/maps/api/js?key={{ env('GOOGLE_MAPS_API_KEY') }}&libraries=places&callback=initMap" async defer></script>
+<script src="https://maps.googleapis.com/maps/api/js?key={{ config('googlemaps.api_key') }}&libraries=places&callback=initMap" async defer></script>
 <script>
     // Global variables
     let map;
@@ -311,8 +311,8 @@
 
         // Generate a unique ID for the marker and initialize data
         marker.markerId = 'marker_' + Date.now() + '_' + Math.floor(Math.random() * 1000);
-        marker.markerLabel = '';
-        marker.markerEmirate = 'Dubai';
+        marker.locationLabel = '';
+        marker.locationEmirate = document.getElementById('emirate').value || 'Dubai';
 
         markers.push(marker);
 
@@ -330,26 +330,25 @@
             // Add event listeners after the info window is opened
             setTimeout(() => {
                 const removeButton = document.querySelector(`button.remove-marker[data-marker-id="${marker.markerId}"]`);
+                const labelInput = document.querySelector(`input.marker-label[data-marker-id="${marker.markerId}"]`);
+                const emirateSelect = document.querySelector(`select.marker-emirate[data-marker-id="${marker.markerId}"]`);
+
                 if (removeButton) {
                     removeButton.addEventListener('click', function() {
                         removeMarker(marker);
-                        infoWindow.close();
                     });
                 }
 
-                // Add event listeners for label and emirate inputs to save data to marker
-                const labelInput = document.querySelector('.marker-label');
-                const emirateSelect = document.querySelector('.marker-emirate');
-
+                // Add event listeners to update marker data when inputs change
                 if (labelInput) {
                     labelInput.addEventListener('input', function() {
-                        marker.markerLabel = this.value;
+                        marker.locationLabel = this.value;
                     });
                 }
 
                 if (emirateSelect) {
                     emirateSelect.addEventListener('change', function() {
-                        marker.markerEmirate = this.value;
+                        marker.locationEmirate = this.value;
                     });
                 }
             }, 100);
@@ -357,7 +356,10 @@
 
         // Update info window content when marker is dragged
         marker.addListener('dragend', function() {
-            infoWindow.setContent(createInfoWindowContent(marker, null));
+            infoWindow.setContent(createInfoWindowContent(marker, {
+                label: marker.locationLabel || '',
+                emirate: marker.locationEmirate || 'Dubai'
+            }));
         });
     }
 
@@ -380,8 +382,10 @@
         const position = marker.getPosition();
         const lat = position.lat();
         const lng = position.lng();
-        const label = locationData ? locationData.label : '';
-        const emirate = locationData ? locationData.emirate : document.getElementById('emirate').value;
+
+        // Use existing data if provided, otherwise use stored data on marker or defaults
+        const label = locationData ? locationData.label : (marker.locationLabel || '');
+        const emirate = locationData ? locationData.emirate : (marker.locationEmirate || document.getElementById('emirate').value || 'Dubai');
         const markerId = marker.markerId || 'marker_' + Date.now() + '_' + Math.floor(Math.random() * 1000);
 
         // If the marker doesn't have an ID yet, assign one
@@ -394,11 +398,11 @@
                 <h3 style="margin-top: 0;">Location Details</h3>
                 <div style="margin-bottom: 10px;">
                     <label style="display: block; margin-bottom: 5px;">Label:</label>
-                    <input type="text" class="marker-label" value="${label}" style="width: 100%; padding: 5px;">
+                    <input type="text" class="marker-label" data-marker-id="${marker.markerId}" value="${label}" style="width: 100%; padding: 5px;">
                 </div>
                 <div style="margin-bottom: 10px;">
                     <label style="display: block; margin-bottom: 5px;">Emirate:</label>
-                    <select class="marker-emirate" style="width: 100%; padding: 5px;">
+                    <select class="marker-emirate" data-marker-id="${marker.markerId}" style="width: 100%; padding: 5px;">
                         <option value="Dubai" ${emirate === 'Dubai' ? 'selected' : ''}>Dubai</option>
                         <option value="Abu Dhabi" ${emirate === 'Abu Dhabi' ? 'selected' : ''}>Abu Dhabi</option>
                         <option value="Sharjah" ${emirate === 'Sharjah' ? 'selected' : ''}>Sharjah</option>
@@ -436,11 +440,11 @@
                 animation: google.maps.Animation.DROP
             });
 
-            // Generate a unique ID for the marker and store initial data
+            // Generate a unique ID for the marker and store data
             marker.markerId = 'marker_' + Date.now() + '_' + Math.floor(Math.random() * 1000);
             marker.locationId = id;
-            marker.markerLabel = label;
-            marker.markerEmirate = emirate;
+            marker.locationLabel = label;
+            marker.locationEmirate = emirate;
             markers.push(marker);
 
             // Add info window for the marker
@@ -457,26 +461,25 @@
                 // Add event listeners after the info window is opened
                 setTimeout(() => {
                     const removeButton = document.querySelector(`button.remove-marker[data-marker-id="${marker.markerId}"]`);
+                    const labelInput = document.querySelector(`input.marker-label[data-marker-id="${marker.markerId}"]`);
+                    const emirateSelect = document.querySelector(`select.marker-emirate[data-marker-id="${marker.markerId}"]`);
+
                     if (removeButton) {
                         removeButton.addEventListener('click', function() {
                             removeMarker(marker);
-                            infoWindow.close();
                         });
                     }
 
-                    // Add event listeners for label and emirate inputs to save data to marker
-                    const labelInput = document.querySelector('.marker-label');
-                    const emirateSelect = document.querySelector('.marker-emirate');
-
+                    // Add event listeners to update marker data when inputs change
                     if (labelInput) {
                         labelInput.addEventListener('input', function() {
-                            marker.markerLabel = this.value;
+                            marker.locationLabel = this.value;
                         });
                     }
 
                     if (emirateSelect) {
                         emirateSelect.addEventListener('change', function() {
-                            marker.markerEmirate = this.value;
+                            marker.locationEmirate = this.value;
                         });
                     }
                 }, 100);
@@ -484,7 +487,10 @@
 
             // Update info window content when marker is dragged
             marker.addListener('dragend', function() {
-                infoWindow.setContent(createInfoWindowContent(marker, { label, emirate }));
+                infoWindow.setContent(createInfoWindowContent(marker, {
+                    label: marker.locationLabel || '',
+                    emirate: marker.locationEmirate || 'Dubai'
+                }));
             });
         });
     }
@@ -500,9 +506,23 @@
 
             const position = marker.getPosition();
 
-            // Get label and emirate from marker's stored data or defaults
-            let label = marker.markerLabel || '';
-            let emirate = marker.markerEmirate || 'Dubai';
+            // Get label and emirate from stored marker data
+            let label = marker.locationLabel || '';
+            let emirate = marker.locationEmirate || 'Dubai';
+
+            // If the info window is currently open, get the current values from the inputs
+            const currentLabelInput = document.querySelector(`input.marker-label[data-marker-id="${marker.markerId}"]`);
+            const currentEmirateSelect = document.querySelector(`select.marker-emirate[data-marker-id="${marker.markerId}"]`);
+
+            if (currentLabelInput) {
+                label = currentLabelInput.value;
+                marker.locationLabel = label; // Update stored value
+            }
+
+            if (currentEmirateSelect) {
+                emirate = currentEmirateSelect.value;
+                marker.locationEmirate = emirate; // Update stored value
+            }
 
             locationsData.push({
                 id: marker.locationId || null,

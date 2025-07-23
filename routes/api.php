@@ -24,6 +24,7 @@ use App\Http\Controllers\API\VendorRegistrationController;
 use App\Http\Controllers\API\ProviderRegistrationController;
 use App\Http\Controllers\API\MerchantRegistrationController;
 use App\Http\Controllers\API\EmailVerificationController;
+use App\Http\Controllers\LanguageController;
 
 /*
 |--------------------------------------------------------------------------
@@ -44,6 +45,17 @@ Route::get('/health-check', function () {
         'timestamp' => now(),
         'version' => '1.0.0'
     ]);
+});
+
+// Language routes (public)
+Route::prefix('language')->group(function () {
+    Route::get('/supported', [LanguageController::class, 'getSupportedLanguages']);
+    Route::post('/switch', [LanguageController::class, 'switchLanguage']);
+    Route::get('/current', [LanguageController::class, 'getCurrentLanguage']);
+    Route::get('/rtl-info', [LanguageController::class, 'getRtlInfo']);
+    Route::get('/switcher-data', [LanguageController::class, 'getLanguageSwitcherData']);
+    Route::post('/format-number', [LanguageController::class, 'formatNumber']);
+    Route::post('/convert-to-arabic-numbers', [LanguageController::class, 'convertToArabicNumbers']);
 });
 
 // Public routes (no authentication required)

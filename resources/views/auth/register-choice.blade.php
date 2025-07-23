@@ -1,9 +1,10 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="{{ app()->getLocale() }}" dir="{{ app()->getLocale() === 'ar' ? 'rtl' : 'ltr' }}">
 <head>
     <meta charset="utf-8"/>
     <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
-    <title>Choose Registration Type - {{ config('app.name') }}</title>
+    <meta name="csrf-token" content="{{ csrf_token() }}">
+    <title>{{ __('messages.choose_registration_type') }} - {{ config('app.name') }}</title>
 
     <!-- Preconnect to external domains -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -18,6 +19,8 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet"/>
 
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
 
@@ -381,23 +384,35 @@
                 </div>
 
                 <div class="hidden md:flex items-center space-x-8">
-                    <a href="{{ url('/') }}#features" class="text-gray-600 hover:text-gray-800 transition-colors">Features</a>
-                    <a href="{{ url('/') }}#about" class="text-gray-600 hover:text-gray-800 transition-colors">About</a>
-                    <a href="{{ url('/') }}#contact" class="text-gray-600 hover:text-gray-800 transition-colors">Contact</a>
+                    <a href="{{ url('/') }}#features" class="text-gray-600 hover:text-gray-800 transition-colors">{{ __('messages.services') }}</a>
+                    <a href="{{ url('/') }}#about" class="text-gray-600 hover:text-gray-800 transition-colors">{{ __('messages.about') }}</a>
+                    <a href="{{ url('/') }}#contact" class="text-gray-600 hover:text-gray-800 transition-colors">{{ __('messages.contact') }}</a>
+
+                    <!-- Language Switcher -->
+                    <div class="language-switcher flex items-center space-x-2">
+                        <button onclick="switchLanguage('en')" class="lang-btn text-gray-600 hover:text-gray-800 transition-colors px-2 py-1 rounded {{ app()->getLocale() === 'en' ? 'bg-gray-200 font-semibold' : '' }}" data-lang="en">
+                            EN
+                        </button>
+                        <span class="text-gray-400">|</span>
+                        <button onclick="switchLanguage('ar')" class="lang-btn text-gray-600 hover:text-gray-800 transition-colors px-2 py-1 rounded {{ app()->getLocale() === 'ar' ? 'bg-gray-200 font-semibold' : '' }}" data-lang="ar">
+                            AR
+                        </button>
+                    </div>
+
                     @auth
                         @if(auth()->user()->role === 'vendor')
-                            <a href="{{ route('vendor.dashboard') }}" class="btn-secondary-light">Dashboard</a>
+                            <a href="{{ route('vendor.dashboard') }}" class="btn-secondary-light">{{ __('messages.dashboard') }}</a>
                         @elseif(auth()->user()->role === 'provider')
-                            <a href="{{ route('provider.dashboard') }}" class="btn-secondary-light">Dashboard</a>
+                            <a href="{{ route('provider.dashboard') }}" class="btn-secondary-light">{{ __('messages.dashboard') }}</a>
                         @elseif(auth()->user()->role === 'merchant')
-                            <a href="{{ route('merchant.dashboard') }}" class="btn-secondary-light">Dashboard</a>
+                            <a href="{{ route('merchant.dashboard') }}" class="btn-secondary-light">{{ __('messages.dashboard') }}</a>
                         @elseif(auth()->user()->role === 'admin')
-                            <a href="{{ route('admin.dashboard') }}" class="btn-secondary-light">Dashboard</a>
+                            <a href="{{ route('admin.dashboard') }}" class="btn-secondary-light">{{ __('messages.dashboard') }}</a>
                         @else
-                            <a href="{{ route('login') }}" class="btn-secondary-light">Login</a>
+                            <a href="{{ route('login') }}" class="btn-secondary-light">{{ __('messages.login') }}</a>
                         @endif
                     @else
-                        <a href="{{ route('login') }}" class="btn-secondary-light">Login</a>
+                        <a href="{{ route('login') }}" class="btn-secondary-light">{{ __('messages.login') }}</a>
                     @endauth
                 </div>
 
@@ -410,32 +425,43 @@
         <!-- Mobile Menu -->
         <div class="mobile-menu md:hidden bg-white/95 backdrop-blur-md border-t border-gray-200">
             <div class="px-4 py-4 space-y-3">
-                <a href="{{ url('/') }}#features" class="block text-gray-600 hover:text-gray-800 transition-colors">Features</a>
-                <a href="{{ url('/') }}#about" class="block text-gray-600 hover:text-gray-800 transition-colors">About</a>
-                <a href="{{ url('/') }}#contact" class="block text-gray-600 hover:text-gray-800 transition-colors">Contact</a>
+                <a href="{{ url('/') }}#features" class="block text-gray-600 hover:text-gray-800 transition-colors">{{ __('messages.services') }}</a>
+                <a href="{{ url('/') }}#about" class="block text-gray-600 hover:text-gray-800 transition-colors">{{ __('messages.about') }}</a>
+                <a href="{{ url('/') }}#contact" class="block text-gray-600 hover:text-gray-800 transition-colors">{{ __('messages.contact') }}</a>
+
+                <!-- Mobile Language Switcher -->
+                <div class="language-switcher flex items-center justify-center space-x-4 py-2">
+                    <button onclick="switchLanguage('en')" class="lang-btn text-gray-600 hover:text-gray-800 transition-colors px-3 py-1 rounded border border-gray-300 {{ app()->getLocale() === 'en' ? 'bg-gray-200 font-semibold' : '' }}" data-lang="en">
+                        {{ __('messages.english') }}
+                    </button>
+                    <button onclick="switchLanguage('ar')" class="lang-btn text-gray-600 hover:text-gray-800 transition-colors px-3 py-1 rounded border border-gray-300 {{ app()->getLocale() === 'ar' ? 'bg-gray-200 font-semibold' : '' }}" data-lang="ar">
+                        {{ __('messages.arabic') }}
+                    </button>
+                </div>
+
                 @auth
                     @if(auth()->user()->role === 'vendor')
-                        <a href="{{ route('vendor.dashboard') }}" class="block btn-secondary-light text-center">Dashboard</a>
+                        <a href="{{ route('vendor.dashboard') }}" class="block btn-secondary-light text-center">{{ __('messages.dashboard') }}</a>
                     @elseif(auth()->user()->role === 'provider')
-                        <a href="{{ route('provider.dashboard') }}" class="block btn-secondary-light text-center">Dashboard</a>
+                        <a href="{{ route('provider.dashboard') }}" class="block btn-secondary-light text-center">{{ __('messages.dashboard') }}</a>
                     @elseif(auth()->user()->role === 'merchant')
-                        <a href="{{ route('merchant.dashboard') }}" class="block btn-secondary-light text-center">Dashboard</a>
+                        <a href="{{ route('merchant.dashboard') }}" class="block btn-secondary-light text-center">{{ __('messages.dashboard') }}</a>
                     @elseif(auth()->user()->role === 'admin')
-                        <a href="{{ route('admin.dashboard') }}" class="block btn-secondary-light text-center">Dashboard</a>
+                        <a href="{{ route('admin.dashboard') }}" class="block btn-secondary-light text-center">{{ __('messages.dashboard') }}</a>
                     @else
-                        <a href="{{ route('login') }}" class="block btn-secondary-light text-center">Login</a>
+                        <a href="{{ route('login') }}" class="block btn-secondary-light text-center">{{ __('messages.login') }}</a>
                     @endif
                 @else
-                    <a href="{{ route('login') }}" class="block btn-secondary-light text-center">Login</a>
+                    <a href="{{ route('login') }}" class="block btn-secondary-light text-center">{{ __('messages.login') }}</a>
                 @endauth
             </div>
         </div>
     </nav>
 
     <div class="container mx-auto px-4 py-8 pt-24">
-        <header class="text-left mb-12">
-            <h1 class="text-4xl font-bold text-gray-800 mb-4">Choose Registration Type</h1>
-            <p class="text-lg font-semibold text-gray-900 max-w-3xl text-left">Whether you're selling products or supplying to vendors, we have the perfect solution for you.</p>
+        <header class="mb-12 {{ app()->getLocale() === 'ar' ? 'text-right' : 'text-left' }}">
+            <h1 class="text-4xl font-bold text-gray-800 mb-4">{{ __('messages.choose_registration_type') }}</h1>
+            <p class="text-lg font-semibold text-gray-900 max-w-3xl {{ app()->getLocale() === 'ar' ? 'text-right' : 'text-left' }}">{{ __('messages.registration_type_desc') }}</p>
         </header>
 
         <main class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
@@ -451,30 +477,30 @@
 
                 <!-- Content Section with text overlay -->
                 <div class="card-content-modern">
-                    <h2 class="card-title-modern">Vendor Registration</h2>
-                    <p class="card-subtitle-modern">Perfect for businesses selling physical products and managing inventory.</p>
+                    <h2 class="card-title-modern">{{ __('messages.vendor_registration') }}</h2>
+                    <p class="card-subtitle-modern">{{ __('messages.vendor_registration_desc') }}</p>
 
                     <ul class="feature-list-modern">
                         <li class="feature-item-modern">
                             <span class="material-icons feature-icon-modern">check_circle</span>
-                            <span class="feature-text-modern">Product catalog management</span>
+                            <span class="feature-text-modern">{{ __('messages.product_catalog_management') }}</span>
                         </li>
                         <li class="feature-item-modern">
                             <span class="material-icons feature-icon-modern">check_circle</span>
-                            <span class="feature-text-modern">Inventory tracking & analytics</span>
+                            <span class="feature-text-modern">{{ __('messages.inventory_tracking_analytics') }}</span>
                         </li>
                         <li class="feature-item-modern">
                             <span class="material-icons feature-icon-modern">check_circle</span>
-                            <span class="feature-text-modern">Order management system</span>
+                            <span class="feature-text-modern">{{ __('messages.order_management_system') }}</span>
                         </li>
                         <li class="feature-item-modern">
                             <span class="material-icons feature-icon-modern">check_circle</span>
-                            <span class="feature-text-modern">Multi-channel delivery options</span>
+                            <span class="feature-text-modern">{{ __('messages.multi_channel_delivery') }}</span>
                         </li>
                     </ul>
 
                     <button class="modern-button vendor-button">
-                        <span>Register as Vendor</span>
+                        <span>{{ __('messages.register_as_vendor') }}</span>
                     </button>
                 </div>
             </div>
@@ -491,30 +517,30 @@
 
                 <!-- Content Section with text overlay -->
                 <div class="card-content-modern">
-                    <h2 class="card-title-modern">Provider Registration</h2>
-                    <p class="card-subtitle-modern">Perfect for suppliers providing wholesale products to vendors.</p>
+                    <h2 class="card-title-modern">{{ __('messages.provider_registration') }}</h2>
+                    <p class="card-subtitle-modern">{{ __('messages.provider_registration_desc') }}</p>
 
                     <ul class="feature-list-modern">
                         <li class="feature-item-modern">
                             <span class="material-icons feature-icon-modern">check_circle</span>
-                            <span class="feature-text-modern">Wholesale product catalog</span>
+                            <span class="feature-text-modern">{{ __('messages.wholesale_product_catalog') }}</span>
                         </li>
                         <li class="feature-item-modern">
                             <span class="material-icons feature-icon-modern">check_circle</span>
-                            <span class="feature-text-modern">Bulk order management</span>
+                            <span class="feature-text-modern">{{ __('messages.bulk_order_management') }}</span>
                         </li>
                         <li class="feature-item-modern">
                             <span class="material-icons feature-icon-modern">check_circle</span>
-                            <span class="feature-text-modern">Vendor relationship management</span>
+                            <span class="feature-text-modern">{{ __('messages.vendor_relationship_management') }}</span>
                         </li>
                         <li class="feature-item-modern">
                             <span class="material-icons feature-icon-modern">check_circle</span>
-                            <span class="feature-text-modern">Supply chain tracking</span>
+                            <span class="feature-text-modern">{{ __('messages.supply_chain_tracking') }}</span>
                         </li>
                     </ul>
 
                     <button class="modern-button provider-button">
-                        <span>Register as Provider</span>
+                        <span>{{ __('messages.register_as_provider') }}</span>
                     </button>
                 </div>
             </div>
@@ -531,30 +557,30 @@
 
                 <!-- Content Section with text overlay -->
                 <div class="card-content-modern">
-                    <h2 class="card-title-modern">Merchant Registration</h2>
-                    <p class="card-subtitle-modern">Perfect for individual women merchants and small business owners.</p>
+                    <h2 class="card-title-modern">{{ __('messages.merchant_registration') }}</h2>
+                    <p class="card-subtitle-modern">{{ __('messages.merchant_registration_desc') }}</p>
 
                     <ul class="feature-list-modern">
                         <li class="feature-item-modern">
                             <span class="material-icons feature-icon-modern">check_circle</span>
-                            <span class="feature-text-modern">Individual business setup</span>
+                            <span class="feature-text-modern">{{ __('messages.individual_business_setup') }}</span>
                         </li>
                         <li class="feature-item-modern">
                             <span class="material-icons feature-icon-modern">check_circle</span>
-                            <span class="feature-text-modern">Direct customer sales</span>
+                            <span class="feature-text-modern">{{ __('messages.direct_customer_sales') }}</span>
                         </li>
                         <li class="feature-item-modern">
                             <span class="material-icons feature-icon-modern">check_circle</span>
-                            <span class="feature-text-modern">Flexible delivery options</span>
+                            <span class="feature-text-modern">{{ __('messages.flexible_delivery_options') }}</span>
                         </li>
                         <li class="feature-item-modern">
                             <span class="material-icons feature-icon-modern">check_circle</span>
-                            <span class="feature-text-modern">Small store management</span>
+                            <span class="feature-text-modern">{{ __('messages.small_store_management') }}</span>
                         </li>
                     </ul>
 
                     <button class="modern-button merchant-button">
-                        <span>Register as Merchant</span>
+                        <span>{{ __('messages.register_as_merchant') }}</span>
                     </button>
                 </div>
             </div>
@@ -577,6 +603,56 @@
                     window.location.href = '{{ route("register.merchant") }}';
                 }
             }, 300);
+        }
+
+        // Language switching functionality
+        function switchLanguage(locale) {
+            // Show loading state
+            const buttons = document.querySelectorAll('.lang-btn');
+            buttons.forEach(btn => {
+                if (btn.dataset.lang === locale) {
+                    btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i>';
+                    btn.disabled = true;
+                }
+            });
+
+            // Make AJAX request to switch language
+            fetch('{{ route('language.switch.post') }}', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
+                },
+                body: JSON.stringify({ locale: locale })
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    // Store language preference
+                    localStorage.setItem('language', locale);
+                    // Reload page to apply new language
+                    window.location.reload();
+                } else {
+                    console.error('Language switch failed:', data.message);
+                    // Restore button state
+                    buttons.forEach(btn => {
+                        if (btn.dataset.lang === locale) {
+                            btn.innerHTML = locale.toUpperCase();
+                            btn.disabled = false;
+                        }
+                    });
+                }
+            })
+            .catch(error => {
+                console.error('Error switching language:', error);
+                // Restore button state
+                buttons.forEach(btn => {
+                    if (btn.dataset.lang === locale) {
+                        btn.innerHTML = locale.toUpperCase();
+                        btn.disabled = false;
+                    }
+                });
+            });
         }
 
         // Mobile Menu functionality
@@ -604,5 +680,8 @@
             }
         });
     </script>
+
+    <!-- Bootstrap JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>
