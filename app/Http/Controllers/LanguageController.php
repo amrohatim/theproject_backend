@@ -100,7 +100,7 @@ class LanguageController extends Controller
         $message = __('messages.language') . ' ' . __('messages.updated');
         
         // Redirect back to the previous page or home
-        $redirectUrl = $request->header('referer', route('home', [], false));
+        $redirectUrl = $request->header('referer', url('/'));
         
         // Remove any existing lang parameter from the URL
         $redirectUrl = preg_replace('/[?&]lang=[^&]*/', '', $redirectUrl);

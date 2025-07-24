@@ -452,26 +452,152 @@ return [
     // Registration Choice Page
     'choose_registration_type' => 'اختر نوع التسجيل',
     'registration_type_desc' => 'سواء كنت تبيع المنتجات أو تزود البائعين، لدينا الحل المثالي لك.',
-    'vendor_registration' => 'تسجيل البائع',
+    'vendor_registration' => 'تسجيل البائعة',
     'vendor_registration_desc' => 'مثالي للشركات التي تبيع المنتجات المادية وتدير المخزون.',
     'product_catalog_management' => 'إدارة كتالوج المنتجات',
     'inventory_tracking_analytics' => 'تتبع المخزون والتحليلات',
     'order_management_system' => 'نظام إدارة الطلبات',
     'multi_channel_delivery' => 'خيارات التوصيل متعددة القنوات',
-    'register_as_vendor' => 'سجل كبائع',
-    'provider_registration' => 'تسجيل المزود',
+    'register_as_vendor' => 'سجل كبائعة',
+    'provider_registration' => 'تسجيل المزودة',
     'provider_registration_desc' => 'مثالي للموردين الذين يقدمون منتجات بالجملة للبائعين.',
     'wholesale_product_catalog' => 'كتالوج منتجات الجملة',
     'bulk_order_management' => 'إدارة الطلبات بالجملة',
     'vendor_relationship_management' => 'إدارة علاقات البائعين',
     'supply_chain_tracking' => 'تتبع سلسلة التوريد',
-    'register_as_provider' => 'سجل كمقدم خدمة',
-    'merchant_registration' => 'تسجيل التاجر',
+    'register_as_provider' => 'سجل كمزودة',
+    'merchant_registration' => 'تسجيل التاجرة',
     'merchant_registration_desc' => 'مثالي للتاجرات الفرديات وأصحاب الأعمال الصغيرة.',
     'individual_business_setup' => 'إعداد الأعمال الفردية',
     'direct_customer_sales' => 'مبيعات مباشرة للعملاء',
     'flexible_delivery_options' => 'خيارات توصيل مرنة',
     'small_store_management' => 'إدارة المتجر الصغير',
-    'register_as_merchant' => 'سجل كتاجر',
+    'register_as_merchant' => 'سجل كتاجرة',
+
+    // Registration Form Labels and Fields
+    'personal_info' => 'المعلومات الشخصية',
+    'email_verification' => 'التحقق من البريد الإلكتروني',
+    'phone_verification' => 'التحقق من الهاتف',
+    'company_info' => 'معلومات الشركة',
+    'business_info' => 'معلومات العمل',
+    'license_upload' => 'رفع الترخيص',
+    'full_name' => 'الاسم الكامل',
+    'enter_full_name' => 'أدخل اسمك الكامل',
+    'phone_number' => 'رقم الهاتف',
+    'enter_phone_number' => 'أدخل رقم هاتفك',
+    'confirm_password' => 'تأكيد كلمة المرور',
+    'enter_confirm_password' => 'أدخل تأكيد كلمة المرور',
+    'company_name' => 'اسم الشركة',
+    'business_name' => 'اسم العمل',
+    'enter_business_name' => 'أدخل اسم عملك',
+    'enter_company_name' => 'أدخل اسم الشركة',
+    'supplier_name' => 'اسم المورد',
+    'enter_supplier_name' => 'أدخل اسم المورد',
+
+    // Step Descriptions
+    'basic_information' => 'المعلومات الأساسية',
+    'verify_your_email' => 'تحقق من بريدك الإلكتروني',
+    'verify_your_phone' => 'تحقق من هاتفك',
+    'business_details' => 'تفاصيل العمل',
+    'upload_documents' => 'رفع المستندات',
+
+    // Buttons and Actions
+    'continue_to_email_verification' => 'متابعة إلى التحقق من البريد الإلكتروني',
+    'continue_to_phone_verification' => 'متابعة إلى التحقق من الهاتف',
+    'continue_to_company_info' => 'متابعة إلى معلومات الشركة',
+    'continue_to_license_upload' => 'متابعة إلى رفع الترخيص',
+    'verify_email' => 'تحقق من البريد الإلكتروني',
+    'verify_phone' => 'تحقق من الهاتف',
+    'resend_code' => 'إعادة إرسال الرمز',
+    'resend_otp' => 'إعادة إرسال رمز التحقق',
+    'complete_registration' => 'إكمال التسجيل',
+    'saving' => 'جاري الحفظ...',
+
+    // Verification Messages
+    'verification_code_sent' => 'تم إرسال رمز التحقق إلى',
+    'enter_verification_code' => 'أدخل رمز التحقق',
+    'enter_6_digit_code' => 'أدخل الرمز المكون من 6 أرقام',
+    'check_email_for_code' => 'تحقق من بريدك الإلكتروني للحصول على الرمز',
+    'check_phone_for_code' => 'تحقق من هاتفك للحصول على الرمز',
+    'verification_code' => 'رمز التحقق',
+    'otp_code' => 'رمز التحقق',
+
+    // Help Messages
+    'check_spam_folder' => 'تحقق من مجلد الرسائل غير المرغوب فيها إذا لم تجد البريد الإلكتروني',
+    'code_expires_in_10_minutes' => 'ينتهي صلاحية الرمز خلال 10 دقائق',
+    'make_sure_phone_receives_sms' => 'تأكد من أن هاتفك يمكنه استقبال رسائل SMS',
+
+    // File Upload
+    'upload_business_license' => 'رفع ترخيص العمل',
+    'business_license_pdf' => 'ترخيص العمل (PDF)',
+    'drop_license_here' => 'اسحب ترخيصك هنا أو انقر للتصفح',
+    'pdf_files_only' => 'ملفات PDF فقط، حد أقصى 10 ميجابايت',
+    'license_start_date' => 'تاريخ بداية الترخيص',
+    'license_end_date' => 'تاريخ انتهاء الترخيص',
+    'notes' => 'ملاحظات',
+    'optional_notes' => 'ملاحظات اختيارية',
+
+    // Info Messages
+    'license_reviewed_24_48_hours' => 'سيتم مراجعة ترخيصك خلال 24-48 ساعة',
+    'documents_securely_stored' => 'جميع المستندات مشفرة ومحفوظة بأمان',
+    'email_confirmation_once_approved' => 'ستتلقى تأكيد بالبريد الإلكتروني بمجرد الموافقة',
+
+    // Validation Messages
+    'field_required' => 'هذا الحقل مطلوب',
+    'invalid_email_format' => 'يرجى إدخال عنوان بريد إلكتروني صحيح',
+    'password_min_8_characters' => 'كلمة المرور يجب أن تكون 8 أحرف على الأقل',
+    'passwords_do_not_match' => 'كلمات المرور غير متطابقة',
+    'invalid_phone_format' => 'تنسيق رقم الهاتف غير صحيح',
+    'file_too_large' => 'حجم الملف كبير جداً',
+    'invalid_file_type' => 'نوع الملف غير صحيح',
+    'pdf_files_only_message' => 'ملفات PDF فقط مسموحة',
+
+    // Additional registration form translations
+    'already_have_account' => 'هل لديك حساب بالفعل؟',
+    'join_merchant_community' => 'انضم إلى مجتمع التجار لدينا',
+
+    // Provider Registration Form
+    'company_supplier_name' => 'اسم الشركة/المورد',
+    'enter_company_supplier_name' => 'أدخل اسم شركتك أو المورد',
+    'account_created' => 'تم إنشاء الحساب!',
+    'provider_registration_submitted' => 'تم تقديم تسجيل مقدم الخدمة للمراجعة. ستتلقى رسالة تأكيد بالبريد الإلكتروني قريباً.',
+    'continue_to_login' => 'متابعة إلى تسجيل الدخول',
+    'registration_failed_try_again' => 'فشل التسجيل. يرجى المحاولة مرة أخرى.',
+    'creating_account' => 'جاري إنشاء الحساب...',
+    'create_vendor_account' => 'إنشاء حساب بائع',
+    'create_provider_account' => 'إنشاء حساب مقدم خدمة',
+
+    // Vue Component Step Names
+    'personal_information' => 'المعلومات الشخصية',
+    'provide_personal_details' => 'يرجى تقديم تفاصيلك الشخصية للبدء.',
+    'enter_your_full_name' => 'أدخل اسمك الكامل',
+
+    // Marketing Content
+    'join_our_merchant_community' => 'انضم إلى مجتمع التجار لدينا',
+    'grow_your_sales' => 'نمي مبيعاتك',
+    'expand_your_business' => 'وسع نشاطك التجاري',
+    'reach_more_customers' => 'اوصل إلى المزيد من العملاء',
+    'grow_your_business' => 'نمي عملك',
+    'access_large_vendors_base' => 'الوصول إلى قاعدة كبيرة من البائعين وزيادة مبيعاتك',
+    'professional_tools' => 'أدوات احترافية',
+    'easy_dashboard_management' => 'لوحة تحكم سهلة الاستخدام لإدارة طلباتك ومنتجاتك',
+    'dedicated_support' => 'دعم مخصص',
+    'team_help_succeed' => 'فريقنا هنا لمساعدتك على النجاح في منصتنا',
+
+    // Provider Form Fields (removing duplicates)
+    'company_logo_optional' => 'شعار الشركة (اختياري)',
+    'click_upload_drag_drop' => 'انقر للرفع أو اسحب وأفلت',
+    'png_jpg_gif_5mb' => 'PNG، JPG، GIF حتى 5 ميجابايت',
+    'delivery_service_configuration' => 'إعداد خدمة التوصيل',
+    'i_provide_delivery_services' => 'أقدم خدمات التوصيل',
+    'description_optional' => 'الوصف (اختياري)',
+
+    // Marketing Content for Provider Registration
+    'grow_your_business_title' => 'نمي عملك',
+    'grow_your_business_desc' => 'الوصول إلى قاعدة كبيرة من البائعين وزيادة مبيعاتك',
+    'professional_tools_title' => 'أدوات احترافية',
+    'professional_tools_desc' => 'لوحة تحكم سهلة الاستخدام لإدارة طلباتك ومنتجاتك',
+    'dedicated_support_title' => 'دعم مخصص',
+    'dedicated_support_desc' => 'فريقنا هنا لمساعدتك على النجاح في منصتنا',
 
 ];

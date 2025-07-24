@@ -1,15 +1,15 @@
 <template>
   <div>
     <div class="mb-6">
-      <h2 class="text-2xl font-bold text-gray-900 mb-2">Personal Information</h2>
-      <p class="text-gray-600">Please provide your personal details to get started.</p>
+      <h2 class="text-2xl font-bold text-gray-900 mb-2">{{ $t('personal_information') }}</h2>
+      <p class="text-gray-600">{{ $t('provide_personal_details') }}</p>
     </div>
 
     <form @submit.prevent="handleSubmit" class="space-y-6">
       <!-- Full Name -->
       <div>
         <label for="name" class="block text-sm font-medium text-gray-700 mb-2">
-          Full Name <span class="text-red-500">*</span>
+          {{ $t('full_name') }} <span class="text-red-500">*</span>
         </label>
         <input
           id="name"
@@ -17,7 +17,7 @@
           type="text"
           required
           class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors"
-          placeholder="Enter your full name"
+          :placeholder="$t('enter_your_full_name')"
           :disabled="loading"
         />
         <div v-if="errors.name" class="mt-1 text-sm text-red-600">
@@ -214,6 +214,10 @@ export default {
     },
   },
   methods: {
+    // Translation method
+    $t(key) {
+      return window.appTranslations && window.appTranslations[key] ? window.appTranslations[key] : key;
+    },
     handleSubmit() {
       if (this.isFormValid) {
         this.errors = {};

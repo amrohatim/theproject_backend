@@ -701,14 +701,14 @@ export default {
       const category = newSize.category || 'clothes'
       return Object.keys(sizeOptions.value[category] || {}).map(key => ({
         value: key,
-        label: category === 'clothes' ? `${key} (${sizeOptions.value[category][key]})` : `${key} (${sizeOptions.value[category][key]})`
+        label: (category === 'clothes') ? `${key} (${sizeOptions.value[category][key]})` : `${key} (${sizeOptions.value[category][key]})`
       }))
     })
 
     const getSizeNameOptionsForEdit = (category) => {
       return Object.keys(sizeOptions.value[category] || {}).map(key => ({
         value: key,
-        label: category === 'clothes' ? `${key} (${sizeOptions.value[category][key]})` : `${key} (${sizeOptions.value[category][key]})`
+        label: (category === 'clothes') ? `${key} (${sizeOptions.value[category][key]})` : `${key} (${sizeOptions.value[category][key]})`
       }))
     }
 

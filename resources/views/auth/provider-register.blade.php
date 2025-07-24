@@ -727,13 +727,13 @@
 
             <!-- Company Name -->
             <div class="form-group">
-                <label for="name" class="form-label">Company/Supplier Name *</label>
+                <label for="name" class="form-label">@lang('messages.company_supplier_name') *</label>
                 <input
                     type="text"
                     id="name"
                     name="name"
                     class="form-input"
-                    placeholder="Enter your company or supplier name"
+                    placeholder="@lang('messages.enter_company_supplier_name')"
                     value="{{ old('name') }}"
                     required
                     minlength="2"
@@ -1580,7 +1580,7 @@
                     }]);
                 } finally {
                     submitBtn.disabled = false;
-                    btnText.textContent = 'Create Provider Account';
+                    btnText.textContent = '@lang('messages.create_provider_account')';
                 }
             });
         }
@@ -1592,10 +1592,10 @@
                     <div class="success-checkmark">
                         <i class="fas fa-check"></i>
                     </div>
-                    <h2 class="success-title">Account Created!</h2>
-                    <p class="success-subtitle">Your provider registration has been submitted for review. You'll receive an email confirmation shortly.</p>
+                    <h2 class="success-title">@lang('messages.account_created')</h2>
+                    <p class="success-subtitle">@lang('messages.provider_registration_submitted')</p>
                     <a href="{{ route('login') }}" class="submit-btn" style="display: inline-block; text-decoration: none; text-align: center; margin-top: 16px;">
-                        Continue to Login
+                        @lang('messages.continue_to_login')
                     </a>
                 </div>
             `;

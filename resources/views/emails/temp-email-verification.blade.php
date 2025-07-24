@@ -25,25 +25,46 @@
             margin-bottom: 30px;
         }
         .logo {
-            width: 80px;
-            height: 80px;
+            width: 70px;
+            height: 90px;
             margin: 0 auto 20px;
             background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            border-radius: 15px;
+            border-radius: 10px;
             display: flex;
             align-items: center;
-            justify-content: center;
             color: white;
             font-size: 24px;
             font-weight: bold;
+            text-align: center;
+            line-height: 90px;
+            vertical-align: middle;
+            padding-left: 21px;
         }
         .logo.provider-logo {
-            background:linear-gradient(135deg, #8b5cf6 0%, #7c3aed 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            line-height: 90px;
+            vertical-align: middle;
+            background: linear-gradient(135deg, #8b5cf6 0%, #7c3aed 100%);
         }
         .logo.vendor-logo {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            line-height: 90px;
+            vertical-align: middle;
             background: linear-gradient(135deg, #3b82f6 0%, #1d4ed8 100%);
         }
         .logo.merchant-logo {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            line-height: 90px;
+            vertical-align: middle;
             background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%);
         }
         h1 {
@@ -120,8 +141,8 @@
     <div class="container">
         <!-- Header -->
         <div class="header">
-            <div class="logo {{ $userType === 'provider' ? 'provider-logo' : $userType === 'merchant' ? 'merchant-logo' : 'vendor-logo' }} justify-center items-center">
-                D3C
+            <div class= "logo {{ $userType === 'provider' ? 'provider-logo' : ($userType === 'merchant' ? 'merchant-logo' : 'vendor-logo') }}">
+               D3C
             </div>
             <h1>Email Verification</h1>
             <p class="subtitle">
@@ -152,7 +173,7 @@
         </p>
 
         <!-- Verification Code -->
-        <div class="verification-code {{ $userType === 'provider' ? 'provider-code' : $userType === 'merchant' ? 'merchant-code' : '' }}">
+        <div class="verification-code {{ $userType === 'provider' ? 'provider-code' : ($userType === 'merchant' ? 'merchant-code' : '') }}">
             {{ $verificationCode }}
         </div>
 

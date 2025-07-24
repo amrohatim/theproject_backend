@@ -1,10 +1,15 @@
+@php
+    $currentLocale = app()->getLocale();
+    $isRtl = in_array($currentLocale, ['ar', 'he', 'fa', 'ur']);
+    $direction = $isRtl ? 'rtl' : 'ltr';
+@endphp
 <!DOCTYPE html>
-<html lang="en">
+<html lang="{{ $currentLocale }}" dir="{{ $direction }}">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="csrf-token" content="{{ csrf_token() }}">
-    <title>Data3Chic - Provider Registration</title>
+    <title>Data3Chic - {{ __('messages.provider_registration') }}</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script>
         tailwind.config = {
@@ -190,8 +195,57 @@
         }
 
     </style>
+
+    <!-- RTL Support -->
+    @if($isRtl)
+    <style>
+        body {
+            direction: rtl;
+            text-align: right;
+        }
+        .rtl-flip {
+            transform: scaleX(-1);
+        }
+        .rtl-margin-left {
+            margin-right: auto;
+            margin-left: 0;
+        }
+        .rtl-margin-right {
+            margin-left: auto;
+            margin-right: 0;
+        }
+        .rtl-text-left {
+            text-align: right;
+        }
+        .rtl-text-right {
+            text-align: left;
+        }
+        .rtl-float-left {
+            float: right;
+        }
+        .rtl-float-right {
+            float: left;
+        }
+        .rtl-border-left {
+            border-right: 1px solid;
+            border-left: none;
+        }
+        .rtl-border-right {
+            border-left: 1px solid;
+            border-right: none;
+        }
+        .rtl-padding-left {
+            padding-right: 1rem;
+            padding-left: 0;
+        }
+        .rtl-padding-right {
+            padding-left: 1rem;
+            padding-right: 0;
+        }
+    </style>
+    @endif
 </head>
-<body class="min-h-screen bg-gray-50">
+<body class="min-h-screen bg-gray-50 {{ $isRtl ? 'rtl' : '' }}">
     <div class="min-h-screen flex">
         <!-- Left Side - Marketing Content -->
         <div class="hidden lg:flex lg:w-1/2 text-white p-12 flex-col justify-top" style="background: linear-gradient(135deg, #8b5cf6 0%, #7c3aed 100%);">
@@ -203,10 +257,10 @@
                 <!-- Main Heading -->
                 <div class="text-center space-y-4">
                     <h2 class="text-4xl font-bold leading-tight">
-                        Join Our Provider<br>Network
+                        {{ __('messages.provider_registration') }}
                     </h2>
                     <p class="text-purple-100 text-lg">
-                        Expand your sales network and provide  your products widly to variety of vendors
+                        {{ __('messages.provider_registration_desc') }}
                     </p>
                 </div>
 
@@ -219,8 +273,8 @@
                             </svg>
                         </div>
                         <div>
-                            <h3 class="font-semibold text-lg mb-1">Grow Your Business</h3>
-                            <p class="text-purple-100 text-sm">Access to a large vendors base and increase your sales.</p>
+                            <h3 class="font-semibold text-lg mb-1">{{ __('messages.grow_your_business_title') }}</h3>
+                            <p class="text-purple-100 text-sm">{{ __('messages.grow_your_business_desc') }}</p>
                         </div>
                     </div>
 
@@ -231,8 +285,8 @@
                             </svg>
                         </div>
                         <div>
-                            <h3 class="font-semibold text-lg mb-1">Professional Tools</h3>
-                            <p class="text-purple-100 text-sm">Easy-to-use dashboard to manage your orders and products.</p>
+                            <h3 class="font-semibold text-lg mb-1">{{ __('messages.professional_tools_title') }}</h3>
+                            <p class="text-purple-100 text-sm">{{ __('messages.professional_tools_desc') }}</p>
                         </div>
                     </div>
 
@@ -243,8 +297,8 @@
                             </svg>
                         </div>
                         <div>
-                            <h3 class="font-semibold text-lg mb-1">Dedicated Support</h3>
-                            <p class="text-purple-100 text-sm">Our team is here to help you succeed on our platform.</p>
+                            <h3 class="font-semibold text-lg mb-1">{{ __('messages.dedicated_support_title') }}</h3>
+                            <p class="text-purple-100 text-sm">{{ __('messages.dedicated_support_desc') }}</p>
                         </div>
                     </div>
                 </div>
@@ -255,27 +309,27 @@
         <div class="w-full lg:w-1/2 bg-white p-8 lg:p-12 flex items-center justify-center">
             <div class="w-full max-w-md space-y-6">
                 <div class="text-center space-y-2">
-                    <h2 class="text-2xl font-bold text-gray-900">Create Provider Account</h2>
-                    <p class="text-gray-600">Step 1 of 4: Provider Information</p>
+                    <h2 class="text-2xl font-bold text-gray-900">{{ __('messages.provider_registration') }}</h2>
+                    <p class="text-gray-600">{{ __('messages.personal_info') }}</p>
                 </div>
 
                 <!-- Step Indicator -->
                 <div class="progress-bar">
                     <div class="progress-step active">
                         <div class="step-circle">1</div>
-                        <div class="step-label">Provider Info</div>
+                        <div class="step-label">{{ __('messages.personal_info') }}</div>
                     </div>
                     <div class="progress-step">
                         <div class="step-circle">2</div>
-                        <div class="step-label">Verification</div>
+                        <div class="step-label">{{ __('messages.email_verification') }}</div>
                     </div>
                     <div class="progress-step">
                         <div class="step-circle">3</div>
-                        <div class="step-label">Phone</div>
+                        <div class="step-label">{{ __('messages.phone_verification') }}</div>
                     </div>
                     <div class="progress-step">
                         <div class="step-circle">4</div>
-                        <div class="step-label">License</div>
+                        <div class="step-label">{{ __('messages.license_upload') }}</div>
                     </div>
                 </div>
 
@@ -291,9 +345,9 @@
 
                     <!-- Name Field -->
                     <div class="space-y-2">
-                        <label for="name" class="text-sm font-medium text-gray-700">Full Name</label>
+                        <label for="name" class="text-sm font-medium text-gray-700">{{ __('messages.full_name') }}</label>
                         <div class="relative">
-                            <input id="name" name="name" type="text" placeholder="Enter your full name" value="{{ old('name') }}" required class="w-full pl-10 pr-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent">
+                            <input id="name" name="name" type="text" placeholder="{{ __('messages.enter_full_name') }}" value="{{ old('name') }}" required class="w-full pl-10 pr-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent">
                             <svg class="absolute left-3 top-1/2 transform -translate-y-1/2 w-4 h-4 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"></path>
                             </svg>
@@ -302,9 +356,9 @@
 
                     <!-- Email Field -->
                     <div class="space-y-2">
-                        <label for="email" class="text-sm font-medium text-gray-700">Email Address</label>
+                        <label for="email" class="text-sm font-medium text-gray-700">{{ __('messages.email_address') }}</label>
                         <div class="relative">
-                            <input id="email" name="email" type="email" placeholder="Enter your email" value="{{ old('email') }}" required class="w-full pl-10 pr-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent">
+                            <input id="email" name="email" type="email" placeholder="{{ __('messages.enter_email_address') }}" value="{{ old('email') }}" required class="w-full pl-10 pr-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent">
                             <svg class="absolute left-3 top-1/2 transform -translate-y-1/2 w-4 h-4 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 4.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"></path>
                             </svg>
@@ -313,7 +367,7 @@
 
                     <!-- Phone Field -->
                     <div class="space-y-2">
-                        <label for="phone" class="text-sm font-medium text-gray-700">Phone Number</label>
+                        <label for="phone" class="text-sm font-medium text-gray-700">{{ __('messages.phone_number') }}</label>
                         <div class="flex border border-gray-300 rounded-md focus-within:ring-2 focus-within:ring-purple-500 focus-within:border-transparent">
                             <div class="flex items-center px-3 bg-gray-50 border-r border-gray-300 rounded-l-md">
                                 <img src="data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMjQiIGhlaWdodD0iMTgiIHZpZXdCb3g9IjAgMCAyNCAxOCIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KPHJlY3Qgd2lkdGg9IjI0IiBoZWlnaHQ9IjYiIGZpbGw9IiMwMDczMzMiLz4KPHJlY3QgeT0iNiIgd2lkdGg9IjI0IiBoZWlnaHQ9IjYiIGZpbGw9IiNGRkZGRkYiLz4KPHJlY3QgeT0iMTIiIHdpZHRoPSIyNCIgaGVpZ2h0PSI2IiBmaWxsPSIjRkYwMDAwIi8+Cjwvc3ZnPgo=" alt="UAE Flag" class="w-5 h-4 mr-2">
@@ -325,7 +379,7 @@
 
                     <!-- Password Field -->
                     <div class="space-y-2">
-                        <label for="password" class="text-sm font-medium text-gray-700">Password</label>
+                        <label for="password" class="text-sm font-medium text-gray-700">{{ __('messages.password') }}</label>
                         <div class="relative">
                             <input id="password" name="password" type="password" placeholder="Create a strong password" required class="w-full pl-10 pr-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent">
                             <svg class="absolute left-3 top-1/2 transform -translate-y-1/2 w-4 h-4 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -336,7 +390,7 @@
 
                     <!-- Confirm Password Field -->
                     <div class="space-y-2">
-                        <label for="password_confirmation" class="text-sm font-medium text-gray-700">Confirm Password</label>
+                        <label for="password_confirmation" class="text-sm font-medium text-gray-700">{{ __('messages.confirm_password') }}</label>
                         <div class="relative">
                             <input id="password_confirmation" name="password_confirmation" type="password" placeholder="Confirm your password" required class="w-full pl-10 pr-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent">
                             <svg class="absolute left-3 top-1/2 transform -translate-y-1/2 w-4 h-4 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -347,7 +401,7 @@
 
                     <!-- Business Name Field -->
                     <div class="space-y-2">
-                        <label for="business_name" class="text-sm font-medium text-gray-700">Business Name</label>
+                        <label for="business_name" class="text-sm font-medium text-gray-700">{{ __('messages.business_name') }}</label>
                         <div class="relative">
                             <input id="business_name" name="business_name" type="text" placeholder="Enter your business name" value="{{ old('business_name') }}" class="w-full pl-10 pr-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent">
                             <svg class="absolute left-3 top-1/2 transform -translate-y-1/2 w-4 h-4 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -358,15 +412,15 @@
 
                     <!-- Provider Logo Upload Field -->
                     <div class="space-y-2">
-                        <label for="logo" class="text-sm font-medium text-gray-700">Company Logo (Optional)</label>
+                        <label for="logo" class="text-sm font-medium text-gray-700">{{ __('messages.company_logo_optional') }}</label>
                         <div class="logo-upload-container border-2 border-dashed border-gray-300 rounded-md p-6 text-center hover:border-purple-500 transition-colors duration-300 cursor-pointer" id="logoUploadContainer">
                             <!-- Upload Placeholder -->
                             <div class="upload-placeholder" id="logoUploadPlaceholder">
                                 <svg class="mx-auto h-12 w-12 text-gray-400 mb-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12"></path>
                                 </svg>
-                                <p class="text-sm text-gray-600 mb-2">Click to upload or drag and drop</p>
-                                <p class="text-xs text-gray-500">PNG, JPG, GIF up to 5MB</p>
+                                <p class="text-sm text-gray-600 mb-2">{{ __('messages.click_upload_drag_drop') }}</p>
+                                <p class="text-xs text-gray-500">{{ __('messages.png_jpg_gif_5mb') }}</p>
                             </div>
                             <!-- Image Preview -->
                             <div class="image-preview hidden" id="logoImagePreview">
@@ -382,20 +436,20 @@
 
                     <!-- Description Field -->
                     <div class="space-y-2">
-                        <label for="description" class="text-sm font-medium text-gray-700">Description (Optional)</label>
+                        <label for="description" class="text-sm font-medium text-gray-700">{{ __('messages.description_optional') }}</label>
                         <textarea id="description" name="description" rows="3" placeholder="Describe your business..." class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent">{{ old('description') }}</textarea>
                     </div>
 
                     <!-- Delivery Capability & Emirates Fee Options -->
                     <div class="space-y-4">
                         <div class="border-t pt-4">
-                            <h3 class="text-lg font-medium text-gray-900 mb-4">Delivery Service Configuration</h3>
+                            <h3 class="text-lg font-medium text-gray-900 mb-4">{{ __('messages.delivery_service_configuration') }}</h3>
 
                             <!-- Delivery Capability Toggle -->
                             <div class="space-y-3">
                                 <label class="flex items-center">
                                     <input type="checkbox" id="delivery_capability" name="delivery_capability" value="1" class="rounded border-gray-300 text-purple-600 focus:ring-purple-500">
-                                    <span class="ml-2 text-sm font-medium text-gray-700">I provide delivery services</span>
+                                    <span class="ml-2 text-sm font-medium text-gray-700">{{ __('messages.i_provide_delivery_services') }}</span>
                                 </label>
                             </div>
 

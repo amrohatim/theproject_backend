@@ -1,21 +1,21 @@
 <template>
   <div class="merchant-info-step">
     <div class="step-header">
-      <h2 class="step-title">Business Information</h2>
-      <p class="step-description">Please provide your business details and UAE ID</p>
+      <h2 class="step-title">{{ $t('business_info') }}</h2>
+      <p class="step-description">{{ $t('business_details') }}</p>
     </div>
 
     <form @submit.prevent="handleSubmit" class="merchant-form">
       <!-- Business Name -->
       <div class="form-group">
-        <label for="name" class="form-label">Business Name *</label>
+        <label for="name" class="form-label">{{ $t('business_name') }} *</label>
         <input
           type="text"
           id="name"
           v-model="formData.name"
           class="form-input"
           :class="{ 'error': errors.name }"
-          placeholder="Enter your business name"
+          :placeholder="$t('enter_business_name')"
           required
           @input="updateField('name', $event.target.value)"
         >
@@ -24,14 +24,14 @@
 
       <!-- Email -->
       <div class="form-group">
-        <label for="email" class="form-label">Email Address *</label>
+        <label for="email" class="form-label">{{ $t('email_address') }} *</label>
         <input
           type="email"
           id="email"
           v-model="formData.email"
           class="form-input"
           :class="{ 'error': errors.email }"
-          placeholder="Enter your business email address"
+          :placeholder="$t('enter_email_address')"
           required
           @input="updateField('email', $event.target.value)"
         >
@@ -40,7 +40,7 @@
 
       <!-- Phone -->
       <div class="form-group">
-        <label for="phone" class="form-label">Phone Number *</label>
+        <label for="phone" class="form-label">{{ $t('phone_number') }} *</label>
         <div class="phone-input-container">
           <div class="country-code-display">
             <img src="data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMjQiIGhlaWdodD0iMTgiIHZpZXdCb3g9IjAgMCAyNCAxOCIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KPHJlY3Qgd2lkdGg9IjI0IiBoZWlnaHQ9IjYiIGZpbGw9IiMwMDczMzMiLz4KPHJlY3QgeT0iNiIgd2lkdGg9IjI0IiBoZWlnaHQ9IjYiIGZpbGw9IiNGRkZGRkYiLz4KPHJlY3QgeT0iMTIiIHdpZHRoPSIyNCIgaGVpZ2h0PSI2IiBmaWxsPSIjRkYwMDAwIi8+Cjwvc3ZnPgo=" alt="UAE Flag" class="flag-icon">
@@ -64,14 +64,14 @@
 
       <!-- Password -->
       <div class="form-group">
-        <label for="password" class="form-label">Password *</label>
+        <label for="password" class="form-label">{{ $t('password') }} *</label>
         <input
           type="password"
           id="password"
           v-model="formData.password"
           class="form-input"
           :class="{ 'error': errors.password }"
-          placeholder="Create a strong password"
+          :placeholder="$t('enter_password')"
           required
           @input="updateField('password', $event.target.value)"
         >
@@ -80,14 +80,14 @@
 
       <!-- Confirm Password -->
       <div class="form-group">
-        <label for="password_confirmation" class="form-label">Confirm Password *</label>
+        <label for="password_confirmation" class="form-label">{{ $t('confirm_password') }} *</label>
         <input
           type="password"
           id="password_confirmation"
           v-model="formData.password_confirmation"
           class="form-input"
           :class="{ 'error': errors.password_confirmation }"
-          placeholder="Confirm your password"
+          :placeholder="$t('enter_confirm_password')"
           required
           @input="updateField('password_confirmation', $event.target.value)"
         >
@@ -473,6 +473,10 @@ export default {
     }
   },
   methods: {
+    // Translation method
+    $t(key) {
+      return window.appTranslations && window.appTranslations[key] ? window.appTranslations[key] : key;
+    },
     updateField(fieldName, value) {
       this.formData[fieldName] = value;
       this.$emit('update', this.formData);

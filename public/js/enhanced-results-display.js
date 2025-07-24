@@ -270,9 +270,9 @@ class EnhancedResultsDisplay {
     renderStatusBadge(result) {
         if (!result.status) return '';
         
-        const statusClass = result.status === 'active' ? 'active' : 
-                           result.status === 'inactive' ? 'inactive' : 
-                           result.featured ? 'featured' : '';
+        const statusClass = (result.status === 'active') ? 'active' :
+                           (result.status === 'inactive') ? 'inactive' :
+                           (result.featured ? 'featured' : '');
         
         return statusClass ? `<div class="result-status-badge ${statusClass}"></div>` : '';
     }

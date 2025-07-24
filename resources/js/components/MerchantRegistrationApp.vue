@@ -81,8 +81,8 @@
                        data-step="1"
                        tabindex="0"
                        role="button"
-                       :aria-label="`Step 1: ${steps[0].name} - Business information`"
-                       :title="`${steps[0].name} - Business information`">
+                       :aria-label="`Step 1: ${translatedSteps[0].name} - Business information`"
+                       :title="`${translatedSteps[0].name} - Business information`">
                     <span v-if="currentStep > 1">
                       <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
@@ -91,7 +91,7 @@
                     <span v-else>1</span>
                   </div>
                   <div class="mt-3 text-center">
-                    <div class="text-xs font-semibold" :class="getStepLabelClasses(1)">{{ steps[0].name }}</div>
+                    <div class="text-xs font-semibold" :class="getStepLabelClasses(1)">{{ translatedSteps[0].name }}</div>
                   </div>
                 </div>
                 <div class="progress-line flex-1 h-1 mx-4 rounded-full" :class="currentStep > 1 ? 'bg-amber-500' : 'bg-gray-300'"></div>
@@ -103,8 +103,8 @@
                        data-step="2"
                        tabindex="0"
                        role="button"
-                       :aria-label="`Step 2: ${steps[1].name} - Verify your email`"
-                       :title="`${steps[1].name} - Verify your email`">
+                       :aria-label="`Step 2: ${translatedSteps[1].name} - Verify your email`"
+                       :title="`${translatedSteps[1].name} - Verify your email`">
                     <span v-if="currentStep > 2">
                       <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
@@ -113,7 +113,7 @@
                     <span v-else>2</span>
                   </div>
                   <div class="mt-3 text-center">
-                    <div class="text-xs font-semibold" :class="getStepLabelClasses(2)">{{ steps[1].name }}</div>
+                    <div class="text-xs font-semibold" :class="getStepLabelClasses(2)">{{ translatedSteps[1].name }}</div>
                   </div>
                 </div>
                 <div class="progress-line flex-1 h-1 mx-4 rounded-full" :class="currentStep > 2 ? 'bg-amber-500' : 'bg-gray-300'"></div>
@@ -125,8 +125,8 @@
                        data-step="3"
                        tabindex="0"
                        role="button"
-                       :aria-label="`Step 3: ${steps[2].name} - Verify your phone`"
-                       :title="`${steps[2].name} - Verify your phone`">
+                       :aria-label="`Step 3: ${translatedSteps[2].name} - Verify your phone`"
+                       :title="`${translatedSteps[2].name} - Verify your phone`">
                     <span v-if="currentStep > 3">
                       <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
@@ -135,7 +135,7 @@
                     <span v-else>3</span>
                   </div>
                   <div class="mt-3 text-center">
-                    <div class="text-xs font-semibold" :class="getStepLabelClasses(3)">{{ steps[2].name }}</div>
+                    <div class="text-xs font-semibold" :class="getStepLabelClasses(3)">{{ translatedSteps[2].name }}</div>
                   </div>
                 </div>
                 <div class="progress-line flex-1 h-1 mx-4 rounded-full" :class="currentStep > 3 ? 'bg-amber-500' : 'bg-gray-300'"></div>
@@ -147,8 +147,8 @@
                        data-step="4"
                        tabindex="0"
                        role="button"
-                       :aria-label="`Step 4: ${steps[3].name} - Upload documents`"
-                       :title="`${steps[3].name} - Upload documents`">
+                       :aria-label="`Step 4: ${translatedSteps[3].name} - Upload documents`"
+                       :title="`${translatedSteps[3].name} - Upload documents`">
                     <span v-if="currentStep > 4">
                       <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
@@ -157,7 +157,7 @@
                     <span v-else>4</span>
                   </div>
                   <div class="mt-3 text-center">
-                    <div class="text-xs font-semibold" :class="getStepLabelClasses(4)">{{ steps[3].name }}</div>
+                    <div class="text-xs font-semibold" :class="getStepLabelClasses(4)">{{ translatedSteps[3].name }}</div>
                   </div>
                 </div>
               </div>
@@ -171,16 +171,16 @@
               </div>
               <div class="w-full bg-gray-200 rounded-full h-3 mb-4 shadow-inner">
                 <div class="h-3 rounded-full transition-all duration-500 ease-out shadow-sm"
-                     :style="`width: ${(currentStep / steps.length) * 100}%; background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%);`"></div>
+                     :style="`width: ${(currentStep / translatedSteps.length) * 100}%; background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%);`"></div>
               </div>
               <div class="text-center">
-                <h3 class="text-base font-semibold text-gray-900" id="mobile-title">{{ steps[currentStep - 1]?.name }}</h3>
+                <h3 class="text-base font-semibold text-gray-900" id="mobile-title">{{ translatedSteps[currentStep - 1]?.name }}</h3>
                 <p class="text-xs text-gray-500" id="mobile-description">{{ getMobileStepDescription(currentStep) }}</p>
               </div>
 
               <!-- Mobile Step Dots -->
               <div class="flex justify-center mt-4 space-x-2" id="mobile-dots">
-                <div v-for="(step, index) in steps" :key="index"
+                <div v-for="(step, index) in translatedSteps" :key="index"
                      class="w-2 h-2 rounded-full transition-all duration-300"
                      :class="currentStep === index + 1 ? 'bg-amber-600' : 'bg-gray-300'"
                      :data-mobile-step="index + 1"></div>
@@ -348,7 +348,21 @@ export default {
       },
     };
   },
+  computed: {
+    translatedSteps() {
+      return [
+        { name: this.$t('business_info') },
+        { name: this.$t('email_verification') },
+        { name: this.$t('phone_verification') },
+        { name: this.$t('license_upload') },
+      ];
+    }
+  },
   methods: {
+    // Translation method
+    $t(key) {
+      return window.appTranslations && window.appTranslations[key] ? window.appTranslations[key] : key;
+    },
     async handleMerchantInfoSubmit(merchantData) {
       this.loading = true;
       this.error = null;

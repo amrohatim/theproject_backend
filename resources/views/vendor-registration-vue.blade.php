@@ -1,10 +1,15 @@
+@php
+    $currentLocale = app()->getLocale();
+    $isRtl = in_array($currentLocale, ['ar', 'he', 'fa', 'ur']);
+    $direction = $isRtl ? 'rtl' : 'ltr';
+@endphp
 <!DOCTYPE html>
-<html lang="en">
+<html lang="{{ $currentLocale }}" dir="{{ $direction }}">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="csrf-token" content="{{ csrf_token() }}">
-    <title>Data3Chic - Vendor Registration</title>
+    <title>Data3Chic - {{ __('messages.vendor_registration') }}</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script>
         tailwind.config = {
@@ -94,9 +99,129 @@
         @keyframes spin {
             to { transform: rotate(360deg); }
         }
+
+        /* RTL Support */
+        @if($isRtl)
+        body {
+            direction: rtl;
+            text-align: right;
+        }
+        .rtl-flip {
+            transform: scaleX(-1);
+        }
+        .rtl-margin-left {
+            margin-right: auto;
+            margin-left: 0;
+        }
+        .rtl-margin-right {
+            margin-left: auto;
+            margin-right: 0;
+        }
+        .rtl-text-left {
+            text-align: right;
+        }
+        .rtl-text-right {
+            text-align: left;
+        }
+        .rtl-float-left {
+            float: right;
+        }
+        .rtl-float-right {
+            float: left;
+        }
+        .rtl-border-left {
+            border-right: 1px solid;
+            border-left: none;
+        }
+        .rtl-border-right {
+            border-left: 1px solid;
+            border-right: none;
+        }
+        .rtl-padding-left {
+            padding-right: 1rem;
+            padding-left: 0;
+        }
+        .rtl-padding-right {
+            padding-left: 1rem;
+            padding-right: 0;
+        }
+        @endif
     </style>
+
+    <!-- Pass translations and locale data to JavaScript -->
+    <script>
+        window.appLocale = '{{ $currentLocale }}';
+        window.appDirection = '{{ $direction }}';
+        window.appIsRtl = {{ $isRtl ? 'true' : 'false' }};
+        window.appTranslations = {
+            'personal_info': '{{ __('messages.personal_info') }}',
+            'email_verification': '{{ __('messages.email_verification') }}',
+            'phone_verification': '{{ __('messages.phone_verification') }}',
+            'company_info': '{{ __('messages.company_info') }}',
+            'license_upload': '{{ __('messages.license_upload') }}',
+            'full_name': '{{ __('messages.full_name') }}',
+            'enter_full_name': '{{ __('messages.enter_full_name') }}',
+            'email_address': '{{ __('messages.email_address') }}',
+            'enter_email_address': '{{ __('messages.enter_email_address') }}',
+            'phone_number': '{{ __('messages.phone_number') }}',
+            'enter_phone_number': '{{ __('messages.enter_phone_number') }}',
+            'password': '{{ __('messages.password') }}',
+            'enter_password': '{{ __('messages.enter_password') }}',
+            'confirm_password': '{{ __('messages.confirm_password') }}',
+            'enter_confirm_password': '{{ __('messages.enter_confirm_password') }}',
+            'company_name': '{{ __('messages.company_name') }}',
+            'enter_company_name': '{{ __('messages.enter_company_name') }}',
+            'business_name': '{{ __('messages.business_name') }}',
+            'enter_business_name': '{{ __('messages.enter_business_name') }}',
+            'continue_to_email_verification': '{{ __('messages.continue_to_email_verification') }}',
+            'continue_to_phone_verification': '{{ __('messages.continue_to_phone_verification') }}',
+            'continue_to_company_info': '{{ __('messages.continue_to_company_info') }}',
+            'continue_to_license_upload': '{{ __('messages.continue_to_license_upload') }}',
+            'verify_email': '{{ __('messages.verify_email') }}',
+            'verify_phone': '{{ __('messages.verify_phone') }}',
+            'resend_code': '{{ __('messages.resend_code') }}',
+            'resend_otp': '{{ __('messages.resend_otp') }}',
+            'complete_registration': '{{ __('messages.complete_registration') }}',
+            'processing': '{{ __('messages.processing') }}',
+            'saving': '{{ __('messages.saving') }}',
+            'verification_code_sent': '{{ __('messages.verification_code_sent') }}',
+            'enter_verification_code': '{{ __('messages.enter_verification_code') }}',
+            'enter_6_digit_code': '{{ __('messages.enter_6_digit_code') }}',
+            'verification_code': '{{ __('messages.verification_code') }}',
+            'otp_code': '{{ __('messages.otp_code') }}',
+            'check_spam_folder': '{{ __('messages.check_spam_folder') }}',
+            'code_expires_in_10_minutes': '{{ __('messages.code_expires_in_10_minutes') }}',
+            'make_sure_phone_receives_sms': '{{ __('messages.make_sure_phone_receives_sms') }}',
+            'upload_business_license': '{{ __('messages.upload_business_license') }}',
+            'business_license_pdf': '{{ __('messages.business_license_pdf') }}',
+            'drop_license_here': '{{ __('messages.drop_license_here') }}',
+            'pdf_files_only': '{{ __('messages.pdf_files_only') }}',
+            'license_start_date': '{{ __('messages.license_start_date') }}',
+            'license_end_date': '{{ __('messages.license_end_date') }}',
+            'notes': '{{ __('messages.notes') }}',
+            'optional_notes': '{{ __('messages.optional_notes') }}',
+            'license_reviewed_24_48_hours': '{{ __('messages.license_reviewed_24_48_hours') }}',
+            'documents_securely_stored': '{{ __('messages.documents_securely_stored') }}',
+            'email_confirmation_once_approved': '{{ __('messages.email_confirmation_once_approved') }}',
+            'field_required': '{{ __('messages.field_required') }}',
+            'invalid_email_format': '{{ __('messages.invalid_email_format') }}',
+            'password_min_8_characters': '{{ __('messages.password_min_8_characters') }}',
+            'passwords_do_not_match': '{{ __('messages.passwords_do_not_match') }}',
+            'invalid_phone_format': '{{ __('messages.invalid_phone_format') }}',
+            'file_too_large': '{{ __('messages.file_too_large') }}',
+            'invalid_file_type': '{{ __('messages.invalid_file_type') }}',
+            'pdf_files_only_message': '{{ __('messages.pdf_files_only_message') }}',
+            'vendor_registration': '{{ __('messages.vendor_registration') }}',
+            'vendor_registration_desc': '{{ __('messages.vendor_registration_desc') }}',
+            'basic_information': '{{ __('messages.basic_information') }}',
+            'verify_your_email': '{{ __('messages.verify_your_email') }}',
+            'verify_your_phone': '{{ __('messages.verify_your_phone') }}',
+            'business_details': '{{ __('messages.business_details') }}',
+            'upload_documents': '{{ __('messages.upload_documents') }}'
+        };
+    </script>
 </head>
-<body class="min-h-screen bg-gray-50">
+<body class="min-h-screen bg-gray-50 {{ $isRtl ? 'rtl' : '' }}">
     <div class="min-h-screen flex">
         <!-- Left Side - Marketing Content -->
         <div class="hidden lg:flex lg:w-1/2 bg-gradient-to-br from-blue-600 via-blue-700 to-blue-800 text-white p-12 flex-col justify-center">
@@ -109,11 +234,10 @@
                 <!-- Main Heading -->
                 <div class="text-center space-y-4">
                     <h2 class="text-4xl font-bold leading-tight">
-                        Join Our Vendor<br>Community
+                        {{ __('messages.vendor_registration') }}
                     </h2>
                     <p class="text-blue-100 text-lg">
-                        Expand your business reach and connect with thousands of customers<br>
-                        looking for unique products like yours.
+                        {{ __('messages.vendor_registration_desc') }}
                     </p>
                 </div>
 
@@ -282,7 +406,7 @@
                     <div class="step-content active" id="step-1">
                         <div class="space-y-4">
                             <div class="space-y-2">
-                                <label for="fullName" class="text-sm font-medium text-gray-700">Full Name</label>
+                                <label for="fullName" class="text-sm font-medium text-gray-700" id="fullNameLabel">Full Name</label>
                                 <div class="relative">
                                     <input id="fullName" name="name" type="text" placeholder="Enter your full name" class="w-full pl-10 pr-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent">
                                     <svg class="absolute left-3 top-1/2 transform -translate-y-1/2 w-4 h-4 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -292,7 +416,7 @@
                             </div>
 
                             <div class="space-y-2">
-                                <label for="email" class="text-sm font-medium text-gray-700">Email Address</label>
+                                <label for="email" class="text-sm font-medium text-gray-700" id="emailLabel">Email Address</label>
                                 <div class="relative">
                                     <input id="email" name="email" type="email" placeholder="Enter your email" class="w-full pl-10 pr-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent">
                                     <svg class="absolute left-3 top-1/2 transform -translate-y-1/2 w-4 h-4 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -302,7 +426,7 @@
                             </div>
 
                             <div class="space-y-2">
-                                <label for="phone" class="text-sm font-medium text-gray-700">Phone Number</label>
+                                <label for="phone" class="text-sm font-medium text-gray-700" id="phoneLabel">Phone Number</label>
                                 <div class="relative">
                                     <div class="absolute left-3 top-1/2 transform -translate-y-1/2 flex items-center">
                                         <span class="text-sm text-gray-600 mr-2">🇦🇪 +971</span>
@@ -312,7 +436,7 @@
                             </div>
 
                             <div class="space-y-2">
-                                <label for="password" class="text-sm font-medium text-gray-700">Password</label>
+                                <label for="password" class="text-sm font-medium text-gray-700" id="passwordLabel">Password</label>
                                 <div class="relative">
                                     <input id="password" name="password" type="password" placeholder="Create a password" class="w-full pl-10 pr-10 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent">
                                     <svg class="absolute left-3 top-1/2 transform -translate-y-1/2 w-4 h-4 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -326,7 +450,7 @@
                             </div>
 
                             <div class="space-y-2">
-                                <label for="confirmPassword" class="text-sm font-medium text-gray-700">Confirm Password</label>
+                                <label for="confirmPassword" class="text-sm font-medium text-gray-700" id="confirmPasswordLabel">Confirm Password</label>
                                 <input id="confirmPassword" name="password_confirmation" type="password" placeholder="Confirm your password" class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent">
                             </div>
                         </div>
@@ -580,11 +704,11 @@
         let sessionData = {};
 
         const steps = [
-            { name: "Personal Info", description: "Basic information" },
-            { name: "Email Verification", description: "Verify your email" },
-            { name: "Phone Verification", description: "Verify your phone" },
-            { name: "Company Info", description: "Business details" },
-            { name: "License Upload", description: "Upload documents" }
+            { name: window.appTranslations.personal_info || "Personal Info", description: window.appTranslations.basic_information || "Basic information" },
+            { name: window.appTranslations.email_verification || "Email Verification", description: window.appTranslations.verify_your_email || "Verify your email" },
+            { name: window.appTranslations.phone_verification || "Phone Verification", description: window.appTranslations.verify_your_phone || "Verify your phone" },
+            { name: window.appTranslations.company_info || "Company Info", description: window.appTranslations.business_details || "Business details" },
+            { name: window.appTranslations.license_upload || "License Upload", description: window.appTranslations.upload_documents || "Upload documents" }
         ];
 
         // CSRF Token
@@ -1383,7 +1507,53 @@
             }
         });
 
+        // Initialize translations
+        function initializeTranslations() {
+            if (window.appTranslations) {
+                // Update form labels
+                const fullNameLabel = document.getElementById('fullNameLabel');
+                if (fullNameLabel) fullNameLabel.textContent = window.appTranslations.full_name || 'Full Name';
+
+                const emailLabel = document.getElementById('emailLabel');
+                if (emailLabel) emailLabel.textContent = window.appTranslations.email_address || 'Email Address';
+
+                const phoneLabel = document.getElementById('phoneLabel');
+                if (phoneLabel) phoneLabel.textContent = window.appTranslations.phone_number || 'Phone Number';
+
+                const passwordLabel = document.getElementById('passwordLabel');
+                if (passwordLabel) passwordLabel.textContent = window.appTranslations.password || 'Password';
+
+                const confirmPasswordLabel = document.getElementById('confirmPasswordLabel');
+                if (confirmPasswordLabel) confirmPasswordLabel.textContent = window.appTranslations.confirm_password || 'Confirm Password';
+
+                // Update placeholders
+                const fullNameInput = document.getElementById('fullName');
+                if (fullNameInput) fullNameInput.placeholder = window.appTranslations.enter_full_name || 'Enter your full name';
+
+                const emailInput = document.getElementById('email');
+                if (emailInput) emailInput.placeholder = window.appTranslations.enter_email_address || 'Enter your email';
+
+                const phoneInput = document.getElementById('phone');
+                if (phoneInput) phoneInput.placeholder = window.appTranslations.enter_phone_number || 'Enter 9-digit number';
+
+                const passwordInput = document.getElementById('password');
+                if (passwordInput) passwordInput.placeholder = window.appTranslations.enter_password || 'Create a password';
+
+                const confirmPasswordInput = document.getElementById('confirmPassword');
+                if (confirmPasswordInput) confirmPasswordInput.placeholder = window.appTranslations.enter_confirm_password || 'Confirm your password';
+
+                // Update button text
+                const nextButtons = document.querySelectorAll('button');
+                nextButtons.forEach(button => {
+                    if (button.textContent.includes('Next')) {
+                        button.innerHTML = button.innerHTML.replace('Next', window.appTranslations.continue_to_email_verification || 'Continue to Email Verification');
+                    }
+                });
+            }
+        }
+
         // Initialize
+        initializeTranslations();
         showStep(currentStep);
     </script>
 </body>
