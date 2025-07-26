@@ -77,7 +77,7 @@
               <div class="enhanced-form-field space-y-2">
                 <label class="enhanced-form-label">
                   <i class="fas fa-tag"></i>
-                  Size Name
+                  {{ $t('size_name') }}
                 </label>
                 <input type="text"
                        v-model="size.name"
@@ -91,7 +91,7 @@
               <div class="enhanced-form-field space-y-2">
                 <label class="enhanced-form-label">
                   <i class="fas fa-ruler"></i>
-                  Size Value
+                  {{ $t('size_value') }}
                 </label>
                 <input type="text"
                        v-model="size.value"
@@ -107,7 +107,7 @@
               <div class="enhanced-form-field space-y-2">
                 <label class="enhanced-form-label">
                   <i class="fas fa-boxes"></i>
-                  Stock Quantity
+                  {{ $t('stock_quantity') }}
                 </label>
                 <div class="enhanced-input-group">
                   <input type="number"
@@ -118,7 +118,7 @@
                          :max="colorStock"
                          @input="size.stock = validateSizeStock(size.stock, index); validateSizeField(index, 'stock')"
                          placeholder="0">
-                  <div class="input-suffix">units</div>
+                  <div class="input-suffix">{{ $t('units') }}</div>
                 </div>
                 <div class="stock-allocation-info">
                   <span class="available-stock">Available: {{ availableSizeStock + (parseInt(size.stock) || 0) }}</span>
@@ -130,7 +130,7 @@
               <div class="enhanced-form-field space-y-2">
                 <label class="enhanced-form-label">
                   <i class="fas fa-dollar-sign"></i>
-                  Price Adjustment
+                  {{ $t('price_adjustment') }}
                 </label>
                 <div class="enhanced-input-group">
                   <input type="number"
@@ -140,7 +140,7 @@
                          step="0.01"
                          @input="validateSizeField(index, 'price_adjustment')"
                          placeholder="0.00">
-                  <div class="input-suffix">AED</div>
+                  <div class="input-suffix">{{ $t('aed') }}</div>
                 </div>
                 <div v-if="size.errors?.price_adjustment" class="text-red-500 text-xs">{{ size.errors.price_adjustment }}</div>
               </div>
@@ -170,15 +170,15 @@
     <!-- Empty State -->
     <div v-else class="text-center py-8 text-gray-500">
       <i class="fas fa-ruler-combined text-3xl mb-3"></i>
-      <p class="text-sm">No sizes added yet</p>
-      <p class="text-xs">Click "Add Size" to start managing sizes for this color</p>
+      <p class="text-sm">{{ $t('no_sizes_added_yet') }}</p>
+      <p class="text-xs">{{ $t('click_add_size_to_start_managing') }}</p>
     </div>
 
     <!-- Add Size Modal -->
     <div v-if="showAddSizeModal" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
       <div class="bg-white rounded-lg p-6 w-full max-w-md mx-4">
         <div class="flex items-center justify-between mb-4">
-          <h3 class="text-lg font-semibold">Add New Size</h3>
+          <h3 class="text-lg font-semibold">{{ $t('add_new_size') }}</h3>
           <button @click="closeAddSizeModal" class="text-gray-400 hover:text-gray-600">
             <i class="fas fa-times"></i>
           </button>
@@ -189,16 +189,16 @@
           <div class="enhanced-form-field space-y-1">
             <label class="enhanced-form-label text-sm">
               <i class="fas fa-layer-group"></i>
-              Size Category
+              {{ $t('size_category') }}
             </label>
             <select v-model="newSize.category"
                     class="vue-form-control-enhanced-blue"
                     :class="{ 'border-red-500': newSize.errors?.category }"
                     @change="onCategoryChange">
-              <option value="">Select Category</option>
-              <option value="clothes">Clothes</option>
-              <option value="shoes">Shoes</option>
-              <option value="hats">Hats</option>
+              <option value="">{{ $t('select_category') }}</option>
+              <option value="clothes">{{ $t('clothes') }}</option>
+              <option value="shoes">{{ $t('shoes') }}</option>
+              <option value="hats">{{ $t('hats') }}</option>
             </select>
             <div v-if="newSize.errors?.category" class="text-red-500 text-xs">{{ newSize.errors.category }}</div>
           </div>
@@ -214,7 +214,7 @@
                     :class="{ 'border-red-500': newSize.errors?.name }"
                     @change="onSizeNameChange"
                     :disabled="!newSize.category">
-              <option value="">Select Size Name</option>
+              <option value="">{{ $t('select_size_name') }}</option>
               <option v-for="sizeOption in availableSizeNames"
                       :key="sizeOption.value"
                       :value="sizeOption.value">{{ sizeOption.label }}</option>
@@ -235,7 +235,7 @@
                    @input="validateNewSizeField('value')"
                    :disabled="!newSize.name"
                    readonly
-                   placeholder="Auto-filled based on size name">
+                   :placeholder="$t('auto_filled_based_on_size_name')">
             <div v-if="newSize.errors?.value" class="text-red-500 text-xs">{{ newSize.errors.value }}</div>
           </div>
 
@@ -257,8 +257,8 @@
                 <div class="input-suffix">units</div>
               </div>
               <div class="stock-allocation-info text-xs">
-                <span class="available-stock">Available: {{ availableSizeStock }}</span>
-                <span class="allocated-stock">{{ newSize.stock || 0 }} to allocate</span>
+                <span class="available-stock">{{ $t('available') }}: {{ availableSizeStock }}</span>
+                <span class="allocated-stock">{{ newSize.stock || 0 }} {{ $t('to_allocate') }}</span>
               </div>
               <div v-if="newSize.errors?.stock" class="text-red-500 text-xs">{{ newSize.errors.stock }}</div>
             </div>
@@ -289,12 +289,12 @@
                   :disabled="saving"
                   class="vue-btn vue-btn-primary flex-1">
             <i class="fas fa-plus"></i>
-            {{ saving ? 'Adding...' : 'Add Size' }}
+            {{ saving ? $t('adding') : $t('add_size') }}
           </button>
           <button type="button" 
                   @click="closeAddSizeModal"
                   class="vue-btn vue-btn-secondary">
-            Cancel
+            {{ $t('cancel') }}
           </button>
         </div>
       </div>
@@ -792,6 +792,42 @@ export default {
       }
     }, { immediate: true })
 
+    // Translation method
+    const $t = (key, replacements = {}) => {
+      const translations = {
+        'no_sizes_added_yet': 'No sizes added yet',
+        'click_add_size_to_start_managing': 'Click "Add Size" to start managing sizes for this color',
+        'add_new_size': 'Add New Size',
+        'size_category': 'Size Category',
+        'select_category': 'Select Category',
+        'clothes': 'Clothes',
+        'shoes': 'Shoes',
+        'hats': 'Hats',
+        'size_name': 'Size Name',
+        'select_size_name': 'Select Size Name',
+        'size_value': 'Size Value',
+        'auto_filled_based_on_size_name': 'Auto-filled based on size name',
+        'stock_quantity': 'Stock Quantity',
+        'units': 'units',
+        'available': 'Available',
+        'to_allocate': 'to allocate',
+        'price_adjustment': 'Price Adjustment',
+        'aed': 'AED',
+        'adding': 'Adding',
+        'add_size': 'Add Size',
+        'cancel': 'Cancel'
+      }
+      
+      let translation = translations[key] || key
+      
+      // Handle replacements
+      Object.keys(replacements).forEach(placeholder => {
+        translation = translation.replace(`[${placeholder}]`, replacements[placeholder])
+      })
+      
+      return translation
+    }
+
     return {
       loading,
       saving,
@@ -815,7 +851,8 @@ export default {
       saveSize,
       removeSize,
       closeAddSizeModal,
-      addSize
+      addSize,
+      $t
     }
   }
 }

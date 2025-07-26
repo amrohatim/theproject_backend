@@ -12,11 +12,10 @@
           <!-- Main Heading -->
           <div class="text-center space-y-4">
             <h2 class="text-4xl font-bold leading-tight">
-              Join Our Merchant<br>Community
+              {{ $t('join_our_merchant_community') }}
             </h2>
             <p class="text-amber-100 text-lg">
-              Expand your business reach and connect with thousands of customers<br>
-              looking for unique products and services like yours.
+              {{ $t('expand_business_reach') }}
             </p>
           </div>
 
@@ -29,8 +28,8 @@
                 </svg>
               </div>
               <div>
-                <h3 class="font-semibold text-lg mb-1">Grow Your Sales</h3>
-                <p class="text-amber-100 text-sm">Access to a large customer base and increase your revenue.</p>
+                <h3 class="font-semibold text-lg mb-1">{{ $t('grow_your_sales') }}</h3>
+                <p class="text-amber-100 text-sm">{{ $t('access_large_customer_base') }}</p>
               </div>
             </div>
 
@@ -42,8 +41,8 @@
                 </svg>
               </div>
               <div>
-                <h3 class="font-semibold text-lg mb-1">Powerful Tools</h3>
-                <p class="text-amber-100 text-sm">Easy-to-use dashboard to manage your products and orders.</p>
+                <h3 class="font-semibold text-lg mb-1">{{ $t('powerful_tools') }}</h3>
+                <p class="text-amber-100 text-sm">{{ $t('easy_dashboard_manage_products') }}</p>
               </div>
             </div>
 
@@ -54,8 +53,8 @@
                 </svg>
               </div>
               <div>
-                <h3 class="font-semibold text-lg mb-1">Dedicated Support</h3>
-                <p class="text-amber-100 text-sm">Our team is here to help you succeed on our platform.</p>
+                <h3 class="font-semibold text-lg mb-1">{{ $t('dedicated_support') }}</h3>
+                <p class="text-amber-100 text-sm">{{ $t('our_team_help_succeed') }}</p>
               </div>
             </div>
           </div>
@@ -66,8 +65,8 @@
       <div class="w-full lg:w-1/2 bg-white p-8 lg:p-12 flex items-center justify-center">
         <div class="w-full max-w-md space-y-6">
           <div class="text-center space-y-2">
-            <h2 class="text-2xl font-bold text-gray-900">Create Merchant Account</h2>
-            <p class="text-gray-600">Complete all steps to get started</p>
+            <h2 class="text-2xl font-bold text-gray-900">{{ $t('create_merchant_account') }}</h2>
+            <p class="text-gray-600">{{ $t('complete_all_steps') }}</p>
           </div>
 
           <!-- Progress Indicator -->
@@ -166,8 +165,8 @@
             <!-- Mobile Progress Indicator -->
             <div class="md:hidden">
               <div class="flex items-center justify-between mb-4">
-                <span class="text-sm font-semibold text-amber-600" id="mobile-step">Step {{ currentStep }} of {{ steps.length }}</span>
-                <span class="text-xs text-gray-500" id="mobile-progress">{{ Math.round((currentStep / steps.length) * 100) }}% Complete</span>
+                <span class="text-sm font-semibold text-amber-600" id="mobile-step">{{ $t('step_of').replace('{current}', currentStep).replace('{total}', steps.length) }}</span>
+                <span class="text-xs text-gray-500" id="mobile-progress">{{ $t('percent_complete').replace('{percent}', Math.round((currentStep / steps.length) * 100)) }}</span>
               </div>
               <div class="w-full bg-gray-200 rounded-full h-3 mb-4 shadow-inner">
                 <div class="h-3 rounded-full transition-all duration-500 ease-out shadow-sm"
@@ -231,10 +230,10 @@
             <svg class="w-12 h-12 text-green-500 mx-auto mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
             </svg>
-            <h3 class="text-lg font-semibold text-gray-900 mb-2">Registration Complete!</h3>
-            <p class="text-gray-600 mb-4">Your merchant registration has been submitted successfully. You will receive an email or call from our support team.</p>
+            <h3 class="text-lg font-semibold text-gray-900 mb-2">{{ $t('registration_complete') }}</h3>
+            <p class="text-gray-600 mb-4">{{ $t('registration_submitted_successfully') }}</p>
             <button @click="goToLogin" class="px-6 py-2 text-white rounded-md" style="background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%);" onmouseover="this.style.opacity='0.9'" onmouseout="this.style.opacity='1'">
-              Go to Login
+              {{ $t('go_to_login') }}
             </button>
           </div>
 
@@ -268,14 +267,14 @@
           <!-- Navigation -->
           <div v-if="currentStep > 1 && currentStep < 5" class="flex justify-between pt-4">
             <button @click="goBack" :disabled="loading" class="px-4 py-2 border border-gray-300 rounded-md text-gray-700 bg-white hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed">
-              Previous
+              {{ $t('previous') }}
             </button>
           </div>
 
           <div class="text-center">
             <p class="text-sm text-gray-600">
-              Already have an account?
-              <a href="/login" class="text-amber-600 hover:text-amber-700 font-medium">Log In</a>
+              {{ $t('already_have_account') }}
+              <a href="/login" class="text-amber-600 hover:text-amber-700 font-medium">{{ $t('log_in') }}</a>
             </p>
           </div>
         </div>
@@ -316,10 +315,10 @@ export default {
       userId: null,
       otpRequestId: null,
       steps: [
-        { name: 'Business Info' },
-        { name: 'Email Verification' },
-        { name: 'Phone Verification' },
-        { name: 'License Upload' },
+        { name: 'business_info' },
+        { name: 'email_verification' },
+        { name: 'phone_verification' },
+        { name: 'license_upload' },
       ],
       formData: {
         merchantInfo: {
@@ -380,7 +379,7 @@ export default {
             this.success = null;
           }, 3000);
         } else {
-          this.error = response.message || 'Registration failed. Please try again.';
+          this.error = response.message || this.$t('registration_failed_try_again');
         }
       } catch (error) {
         console.error('Merchant info submission error:', error);
@@ -393,7 +392,7 @@ export default {
               // Check if we should show login dialog
               if (errorData.show_login_dialog) {
                 this.$refs.merchantInfoStep.showLoginDialog(
-                  errorData.errors.email?.[0] || errorData.errors.phone?.[0] || 'Account already exists'
+                  errorData.errors.email?.[0] || errorData.errors.phone?.[0] || this.$t('account_already_exists')
                 );
               } else {
                 // Show validation error modal
@@ -401,10 +400,10 @@ export default {
               }
             }
           } catch (parseError) {
-            this.error = 'Please check your input and try again.';
+            this.error = this.$t('check_input_try_again');
           }
         } else {
-          this.error = error.message || 'Registration failed. Please try again.';
+          this.error = error.message || this.$t('registration_failed_try_again');
         }
       } finally {
         this.loading = false;
@@ -434,11 +433,11 @@ export default {
             this.success = null;
           }, 3000);
         } else {
-          this.error = response.message || 'Email verification failed.';
+          this.error = response.message || this.$t('email_verification_failed');
         }
       } catch (error) {
         console.error('Email verification error:', error);
-        this.error = error.message || 'Email verification failed. Please try again.';
+        this.error = error.message || this.$t('email_verification_failed_try_again');
         
         if (this.$refs.emailVerificationStep) {
           this.$refs.emailVerificationStep.setErrors({ verification_code: [error.message] });
@@ -481,11 +480,11 @@ export default {
             this.success = null;
           }, 3000);
         } else {
-          this.error = response.message || 'OTP verification failed.';
+          this.error = response.message || this.$t('otp_verification_failed');
         }
       } catch (error) {
         console.error('OTP verification error:', error);
-        this.error = error.message || 'OTP verification failed. Please try again.';
+        this.error = error.message || this.$t('otp_verification_failed_try_again');
 
         if (this.$refs.otpVerificationStep) {
           this.$refs.otpVerificationStep.setErrors({ otp_code: [error.message] });
@@ -510,11 +509,11 @@ export default {
           this.success = response.message;
           this.currentStep = 5;
         } else {
-          this.error = response.message || 'License upload failed.';
+          this.error = response.message || this.$t('license_upload_failed');
         }
       } catch (error) {
         console.error('License upload error:', error);
-        this.error = error.message || 'License upload failed. Please try again.';
+        this.error = error.message || this.$t('license_upload_failed_try_again');
         
         if (this.$refs.licenseUploadStep) {
           this.$refs.licenseUploadStep.setErrors({ license_file: [error.message] });
@@ -539,11 +538,11 @@ export default {
             this.success = null;
           }, 3000);
         } else {
-          this.error = response.message || 'Failed to resend verification email.';
+          this.error = response.message || this.$t('failed_resend_verification_email');
         }
       } catch (error) {
         console.error('Resend email error:', error);
-        this.error = error.message || 'Failed to resend verification email.';
+        this.error = error.message || this.$t('failed_resend_verification_email');
       } finally {
         this.loading = false;
       }
@@ -557,7 +556,7 @@ export default {
         const response = await merchantRegistrationApi.resendPhoneOtp(this.registrationToken);
 
         if (response.success) {
-          this.success = response.message || 'OTP sent successfully.';
+          this.success = response.message || this.$t('otp_sent_successfully');
           // Store new request_id if provided
           if (response.request_id) {
             this.otpRequestId = response.request_id;
@@ -568,11 +567,11 @@ export default {
             this.success = null;
           }, 3000);
         } else {
-          this.error = response.message || 'Failed to resend OTP.';
+          this.error = response.message || this.$t('failed_resend_otp');
         }
       } catch (error) {
         console.error('Resend OTP error:', error);
-        this.error = error.message || 'Failed to resend OTP.';
+        this.error = error.message || this.$t('failed_resend_otp');
       } finally {
         this.loading = false;
       }
@@ -622,10 +621,10 @@ export default {
 
     getMobileStepDescription(stepNumber) {
       const descriptions = [
-        'Business information',
-        'Verify your email',
-        'Verify your phone',
-        'Upload documents'
+        this.$t('business_information'),
+        this.$t('verify_your_email_step'),
+        this.$t('verify_your_phone_step'),
+        this.$t('upload_documents_step')
       ];
       return descriptions[stepNumber - 1] || '';
     }

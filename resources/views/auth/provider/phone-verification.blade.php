@@ -1,11 +1,11 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="{{ app()->getLocale() }}" dir="{{ app()->getLocale() == 'ar' ? 'rtl' : 'ltr' }}">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="description" content="Provider Registration Step 3 - Phone Verification">
+    <meta name="description" content="{{ __('messages.provider_registration_phone_verification_description') }}">
     <meta name="robots" content="noindex, nofollow">
-    <title>Data3Chic - Provider Registration</title>
+    <title>{{ __('messages.data3chic_provider_registration') }}</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script>
         tailwind.config = {
@@ -31,7 +31,12 @@
     </script>
 
     <!-- Fonts -->
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    @if(app()->getLocale() == 'ar')
+        <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+        <link rel="stylesheet" href="{{ asset('css/rtl.css') }}">
+    @else
+        <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    @endif
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 
     <!-- CSRF Token -->
@@ -153,16 +158,16 @@
         <div class="hidden lg:flex lg:w-1/2 text-white p-12 flex-col justify-top" style="background: linear-gradient(135deg, #8b5cf6 0%, #7c3aed 100%);">
             <div class="max-w-md mx-auto space-y-8">
                 <div class="text-center">
-                    <h1 class="text-3xl font-bold mb-8">Data3Chic</h1>
+                    <h1 class="text-3xl font-bold mb-8">Dala3Chic</h1>
                 </div>
 
                 <!-- Main Heading -->
                 <div class="text-center space-y-4">
                     <h2 class="text-4xl font-bold leading-tight">
-                        Phone<br>Verification
+                        {{ __('messages.verification') }} {{ __('messages.phone') }}
                     </h2>
                     <p class="text-purple-100 text-lg">
-                        We'll send a verification code to your phone number to ensure account security.
+                        {{ __('messages.phone_verification_description') }}
                     </p>
                 </div>
 
@@ -175,8 +180,8 @@
                             </svg>
                         </div>
                         <div>
-                            <h3 class="font-semibold text-lg mb-1">SMS Verification</h3>
-                            <p class="text-purple-100 text-sm">Secure verification code sent directly to your phone.</p>
+                            <h3 class="font-semibold text-lg mb-1">{{ __('messages.sms_verification') }}</h3>
+                            <p class="text-purple-100 text-sm">{{ __('messages.secure_verification_code_sent_directly_to_your_phone') }}</p>
                         </div>
                     </div>
 
@@ -187,8 +192,8 @@
                             </svg>
                         </div>
                         <div>
-                            <h3 class="font-semibold text-lg mb-1">Account Security</h3>
-                            <p class="text-purple-100 text-sm">Phone verification adds an extra layer of security.</p>
+                            <h3 class="font-semibold text-lg mb-1">{{ __('messages.account_security') }}</h3>
+                            <p class="text-purple-100 text-sm">{{ __('messages.account_security_description') }}</p>
                         </div>
                     </div>
 
@@ -199,8 +204,8 @@
                             </svg>
                         </div>
                         <div>
-                            <h3 class="font-semibold text-lg mb-1">Almost Complete</h3>
-                            <p class="text-purple-100 text-sm">Just one more step to complete your registration.</p>
+                            <h3 class="font-semibold text-lg mb-1">{{ __('messages.almost_complete') }}</h3>
+                            <p class="text-purple-100 text-sm">{{ __('messages.just_one_more_step_to_complete_your_registration') }}</p>
                         </div>
                     </div>
                 </div>
@@ -211,35 +216,35 @@
         <div class="w-full lg:w-1/2 bg-white p-8 lg:p-12 flex items-center justify-center">
             <div class="w-full max-w-md space-y-6">
                 <div class="text-center space-y-2">
-                    <h2 class="text-2xl font-bold text-gray-900">Phone Verification</h2>
-                    <p class="text-gray-600">Step 3 of 4: Verify your phone number</p>
+                    <h2 class="text-2xl font-bold text-gray-900">{{ __('messages.phone_verification') }}</h2>
+                    <p class="text-gray-600">{{ __('messages.step_3_of_4_verify_phone') }}</p>
                 </div>
 
                 <!-- Step Indicator -->
                 <div class="progress-bar">
                     <div class="progress-step completed">
                         <div class="step-circle"><i class="fas fa-check"></i></div>
-                        <div class="step-label">Provider Info</div>
+                        <div class="step-label">{{ __('messages.provider_info') }}</div>
                     </div>
                     <div class="progress-step completed">
                         <div class="step-circle"><i class="fas fa-check"></i></div>
-                        <div class="step-label">Verification</div>
+                        <div class="step-label">{{ __('messages.verification') }}</div>
                     </div>
                     <div class="progress-step active">
                         <div class="step-circle">3</div>
-                        <div class="step-label">Phone</div>
+                        <div class="step-label">{{ __('messages.phone') }}</div>
                     </div>
                     <div class="progress-step">
                         <div class="step-circle">4</div>
-                        <div class="step-label">License</div>
+                        <div class="step-label">{{ __('messages.license') }}</div>
                     </div>
                 </div>
 
                 <!-- Back Link -->
                 <div class="mb-4">
                     <a href="/register/provider/step2" class="text-purple-600 hover:text-purple-700 transition-colors duration-300 text-sm font-medium">
-                        <i class="fas fa-arrow-left mr-2"></i>
-                        Back to Email Verification
+                        <i class="fas fa-arrow-{{ app()->getLocale() == 'ar' ? 'right' : 'left' }} {{ app()->getLocale() == 'ar' ? 'ml-2' : 'mr-2' }}"></i>
+                        {{ __('messages.back_to_email_verification') }}
                     </a>
                 </div>
 
@@ -252,13 +257,13 @@
                         <div class="w-16 h-16 bg-purple-100 rounded-full flex items-center justify-center mx-auto mb-4">
                             <i class="fas fa-mobile-alt text-purple-600 text-2xl"></i>
                         </div>
-                        <h3 class="font-semibold text-gray-900 mb-2">Check Your Phone</h3>
+                        <h3 class="font-semibold text-gray-900 mb-2">{{ __('messages.check_your_phone') }}</h3>
                         <p class="text-gray-600 text-sm mb-4">
-                            We'll send a verification code to your phone number.
+                            {{ __('messages.phone_verification_send_description') }}
                         </p>
                         <div class="font-semibold text-purple-600 mb-4" id="phone-display">{{ $phoneNumber ?? 'Your Phone' }}</div>
                         <p class="text-gray-600 text-sm">
-                            Enter the 6-digit code to continue your registration.
+                            {{ __('messages.enter_6_digit_code_continue') }}
                         </p>
                     </div>
                 </div>
@@ -270,7 +275,7 @@
                             <i class="fas fa-spinner fa-spin mr-2"></i>
                         </span>
                         <i class="fas fa-paper-plane mr-2"></i>
-                        <span class="button-text">Send Verification Code</span>
+                        <span class="button-text">{{ __('messages.send_verification_code') }}</span>
                     </button>
                 </div>
 
@@ -278,10 +283,10 @@
                 <div id="otp-form-section" class="hidden space-y-4">
                     <!-- OTP Code Field -->
                     <div class="space-y-2">
-                        <label for="otp_code" class="text-sm font-medium text-gray-700">Enter OTP Code</label>
+                        <label for="otp_code" class="text-sm font-medium text-gray-700">{{ __('messages.enter_otp_code') }}</label>
                         <div class="relative">
                             <input id="otp_code" name="otp_code" type="text"
-                                   placeholder="000000" required maxlength="6"
+                                   placeholder="{{ __('messages.enter_6_digit_code') }}" required maxlength="6"
                                    class="w-full pl-10 pr-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent text-center text-lg font-mono tracking-widest">
                             <svg class="absolute left-3 top-1/2 transform -translate-y-1/2 w-4 h-4 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"></path>
@@ -295,17 +300,17 @@
                             <i class="fas fa-spinner fa-spin mr-2"></i>
                         </span>
                         <i class="fas fa-check mr-2"></i>
-                        <span class="button-text">Verify Phone Number</span>
+                        <span class="button-text">{{ __('messages.verify_phone_number') }}</span>
                     </button>
 
                     <!-- Resend Section -->
                     <div class="text-center">
-                        <p class="text-gray-600 text-sm mb-2">Didn't receive the code?</p>
+                        <p class="text-gray-600 text-sm mb-2">{{ __('messages.didnt_receive_code') }}</p>
                         <button type="button" onclick="resendPhoneOTP()" id="resend-otp-btn" class="text-purple-600 hover:text-purple-700 font-medium underline">
                             <span class="loading hidden">
                                 <i class="fas fa-spinner fa-spin mr-2"></i>
                             </span>
-                            <span class="button-text">Resend OTP</span>
+                            <span class="button-text">{{ __('messages.resend_otp') }}</span>
                         </button>
                     </div>
                 </div>

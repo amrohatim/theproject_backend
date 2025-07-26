@@ -11,6 +11,7 @@
         "laravel/sanctum": "^4.1",
         "laravel/tinker": "^2.10.1",
         "mailgun/mailgun-php": "^4.0",
+        "mindplay/php-vite": "^1.0",
         "symfony/mailgun-mailer": "^7.0"
     },
     "require-dev": {

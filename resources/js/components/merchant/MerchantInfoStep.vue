@@ -43,7 +43,7 @@
         <label for="phone" class="form-label">{{ $t('phone_number') }} *</label>
         <div class="phone-input-container">
           <div class="country-code-display">
-            <img src="data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMjQiIGhlaWdodD0iMTgiIHZpZXdCb3g9IjAgMCAyNCAxOCIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KPHJlY3Qgd2lkdGg9IjI0IiBoZWlnaHQ9IjYiIGZpbGw9IiMwMDczMzMiLz4KPHJlY3QgeT0iNiIgd2lkdGg9IjI0IiBoZWlnaHQ9IjYiIGZpbGw9IiNGRkZGRkYiLz4KPHJlY3QgeT0iMTIiIHdpZHRoPSIyNCIgaGVpZ2h0PSI2IiBmaWxsPSIjRkYwMDAwIi8+Cjwvc3ZnPgo=" alt="UAE Flag" class="flag-icon">
+            <img src="data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMjQiIGhlaWdodD0iMTgiIHZpZXdCb3g9IjAgMCAyNCAxOCIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KPHJlY3Qgd2lkdGg9IjI0IiBoZWlnaHQ9IjYiIGZpbGw9IiMwMDczMzMiLz4KPHJlY3QgeT0iNiIgd2lkdGg9IjI0IiBoZWlnaHQ9IjYiIGZpbGw9IiNGRkZGRkYiLz4KPHJlY3QgeT0iMTIiIHdpZHRoPSIyNCIgaGVpZ2h0PSI2IiBmaWxsPSIjRkYwMDAwIi8+Cjwvc3ZnPgo=" :alt="$t('uae_flag')" class="flag-icon">
             <span class="country-code">+971</span>
           </div>
           <input
@@ -52,7 +52,7 @@
             v-model="phoneNumber"
             class="form-input phone-input"
             :class="{ 'error': errors.phone }"
-            placeholder="50 123 4567"
+            :placeholder="$t('phone_placeholder')"
             required
             maxlength="11"
             @input="handlePhoneInput"
@@ -96,7 +96,7 @@
 
       <!-- Logo Upload -->
       <div class="form-group">
-        <label for="logo" class="form-label">Business Logo (Optional)</label>
+        <label for="logo" class="form-label">{{ $t('business_logo_optional') }}</label>
         <div class="file-upload" :class="{ 'has-image': logoPreviewUrl }">
           <input
             type="file"
@@ -111,12 +111,12 @@
               <img :src="logoPreviewUrl" :alt="logoFileName" class="preview-thumbnail">
               <div class="image-info">
                 <span class="file-name">{{ logoFileName }}</span>
-                <span class="change-text">Click to change</span>
+                <span class="change-text">{{ $t('click_to_change') }}</span>
               </div>
             </div>
             <div v-else class="upload-placeholder">
               <i class="fas fa-cloud-upload-alt"></i>
-              <span>Click to upload logo</span>
+              <span>{{ $t('click_to_upload_logo') }}</span>
             </div>
           </label>
         </div>
@@ -125,7 +125,7 @@
 
       <!-- UAE ID Front -->
       <div class="form-group">
-        <label for="uae_id_front" class="form-label">UAE ID Front Side *</label>
+        <label for="uae_id_front" class="form-label">{{ $t('uae_id_front_side_required') }}</label>
         <div class="file-upload" :class="{ 'has-image': uaeIdFrontPreviewUrl }">
           <input
             type="file"
@@ -141,12 +141,12 @@
               <img :src="uaeIdFrontPreviewUrl" :alt="uaeIdFrontFileName" class="preview-thumbnail">
               <div class="image-info">
                 <span class="file-name">{{ uaeIdFrontFileName }}</span>
-                <span class="change-text">Click to change</span>
+                <span class="change-text">{{ $t('click_to_change') }}</span>
               </div>
             </div>
             <div v-else class="upload-placeholder">
               <i class="fas fa-id-card"></i>
-              <span>Upload front side of UAE ID</span>
+              <span>{{ $t('upload_front_side_uae_id') }}</span>
             </div>
           </label>
         </div>
@@ -155,7 +155,7 @@
 
       <!-- UAE ID Back -->
       <div class="form-group">
-        <label for="uae_id_back" class="form-label">UAE ID Back Side *</label>
+        <label for="uae_id_back" class="form-label">{{ $t('uae_id_back_side_required') }}</label>
         <div class="file-upload" :class="{ 'has-image': uaeIdBackPreviewUrl }">
           <input
             type="file"
@@ -171,12 +171,12 @@
               <img :src="uaeIdBackPreviewUrl" :alt="uaeIdBackFileName" class="preview-thumbnail">
               <div class="image-info">
                 <span class="file-name">{{ uaeIdBackFileName }}</span>
-                <span class="change-text">Click to change</span>
+                <span class="change-text">{{ $t('click_to_change') }}</span>
               </div>
             </div>
             <div v-else class="upload-placeholder">
               <i class="fas fa-id-card"></i>
-              <span>Upload back side of UAE ID</span>
+              <span>{{ $t('upload_back_side_uae_id') }}</span>
             </div>
           </label>
         </div>
@@ -185,14 +185,14 @@
 
       <!-- Store Location -->
       <div class="form-group">
-        <label for="store_location_address" class="form-label">Store Location (Optional)</label>
+        <label for="store_location_address" class="form-label">{{ $t('store_location_optional') }}</label>
         <div class="location-search-container">
           <input
             type="text"
             id="location-search"
             v-model="locationSearch"
             class="form-input"
-            placeholder="Search for your store location..."
+            :placeholder="$t('search_for_store_location')"
             @focus="handleLocationFocus"
             @input="handleLocationSearch"
             autocomplete="off"
@@ -205,7 +205,7 @@
             type="button"
             class="clear-location-btn"
             @click="clearLocation"
-            title="Clear location"
+            :title="$t('clear_location')"
           >
             <i class="fas fa-times"></i>
           </button>
@@ -214,14 +214,14 @@
         <!-- Map Loading State -->
         <div v-if="mapLoading" class="map-loading">
           <div class="loading-spinner"></div>
-          <span>Loading map...</span>
+          <span>{{ $t('loading_map') }}</span>
         </div>
 
         <!-- Map Error State -->
         <div v-if="mapError" class="map-error">
           <i class="fas fa-exclamation-triangle"></i>
           <span>{{ mapError }}</span>
-          <button type="button" @click="retryMapLoad" class="retry-btn">Retry</button>
+          <button type="button" @click="retryMapLoad" class="retry-btn">{{ $t('retry') }}</button>
         </div>
 
         <!-- Map Container -->
@@ -240,7 +240,7 @@
           <!-- Loading State Overlay -->
           <div v-if="mapLoading" class="map-loading">
             <div class="loading-spinner"></div>
-            <p>Loading Google Maps...</p>
+            <p>{{ $t('loading_google_maps') }}</p>
           </div>
 
           <!-- Error State Overlay -->
@@ -249,14 +249,14 @@
             <p>{{ mapError }}</p>
             <button @click="retryMapLoad" class="retry-btn">
               <i class="fas fa-redo"></i>
-              Retry
+              {{ $t('retry') }}
             </button>
           </div>
 
           <!-- Map Instructions (only show when map is visible) -->
           <div v-if="!mapLoading && !mapError" class="map-instructions">
             <i class="fas fa-info-circle"></i>
-            Click anywhere on the map to set your store location, or drag the marker to fine-tune the position.
+            {{ $t('map_instructions') }}
           </div>
 
           <!-- Selected Address (only show when map is visible and address exists) -->
@@ -270,11 +270,11 @@
             type="text"
             v-model="formData.store_location_address"
             class="form-input location-selected"
-            placeholder="Selected address will appear here"
+            :placeholder="$t('selected_address_will_appear_here')"
             readonly
           >
           <button type="button" class="clear-location-btn" @click="clearLocation">
-            <i class="fas fa-times"></i> Clear Location
+            <i class="fas fa-times"></i> {{ $t('clear_location') }}
           </button>
         </div>
         <div v-if="errors.store_location_address" class="error-message">{{ errors.store_location_address[0] }}</div>
@@ -288,13 +288,13 @@
             id="delivery_capability" 
             v-model="formData.delivery_capability"
           >
-          <label for="delivery_capability" class="form-label">I can deliver to customers</label>
+          <label for="delivery_capability" class="form-label">{{ $t('i_can_deliver_to_customers') }}</label>
         </div>
       </div>
 
       <!-- Delivery Fees -->
       <div v-if="formData.delivery_capability" class="delivery-fees">
-        <h4>Delivery Fees by Emirate (AED)</h4>
+        <h4>{{ $t('delivery_fees_by_emirate_aed') }}</h4>
         <div class="emirate-fee" v-for="emirate in emirates" :key="emirate.key">
           <label>{{ emirate.name }}:</label>
           <input 
@@ -309,7 +309,7 @@
 
       <button type="submit" class="form-button" :disabled="loading">
         <div v-if="loading" class="loading-spinner"></div>
-        <span class="button-text">{{ loading ? 'Creating Account...' : 'Continue to Verification' }}</span>
+        <span class="button-text">{{ loading ? $t('creating_account') : $t('continue_to_verification') }}</span>
       </button>
     </form>
 
@@ -319,14 +319,14 @@
         <div class="modal-header">
           <h3 class="modal-title">
             <i class="fas fa-exclamation-triangle"></i>
-            Validation Errors
+            {{ $t('validation_errors') }}
           </h3>
           <button type="button" class="modal-close" @click="closeValidationModal">
             <i class="fas fa-times"></i>
           </button>
         </div>
         <div class="modal-body">
-          <p class="modal-description">Please fix the following errors before submitting:</p>
+          <p class="modal-description">{{ $t('please_fix_the_following_errors_before_submitting') }}</p>
           <ul class="error-list">
             <li v-for="error in validationErrors" :key="error.field">
               <i class="fas fa-exclamation-circle"></i>
@@ -338,7 +338,7 @@
         </div>
         <div class="modal-footer">
           <button type="button" class="modal-btn modal-btn-primary" @click="closeValidationModal">
-            Fix Errors
+            {{ $t('fix_errors') }}
           </button>
         </div>
       </div>
@@ -350,7 +350,7 @@
         <div class="modal-header">
           <h3 class="modal-title">
             <i class="fas fa-user-check"></i>
-            Account Already Exists
+            {{ $t('account_already_exists') }}
           </h3>
           <button type="button" class="modal-close" @click="closeLoginModal">
             <i class="fas fa-times"></i>
@@ -361,10 +361,10 @@
         </div>
         <div class="modal-footer">
           <button type="button" class="modal-btn modal-btn-secondary" @click="closeLoginModal">
-            Cancel
+            {{ $t('cancel') }}
           </button>
           <button type="button" class="modal-btn modal-btn-primary" @click="redirectToLogin">
-            Go to Login
+            {{ $t('go_to_login') }}
           </button>
         </div>
       </div>
@@ -565,46 +565,46 @@ export default {
 
       // Business name validation
       if (!this.formData.name || this.formData.name.trim() === '') {
-        errors.push({ field: 'name', message: 'Business name is required' });
+        errors.push({ field: 'name', message: this.$t('business_name_is_required') });
       } else if (this.formData.name.length > 255) {
-        errors.push({ field: 'name', message: 'Business name cannot exceed 255 characters' });
+        errors.push({ field: 'name', message: this.$t('business_name_cannot_exceed_255_characters') });
       }
 
       // Email validation
       if (!this.formData.email || this.formData.email.trim() === '') {
-        errors.push({ field: 'email', message: 'Email address is required' });
+        errors.push({ field: 'email', message: this.$t('email_is_required') });
       } else if (!this.isValidEmail(this.formData.email)) {
-        errors.push({ field: 'email', message: 'Please enter a valid email address' });
+        errors.push({ field: 'email', message: this.$t('please_enter_a_valid_email_address') });
       }
 
       // Phone validation
       if (!this.formData.phone || this.formData.phone.trim() === '') {
-        errors.push({ field: 'phone', message: 'Phone number is required' });
+        errors.push({ field: 'phone', message: this.$t('phone_number_is_required') });
       } else if (!this.isValidUAEPhone(this.formData.phone)) {
-        errors.push({ field: 'phone', message: 'Please enter a valid 9-digit UAE phone number' });
+        errors.push({ field: 'phone', message: this.$t('please_enter_a_valid_9_digit_uae_phone_number') });
       }
 
       // Password validation
       if (!this.formData.password || this.formData.password.trim() === '') {
-        errors.push({ field: 'password', message: 'Password is required' });
+        errors.push({ field: 'password', message: this.$t('password_is_required') });
       } else if (this.formData.password.length < 8) {
-        errors.push({ field: 'password', message: 'Password must be at least 8 characters' });
+        errors.push({ field: 'password', message: this.$t('password_must_be_at_least_8_characters') });
       }
 
       // Password confirmation validation
       if (!this.formData.password_confirmation || this.formData.password_confirmation.trim() === '') {
-        errors.push({ field: 'password_confirmation', message: 'Password confirmation is required' });
+        errors.push({ field: 'password_confirmation', message: this.$t('password_confirmation_is_required') });
       } else if (this.formData.password !== this.formData.password_confirmation) {
-        errors.push({ field: 'password_confirmation', message: 'Password confirmation does not match' });
+        errors.push({ field: 'password_confirmation', message: this.$t('password_confirmation_does_not_match') });
       }
 
       // UAE ID validation
       if (!this.formData.uae_id_front) {
-        errors.push({ field: 'uae_id_front', message: 'UAE ID front side is required' });
+        errors.push({ field: 'uae_id_front', message: this.$t('uae_id_front_side_is_required') });
       }
 
       if (!this.formData.uae_id_back) {
-        errors.push({ field: 'uae_id_back', message: 'UAE ID back side is required' });
+        errors.push({ field: 'uae_id_back', message: this.$t('uae_id_back_side_is_required') });
       }
 
       // Delivery fees validation
@@ -614,7 +614,7 @@ export default {
           if (!this.formData.delivery_fees[emirate] || this.formData.delivery_fees[emirate] === '') {
             errors.push({
               field: `delivery_fees.${emirate}`,
-              message: `Delivery fee for ${this.getEmirateDisplayName(emirate)} is required when delivery capability is enabled`
+              message: this.$t('delivery_fee_for_emirate_is_required', { emirate: this.getEmirateDisplayName(emirate) })
             });
           }
         });

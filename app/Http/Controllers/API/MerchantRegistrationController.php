@@ -141,7 +141,6 @@ class MerchantRegistrationController extends Controller
             $validator = Validator::make($request->all(), [
                 'user_id' => 'required|exists:users,id',
                 'license_file' => 'required|file|mimes:pdf|max:10240', // 10MB max
-                'license_type' => 'nullable|string|max:100',
                 'license_start_date' => 'required|date|after_or_equal:today',
                 'license_end_date' => 'required|date|after:license_start_date',
             ], [

@@ -1,11 +1,11 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="{{ app()->getLocale() }}" dir="{{ app()->getLocale() == 'ar' ? 'rtl' : 'ltr' }}">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="description" content="Provider Registration Step 2 - Email Verification">
+    <meta name="description" content="{{ __('messages.provider_registration_step2_description') }}">
     <meta name="robots" content="noindex, nofollow">
-    <title>Data3Chic - Provider Registration</title>
+    <title>{{ __('messages.data3chic_provider_registration') }}</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script>
         tailwind.config = {
@@ -31,7 +31,12 @@
     </script>
 
     <!-- Fonts -->
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    @if(app()->getLocale() == 'ar')
+        <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+        <link rel="stylesheet" href="{{ asset('css/rtl.css') }}">
+    @else
+        <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    @endif
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 
     <!-- CSRF Token -->
@@ -200,16 +205,16 @@
         <div class="hidden lg:flex lg:w-1/2 text-white p-12 flex-col justify-top" style="background: linear-gradient(135deg, #8b5cf6 0%, #7c3aed 100%);">
             <div class="max-w-md mx-auto space-y-8">
                 <div class="text-center">
-                    <h1 class="text-3xl font-bold mb-8">Data3Chic</h1>
+                    <h1 class="text-3xl font-bold mb-8">Dala3Chic</h1>
                 </div>
 
                 <!-- Main Heading -->
                 <div class="text-center space-y-4">
                     <h2 class="text-4xl font-bold leading-tight">
-                        Email<br>Verification
+                        {{ __('messages.email_verification') }}
                     </h2>
                     <p class="text-purple-100 text-lg">
-                        We've sent a verification code to your email address. Please check your inbox and enter the code below.
+                        {{ __('messages.email_verification_description') }}
                     </p>
                 </div>
 
@@ -222,8 +227,8 @@
                             </svg>
                         </div>
                         <div>
-                            <h3 class="font-semibold text-lg mb-1">Secure Verification</h3>
-                            <p class="text-purple-100 text-sm">Your email verification ensures account security and authenticity.</p>
+                            <h3 class="font-semibold text-lg mb-1">{{ __('messages.secure_verification') }}</h3>
+                            <p class="text-purple-100 text-sm">{{ __('messages.secure_verification_description') }}</p>
                         </div>
                     </div>
 
@@ -234,8 +239,8 @@
                             </svg>
                         </div>
                         <div>
-                            <h3 class="font-semibold text-lg mb-1">Quick Process</h3>
-                            <p class="text-purple-100 text-sm">Email verification takes just a few seconds to complete.</p>
+                            <h3 class="font-semibold text-lg mb-1">{{ __('messages.quick_process') }}</h3>
+                            <p class="text-purple-100 text-sm">{{ __('messages.quick_process_description') }}</p>
                         </div>
                     </div>
 
@@ -246,8 +251,8 @@
                             </svg>
                         </div>
                         <div>
-                            <h3 class="font-semibold text-lg mb-1">Almost Done</h3>
-                            <p class="text-purple-100 text-sm">You're halfway through the registration process.</p>
+                            <h3 class="font-semibold text-lg mb-1">{{ __('messages.almost_done') }}</h3>
+                            <p class="text-purple-100 text-sm">{{ __('messages.halfway_through_registration') }}</p>
                         </div>
                     </div>
                 </div>
@@ -258,35 +263,35 @@
         <div class="w-full lg:w-1/2 bg-white p-8 lg:p-12 flex items-center justify-center">
             <div class="w-full max-w-md space-y-6">
                 <div class="text-center space-y-2">
-                    <h2 class="text-2xl font-bold text-gray-900">Verify Your Email</h2>
-                    <p class="text-gray-600">Step 2 of 4: Email Verification</p>
+                    <h2 class="text-2xl font-bold text-gray-900">{{ __('messages.verify_your_email') }}</h2>
+                    <p class="text-gray-600">{{ __('messages.step_2_of_4_email_verification') }}</p>
                 </div>
 
                 <!-- Step Indicator -->
                 <div class="progress-bar">
                     <div class="progress-step completed">
                         <div class="step-circle"><i class="fas fa-check"></i></div>
-                        <div class="step-label">Provider Info</div>
+                        <div class="step-label">{{ __('messages.provider_info') }}</div>
                     </div>
                     <div class="progress-step active">
                         <div class="step-circle">2</div>
-                        <div class="step-label">Verification</div>
+                        <div class="step-label">{{ __('messages.verification') }}</div>
                     </div>
                     <div class="progress-step">
                         <div class="step-circle">3</div>
-                        <div class="step-label">Phone</div>
+                        <div class="step-label">{{ __('messages.phone') }}</div>
                     </div>
                     <div class="progress-step">
                         <div class="step-circle">4</div>
-                        <div class="step-label">License</div>
+                        <div class="step-label">{{ __('messages.license') }}</div>
                     </div>
                 </div>
 
                 <!-- Back Link -->
                 <div class="mb-4">
                     <a href="/register/provider/step1" class="text-purple-600 hover:text-purple-700 transition-colors duration-300 text-sm font-medium">
-                        <i class="fas fa-arrow-left mr-2"></i>
-                        Back to Provider Info
+                        <i class="fas fa-arrow-{{ app()->getLocale() == 'ar' ? 'right' : 'left' }} {{ app()->getLocale() == 'ar' ? 'ml-2' : 'mr-2' }}"></i>
+                        {{ __('messages.back_to_provider_info') }}
                     </a>
                 </div>
 
@@ -294,13 +299,13 @@
                 <div class="bg-purple-50 border border-purple-200 rounded-lg p-6 mb-6">
                     <div class="flex items-center justify-between mb-4">
                         <div class="flex items-center">
-                            <i class="fas fa-envelope text-purple-600 mr-2"></i>
-                            <span class="font-medium text-gray-900">Email Verification</span>
+                            <i class="fas fa-envelope text-purple-600 {{ app()->getLocale() == 'ar' ? 'ml-2' : 'mr-2' }}"></i>
+                            <span class="font-medium text-gray-900">{{ __('messages.email_verification') }}</span>
                         </div>
-                        <span class="px-2 py-1 bg-yellow-100 text-yellow-800 text-xs font-medium rounded-full" id="emailStatus">Pending</span>
+                        <span class="px-2 py-1 bg-yellow-100 text-yellow-800 text-xs font-medium rounded-full" id="emailStatus">{{ __('messages.pending') }}</span>
                     </div>
                     <p class="text-gray-600 text-sm mb-4">
-                        We've sent a 6-digit verification code to your email address. Please enter the code below to verify your email.
+                        {{ __('messages.email_verification_code_description') }}
                     </p>
                 </div>
 
@@ -308,10 +313,10 @@
                 <form id="emailVerificationForm" class="space-y-4">
                     <!-- Verification Code Field -->
                     <div class="space-y-2">
-                        <label for="verification_code" class="text-sm font-medium text-gray-700">Verification Code</label>
+                        <label for="verification_code" class="text-sm font-medium text-gray-700">{{ __('messages.verification_code') }}</label>
                         <div class="relative">
                             <input id="verification_code" name="verification_code" type="text"
-                                   placeholder="Enter 6-digit code" required maxlength="6"
+                                   placeholder="{{ __('messages.enter_6_digit_code') }}" required maxlength="6"
                                    class="w-full pl-10 pr-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent text-center text-lg font-mono tracking-widest">
                             <svg class="absolute left-3 top-1/2 transform -translate-y-1/2 w-4 h-4 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"></path>
@@ -324,26 +329,26 @@
                     <!-- Verify Button -->
                     <button type="submit" id="verifyCodeBtn" class="w-full text-white py-3 px-4 rounded-md font-semibold transition-all duration-300 transform hover:scale-105 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:ring-offset-2" style="background: linear-gradient(135deg, #8b5cf6 0%, #7c3aed 100%);">
                         <span class="loading hidden">
-                            <i class="fas fa-spinner fa-spin mr-2"></i>
+                            <i class="fas fa-spinner fa-spin {{ app()->getLocale() == 'ar' ? 'ml-2' : 'mr-2' }}"></i>
                         </span>
-                        <span class="button-text">Verify Code</span>
+                        <span class="button-text">{{ __('messages.verify_code') }}</span>
                     </button>
                 </form>
 
                 <!-- Resend Section -->
                 <div class="text-center mt-4">
                     <p class="text-gray-600 text-sm">
-                        Didn't receive the code?
+                        {{ __('messages.didnt_receive_code') }}
                         <button type="button" id="resendCodeBtn" class="text-purple-600 hover:text-purple-700 font-medium underline">
-                            Resend Code
+                            {{ __('messages.resend_code') }}
                         </button>
                     </p>
                 </div>
 
                 <!-- Continue Button (hidden until email verification complete) -->
                 <button type="button" id="continueBtn" class="w-full text-white py-3 px-4 rounded-md font-semibold transition-all duration-300 transform hover:scale-105 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:ring-offset-2 hidden" style="background: linear-gradient(135deg, #8b5cf6 0%, #7c3aed 100%);">
-                    Continue to Phone Verification
-                    <i class="fas fa-arrow-right ml-2"></i>
+                    {{ __('messages.continue_to_phone_verification') }}
+                    <i class="fas fa-arrow-{{ app()->getLocale() == 'ar' ? 'left' : 'right' }} {{ app()->getLocale() == 'ar' ? 'mr-2' : 'ml-2' }}"></i>
                 </button>
             </div>
         </div>
@@ -497,7 +502,7 @@
             }
 
             resendBtn.disabled = true;
-            resendBtn.textContent = 'Sending...';
+            resendBtn.textContent = '{{ __('messages.sending') }}...';
 
             // Clear any previous messages
             clearMessages();
@@ -516,32 +521,32 @@
             .then(data => {
                 if (data.success) {
                     console.log('Verification email resent successfully');
-                    showSuccess('Verification code sent successfully! Please check your email.');
+                    showSuccess('{{ __('messages.verification_code_sent_successfully') }}');
 
                     // Disable resend button for 60 seconds
                     let countdown = 60;
                     const interval = setInterval(() => {
-                        resendBtn.textContent = `Resend Code (${countdown}s)`;
+                        resendBtn.textContent = `{{ __('messages.resend_code') }} (${countdown}s)`;
                         countdown--;
 
                         if (countdown < 0) {
                             clearInterval(interval);
                             resendBtn.disabled = false;
-                            resendBtn.textContent = 'Resend Code';
+                            resendBtn.textContent = '{{ __('messages.resend_code') }}';
                         }
                     }, 1000);
                 } else {
                     console.error('Failed to resend verification email:', data.message);
                     showError(data.message || 'Failed to resend verification code. Please try again.');
                     resendBtn.disabled = false;
-                    resendBtn.textContent = 'Resend Code';
+                    resendBtn.textContent = '{{ __('messages.resend_code') }}';
                 }
             })
             .catch(error => {
                 console.error('Error resending verification email:', error);
                 showError('Failed to resend verification code. Please check your connection and try again.');
                 resendBtn.disabled = false;
-                resendBtn.textContent = 'Resend Code';
+                resendBtn.textContent = '{{ __('messages.resend_code') }}';
             });
         });
 
@@ -558,7 +563,7 @@
         // Helper functions
         function updateEmailVerificationStatus() {
             const emailStatus = document.getElementById('emailStatus');
-            emailStatus.textContent = 'Verified';
+            emailStatus.textContent = '{{ __('messages.verified') }}';
             emailStatus.className = 'px-2 py-1 bg-green-100 text-green-800 text-xs font-medium rounded-full';
         }
 

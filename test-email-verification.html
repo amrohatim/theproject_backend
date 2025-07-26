@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Test Email Verification Translations</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gray-50 p-8">
+    <div class="max-w-md mx-auto bg-white rounded-lg shadow-lg p-6">
+        <h2 class="text-2xl font-bold text-center mb-6">Email Verification Test</h2>
+        
+        <!-- English Version -->
+        <div class="mb-8">
+            <h3 class="text-lg font-semibold mb-4 text-blue-600">English Version:</h3>
+            <div class="space-y-4">
+                <h4 class="text-xl font-bold">Verify Your Email</h4>
+                <p class="text-gray-600">We've sent a verification code to test@example.com</p>
+                <input type="text" placeholder="Enter 6-digit code" class="w-full p-3 border rounded-lg" maxlength="6">
+                <button class="w-full bg-amber-500 text-white py-3 rounded-lg font-semibold">Verify Email</button>
+                <p class="text-sm text-gray-500 text-center">Didn't receive the code? <a href="#" class="text-amber-600 hover:underline">Resend</a></p>
+                <p class="text-sm text-gray-500 text-center">You can resend the code in 60 seconds</p>
+            </div>
+        </div>
+        
+        <!-- Arabic Version -->
+        <div>
+            <h3 class="text-lg font-semibold mb-4 text-green-600">Arabic Version (RTL):</h3>
+            <div class="space-y-4 text-right" dir="rtl">
+                <h4 class="text-xl font-bold">تحقق من بريدك الإلكتروني</h4>
+                <p class="text-gray-600">لقد أرسلنا رمز التحقق إلى test@example.com</p>
+                <input type="text" placeholder="أدخل الرمز المكون من 6 أرقام" class="w-full p-3 border rounded-lg" maxlength="6">
+                <button class="w-full bg-amber-500 text-white py-3 rounded-lg font-semibold">تحقق من البريد الإلكتروني</button>
+                <p class="text-sm text-gray-500 text-center">لم تستلم الرمز؟ <a href="#" class="text-amber-600 hover:underline">إعادة إرسال</a></p>
+                <p class="text-sm text-gray-500 text-center">يمكنك إعادة إرسال الرمز خلال 60 ثانية</p>
+            </div>
+        </div>
+        
+        <!-- Test OTP Error Messages -->
+        <div class="mt-8 p-4 bg-red-50 border border-red-200 rounded-lg">
+            <h4 class="font-semibold text-red-800 mb-2">Error Messages Test:</h4>
+            <p class="text-red-600 text-sm">API request failed: Error: Invalid verification code. Please try again.</p>
+            <p class="text-red-600 text-sm">Email verification error: Error: Invalid verification code. Please try again.</p>
+        </div>
+    </div>
+</body>
+</html>

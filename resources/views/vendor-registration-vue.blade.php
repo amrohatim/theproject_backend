@@ -145,7 +145,30 @@
             padding-left: 1rem;
             padding-right: 0;
         }
+
+        /* RTL Arrow Direction Fix */
+        .rtl-arrow {
+            transform: scaleX(-1);
+        }
+
+        /* RTL Button Spacing */
+        .space-x-reverse > * + * {
+            margin-right: 0.5rem;
+            margin-left: 0;
+        }
         @endif
+
+        /* File Upload Areas Hover Effects */
+        .logo-upload-area:hover,
+        .license-upload-area:hover {
+            border-color: #6b7280;
+        }
+
+        .logo-upload-area.border-blue-400,
+        .license-upload-area.border-blue-400 {
+            border-color: #60a5fa !important;
+            background-color: #eff6ff !important;
+        }
     </style>
 
     <!-- Pass translations and locale data to JavaScript -->
@@ -217,7 +240,75 @@
             'verify_your_email': '{{ __('messages.verify_your_email') }}',
             'verify_your_phone': '{{ __('messages.verify_your_phone') }}',
             'business_details': '{{ __('messages.business_details') }}',
-            'upload_documents': '{{ __('messages.upload_documents') }}'
+            'upload_documents': '{{ __('messages.upload_documents') }}',
+
+            // Additional missing translations
+            'next': '{{ __('messages.next') }}',
+            'previous': '{{ __('messages.previous') }}',
+            'grow_your_sales_desc': '{{ __('messages.grow_your_sales_desc') }}',
+            'powerful_tools_desc': '{{ __('messages.powerful_tools_desc') }}',
+            'dedicated_support_desc': '{{ __('messages.dedicated_support_desc') }}',
+
+            // Step tooltips
+            'step_1_tooltip': '{{ __('messages.step_1_tooltip') }}',
+            'step_2_tooltip': '{{ __('messages.step_2_tooltip') }}',
+            'step_3_tooltip': '{{ __('messages.step_3_tooltip') }}',
+            'step_4_tooltip': '{{ __('messages.step_4_tooltip') }}',
+            'step_5_tooltip': '{{ __('messages.step_5_tooltip') }}',
+
+            // Email verification messages
+            'verification_code_sent_email': '{{ __('messages.verification_code_sent_email') }}',
+            'validation_error': '{{ __('messages.validation_error') }}',
+            'invalid_verification_code': '{{ __('messages.invalid_verification_code') }}',
+            'failed_send_verification_code': '{{ __('messages.failed_send_verification_code') }}',
+
+            // Phone verification messages
+            'verification_code_sent_phone': '{{ __('messages.verification_code_sent_phone') }}',
+            'sms_verification_code': '{{ __('messages.sms_verification_code') }}',
+            'resend_sms_code': '{{ __('messages.resend_sms_code') }}',
+
+            // Company info fields
+            'primary_contact': '{{ __('messages.primary_contact') }}',
+            'secondary_contact_optional': '{{ __('messages.secondary_contact_optional') }}',
+            'upload_company_logo_info': '{{ __('messages.upload_company_logo_info') }}',
+
+            // Emirates in Arabic
+            'emirate': '{{ __('messages.emirate') }}',
+            'abu_dhabi': '{{ __('messages.abu_dhabi') }}',
+            'dubai': '{{ __('messages.dubai') }}',
+            'sharjah': '{{ __('messages.sharjah') }}',
+            'ajman': '{{ __('messages.ajman') }}',
+            'umm_al_quwain': '{{ __('messages.umm_al_quwain') }}',
+            'ras_al_khaimah': '{{ __('messages.ras_al_khaimah') }}',
+            'fujairah': '{{ __('messages.fujairah') }}',
+
+            // License upload
+            'click_to_upload': '{{ __('messages.click_to_upload') }}',
+            'important': '{{ __('messages.important') }}',
+            'license_requirements': '{{ __('messages.license_requirements') }}',
+
+            // Alert and notification messages
+            'sending': '{{ __('messages.sending') }}',
+            'verification_code_sent_successfully': '{{ __('messages.verification_code_sent_successfully') }}',
+            'sms_code_sent_successfully': '{{ __('messages.sms_code_sent_successfully') }}',
+            'failed_send_sms_code': '{{ __('messages.failed_send_sms_code') }}',
+            'network_error_try_again': '{{ __('messages.network_error_try_again') }}',
+            'your_email': '{{ __('messages.your_email') }}',
+            'enter_sms_code': '{{ __('messages.enter_sms_code') }}',
+            'select_emirate': '{{ __('messages.select_emirate') }}',
+
+            // File upload error messages
+            'invalid_image_format': '{{ __('messages.invalid_image_format') }}',
+            'logo_file_too_large': '{{ __('messages.logo_file_too_large') }}',
+            'pdf_files_only_message': '{{ __('messages.pdf_files_only_message') }}',
+            // misisng keyframes
+            'enter_company_email': '{{ __('messages.enter_company_email') }}',
+            'enter_business_address': '{{ __('messages.enter_business_address') }}',
+            'create_vendor_account': '{{ __('messages.create_vendor_account') }}',
+            'company_email': '{{ __('messages.company_email') }}',
+            'enter_city_name': '{{ __('messages.enter_city_name') }}',
+            'or_drag_and_drop': '{{ __('messages.or_drag_and_drop') }}',
+            
         };
     </script>
 </head>
@@ -250,8 +341,8 @@
                             </svg>
                         </div>
                         <div>
-                            <h3 class="font-semibold text-lg mb-1">Grow Your Sales</h3>
-                            <p class="text-blue-100 text-sm">Access to a large customer base and increase your revenue.</p>
+                            <h3 class="font-semibold text-lg mb-1">{{ __('messages.grow_your_sales') }}</h3>
+                            <p class="text-blue-100 text-sm">{{ __('messages.grow_your_sales_desc') }}</p>
                         </div>
                     </div>
 
@@ -263,8 +354,8 @@
                             </svg>
                         </div>
                         <div>
-                            <h3 class="font-semibold text-lg mb-1">Powerful Tools</h3>
-                            <p class="text-blue-100 text-sm">Easy-to-use dashboard to manage your products and orders.</p>
+                            <h3 class="font-semibold text-lg mb-1">{{ __('messages.powerful_tools') }}</h3>
+                            <p class="text-blue-100 text-sm">{{ __('messages.powerful_tools_desc') }}</p>
                         </div>
                     </div>
 
@@ -275,8 +366,8 @@
                             </svg>
                         </div>
                         <div>
-                            <h3 class="font-semibold text-lg mb-1">Dedicated Support</h3>
-                            <p class="text-blue-100 text-sm">Our team is here to help you succeed on our platform.</p>
+                            <h3 class="font-semibold text-lg mb-1">{{ __('messages.dedicated_support') }}</h3>
+                            <p class="text-blue-100 text-sm">{{ __('messages.dedicated_support_desc') }}</p>
                         </div>
                     </div>
                 </div>
@@ -287,8 +378,8 @@
         <div class="w-full lg:w-1/2 bg-white p-8 lg:p-12 flex items-center justify-center">
             <div class="w-full max-w-md space-y-6">
                 <div class="text-center space-y-2">
-                    <h2 class="text-2xl font-bold text-gray-900">Create Vendor Account</h2>
-                    <p class="text-gray-600">Complete all steps to get started</p>
+                    <h2 class="text-2xl font-bold text-gray-900">{{ __('messages.create_vendor_account') }}</h2>
+                    <p class="text-gray-600">{{ __('messages.complete_all_steps') }}</p>
                 </div>
 
                 <!-- Progress Indicator -->
@@ -301,12 +392,12 @@
                                      data-step="1"
                                      tabindex="0"
                                      role="button"
-                                     aria-label="Step 1: Personal Info - Basic information"
-                                     title="Personal Info - Basic information">
+                                     aria-label="{{ __('messages.step_1_tooltip') }}"
+                                     title="{{ __('messages.step_1_tooltip') }}">
                                     1F
                                 </div>
                                 <div class="mt-3 text-center">
-                                    <div class="text-xs font-semibold text-blue-600">Personal Info</div>
+                                    <div class="text-xs font-semibold text-blue-600">{{ __('messages.personal_info') }}</div>
                                 </div>
                             </div>
                             <div class="progress-line flex-1 h-1 mx-4 bg-gray-300 rounded-full"></div>
@@ -317,12 +408,12 @@
                                      data-step="2"
                                      tabindex="0"
                                      role="button"
-                                     aria-label="Step 2: Email Verification - Verify your email"
-                                     title="Email Verification - Verify your email">
+                                     aria-label="{{ __('messages.step_2_tooltip') }}"
+                                     title="{{ __('messages.step_2_tooltip') }}">
                                     2
                                 </div>
                                 <div class="mt-3 text-center">
-                                    <div class="text-xs font-semibold text-gray-400">Email Verification</div>
+                                    <div class="text-xs font-semibold text-gray-400">{{ __('messages.email_verification') }}</div>
                                 </div>
                             </div>
                             <div class="progress-line flex-1 h-1 mx-4 bg-gray-300 rounded-full"></div>
@@ -333,12 +424,12 @@
                                      data-step="3"
                                      tabindex="0"
                                      role="button"
-                                     aria-label="Step 3: Phone Verification - Verify your phone"
-                                     title="Phone Verification - Verify your phone">
+                                     aria-label="{{ __('messages.step_3_tooltip') }}"
+                                     title="{{ __('messages.step_3_tooltip') }}">
                                     3
                                 </div>
                                 <div class="mt-3 text-center">
-                                    <div class="text-xs font-semibold text-gray-400">Phone Verification</div>
+                                    <div class="text-xs font-semibold text-gray-400">{{ __('messages.phone_verification') }}</div>
                                 </div>
                             </div>
                             <div class="progress-line flex-1 h-1 mx-4 bg-gray-300 rounded-full"></div>
@@ -349,12 +440,12 @@
                                      data-step="4"
                                      tabindex="0"
                                      role="button"
-                                     aria-label="Step 4: Company Info - Business details"
-                                     title="Company Info - Business details">
+                                     aria-label="{{ __('messages.step_4_tooltip') }}"
+                                     title="{{ __('messages.step_4_tooltip') }}">
                                     4
                                 </div>
                                 <div class="mt-3 text-center">
-                                    <div class="text-xs font-semibold text-gray-400">Company Info</div>
+                                    <div class="text-xs font-semibold text-gray-400">{{ __('messages.company_info') }}</div>
                                 </div>
                             </div>
                             <div class="progress-line flex-1 h-1 mx-4 bg-gray-300 rounded-full"></div>
@@ -365,12 +456,12 @@
                                      data-step="5"
                                      tabindex="0"
                                      role="button"
-                                     aria-label="Step 5: License Upload - Upload documents"
-                                     title="License Upload - Upload documents">
+                                     aria-label="{{ __('messages.step_5_tooltip') }}"
+                                     title="{{ __('messages.step_5_tooltip') }}">
                                     5
                                 </div>
                                 <div class="mt-3 text-center">
-                                    <div class="text-xs font-semibold text-gray-400">License Upload</div>
+                                    <div class="text-xs font-semibold text-gray-400">{{ __('messages.license_upload') }}</div>
                                 </div>
                             </div>
                         </div>
@@ -386,8 +477,8 @@
                             <div class="h-3 rounded-full transition-all duration-500 ease-out shadow-sm" id="progress-bar" style="width: 20%; background: linear-gradient(135deg, #3b82f6 0%, #1d4ed8 100%);"></div>
                         </div>
                         <div class="text-center">
-                            <h3 class="text-base font-semibold text-gray-900" id="mobile-title">Personal Info</h3>
-                            <p class="text-xs text-gray-500" id="mobile-description">Basic information</p>
+                            <h3 class="text-base font-semibold text-gray-900" id="mobile-title">{{ __('messages.personal_info') }}</h3>
+                            <p class="text-xs text-gray-500" id="mobile-description">{{ __('messages.basic_information') }}</p>
                         </div>
 
                         <!-- Mobile Step Dots -->
@@ -406,9 +497,9 @@
                     <div class="step-content active" id="step-1">
                         <div class="space-y-4">
                             <div class="space-y-2">
-                                <label for="fullName" class="text-sm font-medium text-gray-700" id="fullNameLabel">Full Name</label>
+                                <label for="fullName" class="text-sm font-medium text-gray-700" id="fullNameLabel">{{ __('messages.full_name') }}</label>
                                 <div class="relative">
-                                    <input id="fullName" name="name" type="text" placeholder="Enter your full name" class="w-full pl-10 pr-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent">
+                                    <input id="fullName" name="name" type="text" placeholder="{{ __('messages.enter_full_name') }}" class="w-full pl-10 pr-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent">
                                     <svg class="absolute left-3 top-1/2 transform -translate-y-1/2 w-4 h-4 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"></path>
                                     </svg>
@@ -416,9 +507,9 @@
                             </div>
 
                             <div class="space-y-2">
-                                <label for="email" class="text-sm font-medium text-gray-700" id="emailLabel">Email Address</label>
+                                <label for="email" class="text-sm font-medium text-gray-700" id="emailLabel">{{ __('messages.email_address') }}</label>
                                 <div class="relative">
-                                    <input id="email" name="email" type="email" placeholder="Enter your email" class="w-full pl-10 pr-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent">
+                                    <input id="email" name="email" type="email" placeholder="{{ __('messages.enter_email_address') }}" class="w-full pl-10 pr-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent">
                                     <svg class="absolute left-3 top-1/2 transform -translate-y-1/2 w-4 h-4 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 4.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"></path>
                                     </svg>
@@ -426,19 +517,19 @@
                             </div>
 
                             <div class="space-y-2">
-                                <label for="phone" class="text-sm font-medium text-gray-700" id="phoneLabel">Phone Number</label>
+                                <label for="phone" class="text-sm font-medium text-gray-700" id="phoneLabel">{{ __('messages.phone_number') }}</label>
                                 <div class="relative">
                                     <div class="absolute left-3 top-1/2 transform -translate-y-1/2 flex items-center">
                                         <span class="text-sm text-gray-600 mr-2">🇦🇪 +971</span>
                                     </div>
-                                    <input id="phone" name="phone" type="tel" placeholder="Enter 9-digit number" maxlength="9" class="w-full pl-20 pr-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent">
+                                    <input id="phone" name="phone" type="tel" placeholder="{{ __('messages.enter_phone_number') }}" maxlength="9" class="w-full pl-20 pr-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent">
                                 </div>
                             </div>
 
                             <div class="space-y-2">
-                                <label for="password" class="text-sm font-medium text-gray-700" id="passwordLabel">Password</label>
+                                <label for="password" class="text-sm font-medium text-gray-700" id="passwordLabel">{{ __('messages.password') }}</label>
                                 <div class="relative">
-                                    <input id="password" name="password" type="password" placeholder="Create a password" class="w-full pl-10 pr-10 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent">
+                                    <input id="password" name="password" type="password" placeholder="{{ __('messages.enter_password') }}" class="w-full pl-10 pr-10 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent">
                                     <svg class="absolute left-3 top-1/2 transform -translate-y-1/2 w-4 h-4 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"></path>
                                     </svg>
@@ -450,8 +541,8 @@
                             </div>
 
                             <div class="space-y-2">
-                                <label for="confirmPassword" class="text-sm font-medium text-gray-700" id="confirmPasswordLabel">Confirm Password</label>
-                                <input id="confirmPassword" name="password_confirmation" type="password" placeholder="Confirm your password" class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent">
+                                <label for="confirmPassword" class="text-sm font-medium text-gray-700" id="confirmPasswordLabel">{{ __('messages.confirm_password') }}</label>
+                                <input id="confirmPassword" name="password_confirmation" type="password" placeholder="{{ __('messages.enter_confirm_password') }}" class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent">
                             </div>
                         </div>
                     </div>
@@ -463,19 +554,19 @@
                                 <svg class="w-12 h-12 text-blue-600 mx-auto mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 4.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"></path>
                                 </svg>
-                                <h3 class="text-lg font-semibold text-gray-900 mb-2">Verify Your Email</h3>
+                                <h3 class="text-lg font-semibold text-gray-900 mb-2">{{ __('messages.verify_email') }}</h3>
                                 <p class="text-gray-600 mb-4">
-                                    We've sent a verification code to <strong id="email-display">your email</strong>
+                                    {{ __('messages.verification_code_sent_email') }} <strong id="email-display">{{ __('messages.your_email') }}</strong>
                                 </p>
                             </div>
 
                             <div class="space-y-2">
-                                <label for="verificationCode" class="text-sm font-medium text-gray-700">Verification Code</label>
-                                <input id="verificationCode" name="verification_code" type="text" placeholder="Enter 6-digit code" maxlength="6" class="w-full px-3 py-2 border border-gray-300 rounded-md text-center text-lg tracking-widest focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent">
+                                <label for="verificationCode" class="text-sm font-medium text-gray-700">{{ __('messages.verification_code') }}</label>
+                                <input id="verificationCode" name="verification_code" type="text" placeholder="{{ __('messages.enter_verification_code') }}" maxlength="6" class="w-full px-3 py-2 border border-gray-300 rounded-md text-center text-lg tracking-widest focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent">
                             </div>
 
                             <button type="button" id="resend-email-btn" class="text-blue-600 border border-blue-600 hover:bg-blue-50 bg-transparent px-4 py-2 rounded-md font-medium">
-                                Resend Code
+                                {{ __('messages.resend_code') }}
                             </button>
                         </div>
                     </div>
@@ -487,16 +578,16 @@
                                 <svg class="w-8 h-8 text-blue-600 mx-auto mb-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z"></path>
                                 </svg>
-                                <p class="text-sm text-gray-600">We'll send a verification code to your phone number</p>
+                                <p class="text-sm text-gray-600">{{ __('messages.verification_code_sent_phone') }}</p>
                             </div>
 
                             <div class="space-y-2">
-                                <label for="phoneCode" class="text-sm font-medium text-gray-700">SMS Verification Code</label>
-                                <input id="phoneCode" name="otp_code" type="text" placeholder="Enter SMS code" maxlength="6" class="w-full px-3 py-2 border border-gray-300 rounded-md text-center focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent">
+                                <label for="phoneCode" class="text-sm font-medium text-gray-700">{{ __('messages.sms_verification_code') }}</label>
+                                <input id="phoneCode" name="otp_code" type="text" placeholder="{{ __('messages.enter_sms_code') }}" maxlength="6" class="w-full px-3 py-2 border border-gray-300 rounded-md text-center focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent">
                             </div>
 
                             <button type="button" id="resend-sms-btn" class="w-full text-blue-600 border border-blue-600 hover:bg-blue-50 bg-transparent px-4 py-2 rounded-md font-medium">
-                                Resend SMS Code
+                                {{ __('messages.resend_sms_code') }}
                             </button>
                         </div>
                     </div>
@@ -505,9 +596,9 @@
                     <div class="step-content" id="step-4">
                         <div class="space-y-4">
                             <div class="space-y-2">
-                                <label for="businessName" class="text-sm font-medium text-gray-700">Business Name</label>
+                                <label for="businessName" class="text-sm font-medium text-gray-700">{{ __('messages.business_name') }}</label>
                                 <div class="relative">
-                                    <input id="businessName" name="company_name" type="text" placeholder="Enter your business name" class="w-full pl-10 pr-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent">
+                                    <input id="businessName" name="company_name" type="text" placeholder="{{ __('messages.enter_business_name') }}" class="w-full pl-10 pr-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent">
                                     <svg class="absolute left-3 top-1/2 transform -translate-y-1/2 w-4 h-4 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"></path>
                                     </svg>
@@ -515,9 +606,9 @@
                             </div>
 
                             <div class="space-y-2">
-                                <label for="companyEmail" class="text-sm font-medium text-gray-700">Company Email</label>
+                                <label for="companyEmail" class="text-sm font-medium text-gray-700">{{ __('messages.company_email') }}</label>
                                 <div class="relative">
-                                    <input id="companyEmail" name="company_email" type="email" placeholder="Enter company email" class="w-full pl-10 pr-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent">
+                                    <input id="companyEmail" name="company_email" type="email" placeholder="{{ __('messages.enter_company_email') }}" class="w-full pl-10 pr-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent">
                                     <svg class="absolute left-3 top-1/2 transform -translate-y-1/2 w-4 h-4 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 4.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"></path>
                                     </svg>
@@ -526,56 +617,71 @@
 
                             <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                                 <div class="space-y-2">
-                                    <label for="primaryContact" class="text-sm font-medium text-gray-700">Primary Contact</label>
+                                    <label for="primaryContact" class="text-sm font-medium text-gray-700">{{ __('messages.primary_contact') }}</label>
                                     <div class="relative">
                                         <div class="absolute left-3 top-1/2 transform -translate-y-1/2 flex items-center">
                                             <span class="text-sm text-gray-600 mr-2">🇦🇪 +971</span>
                                         </div>
-                                        <input id="primaryContact" name="contact_number_1" type="tel" placeholder="9-digit number" maxlength="9" class="w-full pl-20 pr-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent">
+                                        <input id="primaryContact" name="contact_number_1" type="tel" placeholder="{{ __('messages.enter_phone_number') }}" maxlength="9" class="w-full pl-20 pr-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent">
                                     </div>
                                 </div>
 
                                 <div class="space-y-2">
-                                    <label for="secondaryContact" class="text-sm font-medium text-gray-700">Secondary Contact (Optional)</label>
+                                    <label for="secondaryContact" class="text-sm font-medium text-gray-700">{{ __('messages.secondary_contact_optional') }}</label>
                                     <div class="relative">
                                         <div class="absolute left-3 top-1/2 transform -translate-y-1/2 flex items-center">
                                             <span class="text-sm text-gray-600 mr-2">🇦🇪 +971</span>
                                         </div>
-                                        <input id="secondaryContact" name="contact_number_2" type="tel" placeholder="9-digit number" maxlength="9" class="w-full pl-20 pr-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent">
+                                        <input id="secondaryContact" name="contact_number_2" type="tel" placeholder="{{ __('messages.enter_phone_number') }}" maxlength="9" class="w-full pl-20 pr-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent">
                                     </div>
                                 </div>
                             </div>
 
                             <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                                 <div class="space-y-2">
-                                    <label for="emirate" class="text-sm font-medium text-gray-700">Emirate</label>
+                                    <label for="emirate" class="text-sm font-medium text-gray-700">{{ __('messages.emirate') }}</label>
                                     <select id="emirate" name="emirate" class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent">
-                                        <option value="">Select emirate</option>
-                                        <option value="Abu Dhabi">Abu Dhabi</option>
-                                        <option value="Dubai">Dubai</option>
-                                        <option value="Sharjah">Sharjah</option>
-                                        <option value="Ajman">Ajman</option>
-                                        <option value="Umm Al Quwain">Umm Al Quwain</option>
-                                        <option value="Ras Al Khaimah">Ras Al Khaimah</option>
-                                        <option value="Fujairah">Fujairah</option>
+                                        <option value="">{{ __('messages.select_emirate') }}</option>
+                                        <option value="Abu Dhabi">{{ __('messages.abu_dhabi') }}</option>
+                                        <option value="Dubai">{{ __('messages.dubai') }}</option>
+                                        <option value="Sharjah">{{ __('messages.sharjah') }}</option>
+                                        <option value="Ajman">{{ __('messages.ajman') }}</option>
+                                        <option value="Umm Al Quwain">{{ __('messages.umm_al_quwain') }}</option>
+                                        <option value="Ras Al Khaimah">{{ __('messages.ras_al_khaimah') }}</option>
+                                        <option value="Fujairah">{{ __('messages.fujairah') }}</option>
                                     </select>
                                 </div>
 
                                 <div class="space-y-2">
-                                    <label for="city" class="text-sm font-medium text-gray-700">City</label>
-                                    <input id="city" name="city" type="text" placeholder="Enter city name" class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent">
+                                    <label for="city" class="text-sm font-medium text-gray-700">{{ __('messages.city') }}</label>
+                                    <input id="city" name="city" type="text" placeholder="{{ __('messages.enter_city_name') }}" class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent">
                                 </div>
                             </div>
 
                             <div class="space-y-2">
-                                <label for="address" class="text-sm font-medium text-gray-700">Address</label>
-                                <textarea id="address" name="address" rows="3" placeholder="Enter your business address" class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"></textarea>
+                                <label for="address" class="text-sm font-medium text-gray-700">{{ __('messages.address') }}</label>
+                                <textarea id="address" name="address" rows="3" placeholder="{{ __('messages.enter_business_address') }}" class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"></textarea>
                             </div>
 
                             <div class="space-y-2">
-                                <label for="companyLogo" class="text-sm font-medium text-gray-700">Company Logo (Optional)</label>
-                                <input id="companyLogo" name="logo" type="file" accept="image/*" class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent">
-                                <p class="text-xs text-gray-500">Upload your company logo (JPG, PNG, max 2MB)</p>
+                                <label for="companyLogo" class="text-sm font-medium text-gray-700">{{ __('messages.company_logo_optional') }}</label>
+                                <div class="logo-upload-area border-2 border-dashed border-gray-300 rounded-lg p-6 text-center cursor-pointer hover:border-gray-400 transition-colors" onclick="document.getElementById('companyLogo').click()">
+                                    <div id="logo-upload-content">
+                                        <svg class="w-8 h-8 text-gray-400 mx-auto mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"></path>
+                                        </svg>
+                                        <p class="text-gray-600 mb-2">
+                                            <span class="font-medium text-blue-600 cursor-pointer">{{ __('messages.click_to_upload') }}</span> {{ __('messages.or_drag_and_drop') }}
+                                        </p>
+                                        <p class="text-sm text-gray-500">{{ __('messages.upload_company_logo_info') }}</p>
+                                    </div>
+                                    <div id="logo-preview" class="hidden">
+                                        <img id="logo-preview-image" class="mx-auto max-h-32 rounded-lg mb-2" alt="Logo preview">
+                                        <p id="logo-file-name" class="text-sm text-gray-600 font-medium"></p>
+                                        <button type="button" onclick="removeLogo(event)" class="mt-2 text-sm text-red-600 hover:text-red-800">{{ __('messages.remove') }}</button>
+                                    </div>
+                                </div>
+                                <input id="companyLogo" name="logo" type="file" accept="image/*" class="hidden">
                             </div>
                         </div>
                     </div>
@@ -587,30 +693,40 @@
                                 <svg class="w-12 h-12 text-blue-600 mx-auto mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12"></path>
                                 </svg>
-                                <h3 class="text-lg font-semibold text-gray-900 mb-2">Upload Business License</h3>
-                                <p class="text-gray-600">Please upload your business license or registration documents</p>
+                                <h3 class="text-lg font-semibold text-gray-900 mb-2">{{ __('messages.upload_business_license') }}</h3>
+                                <p class="text-gray-600">{{ __('messages.upload_license_description') }}</p>
                             </div>
 
                             <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
                                 <div class="space-y-2">
-                                    <label for="licenseStartDate" class="text-sm font-medium text-gray-700">License Start Date</label>
+                                    <label for="licenseStartDate" class="text-sm font-medium text-gray-700">{{ __('messages.license_start_date') }}</label>
                                     <input id="licenseStartDate" name="license_start_date" type="date" class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent">
                                 </div>
 
                                 <div class="space-y-2">
-                                    <label for="licenseEndDate" class="text-sm font-medium text-gray-700">License End Date</label>
+                                    <label for="licenseEndDate" class="text-sm font-medium text-gray-700">{{ __('messages.license_end_date') }}</label>
                                     <input id="licenseEndDate" name="license_end_date" type="date" class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent">
                                 </div>
                             </div>
 
-                            <div class="upload-area border-2 border-dashed border-gray-300 rounded-lg p-8 text-center cursor-pointer" onclick="document.getElementById('license-upload').click()">
-                                <svg class="w-8 h-8 text-gray-400 mx-auto mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12"></path>
-                                </svg>
-                                <p class="text-gray-600 mb-2">
-                                    <span class="font-medium text-blue-600 cursor-pointer">Click to upload</span> or drag and drop
-                                </p>
-                                <p class="text-sm text-gray-500">PDF files only, up to 10MB</p>
+                            <div class="license-upload-area border-2 border-dashed border-gray-300 rounded-lg p-8 text-center cursor-pointer hover:border-gray-400 transition-colors" onclick="document.getElementById('license-upload').click()">
+                                <div id="license-upload-content">
+                                    <svg class="w-8 h-8 text-gray-400 mx-auto mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12"></path>
+                                    </svg>
+                                    <p class="text-gray-600 mb-2">
+                                        <span class="font-medium text-blue-600 cursor-pointer">{{ __('messages.click_to_upload') }}</span> {{ __('messages.or_drag_and_drop') }}
+                                    </p>
+                                    <p class="text-sm text-gray-500">{{ __('messages.pdf_files_only') }}</p>
+                                </div>
+                                <div id="license-preview" class="hidden">
+                                    <svg class="w-8 h-8 text-green-500 mx-auto mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                                    </svg>
+                                    <p id="license-file-name" class="text-sm text-gray-600 font-medium mb-2"></p>
+                                    <p id="license-file-size" class="text-xs text-gray-500 mb-2"></p>
+                                    <button type="button" onclick="removeLicense(event)" class="text-sm text-red-600 hover:text-red-800">{{ __('messages.remove') }}</button>
+                                </div>
                                 <input type="file" class="hidden" accept=".pdf" id="license-upload" name="license_file">
                             </div>
 
@@ -623,7 +739,7 @@
                                     </div>
                                     <div class="ml-3">
                                         <p class="text-sm text-yellow-800">
-                                            <strong>Important:</strong> Make sure your business license is current and clearly visible.
+                                            <strong>{{ __('messages.important') }}:</strong> {{ __('messages.license_requirements') }}
                                         </p>
                                     </div>
                                 </div>
@@ -633,13 +749,13 @@
 
                     <div class="flex justify-between pt-4">
                         <button type="button" id="prev-btn" class="px-4 py-2 border border-gray-300 rounded-md text-gray-700 bg-white hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed" disabled>
-                            Previous
+                            {{ __('messages.previous') }}
                         </button>
 
-                        <button type="button" id="next-btn" class="px-6 py-2 text-white rounded-md font-medium flex items-center space-x-2" style="background: linear-gradient(135deg, #3b82f6 0%, #1d4ed8 100%); box-shadow: 0 4px 12px rgba(59, 130, 246, 0.3);" onmouseover="this.style.transform='translateY(-1px)'; this.style.boxShadow='0 6px 16px rgba(59, 130, 246, 0.4)'" onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow='0 4px 12px rgba(59, 130, 246, 0.3)'">
-                            <span id="next-btn-text">Next</span>
+                        <button type="button" id="next-btn" class="px-6 py-2 text-white rounded-md font-medium flex items-center {{ app()->getLocale() == 'ar' ? 'space-x-reverse' : 'space-x-2' }}" style="background: linear-gradient(135deg, #3b82f6 0%, #1d4ed8 100%); box-shadow: 0 4px 12px rgba(59, 130, 246, 0.3);" onmouseover="this.style.transform='translateY(-1px)'; this.style.boxShadow='0 6px 16px rgba(59, 130, 246, 0.4)'" onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow='0 4px 12px rgba(59, 130, 246, 0.3)'">
+                            <span id="next-btn-text">{{ __('messages.next') }}</span>
                             <span id="next-btn-loading" class="loading hidden"></span>
-                            <svg id="next-btn-arrow" class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <svg id="next-btn-arrow" class="w-4 h-4 {{ app()->getLocale() == 'ar' ? 'rtl-arrow' : '' }}" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
                             </svg>
                         </button>
@@ -648,8 +764,8 @@
 
                 <div class="text-center">
                     <p class="text-sm text-gray-600">
-                        Already have an account?
-                        <a href="/login" class="text-blue-600 hover:text-blue-700 font-medium">Log In</a>
+                        {{ __('messages.already_have_account') }}
+                        <a href="/login" class="text-blue-600 hover:text-blue-700 font-medium">{{ __('messages.log_in') }}</a>
                     </p>
                 </div>
             </div>
@@ -668,15 +784,15 @@
                 <svg class="w-6 h-6 text-red-500 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
                 </svg>
-                <h3 class="text-lg font-semibold text-gray-900">Validation Error</h3>
+                <h3 class="text-lg font-semibold text-gray-900">{{ __('messages.validation_error') }}</h3>
             </div>
             <p id="error-message" class="text-gray-600 mb-4"></p>
             <div class="flex justify-end space-x-3">
                 <button id="error-modal-close" class="px-4 py-2 bg-gray-300 text-gray-700 rounded-md hover:bg-gray-400">
-                    Close
+                    {{ __('messages.close') }}
                 </button>
                 <button id="error-modal-login" class="px-4 py-2 text-white rounded-md hidden" style="background: linear-gradient(135deg, #3b82f6 0%, #1d4ed8 100%);" onmouseover="this.style.opacity='0.9'" onmouseout="this.style.opacity='1'">
-                    Go to Login
+                    {{ __('messages.go_to_login') }}
                 </button>
             </div>
         </div>
@@ -689,10 +805,10 @@
                 <svg class="w-12 h-12 text-green-500 mx-auto mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
                 </svg>
-                <h3 class="text-lg font-semibold text-gray-900 mb-2">Registration Complete!</h3>
-                <p class="text-gray-600 mb-4">Your vendor registration has been submitted successfully. You will receive an email or call from our support team.</p>
+                <h3 class="text-lg font-semibold text-gray-900 mb-2">{{ __('messages.registration_complete') }}</h3>
+                <p class="text-gray-600 mb-4">{{ __('messages.registration_success_message') }}</p>
                 <button onclick="window.location.href='/login'" class="px-6 py-2 text-white rounded-md" style="background: linear-gradient(135deg, #3b82f6 0%, #1d4ed8 100%);" onmouseover="this.style.opacity='0.9'" onmouseout="this.style.opacity='1'">
-                    Go to Login
+                    {{ __('messages.go_to_login') }}
                 </button>
             </div>
         </div>
@@ -1033,9 +1149,9 @@
             prevBtn.disabled = step === 1;
 
             if (step === totalSteps) {
-                nextBtnText.textContent = 'Complete Registration';
+                nextBtnText.textContent = window.appTranslations.complete_registration || 'Complete Registration';
             } else {
-                nextBtnText.textContent = 'Next';
+                nextBtnText.textContent = window.appTranslations.next || 'Next';
             }
 
             updateProgressIndicator();
@@ -1432,7 +1548,7 @@
         // Resend buttons
         document.getElementById('resend-email-btn').addEventListener('click', async function() {
             this.disabled = true;
-            this.textContent = 'Sending...';
+            this.textContent = window.appTranslations.sending || 'Sending...';
 
             try {
                 const response = await fetch('/api/vendor-registration/verify-email', {
@@ -1447,65 +1563,177 @@
 
                 const data = await response.json();
                 if (data.success) {
-                    alert('Verification code sent successfully!');
+                    alert(window.appTranslations.verification_code_sent_successfully || 'Verification code sent successfully!');
                 } else {
-                    alert('Failed to send verification code. Please try again.');
+                    alert(window.appTranslations.failed_send_verification_code || 'Failed to send verification code. Please try again.');
                 }
             } catch (error) {
-                alert('Network error. Please try again.');
+                alert(window.appTranslations.network_error_try_again || 'Network error. Please try again.');
             } finally {
                 this.disabled = false;
-                this.textContent = 'Resend Code';
+                this.textContent = window.appTranslations.resend_code || 'Resend Code';
             }
         });
 
         document.getElementById('resend-sms-btn').addEventListener('click', async function() {
             this.disabled = true;
-            this.textContent = 'Sending...';
+            this.textContent = window.appTranslations.sending || 'Sending...';
 
             try {
                 const success = await sendPhoneOtp();
                 if (success) {
-                    alert('SMS code sent successfully!');
+                    alert(window.appTranslations.sms_code_sent_successfully || 'SMS code sent successfully!');
                 } else {
-                    alert('Failed to send SMS code. Please try again.');
+                    alert(window.appTranslations.failed_send_sms_code || 'Failed to send SMS code. Please try again.');
                 }
             } catch (error) {
-                alert('Network error. Please try again.');
+                alert(window.appTranslations.network_error_try_again || 'Network error. Please try again.');
             } finally {
                 this.disabled = false;
-                this.textContent = 'Resend SMS Code';
+                this.textContent = window.appTranslations.resend_sms_code || 'Resend SMS Code';
             }
         });
 
-        // File upload functionality with PDF validation
+        // Company Logo upload functionality
+        document.getElementById('companyLogo').addEventListener('change', function(e) {
+            if (e.target.files.length > 0) {
+                const file = e.target.files[0];
+                const fileName = file.name;
+                const fileExtension = fileName.split('.').pop().toLowerCase();
+                const allowedExtensions = ['jpg', 'jpeg', 'png', 'gif'];
+
+                // Check if file is an image
+                if (!allowedExtensions.includes(fileExtension)) {
+                    showErrorModal(window.appTranslations.invalid_image_format || 'Please select a valid image file (JPG, PNG, GIF).');
+                    e.target.value = ''; // Clear the file input
+                    return;
+                }
+
+                // Check file size (2MB limit)
+                const maxSize = 2 * 1024 * 1024; // 2MB
+                if (file.size > maxSize) {
+                    showErrorModal(window.appTranslations.logo_file_too_large || 'Company logo file must be less than 2MB.');
+                    e.target.value = ''; // Clear the file input
+                    return;
+                }
+
+                // Show preview
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    document.getElementById('logo-upload-content').classList.add('hidden');
+                    document.getElementById('logo-preview').classList.remove('hidden');
+                    document.getElementById('logo-preview-image').src = e.target.result;
+                    document.getElementById('logo-file-name').textContent = fileName;
+                };
+                reader.readAsDataURL(file);
+            }
+        });
+
+        // Logo drag and drop functionality
+        const logoUploadArea = document.querySelector('.logo-upload-area');
+
+        logoUploadArea.addEventListener('dragover', function(e) {
+            e.preventDefault();
+            this.classList.add('border-blue-400', 'bg-blue-50');
+        });
+
+        logoUploadArea.addEventListener('dragleave', function(e) {
+            e.preventDefault();
+            this.classList.remove('border-blue-400', 'bg-blue-50');
+        });
+
+        logoUploadArea.addEventListener('drop', function(e) {
+            e.preventDefault();
+            this.classList.remove('border-blue-400', 'bg-blue-50');
+
+            const files = e.dataTransfer.files;
+            if (files.length > 0) {
+                document.getElementById('companyLogo').files = files;
+                document.getElementById('companyLogo').dispatchEvent(new Event('change'));
+            }
+        });
+
+
+
+        // License upload functionality with PDF validation
         document.getElementById('license-upload').addEventListener('change', function(e) {
             if (e.target.files.length > 0) {
                 const file = e.target.files[0];
                 const fileName = file.name;
                 const fileExtension = fileName.split('.').pop().toLowerCase();
-                const uploadArea = document.querySelector('.upload-area p');
 
                 // Check if file is PDF
                 if (fileExtension !== 'pdf') {
-                    showErrorModal('Please select a PDF file only. Other file formats are not allowed for license upload.');
+                    showErrorModal(window.appTranslations.pdf_files_only_message || 'Please select a PDF file only. Other file formats are not allowed for license upload.');
                     e.target.value = ''; // Clear the file input
-                    uploadArea.innerHTML = `<span class="font-medium text-blue-600 cursor-pointer">Click to upload</span> or drag and drop`;
                     return;
                 }
 
                 // Check file size (10MB limit)
                 const maxSize = 10 * 1024 * 1024; // 10MB
                 if (file.size > maxSize) {
-                    showErrorModal('File size must be less than 10MB.');
+                    showErrorModal(window.appTranslations.file_too_large || 'File size must be less than 10MB.');
                     e.target.value = ''; // Clear the file input
-                    uploadArea.innerHTML = `<span class="font-medium text-blue-600 cursor-pointer">Click to upload</span> or drag and drop`;
                     return;
                 }
 
-                uploadArea.innerHTML = `<span class="font-medium text-blue-600">Selected: ${fileName}</span>`;
+                // Show preview
+                document.getElementById('license-upload-content').classList.add('hidden');
+                document.getElementById('license-preview').classList.remove('hidden');
+                document.getElementById('license-file-name').textContent = fileName;
+                document.getElementById('license-file-size').textContent = formatFileSize(file.size);
             }
         });
+
+        // License drag and drop functionality
+        const licenseUploadArea = document.querySelector('.license-upload-area');
+
+        licenseUploadArea.addEventListener('dragover', function(e) {
+            e.preventDefault();
+            this.classList.add('border-blue-400', 'bg-blue-50');
+        });
+
+        licenseUploadArea.addEventListener('dragleave', function(e) {
+            e.preventDefault();
+            this.classList.remove('border-blue-400', 'bg-blue-50');
+        });
+
+        licenseUploadArea.addEventListener('drop', function(e) {
+            e.preventDefault();
+            this.classList.remove('border-blue-400', 'bg-blue-50');
+
+            const files = e.dataTransfer.files;
+            if (files.length > 0) {
+                document.getElementById('license-upload').files = files;
+                document.getElementById('license-upload').dispatchEvent(new Event('change'));
+            }
+        });
+
+
+
+        // Format file size helper function
+        function formatFileSize(bytes) {
+            if (bytes === 0) return '0 Bytes';
+            const k = 1024;
+            const sizes = ['Bytes', 'KB', 'MB', 'GB'];
+            const i = Math.floor(Math.log(bytes) / Math.log(k));
+            return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + ' ' + sizes[i];
+        }
+
+        // Global functions for file removal (accessible from onclick handlers)
+        window.removeLogo = function(event) {
+            event.stopPropagation();
+            document.getElementById('companyLogo').value = '';
+            document.getElementById('logo-upload-content').classList.remove('hidden');
+            document.getElementById('logo-preview').classList.add('hidden');
+        };
+
+        window.removeLicense = function(event) {
+            event.stopPropagation();
+            document.getElementById('license-upload').value = '';
+            document.getElementById('license-upload-content').classList.remove('hidden');
+            document.getElementById('license-preview').classList.add('hidden');
+        };
 
         // Initialize translations
         function initializeTranslations() {
@@ -1543,12 +1771,26 @@
                 if (confirmPasswordInput) confirmPasswordInput.placeholder = window.appTranslations.enter_confirm_password || 'Confirm your password';
 
                 // Update button text
-                const nextButtons = document.querySelectorAll('button');
-                nextButtons.forEach(button => {
-                    if (button.textContent.includes('Next')) {
-                        button.innerHTML = button.innerHTML.replace('Next', window.appTranslations.continue_to_email_verification || 'Continue to Email Verification');
-                    }
-                });
+                const nextBtnText = document.getElementById('next-btn-text');
+                if (nextBtnText && nextBtnText.textContent.includes('Next')) {
+                    nextBtnText.textContent = window.appTranslations.next || 'Next';
+                }
+
+                const prevBtn = document.getElementById('prev-btn');
+                if (prevBtn) {
+                    prevBtn.textContent = window.appTranslations.previous || 'Previous';
+                }
+
+                // Update promotional content
+                const growSalesDesc = document.querySelector('p:contains("messages.grow_your_sales_desc")');
+                if (growSalesDesc) {
+                    growSalesDesc.textContent = window.appTranslations.grow_your_sales_desc || 'Reach thousands of customers and grow your sales with our advanced platform';
+                }
+
+                const powerfulToolsDesc = document.querySelector('p:contains("messages.powerful_tools_desc")');
+                if (powerfulToolsDesc) {
+                    powerfulToolsDesc.textContent = window.appTranslations.powerful_tools_desc || 'Get powerful tools to manage your products and orders efficiently';
+                }
             }
         }
 

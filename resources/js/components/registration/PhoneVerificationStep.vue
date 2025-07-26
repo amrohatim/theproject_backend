@@ -1,9 +1,9 @@
 <template>
   <div>
-    <div class="mb-6">
-      <h2 class="text-2xl font-bold text-gray-900 mb-2">Phone Verification</h2>
+b    <div class="mb-6">
+      <h2 class="text-2xl font-bold text-gray-900 mb-2">{{ $t('phone_verification') }}</h2>
       <p class="text-gray-600">
-        We'll send an OTP code to <strong>{{ phone }}</strong> to verify your phone number.
+        {{ $t('well_send_otp_code_to') }} <strong>{{ phone }}</strong> {{ $t('to_verify_your_phone_number') }}.
       </p>
     </div>
 
@@ -13,7 +13,7 @@
         <div class="flex items-center">
           <i class="fas fa-mobile-alt text-blue-500 mr-3"></i>
           <div>
-            <p class="text-sm font-medium text-blue-900">Phone number to verify:</p>
+            <p class="text-sm font-medium text-blue-900">{{ $t('phone_number_to_verify') }}:</p>
             <p class="text-blue-700">{{ phone }}</p>
           </div>
         </div>
@@ -26,11 +26,11 @@
       >
         <span v-if="loading" class="flex items-center justify-center">
           <i class="fas fa-spinner fa-spin mr-2"></i>
-          Sending OTP...
+          {{ $t('sending_otp') }}...
         </span>
         <span v-else class="flex items-center justify-center">
           <i class="fas fa-paper-plane mr-2"></i>
-          Send OTP Code
+          {{ $t('send_otp_code') }}
         </span>
       </button>
     </div>
@@ -41,8 +41,8 @@
         <div class="flex items-center">
           <i class="fas fa-check-circle text-green-500 mr-3"></i>
           <div>
-            <p class="text-sm font-medium text-green-900">OTP sent successfully!</p>
-            <p class="text-green-700">Check your phone for the verification code</p>
+            <p class="text-sm font-medium text-green-900">{{ $t('otp_sent_successfully') }}!</p>
+            <p class="text-green-700">{{ $t('check_your_phone_for_verification_code') }}</p>
           </div>
         </div>
       </div>
@@ -51,7 +51,7 @@
         <!-- OTP Code Input -->
         <div class="mb-6">
           <label for="otp_code" class="block text-sm font-medium text-gray-700 mb-2">
-            Enter OTP Code <span class="text-red-500">*</span>
+            {{ $t('enter_otp_code') }} <span class="text-red-500">*</span>
           </label>
           <div class="flex justify-center">
             <div class="flex space-x-2">
@@ -79,7 +79,7 @@
         <div class="text-center mb-6">
           <div v-if="timeLeft > 0" class="text-sm text-gray-600 mb-2">
             <i class="fas fa-clock mr-1"></i>
-            Resend OTP in {{ formatTime(timeLeft) }}
+            {{ $t('resend_otp_in') }} {{ formatTime(timeLeft) }}
           </div>
           <button
             v-else
@@ -90,11 +90,11 @@
           >
             <span v-if="resendLoading">
               <i class="fas fa-spinner fa-spin mr-1"></i>
-              Sending...
+              {{ $t('sending') }}...
             </span>
             <span v-else>
               <i class="fas fa-redo mr-1"></i>
-              Resend OTP
+              {{ $t('resend_otp') }}
             </span>
           </button>
         </div>
@@ -107,10 +107,10 @@
         >
           <span v-if="loading" class="flex items-center justify-center">
             <i class="fas fa-spinner fa-spin mr-2"></i>
-            Verifying...
+            {{ $t('verifying') }}...
           </span>
           <span v-else class="flex items-center justify-center">
-            Verify Phone Number
+            {{ $t('verify_phone_number') }}
             <i class="fas fa-arrow-right ml-2"></i>
           </span>
         </button>
@@ -118,14 +118,14 @@
 
       <!-- Help Text -->
       <div class="text-center text-sm text-gray-500">
-        <p>Didn't receive the OTP? Make sure your phone is on and</p>
+        <p>{{ $t('didnt_receive_otp_make_sure_phone_on_and') }}</p>
         <button
           type="button"
           @click="handleResend"
           :disabled="loading || resendLoading || timeLeft > 0"
           class="text-blue-600 hover:text-blue-800 underline disabled:opacity-50 disabled:cursor-not-allowed"
         >
-          try sending again
+          {{ $t('try_sending_again') }}
         </button>
       </div>
     </div>
@@ -170,6 +170,37 @@ export default {
     }
   },
   methods: {
+    // Translation method
+    $t(key, replacements = {}) {
+      const translations = {
+        'phone_verification': 'Phone Verification',
+        'well_send_otp_code_to': "We'll send an OTP code to",
+        'to_verify_your_phone_number': 'to verify your phone number',
+        'phone_number_to_verify': 'Phone number to verify',
+        'sending_otp': 'Sending OTP',
+        'send_otp_code': 'Send OTP Code',
+        'otp_sent_successfully': 'OTP sent successfully',
+        'check_your_phone_for_verification_code': 'Check your phone for the verification code',
+        'enter_otp_code': 'Enter OTP Code',
+        'resend_otp_in': 'Resend OTP in',
+        'sending': 'Sending',
+        'resend_otp': 'Resend OTP',
+        'verifying': 'Verifying',
+        'verify_phone_number': 'Verify Phone Number',
+        'didnt_receive_otp_make_sure_phone_on_and': "Didn't receive the OTP? Make sure your phone is on and",
+        'try_sending_again': 'try sending again',
+        'failed_to_send_otp_please_try_again': 'Failed to send OTP. Please try again.'
+      }
+      
+      let translation = translations[key] || key
+      
+      // Handle replacements
+      Object.keys(replacements).forEach(placeholder => {
+        translation = translation.replace(`[${placeholder}]`, replacements[placeholder])
+      })
+      
+      return translation
+    },
     async sendOtp() {
       this.errors = {};
       
@@ -186,7 +217,7 @@ export default {
           }
         });
       } catch (error) {
-        this.errors.otp_code = 'Failed to send OTP. Please try again.';
+        this.errors.otp_code = this.$t('failed_to_send_otp_please_try_again');
       }
     },
 

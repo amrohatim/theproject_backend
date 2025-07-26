@@ -251,7 +251,7 @@
         <div class="hidden lg:flex lg:w-1/2 text-white p-12 flex-col justify-top" style="background: linear-gradient(135deg, #8b5cf6 0%, #7c3aed 100%);">
             <div class="max-w-md mx-auto space-y-8">
                 <div class="text-center">
-                    <h1 class="text-3xl font-bold mb-8">Data3Chic</h1>
+                    <h1 class="text-3xl font-bold mb-8">Dala3Chic</h1>
                 </div>
 
                 <!-- Main Heading -->
@@ -336,8 +336,8 @@
                 <!-- Back Link -->
                 <div class="mb-4">
                     <a href="{{ route('register') }}" class="text-purple-600 hover:text-purple-700 transition-colors duration-300 text-sm font-medium">
-                        <i class="fas fa-arrow-left mr-2"></i>
-                        Back to Registration Options
+                        <i class="fas fa-arrow-{{ app()->getLocale() == 'ar' ? 'right' : 'left' }} {{ app()->getLocale() == 'ar' ? 'ml-2' : 'mr-2' }}"></i>
+                        {{ __('messages.back_to_registration_options') }}
                     </a>
                 </div>
                 <form method="POST" action="/api/provider/register/validate-info" enctype="multipart/form-data" class="space-y-4">
@@ -381,7 +381,7 @@
                     <div class="space-y-2">
                         <label for="password" class="text-sm font-medium text-gray-700">{{ __('messages.password') }}</label>
                         <div class="relative">
-                            <input id="password" name="password" type="password" placeholder="Create a strong password" required class="w-full pl-10 pr-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent">
+                            <input id="password" name="password" type="password" placeholder="{{ __('messages.create_strong_password') }}" required class="w-full pl-10 pr-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent">
                             <svg class="absolute left-3 top-1/2 transform -translate-y-1/2 w-4 h-4 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"></path>
                             </svg>
@@ -392,7 +392,7 @@
                     <div class="space-y-2">
                         <label for="password_confirmation" class="text-sm font-medium text-gray-700">{{ __('messages.confirm_password') }}</label>
                         <div class="relative">
-                            <input id="password_confirmation" name="password_confirmation" type="password" placeholder="Confirm your password" required class="w-full pl-10 pr-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent">
+                            <input id="password_confirmation" name="password_confirmation" type="password" placeholder="{{ __('messages.confirm_your_password') }}" required class="w-full pl-10 pr-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent">
                             <svg class="absolute left-3 top-1/2 transform -translate-y-1/2 w-4 h-4 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"></path>
                             </svg>
@@ -403,7 +403,7 @@
                     <div class="space-y-2">
                         <label for="business_name" class="text-sm font-medium text-gray-700">{{ __('messages.business_name') }}</label>
                         <div class="relative">
-                            <input id="business_name" name="business_name" type="text" placeholder="Enter your business name" value="{{ old('business_name') }}" class="w-full pl-10 pr-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent">
+                            <input id="business_name" name="business_name" type="text" placeholder="{{ __('messages.enter_business_name') }}" value="{{ old('business_name') }}" class="w-full pl-10 pr-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent">
                             <svg class="absolute left-3 top-1/2 transform -translate-y-1/2 w-4 h-4 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"></path>
                             </svg>
@@ -437,7 +437,7 @@
                     <!-- Description Field -->
                     <div class="space-y-2">
                         <label for="description" class="text-sm font-medium text-gray-700">{{ __('messages.description_optional') }}</label>
-                        <textarea id="description" name="description" rows="3" placeholder="Describe your business..." class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent">{{ old('description') }}</textarea>
+                        <textarea id="description" name="description" rows="3" placeholder="{{ __('messages.describe_your_business') }}" class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent">{{ old('description') }}</textarea>
                     </div>
 
                     <!-- Delivery Capability & Emirates Fee Options -->
@@ -455,18 +455,18 @@
 
                             <!-- Emirates Selection and Fee Configuration -->
                             <div class="delivery-config hidden mt-4" id="deliveryConfig">
-                                <label class="text-sm font-medium text-gray-700 mb-3 block">Select Emirates and Set Delivery Fees *</label>
+                                <label class="text-sm font-medium text-gray-700 mb-3 block">{{ __('messages.select_emirates_and_set_delivery_fees') }}</label>
                                 <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                                     <!-- Abu Dhabi -->
                                     <div class="emirate-option">
                                         <label class="flex items-center mb-2">
                                             <input type="checkbox" class="emirate-checkbox rounded border-gray-300 text-purple-600 focus:ring-purple-500" data-emirate="abu_dhabi">
-                                            <span class="ml-2 text-sm font-medium text-gray-700">Abu Dhabi</span>
+                                            <span class="ml-2 text-sm font-medium text-gray-700">{{ __('messages.abu_dhabi') }}</span>
                                         </label>
                                         <div class="fee-input-container hidden">
                                             <div class="relative">
-                                                <input type="number" step="0.01" min="0" placeholder="0.00" class="w-full pl-8 pr-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent" data-fee-input="abu_dhabi">
-                                                <span class="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-500 text-sm">AED</span>
+                                                <input type="number" step="1" min="0" placeholder="0" class="w-full pl-20 pr-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent" data-fee-input="abu_dhabi" oninput="this.value = this.value.replace(/[^0-9]/g, '');">
+                                                <span class="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-500 text-sm">{{ __('messages.aed') }}</span>
                                             </div>
                                         </div>
                                     </div>
@@ -475,12 +475,12 @@
                                     <div class="emirate-option">
                                         <label class="flex items-center mb-2">
                                             <input type="checkbox" class="emirate-checkbox rounded border-gray-300 text-purple-600 focus:ring-purple-500" data-emirate="dubai">
-                                            <span class="ml-2 text-sm font-medium text-gray-700">Dubai</span>
+                                            <span class="ml-2 text-sm font-medium text-gray-700">{{ __('messages.dubai') }}</span>
                                         </label>
                                         <div class="fee-input-container hidden">
                                             <div class="relative">
-                                                <input type="number" step="0.01" min="0" placeholder="0.00" class="w-full pl-8 pr-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent" data-fee-input="dubai">
-                                                <span class="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-500 text-sm">AED</span>
+                                                <input type="number" step="1" min="0" placeholder="0" class="w-full pl-20 pr-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent" data-fee-input="dubai" oninput="this.value = this.value.replace(/[^0-9]/g, '');">
+                                                <span class="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-500 text-sm">{{ __('messages.aed') }}</span>
                                             </div>
                                         </div>
                                     </div>
@@ -489,12 +489,12 @@
                                     <div class="emirate-option">
                                         <label class="flex items-center mb-2">
                                             <input type="checkbox" class="emirate-checkbox rounded border-gray-300 text-purple-600 focus:ring-purple-500" data-emirate="sharjah">
-                                            <span class="ml-2 text-sm font-medium text-gray-700">Sharjah</span>
+                                            <span class="ml-2 text-sm font-medium text-gray-700">{{ __('messages.sharjah') }}</span>
                                         </label>
                                         <div class="fee-input-container hidden">
                                             <div class="relative">
-                                                <input type="number" step="0.01" min="0" placeholder="0.00" class="w-full pl-8 pr-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent" data-fee-input="sharjah">
-                                                <span class="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-500 text-sm">AED</span>
+                                                <input type="number" step="1" min="0" placeholder="0" class="w-full pl-20 pr-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent" data-fee-input="sharjah" oninput="this.value = this.value.replace(/[^0-9]/g, '');">
+                                                <span class="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-500 text-sm">{{ __('messages.aed') }}</span>
                                             </div>
                                         </div>
                                     </div>
@@ -503,12 +503,12 @@
                                     <div class="emirate-option">
                                         <label class="flex items-center mb-2">
                                             <input type="checkbox" class="emirate-checkbox rounded border-gray-300 text-purple-600 focus:ring-purple-500" data-emirate="ajman">
-                                            <span class="ml-2 text-sm font-medium text-gray-700">Ajman</span>
+                                            <span class="ml-2 text-sm font-medium text-gray-700">{{ __('messages.ajman') }}</span>
                                         </label>
                                         <div class="fee-input-container hidden">
                                             <div class="relative">
-                                                <input type="number" step="0.01" min="0" placeholder="0.00" class="w-full pl-8 pr-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent" data-fee-input="ajman">
-                                                <span class="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-500 text-sm">AED</span>
+                                                <input type="number" step="1" min="0" placeholder="0" class="w-full pl-20 pr-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent" data-fee-input="ajman" oninput="this.value = this.value.replace(/[^0-9]/g, '');">
+                                                <span class="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-500 text-sm">{{ __('messages.aed') }}</span>
                                             </div>
                                         </div>
                                     </div>
@@ -517,12 +517,12 @@
                                     <div class="emirate-option">
                                         <label class="flex items-center mb-2">
                                             <input type="checkbox" class="emirate-checkbox rounded border-gray-300 text-purple-600 focus:ring-purple-500" data-emirate="uaq">
-                                            <span class="ml-2 text-sm font-medium text-gray-700">Umm Al Quwain</span>
+                                            <span class="ml-2 text-sm font-medium text-gray-700">{{ __('messages.umm_al_quwain') }}</span>
                                         </label>
                                         <div class="fee-input-container hidden">
                                             <div class="relative">
-                                                <input type="number" step="0.01" min="0" placeholder="0.00" class="w-full pl-8 pr-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent" data-fee-input="uaq">
-                                                <span class="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-500 text-sm">AED</span>
+                                                <input type="number" step="1" min="0" placeholder="0" class="w-full pl-20 pr-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent" data-fee-input="uaq" oninput="this.value = this.value.replace(/[^0-9]/g, '');">
+                                                <span class="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-500 text-sm">{{ __('messages.aed') }}</span>
                                             </div>
                                         </div>
                                     </div>
@@ -531,12 +531,12 @@
                                     <div class="emirate-option">
                                         <label class="flex items-center mb-2">
                                             <input type="checkbox" class="emirate-checkbox rounded border-gray-300 text-purple-600 focus:ring-purple-500" data-emirate="rak">
-                                            <span class="ml-2 text-sm font-medium text-gray-700">Ras Al Khaimah</span>
+                                            <span class="ml-2 text-sm font-medium text-gray-700">{{ __('messages.ras_al_khaimah') }}</span>
                                         </label>
                                         <div class="fee-input-container hidden">
                                             <div class="relative">
-                                                <input type="number" step="0.01" min="0" placeholder="0.00" class="w-full pl-8 pr-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent" data-fee-input="rak">
-                                                <span class="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-500 text-sm">AED</span>
+                                                <input type="number" step="1" min="0" placeholder="0" class="w-full pl-20 pr-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent" data-fee-input="rak" oninput="this.value = this.value.replace(/[^0-9]/g, '');">
+                                                <span class="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-500  text-sm">{{ __('messages.aed') }}</span>
                                             </div>
                                         </div>
                                     </div>
@@ -545,12 +545,12 @@
                                     <div class="emirate-option">
                                         <label class="flex items-center mb-2">
                                             <input type="checkbox" class="emirate-checkbox rounded border-gray-300 text-purple-600 focus:ring-purple-500" data-emirate="fujairah">
-                                            <span class="ml-2 text-sm font-medium text-gray-700">Fujairah</span>
+                                            <span class="ml-2 text-sm font-medium text-gray-700">{{ __('messages.fujairah') }}</span>
                                         </label>
                                         <div class="fee-input-container hidden">
                                             <div class="relative">
-                                                <input type="number" step="0.01" min="0" placeholder="0.00" class="w-full pl-8 pr-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent" data-fee-input="fujairah">
-                                                <span class="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-500 text-sm">AED</span>
+                                                <input type="number" step="1" min="0" placeholder="0" class="w-full pl-20 pr-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent" data-fee-input="fujairah" oninput="this.value = this.value.replace(/[^0-9]/g, '');">
+                                                <span class="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-500 text-sm">{{ __('messages.aed') }}</span>
                                             </div>
                                         </div>
                                     </div>
@@ -562,8 +562,12 @@
 
                     <!-- Submit Button -->
                     <button type="submit" class="w-full text-white py-3 px-4 rounded-md font-semibold transition-all duration-300 transform hover:scale-105 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:ring-offset-2" style="background: linear-gradient(135deg, #8b5cf6 0%, #7c3aed 100%);">
-                        Continue to Email Verification
-                        <i class="fas fa-arrow-right ml-2"></i>
+                        {{ __('messages.continue_to_email_verification') }}
+                        @if ($isRtl)
+                            <i class="fas fa-arrow-left ml-2"></i>
+                        @else
+                            <i class="fas fa-arrow-right ml-2"></i>
+                        @endif
                     </button>
                 </form>
             </div>

@@ -875,6 +875,64 @@ export default {
       }
     }
 
+    // Translation method
+    const $t = (key) => {
+      const translations = {
+        'loading': 'Loading...',
+        'add_product': 'Add Product',
+        'create_new_product_for_store': 'Create a new product for your store',
+        'back_to_products': 'Back to Products',
+        'basic_information': 'Basic Information',
+        'enter_basic_details': 'Enter the basic details of your product',
+        'product_name': 'Product Name',
+        'enter_product_name': 'Enter product name',
+        'category': 'Category',
+        'select_category': 'Select Category',
+        'branch': 'Branch',
+        'no_branches_available': 'No branches available',
+        'select_branch': 'Select Branch',
+        'need_create_branch_first': 'You need to create a branch first.',
+        'create_branch': 'Create Branch',
+        'branch_automatically_selected': 'Branch automatically selected',
+        'price': 'Price',
+        'original_price_if_on_sale': 'Original Price (if on sale)',
+        'general_stock': 'General Stock',
+        'total_stock_quantity_available': 'Total stock quantity available for all color variants',
+        'description': 'Description',
+        'enter_product_description': 'Enter product description',
+        'available_for_purchase': 'Available for purchase',
+        'uncheck_if_not_available': 'Uncheck if this product is not available for purchase.',
+        'colors_and_images': 'Colors & Images',
+        'add_color_variants_with_images': 'Add color variants with images for your product',
+        'add_color': 'Add Color',
+        'no_colors_added_yet': 'No colors added yet',
+        'add_at_least_one_color_variant': 'Add at least one color variant with an image for your product',
+        'add_first_color': 'Add First Color',
+        'overall_stock_allocation': 'Overall Stock Allocation',
+        'allocated': 'allocated',
+        'total_color_stock_exceeds_limit': '⚠️ Total color stock allocation exceeds general stock limit',
+        'units_remaining_to_allocate': '💡 {count} units remaining to allocate',
+        'all_stock_allocated': '✅ All stock allocated to colors',
+        'product_specifications': 'Product Specifications',
+        'add_detailed_specifications': 'Add detailed specifications for your product',
+        'add_specification': 'Add Specification',
+        'no_specifications_added_yet': 'No specifications added yet',
+        'add_technical_specifications': 'Add technical specifications or features for your product',
+        'add_first_specification': 'Add First Specification',
+        'previous': 'Previous',
+        'next': 'Next',
+        'saving': 'Saving...',
+        'save_product': 'Save Product',
+        'product_created_successfully': 'Product Created Successfully!',
+        'product_added_to_store': 'Your product has been added to your store.',
+        'view_products': 'View Products',
+        'create_another': 'Create Another',
+        'error_creating_product': 'Error Creating Product',
+        'try_again': 'Try Again'
+      }
+      return translations[key] || key
+    }
+
     // Lifecycle
     onMounted(() => {
       fetchInitialData()
@@ -923,7 +981,8 @@ export default {
       closeErrorModal,
       createAnother,
       findCategoryById,
-      validateCategorySelection
+      validateCategorySelection,
+      $t
     }
   }
 }

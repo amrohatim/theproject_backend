@@ -1,10 +1,10 @@
 <template>
   <div>
     <div class="mb-6">
-      <h2 class="text-2xl font-bold text-gray-900 mb-2">Email Verification</h2>
+      <h2 class="text-2xl font-bold text-gray-900 mb-2">{{ $t('email_verification') }}</h2>
       <p class="text-gray-600">
-        We've sent a verification code to <strong>{{ email }}</strong>. 
-        Please enter the 6-digit code below.
+        {{ $t('weve_sent_verification_code_to') }} <strong>{{ email }}</strong>. 
+        {{ $t('please_enter_6_digit_code') }}
       </p>
     </div>
 
@@ -14,7 +14,7 @@
         <div class="flex items-center">
           <i class="fas fa-envelope text-blue-500 mr-3"></i>
           <div>
-            <p class="text-sm font-medium text-blue-900">Verification email sent to:</p>
+            <p class="text-sm font-medium text-blue-900">{{ $t('verification_email_sent_to') }}:</p>
             <p class="text-blue-700">{{ email }}</p>
           </div>
         </div>
@@ -23,7 +23,7 @@
       <!-- Verification Code Input -->
       <div>
         <label for="verification_code" class="block text-sm font-medium text-gray-700 mb-2">
-          Verification Code <span class="text-red-500">*</span>
+          {{ $t('verification_code') }} <span class="text-red-500">*</span>
         </label>
         <div class="flex justify-center">
           <div class="flex space-x-2">
@@ -51,7 +51,7 @@
       <div class="text-center">
         <div v-if="timeLeft > 0" class="text-sm text-gray-600 mb-2">
           <i class="fas fa-clock mr-1"></i>
-          Resend code in {{ formatTime(timeLeft) }}
+          {{ $t('resend_code_in') }} {{ formatTime(timeLeft) }}
         </div>
         <button
           v-else
@@ -62,11 +62,11 @@
         >
           <span v-if="resendLoading">
             <i class="fas fa-spinner fa-spin mr-1"></i>
-            Sending...
+            {{ $t('sending') }}...
           </span>
           <span v-else>
             <i class="fas fa-redo mr-1"></i>
-            Resend verification code
+            {{ $t('resend_verification_code') }}
           </span>
         </button>
       </div>
@@ -80,10 +80,10 @@
         >
           <span v-if="loading" class="flex items-center justify-center">
             <i class="fas fa-spinner fa-spin mr-2"></i>
-            Verifying...
+            {{ $t('verifying') }}...
           </span>
           <span v-else class="flex items-center justify-center">
-            Verify Email
+            {{ $t('verify_email') }}
             <i class="fas fa-arrow-right ml-2"></i>
           </span>
         </button>
@@ -91,14 +91,14 @@
 
       <!-- Help Text -->
       <div class="text-center text-sm text-gray-500">
-        <p>Didn't receive the email? Check your spam folder or</p>
+        <p>{{ $t('didnt_receive_email_check_spam') }}</p>
         <button
           type="button"
           @click="handleResend"
           :disabled="loading || resendLoading || timeLeft > 0"
           class="text-blue-600 hover:text-blue-800 underline disabled:opacity-50 disabled:cursor-not-allowed"
         >
-          request a new code
+          {{ $t('request_a_new_code') }}
         </button>
       </div>
     </form>
@@ -155,6 +155,10 @@ export default {
     }
   },
   methods: {
+    // Translation method
+    $t(key) {
+      return window.appTranslations && window.appTranslations[key] ? window.appTranslations[key] : key;
+    },
     handleDigitInput(index, event) {
       const value = event.target.value;
 
@@ -237,7 +241,7 @@ export default {
           }
         });
       } catch (error) {
-        this.errors.verification_code = 'Failed to resend verification code';
+        this.errors.verification_code = this.$t('failed_to_resend_verification_code');
       } finally {
         this.resendLoading = false;
       }

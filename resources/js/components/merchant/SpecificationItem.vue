@@ -1,23 +1,23 @@
 <template>
   <div class="specification-item grid grid-cols-12 gap-4 items-center p-4 rounded-lg">
     <div class="col-span-4">
-      <label class="block vue-text-sm mb-2">Key</label>
+      <label class="block vue-text-sm mb-2">{{ $t('key') }}</label>
       <input type="text"
              :value="specification.key"
              @input="updateSpecification('key', $event.target.value)"
-             placeholder="e.g., Material"
+             :placeholder="$t('eg_material')"
              class="vue-form-control  bg-white border p-2 border-amber-50 rounded-md">
     </div>
     <div class="col-span-6">
-      <label class="block vue-text-sm mb-2">Value</label>
+      <label class="block vue-text-sm mb-2">{{ $t('value') }}</label>
       <input type="text"
              :value="specification.value"
              @input="updateSpecification('value', $event.target.value)"
-             placeholder="e.g., 100% Cotton"
+             :placeholder="$t('eg_cotton')"
              class="vue-form-control  bg-white border p-2 border-amber-50 rounded-md" >
     </div>
     <div class="col-span-1">
-      <label class="block vue-text-sm mb-2">Order</label>
+      <label class="block vue-text-sm mb-2">{{ $t('order') }}</label>
       <input type="number"
              :value="specification.display_order"
              @input="updateSpecification('display_order', parseInt($event.target.value) || 0)"

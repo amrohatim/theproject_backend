@@ -4,6 +4,11 @@ import MerchantRegistrationApp from './components/MerchantRegistrationApp.vue';
 // Create and mount the Vue app
 const app = createApp(MerchantRegistrationApp);
 
+// Add global translation method
+app.config.globalProperties.$t = function(key) {
+  return window.appTranslations && window.appTranslations[key] ? window.appTranslations[key] : key;
+};
+
 // Mount the app to the DOM element
 app.mount('#merchant-registration-app');
 

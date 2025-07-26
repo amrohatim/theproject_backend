@@ -4,25 +4,25 @@
       <div class="verification-icon">
         <i class="fas fa-envelope-open-text"></i>
       </div>
-      <h2 class="step-title">Verify Your Email</h2>
+      <h2 class="step-title">{{ $t('verify_your_email_title') }}</h2>
       <p class="step-description">
-        We've sent a verification code to <strong>{{ email }}</strong>
+        {{ $t('weve_sent_verification_code_to') }} <strong>{{ email }}</strong>
       </p>
       <p class="step-subdescription">
-        Please check your email and enter the 6-digit code below
+        {{ $t('please_check_email_enter_code') }}
       </p>
     </div>
 
     <form @submit.prevent="handleSubmit" class="verification-form">
       <div class="form-group">
-        <label for="verification_code" class="form-label">Verification Code</label>
+        <label for="verification_code" class="form-label">{{ $t('verification_code') }}</label>
         <input
           type="text"
           id="verification_code"
           v-model="verificationCode"
           class="form-input verification-input"
           :class="{ 'error': errors.verification_code }"
-          placeholder="Enter 6-digit code"
+          :placeholder="$t('enter_6_digit_code_placeholder')"
           maxlength="6"
           required
           @input="handleCodeInput"
@@ -34,31 +34,31 @@
 
       <button type="submit" class="form-button" :disabled="loading || verificationCode.length !== 6">
         <div v-if="loading" class="loading-spinner"></div>
-        <span class="button-text">{{ loading ? 'Verifying...' : 'Verify Email' }}</span>
+        <span class="button-text">{{ loading ? $t('verifying') : $t('verify_email') }}</span>
       </button>
     </form>
 
     <div class="resend-section">
-      <p class="resend-text">Didn't receive the code?</p>
+      <p class="resend-text">{{ $t('didnt_receive_code') }}</p>
       <button 
         type="button" 
         class="resend-button" 
         @click="handleResend"
         :disabled="loading || resendCooldown > 0"
       >
-        <span v-if="resendCooldown > 0">Resend in {{ resendCooldown }}s</span>
-        <span v-else>Resend Code</span>
+        <span v-if="resendCooldown > 0">{{ $t('resend_in_seconds').replace('{seconds}', resendCooldown) }}</span>
+        <span v-else>{{ $t('resend_code') }}</span>
       </button>
     </div>
 
     <div class="help-section">
       <div class="help-item">
         <i class="fas fa-info-circle"></i>
-        <span>Check your spam/junk folder if you don't see the email</span>
+        <span>{{ $t('check_spam_junk_folder') }}</span>
       </div>
       <div class="help-item">
         <i class="fas fa-clock"></i>
-        <span>The verification code expires in 10 minutes</span>
+        <span>{{ $t('verification_code_expires_10_minutes') }}</span>
       </div>
     </div>
   </div>
@@ -125,6 +125,9 @@ export default {
     },
     setErrors(errors) {
       this.errors = errors;
+    },
+    $t(key) {
+      return window.appTranslations && window.appTranslations[key] ? window.appTranslations[key] : key;
     }
   },
   beforeUnmount() {

@@ -1,11 +1,11 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="{{ app()->getLocale() }}" dir="{{ app()->getLocale() == 'ar' ? 'rtl' : 'ltr' }}">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="description" content="Provider Registration Step 4 - License Upload">
+    <meta name="description" content="{{ __('messages.provider_registration_step4_description') }}">
     <meta name="robots" content="noindex, nofollow">
-    <title>Data3Chic - Provider Registration</title>
+    <title>{{ __('messages.data3chic_provider_registration') }}</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script>
         tailwind.config = {
@@ -31,7 +31,12 @@
     </script>
 
     <!-- Fonts -->
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    @if(app()->getLocale() == 'ar')
+        <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+        <link rel="stylesheet" href="{{ asset('css/rtl.css') }}">
+    @else
+        <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    @endif
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 
     <!-- CSRF Token -->
@@ -159,10 +164,10 @@
                 <!-- Main Heading -->
                 <div class="text-center space-y-4">
                     <h2 class="text-4xl font-bold leading-tight">
-                        License<br>Upload
+                        {{ __('messages.license_upload') }}
                     </h2>
                     <p class="text-purple-100 text-lg">
-                        Upload your business license to complete your provider registration and start selling.
+                        {{ __('messages.license_upload_description') }}
                     </p>
                 </div>
 
@@ -175,8 +180,8 @@
                             </svg>
                         </div>
                         <div>
-                            <h3 class="font-semibold text-lg mb-1">Secure Upload</h3>
-                            <p class="text-purple-100 text-sm">Your business documents are encrypted and stored securely.</p>
+                            <h3 class="font-semibold text-lg mb-1">{{ __('messages.secure_upload') }}</h3>
+                            <p class="text-purple-100 text-sm">{{ __('messages.secure_upload_description') }}</p>
                         </div>
                     </div>
 
@@ -187,8 +192,8 @@
                             </svg>
                         </div>
                         <div>
-                            <h3 class="font-semibold text-lg mb-1">Quick Verification</h3>
-                            <p class="text-purple-100 text-sm">Our team will review your license within 24-48 hours.</p>
+                            <h3 class="font-semibold text-lg mb-1">{{ __('messages.quick_verification') }}</h3>
+                            <p class="text-purple-100 text-sm">{{ __('messages.quick_verification_description') }}</p>
                         </div>
                     </div>
 
@@ -199,8 +204,8 @@
                             </svg>
                         </div>
                         <div>
-                            <h3 class="font-semibold text-lg mb-1">Start Selling</h3>
-                            <p class="text-purple-100 text-sm">Once approved, you can immediately start listing products.</p>
+                            <h3 class="font-semibold text-lg mb-1">{{ __('messages.start_selling') }}</h3>
+                            <p class="text-purple-100 text-sm">{{ __('messages.start_selling_description') }}</p>
                         </div>
                     </div>
                 </div>
@@ -211,62 +216,61 @@
         <div class="w-full lg:w-1/2 bg-white p-8 lg:p-12 flex items-center justify-center">
             <div class="w-full max-w-md space-y-6">
                 <div class="text-center space-y-2">
-                    <h2 class="text-2xl font-bold text-gray-900">Upload Business License</h2>
-                    <p class="text-gray-600">Step 4 of 4: Upload your business registration documents</p>
+                    <h2 class="text-2xl font-bold text-gray-900">{{ __('messages.upload_business_license') }}</h2>
+                    <p class="text-gray-600">{{ __('messages.step_4_of_4_upload_documents') }}</p>
                 </div>
 
                 <!-- Step Indicator -->
                 <div class="progress-bar">
                     <div class="progress-step completed">
                         <div class="step-circle"><i class="fas fa-check"></i></div>
-                        <div class="step-label">Provider Info</div>
+                        <div class="step-label">{{ __('messages.provider_info') }}</div>
                     </div>
                     <div class="progress-step completed">
                         <div class="step-circle"><i class="fas fa-check"></i></div>
-                        <div class="step-label">Verification</div>
+                        <div class="step-label">{{ __('messages.verification') }}</div>
                     </div>
                     <div class="progress-step completed">
                         <div class="step-circle"><i class="fas fa-check"></i></div>
-                        <div class="step-label">Phone</div>
+                        <div class="step-label">{{ __('messages.phone') }}</div>
                     </div>
                     <div class="progress-step active">
                         <div class="step-circle">4</div>
-                        <div class="step-label">License</div>
+                        <div class="step-label">{{ __('messages.license') }}</div>
                     </div>
                 </div>
 
                 <!-- Back Link -->
                 <div class="mb-4">
                     <a href="/register/provider/phone-verification" class="text-purple-600 hover:text-purple-700 transition-colors duration-300 text-sm font-medium">
-                        <i class="fas fa-arrow-left mr-2"></i>
-                        Back to Phone Verification
+                        <i class="fas fa-arrow-{{ app()->getLocale() == 'ar' ? 'right' : 'left' }} {{ app()->getLocale() == 'ar' ? 'ml-2' : 'mr-2' }}"></i>
+                        {{ __('messages.back_to_phone_verification') }}
                     </a>
                 </div>
 
                 <!-- License Information Card -->
                 <div class="bg-purple-50 border border-purple-200 rounded-lg p-6 mb-6">
                     <div class="flex items-center mb-4">
-                        <i class="fas fa-info-circle text-purple-600 mr-2"></i>
-                        <h3 class="font-semibold text-gray-900">License Information</h3>
+                        <i class="fas fa-info-circle text-purple-600 {{ app()->getLocale() == 'ar' ? 'ml-2' : 'mr-2' }}"></i>
+                        <h3 class="font-semibold text-gray-900">{{ __('messages.license_information') }}</h3>
                     </div>
                     <p class="text-gray-600 text-sm">
-                        Please upload your valid business license or trade registration document.
-                        This helps us verify your business and ensures compliance with local regulations.
+                        {{ __('messages.license_upload_instructions') }}
                     </p>
                 </div>
 
                 <!-- License Requirements -->
                 <div class="bg-yellow-50 border border-yellow-200 rounded-lg p-4 mb-6">
                     <h4 class="flex items-center text-yellow-800 font-semibold text-sm mb-2">
-                        <i class="fas fa-exclamation-triangle mr-2"></i>
-                        Requirements:
+                        <i class="fas fa-exclamation-triangle {{ app()->getLocale() == 'ar' ? 'ml-2' : 'mr-2' }}"></i>
+                        {{ __('messages.requirements') }}:
                     </h4>
-                    <ul class="text-yellow-700 text-sm space-y-1 ml-4">
-                        <li>• Valid business license or trade registration</li>
-                        <li>• Document must be in PDF format</li>
-                        <li>• File size should not exceed 10MB</li>
-                        <li>• Document should be clear and readable</li>
-                        <li>• License should be currently valid</li>
+                    <ul class="text-yellow-700 text-sm space-y-1 {{ app()->getLocale() == 'ar' ? 'mr-4' : 'ml-4' }}">
+                        <li>• {{ __('messages.valid_business_license') }}</li>
+                        <li>• {{ __('messages.document_pdf_format') }}</li>
+                        <li>• {{ __('messages.max_file_size_10mb') }}</li>
+                        <li>• {{ __('messages.document_clear_readable') }}</li>
+                        <li>• {{ __('messages.license_currently_valid') }}</li>
                     </ul>
                 </div>
 
@@ -276,7 +280,7 @@
 
                     <!-- License Start Date -->
                     <div class="space-y-2">
-                        <label for="license_start_date" class="text-sm font-medium text-gray-700">License Start Date</label>
+                        <label for="license_start_date" class="text-sm font-medium text-gray-700">{{ __('messages.license_start_date') }}</label>
                         <div class="relative">
                             <input id="license_start_date" name="license_start_date" type="date" required
                                    class="w-full pl-10 pr-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent">
@@ -288,7 +292,7 @@
 
                     <!-- License Expiry Date -->
                     <div class="space-y-2">
-                        <label for="license_expiry_date" class="text-sm font-medium text-gray-700">License Expiry Date</label>
+                        <label for="license_expiry_date" class="text-sm font-medium text-gray-700">{{ __('messages.license_expiry_date') }}</label>
                         <div class="relative">
                             <input id="license_expiry_date" name="license_expiry_date" type="date" required
                                    class="w-full pl-10 pr-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent">
@@ -300,16 +304,16 @@
 
                     <!-- File Upload -->
                     <div class="space-y-2">
-                        <label for="license_file" class="text-sm font-medium text-gray-700">Business License Document</label>
+                        <label for="license_file" class="text-sm font-medium text-gray-700">{{ __('messages.business_license_document') }}</label>
                         <div class="relative">
                             <input type="file" id="license_file" name="license_file" accept=".pdf" required class="hidden">
                             <label for="license_file" id="file-upload-label" class="flex flex-col items-center justify-center w-full h-32 border-2 border-gray-300 border-dashed rounded-lg cursor-pointer bg-gray-50 hover:bg-purple-50 hover:border-purple-300 transition-colors">
                                 <div class="flex flex-col items-center justify-center pt-5 pb-6">
                                     <i class="fas fa-file-pdf text-4xl text-gray-400 mb-3"></i>
                                     <p class="mb-2 text-sm text-gray-500">
-                                        <span class="font-semibold">Click to upload</span> license document
+                                        <span class="font-semibold">{{ __('messages.click_to_upload') }}</span> {{ __('messages.license_document') }}
                                     </p>
-                                    <p class="text-xs text-gray-500">PDF format, max 10MB</p>
+                                    <p class="text-xs text-gray-500">{{ __('messages.pdf_format_max_10mb') }}</p>
                                 </div>
                             </label>
                         </div>
@@ -320,7 +324,7 @@
                         <span class="loading hidden">
                             <i class="fas fa-spinner fa-spin mr-2"></i>
                         </span>
-                        <span class="button-text">Complete Registration</span>
+                        <span class="button-text">{{ __('messages.complete_registration') }}</span>
                     </button>
                 </form>
             </div>
@@ -341,13 +345,13 @@
 
             if (file) {
                 if (file.type !== 'application/pdf') {
-                    alert('Please select a PDF file.');
+                    alert('{{ __('messages.please_select_pdf_file') }}');
                     e.target.value = '';
                     return;
                 }
 
                 if (file.size > 10 * 1024 * 1024) { // 10MB
-                    alert('File size must be less than 10MB.');
+                    alert('{{ __('messages.file_size_less_than_10mb') }}');
                     e.target.value = '';
                     return;
                 }
@@ -356,7 +360,7 @@
                     <div class="flex flex-col items-center justify-center pt-5 pb-6">
                         <i class="fas fa-check-circle text-4xl text-green-500 mb-3"></i>
                         <p class="mb-2 text-sm text-green-600 font-semibold">${file.name}</p>
-                        <p class="text-xs text-green-500">File selected successfully - Click to change</p>
+                        <p class="text-xs text-green-500">{{ __('messages.file_selected_successfully') }}</p>
                     </div>
                 `;
                 label.classList.remove('border-gray-300', 'bg-gray-50', 'hover:bg-purple-50', 'hover:border-purple-300');
@@ -382,7 +386,7 @@
                 const expiry = new Date(expiryDate);
 
                 if (expiry <= start) {
-                    alert('License expiry date must be after the start date.');
+                    alert('{{ __('messages.license_expiry_after_start') }}');
                     document.getElementById('license_expiry_date').value = '';
                 }
             }
@@ -395,7 +399,7 @@
             // Get user_id from localStorage (should be set after phone verification)
             const userId = localStorage.getItem('provider_user_id');
             if (!userId) {
-                alert('User session not found. Please complete phone verification first.');
+                alert('{{ __('messages.user_session_not_found') }}');
                 window.location.href = '/register/provider/phone-verification';
                 return;
             }
@@ -418,18 +422,18 @@
             .then(response => response.json())
             .then(data => {
                 if (data.success) {
-                    alert('License uploaded successfully! Registration completed. Please wait for admin approval.');
+                    alert('{{ __('messages.license_uploaded_successfully') }}');
                     // Clear stored data
                     localStorage.removeItem('provider_registration_token');
                     localStorage.removeItem('provider_user_id');
                     window.location.href = '/login';
                 } else {
-                    throw new Error(data.message || 'License upload failed');
+                    throw new Error(data.message || '{{ __('messages.license_upload_failed') }}');
                 }
             })
             .catch(error => {
                 console.error('Error:', error);
-                alert(error.message || 'An error occurred. Please try again.');
+                alert(error.message || '{{ __('messages.error_occurred_try_again') }}');
             })
             .finally(() => {
                 const loadingSpan = submitBtn.querySelector('.loading');

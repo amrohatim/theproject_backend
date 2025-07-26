@@ -3,8 +3,8 @@
     <div class="max-w-4xl mx-auto px-4">
       <!-- Header -->
       <div class="text-center mb-8">
-        <h1 class="text-3xl font-bold text-gray-900 mb-2">Vendor Registration</h1>
-        <p class="text-gray-600">Complete your registration in 5 simple steps</p>
+        <h1 class="text-3xl font-bold text-gray-900 mb-2">{{ $t('vendor_registration') }}</h1>
+        <p class="text-gray-600">{{ $t('complete_registration_5_steps') }}</p>
       </div>
 
       <!-- Progress Bar -->
@@ -106,22 +106,22 @@
             :disabled="loading"
           >
             <i class="fas fa-arrow-left mr-2"></i>
-            Back
+            {{ $t('back') }}
           </button>
           <div v-else></div>
 
           <div v-if="currentStep === 6" class="text-center w-full">
             <div class="mb-4">
               <i class="fas fa-check-circle text-green-500 text-4xl mb-2"></i>
-              <h2 class="text-2xl font-bold text-gray-900 mb-2">Registration Complete!</h2>
-              <p class="text-gray-600 mb-4">Your vendor registration has been submitted successfully.</p>
+              <h2 class="text-2xl font-bold text-gray-900 mb-2">{{ $t('registration_complete') }}</h2>
+              <p class="text-gray-600 mb-4">{{ $t('vendor_registration_submitted_successfully') }}</p>
             </div>
             <a 
               href="/" 
               class="inline-flex items-center px-6 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors"
             >
               <i class="fas fa-home mr-2"></i>
-              Go to Dashboard
+              {{ $t('go_to_dashboard') }}
             </a>
           </div>
         </div>
@@ -155,11 +155,11 @@ export default {
       success: null,
       userId: null, // Will be set after company info is completed
       steps: [
-        { name: 'Personal Info' },
-        { name: 'Email Verification' },
-        { name: 'Phone Verification' },
-        { name: 'Company Info' },
-        { name: 'License Upload' },
+        { name: 'personal_info' },
+        { name: 'email_verification' },
+        { name: 'phone_verification' },
+        { name: 'company_info' },
+        { name: 'license_upload' },
       ],
       formData: {
         personalInfo: {
@@ -186,6 +186,10 @@ export default {
     };
   },
   methods: {
+    // Translation method
+    $t(key) {
+      return window.appTranslations && window.appTranslations[key] ? window.appTranslations[key] : key;
+    },
     getStepClasses(step) {
       if (this.currentStep > step) {
         return 'bg-blue-500 border-blue-500 text-white';
@@ -212,10 +216,10 @@ export default {
           this.success = response.message;
           this.currentStep = 2;
         } else {
-          this.error = response.message || 'Registration failed. Please try again.';
+          this.error = response.message || this.$t('registration_failed_try_again');
         }
       } catch (error) {
-        this.error = error.message || 'An error occurred. Please try again.';
+        this.error = error.message || this.$t('error_occurred_try_again');
       } finally {
         this.loading = false;
       }
@@ -232,7 +236,7 @@ export default {
           this.success = response.message;
           this.currentStep = 3;
         } else {
-          this.error = response.message || 'Email verification failed. Please try again.';
+          this.error = response.message || this.$t('email_verification_failed_try_again');
         }
       } catch (error) {
         this.error = error.message || 'An error occurred. Please try again.';
@@ -252,7 +256,7 @@ export default {
           this.success = response.message;
           this.currentStep = 4;
         } else {
-          this.error = response.message || 'Phone verification failed. Please try again.';
+          this.error = response.message || this.$t('phone_verification_failed_try_again');
         }
       } catch (error) {
         this.error = error.message || 'An error occurred. Please try again.';
@@ -274,7 +278,7 @@ export default {
           // Store user_id for license upload step
           this.userId = response.user_id;
         } else {
-          this.error = response.message || 'Company information submission failed. Please try again.';
+          this.error = response.message || this.$t('company_info_submission_failed_try_again');
         }
       } catch (error) {
         this.error = error.message || 'An error occurred. Please try again.';
@@ -296,16 +300,16 @@ export default {
         } else {
           // Handle specific error cases
           if (response.error_code === 'LICENSE_UPLOAD_ERROR') {
-            this.error = 'Server error during license upload. Please try again or contact support.';
+            this.error = this.$t('server_error_license_upload_contact_support');
           } else if (response.errors && response.errors.session) {
-            this.error = 'Registration session expired. Please restart the registration process.';
+            this.error = this.$t('registration_session_expired_restart');
           } else {
-            this.error = response.message || 'License upload failed. Please check your file and try again.';
+            this.error = response.message || this.$t('license_upload_failed_check_file');
           }
         }
       } catch (error) {
         console.error('License upload error:', error);
-        this.error = 'Network error occurred. Please check your connection and try again.';
+        this.error = this.$t('network_error_check_connection');
       } finally {
         this.loading = false;
       }
@@ -321,7 +325,7 @@ export default {
         if (response.success) {
           this.success = response.message;
         } else {
-          this.error = response.message || 'Failed to resend verification email.';
+          this.error = response.message || this.$t('failed_resend_verification_email');
         }
       } catch (error) {
         this.error = error.message || 'An error occurred. Please try again.';
@@ -340,7 +344,7 @@ export default {
         if (response.success) {
           this.success = response.message;
         } else {
-          this.error = response.message || 'Failed to resend OTP.';
+          this.error = response.message || this.$t('failed_resend_otp');
         }
       } catch (error) {
         this.error = error.message || 'An error occurred. Please try again.';

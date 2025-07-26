@@ -28,7 +28,7 @@
       <!-- Email -->
       <div>
         <label for="email" class="block text-sm font-medium text-gray-700 mb-2">
-          Email Address <span class="text-red-500">*</span>
+          {{ $t('email_address') }} <span class="text-red-500">*</span>
         </label>
         <input
           id="email"
@@ -36,7 +36,7 @@
           type="email"
           required
           class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors"
-          placeholder="Enter your email address"
+          :placeholder="$t('enter_your_email_address')"
           :disabled="loading"
         />
         <div v-if="errors.email" class="mt-1 text-sm text-red-600">
@@ -47,7 +47,7 @@
       <!-- Phone -->
       <div>
         <label for="phone" class="block text-sm font-medium text-gray-700 mb-2">
-          Phone Number <span class="text-red-500">*</span>
+          {{ $t('phone_number') }} <span class="text-red-500">*</span>
         </label>
         <input
           id="phone"
@@ -55,7 +55,7 @@
           type="tel"
           required
           class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors"
-          placeholder="Enter your phone number"
+          :placeholder="$t('enter_your_phone_number')"
           :disabled="loading"
         />
         <div v-if="errors.phone" class="mt-1 text-sm text-red-600">
@@ -66,7 +66,7 @@
       <!-- Password -->
       <div>
         <label for="password" class="block text-sm font-medium text-gray-700 mb-2">
-          Password <span class="text-red-500">*</span>
+          {{ $t('password') }} <span class="text-red-500">*</span>
         </label>
         <div class="relative">
           <input
@@ -75,7 +75,7 @@
             :type="showPassword ? 'text' : 'password'"
             required
             class="w-full px-4 py-3 pr-12 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors"
-            placeholder="Create a strong password"
+            :placeholder="$t('create_a_strong_password')"
             :disabled="loading"
           />
           <button
@@ -90,14 +90,14 @@
           {{ errors.password[0] }}
         </div>
         <div class="mt-1 text-sm text-gray-500">
-          Password must be at least 8 characters long
+          {{ $t('password_must_be_at_least_8_characters') }}
         </div>
       </div>
 
       <!-- Confirm Password -->
       <div>
         <label for="password_confirmation" class="block text-sm font-medium text-gray-700 mb-2">
-          Confirm Password <span class="text-red-500">*</span>
+          {{ $t('confirm_password') }} <span class="text-red-500">*</span>
         </label>
         <div class="relative">
           <input
@@ -106,7 +106,7 @@
             :type="showConfirmPassword ? 'text' : 'password'"
             required
             class="w-full px-4 py-3 pr-12 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors"
-            placeholder="Confirm your password"
+            :placeholder="$t('confirm_your_password')"
             :disabled="loading"
           />
           <button
@@ -121,7 +121,7 @@
           {{ errors.password_confirmation[0] }}
         </div>
         <div v-if="passwordMismatch" class="mt-1 text-sm text-red-600">
-          Passwords do not match
+          {{ $t('passwords_do_not_match') }}
         </div>
       </div>
 
@@ -136,10 +136,10 @@
           :disabled="loading"
         />
         <label for="terms" class="ml-3 text-sm text-gray-700">
-          I agree to the 
-          <a href="#" class="text-blue-600 hover:text-blue-800 underline">Terms and Conditions</a>
-          and 
-          <a href="#" class="text-blue-600 hover:text-blue-800 underline">Privacy Policy</a>
+          {{ $t('i_agree_to_the') }} 
+          <a href="#" class="text-blue-600 hover:text-blue-800 underline">{{ $t('terms_and_conditions') }}</a>
+          {{ $t('and') }} 
+          <a href="#" class="text-blue-600 hover:text-blue-800 underline">{{ $t('privacy_policy') }}</a>
           <span class="text-red-500">*</span>
         </label>
       </div>
@@ -153,10 +153,10 @@
         >
           <span v-if="loading" class="flex items-center justify-center">
             <i class="fas fa-spinner fa-spin mr-2"></i>
-            Processing...
+            {{ $t('processing') }}...
           </span>
           <span v-else class="flex items-center justify-center">
-            Continue to Email Verification
+            {{ $t('continue_to_email_verification') }}
             <i class="fas fa-arrow-right ml-2"></i>
           </span>
         </button>

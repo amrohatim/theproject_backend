@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "d9262d923ea8b20e4c985f19911d1a9c",
+    "content-hash": "e44f364902eab7dd1dac35072431e3c4",
     "packages": [
         {
             "name": "brick/math",
@@ -2199,6 +2199,44 @@
                 "source": "https://github.com/mailgun/mailgun-php/tree/v4.3.5"
             },
             "time": "2025-04-06T12:36:45+00:00"
+        },
+        {
+            "name": "mindplay/php-vite",
+            "version": "1.0.1",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/mindplay-dk/php-vite.git",
+                "reference": "f9416949acd4652d322793055e2e7661648bd69c"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/mindplay-dk/php-vite/zipball/f9416949acd4652d322793055e2e7661648bd69c",
+                "reference": "f9416949acd4652d322793055e2e7661648bd69c",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=8.1"
+            },
+            "require-dev": {
+                "mindplay/testies": "^1.1",
+                "phpunit/php-code-coverage": "^10"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "mindplay\\vite\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MPL-2.0"
+            ],
+            "description": "a lightweight PHP-backend integration for the Vite frontend build tool",
+            "support": {
+                "issues": "https://github.com/mindplay-dk/php-vite/issues",
+                "source": "https://github.com/mindplay-dk/php-vite/tree/1.0.1"
+            },
+            "time": "2024-10-08T10:42:03+00:00"
         },
         {
             "name": "monolog/monolog",

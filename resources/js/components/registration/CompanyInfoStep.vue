@@ -1,15 +1,15 @@
 <template>
   <div>
     <div class="mb-6">
-      <h2 class="text-2xl font-bold text-gray-900 mb-2">Company Information</h2>
-      <p class="text-gray-600">Please provide your company details for vendor registration.</p>
+      <h2 class="text-2xl font-bold text-gray-900 mb-2">{{ $t('company_information') }}</h2>
+      <p class="text-gray-600">{{ $t('provide_company_details_for_vendor_registration') }}</p>
     </div>
 
     <form @submit.prevent="handleSubmit" class="space-y-6">
       <!-- Company Name -->
       <div>
         <label for="name" class="block text-sm font-medium text-gray-700 mb-2">
-          Company Name <span class="text-red-500">*</span>
+          {{ $t('company_name') }} <span class="text-red-500">*</span>
         </label>
         <input
           id="name"
@@ -17,7 +17,7 @@
           type="text"
           required
           class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors"
-          placeholder="Enter your company name"
+          :placeholder="$t('enter_your_company_name')"
           :disabled="loading"
         />
         <div v-if="errors.name" class="mt-1 text-sm text-red-600">
@@ -28,7 +28,7 @@
       <!-- Company Email -->
       <div>
         <label for="email" class="block text-sm font-medium text-gray-700 mb-2">
-          Company Email <span class="text-red-500">*</span>
+          {{ $t('company_email') }} <span class="text-red-500">*</span>
         </label>
         <input
           id="email"
@@ -36,7 +36,7 @@
           type="email"
           required
           class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors"
-          placeholder="Enter company email address"
+          :placeholder="$t('enter_company_email_address')"
           :disabled="loading"
         />
         <div v-if="errors.email" class="mt-1 text-sm text-red-600">
@@ -47,7 +47,7 @@
       <!-- Primary Contact Number -->
       <div>
         <label for="contact_number_1" class="block text-sm font-medium text-gray-700 mb-2">
-          Primary Contact Number <span class="text-red-500">*</span>
+          {{ $t('primary_contact_number') }} <span class="text-red-500">*</span>
         </label>
         <input
           id="contact_number_1"
@@ -55,7 +55,7 @@
           type="tel"
           required
           class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors"
-          placeholder="Enter primary contact number"
+          :placeholder="$t('enter_primary_contact_number')"
           :disabled="loading"
         />
         <div v-if="errors.contact_number_1" class="mt-1 text-sm text-red-600">
@@ -66,14 +66,14 @@
       <!-- Secondary Contact Number -->
       <div>
         <label for="contact_number_2" class="block text-sm font-medium text-gray-700 mb-2">
-          Secondary Contact Number
+          {{ $t('secondary_contact_number') }}
         </label>
         <input
           id="contact_number_2"
           v-model="formData.contact_number_2"
           type="tel"
           class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors"
-          placeholder="Enter secondary contact number (optional)"
+          :placeholder="$t('enter_secondary_contact_number_optional')"
           :disabled="loading"
         />
         <div v-if="errors.contact_number_2" class="mt-1 text-sm text-red-600">
@@ -84,7 +84,7 @@
       <!-- Address -->
       <div>
         <label for="address" class="block text-sm font-medium text-gray-700 mb-2">
-          Company Address <span class="text-red-500">*</span>
+          {{ $t('company_address') }} <span class="text-red-500">*</span>
         </label>
         <textarea
           id="address"
@@ -92,7 +92,7 @@
           required
           rows="3"
           class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors"
-          placeholder="Enter your complete company address"
+          :placeholder="$t('enter_your_complete_company_address')"
           :disabled="loading"
         ></textarea>
         <div v-if="errors.address" class="mt-1 text-sm text-red-600">
@@ -103,7 +103,7 @@
       <!-- Emirate -->
       <div>
         <label for="emirate" class="block text-sm font-medium text-gray-700 mb-2">
-          Emirate <span class="text-red-500">*</span>
+          {{ $t('emirate') }} <span class="text-red-500">*</span>
         </label>
         <select
           id="emirate"
@@ -112,14 +112,14 @@
           class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors"
           :disabled="loading"
         >
-          <option value="">Select emirate</option>
-          <option value="Abu Dhabi">Abu Dhabi</option>
-          <option value="Dubai">Dubai</option>
-          <option value="Sharjah">Sharjah</option>
-          <option value="Ajman">Ajman</option>
-          <option value="Umm Al Quwain">Umm Al Quwain</option>
-          <option value="Ras Al Khaimah">Ras Al Khaimah</option>
-          <option value="Fujairah">Fujairah</option>
+          <option value="">{{ $t('select_emirate') }}</option>
+          <option value="Abu Dhabi">{{ $t('abu_dhabi') }}</option>
+          <option value="Dubai">{{ $t('dubai') }}</option>
+          <option value="Sharjah">{{ $t('sharjah') }}</option>
+          <option value="Ajman">{{ $t('ajman') }}</option>
+          <option value="Umm Al Quwain">{{ $t('umm_al_quwain') }}</option>
+          <option value="Ras Al Khaimah">{{ $t('ras_al_khaimah') }}</option>
+          <option value="Fujairah">{{ $t('fujairah') }}</option>
         </select>
         <div v-if="errors.emirate" class="mt-1 text-sm text-red-600">
           {{ errors.emirate[0] }}
@@ -129,7 +129,7 @@
       <!-- City -->
       <div>
         <label for="city" class="block text-sm font-medium text-gray-700 mb-2">
-          City <span class="text-red-500">*</span>
+          {{ $t('city') }} <span class="text-red-500">*</span>
         </label>
         <input
           id="city"
@@ -137,7 +137,7 @@
           type="text"
           required
           class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors"
-          placeholder="Enter city name"
+          :placeholder="$t('enter_city_name')"
           :disabled="loading"
         />
         <div v-if="errors.city" class="mt-1 text-sm text-red-600">
@@ -148,14 +148,14 @@
       <!-- Street -->
       <div>
         <label for="street" class="block text-sm font-medium text-gray-700 mb-2">
-          Street
+          {{ $t('street') }}
         </label>
         <input
           id="street"
           v-model="formData.street"
           type="text"
           class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors"
-          placeholder="Enter street name (optional)"
+          :placeholder="$t('enter_street_name_optional')"
           :disabled="loading"
         />
         <div v-if="errors.street" class="mt-1 text-sm text-red-600">
@@ -174,7 +174,7 @@
             :disabled="loading"
           />
           <label for="delivery_capability" class="ml-3 text-sm font-medium text-gray-700">
-            We offer delivery services
+            {{ $t('we_offer_delivery_services') }}
           </label>
         </div>
         <div v-if="errors.delivery_capability" class="mt-1 text-sm text-red-600">
@@ -185,7 +185,7 @@
       <!-- Company Logo -->
       <div>
         <label for="logo" class="block text-sm font-medium text-gray-700 mb-2">
-          Company Logo
+          {{ $t('company_logo') }}
         </label>
         <div class="mt-1 flex justify-center px-6 pt-5 pb-6 border-2 border-gray-300 border-dashed rounded-lg hover:border-gray-400 transition-colors">
           <div class="space-y-1 text-center">
@@ -197,7 +197,7 @@
                 class="mt-2 text-sm text-red-600 hover:text-red-800"
                 :disabled="loading"
               >
-                Remove logo
+                {{ $t('remove_logo') }}
               </button>
             </div>
             <div v-else>
@@ -206,7 +206,7 @@
               </svg>
               <div class="flex text-sm text-gray-600">
                 <label for="logo" class="relative cursor-pointer bg-white rounded-md font-medium text-blue-600 hover:text-blue-500 focus-within:outline-none focus-within:ring-2 focus-within:ring-offset-2 focus-within:ring-blue-500">
-                  <span>Upload a logo</span>
+                  <span>{{ $t('upload_a_logo') }}</span>
                   <input
                     id="logo"
                     ref="logoInput"
@@ -217,9 +217,9 @@
                     :disabled="loading"
                   />
                 </label>
-                <p class="pl-1">or drag and drop</p>
+                <p class="pl-1">{{ $t('or_drag_and_drop') }}</p>
               </div>
-              <p class="text-xs text-gray-500">PNG, JPG, GIF up to 2MB</p>
+              <p class="text-xs text-gray-500">{{ $t('png_jpg_gif_up_to_2mb') }}</p>
             </div>
           </div>
         </div>
@@ -231,21 +231,21 @@
       <!-- Company Description -->
       <div>
         <label for="description" class="block text-sm font-medium text-gray-700 mb-2">
-          Company Description
+          {{ $t('company_description') }}
         </label>
         <textarea
           id="description"
           v-model="formData.description"
           rows="4"
           class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors"
-          placeholder="Describe your company, products, and services..."
+          :placeholder="$t('describe_your_company_products_services')"
           :disabled="loading"
         ></textarea>
         <div v-if="errors.description" class="mt-1 text-sm text-red-600">
           {{ errors.description[0] }}
         </div>
         <div class="mt-1 text-sm text-gray-500">
-          Tell us about your business to help customers understand what you offer
+          {{ $t('tell_us_about_your_business') }}
         </div>
       </div>
 
@@ -258,10 +258,10 @@
         >
           <span v-if="loading" class="flex items-center justify-center">
             <i class="fas fa-spinner fa-spin mr-2"></i>
-            Saving...
+            {{ $t('saving') }}...
           </span>
           <span v-else class="flex items-center justify-center">
-            Continue to License Upload
+            {{ $t('continue_to_license_upload') }}
             <i class="fas fa-arrow-right ml-2"></i>
           </span>
         </button>
@@ -315,6 +315,10 @@ export default {
     },
   },
   methods: {
+    // Translation method
+    $t(key) {
+      return window.appTranslations && window.appTranslations[key] ? window.appTranslations[key] : key;
+    },
     handleSubmit() {
       if (this.isFormValid) {
         this.errors = {};
@@ -326,13 +330,13 @@ export default {
       if (file) {
         // Validate file size (2MB max)
         if (file.size > 2 * 1024 * 1024) {
-          this.errors = { ...this.errors, logo: ['File size must be less than 2MB'] };
+          this.errors = { ...this.errors, logo: [this.$t('file_size_must_be_less_than_2mb')] };
           return;
         }
         
         // Validate file type
         if (!file.type.startsWith('image/')) {
-          this.errors = { ...this.errors, logo: ['Please select a valid image file'] };
+          this.errors = { ...this.errors, logo: [this.$t('please_select_valid_image_file')] };
           return;
         }
         

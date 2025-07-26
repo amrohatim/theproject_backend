@@ -4,16 +4,16 @@
       <div class="upload-icon">
         <i class="fas fa-certificate"></i>
       </div>
-      <h2 class="step-title">Upload Business License</h2>
+      <h2 class="step-title">{{ $t('upload_business_license') }}</h2>
       <p class="step-description">
-        Please upload your business license to complete your registration
+        {{ $t('upload_license_description_merchant') }}
       </p>
     </div>
 
     <form @submit.prevent="handleSubmit" class="license-form">
       <!-- License File Upload -->
       <div class="form-group">
-        <label for="license_file" class="form-label">Business License (PDF) *</label>
+        <label for="license_file" class="form-label">{{ $t('business_license_pdf') }} *</label>
         <div class="file-upload-area" :class="{ 'has-file': licenseFile, 'drag-over': isDragOver }">
           <input 
             type="file" 
@@ -30,8 +30,8 @@
           <div class="file-upload-content">
             <div v-if="!licenseFile" class="upload-placeholder">
               <i class="fas fa-cloud-upload-alt upload-icon-large"></i>
-              <h3>Drop your license here or click to browse</h3>
-              <p>PDF files only, max 10MB</p>
+              <h3>{{ $t('drop_license_or_browse') }}</h3>
+              <p>{{ $t('pdf_files_max_10mb') }}</p>
             </div>
             <div v-else class="file-preview">
               <div class="file-info">
@@ -52,7 +52,7 @@
 
       <!-- License Start Date -->
       <div class="form-group">
-        <label for="license_start_date" class="form-label">License Start Date <span class="required">*</span></label>
+        <label for="license_start_date" class="form-label">{{ $t('license_start_date') }} <span class="required">*</span></label>
         <input
           type="date"
           id="license_start_date"
@@ -67,7 +67,7 @@
 
       <!-- License End Date -->
       <div class="form-group">
-        <label for="license_end_date" class="form-label">License End Date <span class="required">*</span></label>
+        <label for="license_end_date" class="form-label">{{ $t('license_end_date') }} <span class="required">*</span></label>
         <input
           type="date"
           id="license_end_date"
@@ -82,13 +82,13 @@
 
       <!-- Notes -->
       <div class="form-group">
-        <label for="notes" class="form-label">Additional Notes (Optional)</label>
+        <label for="notes" class="form-label">{{ $t('additional_notes_optional') }}</label>
         <textarea
           id="notes"
           v-model="formData.notes"
           class="form-textarea"
           :class="{ 'error': errors.notes }"
-          placeholder="Any additional information about your license..."
+          :placeholder="$t('license_additional_info_placeholder')"
           rows="4"
         ></textarea>
         <div v-if="errors.notes" class="error-message">{{ errors.notes[0] }}</div>
@@ -96,22 +96,22 @@
 
       <button type="submit" class="form-button" :disabled="loading || !licenseFile">
         <div v-if="loading" class="loading-spinner"></div>
-        <span class="button-text">{{ loading ? 'Uploading License...' : 'Complete Registration' }}</span>
+        <span class="button-text">{{ loading ? $t('uploading_license') : $t('complete_registration') }}</span>
       </button>
     </form>
 
     <div class="info-section">
       <div class="info-item">
         <i class="fas fa-info-circle"></i>
-        <span>Your license will be reviewed within 24-48 hours</span>
+        <span>{{ $t('license_review_24_48_hours') }}</span>
       </div>
       <div class="info-item">
         <i class="fas fa-shield-alt"></i>
-        <span>All documents are securely encrypted and stored</span>
+        <span>{{ $t('documents_securely_encrypted') }}</span>
       </div>
       <div class="info-item">
         <i class="fas fa-check-circle"></i>
-        <span>You'll receive an email confirmation once approved</span>
+        <span>{{ $t('email_confirmation_once_approved') }}</span>
       </div>
     </div>
   </div>
@@ -183,13 +183,13 @@ export default {
 
       // Check if start date is provided
       if (!this.formData.license_start_date) {
-        this.errors.license_start_date = ['License start date is required'];
+        this.errors.license_start_date = [this.$t('license_start_date_required')];
         isValid = false;
       }
 
       // Check if end date is provided
       if (!this.formData.license_end_date) {
-        this.errors.license_end_date = ['License end date is required'];
+        this.errors.license_end_date = [this.$t('license_end_date_required')];
         isValid = false;
       }
 
@@ -202,13 +202,13 @@ export default {
 
         // Check if start date is not in the past
         if (startDate < today) {
-          this.errors.license_start_date = ['License start date cannot be in the past'];
+          this.errors.license_start_date = [this.$t('license_start_date_cannot_past')];
           isValid = false;
         }
 
         // Check if end date is after start date
         if (endDate <= startDate) {
-          this.errors.license_end_date = ['License end date must be after start date'];
+          this.errors.license_end_date = [this.$t('license_end_date_after_start')];
           isValid = false;
         }
       }
@@ -229,13 +229,13 @@ export default {
 
       // Validate file type
       if (file.type !== 'application/pdf') {
-        this.errors = { license_file: ['Please select a PDF file.'] };
+        this.errors = { license_file: [this.$t('please_select_pdf_file')] };
         return;
       }
 
       // Validate file size (10MB max)
       if (file.size > 10 * 1024 * 1024) {
-        this.errors = { license_file: ['File size must be less than 10MB.'] };
+        this.errors = { license_file: [this.$t('file_size_less_10mb')] };
         return;
       }
 
@@ -247,9 +247,9 @@ export default {
       this.$refs.licenseInput.value = '';
     },
     formatFileSize(bytes) {
-      if (bytes === 0) return '0 Bytes';
+      if (bytes === 0) return '0 ' + this.$t('bytes');
       const k = 1024;
-      const sizes = ['Bytes', 'KB', 'MB', 'GB'];
+      const sizes = [this.$t('bytes'), this.$t('kb'), this.$t('mb'), this.$t('gb')];
       const i = Math.floor(Math.log(bytes) / Math.log(k));
       return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + ' ' + sizes[i];
     },

@@ -6,20 +6,20 @@
         <div class="flex items-center gap-4">
           <a :href="backUrl" class="vue-btn vue-btn-secondary">
             <i class="fas fa-arrow-left w-4 h-4"></i>
-            Back to Products
+            {{ $t('back_to_products') }}
           </a>
           <div>
-            <h1 class="vue-text-2xl">Edit Product</h1>
-            <p class="vue-text-muted mt-1">Update product information, colors, and specifications</p>
+            <h1 class="vue-text-2xl">{{ $t('edit_product') }}</h1>
+            <p class="vue-text-muted mt-1">{{ $t('update_product_info_colors_specs') }}</p>
           </div>
         </div>
         <div class="flex gap-2">
           <button type="button" class="vue-btn vue-btn-secondary" @click="previewProduct">
-            Preview
+            {{ $t('preview') }}
           </button>
           <button type="button" class="vue-btn vue-btn-primary" @click="saveProduct" :disabled="saving">
             <i class="fas fa-save w-4 h-4"></i>
-            {{ saving ? 'Saving...' : 'Save Changes' }}
+            {{ saving ? $t('saving') : $t('save_changes') }}
           </button>
         </div>
       </div>
@@ -28,9 +28,9 @@
       <div class="vue-card" style="background-color: var(--primary-blue-light); border-color: var(--gray-200);">
         <div class="vue-card-body">
           <div class="flex items-center justify-between mb-2">
-            <span class="vue-text-sm" style="color: var(--primary-blue-hover);">Stock Allocation Progress</span>
+            <span class="vue-text-sm" style="color: var(--primary-blue-hover);">{{ $t('stock_allocation_progress') }}</span>
             <span class="vue-text-sm" style="color: var(--primary-blue);">
-              <span>{{ totalAllocatedStock }}</span> / {{ productData.stock }} units allocated
+              <span>{{ totalAllocatedStock }}</span> / {{ productData.stock }} {{ $t('units_allocated') }}
             </span>
           </div>
           <div class="w-full rounded-full h-2" style="background-color: var(--gray-200);">
@@ -44,7 +44,7 @@
             <div class="flex items-center gap-2">
               <i class="fas fa-exclamation-triangle" style="color: var(--yellow-600);"></i>
               <p style="color: var(--yellow-800); font-size: 0.875rem; margin: 0;">
-                You've allocated more stock than available. Please adjust color stock quantities.
+                {{ $t('stock_over_allocated_adjust_quantities') }}
               </p>
             </div>
           </div>
@@ -62,7 +62,7 @@
                   :class="getTabClasses(tab.id)"
                   @click="activeTab = tab.id">
             <i :class="tab.icon + ' w-4 h-4'"></i>
-            <span class="hidden sm:inline">{{ tab.label }}</span>
+            <span class="hidden sm:inline">{{ $t(tab.label) }}</span>
           </button>
         </div>
 
@@ -76,13 +76,13 @@
                 <div class="p-6 border-b" style="border-color: var(--gray-200);">
                   <h3 class="flex items-center gap-2 vue-text-lg">
                     <i class="fas fa-box w-5 h-5" style="color: var(--gray-600);"></i>
-                    Product Details
+                    {{ $t('product_details') }}
                   </h3>
                 </div>
                 <div class="p-6 space-y-4">
                   <div class="space-y-2">
                     <label for="name" class="block vue-text-sm">
-                      Product Name <span class="text-red-500">*</span>
+                      {{ $t('product_name') }} <span class="text-red-500">*</span>
                     </label>
                     <input type="text" 
                            id="name" 
@@ -96,7 +96,7 @@
                   <div class="grid grid-cols-2 gap-4">
                     <div class="space-y-2">
                       <label for="category_id" class="block vue-text-sm">
-                        Category <span class="text-red-500">*</span>
+                        {{ $t('category') }} <span class="text-red-500">*</span>
                       </label>
                       <select id="category_id"
                               v-model="productData.category_id"
@@ -104,7 +104,7 @@
                               :class="{ 'border-red-500': errors.category_id }"
                               required
                               @change="validateCategorySelection">
-                        <option value="">Select Category</option>
+                        <option value="">{{ $t('select_category') }}</option>
                         <optgroup v-for="parent in categories" :key="parent.id" :label="parent.name">
                           <!-- <option :value="parent.id"
                                   disabled
@@ -128,7 +128,7 @@
 
                   <div class="space-y-2">
                     <label for="description" class="block vue-text-sm">
-                      Description
+                      {{ $t('description') }}
                     </label>
                     <textarea id="description" 
                               v-model="productData.description" 
@@ -146,14 +146,14 @@
                 <div class="p-6 border-b" style="border-color: var(--gray-200);">
                   <h3 class="flex items-center gap-2 vue-text-lg">
                     <i class="fas fa-dollar-sign w-5 h-5" style="color: var(--gray-600);"></i>
-                    Pricing & Inventory
+                    {{ $t('pricing_inventory') }}
                   </h3>
                 </div>
                 <div class="p-6 space-y-4">
                   <div class="grid grid-cols-2 gap-4">
                     <div class="space-y-2">
                       <label for="price" class="block vue-text-sm">
-                        Current Price <span class="text-red-500">*</span>
+                        {{ $t('current_price') }} <span class="text-red-500">*</span>
                       </label>
                       <div class="relative">
                         <i class="fas fa-dollar-sign absolute left-3 top-1/2 transform -translate-y-1/2 w-4 h-4" style="color: var(--gray-400);"></i>
@@ -171,7 +171,7 @@
 
                     <div class="space-y-2">
                       <label for="original_price" class="block vue-text-sm">
-                        Original Price
+                        {{ $t('original_price') }}
                       </label>
                       <div class="relative">
                         <i class="fas fa-dollar-sign absolute left-3 top-1/2 transform -translate-y-1/2 w-4 h-4" style="color: var(--gray-400);"></i>
@@ -190,7 +190,7 @@
                   <div class="grid grid-cols-2 gap-4">
                     <div class="space-y-2">
                       <label for="stock" class="block vue-text-sm">
-                        Total Stock <span class="text-red-500">*</span>
+                        {{ $t('total_stock') }} <span class="text-red-500">*</span>
                       </label>
                       <div class="relative">
                         <i class="fas fa-warehouse absolute left-3 top-1/2 transform -translate-y-1/2 w-4 h-4" style="color: var(--gray-400);"></i>
@@ -354,11 +354,11 @@
         <div class="mx-auto flex items-center justify-center h-12 w-12 rounded-full bg-green-100 mb-4">
           <i class="fas fa-check text-green-600 text-xl"></i>
         </div>
-        <h3 class="text-lg font-medium text-gray-900 mb-2">Success!</h3>
-        <p class="text-sm text-gray-500 mb-6">Product updated successfully!</p>
+        <h3 class="text-lg font-medium text-gray-900 mb-2">{{ $t('success') }}</h3>
+        <p class="text-sm text-gray-500 mb-6">{{ $t('product_updated_successfully') }}</p>
         <button @click="closeSuccessModal"
                 class="w-full bg-blue-500 hover:bg-blue-600 text-white font-medium py-2 px-4 rounded-lg transition-colors">
-          Continue
+          {{ $t('continue') }}
         </button>
       </div>
     </div>
@@ -371,11 +371,11 @@
         <div class="mx-auto flex items-center justify-center h-12 w-12 rounded-full bg-red-100 mb-4">
           <i class="fas fa-exclamation-triangle text-red-600 text-xl"></i>
         </div>
-        <h3 class="text-lg font-medium text-gray-900 mb-2">Error</h3>
+        <h3 class="text-lg font-medium text-gray-900 mb-2">{{ $t('error') }}</h3>
         <p class="text-sm text-gray-500 mb-6">{{ errorMessage }}</p>
         <button @click="closeErrorModal"
                 class="w-full bg-red-500 hover:bg-red-600 text-white font-medium py-2 px-4 rounded-lg transition-colors">
-          Close
+          {{ $t('close') }}
         </button>
       </div>
     </div>
@@ -432,11 +432,16 @@ export default {
     const showErrorModal = ref(false)
     const errorMessage = ref('')
 
+    // Translation method
+    const $t = (key) => {
+      return window.appTranslations && window.appTranslations[key] ? window.appTranslations[key] : key;
+    }
+
     // Tab configuration
     const tabs = [
-      { id: 'basic', label: 'Basic Info', icon: 'fas fa-box' },
-      { id: 'colors', label: 'Colors & Images', icon: 'fas fa-palette' },
-      { id: 'specifications', label: 'Specifications', icon: 'fas fa-file-text' }
+      { id: 'basic', label: 'basic_info', icon: 'fas fa-box' },
+      { id: 'colors', label: 'colors_images', icon: 'fas fa-palette' },
+      { id: 'specifications', label: 'specifications', icon: 'fas fa-file-text' }
     ]
 
     // Computed properties
@@ -885,6 +890,7 @@ export default {
       salePercentage,
 
       // Methods
+      $t,
       getTabClasses,
       fetchProductData,
       validateForm,

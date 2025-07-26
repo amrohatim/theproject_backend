@@ -4,18 +4,18 @@
       <div class="verification-icon">
         <i class="fas fa-mobile-alt"></i>
       </div>
-      <h2 class="step-title">Verify Your Phone</h2>
+      <h2 class="step-title">{{ $t('verify_your_phone') }}</h2>
       <p class="step-description">
-        We've sent a verification code to <strong>{{ phone }}</strong>
+        {{ $t('verification_code_sent_to') }} <strong>{{ phone }}</strong>
       </p>
       <p class="step-subdescription">
-        Please enter the 6-digit code below
+        {{ $t('enter_6_digit_code_below') }}
       </p>
     </div>
 
     <form @submit.prevent="handleSubmit" class="verification-form">
       <div class="form-group">
-        <label for="otp_code" class="form-label">OTP Code</label>
+        <label for="otp_code" class="form-label">{{ $t('otp_code') }}</label>
         <div class="otp-input-container">
           <input
             v-for="(digit, index) in otpDigits"
@@ -36,31 +36,31 @@
 
       <button type="submit" class="form-button" :disabled="loading || !isOtpComplete">
         <div v-if="loading" class="loading-spinner"></div>
-        <span class="button-text">{{ loading ? 'Verifying...' : 'Verify Phone' }}</span>
+        <span class="button-text">{{ loading ? $t('verifying') : $t('verify_phone') }}</span>
       </button>
     </form>
 
     <div class="resend-section">
-      <p class="resend-text">Didn't receive the code?</p>
+      <p class="resend-text">{{ $t('didnt_receive_code') }}</p>
       <button 
         type="button" 
         class="resend-button" 
         @click="handleResend"
         :disabled="loading || resendCooldown > 0"
       >
-        <span v-if="resendCooldown > 0">Resend in {{ resendCooldown }}s</span>
-        <span v-else>Resend OTP</span>
+        <span v-if="resendCooldown > 0">{{ $t('resend_in') }} {{ resendCooldown }}s</span>
+        <span v-else>{{ $t('resend_otp') }}</span>
       </button>
     </div>
 
     <div class="help-section">
       <div class="help-item">
         <i class="fas fa-info-circle"></i>
-        <span>Make sure your phone can receive SMS messages</span>
+        <span>{{ $t('phone_sms_check') }}</span>
       </div>
       <div class="help-item">
         <i class="fas fa-clock"></i>
-        <span>The OTP code expires in 10 minutes</span>
+        <span>{{ $t('otp_expires_10_minutes') }}</span>
       </div>
     </div>
   </div>
@@ -177,7 +177,7 @@ export default {
       this.errors = errors;
     },
     clearOtp() {
-      this.otpDigits = ['', '', '', ''];
+      this.otpDigits = ['', '', '', '', '', ''];
       this.$refs.otpInput0[0].focus();
     }
   },

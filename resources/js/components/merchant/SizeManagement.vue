@@ -3,9 +3,9 @@
     <!-- Header -->
     <div class="flex items-center justify-between mb-4">
       <div>
-        <h5 class="vue-text-sm font-semibold">Size Management</h5>
+        <h5 class="vue-text-sm font-semibold">{{ $t('size_management') }}</h5>
         <p class="text-xs" style="color: var(--gray-500);">
-          Manage sizes and stock allocation for this color variant
+          {{ $t('manage_sizes_stock_allocation') }}
         </p>
       </div>
       <div class="flex items-center gap-2">
@@ -13,15 +13,15 @@
                 class="vue-btn vue-btn-secondary text-sm"
                 @click="() => refreshSizes()"
                 :disabled="loading"
-                title="Refresh sizes list">
+                :title="$t('refresh_sizes_list')">
           <i class="fas fa-sync-alt w-3 h-3" :class="{ 'fa-spin': loading }"></i>
-          Refresh
+          {{ $t('refresh') }}
         </button>
         <button type="button"
                 class="vue-btn vue-btn-primary text-sm"
                 @click="showAddSizeModal = true">
           <i class="fas fa-plus w-3 h-3"></i>
-          Add Size
+          {{ $t('add_size') }}
         </button>
       </div>
     </div>
@@ -31,13 +31,13 @@
       <div class="flex items-start gap-3">
         <i class="fas fa-exclamation-triangle w-4 h-4 mt-0.5" style="color: var(--red-500);"></i>
         <div class="flex-1">
-          <h6 class="text-sm font-medium" style="color: var(--red-800);">Error Loading Sizes</h6>
+          <h6 class="text-sm font-medium" style="color: var(--red-800);">{{ $t('error_loading_sizes') }}</h6>
           <p class="text-xs mt-1" style="color: var(--red-600);">{{ errorMessage }}</p>
           <button type="button"
                   class="mt-2 text-xs underline"
                   style="color: var(--red-600);"
                   @click="() => refreshSizes()">
-            Try Again
+            {{ $t('try_again') }}
           </button>
         </div>
         <button type="button"
@@ -52,27 +52,27 @@
     <div v-if="loading" class="flex items-center justify-center py-8">
       <div class="flex items-center gap-2">
         <i class="fas fa-spinner fa-spin w-4 h-4" style="color: var(--primary-blue);"></i>
-        <span class="text-sm" style="color: var(--gray-600);">Loading sizes...</span>
+        <span class="text-sm" style="color: var(--gray-600);">{{ $t('loading_sizes') }}</span>
       </div>
     </div>
 
     <!-- Empty State -->
     <div v-else-if="sizes.length === 0 && !errorMessage" class="text-center py-8">
       <i class="fas fa-ruler w-8 h-8 mb-3" style="color: var(--gray-400);"></i>
-      <h6 class="vue-text-sm mb-2">No sizes added</h6>
+      <h6 class="vue-text-sm mb-2">{{ $t('no_sizes_added') }}</h6>
       <p class="text-xs mb-4" style="color: var(--gray-500);">
         <span v-if="isProductCreationMode">
-          Add sizes to this color variant for better inventory management
+          {{ $t('add_sizes_inventory_management') }}
         </span>
         <span v-else>
-          Add sizes to this color variant to manage stock allocation
+          {{ $t('add_sizes_stock_allocation') }}
         </span>
       </p>
       <button type="button"
               class="vue-btn vue-btn-primary text-sm"
               @click="showAddSizeModal = true">
         <i class="fas fa-plus w-3 h-3"></i>
-        Add First Size
+        {{ $t('add_first_size') }}
       </button>
     </div>
 
@@ -91,10 +91,10 @@
                 <h6 class="vue-text-sm font-medium">{{ size.name }}</h6>
                 <div class="flex items-center gap-4 mt-1">
                   <span v-if="size.value" class="text-xs" style="color: var(--gray-600);">
-                    Value: {{ size.value }}
+                    {{ $t('value') }}: {{ size.value }}
                   </span>
                   <span class="text-xs" style="color: var(--gray-600);">
-                    Stock: {{ size.stock || 0 }}
+                    {{ $t('stock') }}: {{ size.stock || 0 }}
                   </span>
                   <span v-if="size.price_adjustment && size.price_adjustment !== 0" 
                         class="text-xs" 
@@ -110,13 +110,13 @@
             <button type="button" 
                     class="p-2 text-blue-600 hover:text-blue-700 hover:bg-blue-50 rounded-lg transition-colors"
                     @click="editSize(index)"
-                    title="Edit size">
+                    :title="$t('edit_size')">
               <i class="fas fa-edit w-4 h-4"></i>
             </button>
             <button type="button" 
                     class="p-2 text-red-600 hover:text-red-700 hover:bg-red-50 rounded-lg transition-colors"
                     @click="removeSize(index)"
-                    title="Remove size">
+                    :title="$t('remove_size')">
               <i class="fas fa-trash w-4 h-4"></i>
             </button>
           </div>
@@ -128,14 +128,14 @@
             <div class="enhanced-form-field space-y-2">
               <label class="enhanced-form-label">
                 <i class="fas fa-ruler"></i>
-                Size Name <span class="text-red-500">*</span>
+                {{ $t('size_name') }} <span class="text-red-500">*</span>
               </label>
               <select v-model="size.name"
                       class="vue-form-control-enhanced-blue"
                       :class="{ 'border-red-500': size.errors?.name }"
                       @change="handleSizeNameChange(size.name, true, index)"
                       required>
-                <option value="">Select Size</option>
+                <option value="">{{ $t('select_size') }}</option>
                 <option v-for="option in getSizeNameOptionsForEdit(size.category)"
                         :key="option.value"
                         :value="option.value">
@@ -148,12 +148,12 @@
             <div class="enhanced-form-field space-y-2">
               <label class="enhanced-form-label">
                 <i class="fas fa-tag"></i>
-                Size Value
+                {{ $t('size_value') }}
               </label>
               <input type="text"
                      v-model="size.value"
                      class="vue-form-control-enhanced-blue"
-                     placeholder="Auto-filled based on selection"
+                     :placeholder="$t('auto_filled_selection')"
                      readonly>
             </div>
           </div>
@@ -162,7 +162,7 @@
             <div class="enhanced-form-field space-y-2">
               <label class="enhanced-form-label">
                 <i class="fas fa-boxes"></i>
-                Stock Quantity
+                {{ $t('stock_quantity') }}
               </label>
               <div class="enhanced-input-group">
                 <input type="number"
@@ -173,11 +173,11 @@
                        :max="colorStock"
                        @input="size.stock = validateSizeStock(size.stock, index); validateSizeField(index, 'stock')"
                        placeholder="0">
-                <div class="input-suffix">units</div>
+                <div class="input-suffix">{{ $t('units') }}</div>
               </div>
               <div class="stock-allocation-info">
-                <span class="available-stock">Available: {{ availableSizeStock + (parseInt(size.stock) || 0) }}</span>
-                <span class="allocated-stock">{{ size.stock || 0 }} allocated</span>
+                <span class="available-stock">{{ $t('available') }}: {{ availableSizeStock + (parseInt(size.stock) || 0) }}</span>
+                <span class="allocated-stock">{{ size.stock || 0 }} {{ $t('allocated') }}</span>
               </div>
               <div v-if="size.errors?.stock" class="text-red-500 text-xs">{{ size.errors.stock }}</div>
             </div>
@@ -185,7 +185,7 @@
             <div class="enhanced-form-field space-y-2">
               <label class="enhanced-form-label">
                 <i class="fas fa-dollar-sign"></i>
-                Price Adjustment
+                {{ $t('price_adjustment') }}
               </label>
               <div class="enhanced-price-input">
                 <div class="currency-prefix">AED</div>
@@ -197,7 +197,7 @@
               </div>
               <p class="enhanced-help-text">
                 <i class="fas fa-info-circle"></i>
-                Additional cost for this size variant
+                {{ $t('additional_cost_size_variant') }}
               </p>
             </div>
           </div>
@@ -210,7 +210,7 @@
                      class="w-4 h-4 bg-gray-100 border-gray-300 rounded"
                      style="color: var(--primary-blue); --tw-ring-color: var(--primary-blue);">
               <label :for="'size-available-' + colorId + '-' + index" class="vue-text-sm">
-                Available for purchase
+                {{ $t('available_for_purchase') }}
               </label>
             </div>
 
@@ -218,7 +218,7 @@
               <button type="button" 
                       class="vue-btn vue-btn-secondary text-sm"
                       @click="cancelEdit(index)">
-                Cancel
+                {{ $t('cancel') }}
               </button>
               <button type="button" 
                       class="vue-btn vue-btn-primary text-sm"
@@ -226,7 +226,7 @@
                       :disabled="saving">
                 <i v-if="saving" class="fas fa-spinner fa-spin w-3 h-3"></i>
                 <i v-else class="fas fa-save w-3 h-3"></i>
-                {{ saving ? 'Saving...' : 'Save' }}
+                {{ saving ? $t('saving') : $t('save') }}
               </button>
             </div>
           </div>
@@ -240,7 +240,7 @@
          @click.self="closeAddSizeModal">
       <div class="bg-white rounded-lg shadow-xl max-w-md w-full max-h-[90vh] flex flex-col">
         <div class="p-4 border-b flex-shrink-0" style="border-color: var(--gray-200);">
-          <h3 class="vue-text-lg">Add New Size</h3>
+          <h3 class="vue-text-lg">{{ $t('add_new_size') }}</h3>
         </div>
 
         <div class="p-4 space-y-4 overflow-y-auto flex-1">
@@ -248,14 +248,14 @@
           <div class="space-y-1">
             <label class="block vue-text-sm font-medium">
               <i class="fas fa-layer-group w-4 h-4 mr-2 text-blue-500"></i>
-              Size Category <span class="text-red-500">*</span>
+              {{ $t('size_category') }} <span class="text-red-500">*</span>
             </label>
             <select v-model="newSize.category"
                     class="vue-form-control-enhanced-blue"
                     @change="newSize.name = ''; newSize.value = ''">
-              <option value="clothes">Clothing Sizes</option>
-              <option value="shoes">Shoe Sizes</option>
-              <option value="hats">Hat Sizes</option>
+              <option value="clothes">{{ $t('clothing_sizes') }}</option>
+              <option value="shoes">{{ $t('shoe_sizes') }}</option>
+              <option value="hats">{{ $t('hat_sizes') }}</option>
             </select>
           </div>
 

@@ -4,9 +4,9 @@
     <div v-if="loading" class="d-flex justify-content-center align-items-center" style="min-height: 50vh;">
       <div class="text-center">
         <div class="spinner-border text-primary" role="status">
-          <span class="visually-hidden">Loading...</span>
+          <span class="visually-hidden">{{ $t('loading') }}</span>
         </div>
-        <p class="mt-3 text-muted">Loading product creation form...</p>
+        <p class="mt-3 text-muted">{{ $t('loading_product_creation_form') }}</p>
       </div>
     </div>
 
@@ -15,12 +15,12 @@
       <!-- Header -->
       <div class="flex items-center justify-between">
         <div>
-          <h1 class="vue-text-2xl">Create New Product</h1>
-          <p class="text-sm text-gray-600">Add a new product to your inventory</p>
+          <h1 class="vue-text-2xl">{{ $t('create_new_product') }}</h1>
+          <p class="text-sm text-gray-600">{{ $t('add_new_product_inventory') }}</p>
         </div>
         <a :href="backUrl" class="vue-btn vue-btn-secondary">
           <i class="fas fa-arrow-left w-4 h-4"></i>
-          Back to Products
+          {{ $t('back_to_products') }}
         </a>
       </div>
 
@@ -47,13 +47,13 @@
               <div class="p-6 border-b" style="border-color: var(--gray-200);">
                 <h3 class="flex items-center gap-2 vue-text-lg">
                   <i class="fas fa-box w-5 h-5" style="color: var(--gray-600);"></i>
-                  Product Details
+                  {{ $t('product_details') }}
                 </h3>
               </div>
               <div class="p-6 space-y-4">
                 <div class="space-y-2">
                   <label for="name" class="block vue-text-sm">
-                    Product Name <span class="text-red-500">*</span>
+                    {{ $t('product_name') }} <span class="text-red-500">*</span>
                   </label>
                   <input type="text" 
                          id="name" 
@@ -66,7 +66,7 @@
 
                 <div class="space-y-2">
                   <label for="category_id" class="block vue-text-sm">
-                    Category <span class="text-red-500">*</span>
+                    {{ $t('category') }} <span class="text-red-500">*</span>
                   </label>
                   <select id="category_id"
                           v-model="productData.category_id"
@@ -74,7 +74,7 @@
                           :class="{ 'border-red-500': errors.category_id }"
                           required
                           @change="validateCategorySelection">
-                    <option value="">Select Category</option>
+                    <option value="">{{ $t('select_category') }}</option>
                     <optgroup v-for="parent in categories" :key="parent.id" :label="parent.name">
                       <!-- <option :value="parent.id"
                               disabled
@@ -94,12 +94,12 @@
                 </div>
 
                 <div class="space-y-2">
-                  <label for="description" class="block vue-text-sm">Description</label>
+                  <label for="description" class="block vue-text-sm">{{ $t('description') }}</label>
                   <textarea id="description" 
                             v-model="productData.description"
                             rows="4"
                             class="vue-form-control"
-                            placeholder="Enter product description..."></textarea>
+                            :placeholder="$t('enter_product_description')"></textarea>
                 </div>
 
 
@@ -109,7 +109,7 @@
                          id="is_available" 
                          v-model="productData.is_available"
                          class="vue-checkbox">
-                  <label for="is_available" class="vue-text-sm">Product is available for sale</label>
+                  <label for="is_available" class="vue-text-sm">{{ $t('product_available_sale') }}</label>
                 </div>
               </div>
             </div>
@@ -119,14 +119,14 @@
               <div class="p-6 border-b" style="border-color: var(--gray-200);">
                 <h3 class="flex items-center gap-2 vue-text-lg">
                   <i class="fas fa-dollar-sign w-5 h-5" style="color: var(--gray-600);"></i>
-                  Pricing & Stock
+                  {{ $t('pricing_stock') }}
                 </h3>
               </div>
               <div class="p-6 space-y-4">
                 <div class="grid grid-cols-2 gap-4">
                   <div class="space-y-2">
                     <label for="price" class="block vue-text-sm">
-                      Price <span class="text-red-500">*</span>
+                      {{ $t('price') }} <span class="text-red-500">*</span>
                     </label>
                     <input type="number" 
                            id="price" 
@@ -140,7 +140,7 @@
                   </div>
 
                   <div class="space-y-2">
-                    <label for="original_price" class="block vue-text-sm">Original Price</label>
+                    <label for="original_price" class="block vue-text-sm">{{ $t('original_price') }}</label>
                     <input type="number" 
                            id="original_price" 
                            v-model.number="productData.original_price"
@@ -152,7 +152,7 @@
 
                 <div class="space-y-2">
                   <label for="stock" class="block vue-text-sm">
-                    Total Stock <span class="text-red-500">*</span>
+                    {{ $t('total_stock') }} <span class="text-red-500">*</span>
                   </label>
                   <input type="number" 
                          id="stock" 
@@ -180,12 +180,12 @@
         <div v-show="activeTab === 'colors'" class="vue-tab-content space-y-6">
           <div class="flex items-center justify-between">
             <div>
-              <h3 class="vue-text-lg">Product Colors</h3>
-              <p class="text-sm text-gray-600">Add color variants with images and size options</p>
+              <h3 class="vue-text-lg">{{ $t('product_colors') }}</h3>
+              <p class="text-sm text-gray-600">{{ $t('add_color_variants_images') }}</p>
             </div>
             <button type="button" @click="addNewColor" class="vue-btn vue-btn-primary">
               <i class="fas fa-plus w-4 h-4"></i>
-              Add Color
+              {{ $t('add_color') }}
             </button>
           </div>
 
@@ -213,11 +213,11 @@
           <div v-else class="vue-card" style="border: 2px dashed var(--gray-300);">
             <div class="flex flex-col items-center justify-center py-12">
               <i class="fas fa-palette w-12 h-12 text-gray-400 mb-4"></i>
-              <h3 class="vue-text-lg text-gray-600 mb-2">No colors added yet</h3>
-              <p class="text-gray-500 mb-4">Add color variants to make your product more appealing</p>
+              <h3 class="vue-text-lg text-gray-600 mb-2">{{ $t('no_colors_added_yet') }}</h3>
+              <p class="text-gray-500 mb-4">{{ $t('add_color_variants_appealing') }}</p>
               <button type="button" @click="addNewColor" class="vue-btn vue-btn-primary">
                 <i class="fas fa-plus w-4 h-4"></i>
-                Add First Color
+                {{ $t('add_first_color') }}
               </button>
             </div>
           </div>
@@ -226,9 +226,9 @@
           <div v-if="productData.stock > 0" class="vue-card" style="background-color: var(--primary-blue-light); border-color: var(--gray-200);">
             <div class="vue-card-body">
               <div class="flex items-center justify-between mb-2">
-                <span class="vue-text-sm" style="color: var(--primary-blue-hover);">Stock Allocation Progress</span>
+                <span class="vue-text-sm" style="color: var(--primary-blue-hover);">{{ $t('stock_allocation_progress') }}</span>
                 <span class="vue-text-sm" style="color: var(--primary-blue);">
-                  <span>{{ totalAllocatedStock }}</span> / {{ productData.stock }} units allocated
+                  <span>{{ totalAllocatedStock }}</span> / {{ productData.stock }} {{ $t('units_allocated') }}
                 </span>
               </div>
               <div class="w-full rounded-full h-2" style="background-color: var(--gray-200);">
@@ -239,7 +239,7 @@
               </div>
               <div v-if="isStockOverAllocated" class="mt-2 text-red-600 text-sm">
                 <i class="fas fa-exclamation-triangle mr-1"></i>
-                Stock over-allocated! Please adjust color stock values.
+                {{ $t('stock_over_allocated_adjust') }}
               </div>
             </div>
           </div>
@@ -247,20 +247,20 @@
           <!-- Stock Summary -->
           <div v-if="productData.colors.length > 0 && productData.stock > 0" class="vue-card">
             <div class="p-6">
-              <h4 class="vue-text-lg mb-4">Stock Allocation Summary</h4>
+              <h4 class="vue-text-lg mb-4">{{ $t('stock_allocation_summary') }}</h4>
               <div class="space-y-3">
                 <div class="flex justify-between items-center">
-                  <span class="text-gray-600">Total Stock:</span>
+                  <span class="text-gray-600">{{ $t('total_stock') }}:</span>
                   <span class="font-medium">{{ productData.stock }}</span>
                 </div>
                 <div class="flex justify-between items-center">
-                  <span class="text-gray-600">Allocated Stock:</span>
+                  <span class="text-gray-600">{{ $t('allocated_stock') }}:</span>
                   <span class="font-medium" :class="{ 'text-red-600': isStockOverAllocated }">
                     {{ totalAllocatedStock }}
                   </span>
                 </div>
                 <div class="flex justify-between items-center">
-                  <span class="text-gray-600">Remaining Stock:</span>
+                  <span class="text-gray-600">{{ $t('remaining_stock') }}:</span>
                   <span class="font-medium" :class="{ 'text-red-600': isStockOverAllocated }">
                     {{ productData.stock - totalAllocatedStock }}
                   </span>
@@ -272,7 +272,7 @@
                 </div>
                 <p v-if="isStockOverAllocated" class="text-red-600 text-sm">
                   <i class="fas fa-exclamation-triangle mr-1"></i>
-                  Stock over-allocated! Please adjust color stock values.
+                  {{ $t('stock_over_allocated_adjust') }}
                 </p>
               </div>
             </div>
@@ -283,12 +283,12 @@
         <div v-show="activeTab === 'specifications'" class="vue-tab-content space-y-6">
           <div class="flex items-center justify-between">
             <div>
-              <h3 class="vue-text-lg">Product Specifications</h3>
-              <p class="text-sm text-gray-600">Add detailed specifications for your product</p>
+              <h3 class="vue-text-lg">{{ $t('product_specifications') }}</h3>
+              <p class="text-sm text-gray-600">{{ $t('add_detailed_specifications') }}</p>
             </div>
             <button type="button" @click="addNewSpecification" class="vue-btn vue-btn-primary">
               <i class="fas fa-plus w-4 h-4"></i>
-              Add Specification
+              {{ $t('add_specification') }}
             </button>
           </div>
 
@@ -308,11 +308,11 @@
           <div v-else class="vue-card" style="border: 2px dashed var(--gray-300);">
             <div class="flex flex-col items-center justify-center py-12">
               <i class="fas fa-file-text w-12 h-12 text-gray-400 mb-4"></i>
-              <h3 class="vue-text-lg text-gray-600 mb-2">No specifications added yet</h3>
-              <p class="text-gray-500 mb-4">Add specifications to provide detailed product information</p>
+              <h3 class="vue-text-lg text-gray-600 mb-2">{{ $t('no_specifications_added_yet') }}</h3>
+              <p class="text-gray-500 mb-4">{{ $t('add_specifications_detailed_info') }}</p>
               <button type="button" @click="addNewSpecification" class="vue-btn vue-btn-primary">
                 <i class="fas fa-plus w-4 h-4"></i>
-                Add First Specification
+                {{ $t('add_first_specification') }}
               </button>
             </div>
           </div>
@@ -322,12 +322,12 @@
         <div class="flex justify-end gap-3 mt-6">
           <a :href="backUrl" class="vue-btn vue-btn-secondary">
             <i class="fas fa-times w-4 h-4"></i>
-            Cancel
+            {{ $t('cancel') }}
           </a>
           <button type="submit" class="vue-btn vue-btn-primary" :disabled="saving">
             <i class="fas fa-save w-4 h-4"></i>
-            <span v-if="saving">Creating...</span>
-            <span v-else>Create Product</span>
+            <span v-if="saving">{{ $t('creating') }}</span>
+            <span v-else>{{ $t('create_product') }}</span>
           </button>
         </div>
       </form>
@@ -338,11 +338,11 @@
       <div class="modal-content" @click.stop>
         <div class="text-center">
           <i class="fas fa-check-circle text-green-500 text-4xl mb-4"></i>
-          <h3 class="vue-text-lg mb-2">Product Created Successfully!</h3>
-          <p class="text-gray-600 mb-4">Your product has been created and is now available in your inventory.</p>
+          <h3 class="vue-text-lg mb-2">{{ $t('product_created_successfully') }}</h3>
+          <p class="text-gray-600 mb-4">{{ $t('product_created_available_inventory') }}</p>
           <div class="flex gap-3 justify-center">
-            <a :href="backUrl" class="vue-btn vue-btn-secondary">View Products</a>
-            <button @click="createAnother" class="vue-btn vue-btn-primary">Create Another</button>
+            <a :href="backUrl" class="vue-btn vue-btn-secondary">{{ $t('view_products') }}</a>
+            <button @click="createAnother" class="vue-btn vue-btn-primary">{{ $t('create_another') }}</button>
           </div>
         </div>
       </div>
@@ -353,9 +353,9 @@
       <div class="modal-content" @click.stop>
         <div class="text-center">
           <i class="fas fa-exclamation-triangle text-red-500 text-4xl mb-4"></i>
-          <h3 class="vue-text-lg mb-2">Error Creating Product</h3>
+          <h3 class="vue-text-lg mb-2">{{ $t('error_creating_product') }}</h3>
           <p class="text-gray-600 mb-4">{{ errorMessage }}</p>
-          <button @click="closeErrorModal" class="vue-btn vue-btn-primary">Try Again</button>
+          <button @click="closeErrorModal" class="vue-btn vue-btn-primary">{{ $t('try_again') }}</button>
         </div>
       </div>
     </div>
