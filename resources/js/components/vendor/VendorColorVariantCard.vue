@@ -1,6 +1,6 @@
 <template>
   <div class="vue-card color-item transition-all duration-200"
-       :class="{ 'ring-2 border-primary-200': isDefault }"
+       :class="{ 'ring-2 border-primary-200': isDefault, 'rtl': isRTL }"
        :style="isDefault ? { '--tw-ring-color': 'var(--primary-blue)' } : {}">
     <div class="p-6 border-b" style="border-color: var(--gray-200);">
       <div class="flex items-center justify-between">
@@ -8,12 +8,13 @@
           <div class="w-6 h-6 rounded-full border-2 border-white shadow-sm"
                :style="{ backgroundColor: color.color_code || '#000000' }"></div>
           <h4 class="vue-text-lg">
-            Color Variant {{ index + 1 }}
+            {{ $t('vendor.color_variant') }} {{ index + 1 }}
             <span v-if="isDefault"
-                  class="ml-2 inline-flex items-center px-2 py-1 text-xs font-medium rounded"
+                  :class="isRTL ? 'mr-2' : 'ml-2'"
+                  class="inline-flex items-center px-2 py-1 text-xs font-medium rounded"
                   style="background-color: var(--gray-100); color: var(--primary-blue-hover);">
-              <i class="fas fa-star w-3 h-3 mr-1"></i>
-              Default
+              <i :class="isRTL ? 'ml-1' : 'mr-1'" class="fas fa-star w-3 h-3"></i>
+              {{ $t('vendor.default') }}
             </span>
           </h4>
         </div>
@@ -22,8 +23,8 @@
                   type="button"
                   class="vue-btn-blue-solid text-sm font-medium"
                   @click="$emit('set-default', index)">
-            <i class="fas fa-star mr-2"></i>
-            Set as Default
+            <i :class="isRTL ? 'ml-2' : 'mr-2'" class="fas fa-star"></i>
+            {{ $t('vendor.set_as_default') }}
           </button>
           <button type="button" 
                   class="remove-item p-2 text-red-600 hover:text-red-700 hover:bg-red-50 rounded-lg transition-colors"
@@ -41,7 +42,7 @@
           <div class="grid grid-cols-2 gap-4">
             <div class="space-y-2">
               <label class="block vue-text-sm">
-                Color Name <span class="text-red-500">*</span>
+                {{ $t('vendor.color_name') }} <span class="text-red-500">*</span>
               </label>
 
               <!-- Color Selection Dropdown -->
@@ -53,7 +54,7 @@
                     <div class="color-swatch"
                          :style="{ backgroundColor: getColorCode(color.name) || '#e5e7eb' }"></div>
                     <div class="color-info">
-                      <span class="color-name">{{ color.name || 'Select color' }}</span>
+                      <span class="color-name">{{ color.name || $t('vendor.select_color') }}</span>
                       <span v-if="color.name" class="color-code">{{ getColorCode(color.name) }}</span>
                     </div>
                   </div>
@@ -67,7 +68,7 @@
                   <div class="color-search">
                     <input type="text"
                            v-model="colorSearchQuery"
-                           placeholder="Search colors..."
+                           :placeholder="$t('vendor.search_colors')"
                            class="color-search-input"
                            @click.stop>
                   </div>
@@ -90,14 +91,14 @@
             </div>
 
             <!-- Color Name Error Display -->
-            <div v-if="errors[`colors.${index}.name`]" class="text-red-500 text-sm mt-1">
+            <div v-if="errors && errors[`colors.${index}.name`]" class="text-red-500 text-sm mt-1">
               {{ errors[`colors.${index}.name`] }}
             </div>
 
             <div class="space-y-2">
               <label class="block vue-text-sm font-medium">
-                <i class="fas fa-palette w-4 h-4 mr-2 text-blue-500"></i>
-                Color Code
+                <i :class="isRTL ? 'ml-2' : 'mr-2'" class="fas fa-palette w-4 h-4 text-blue-500"></i>
+                {{ $t('vendor.color_code') }}
               </label>
               <div class="flex gap-3">
                 <div class="relative">
@@ -128,7 +129,7 @@
 
           <div class="grid grid-cols-2 gap-4">
             <div class="space-y-2">
-              <label class="block vue-text-sm">Price Adjustment</label>
+              <label class="block vue-text-sm">{{ $t('vendor.price_adjustment') }}</label>
               <input type="number"
                      step="0.01"
                      :value="color.price_adjustment"
@@ -139,9 +140,9 @@
 
             <div class="space-y-2">
               <label class="block vue-text-sm">
-                Stock
-                <span v-if="isStockExceeded" class="text-red-500 text-xs ml-1">
-                  (Exceeds available: {{ availableStock }})
+                {{ $t('vendor.stock') }}
+                <span v-if="isStockExceeded" :class="isRTL ? 'mr-1' : 'ml-1'" class="text-red-500 text-xs">
+                  ({{ $t('vendor.exceeds_available') }}: {{ availableStock }})
                 </span>
               </label>
               <div class="relative">
@@ -149,22 +150,29 @@
                        min="0"
                        :max="availableStock"
                        :value="color.stock"
-                       @input="updateColor('stock', parseInt($event.target.value) || 0)"
+                       @input="handleStockInput($event)"
+                       @blur="handleStockBlur($event)"
+                       @paste="handleStockPaste($event)"
+                       @keydown="handleStockKeydown($event)"
                        placeholder="0"
-                       class="vue-form-control"
-                       :class="{ 'border-red-500 bg-red-50': isStockExceeded }">
-                <div v-if="showStockCorrection" class="absolute top-full left-0 right-0 mt-1 p-2 bg-amber-50 border border-amber-200 rounded text-xs text-amber-700">
+                       class="vue-form-control transition-all duration-200"
+                       :class="{
+                         'border-red-500 bg-red-50': isStockExceeded,
+                         'border-green-500 bg-green-50': stockCorrectionApplied
+                       }"
+                       ref="stockInput">
+                <div v-if="showStockCorrection" class="absolute top-full left-0 right-0 mt-1 p-2 bg-amber-50 border border-amber-200 rounded text-xs text-amber-700 animate-fade-in">
                   {{ stockCorrectionMessage }}
                 </div>
               </div>
               <!-- Stock allocation info -->
               <div class="text-xs text-gray-600 space-y-1">
                 <div class="flex justify-between">
-                  <span>Available for this color:</span>
+                  <span>{{ $t('vendor.available_for_this_color') }}:</span>
                   <span class="font-medium">{{ availableStock }}</span>
                 </div>
                 <div class="flex justify-between">
-                  <span>Currently allocated:</span>
+                  <span>{{ $t('vendor.currently_allocated') }}:</span>
                   <span class="font-medium" :class="{ 'text-red-600': isStockExceeded }">{{ color.stock || 0 }}</span>
                 </div>
               </div>
@@ -178,7 +186,7 @@
           </div>
 
           <div class="space-y-2">
-            <label class="block vue-text-sm">Display Order</label>
+            <label class="block vue-text-sm">{{ $t('vendor.display_order') }}</label>
             <input type="number"
                    :value="color.display_order"
                    @input="updateColor('display_order', parseInt($event.target.value) || 0)"
@@ -191,7 +199,7 @@
         <div class="space-y-4">
           <div class="space-y-2">
             <label class="block vue-text-sm">
-              Color Image <span class="text-red-500">*</span>
+              {{ $t('vendor.color_image') }} <span class="text-red-500">*</span>
             </label>
 
             <!-- Image Preview Container -->
@@ -205,8 +213,8 @@
                    alt="Image Preview">
               <div v-else class="image-placeholder text-center">
                 <i class="fas fa-image text-gray-400 text-4xl mb-2"></i>
-                <p class="text-gray-500 text-sm">No image selected</p>
-                <p class="text-gray-400 text-xs">300x400px preview</p>
+                <p class="text-gray-500 text-sm">{{ $t('vendor.no_image_selected') }}</p>
+                <p class="text-gray-400 text-xs">{{ $t('vendor.image_preview_size') }}</p>
               </div>
             </div>
 
@@ -217,23 +225,23 @@
                    style="max-width: 300px;">
 
             <p class="mt-1 text-xs text-gray-500" style="max-width: 300px;">
-              PNG, JPG, GIF up to 2MB
+              {{ $t('vendor.image_format_info') }}
             </p>
 
             <!-- Color Image Error Display -->
-            <div v-if="errors[`colors.${index}.image`] || errors[`color_images.${index}`]" class="text-red-500 text-sm mt-1">
+            <div v-if="errors && (errors[`colors.${index}.image`] || errors[`color_images.${index}`])" class="text-red-500 text-sm mt-1">
               {{ errors[`colors.${index}.image`] || errors[`color_images.${index}`] }}
             </div>
 
             <!-- Default Color Checkbox -->
             <div class="mt-4">
-              <label class="block vue-text-sm mb-2">Default Color</label>
+              <label class="block vue-text-sm mb-2">{{ $t('vendor.default_color') }}</label>
               <div class="flex items-start">
                 <input type="checkbox"
                        :checked="isDefault"
                        @change="$emit('set-default', index)"
                        class="default-color-checkbox focus:ring-indigo-500 h-4 w-4 text-indigo-600 border-gray-300 rounded mt-1">
-                <span class="ml-2 text-sm text-gray-500">This image will be the main product image</span>
+                <span :class="isRTL ? 'mr-2' : 'ml-2'" class="text-sm text-gray-500">{{ $t('vendor.main_product_image_info') }}</span>
               </div>
             </div>
           </div>
@@ -254,13 +262,13 @@
         <div v-else-if="!color.name || !color.stock" class="text-center py-8" style="border-top: 1px solid var(--gray-200); margin-top: 1.5rem; padding-top: 1.5rem;">
           <i class="fas fa-info-circle w-6 h-6 mb-2" style="color: var(--gray-400);"></i>
           <p class="text-sm" style="color: var(--gray-600);">
-            Set color name and stock quantity to manage sizes
+            {{ $t('vendor.set_color_name_stock_for_sizes') }}
           </p>
         </div>
         <div v-else class="text-center py-8" style="border-top: 1px solid var(--gray-200); margin-top: 1.5rem; padding-top: 1.5rem;">
           <i class="fas fa-info-circle w-6 h-6 mb-2" style="color: var(--gray-400);"></i>
           <p class="text-sm" style="color: var(--gray-600);">
-            Save this color variant first to manage sizes
+            {{ $t('vendor.save_color_first_for_sizes') }}
           </p>
         </div>
       </div>
@@ -271,6 +279,38 @@
 <script>
 import { ref, computed, watch, onMounted, onUnmounted } from 'vue'
 import VendorSizeManagement from './VendorSizeManagement.vue'
+
+const colorOptions = [
+  { name: 'Red', value: '#FF0000' },
+  { name: 'Blue', value: '#0000FF' },
+  { name: 'Green', value: '#008000' },
+  { name: 'Yellow', value: '#FFFF00' },
+  { name: 'Orange', value: '#FFA500' },
+  { name: 'Purple', value: '#800080' },
+  { name: 'Pink', value: '#FFC0CB' },
+  { name: 'Brown', value: '#A52A2A' },
+  { name: 'Black', value: '#000000' },
+  { name: 'White', value: '#FFFFFF' },
+  { name: 'Gray', value: '#808080' },
+  { name: 'Navy', value: '#000080' },
+  { name: 'Maroon', value: '#800000' },
+  { name: 'Olive', value: '#808000' },
+  { name: 'Lime', value: '#00FF00' },
+  { name: 'Aqua', value: '#00FFFF' },
+  { name: 'Teal', value: '#008080' },
+  { name: 'Silver', value: '#C0C0C0' },
+  { name: 'Fuchsia', value: '#FF00FF' },
+  { name: 'Coral', value: '#FF7F50' },
+  { name: 'Salmon', value: '#FA8072' },
+  { name: 'Khaki', value: '#F0E68C' },
+  { name: 'Violet', value: '#EE82EE' },
+  { name: 'Indigo', value: '#4B0082' },
+  { name: 'Turquoise', value: '#40E0D0' },
+  { name: 'Gold', value: '#FFD700' },
+  { name: 'Crimson', value: '#DC143C' },
+  { name: 'Chocolate', value: '#D2691E' },
+  { name: 'Beige', value: '#F5F5DC' }
+]
 
 export default {
   name: 'VendorColorVariantCard',
@@ -286,21 +326,29 @@ export default {
       type: Number,
       required: true
     },
+    totalStock: {
+      type: Number,
+      default: 0
+    },
+    allocatedStock: {
+      type: Number,
+      default: 0
+    },
     isDefault: {
       type: Boolean,
       default: false
     },
-    productId: {
-      type: [String, Number],
-      default: 'new'
+    allColors: {
+      type: Array,
+      default: () => []
     },
     generalStock: {
       type: Number,
       default: 0
     },
-    allColors: {
-      type: Array,
-      default: () => []
+    productId: {
+      type: [String, Number],
+      default: null
     },
     errors: {
       type: Object,
@@ -309,6 +357,39 @@ export default {
   },
   emits: ['update', 'remove', 'set-default', 'image-upload', 'sizes-updated', 'stock-corrected'],
   setup(props, { emit }) {
+    // Translation method
+    const translate = (key, replacements = {}) => {
+      // Try multiple translation sources
+      let translation = key;
+
+      if (window.appTranslations && window.appTranslations[key]) {
+        translation = window.appTranslations[key];
+      } else if (window.Laravel && window.Laravel.translations && window.Laravel.translations[key]) {
+        translation = window.Laravel.translations[key];
+      } else if (window.translations && window.translations[key]) {
+        translation = window.translations[key];
+      }
+
+      // Handle placeholder replacements
+      Object.keys(replacements).forEach(placeholder => {
+        translation = translation.replace(`:${placeholder}`, replacements[placeholder]);
+      });
+
+      return translation;
+    };
+    
+    // RTL support
+    const isRTL = computed(() => {
+      return ['ar', 'he', 'fa'].includes(window.Laravel?.locale || 'en')
+    })
+    
+    // Currency formatting
+    const formatCurrency = (amount) => {
+      return new Intl.NumberFormat('en-US', {
+        style: 'currency',
+        currency: 'USD'
+      }).format(amount)
+    }
     const showColorDropdown = ref(false)
     const colorSearchQuery = ref('')
     const imagePreviewUrl = ref('')
@@ -316,6 +397,8 @@ export default {
     // Stock validation reactive refs
     const stockCorrectionMessage = ref('')
     const showStockCorrection = ref(false)
+    const stockCorrectionApplied = ref(false)
+    const stockInput = ref(null)
 
     // Color options array
     const colorOptionsArray = [
@@ -360,6 +443,9 @@ export default {
 
     // Stock validation computed properties
     const otherColorsStock = computed(() => {
+      if (!props.allColors || !Array.isArray(props.allColors)) {
+        return 0
+      }
       return props.allColors
         .filter((_, index) => index !== props.index)
         .reduce((total, color) => total + (parseInt(color.stock) || 0), 0)
@@ -402,6 +488,35 @@ export default {
       colorSearchQuery.value = ''
     }
 
+    // Enhanced stock input handlers for comprehensive validation
+    const handleStockInput = (event) => {
+      const value = parseInt(event.target.value) || 0
+      updateColor('stock', value)
+    }
+
+    const handleStockBlur = (event) => {
+      const value = parseInt(event.target.value) || 0
+      updateColor('stock', value)
+    }
+
+    const handleStockPaste = (event) => {
+      // Allow paste to complete, then validate
+      setTimeout(() => {
+        const value = parseInt(event.target.value) || 0
+        updateColor('stock', value)
+      }, 0)
+    }
+
+    const handleStockKeydown = (event) => {
+      // Handle spinner controls (up/down arrows)
+      if (event.key === 'ArrowUp' || event.key === 'ArrowDown') {
+        setTimeout(() => {
+          const value = parseInt(event.target.value) || 0
+          updateColor('stock', value)
+        }, 0)
+      }
+    }
+
     const updateColor = (field, value) => {
       console.log('updateColor called in child with:', { field, value, index: props.index })
       let finalValue = value
@@ -432,8 +547,19 @@ export default {
 
     // Stock correction feedback methods
     const showStockCorrectionFeedback = (attempted, corrected) => {
-      stockCorrectionMessage.value = `Stock automatically corrected from ${attempted} to ${corrected} (available stock limit)`
+      stockCorrectionMessage.value = translate('vendor.stock_auto_corrected', { attempted, corrected })
       showStockCorrection.value = true
+      stockCorrectionApplied.value = true
+
+      // Add visual feedback animation to the input field
+      if (stockInput.value) {
+        stockInput.value.classList.add('animate-pulse')
+        setTimeout(() => {
+          if (stockInput.value) {
+            stockInput.value.classList.remove('animate-pulse')
+          }
+        }, 1000)
+      }
 
       // Auto-hide after 5 seconds
       setTimeout(() => {
@@ -444,6 +570,7 @@ export default {
     const hideStockCorrectionFeedback = () => {
       showStockCorrection.value = false
       stockCorrectionMessage.value = ''
+      stockCorrectionApplied.value = false
     }
 
     // Size management event handlers
@@ -462,7 +589,7 @@ export default {
       if (file) {
         // Validate file type
         if (!file.type.startsWith('image/')) {
-          alert('Please select a valid image file.')
+          alert($t('vendor.select_valid_image_file'))
           event.target.value = ''
           return
         }
@@ -470,7 +597,7 @@ export default {
         // Validate file size (2MB limit)
         if (file.size > 2 * 1024 * 1024) {
           const fileSizeMB = (file.size / (1024 * 1024)).toFixed(2)
-          alert(`File size (${fileSizeMB}MB) exceeds the 2MB limit. Please choose a smaller image.`)
+          alert($t('vendor.file_size_exceeds_limit', { size: fileSizeMB }))
           event.target.value = ''
           return
         }
@@ -521,21 +648,29 @@ export default {
 
 
     return {
+      $t: translate,
       showColorDropdown,
       colorSearchQuery,
       imagePreviewUrl,
       stockCorrectionMessage,
       showStockCorrection,
+      stockCorrectionApplied,
+      stockInput,
       colorOptionsArray,
       filteredColorOptions,
       otherColorsStock,
       availableStock,
       isStockExceeded,
       shouldShowSizeManagement,
+      isRTL,
       getColorCode,
       toggleColorDropdown,
       selectColor,
       updateColor,
+      handleStockInput,
+      handleStockBlur,
+      handleStockPaste,
+      handleStockKeydown,
       handleImageUpload,
       handleSizesUpdated,
       handleSaveColorFirst
@@ -729,6 +864,66 @@ export default {
 
 
 
+/* RTL Support */
+.rtl {
+  direction: rtl;
+}
+
+.rtl .flex {
+  flex-direction: row-reverse;
+}
+
+.rtl .text-left {
+  text-align: right;
+}
+
+.rtl .text-right {
+  text-align: left;
+}
+
+.rtl .float-left {
+  float: right;
+}
+
+.rtl .float-right {
+  float: left;
+}
+
+.rtl .border-l {
+  border-left: none;
+  border-right: 1px solid;
+}
+
+.rtl .border-r {
+  border-right: none;
+  border-left: 1px solid;
+}
+
+.rtl .rounded-l {
+  border-top-left-radius: 0;
+  border-bottom-left-radius: 0;
+  border-top-right-radius: 0.375rem;
+  border-bottom-right-radius: 0.375rem;
+}
+
+.rtl .rounded-r {
+  border-top-right-radius: 0;
+  border-bottom-right-radius: 0;
+  border-top-left-radius: 0.375rem;
+  border-bottom-left-radius: 0.375rem;
+}
+
+.rtl input[type="text"],
+.rtl input[type="number"],
+.rtl textarea {
+  text-align: right;
+}
+
+.rtl .color-dropdown {
+  left: auto;
+  right: 0;
+}
+
 /* Dark mode support */
 @media (prefers-color-scheme: dark) {
   .selected-color-display {
@@ -768,5 +963,21 @@ export default {
     border-color: #10b981 !important;
     background-color: #064e3b !important;
   }
+}
+
+/* Stock validation animations */
+@keyframes fade-in {
+  from {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.animate-fade-in {
+  animation: fade-in 0.3s ease-out;
 }
 </style>

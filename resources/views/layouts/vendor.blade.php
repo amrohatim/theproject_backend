@@ -1,10 +1,15 @@
+@php
+    $currentLocale = app()->getLocale();
+    $isRtl = in_array($currentLocale, ['ar', 'he', 'fa', 'ur']);
+    $direction = $isRtl ? 'rtl' : 'ltr';
+@endphp
 <!DOCTYPE html>
-<html lang="en">
+<html lang="{{ $currentLocale }}" dir="{{ $direction }}">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="csrf-token" content="{{ csrf_token() }}">
-    <title>@yield('title', 'Vendor Dashboard') - Dala3Chic Admin</title>
+    <title>{{ __('messages.vendor_dashboard_title') }}</title>
 
     <!-- Bootstrap CSS -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
@@ -14,6 +19,11 @@
 
     <!-- Google Fonts - For modern dashboard -->
     <link href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+    <!-- RTL CSS for Arabic -->
+    @if($isRtl)
+        <link href="{{ asset('css/rtl.css') }}" rel="stylesheet">
+    @endif
 
     <!-- Modern Dashboard CSS (inline styles below) -->
 
@@ -184,11 +194,67 @@
             padding: 2rem;
         }
 
+        /* RTL Support */
+        [dir="rtl"] .sidebar {
+            right: 0;
+            left: auto;
+            box-shadow: -4px 0 20px rgba(0, 0, 0, 0.1);
+        }
+
+        [dir="rtl"] .sidebar nav a {
+            border-right: 3px solid transparent;
+            border-left: none;
+        }
+
+        [dir="rtl"] .sidebar nav a:hover,
+        [dir="rtl"] .sidebar nav a.active {
+            border-right-color: white;
+            border-left-color: transparent;
+        }
+
+        [dir="rtl"] .sidebar nav a i {
+            margin-left: 0.75rem;
+            margin-right: 0;
+        }
+
+        [dir="rtl"] .main-content {
+            margin-right: 280px;
+            margin-left: 0;
+        }
+
+        [dir="rtl"] .top-bar {
+            justify-content: flex-start;
+        }
+
+        [dir="rtl"] .dropdown-menu {
+            right: auto;
+            left: 0;
+        }
+
+        [dir="rtl"] .ms-auto {
+            margin-left: 0 !important;
+            margin-right: auto !important;
+        }
+
+        [dir="rtl"] .me-2 {
+            margin-left: 0.5rem !important;
+            margin-right: 0 !important;
+        }
+
+        [dir="rtl"] .ms-1 {
+            margin-left: 0 !important;
+            margin-right: 0.25rem !important;
+        }
+
         /* Responsive */
         @media (max-width: 768px) {
             .sidebar {
                 transform: translateX(-100%);
                 transition: transform 0.3s ease;
+            }
+
+            [dir="rtl"] .sidebar {
+                transform: translateX(100%);
             }
 
             .sidebar.show {
@@ -197,6 +263,10 @@
 
             .main-content {
                 margin-left: 0;
+            }
+
+            [dir="rtl"] .main-content {
+                margin-right: 0;
             }
         }
     </style>
@@ -208,7 +278,7 @@
         <!-- Sidebar -->
         <div class="sidebar">
             <div class="brand">
-                <h1>Dala3Chic</h1>
+                <h1>{{ __('messages.dala3chic_admin') }}</h1>
             </div>
 
             <div class="user-info">
@@ -222,47 +292,47 @@
             <nav>
                 <a href="{{ route('vendor.dashboard') }}" class="{{ request()->routeIs('vendor.dashboard') ? 'active' : '' }}">
                     <i class="fas fa-tachometer-alt"></i>
-                    Dashboard
+                    {{ __('messages.dashboard') }}
                 </a>
                 <a href="{{ route('vendor.company.index') }}" class="{{ request()->routeIs('vendor.company.*') ? 'active' : '' }}">
                     <i class="fas fa-building"></i>
-                    Company
+                    {{ __('messages.company') }}
                 </a>
                 <a href="{{ route('vendor.branches.index') }}" class="{{ request()->routeIs('vendor.branches.*') ? 'active' : '' }}">
                     <i class="fas fa-map-marker-alt"></i>
-                    Branches
+                    {{ __('messages.branches') }}
                 </a>
                 <a href="{{ route('vendor.products.index') }}" class="{{ request()->routeIs('vendor.products.*') ? 'active' : '' }}">
                     <i class="fas fa-box"></i>
-                    Products
+                    {{ __('messages.products') }}
                 </a>
                 <a href="{{ route('vendor.services.index') }}" class="{{ request()->routeIs('vendor.services.*') ? 'active' : '' }}">
                     <i class="fas fa-concierge-bell"></i>
-                    Services
+                    {{ __('messages.services') }}
                 </a>
                 <a href="{{ route('vendor.deals.index') }}" class="{{ request()->routeIs('vendor.deals.*') ? 'active' : '' }}">
                     <i class="fas fa-percent"></i>
-                    Deals
+                    {{ __('messages.deals') }}
                 </a>
                 <a href="{{ route('vendor.orders.index') }}" class="{{ request()->routeIs('vendor.orders.index') ? 'active' : '' }}">
                     <i class="fas fa-shopping-cart"></i>
-                    All Orders
+                    {{ __('messages.all_orders') }}
                 </a>
                 <a href="{{ route('vendor.orders.pending') }}" class="{{ request()->routeIs('vendor.orders.pending') ? 'active' : '' }}">
                     <i class="fas fa-clock"></i>
-                    Pending Orders
+                    {{ __('messages.pending_orders') }}
                 </a>
                 <a href="{{ route('vendor.bookings.index') }}" class="{{ request()->routeIs('vendor.bookings.*') ? 'active' : '' }}">
                     <i class="fas fa-calendar-alt"></i>
-                    Bookings
+                    {{ __('messages.bookings') }}
                 </a>
                 <a href="{{ route('vendor.license.index') }}" class="{{ request()->routeIs('vendor.license.*') ? 'active' : '' }}">
                     <i class="fas fa-certificate"></i>
-                    License Management
+                    {{ __('messages.license_management') }}
                 </a>
                 <a href="{{ route('vendor.settings') }}" class="{{ request()->routeIs('vendor.settings*') ? 'active' : '' }}">
                     <i class="fas fa-cog"></i>
-                    Settings
+                    {{ __('messages.settings') }}
                 </a>
             </nav>
 
@@ -281,7 +351,7 @@
                 <button class="btn btn-link d-md-none" id="sidebar-toggle">
                     <i class="fas fa-bars"></i>
                 </button>
-                <h1>@yield('header', 'Vendor Dashboard')</h1>
+                <h1>@yield('header', __('messages.vendor_dashboard'))</h1>
                 <div class="ms-auto">
                     <div class="dropdown">
                         <button class="btn btn-link dropdown-toggle" type="button" data-bs-toggle="dropdown">
@@ -289,13 +359,13 @@
                             <i class="fas fa-chevron-down ms-1"></i>
                         </button>
                         <ul class="dropdown-menu dropdown-menu-end">
-                            <li><a class="dropdown-item" href="{{ route('vendor.settings.profile') }}">Profile</a></li>
-                            <li><a class="dropdown-item" href="{{ route('vendor.settings') }}">Settings</a></li>
+                            <li><a class="dropdown-item" href="{{ route('vendor.settings.profile') }}">{{ __('messages.profile') }}</a></li>
+                            <li><a class="dropdown-item" href="{{ route('vendor.settings') }}">{{ __('messages.settings') }}</a></li>
                             <li><hr class="dropdown-divider"></li>
                             <li>
                                 <form method="POST" action="{{ route('logout') }}">
                                     @csrf
-                                    <button type="submit" class="dropdown-item">Logout</button>
+                                    <button type="submit" class="dropdown-item">{{ __('messages.logout') }}</button>
                                 </form>
                             </li>
                         </ul>

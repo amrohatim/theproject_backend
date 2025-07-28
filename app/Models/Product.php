@@ -34,6 +34,10 @@ class Product extends Model
         'is_available',
         'is_multi_branch',
         'display_order',
+        'is_merchant',
+        'merchant_name',
+        'product_name_arabic',
+        'product_description_arabic',
     ];
 
     /**
@@ -50,6 +54,7 @@ class Product extends Model
         'is_available' => 'boolean',
         'is_multi_branch' => 'boolean',
         'display_order' => 'integer',
+        'is_merchant' => 'boolean',
     ];
 
     /**

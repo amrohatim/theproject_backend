@@ -42,6 +42,7 @@
         "@vitejs/plugin-vue": "^6.0.0",
         "figma-api": "^2.0.2-beta",
         "playwright": "^1.54.0",
-        "vue": "^3.5.17"
+        "vue": "^3.5.17",
+        "vue-i18n": "^11.1.11"
     }
 }

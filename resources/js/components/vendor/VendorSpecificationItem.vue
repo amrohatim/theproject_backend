@@ -1,23 +1,24 @@
 <template>
-  <div class="specification-item grid grid-cols-12 gap-4 items-center p-4 rounded-lg border border-gray-200 bg-white">
+  <div class="specification-item grid grid-cols-12 gap-4 items-center p-4 rounded-lg border border-gray-200 bg-white"
+       :class="{ 'rtl': isRTL }">
     <div class="col-span-4">
-      <label class="block vue-text-sm mb-2">Key</label>
+      <label class="block vue-text-sm mb-2">{{ $t('vendor.specification_key') }}</label>
       <input type="text"
              :value="specification.key"
              @input="updateSpecification('key', $event.target.value)"
-             placeholder="e.g., Material"
+             :placeholder="$t('vendor.specification_key_placeholder')"
              class="vue-form-control">
     </div>
     <div class="col-span-6">
-      <label class="block vue-text-sm mb-2">Value</label>
+      <label class="block vue-text-sm mb-2">{{ $t('vendor.specification_value') }}</label>
       <input type="text"
              :value="specification.value"
              @input="updateSpecification('value', $event.target.value)"
-             placeholder="e.g., 100% Cotton"
+             :placeholder="$t('vendor.specification_value_placeholder')"
              class="vue-form-control">
     </div>
     <div class="col-span-1">
-      <label class="block vue-text-sm mb-2">Order</label>
+      <label class="block vue-text-sm mb-2">{{ $t('vendor.order') }}</label>
       <input type="number"
              :value="specification.display_order"
              @input="updateSpecification('display_order', parseInt($event.target.value) || 0)"
@@ -34,6 +35,8 @@
 </template>
 
 <script>
+import { computed, getCurrentInstance } from 'vue'
+
 export default {
   name: 'VendorSpecificationItem',
   props: {
@@ -48,11 +51,41 @@ export default {
   },
   emits: ['update', 'remove'],
   setup(props, { emit }) {
+    const instance = getCurrentInstance()
+
+    // Translation method
+    const translate = (key, replacements = {}) => {
+      // Try multiple translation sources
+      let translation = key;
+
+      if (window.appTranslations && window.appTranslations[key]) {
+        translation = window.appTranslations[key];
+      } else if (window.Laravel && window.Laravel.translations && window.Laravel.translations[key]) {
+        translation = window.Laravel.translations[key];
+      } else if (window.translations && window.translations[key]) {
+        translation = window.translations[key];
+      }
+
+      // Handle placeholder replacements
+      Object.keys(replacements).forEach(placeholder => {
+        translation = translation.replace(`:${placeholder}`, replacements[placeholder]);
+      });
+
+      return translation;
+    };
+
+    // RTL support
+    const isRTL = computed(() => {
+      return ['ar', 'he', 'fa'].includes(window.Laravel?.locale || 'en')
+    })
+
     const updateSpecification = (field, value) => {
       emit('update', props.index, field, value)
     }
 
     return {
+      $t: translate,
+      isRTL,
       updateSpecification
     }
   }
@@ -97,6 +130,33 @@ export default {
 
 .remove-item:hover {
   transform: scale(1.1);
+}
+
+/* RTL Support */
+.rtl {
+  direction: rtl;
+}
+
+.rtl .text-left {
+  text-align: right;
+}
+
+.rtl .text-right {
+  text-align: left;
+}
+
+.rtl input[type="text"],
+.rtl input[type="number"],
+.rtl textarea {
+  text-align: right;
+}
+
+.rtl .grid {
+  direction: rtl;
+}
+
+.rtl .flex {
+  flex-direction: row-reverse;
 }
 
 /* Dark mode support */

@@ -15,9 +15,9 @@
         <div class="md:grid md:grid-cols-3 md:gap-6">
             <div class="md:col-span-1 p-6 border-r border-gray-200 dark:border-gray-700">
                 <div class="px-4 sm:px-0">
-                    <h3 class="text-lg font-medium leading-6 text-gray-900 dark:text-white">Company Information</h3>
-                    <p class="mt-1 text-sm text-gray-600 dark:text-gray-400">
-                        Basic information about your company that will be displayed to customers.
+                    <h3 class="text-lg font-medium leading-6 text-gray-900 dark:text-white">{{ __('messages.company_information') }}</h3>
+                    <p class="mt-1 text-gray-600 dark:text-gray-400">
+                        {{ __('messages.company_info_description') }}
                     </p>
                 </div>
             </div>
@@ -32,7 +32,7 @@
                         </div>
 
                         <div class="col-span-6 sm:col-span-3">
-                            <label for="business_type" class="block text-sm font-medium text-gray-700 dark:text-gray-300">Business Type</label>
+                            <label for="business_type" class="block text-sm font-medium text-gray-700 dark:text-gray-300">{{ __('messages.business_type') }}</label>
                             <select id="business_type" name="business_type" class="mt-1 block w-full py-2 px-3 border border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-white bg-white rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
                                 <option value="">Select Business Type</option>
                                 <option value="retail" {{ ($company->business_type ?? old('business_type')) == 'retail' ? 'selected' : '' }}>Retail</option>
@@ -45,27 +45,27 @@
                         </div>
 
                         <div class="col-span-6 sm:col-span-3">
-                            <label for="registration_number" class="block text-sm font-medium text-gray-700 dark:text-gray-300">Registration Number</label>
+                            <label for="registration_number" class="block text-sm font-medium text-gray-700 dark:text-gray-300">{{ __('messages.registration_number') }}</label>
                             <input type="text" name="registration_number" id="registration_number" value="{{ $company->registration_number ?? old('registration_number') }}" class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-white rounded-md">
                         </div>
 
                         <div class="col-span-6 sm:col-span-4">
-                            <label for="email" class="block text-sm font-medium text-gray-700 dark:text-gray-300">Email Address</label>
+                            <label for="email" class="block text-sm font-medium text-gray-700 dark:text-gray-300">{{ __('messages.email') }}</label>
                             <input type="email" name="email" id="email" value="{{ $company->email ?? old('email') }}" class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-white rounded-md">
                         </div>
 
                         <div class="col-span-6 sm:col-span-3">
-                            <label for="phone" class="block text-sm font-medium text-gray-700 dark:text-gray-300">Phone Number</label>
+                            <label for="phone" class="block text-sm font-medium text-gray-700 dark:text-gray-300">{{ __('messages.phone') }}</label>
                             <input type="text" name="phone" id="phone" value="{{ $company->phone ?? old('phone') }}" class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-white rounded-md">
                         </div>
 
                         <div class="col-span-6 sm:col-span-3">
-                            <label for="website" class="block text-sm font-medium text-gray-700 dark:text-gray-300">Website</label>
+                            <label for="website" class="block text-sm font-medium text-gray-700 dark:text-gray-300">{{ __('messages.website') }}</label>
                             <input type="text" name="website" id="website" value="{{ $company->website ?? old('website') }}" class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-white rounded-md">
                         </div>
 
                         <div class="col-span-6 sm:col-span-3">
-                            <label for="can_deliver" class="block text-sm font-medium text-gray-700 dark:text-gray-300">Delivery Capability</label>
+                            <label for="can_deliver" class="block text-sm font-medium text-gray-700 dark:text-gray-300">{{ __('messages.delivery_capability') }}</label>
                             <select id="can_deliver" name="can_deliver" class="mt-1 block w-full py-2 px-3 border border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-white bg-white rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
                                 <option value="1" {{ ($company->can_deliver ?? old('can_deliver', '1')) == '1' || ($company->can_deliver ?? old('can_deliver', true)) === true ? 'selected' : '' }}>Yes, we can handle our own deliveries</option>
                                 <option value="0" {{ ($company->can_deliver ?? old('can_deliver')) == '0' || ($company->can_deliver ?? old('can_deliver')) === false ? 'selected' : '' }}>No, we need a third-party delivery service</option>
@@ -74,13 +74,13 @@
                         </div>
 
                         <div class="col-span-6">
-                            <label for="description" class="block text-sm font-medium text-gray-700 dark:text-gray-300">Description</label>
+                            <label for="description" class="block text-sm font-medium text-gray-700 dark:text-gray-300">{{ __('messages.description') }}</label>
                             <textarea id="description" name="description" rows="3" class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-white rounded-md">{{ $company->description ?? old('description') }}</textarea>
                             <p class="mt-2 text-sm text-gray-500 dark:text-gray-400">Brief description of your company for your customers.</p>
                         </div>
 
                         <div class="col-span-6">
-                            <label class="block text-sm font-medium text-gray-700 dark:text-gray-300">Company Logo</label>
+                            <label class="block text-sm font-medium text-gray-700 dark:text-gray-300">{{ __('messages.company_logo') }}</label>
                             <div class="mt-1 flex items-center">
                                 @if(isset($company) && $company->logo)
                                     @php
@@ -124,13 +124,13 @@
                                             </svg>
                                             <div class="flex text-sm text-gray-600 dark:text-gray-400">
                                                 <label for="logo" class="relative cursor-pointer bg-white dark:bg-gray-700 rounded-md font-medium text-indigo-600 dark:text-indigo-400 hover:text-indigo-500 dark:hover:text-indigo-300 focus-within:outline-none focus-within:ring-2 focus-within:ring-offset-2 focus-within:ring-indigo-500">
-                                                    <span>Upload a file</span>
+                                                    <span>{{ __('messages.upload_file') }}</span>
                                                     <input id="logo" name="logo" type="file" class="sr-only" onchange="showFileName(this)">
                                                 </label>
-                                                <p class="pl-1" id="file-name">or drag and drop</p>
+                                                <p class="pl-1" id="file-name">{{ __('messages.or_drag_drop') }}</p>
                                             </div>
                                             <p class="text-xs text-gray-500 dark:text-gray-400">
-                                                PNG, JPG, GIF up to 2MB
+                                                {{ __('messages.file_format_limit') }}
                                             </p>
                                         </div>
                                     </div>
@@ -140,7 +140,7 @@
                     </div>
                     <div class="mt-6 flex justify-end">
                         <button type="submit" class="inline-flex items-center px-4 py-2 bg-indigo-600 border border-transparent rounded-md font-semibold text-xs text-white uppercase tracking-widest hover:bg-indigo-700 active:bg-indigo-900 focus:outline-none focus:border-indigo-900 focus:ring ring-indigo-300 disabled:opacity-25 transition ease-in-out duration-150">
-                            <i class="fas fa-save mr-2"></i> Save Changes
+                            <i class="fas fa-save mr-2"></i> {{ __('messages.save_company_info') }}
                         </button>
                     </div>
                 </form>
@@ -153,9 +153,9 @@
         <div class="md:grid md:grid-cols-3 md:gap-6">
             <div class="md:col-span-1 p-6 border-r border-gray-200 dark:border-gray-700">
                 <div class="px-4 sm:px-0">
-                    <h3 class="text-lg font-medium leading-6 text-gray-900 dark:text-white">Address Information</h3>
-                    <p class="mt-1 text-sm text-gray-600 dark:text-gray-400">
-                        Your company's headquarters or main address.
+                    <h3 class="text-lg font-medium leading-6 text-gray-900 dark:text-white">{{ __('messages.address_information') }}</h3>
+                    <p class="mt-1 text-gray-600 dark:text-gray-400">
+                        {{ __('messages.address_info_description') }}
                     </p>
                 </div>
             </div>
@@ -165,27 +165,27 @@
                     @method('PUT')
                     <div class="grid grid-cols-6 gap-6">
                         <div class="col-span-6">
-                            <label for="address" class="block text-sm font-medium text-gray-700 dark:text-gray-300">Street Address</label>
+                            <label for="address" class="block text-sm font-medium text-gray-700 dark:text-gray-300">{{ __('messages.street_address') }}</label>
                             <input type="text" name="address" id="address" value="{{ $company->address ?? old('address') }}" class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-white rounded-md">
                         </div>
 
                         <div class="col-span-6 sm:col-span-6 lg:col-span-2">
-                            <label for="city" class="block text-sm font-medium text-gray-700 dark:text-gray-300">City</label>
+                            <label for="city" class="block text-sm font-medium text-gray-700 dark:text-gray-300">{{ __('messages.city') }}</label>
                             <input type="text" name="city" id="city" value="{{ $company->city ?? old('city') }}" class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-white rounded-md">
                         </div>
 
                         <div class="col-span-6 sm:col-span-3 lg:col-span-2">
-                            <label for="state" class="block text-sm font-medium text-gray-700 dark:text-gray-300">State / Province</label>
+                            <label for="state" class="block text-sm font-medium text-gray-700 dark:text-gray-300">{{ __('messages.state_province') }}</label>
                             <input type="text" name="state" id="state" value="{{ $company->state ?? old('state') }}" class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-white rounded-md">
                         </div>
 
                         <div class="col-span-6 sm:col-span-3 lg:col-span-2">
-                            <label for="postal_code" class="block text-sm font-medium text-gray-700 dark:text-gray-300">ZIP / Postal Code</label>
+                            <label for="postal_code" class="block text-sm font-medium text-gray-700 dark:text-gray-300">{{ __('messages.zip_postal_code') }}</label>
                             <input type="text" name="postal_code" id="postal_code" value="{{ $company->zip_code ?? old('postal_code') }}" class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-white rounded-md">
                         </div>
 
                         <div class="col-span-6 sm:col-span-3">
-                            <label for="country" class="block text-sm font-medium text-gray-700 dark:text-gray-300">Country</label>
+                            <label for="country" class="block text-sm font-medium text-gray-700 dark:text-gray-300">{{ __('messages.country') }}</label>
                             <select id="country" name="country" class="mt-1 block w-full py-2 px-3 border border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-white bg-white rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
                                 <option value="">Select Country</option>
                                 <option value="US" {{ ($company->country ?? old('country')) == 'US' ? 'selected' : '' }}>United States</option>
@@ -198,7 +198,7 @@
                     </div>
                     <div class="mt-6 flex justify-end">
                         <button type="submit" class="inline-flex items-center px-4 py-2 bg-indigo-600 border border-transparent rounded-md font-semibold text-xs text-white uppercase tracking-widest hover:bg-indigo-700 active:bg-indigo-900 focus:outline-none focus:border-indigo-900 focus:ring ring-indigo-300 disabled:opacity-25 transition ease-in-out duration-150">
-                            <i class="fas fa-save mr-2"></i> Save Address
+                            <i class="fas fa-save mr-2"></i> {{ __('messages.save_address_info') }}
                         </button>
                     </div>
                 </form>

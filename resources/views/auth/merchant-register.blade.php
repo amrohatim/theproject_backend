@@ -549,33 +549,33 @@
 
                 <!-- Delivery Fees -->
                 <div class="delivery-fees" id="delivery-fees">
-                    <h4 style="margin-bottom: 15px; color: #333;">Delivery Fees by Emirate (AED)</h4>
+                    <h4 style="margin-bottom: 15px; color: #333;">{{ __('messages.delivery_fees_by_emirate') }}</h4>
                     <div class="emirate-fee">
-                        <label>Dubai:</label>
+                        <label>{{ __('messages.dubai') }}:</label>
                         <input type="number" name="delivery_fees[dubai]" placeholder="0" min="0" step="0.01" value="{{ old('delivery_fees.dubai') }}">
                     </div>
                     <div class="emirate-fee">
-                        <label>Abu Dhabi:</label>
+                        <label>{{ __('messages.abu_dhabi') }}:</label>
                         <input type="number" name="delivery_fees[abu_dhabi]" placeholder="0" min="0" step="0.01" value="{{ old('delivery_fees.abu_dhabi') }}">
                     </div>
                     <div class="emirate-fee">
-                        <label>Sharjah:</label>
+                        <label>{{ __('messages.sharjah') }}:</label>
                         <input type="number" name="delivery_fees[sharjah]" placeholder="0" min="0" step="0.01" value="{{ old('delivery_fees.sharjah') }}">
                     </div>
                     <div class="emirate-fee">
-                        <label>Ajman:</label>
+                        <label>{{ __('messages.ajman') }}:</label>
                         <input type="number" name="delivery_fees[ajman]" placeholder="0" min="0" step="0.01" value="{{ old('delivery_fees.ajman') }}">
                     </div>
                     <div class="emirate-fee">
-                        <label>Ras Al Khaimah:</label>
+                        <label>{{ __('messages.ras_al_khaimah') }}:</label>
                         <input type="number" name="delivery_fees[ras_al_khaimah]" placeholder="0" min="0" step="0.01" value="{{ old('delivery_fees.ras_al_khaimah') }}">
                     </div>
                     <div class="emirate-fee">
-                        <label>Fujairah:</label>
+                        <label>{{ __('messages.fujairah') }}:</label>
                         <input type="number" name="delivery_fees[fujairah]" placeholder="0" min="0" step="0.01" value="{{ old('delivery_fees.fujairah') }}">
                     </div>
                     <div class="emirate-fee">
-                        <label>Umm Al Quwain:</label>
+                        <label>{{ __('messages.umm_al_quwain') }}:</label>
                         <input type="number" name="delivery_fees[umm_al_quwain]" placeholder="0" min="0" step="0.01" value="{{ old('delivery_fees.umm_al_quwain') }}">
                     </div>
                 </div>

@@ -1,9 +1,9 @@
 <template>
-  <div class="size-management-container">
+  <div class="size-management-container" :class="{ 'rtl': isRTL }">
     <div class="flex items-center justify-between mb-4">
       <div>
-        <h4 class="vue-text-lg">Size Management</h4>
-        <p class="text-sm text-gray-600">Manage sizes and stock allocation for this color</p>
+        <h4 class="vue-text-lg">{{ $t('vendor.size_management') }}</h4>
+        <p class="text-sm text-gray-600">{{ $t('vendor.manage_sizes_stock_allocation') }}</p>
       </div>
       <button type="button" 
               @click="showAddSizeModal = true"
@@ -16,8 +16,8 @@
     <!-- Stock Allocation Summary -->
     <div v-if="colorStock > 0" class="mb-6 p-4 bg-blue-50 border border-blue-200 rounded-lg">
       <div class="flex items-center justify-between mb-2">
-        <span class="text-sm font-medium text-blue-900">Stock Allocation for this Color</span>
-        <span class="text-sm text-blue-700">{{ totalSizeStock }} / {{ colorStock }} allocated</span>
+        <span class="text-sm font-medium text-blue-900"> {{ $t('vendor.stock_allocation_for_color') }}</span>
+        <span class="text-sm text-blue-700">{{ totalSizeStock }} / {{ colorStock }} {{ $t('vendor.allocated') }}</span>
       </div>
       <div class="w-full bg-blue-200 rounded-full h-2">
         <div class="bg-blue-600 h-2 rounded-full transition-all duration-300"
@@ -25,7 +25,7 @@
              :class="{ 'bg-red-600': totalSizeStock > colorStock }"></div>
       </div>
       <div v-if="totalSizeStock > colorStock" class="mt-2 text-xs text-red-600">
-        ⚠️ Size stock allocation exceeds color stock limit
+        ⚠️ {{ $t('vendor.stock_allocation_exceeds_limit') }}
       </div>
     </div>
 
@@ -38,13 +38,13 @@
           <div v-if="!size.editing" class="grid grid-cols-4 gap-4 items-center">
             <!-- Size Name -->
             <div>
-              <label class="block text-xs font-medium text-gray-700 mb-1">Size Name</label>
+              <label class="block text-xs font-medium text-gray-700 mb-1">{{ $t('vendor.size_name') }}</label>
               <div class="text-sm font-medium">{{ size.name }}</div>
             </div>
             
             <!-- Size Value -->
             <div>
-              <label class="block text-xs font-medium text-gray-700 mb-1">Size Value</label>
+              <label class="block text-xs font-medium text-gray-700 mb-1">{{ $t('vendor.size_value') }}</label>
               <div class="text-sm">{{ size.value || 'N/A' }}</div>
             </div>
             
@@ -52,7 +52,7 @@
             <div>
               <label class="block text-xs font-medium text-gray-700 mb-1">Stock</label>
               <div class="text-sm font-semibold" :class="{ 'text-red-600': size.stock > availableSizeStock + size.stock }">
-                {{ size.stock }} units
+                {{ size.stock }} {{ $t('vendor.unit') }}
               </div>
             </div>
             
@@ -170,7 +170,7 @@
     <!-- Empty State -->
     <div v-else class="text-center py-8 text-gray-500">
       <i class="fas fa-ruler-combined text-3xl mb-3"></i>
-      <p class="text-sm">{{ $t('no_sizes_added_yet') }}</p>
+      <p class="text-sm">{{ $t('vendor.no_sizes_added_yet') }}</p>
       <p class="text-xs">{{ $t('click_add_size_to_start_managing') }}</p>
     </div>
 
@@ -206,8 +206,8 @@
           <!-- Size Name -->
           <div class="enhanced-form-field space-y-1">
             <label class="enhanced-form-label text-sm">
-              <i class="fas fa-tag"></i>
-              Size Name
+              <i class="fas fa-tag" :class="{ 'ml-2': isRTL, 'mr-2': !isRTL }"></i>
+              {{ $t('vendor.size_name') }}
             </label>
             <select v-model="newSize.name"
                     class="vue-form-control-enhanced-blue"
@@ -225,8 +225,8 @@
           <!-- Size Value -->
           <div class="enhanced-form-field space-y-1">
             <label class="enhanced-form-label text-sm">
-              <i class="fas fa-ruler"></i>
-              Size Value
+              <i class="fas fa-ruler" :class="{ 'ml-2': isRTL, 'mr-2': !isRTL }"></i>
+              {{ $t('vendor.size_value') }}
             </label>
             <input type="text"
                    v-model="newSize.value"
@@ -243,8 +243,8 @@
           <div class="grid grid-cols-2 gap-3">
             <div class="enhanced-form-field space-y-1">
               <label class="enhanced-form-label text-sm">
-                <i class="fas fa-boxes"></i>
-                Stock Quantity
+                <i class="fas fa-boxes" :class="{ 'ml-2': isRTL, 'mr-2': !isRTL }"></i>
+                {{ $t('vendor.stock_quantity') }}
               </label>
               <div class="enhanced-input-group">
                 <input type="number"
@@ -254,7 +254,7 @@
                        :max="availableSizeStock"
                        @input="newSize.stock = validateSizeStock(newSize.stock); validateNewSizeField('stock')"
                        placeholder="0">
-                <div class="input-suffix">units</div>
+                <div class="input-suffix">{{ $t('vendor.units') }}</div>
               </div>
               <div class="stock-allocation-info text-xs">
                 <span class="available-stock">{{ $t('available') }}: {{ availableSizeStock }}</span>
@@ -265,8 +265,8 @@
 
             <div class="enhanced-form-field space-y-1">
               <label class="enhanced-form-label text-sm">
-                <i class="fas fa-dollar-sign"></i>
-                Price Adjustment
+                <i class="fas fa-dollar-sign" :class="{ 'ml-2': isRTL, 'mr-2': !isRTL }"></i>
+                {{ $t('vendor.price_adjustment') }}
               </label>
               <div class="enhanced-input-group">
                 <input type="number"
@@ -275,7 +275,7 @@
                        step="0.01"
                        @input="validateNewSizeField('price_adjustment')"
                        placeholder="0.00">
-                <div class="input-suffix">AED</div>
+                <div class="input-suffix">{{ $t('vendor.aed') }}</div>
               </div>
               <div v-if="newSize.errors?.price_adjustment" class="text-red-500 text-xs">{{ newSize.errors.price_adjustment }}</div>
             </div>
@@ -374,6 +374,11 @@ export default {
       return !props.productId || props.productId === null || props.productId === undefined || props.productId === 'null' || props.productId === 'new'
     })
 
+    // RTL support
+    const isRTL = computed(() => {
+      return document.documentElement.dir === 'rtl' || document.documentElement.lang === 'ar'
+    })
+
     // Computed properties for size options
     const availableSizeNames = computed(() => {
       if (!newSize.category || !sizeOptions[newSize.category]) {
@@ -416,23 +421,23 @@ export default {
       const errors = {}
 
       if (!size.category || size.category.trim() === '') {
-        errors.category = 'Size category is required'
+        errors.category = $t('vendor.size_category_required')
       }
 
       if (!size.name || size.name.trim() === '') {
-        errors.name = 'Size name is required'
+        errors.name = $t('vendor.size_name_required')
       }
 
       if (!size.value || size.value.trim() === '') {
-        errors.value = 'Size value is required'
+        errors.value = $t('vendor.size_value_required')
       }
 
       if (size.stock < 0) {
-        errors.stock = 'Stock cannot be negative'
+        errors.stock = $t('vendor.stock_cannot_be_negative')
       }
 
       if (size.stock > props.colorStock) {
-        errors.stock = `Stock cannot exceed color stock (${props.colorStock})`
+        errors.stock = $t('vendor.stock_cannot_exceed_color_stock', { colorStock: props.colorStock })
       }
 
       return errors
@@ -536,7 +541,7 @@ export default {
         }
       } catch (error) {
         console.error('Error fetching sizes:', error)
-        errorMessage.value = 'Failed to load sizes. Please try again.'
+        errorMessage.value = $t('vendor.failed_load_sizes')
       } finally {
         loading.value = false
       }
@@ -603,7 +608,7 @@ export default {
         }
       } catch (error) {
         console.error('Error saving size:', error)
-        errorMessage.value = 'Failed to save size. Please try again.'
+        errorMessage.value = $t('vendor.failed_save_size')
       } finally {
         saving.value = false
       }
@@ -612,7 +617,7 @@ export default {
     const removeSize = async (index) => {
       const size = sizes.value[index]
 
-      if (!confirm('Are you sure you want to remove this size?')) {
+      if (!confirm($t('vendor.confirm_remove_size'))) {
         return
       }
 
@@ -639,7 +644,7 @@ export default {
         }
       } catch (error) {
         console.error('Error removing size:', error)
-        errorMessage.value = 'Failed to remove size. Please try again.'
+        errorMessage.value = $t('vendor.failed_remove_size')
       } finally {
         saving.value = false
       }
@@ -759,7 +764,7 @@ export default {
         }
       } catch (error) {
         console.error('Error adding size:', error)
-        errorMessage.value = 'Failed to add size. Please try again.'
+        errorMessage.value = $t('vendor.failed_add_size')
       } finally {
         saving.value = false
       }
@@ -792,40 +797,19 @@ export default {
       }
     }, { immediate: true })
 
-    // Translation method
+    // Translation method using Laravel's translation system
     const $t = (key, replacements = {}) => {
-      const translations = {
-        'no_sizes_added_yet': 'No sizes added yet',
-        'click_add_size_to_start_managing': 'Click "Add Size" to start managing sizes for this color',
-        'add_new_size': 'Add New Size',
-        'size_category': 'Size Category',
-        'select_category': 'Select Category',
-        'clothes': 'Clothes',
-        'shoes': 'Shoes',
-        'hats': 'Hats',
-        'size_name': 'Size Name',
-        'select_size_name': 'Select Size Name',
-        'size_value': 'Size Value',
-        'auto_filled_based_on_size_name': 'Auto-filled based on size name',
-        'stock_quantity': 'Stock Quantity',
-        'units': 'units',
-        'available': 'Available',
-        'to_allocate': 'to allocate',
-        'price_adjustment': 'Price Adjustment',
-        'aed': 'AED',
-        'adding': 'Adding',
-        'add_size': 'Add Size',
-        'cancel': 'Cancel'
+      if (typeof window.Laravel !== 'undefined' && window.Laravel.translations) {
+        let translation = window.Laravel.translations[key] || key
+        
+        // Handle replacements
+        Object.keys(replacements).forEach(placeholder => {
+          translation = translation.replace(`:${placeholder}`, replacements[placeholder])
+        })
+        
+        return translation
       }
-      
-      let translation = translations[key] || key
-      
-      // Handle replacements
-      Object.keys(replacements).forEach(placeholder => {
-        translation = translation.replace(`[${placeholder}]`, replacements[placeholder])
-      })
-      
-      return translation
+      return key
     }
 
     return {
@@ -838,6 +822,7 @@ export default {
       totalSizeStock,
       availableSizeStock,
       isProductCreationMode,
+      isRTL,
       availableSizeNames,
       availableSizeValues,
       validateSizeStock,
@@ -989,6 +974,51 @@ export default {
   border: 1px solid #e5e7eb;
   border-radius: 0.5rem;
   box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px 0 rgba(0, 0, 0, 0.06);
+}
+
+/* RTL Support */
+.rtl {
+  direction: rtl;
+  text-align: right;
+}
+
+.rtl .enhanced-form-label {
+  flex-direction: row-reverse;
+}
+
+.rtl .vue-form-control-enhanced-blue {
+  text-align: right;
+}
+
+.rtl .enhanced-input-group {
+  flex-direction: row-reverse;
+}
+
+.rtl .input-suffix {
+  left: 0.75rem;
+  right: auto;
+}
+
+.rtl .enhanced-input-group input {
+  padding-left: 3rem;
+  padding-right: 0.75rem;
+}
+
+.rtl .stock-allocation-info {
+  flex-direction: row-reverse;
+}
+
+.rtl .grid {
+  direction: rtl;
+}
+
+.rtl .flex {
+  flex-direction: row-reverse;
+}
+
+.rtl .gap-3 > * + * {
+  margin-left: 0;
+  margin-right: 0.75rem;
 }
 
 /* Dark mode support */

@@ -1,5 +1,5 @@
 <template>
-  <div class="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100 py-8">
+  <div class="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100 py-8" :class="{ 'rtl': isRTL }">
     <div class="max-w-4xl mx-auto px-4">
       <!-- Header -->
       <div class="text-center mb-8">
@@ -185,11 +185,13 @@ export default {
       },
     };
   },
-  methods: {
-    // Translation method
-    $t(key) {
-      return window.appTranslations && window.appTranslations[key] ? window.appTranslations[key] : key;
+  computed: {
+    // RTL support
+    isRTL() {
+      return document.documentElement.dir === 'rtl' || document.documentElement.lang === 'ar';
     },
+  },
+  methods: {
     getStepClasses(step) {
       if (this.currentStep > step) {
         return 'bg-blue-500 border-blue-500 text-white';
@@ -216,10 +218,10 @@ export default {
           this.success = response.message;
           this.currentStep = 2;
         } else {
-          this.error = response.message || this.$t('registration_failed_try_again');
+          this.error = response.message || this.$t('vendor.registration_failed_try_again');
         }
       } catch (error) {
-        this.error = error.message || this.$t('error_occurred_try_again');
+        this.error = error.message || this.$t('vendor.error_occurred_try_again');
       } finally {
         this.loading = false;
       }
@@ -236,10 +238,10 @@ export default {
           this.success = response.message;
           this.currentStep = 3;
         } else {
-          this.error = response.message || this.$t('email_verification_failed_try_again');
+          this.error = response.message || this.$t('vendor.email_verification_failed_try_again');
         }
       } catch (error) {
-        this.error = error.message || 'An error occurred. Please try again.';
+        this.error = error.message || this.$t('vendor.error_occurred_try_again');
       } finally {
         this.loading = false;
       }
@@ -256,10 +258,10 @@ export default {
           this.success = response.message;
           this.currentStep = 4;
         } else {
-          this.error = response.message || this.$t('phone_verification_failed_try_again');
+          this.error = response.message || this.$t('vendor.phone_verification_failed_try_again');
         }
       } catch (error) {
-        this.error = error.message || 'An error occurred. Please try again.';
+        this.error = error.message || this.$t('vendor.error_occurred_try_again');
       } finally {
         this.loading = false;
       }
@@ -278,10 +280,10 @@ export default {
           // Store user_id for license upload step
           this.userId = response.user_id;
         } else {
-          this.error = response.message || this.$t('company_info_submission_failed_try_again');
+          this.error = response.message || this.$t('vendor.company_info_submission_failed_try_again');
         }
       } catch (error) {
-        this.error = error.message || 'An error occurred. Please try again.';
+        this.error = error.message || this.$t('vendor.error_occurred_try_again');
       } finally {
         this.loading = false;
       }
@@ -300,16 +302,16 @@ export default {
         } else {
           // Handle specific error cases
           if (response.error_code === 'LICENSE_UPLOAD_ERROR') {
-            this.error = this.$t('server_error_license_upload_contact_support');
+            this.error = this.$t('vendor.server_error_license_upload_contact_support');
           } else if (response.errors && response.errors.session) {
-            this.error = this.$t('registration_session_expired_restart');
+            this.error = this.$t('vendor.registration_session_expired_restart');
           } else {
-            this.error = response.message || this.$t('license_upload_failed_check_file');
+            this.error = response.message || this.$t('vendor.license_upload_failed_check_file');
           }
         }
       } catch (error) {
         console.error('License upload error:', error);
-        this.error = this.$t('network_error_check_connection');
+        this.error = this.$t('vendor.network_error_check_connection');
       } finally {
         this.loading = false;
       }
@@ -325,10 +327,10 @@ export default {
         if (response.success) {
           this.success = response.message;
         } else {
-          this.error = response.message || this.$t('failed_resend_verification_email');
+          this.error = response.message || this.$t('vendor.failed_resend_verification_email');
         }
       } catch (error) {
-        this.error = error.message || 'An error occurred. Please try again.';
+        this.error = error.message || this.$t('vendor.error_occurred_try_again');
       } finally {
         this.loading = false;
       }
@@ -344,10 +346,10 @@ export default {
         if (response.success) {
           this.success = response.message;
         } else {
-          this.error = response.message || this.$t('failed_resend_otp');
+          this.error = response.message || this.$t('vendor.failed_resend_otp');
         }
       } catch (error) {
-        this.error = error.message || 'An error occurred. Please try again.';
+        this.error = error.message || this.$t('vendor.error_occurred_try_again');
       } finally {
         this.loading = false;
       }
@@ -370,3 +372,59 @@ export default {
   },
 };
 </script>
+
+<style scoped>
+/* RTL Support */
+.rtl {
+  direction: rtl;
+}
+
+.rtl .text-left {
+  text-align: right;
+}
+
+.rtl .text-right {
+  text-align: left;
+}
+
+.rtl .ml-2 {
+  margin-left: 0;
+  margin-right: 0.5rem;
+}
+
+.rtl .mr-2 {
+  margin-right: 0;
+  margin-left: 0.5rem;
+}
+
+.rtl .ml-4 {
+  margin-left: 0;
+  margin-right: 1rem;
+}
+
+.rtl .mr-4 {
+  margin-right: 0;
+  margin-left: 1rem;
+}
+
+.rtl .pl-4 {
+  padding-left: 0;
+  padding-right: 1rem;
+}
+
+.rtl .pr-4 {
+  padding-right: 0;
+  padding-left: 1rem;
+}
+
+.rtl .flex-row {
+  flex-direction: row-reverse;
+}
+
+.rtl input[type="text"],
+.rtl input[type="email"],
+.rtl input[type="tel"],
+.rtl textarea {
+  text-align: right;
+}
+</style>

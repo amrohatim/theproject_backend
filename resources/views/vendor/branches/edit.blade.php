@@ -6,8 +6,8 @@
 @section('content')
 <div class="container mx-auto">
     <div class="mb-6">
-        <h2 class="text-2xl font-bold text-gray-800 dark:text-white">Edit Branch</h2>
-        <p class="mt-1 text-gray-600 dark:text-gray-400">Update branch information</p>
+        <h2 class="text-2xl font-bold text-gray-800 dark:text-white">{{ __('messages.edit_branch') }}</h2>
+        <p class="mt-1 text-gray-600 dark:text-gray-400">{{ __('messages.update_branch_information') }}</p>
     </div>
 
     <div class="bg-white dark:bg-gray-800 rounded-lg shadow p-6 border border-gray-200 dark:border-gray-700">
@@ -16,7 +16,7 @@
             @method('PUT')
             <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                 <div>
-                    <label for="name" class="block text-sm font-medium text-gray-700 dark:text-gray-300">Branch Name</label>
+                    <label for="name" class="block text-sm font-medium text-gray-700 dark:text-gray-300">{{ __('messages.branch_name') }}</label>
                     <input type="text" name="name" id="name" value="{{ old('name', $branch->name) }}" class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-white rounded-md" required>
                     @error('name')
                         <p class="mt-1 text-sm text-red-600 dark:text-red-400">{{ $message }}</p>
@@ -24,9 +24,9 @@
                 </div>
 
                 <div>
-                    <label for="company_id" class="block text-sm font-medium text-gray-700 dark:text-gray-300">Company</label>
+                    <label for="company_id" class="block text-sm font-medium text-gray-700 dark:text-gray-300">{{ __('messages.company') }}</label>
                     <select id="company_id" name="company_id" class="mt-1 block w-full pl-3 pr-10 py-2 text-base border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-white focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm rounded-md" required>
-                        <option value="">Select Company</option>
+                        <option value="">{{ __('messages.select_company') }}</option>
                         @foreach($companies ?? [] as $company)
                             <option value="{{ $company->id }}" {{ old('company_id', $branch->company_id) == $company->id ? 'selected' : '' }}>{{ $company->name }}</option>
                         @endforeach
@@ -37,7 +37,7 @@
                 </div>
 
                 <div>
-                    <label for="phone" class="block text-sm font-medium text-gray-700 dark:text-gray-300">Phone Number</label>
+                    <label for="phone" class="block text-sm font-medium text-gray-700 dark:text-gray-300">{{ __('messages.phone_number') }}</label>
                     <input type="text" name="phone" id="phone" value="{{ old('phone', $branch->phone) }}" class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-white rounded-md">
                     @error('phone')
                         <p class="mt-1 text-sm text-red-600 dark:text-red-400">{{ $message }}</p>
@@ -45,7 +45,7 @@
                 </div>
 
                 <div>
-                    <label for="email" class="block text-sm font-medium text-gray-700 dark:text-gray-300">Email Address</label>
+                    <label for="email" class="block text-sm font-medium text-gray-700 dark:text-gray-300">{{ __('messages.email_address') }}</label>
                     <input type="email" name="email" id="email" value="{{ old('email', $branch->email) }}" class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-white rounded-md">
                     @error('email')
                         <p class="mt-1 text-sm text-red-600 dark:text-red-400">{{ $message }}</p>
@@ -53,7 +53,7 @@
                 </div>
 
                 <div class="col-span-1 md:col-span-2">
-                    <label for="description" class="block text-sm font-medium text-gray-700 dark:text-gray-300">Description</label>
+                    <label for="description" class="block text-sm font-medium text-gray-700 dark:text-gray-300">{{ __('messages.description') }}</label>
                     <textarea id="description" name="description" rows="3" class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-white rounded-md">{{ old('description', $branch->description) }}</textarea>
                     @error('description')
                         <p class="mt-1 text-sm text-red-600 dark:text-red-400">{{ $message }}</p>
@@ -61,7 +61,7 @@
                 </div>
 
                 <div class="col-span-1 md:col-span-2">
-                    <label for="address" class="block text-sm font-medium text-gray-700 dark:text-gray-300">Address <span class="text-red-500">*</span></label>
+                    <label for="address" class="block text-sm font-medium text-gray-700 dark:text-gray-300">{{ __('messages.address') }} <span class="text-red-500">*</span></label>
                     <div class="relative">
                         <input type="text" name="address" id="address" value="{{ old('address', $branch->address) }}" class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 dark:border-gray-600 dark:bg-gray-100 dark:text-gray-600 rounded-md cursor-not-allowed" readonly required>
                         <div id="address-loading" class="absolute right-3 top-1/2 transform -translate-y-1/2 hidden">
@@ -71,23 +71,23 @@
                             </svg>
                         </div>
                     </div>
-                    <p class="mt-1 text-xs text-gray-500 dark:text-gray-400">Address will be automatically filled when you select a location on the map</p>
+                    <p class="mt-1 text-xs text-gray-500 dark:text-gray-400">{{ __('messages.address_auto_fill_hint') }}</p>
                     @error('address')
                         <p class="mt-1 text-sm text-red-600 dark:text-red-400">{{ $message }}</p>
                     @enderror
                 </div>
 
                 <div>
-                    <label for="emirate" class="block text-sm font-medium text-gray-700 dark:text-gray-300">Emirate <span class="text-red-500">*</span></label>
+                    <label for="emirate" class="block text-sm font-medium text-gray-700 dark:text-gray-300">{{ __('messages.emirate') }} <span class="text-red-500">*</span></label>
                     <select id="emirate" name="emirate" class="mt-1 block w-full pl-3 pr-10 py-2 text-base border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-white focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm rounded-md" required>
-                        <option value="">Select Emirate</option>
-                        <option value="Dubai" {{ old('emirate', $branch->emirate ?? '') == 'Dubai' ? 'selected' : '' }}>Dubai</option>
-                        <option value="Abu Dhabi" {{ old('emirate', $branch->emirate ?? '') == 'Abu Dhabi' ? 'selected' : '' }}>Abu Dhabi</option>
-                        <option value="Sharjah" {{ old('emirate', $branch->emirate ?? '') == 'Sharjah' ? 'selected' : '' }}>Sharjah</option>
-                        <option value="Ajman" {{ old('emirate', $branch->emirate ?? '') == 'Ajman' ? 'selected' : '' }}>Ajman</option>
-                        <option value="Umm Al Quwain" {{ old('emirate', $branch->emirate ?? '') == 'Umm Al Quwain' ? 'selected' : '' }}>Umm Al Quwain</option>
-                        <option value="Ras Al Khaimah" {{ old('emirate', $branch->emirate ?? '') == 'Ras Al Khaimah' ? 'selected' : '' }}>Ras Al Khaimah</option>
-                        <option value="Fujairah" {{ old('emirate', $branch->emirate ?? '') == 'Fujairah' ? 'selected' : '' }}>Fujairah</option>
+                        <option value="">{{ __('messages.select_emirate') }}</option>
+                        <option value="Dubai" {{ old('emirate', $branch->emirate) == 'Dubai' ? 'selected' : '' }}>{{ __('messages.dubai') }}</option>
+                        <option value="Abu Dhabi" {{ old('emirate', $branch->emirate) == 'Abu Dhabi' ? 'selected' : '' }}>{{ __('messages.abu_dhabi') }}</option>
+                        <option value="Sharjah" {{ old('emirate', $branch->emirate) == 'Sharjah' ? 'selected' : '' }}>{{ __('messages.sharjah') }}</option>
+                        <option value="Ajman" {{ old('emirate', $branch->emirate) == 'Ajman' ? 'selected' : '' }}>{{ __('messages.ajman') }}</option>
+                        <option value="Umm Al Quwain" {{ old('emirate', $branch->emirate) == 'Umm Al Quwain' ? 'selected' : '' }}>{{ __('messages.umm_al_quwain') }}</option>
+                        <option value="Ras Al Khaimah" {{ old('emirate', $branch->emirate) == 'Ras Al Khaimah' ? 'selected' : '' }}>{{ __('messages.ras_al_khaimah') }}</option>
+                        <option value="Fujairah" {{ old('emirate', $branch->emirate) == 'Fujairah' ? 'selected' : '' }}>{{ __('messages.fujairah') }}</option>
                     </select>
                     @error('emirate')
                         <p class="mt-1 text-sm text-red-600 dark:text-red-400">{{ $message }}</p>
@@ -95,9 +95,9 @@
                 </div>
 
                 <div class="col-span-1 md:col-span-2">
-                    <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Location on Map <span class="text-red-500">*</span></label>
+                    <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">{{ __('messages.location_on_map') }} <span class="text-red-500">*</span></label>
                     <div class="mb-2">
-                        <input id="pac-input" type="text" placeholder="Search for a location" class="w-full p-2 border border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-white rounded-md">
+                        <input id="pac-input" type="text" placeholder="{{ __('messages.search_for_location') }}" class="w-full p-2 border border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-white rounded-md">
                     </div>
                     <div id="map" style="height: 400px; width: 100%; border-radius: 0.375rem;" class="border border-gray-300 dark:border-gray-600"></div>
                     <input type="hidden" name="lat" id="lat" value="{{ old('lat', $branch->lat) }}">
@@ -105,10 +105,10 @@
                 </div>
 
                 <div>
-                    <label for="status" class="block text-sm font-medium text-gray-700 dark:text-gray-300">Status</label>
+                    <label for="status" class="block text-sm font-medium text-gray-700 dark:text-gray-300">{{ __('messages.status') }}</label>
                     <select id="status" name="status" class="mt-1 block w-full pl-3 pr-10 py-2 text-base border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-white focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm rounded-md">
-                        <option value="active" {{ old('status', $branch->status) == 'active' ? 'selected' : '' }}>Active</option>
-                        <option value="inactive" {{ old('status', $branch->status) == 'inactive' ? 'selected' : '' }}>Inactive</option>
+                        <option value="active" {{ old('status', $branch->status) == 'active' ? 'selected' : '' }}>{{ __('messages.active') }}</option>
+                        <option value="inactive" {{ old('status', $branch->status) == 'inactive' ? 'selected' : '' }}>{{ __('messages.inactive') }}</option>
                     </select>
                     @error('status')
                         <p class="mt-1 text-sm text-red-600 dark:text-red-400">{{ $message }}</p>
@@ -116,12 +116,12 @@
                 </div>
 
                 <div class="col-span-1 md:col-span-2">
-                    <h3 class="text-lg font-medium text-gray-900 dark:text-white mb-4">Branch Image</h3>
+                    <h3 class="text-lg font-medium text-gray-900 dark:text-white mb-4">{{ __('messages.branch_image') }}</h3>
                     <div class="bg-gray-50 dark:bg-gray-700 p-4 rounded-md border border-gray-200 dark:border-gray-600">
                         <div class="flex flex-col space-y-4">
                             <div class="flex items-center">
                                 <input type="checkbox" name="use_company_image" id="use_company_image" value="1" class="form-checkbox h-5 w-5 text-indigo-600 dark:text-indigo-400" {{ old('use_company_image', $branch->use_company_image) ? 'checked' : '' }}>
-                                <label for="use_company_image" class="ml-2 text-gray-700 dark:text-gray-300">Use company image</label>
+                                <label for="use_company_image" class="ml-2 text-gray-700 dark:text-gray-300">{{ __('messages.use_company_image') }}</label>
                             </div>
 
                             <div id="branch_image_container" class="{{ old('use_company_image', $branch->use_company_image) ? 'hidden' : '' }}">
@@ -131,16 +131,16 @@
                                 @endphp
                                 @if($branchImage)
                                 <div class="mb-3">
-                                    <p class="text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Current Branch Image:</p>
+                                    <p class="text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">{{ __('messages.current_branch_image') }}:</p>
                                     <img src="{{ $branchImage }}" alt="{{ $branch->name }}" class="w-40 h-40 object-cover rounded-md border border-gray-300 dark:border-gray-600">
                                 </div>
                                 @endif
 
-                                <label for="branch_image" class="block text-sm font-medium text-gray-700 dark:text-gray-300">{{ $branch->branch_image ? 'Change Branch Image' : 'Upload Branch Image' }}</label>
+                                <label for="branch_image" class="block text-sm font-medium text-gray-700 dark:text-gray-300">{{ $branch->branch_image ? __('messages.change_branch_image') : __('messages.upload_branch_image') }}</label>
                                 <div class="mt-1 flex items-center">
                                     <input type="file" name="branch_image" id="branch_image" accept="image/jpeg,image/png,image/webp" class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-white rounded-md">
                                 </div>
-                                <p class="mt-1 text-sm text-gray-500 dark:text-gray-400">Recommended size: 400x400px. Max file size: 2MB. Supported formats: JPG, PNG, WebP</p>
+                                <p class="mt-1 text-sm text-gray-500 dark:text-gray-400">{{ __('messages.image_upload_requirements') }}</p>
                                 @error('branch_image')
                                     <p class="mt-1 text-sm text-red-600 dark:text-red-400">{{ $message }}</p>
                                 @enderror
@@ -152,7 +152,7 @@
 
             <!-- Business Hours Section -->
             <div class="mt-8 col-span-1 md:col-span-2">
-                <h3 class="text-lg font-medium text-gray-900 dark:text-white mb-4">Business Hours</h3>
+                <h3 class="text-lg font-medium text-gray-900 dark:text-white mb-4">{{ __('messages.business_hours') }}</h3>
                 <div class="bg-gray-50 dark:bg-gray-700 p-4 rounded-md border border-gray-200 dark:border-gray-600">
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                         @php
@@ -170,17 +170,17 @@
                                 <div class="flex items-center justify-between">
                                     <label class="inline-flex items-center">
                                         <input type="checkbox" name="days_open[{{ $day }}]" value="1" class="form-checkbox h-5 w-5 text-indigo-600 dark:text-indigo-400" {{ $isOpen ? 'checked' : '' }}>
-                                        <span class="ml-2 text-gray-700 dark:text-gray-300 capitalize">{{ $day }}</span>
+                                        <span class="ml-2 text-gray-700 dark:text-gray-300 capitalize">{{ __('messages.' . $day) }}</span>
                                     </label>
-                                    <span class="text-xs {{ $isOpen ? 'text-green-500' : 'text-red-500' }} dark:text-gray-400" id="{{ $day }}_status">{{ $isOpen ? 'Open' : 'Closed' }}</span>
+                                    <span class="text-xs {{ $isOpen ? 'text-green-500' : 'text-red-500' }} dark:text-gray-400" id="{{ $day }}_status">{{ $isOpen ? __('messages.open') : __('messages.closed') }}</span>
                                 </div>
                                 <div class="grid grid-cols-2 gap-2 mt-2 {{ $isOpen ? '' : 'hidden' }}" id="{{ $day }}_hours">
                                     <div>
-                                        <label for="{{ $day }}_open" class="block text-xs font-medium text-gray-700 dark:text-gray-300">Opening Time</label>
+                                        <label for="{{ $day }}_open" class="block text-xs font-medium text-gray-700 dark:text-gray-300">{{ __('messages.opening_time') }}</label>
                                         <input type="time" name="opening_hours[{{ $day }}][open]" id="{{ $day }}_open" value="{{ $openTime }}" class="mt-1 block w-full py-2 px-3 border border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-white bg-white rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
                                     </div>
                                     <div>
-                                        <label for="{{ $day }}_close" class="block text-xs font-medium text-gray-700 dark:text-gray-300">Closing Time</label>
+                                        <label for="{{ $day }}_close" class="block text-xs font-medium text-gray-700 dark:text-gray-300">{{ __('messages.closing_time') }}</label>
                                         <input type="time" name="opening_hours[{{ $day }}][close]" id="{{ $day }}_close" value="{{ $closeTime }}" class="mt-1 block w-full py-2 px-3 border border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-white bg-white rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
                                     </div>
                                 </div>
@@ -192,10 +192,10 @@
 
             <div class="mt-6 flex items-center justify-end">
                 <a href="{{ route('vendor.branches.show', $branch->id) }}" class="inline-flex items-center px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm text-sm font-medium text-gray-700 dark:text-gray-300 bg-white dark:bg-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 mr-4">
-                    Cancel
+                    {{ __('messages.cancel') }}
                 </a>
                 <button type="submit" class="inline-flex items-center px-4 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
-                    Update Branch
+                    {{ __('messages.update_branch') }}
                 </button>
             </div>
         </form>
@@ -495,12 +495,12 @@
         function updateHoursVisibility(checkbox, hoursDiv, statusSpan) {
             if (checkbox.checked) {
                 hoursDiv.classList.remove('hidden');
-                statusSpan.textContent = 'Open';
+                statusSpan.textContent = '{{ __('open') }}';
                 statusSpan.classList.remove('text-red-500');
                 statusSpan.classList.add('text-green-500');
             } else {
                 hoursDiv.classList.add('hidden');
-                statusSpan.textContent = 'Closed';
+                statusSpan.textContent = '{{ __('closed') }}';
                 statusSpan.classList.remove('text-green-500');
                 statusSpan.classList.add('text-red-500');
             }

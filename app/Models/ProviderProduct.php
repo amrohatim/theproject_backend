@@ -28,6 +28,8 @@ class ProviderProduct extends Model
         'is_active',
         'image',
         'branch_id',
+        'product_name_arabic',
+        'product_description_arabic',
     ];
 
     /**

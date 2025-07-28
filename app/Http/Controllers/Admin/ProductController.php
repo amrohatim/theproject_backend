@@ -136,6 +136,10 @@ class ProductController extends Controller
         
         $validated['images'] = json_encode($imagePaths);
 
+        // Set merchant tracking fields (admin dashboard = not merchant)
+        $validated['is_merchant'] = false;
+        $validated['merchant_name'] = null;
+
         Product::create($validated);
 
         return redirect()->route('admin.products.index')->with('success', 'Product created successfully');

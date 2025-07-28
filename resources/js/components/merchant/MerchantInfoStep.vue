@@ -296,7 +296,7 @@
       <div v-if="formData.delivery_capability" class="delivery-fees">
         <h4>{{ $t('delivery_fees_by_emirate_aed') }}</h4>
         <div class="emirate-fee" v-for="emirate in emirates" :key="emirate.key">
-          <label>{{ emirate.name }}:</label>
+          <label>{{ $t(emirate.name) }}:</label>
           <input 
             type="number" 
             v-model="formData.delivery_fees[emirate.key]"
@@ -433,13 +433,13 @@ export default {
       geocoder: null,
       _updatingFromParent: false,
       emirates: [
-        { key: 'dubai', name: 'Dubai' },
-        { key: 'abu_dhabi', name: 'Abu Dhabi' },
-        { key: 'sharjah', name: 'Sharjah' },
-        { key: 'ajman', name: 'Ajman' },
-        { key: 'ras_al_khaimah', name: 'Ras Al Khaimah' },
-        { key: 'fujairah', name: 'Fujairah' },
-        { key: 'umm_al_quwain', name: 'Umm Al Quwain' }
+        { key: 'dubai', name: 'dubai' },
+        { key: 'abu_dhabi', name: 'abu_dhabi' },
+        { key: 'sharjah', name: 'sharjah' },
+        { key: 'ajman', name: 'ajman' },
+        { key: 'ras_al_khaimah', name: 'ras_al_khaimah' },
+        { key: 'fujairah', name: 'fujairah' },
+        { key: 'umm_al_quwain', name: 'umm_al_quwain' }
       ]
     };
   },

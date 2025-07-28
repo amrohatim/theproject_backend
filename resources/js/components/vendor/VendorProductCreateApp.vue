@@ -1,10 +1,10 @@
 <template>
-  <div class="vendor-product-create-app">
+  <div class="vendor-product-create-app" :class="{ 'rtl': isRTL }">
     <!-- Loading State -->
     <div v-if="loading" class="fixed inset-0 bg-white bg-opacity-75 flex items-center justify-center z-50">
       <div class="text-center">
         <div class="inline-block animate-spin rounded-full h-16 w-16 border-b-2 border-blue-600"></div>
-        <p class="mt-4 text-gray-600 text-lg">Loading...</p>
+        <p class="mt-4 text-gray-600 text-lg">{{ $t('vendor.loading_product_creation_form') }}</p>
       </div>
     </div>
 
@@ -14,12 +14,12 @@
       <div class="mb-6">
         <div class="flex items-center justify-between">
           <div>
-            <h2 class="text-2xl font-bold text-gray-800 dark:text-white">Add Product</h2>
-            <p class="mt-1 text-gray-600 dark:text-gray-400">Create a new product for your store</p>
+            <h2 class="text-2xl font-bold text-gray-800 dark:text-white">{{ $t('vendor.create_new_product') }}</h2>
+        <p class="mt-1 text-gray-600 dark:text-gray-400">{{ $t('vendor.add_new_product_inventory') }}</p>
           </div>
           <div>
             <a :href="backUrl" class="inline-flex items-center px-4 py-2 bg-gray-600 border border-transparent rounded-md font-semibold text-xs text-white uppercase tracking-widest hover:bg-gray-700 active:bg-gray-900 focus:outline-none focus:border-gray-900 focus:ring ring-gray-300 disabled:opacity-25 transition ease-in-out duration-150">
-              <i class="fas fa-arrow-left mr-2"></i> Back to Products
+              <i class="fas fa-arrow-left" :class="isRTL ? 'ml-2' : 'mr-2'"></i> {{ $t('vendor.back_to_products') }}
             </a>
           </div>
         </div>
@@ -36,7 +36,7 @@
               :class="getTabClasses(tab.id)"
               class="whitespace-nowrap py-4 px-1 border-b-2 font-medium text-sm transition-colors duration-200"
             >
-              <i :class="tab.icon" class="mr-2"></i>
+              <i :class="[tab.icon, isRTL ? 'ml-2' : 'mr-2']"></i>
               {{ tab.label }}
             </button>
           </nav>
@@ -48,22 +48,22 @@
           <div v-show="activeTab === 'basic'" class="vue-tab-content space-y-6">
             <div class="flex items-center justify-between">
               <div>
-                <h3 class="vue-text-lg">Basic Information</h3>
-                <p class="text-sm text-gray-600">Enter the basic details of your product</p>
+                <h3 class="vue-text-lg">{{ $t('vendor.product_details') }}</h3>
+            <p class="text-sm text-gray-600">{{ $t('vendor.enter_basic_details') }}</p>
               </div>
             </div>
 
             <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
               <!-- Product Name -->
               <div>
-                <label class="block vue-text-sm mb-2">
-                  Product Name <span class="text-red-500">*</span>
-                </label>
+                <label for="name" class="block vue-text-sm mb-2">
+                {{ $t('vendor.product_name') }} <span class="text-red-500">*</span>
+              </label>
                 <input
                   v-model="productData.name"
                   type="text"
                   class="vue-form-control"
-                  placeholder="Enter product name"
+                  :placeholder="$t('vendor.enter_product_name')"
                   required
                 />
                 <div v-if="errors.name" class="text-red-500 text-sm mt-1">{{ errors.name }}</div>
@@ -71,8 +71,8 @@
 
               <!-- Category -->
               <div>
-                <label class="block vue-text-sm mb-2">
-                  Category <span class="text-red-500">*</span>
+                <label for="category_id" class="block vue-text-sm mb-2">
+                  {{ $t('vendor.category') }} <span class="text-red-500">*</span>
                 </label>
                 <select
                   v-model="productData.category_id"
@@ -80,7 +80,7 @@
                   required
                   @change="validateCategorySelection"
                 >
-                  <option value="">Select Category</option>
+                  <option value="">{{ $t('vendor.select_category') }}</option>
                   <optgroup v-for="parentCategory in categories" :key="parentCategory.id" :label="parentCategory.name">
                     <option
                       v-for="childCategory in parentCategory.children"
@@ -96,8 +96,8 @@
 
               <!-- Branch -->
               <div>
-                <label class="block vue-text-sm mb-2">
-                  Branch <span class="text-red-500">*</span>
+                <label for="branch_id" class="block vue-text-sm mb-2">
+                  {{ $t('vendor.branch') }} <span class="text-red-500">*</span>
                 </label>
                 <select
                   v-model="productData.branch_id"
@@ -105,7 +105,7 @@
                   :class="{ 'border-red-500': errors.branch_id }"
                   required
                 >
-                  <option value="">{{ branches.length === 0 ? 'No branches available' : 'Select Branch' }}</option>
+                  <option value="">{{ branches.length === 0 ? $t('vendor.no_branches_available') : $t('vendor.select_branch') }}</option>
                   <option
                     v-for="branch in branches"
                     :key="branch.id"
@@ -117,18 +117,18 @@
                 <div v-if="errors.branch_id" class="text-red-500 text-sm mt-1">{{ errors.branch_id }}</div>
                 <div v-else-if="branches.length === 0" class="text-amber-600 text-sm mt-1">
                   <i class="fas fa-exclamation-triangle mr-1"></i>
-                  You need to create a branch first. <a href="/vendor/branches/create" class="text-blue-600 hover:underline">Create Branch</a>
+                  {{ $t('vendor.need_create_branch_first') }} <a href="/vendor/branches/create" class="text-blue-600 hover:underline">{{ $t('vendor.create_branch') }}</a>
                 </div>
                 <div v-else-if="branches.length === 1" class="text-green-600 text-sm mt-1">
                   <i class="fas fa-check-circle mr-1"></i>
-                  Branch automatically selected
+                  {{ $t('vendor.branch_automatically_selected') }}
                 </div>
               </div>
 
               <!-- Price -->
               <div>
-                <label class="block vue-text-sm mb-2">
-                  Price <span class="text-red-500">*</span>
+                <label for="price" class="block vue-text-sm mb-2">
+                  {{ $t('vendor.price') }} <span class="text-red-500">*</span>
                 </label>
                 <div class="relative">
                   <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
@@ -149,7 +149,7 @@
 
               <!-- Original Price -->
               <div>
-                <label class="block vue-text-sm mb-2">Original Price (if on sale)</label>
+                <label class="block vue-text-sm mb-2">{{ $t('vendor.original_price') }}</label>
                 <div class="relative">
                   <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
                     <span class="text-gray-500 sm:text-sm">$</span>
@@ -168,8 +168,8 @@
 
               <!-- Stock -->
               <div>
-                <label class="block vue-text-sm mb-2">
-                  General Stock <span class="text-red-500">*</span>
+                <label for="stock" class="block vue-text-sm mb-2">
+                  {{ $t('vendor.total_stock') }} <span class="text-red-500">*</span>
                 </label>
                 <input
                   v-model.number="productData.stock"
@@ -179,19 +179,19 @@
                   placeholder="0"
                   required
                 />
-                <p class="mt-1 text-xs text-gray-500">Total stock quantity available for all color variants</p>
+                <p class="mt-1 text-xs text-gray-500">{{ $t('vendor.total_stock_quantity_available') }}</p>
                 <div v-if="errors.stock" class="text-red-500 text-sm mt-1">{{ errors.stock }}</div>
               </div>
             </div>
 
             <!-- Description -->
             <div>
-              <label class="block vue-text-sm mb-2">Description</label>
+              <label class="block vue-text-sm mb-2">{{ $t('vendor.description') }}</label>
               <textarea
                 v-model="productData.description"
                 rows="4"
                 class="vue-form-control"
-                placeholder="Enter product description"
+                :placeholder="$t('vendor.enter_product_description')"
               ></textarea>
               <div v-if="errors.description" class="text-red-500 text-sm mt-1">{{ errors.description }}</div>
             </div>
@@ -206,8 +206,8 @@
                 />
               </div>
               <div class="ml-3 text-sm">
-                <label class="font-medium text-gray-700 dark:text-gray-300">Available for purchase</label>
-                <p class="text-gray-500 dark:text-gray-400">Uncheck if this product is not available for purchase.</p>
+                <label class="font-medium text-gray-700 dark:text-gray-300">{{ $t('vendor.product_available_sale') }}</label>
+                  <p class="text-gray-500 dark:text-gray-400">{{ $t('vendor.uncheck_if_not_available') }}</p>
               </div>
             </div>
           </div>
@@ -216,12 +216,12 @@
           <div v-show="activeTab === 'colors'" class="vue-tab-content space-y-6">
             <div class="flex items-center justify-between">
               <div>
-                <h3 class="vue-text-lg">Colors & Images</h3>
-                <p class="text-sm text-gray-600">Add color variants with images for your product</p>
+                <h3 class="vue-text-lg">{{ $t('vendor.colors_and_images') }}</h3>
+            <p class="text-sm text-gray-600">{{ $t('vendor.add_color_variants_images') }}</p>
               </div>
               <button type="button" @click="addNewColor" class="vue-btn vue-btn-primary">
                 <i class="fas fa-plus w-4 h-4"></i>
-                Add Color
+                {{ $t('vendor.add_color') }}
               </button>
             </div>
 
@@ -249,19 +249,19 @@
             <!-- Empty State -->
             <div v-else class="text-center py-12 border-2 border-dashed border-gray-300 rounded-lg">
               <i class="fas fa-palette text-gray-400 text-4xl mb-4"></i>
-              <h3 class="text-lg font-medium text-gray-900 mb-2">No colors added yet</h3>
-              <p class="text-gray-500 mb-4">Add at least one color variant with an image for your product</p>
+              <h3 class="text-lg font-medium text-gray-900 mb-2">{{ $t('vendor.no_colors_added_yet') }}</h3>
+              <p class="text-gray-500 mb-4">{{ $t('vendor.add_color_variants_appealing') }}</p>
               <button type="button" @click="addNewColor" class="vue-btn vue-btn-primary">
                 <i class="fas fa-plus mr-2"></i>
-                Add First Color
+                {{ $t('vendor.add_first_color') }}
               </button>
             </div>
 
             <!-- Stock Allocation Summary -->
             <div v-if="productData.colors.length > 0 && productData.stock > 0" class="mt-6 p-4 bg-blue-50 border border-blue-200 rounded-lg">
               <div class="flex items-center justify-between mb-2">
-                <span class="text-sm font-medium text-blue-900">Overall Stock Allocation</span>
-                <span class="text-sm text-blue-700">{{ totalAllocatedStock }} / {{ productData.stock }} allocated</span>
+                <span class="text-sm font-medium text-blue-900">{{ $t('vendor.stock_allocation_progress') }}</span>
+              <span class="text-sm text-blue-700">{{ totalAllocatedStock }} / {{ productData.stock }} {{ $t('vendor.allocated_stock') }}</span>
               </div>
               <div class="w-full bg-blue-200 rounded-full h-3">
                 <div class="bg-blue-600 h-3 rounded-full transition-all duration-300"
@@ -269,13 +269,13 @@
                      :class="{ 'bg-red-600': isStockOverAllocated }"></div>
               </div>
               <div v-if="isStockOverAllocated" class="mt-2 text-xs text-red-600">
-                ⚠️ Total color stock allocation exceeds general stock limit
+                {{ $t('vendor.stock_over_allocated_adjust') }}
               </div>
               <div v-else-if="totalAllocatedStock < productData.stock" class="mt-2 text-xs text-amber-600">
-                💡 {{ productData.stock - totalAllocatedStock }} units remaining to allocate
+                💡 {{ productData.stock - totalAllocatedStock }} {{ $t('vendor.remaining_stock') }}
               </div>
               <div v-else class="mt-2 text-xs text-green-600">
-                ✅ All stock allocated to colors
+                ✅ {{ $t('vendor.all_stock_allocated') }}
               </div>
             </div>
           </div>
@@ -284,12 +284,12 @@
           <div v-show="activeTab === 'specifications'" class="vue-tab-content space-y-6">
             <div class="flex items-center justify-between">
               <div>
-                <h3 class="vue-text-lg">Product Specifications</h3>
-                <p class="text-sm text-gray-600">Add detailed specifications for your product</p>
+                <h3 class="vue-text-lg">{{ $t('vendor.product_specifications') }}</h3>
+            <p class="text-sm text-gray-600">{{ $t('vendor.add_detailed_specifications') }}</p>
               </div>
               <button type="button" @click="addNewSpecification" class="vue-btn vue-btn-primary">
                 <i class="fas fa-plus w-4 h-4"></i>
-                Add Specification
+                {{ $t('vendor.add_specification') }}
               </button>
             </div>
 
@@ -308,11 +308,11 @@
             <!-- Empty State -->
             <div v-else class="text-center py-12 border-2 border-dashed border-gray-300 rounded-lg">
               <i class="fas fa-file-text text-gray-400 text-4xl mb-4"></i>
-              <h3 class="text-lg font-medium text-gray-900 mb-2">No specifications added yet</h3>
-              <p class="text-gray-500 mb-4">Add technical specifications or features for your product</p>
+              <h3 class="text-lg font-medium text-gray-900 mb-2">{{ $t('vendor.no_specifications_added_yet') }}</h3>
+              <p class="text-gray-500 mb-4">{{ $t('vendor.add_specifications_detailed_info') }}</p>
               <button type="button" @click="addNewSpecification" class="vue-btn vue-btn-primary">
                 <i class="fas fa-plus mr-2"></i>
-                Add First Specification
+                {{ $t('vendor.add_first_specification') }}
               </button>
             </div>
           </div>
@@ -327,8 +327,8 @@
               @click="previousTab"
               class="vue-btn vue-btn-secondary"
             >
-              <i class="fas fa-arrow-left mr-2"></i>
-              Previous
+              <i class="fas fa-arrow-left" :class="isRTL ? 'ml-2' : 'mr-2'"></i>
+              {{ $t('vendor.previous') }}
             </button>
             <div v-else></div>
 
@@ -339,8 +339,8 @@
                 @click="nextTab"
                 class="vue-btn vue-btn-primary"
               >
-                Next
-                <i class="fas fa-arrow-right ml-2"></i>
+                {{ $t('vendor.next') }}
+                <i class="fas fa-arrow-right" :class="isRTL ? 'mr-2' : 'ml-2'"></i>
               </button>
               <button
                 v-else
@@ -349,9 +349,9 @@
                 :disabled="saving"
                 class="vue-btn vue-btn-success"
               >
-                <i v-if="saving" class="fas fa-spinner fa-spin mr-2"></i>
-                <i v-else class="fas fa-save mr-2"></i>
-                {{ saving ? 'Saving...' : 'Save Product' }}
+                <i v-if="saving" class="fas fa-spinner fa-spin" :class="isRTL ? 'ml-2' : 'mr-2'"></i>
+                <i v-else class="fas fa-save" :class="isRTL ? 'ml-2' : 'mr-2'"></i>
+                {{ saving ? $t('vendor.saving') : $t('vendor.save_product') }}
               </button>
             </div>
           </div>
@@ -366,14 +366,14 @@
           <div class="mx-auto flex items-center justify-center h-12 w-12 rounded-full bg-green-100">
             <i class="fas fa-check text-green-600 text-xl"></i>
           </div>
-          <h3 class="text-lg font-medium text-gray-900 mt-4">Product Created Successfully!</h3>
-          <p class="text-sm text-gray-500 mt-2">Your product has been added to your store.</p>
+          <h3 class="text-lg font-medium text-gray-900 mt-4">{{ $t('vendor.product_created_successfully') }}</h3>
+          <p class="text-sm text-gray-500 mt-2">{{ $t('vendor.product_created_available_inventory') }}</p>
           <div class="flex justify-center space-x-3 mt-6">
             <button @click="closeSuccessModal" class="vue-btn vue-btn-secondary">
-              View Products
+              {{ $t('vendor.view_products') }}
             </button>
             <button @click="createAnother" class="vue-btn vue-btn-primary">
-              Create Another
+              {{ $t('vendor.create_another') }}
             </button>
           </div>
         </div>
@@ -387,11 +387,11 @@
           <div class="mx-auto flex items-center justify-center h-12 w-12 rounded-full bg-red-100">
             <i class="fas fa-exclamation-triangle text-red-600 text-xl"></i>
           </div>
-          <h3 class="text-lg font-medium text-gray-900 mt-4">Error Creating Product</h3>
-          <p class="text-sm text-gray-500 mt-2">{{ errorMessage }}</p>
+          <h3 class="text-lg font-medium text-gray-900 mt-4">{{ $t('vendor.error_creating_product') }}</h3>
+          <p class="text-sm text-gray-500 mt-2">{{ errorMessage || $t('vendor.unexpected_error_try_again') }}</p>
           <div class="flex justify-center mt-6">
             <button @click="closeErrorModal" class="vue-btn vue-btn-primary">
-              Try Again
+              {{ $t('vendor.try_again') }}
             </button>
           </div>
         </div>
@@ -466,11 +466,32 @@ export default {
     const showErrorModal = ref(false)
     const errorMessage = ref('')
 
+    // Translation method
+    const translate = (key, replacements = {}) => {
+      // Try multiple translation sources
+      let translation = key;
+
+      if (window.appTranslations && window.appTranslations[key]) {
+        translation = window.appTranslations[key];
+      } else if (window.Laravel && window.Laravel.translations && window.Laravel.translations[key]) {
+        translation = window.Laravel.translations[key];
+      } else if (window.translations && window.translations[key]) {
+        translation = window.translations[key];
+      }
+
+      // Handle placeholder replacements
+      Object.keys(replacements).forEach(placeholder => {
+        translation = translation.replace(`:${placeholder}`, replacements[placeholder]);
+      });
+
+      return translation;
+    };
+
     // Tab configuration
     const tabs = [
-      { id: 'basic', label: 'Basic Info', icon: 'fas fa-box' },
-      { id: 'colors', label: 'Colors & Images', icon: 'fas fa-palette' },
-      { id: 'specifications', label: 'Specifications', icon: 'fas fa-file-text' }
+      { id: 'basic', label: translate('vendor.product_details'), icon: 'fas fa-box' },
+      { id: 'colors', label: translate('vendor.colors_and_images'), icon: 'fas fa-palette' },
+      { id: 'specifications', label: translate('vendor.specifications'), icon: 'fas fa-file-text' }
     ]
 
     // Computed properties
@@ -875,63 +896,10 @@ export default {
       }
     }
 
-    // Translation method
-    const $t = (key) => {
-      const translations = {
-        'loading': 'Loading...',
-        'add_product': 'Add Product',
-        'create_new_product_for_store': 'Create a new product for your store',
-        'back_to_products': 'Back to Products',
-        'basic_information': 'Basic Information',
-        'enter_basic_details': 'Enter the basic details of your product',
-        'product_name': 'Product Name',
-        'enter_product_name': 'Enter product name',
-        'category': 'Category',
-        'select_category': 'Select Category',
-        'branch': 'Branch',
-        'no_branches_available': 'No branches available',
-        'select_branch': 'Select Branch',
-        'need_create_branch_first': 'You need to create a branch first.',
-        'create_branch': 'Create Branch',
-        'branch_automatically_selected': 'Branch automatically selected',
-        'price': 'Price',
-        'original_price_if_on_sale': 'Original Price (if on sale)',
-        'general_stock': 'General Stock',
-        'total_stock_quantity_available': 'Total stock quantity available for all color variants',
-        'description': 'Description',
-        'enter_product_description': 'Enter product description',
-        'available_for_purchase': 'Available for purchase',
-        'uncheck_if_not_available': 'Uncheck if this product is not available for purchase.',
-        'colors_and_images': 'Colors & Images',
-        'add_color_variants_with_images': 'Add color variants with images for your product',
-        'add_color': 'Add Color',
-        'no_colors_added_yet': 'No colors added yet',
-        'add_at_least_one_color_variant': 'Add at least one color variant with an image for your product',
-        'add_first_color': 'Add First Color',
-        'overall_stock_allocation': 'Overall Stock Allocation',
-        'allocated': 'allocated',
-        'total_color_stock_exceeds_limit': '⚠️ Total color stock allocation exceeds general stock limit',
-        'units_remaining_to_allocate': '💡 {count} units remaining to allocate',
-        'all_stock_allocated': '✅ All stock allocated to colors',
-        'product_specifications': 'Product Specifications',
-        'add_detailed_specifications': 'Add detailed specifications for your product',
-        'add_specification': 'Add Specification',
-        'no_specifications_added_yet': 'No specifications added yet',
-        'add_technical_specifications': 'Add technical specifications or features for your product',
-        'add_first_specification': 'Add First Specification',
-        'previous': 'Previous',
-        'next': 'Next',
-        'saving': 'Saving...',
-        'save_product': 'Save Product',
-        'product_created_successfully': 'Product Created Successfully!',
-        'product_added_to_store': 'Your product has been added to your store.',
-        'view_products': 'View Products',
-        'create_another': 'Create Another',
-        'error_creating_product': 'Error Creating Product',
-        'try_again': 'Try Again'
-      }
-      return translations[key] || key
-    }
+    // Check if RTL is enabled
+    const isRTL = computed(() => {
+      return document.documentElement.dir === 'rtl' || document.documentElement.lang === 'ar'
+    })
 
     // Lifecycle
     onMounted(() => {
@@ -982,7 +950,8 @@ export default {
       createAnother,
       findCategoryById,
       validateCategorySelection,
-      $t
+      isRTL,
+      $t: translate
     }
   }
 }
@@ -1135,4 +1104,71 @@ export default {
   opacity: 0;
   transform: translateX(-10px);
 }
+/* RTL Support */
+.vendor-product-create-app.rtl {
+  direction: rtl;
+}
+
+.vendor-product-create-app.rtl .text-left {
+  text-align: right;
+}
+
+.vendor-product-create-app.rtl .text-right {
+  text-align: left;
+}
+
+.vendor-product-create-app.rtl .float-left {
+  float: right;
+}
+
+.vendor-product-create-app.rtl .float-right {
+  float: left;
+}
+
+.vendor-product-create-app.rtl .border-l {
+  border-left: none;
+  border-right: 1px solid;
+}
+
+.vendor-product-create-app.rtl .border-r {
+  border-right: none;
+  border-left: 1px solid;
+}
+
+.vendor-product-create-app.rtl .rounded-l {
+  border-top-left-radius: 0;
+  border-bottom-left-radius: 0;
+  border-top-right-radius: 0.375rem;
+  border-bottom-right-radius: 0.375rem;
+}
+
+.vendor-product-create-app.rtl .rounded-r {
+  border-top-right-radius: 0;
+  border-bottom-right-radius: 0;
+  border-top-left-radius: 0.375rem;
+  border-bottom-left-radius: 0.375rem;
+}
+
+/* Form inputs RTL */
+.vendor-product-create-app.rtl input[type="text"],
+.vendor-product-create-app.rtl input[type="number"],
+.vendor-product-create-app.rtl textarea,
+.vendor-product-create-app.rtl select {
+  text-align: right;
+}
+
+/* Tab navigation RTL */
+.vendor-product-create-app.rtl .tab-navigation {
+  direction: rtl;
+}
+
+/* Button groups RTL */
+.vendor-product-create-app.rtl .flex {
+  direction: rtl;
+}
+
+.vendor-product-create-app.rtl .justify-between {
+  flex-direction: row-reverse;
+}
+
 </style>

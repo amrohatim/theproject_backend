@@ -1,5 +1,5 @@
 <template>
-  <div class="min-h-screen" style="background-color: var(--gray-50);">
+  <div class="min-h-screen" :class="{ 'rtl': isRTL }" style="background-color: var(--gray-50);">
     <!-- Loading State -->
     <div v-if="loading" class="d-flex justify-content-center align-items-center" style="min-height: 50vh;">
       <div class="text-center">
@@ -415,6 +415,10 @@ export default {
     ]
 
     // Computed properties
+    const isRTL = computed(() => {
+      return document.documentElement.dir === 'rtl' || document.documentElement.lang === 'ar'
+    })
+
     const totalAllocatedStock = computed(() => {
       return productData.colors.reduce((total, color) => {
         return total + (parseInt(color.stock) || 0)
@@ -439,6 +443,20 @@ export default {
       return Math.round(((productData.original_price - productData.price) / productData.original_price) * 100)
     })
 
+    // Translation method
+    const $t = (key, replacements = {}) => {
+      const translations = window.Laravel?.translations || {}
+      let translation = translations[key] || key
+      
+      // Handle placeholder replacements
+      Object.keys(replacements).forEach(placeholder => {
+        const regex = new RegExp(`:${placeholder}`, 'g')
+        translation = translation.replace(regex, replacements[placeholder])
+      })
+      
+      return translation
+    }
+
     // Methods
     const getTabClasses = (tabId) => {
       const baseClasses = 'vue-tab-button flex items-center gap-2 px-6 py-3 font-medium text-sm transition-colors'
@@ -459,7 +477,7 @@ export default {
         loading.value = false
       } catch (error) {
         console.error('Error fetching initial data:', error)
-        errorMessage.value = 'Failed to load form data. Please refresh the page.'
+        errorMessage.value = $t('merchant.failed_load_form_data_refresh')
         showErrorModal.value = true
         loading.value = false
       }
@@ -473,42 +491,42 @@ export default {
 
       // Basic validation
       if (!productData.name.trim()) {
-        errors.name = 'Product name is required'
+        errors.name = $t('merchant.product_name_required')
         isValid = false
       }
 
       if (!productData.category_id) {
-        errors.category_id = 'Category is required'
+        errors.category_id = $t('merchant.category_required')
         isValid = false
       } else {
         // Validate that selected category is a leaf category
         const selectedCategory = findCategoryById(productData.category_id)
         if (selectedCategory && !selectedCategory.is_selectable) {
-          errors.category_id = 'Please select a specific subcategory, not a category group'
+          errors.category_id = $t('merchant.select_specific_subcategory_not_group')
           isValid = false
         }
       }
 
       if (!productData.price || productData.price <= 0) {
-        errors.price = 'Price must be greater than 0'
+        errors.price = $t('merchant.price_must_be_greater_than_zero')
         isValid = false
       }
 
       if (!productData.stock || productData.stock < 0) {
-        errors.stock = 'Stock must be 0 or greater'
+        errors.stock = $t('merchant.stock_must_be_zero_or_greater')
         isValid = false
       }
 
       // Colors validation
       if (productData.colors.length === 0) {
-        errors.colors = 'At least one color is required'
+        errors.colors = $t('merchant.at_least_one_color_required')
         isValid = false
       }
 
       // Check if at least one color has an image
       const hasColorWithImage = productData.colors.some(color => color.image || color.imageFile)
       if (!hasColorWithImage) {
-        errors.colors = 'At least one color must have an image'
+        errors.colors = $t('merchant.at_least_one_color_must_have_image')
         isValid = false
       }
 
@@ -595,12 +613,12 @@ export default {
           showSuccessModal.value = true
         } else {
           const errorData = await response.json()
-          errorMessage.value = errorData.message || 'Failed to create product'
+          errorMessage.value = errorData.message || $t('merchant.failed_create_product')
           showErrorModal.value = true
         }
       } catch (error) {
         console.error('Error creating product:', error)
-        errorMessage.value = 'An unexpected error occurred. Please try again.'
+        errorMessage.value = $t('merchant.unexpected_error_try_again')
         showErrorModal.value = true
       } finally {
         saving.value = false
@@ -736,7 +754,7 @@ export default {
         if (selectedCategory && !selectedCategory.is_selectable) {
           // Clear the invalid selection
           productData.category_id = ''
-          errors.category_id = 'Please select a specific subcategory, not a category group'
+          errors.category_id = $t('merchant.select_specific_subcategory_not_group')
         } else {
           // Clear any previous error
           delete errors.category_id
@@ -764,6 +782,7 @@ export default {
       errorMessage,
 
       // Computed
+      isRTL,
       totalAllocatedStock,
       stockProgressPercentage,
       isStockOverAllocated,
@@ -771,6 +790,7 @@ export default {
       salePercentage,
 
       // Methods
+      $t,
       getTabClasses,
       fetchInitialData,
       validateForm,
@@ -830,5 +850,94 @@ export default {
   background: white;
   border-radius: 0 0 0.5rem 0.5rem;
   padding: 1.5rem;
+}
+
+/* RTL Support */
+.rtl {
+  direction: rtl;
+}
+
+.rtl .text-left {
+  text-align: right;
+}
+
+.rtl .text-right {
+  text-align: left;
+}
+
+.rtl .ml-2 {
+  margin-left: 0;
+  margin-right: 0.5rem;
+}
+
+.rtl .mr-2 {
+  margin-right: 0;
+  margin-left: 0.5rem;
+}
+
+.rtl .ml-4 {
+  margin-left: 0;
+  margin-right: 1rem;
+}
+
+.rtl .mr-4 {
+  margin-right: 0;
+  margin-left: 1rem;
+}
+
+.rtl .pl-4 {
+  padding-left: 0;
+  padding-right: 1rem;
+}
+
+.rtl .pr-4 {
+  padding-right: 0;
+  padding-left: 1rem;
+}
+
+.rtl .pl-6 {
+  padding-left: 0;
+  padding-right: 1.5rem;
+}
+
+.rtl .pr-6 {
+  padding-right: 0;
+  padding-left: 1.5rem;
+}
+
+.rtl .flex-row {
+  flex-direction: row-reverse;
+}
+
+.rtl input[type="text"],
+.rtl input[type="number"],
+.rtl input[type="email"],
+.rtl textarea,
+.rtl select {
+  text-align: right;
+}
+
+.rtl .grid {
+  direction: rtl;
+}
+
+.rtl .space-x-2 > * + * {
+  margin-left: 0;
+  margin-right: 0.5rem;
+}
+
+.rtl .gap-2 {
+  gap: 0.5rem;
+  flex-direction: row-reverse;
+}
+
+.rtl .gap-3 {
+  gap: 0.75rem;
+  flex-direction: row-reverse;
+}
+
+.rtl .gap-4 {
+  gap: 1rem;
+  flex-direction: row-reverse;
 }
 </style>

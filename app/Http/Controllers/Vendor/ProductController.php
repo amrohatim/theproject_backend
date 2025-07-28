@@ -307,6 +307,10 @@ class ProductController extends Controller
         $data['is_multi_branch'] = $request->has('is_multi_branch') ? true : false;
         $data['user_id'] = Auth::id(); // Assign the authenticated vendor's user ID
 
+        // Set merchant tracking fields (vendor dashboard = not merchant)
+        $data['is_merchant'] = false;
+        $data['merchant_name'] = null;
+
         // We'll set the image later from the default color image
 
         // Create the product

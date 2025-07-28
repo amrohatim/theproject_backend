@@ -300,6 +300,13 @@
             'license_additional_info_placeholder': '{{ __('messages.license_additional_info_placeholder') }}',
             'license_review_24_48_hours': '{{ __('messages.license_review_24_48_hours') }}',
             'documents_securely_encrypted': '{{ __('messages.documents_securely_encrypted') }}',
+            'sharjah': '{{ __('messages.sharjah') }}',
+            'dubai': '{{ __('messages.dubai') }}',
+            'ajman': '{{ __('messages.ajman') }}',
+            'fujairah': '{{ __('messages.fujairah') }}',
+            'ras_al_khaimah': '{{ __('messages.ras_al_khaimah') }}',
+            'umm_al_quwain': '{{ __('messages.umm_al_quwain') }}',
+            'creating_account': '{{ __('messages.creating_account') }}',
         };
     </script>
 

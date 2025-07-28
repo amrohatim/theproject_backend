@@ -1,31 +1,31 @@
 @extends('layouts.dashboard')
 
-@section('title', 'Branch Details')
-@section('page-title', 'Branch Details')
+@section('title', __('messages.branch_details'))
+@section('page-title', __('messages.branch_details'))
 
 @section('content')
 <div class="container mx-auto">
     <div class="flex justify-between items-center mb-6">
         <div>
             <h2 class="text-2xl font-bold text-gray-800 dark:text-white">{{ $branch->name }}</h2>
-            <p class="mt-1 text-gray-600 dark:text-gray-400">Branch details and information</p>
+            <p class="mt-1 text-gray-600 dark:text-gray-400">{{ __('messages.branch_details_and_information') }}</p>
         </div>
         <div class="flex space-x-2">
             <a href="{{ route('vendor.branches.edit', $branch->id) }}" class="inline-flex items-center px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm text-sm font-medium text-gray-700 dark:text-gray-300 bg-white dark:bg-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
-                <i class="fas fa-edit mr-2"></i> Edit
+                <i class="fas fa-edit mr-2"></i> {{ __('messages.edit') }}
             </a>
             <a href="{{ route('vendor.branches.image', $branch->id) }}" class="inline-flex items-center px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm text-sm font-medium text-gray-700 dark:text-gray-300 bg-white dark:bg-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
-                <i class="fas fa-image mr-2"></i> Manage Image
+                <i class="fas fa-image mr-2"></i> {{ __('messages.manage_image') }}
             </a>
             <a href="{{ route('vendor.branches.index') }}" class="inline-flex items-center px-4 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
-                <i class="fas fa-arrow-left mr-2"></i> Back to Branches
+                <i class="fas fa-arrow-left mr-2"></i> {{ __('messages.back_to_branches') }}
             </a>
         </div>
     </div>
 
     <div class="bg-white dark:bg-gray-800 rounded-lg shadow overflow-hidden border border-gray-200 dark:border-gray-700 mb-6">
         <div class="px-6 py-5 border-b border-gray-200 dark:border-gray-700">
-            <h3 class="text-lg font-medium text-gray-900 dark:text-white">Branch Information</h3>
+            <h3 class="text-lg font-medium text-gray-900 dark:text-white">{{ __('messages.branch_information') }}</h3>
         </div>
         <div class="p-6">
             <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
@@ -57,28 +57,28 @@
                     <div class="text-center">
                         <span class="text-sm text-gray-500 dark:text-gray-400">
                             @if($imageSource == 'branch')
-                                Using branch image
+                                {{ __('messages.using_branch_image') }}
                             @elseif($imageSource == 'company')
-                                Using company image
+                                {{ __('messages.using_company_image') }}
                             @elseif($imageSource == 'legacy')
-                                Using default image
+                                {{ __('messages.using_default_image') }}
                             @else
-                                No image available
+                                {{ __('messages.no_image_available') }}
                             @endif
                         </span>
                     </div>
                 </div>
                 <div class="col-span-1 md:col-span-2">
                 <div>
-                    <h4 class="text-sm font-medium text-gray-500 dark:text-gray-400">Branch Name</h4>
+                    <h4 class="text-sm font-medium text-gray-500 dark:text-gray-400">{{ __('messages.branch_name') }}</h4>
                     <p class="mt-1 text-sm text-gray-900 dark:text-white">{{ $branch->name }}</p>
                 </div>
                 <div>
-                    <h4 class="text-sm font-medium text-gray-500 dark:text-gray-400">Company</h4>
+                    <h4 class="text-sm font-medium text-gray-500 dark:text-gray-400">{{ __('messages.company') }}</h4>
                     <p class="mt-1 text-sm text-gray-900 dark:text-white">{{ $branch->company->name ?? 'N/A' }}</p>
                 </div>
                 <div>
-                    <h4 class="text-sm font-medium text-gray-500 dark:text-gray-400">Email</h4>
+                    <h4 class="text-sm font-medium text-gray-500 dark:text-gray-400">{{ __('messages.email_address') }}</h4>
                     <p class="mt-1 text-sm text-gray-900 dark:text-white">
                         @if($branch->email)
                             <a href="mailto:{{ $branch->email }}" class="text-indigo-600 dark:text-indigo-400 hover:text-indigo-900 dark:hover:text-indigo-300">
@@ -90,7 +90,7 @@
                     </p>
                 </div>
                 <div>
-                    <h4 class="text-sm font-medium text-gray-500 dark:text-gray-400">Phone</h4>
+                    <h4 class="text-sm font-medium text-gray-500 dark:text-gray-400">{{ __('messages.phone_number') }}</h4>
                     <p class="mt-1 text-sm text-gray-900 dark:text-white">
                         @if($branch->phone)
                             <a href="tel:{{ $branch->phone }}" class="text-indigo-600 dark:text-indigo-400 hover:text-indigo-900 dark:hover:text-indigo-300">
@@ -102,11 +102,11 @@
                     </p>
                 </div>
                 <div>
-                    <h4 class="text-sm font-medium text-gray-500 dark:text-gray-400">Address</h4>
+                    <h4 class="text-sm font-medium text-gray-500 dark:text-gray-400">{{ __('messages.address') }}</h4>
                     <p class="mt-1 text-sm text-gray-900 dark:text-white">{{ $branch->address ?? 'N/A' }}</p>
                 </div>
                 <div>
-                    <h4 class="text-sm font-medium text-gray-500 dark:text-gray-400">Status</h4>
+                    <h4 class="text-sm font-medium text-gray-500 dark:text-gray-400">{{ __('messages.status') }}</h4>
                     <p class="mt-1">
                         <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full {{ $branch->status === 'active' ? 'bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-200' : 'bg-red-100 text-red-800 dark:bg-red-900 dark:text-red-200' }}">
                             {{ ucfirst($branch->status) }}
@@ -114,8 +114,8 @@
                     </p>
                 </div>
                 <div class="col-span-1 md:col-span-2">
-                    <h4 class="text-sm font-medium text-gray-500 dark:text-gray-400">Description</h4>
-                    <p class="mt-1 text-sm text-gray-900 dark:text-white">{{ $branch->description ?? 'No description available.' }}</p>
+                    <h4 class="text-sm font-medium text-gray-500 dark:text-gray-400">{{ __('messages.description') }}</h4>
+                    <p class="mt-1 text-sm text-gray-900 dark:text-white">{{ $branch->description ?? __('messages.no_description_available') }}</p>
                 </div>
                 </div>
             </div>
@@ -125,7 +125,7 @@
     <!-- Business Hours Section -->
     <div class="bg-white dark:bg-gray-800 rounded-lg shadow overflow-hidden border border-gray-200 dark:border-gray-700 mb-6">
         <div class="px-6 py-5 border-b border-gray-200 dark:border-gray-700">
-            <h3 class="text-lg font-medium text-gray-900 dark:text-white">Business Hours</h3>
+            <h3 class="text-lg font-medium text-gray-900 dark:text-white">{{ __('messages.business_hours') }}</h3>
         </div>
         <div class="p-6">
             <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -143,7 +143,7 @@
                     @endphp
                     <div class="flex justify-between items-center p-3 bg-gray-50 dark:bg-gray-700 rounded-md">
                         <div>
-                            <span class="font-medium text-gray-700 dark:text-gray-300 capitalize">{{ $day }}</span>
+                            <span class="font-medium text-gray-700 dark:text-gray-300 capitalize">{{ __('messages.' . $day) }}</span>
                         </div>
                         <div>
                             @if($isOpen)
@@ -151,7 +151,7 @@
                                     {{ date('g:i A', strtotime($openTime)) }} - {{ date('g:i A', strtotime($closeTime)) }}
                                 </span>
                             @else
-                                <span class="text-red-600 dark:text-red-400">Closed</span>
+                                <span class="text-red-600 dark:text-red-400">{{ __('messages.closed') }}</span>
                             @endif
                         </div>
                     </div>
@@ -163,9 +163,9 @@
     <!-- Products Section -->
     <div class="bg-white dark:bg-gray-800 rounded-lg shadow overflow-hidden border border-gray-200 dark:border-gray-700 mb-6">
         <div class="px-6 py-5 border-b border-gray-200 dark:border-gray-700 flex justify-between items-center">
-            <h3 class="text-lg font-medium text-gray-900 dark:text-white">Products</h3>
+            <h3 class="text-lg font-medium text-gray-900 dark:text-white">{{ __('messages.products') }}</h3>
             <a href="{{ route('vendor.products.create') }}" class="inline-flex items-center px-3 py-1 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
-                <i class="fas fa-plus mr-1"></i> Add Product
+                <i class="fas fa-plus mr-1"></i> {{ __('messages.add_product') }}
             </a>
         </div>
         <div class="p-6">
@@ -199,9 +199,9 @@
                 </div>
             @else
                 <div class="text-center py-6">
-                    <p class="text-gray-500 dark:text-gray-400">No products found for this branch.</p>
+                    <p class="text-gray-500 dark:text-gray-400">{{ __('messages.no_products_found_for_this_branch') }}</p>
                     <a href="{{ route('vendor.products.create') }}" class="mt-2 inline-flex items-center px-4 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
-                        <i class="fas fa-plus mr-2"></i> Add Your First Product
+                        <i class="fas fa-plus mr-2"></i> {{ __('messages.add_your_first_product') }}
                     </a>
                 </div>
             @endif
@@ -211,9 +211,9 @@
     <!-- Services Section -->
     <div class="bg-white dark:bg-gray-800 rounded-lg shadow overflow-hidden border border-gray-200 dark:border-gray-700">
         <div class="px-6 py-5 border-b border-gray-200 dark:border-gray-700 flex justify-between items-center">
-            <h3 class="text-lg font-medium text-gray-900 dark:text-white">Services</h3>
+            <h3 class="text-lg font-medium text-gray-900 dark:text-white">{{ __('messages.services') }}</h3>
             <a href="{{ route('vendor.services.create') }}" class="inline-flex items-center px-3 py-1 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
-                <i class="fas fa-plus mr-1"></i> Add Service
+                <i class="fas fa-plus mr-1"></i> {{ __('messages.add_service') }}
             </a>
         </div>
         <div class="p-6">
@@ -243,9 +243,9 @@
                 </div>
             @else
                 <div class="text-center py-6">
-                    <p class="text-gray-500 dark:text-gray-400">No services found for this branch.</p>
+                    <p class="text-gray-500 dark:text-gray-400">{{ __('messages.no_services_found_for_this_branch') }}</p>
                     <a href="{{ route('vendor.services.create') }}" class="mt-2 inline-flex items-center px-4 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
-                        <i class="fas fa-plus mr-2"></i> Add Your First Service
+                        <i class="fas fa-plus mr-2"></i> {{ __('messages.add_your_first_service') }}
                     </a>
                 </div>
             @endif

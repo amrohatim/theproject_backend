@@ -1,10 +1,10 @@
 <template>
-  <div class="vendor-product-edit-app">
+  <div class="vendor-product-edit-app" :class="{ 'rtl': isRTL }">
     <!-- Loading State -->
     <div v-if="loading" class="fixed inset-0 bg-white bg-opacity-75 flex items-center justify-center z-50">
       <div class="text-center">
         <div class="inline-block animate-spin rounded-full h-16 w-16 border-b-2 border-blue-600"></div>
-        <p class="mt-4 text-gray-600 text-lg">Loading...</p>
+        <p class="mt-4 text-gray-600 text-lg">{{ $t('vendor.loading') }}</p>
       </div>
     </div>
 
@@ -14,16 +14,16 @@
       <div class="mb-6">
         <div class="flex items-center justify-between">
           <div>
-            <h2 class="text-2xl font-bold text-gray-800 dark:text-white">Edit Product</h2>
-            <p class="mt-1 text-gray-600 dark:text-gray-400">Update product information, colors, and specifications</p>
+            <h2 class="text-2xl font-bold text-gray-800 dark:text-white">{{ $t('vendor.edit_product') }}</h2>
+            <p class="mt-1 text-gray-600 dark:text-gray-400">{{ $t('vendor.update_product_information') }}</p>
           </div>
           <div class="flex gap-2">
             <a :href="backUrl" class="inline-flex items-center px-4 py-2 bg-gray-600 border border-transparent rounded-md font-semibold text-xs text-white uppercase tracking-widest hover:bg-gray-700 active:bg-gray-900 focus:outline-none focus:border-gray-900 focus:ring ring-gray-300 disabled:opacity-25 transition ease-in-out duration-150">
-              <i class="fas fa-arrow-left mr-2"></i> Back to Products
+              <i class="fas fa-arrow-left" :class="isRTL ? 'ml-2' : 'mr-2'"></i> {{ $t('vendor.back_to_products') }}
             </a>
             <button type="button" class="inline-flex items-center px-4 py-2 bg-blue-600 border border-transparent rounded-md font-semibold text-xs text-white uppercase tracking-widest hover:bg-blue-700 active:bg-blue-900 focus:outline-none focus:border-blue-900 focus:ring ring-blue-300 disabled:opacity-25 transition ease-in-out duration-150" @click="saveProduct" :disabled="saving">
-              <i class="fas fa-save mr-2"></i>
-              {{ saving ? 'Saving...' : 'Save Changes' }}
+              <i class="fas fa-save" :class="isRTL ? 'ml-2' : 'mr-2'"></i>
+              {{ saving ? $t('vendor.saving') : $t('vendor.save_changes') }}
             </button>
           </div>
         </div>
@@ -32,9 +32,9 @@
       <!-- Stock Progress Indicator -->
       <div class="bg-blue-50 dark:bg-blue-900/20 border border-blue-200 dark:border-blue-800 rounded-lg p-4 mb-6">
         <div class="flex items-center justify-between mb-2">
-          <span class="text-sm font-medium text-blue-700 dark:text-blue-300">Stock Allocation Progress</span>
+          <span class="text-sm font-medium text-blue-700 dark:text-blue-300">{{ $t('vendor.stock_allocation_progress') }}</span>
           <span class="text-sm text-blue-600 dark:text-blue-400">
-            <span>{{ totalAllocatedStock }}</span> / {{ productData.stock }} units allocated
+            <span>{{ totalAllocatedStock }}</span> / {{ productData.stock }} {{ $t('vendor.units_allocated') }}
           </span>
         </div>
         <div class="w-full bg-gray-200 dark:bg-gray-700 rounded-full h-2">
@@ -46,7 +46,7 @@
           <div class="flex items-center gap-2">
             <i class="fas fa-exclamation-triangle text-yellow-600 dark:text-yellow-400"></i>
             <p class="text-yellow-800 dark:text-yellow-200 text-sm">
-              You've allocated more stock than available. Please adjust color stock quantities.
+              {{ $t('vendor.stock_over_allocated_message') }}
             </p>
           </div>
         </div>
@@ -63,7 +63,7 @@
               :class="getTabClasses(tab.id)"
               class="whitespace-nowrap py-4 px-1 border-b-2 font-medium text-sm transition-colors duration-200"
             >
-              <i :class="tab.icon" class="mr-2"></i>
+              <i :class="[tab.icon, isRTL ? 'ml-2' : 'mr-2']"></i>
               {{ tab.label }}
             </button>
           </nav>
@@ -80,13 +80,13 @@
                 <div class="p-6 border-b" style="border-color: var(--gray-200);">
                   <h3 class="flex items-center gap-2 vue-text-lg">
                     <i class="fas fa-box w-5 h-5" style="color: var(--gray-600);"></i>
-                    Product Details
+                    {{ $t('vendor.product_details') }}
                   </h3>
                 </div>
                 <div class="p-6 space-y-4">
                   <div class="space-y-2">
                     <label for="name" class="block vue-text-sm">
-                      Product Name <span class="text-red-500">*</span>
+                      {{ $t('vendor.product_name') }} <span class="text-red-500">*</span>
                     </label>
                     <input type="text" 
                            id="name" 
@@ -100,7 +100,7 @@
                   <div class="grid grid-cols-2 gap-4">
                     <div class="space-y-2">
                       <label for="category_id" class="block vue-text-sm">
-                        Category <span class="text-red-500">*</span>
+                        {{ $t('vendor.category') }} <span class="text-red-500">*</span>
                       </label>
                       <select id="category_id"
                               v-model="productData.category_id"
@@ -108,7 +108,7 @@
                               :class="{ 'border-red-500': errors.category_id }"
                               required
                               @change="validateCategorySelection">
-                        <option value="">Select Category</option>
+                        <option value="">{{ $t('vendor.select_category') }}</option>
                         <optgroup v-for="parent in categories" :key="parent.id" :label="parent.name">
                           <option v-for="child in parent.children"
                                   :key="child.id"
@@ -124,14 +124,14 @@
 
                     <div class="space-y-2">
                       <label for="branch_id" class="block vue-text-sm">
-                        Branch <span class="text-red-500">*</span>
+                        {{ $t('vendor.branch') }} <span class="text-red-500">*</span>
                       </label>
                       <select id="branch_id"
                               v-model="productData.branch_id"
                               class="vue-form-control"
                               :class="{ 'border-red-500': errors.branch_id }"
                               required>
-                        <option value="">Select Branch</option>
+                        <option value="">{{ $t('vendor.select_branch') }}</option>
                         <option v-for="branch in branches"
                                 :key="branch.id"
                                 :value="branch.id">
@@ -144,7 +144,7 @@
 
                   <div class="space-y-2">
                     <label for="description" class="block vue-text-sm">
-                      Description
+                      {{ $t('vendor.description') }}
                     </label>
                     <textarea id="description" 
                               v-model="productData.description" 
@@ -162,14 +162,14 @@
                 <div class="p-6 border-b" style="border-color: var(--gray-200);">
                   <h3 class="flex items-center gap-2 vue-text-lg">
                     <i class="fas fa-dollar-sign w-5 h-5" style="color: var(--gray-600);"></i>
-                    Pricing & Inventory
+                    {{ $t('vendor.pricing_and_inventory') }}
                   </h3>
                 </div>
                 <div class="p-6 space-y-4">
                   <div class="grid grid-cols-2 gap-4">
                     <div class="space-y-2">
                       <label for="price" class="block vue-text-sm">
-                        Current Price <span class="text-red-500">*</span>
+                        {{ $t('vendor.current_price') }} <span class="text-red-500">*</span>
                       </label>
                       <div class="relative">
                         <i class="fas fa-dollar-sign absolute left-3 top-1/2 transform -translate-y-1/2 w-4 h-4" style="color: var(--gray-400);"></i>
@@ -187,7 +187,7 @@
 
                     <div class="space-y-2">
                       <label for="original_price" class="block vue-text-sm">
-                        Original Price
+                        {{ $t('vendor.original_price') }}
                       </label>
                       <div class="relative">
                         <i class="fas fa-dollar-sign absolute left-3 top-1/2 transform -translate-y-1/2 w-4 h-4" style="color: var(--gray-400);"></i>
@@ -206,7 +206,7 @@
                   <div class="grid grid-cols-2 gap-4">
                     <div class="space-y-2">
                       <label for="stock" class="block vue-text-sm">
-                        Total Stock <span class="text-red-500">*</span>
+                        {{ $t('vendor.total_stock') }} <span class="text-red-500">*</span>
                       </label>
                       <div class="relative">
                         <i class="fas fa-warehouse absolute left-3 top-1/2 transform -translate-y-1/2 w-4 h-4" style="color: var(--gray-400);"></i>
@@ -218,13 +218,13 @@
                                :class="{ 'border-red-500': errors.stock }"
                                required>
                       </div>
-                      <p class="text-xs" style="color: var(--gray-500);">Total inventory to be allocated across color variants</p>
+                      <p class="text-xs" style="color: var(--gray-500);">{{ $t('vendor.total_inventory_allocation_note') }}</p>
                       <div v-if="errors.stock" class="text-red-500 text-xs mt-1">{{ errors.stock }}</div>
                     </div>
 
                     <div class="space-y-2">
                       <label for="display_order" class="block vue-text-sm">
-                        Display Order
+                        {{ $t('vendor.display_order') }}
                       </label>
                       <div class="relative">
                         <i class="fas fa-sort-numeric-up absolute left-3 top-1/2 transform -translate-y-1/2 w-4 h-4" style="color: var(--gray-400);"></i>
@@ -235,7 +235,7 @@
                                class="vue-form-control pl-10"
                                :class="{ 'border-red-500': errors.display_order }">
                       </div>
-                      <p class="text-xs" style="color: var(--gray-500);">Order in which this product appears in listings</p>
+                      <p class="text-xs" style="color: var(--gray-500);">{{ $t('vendor.display_order_note') }}</p>
                       <div v-if="errors.display_order" class="text-red-500 text-xs mt-1">{{ errors.display_order }}</div>
                     </div>
                   </div>
@@ -247,7 +247,7 @@
                            class="w-4 h-4 bg-gray-100 border-gray-300 rounded"
                            style="color: var(--primary-blue); --tw-ring-color: var(--primary-blue);">
                     <label for="is_available" class="vue-text-sm">
-                      Available for purchase
+                      {{ $t('vendor.available_for_purchase') }}
                     </label>
                   </div>
 
@@ -257,10 +257,10 @@
                     <div class="flex items-center gap-2">
                       <span class="px-2 py-1 text-xs font-medium rounded"
                             style="background-color: var(--gray-100); color: var(--primary-blue-hover);">
-                        Sale
+                        {{ $t('vendor.sale') }}
                       </span>
                       <span class="text-sm" style="color: var(--primary-blue);">
-                        {{ salePercentage }}% off
+                        {{ salePercentage }}% {{ $t('vendor.off') }}
                       </span>
                     </div>
                   </div>
@@ -273,12 +273,12 @@
           <div v-show="activeTab === 'colors'" class="vue-tab-content space-y-6">
             <div class="flex items-center justify-between">
               <div>
-                <h3 class="vue-text-lg">Product Colors</h3>
-                <p class="text-sm" style="color: var(--gray-600);">Add color variants with images and size options</p>
+                <h3 class="vue-text-lg">{{ $t('vendor.product_colors') }}</h3>
+                <p class="text-sm" style="color: var(--gray-600);">{{ $t('vendor.add_color_variants_with_images') }}</p>
               </div>
               <button type="button" class="vue-btn vue-btn-primary" @click="addNewColor">
                 <i class="fas fa-plus w-4 h-4"></i>
-                Add Color
+                {{ $t('vendor.add_color') }}
               </button>
             </div>
 
@@ -286,13 +286,13 @@
             <div v-if="productData.colors.length === 0" class="vue-card" style="border: 2px dashed var(--gray-300);">
               <div class="flex flex-col items-center justify-center py-12">
                 <i class="fas fa-palette w-12 h-12 mb-4" style="color: var(--gray-400);"></i>
-                <h3 class="vue-text-lg mb-2">No colors added</h3>
+                <h3 class="vue-text-lg mb-2">{{ $t('vendor.no_colors_added_yet') }}</h3>
                 <p class="text-center mb-4" style="color: var(--gray-600);">
-                  Add at least one color variant with an image to continue
+                  {{ $t('vendor.add_at_least_one_color_variant') }}
                 </p>
                 <button type="button" class="vue-btn vue-btn-primary" @click="addNewColor">
                   <i class="fas fa-plus w-4 h-4"></i>
-                  Add Your First Color
+                  {{ $t('vendor.add_first_color') }}
                 </button>
               </div>
             </div>
@@ -322,12 +322,12 @@
           <div v-show="activeTab === 'specifications'" class="vue-tab-content space-y-6">
             <div class="flex items-center justify-between">
               <div>
-                <h3 class="vue-text-lg">Product Specifications</h3>
-                <p class="text-sm" style="color: var(--gray-600);">Add technical details and product features</p>
+                <h3 class="vue-text-lg">{{ $t('vendor.product_specifications') }}</h3>
+                <p class="text-sm" style="color: var(--gray-600);">{{ $t('vendor.add_detailed_specifications') }}</p>
               </div>
               <button type="button" class="vue-btn vue-btn-primary" @click="addNewSpecification">
                 <i class="fas fa-plus w-4 h-4"></i>
-                Add Specification
+                {{ $t('vendor.add_specification') }}
               </button>
             </div>
 
@@ -336,13 +336,13 @@
                 <div class="space-y-4">
                   <div v-if="productData.specifications.length === 0" class="text-center py-8">
                     <i class="fas fa-file-text w-12 h-12 mx-auto mb-4" style="color: var(--gray-400);"></i>
-                    <h3 class="vue-text-lg mb-2">No specifications added</h3>
+                    <h3 class="vue-text-lg mb-2">{{ $t('vendor.no_specifications_added_yet') }}</h3>
                     <p class="mb-4" style="color: var(--gray-600);">
-                      Add product specifications to provide detailed information to customers
+                      {{ $t('vendor.add_technical_specifications') }}
                     </p>
                     <button type="button" class="vue-btn vue-btn-primary" @click="addNewSpecification">
                       <i class="fas fa-plus w-4 h-4"></i>
-                      Add First Specification
+                      {{ $t('vendor.add_first_specification') }}
                     </button>
                   </div>
 
@@ -370,11 +370,11 @@
         <div class="mx-auto flex items-center justify-center h-12 w-12 rounded-full bg-green-100 mb-4">
           <i class="fas fa-check text-green-600 text-xl"></i>
         </div>
-        <h3 class="text-lg font-medium text-gray-900 mb-2">Success!</h3>
-        <p class="text-sm text-gray-500 mb-6">Product updated successfully!</p>
+        <h3 class="text-lg font-medium text-gray-900 mb-2">{{ $t('vendor.success') }}!</h3>
+        <p class="text-sm text-gray-500 mb-6">{{ $t('vendor.product_updated_successfully') }}!</p>
         <button @click="closeSuccessModal"
                 class="w-full bg-blue-500 hover:bg-blue-600 text-white font-medium py-2 px-4 rounded-lg transition-colors">
-          Continue
+          {{ $t('vendor.continue') }}
         </button>
       </div>
     </div>
@@ -387,11 +387,11 @@
         <div class="mx-auto flex items-center justify-center h-12 w-12 rounded-full bg-red-100 mb-4">
           <i class="fas fa-exclamation-triangle text-red-600 text-xl"></i>
         </div>
-        <h3 class="text-lg font-medium text-gray-900 mb-2">Error</h3>
+        <h3 class="text-lg font-medium text-gray-900 mb-2">{{ $t('vendor.error') }}</h3>
         <p class="text-sm text-gray-500 mb-6">{{ errorMessage }}</p>
         <button @click="closeErrorModal"
                 class="w-full bg-red-500 hover:bg-red-600 text-white font-medium py-2 px-4 rounded-lg transition-colors">
-          Close
+          {{ $t('vendor.close') }}
         </button>
       </div>
     </div>
@@ -420,6 +420,27 @@ export default {
     }
   },
   setup(props) {
+    // Translation method
+    const translate = (key, replacements = {}) => {
+      // Try multiple translation sources
+      let translation = key;
+
+      if (window.appTranslations && window.appTranslations[key]) {
+        translation = window.appTranslations[key];
+      } else if (window.Laravel && window.Laravel.translations && window.Laravel.translations[key]) {
+        translation = window.Laravel.translations[key];
+      } else if (window.translations && window.translations[key]) {
+        translation = window.translations[key];
+      }
+
+      // Handle placeholder replacements
+      Object.keys(replacements).forEach(placeholder => {
+        translation = translation.replace(`:${placeholder}`, replacements[placeholder]);
+      });
+
+      return translation;
+    };
+    
     // Reactive data
     const activeTab = ref('basic')
     const saving = ref(false)
@@ -451,9 +472,9 @@ export default {
 
     // Tab configuration
     const tabs = [
-      { id: 'basic', label: 'Basic Info', icon: 'fas fa-box' },
-      { id: 'colors', label: 'Colors & Images', icon: 'fas fa-palette' },
-      { id: 'specifications', label: 'Specifications', icon: 'fas fa-file-text' }
+      { id: 'basic', label: translate('vendor.product_details'), icon: 'fas fa-box' },
+      { id: 'colors', label: translate('vendor.colors_and_images'), icon: 'fas fa-palette' },
+      { id: 'specifications', label: translate('vendor.specifications'), icon: 'fas fa-file-text' }
     ]
 
     // Computed properties
@@ -887,7 +908,7 @@ export default {
         if (selectedCategory && !selectedCategory.is_selectable) {
           // Clear the invalid selection
           productData.category_id = ''
-          errors.category_id = 'Please select a specific subcategory, not a category group'
+          errors.category_id = translate('vendor.select_specific_subcategory')
         } else {
           // Clear any previous error
           delete errors.category_id
@@ -895,12 +916,20 @@ export default {
       }
     }
 
+    // Check if RTL is enabled
+    const isRTL = computed(() => {
+      return document.documentElement.dir === 'rtl' || document.documentElement.lang === 'ar'
+    })
+
     // Lifecycle
     onMounted(() => {
       fetchProductData()
     })
 
     return {
+      // Translation function
+      $t: translate,
+      
       // Reactive data
       activeTab,
       saving,
@@ -920,6 +949,7 @@ export default {
       isStockOverAllocated,
       showSaleBadge,
       salePercentage,
+      isRTL,
 
       // Methods
       getTabClasses,
@@ -1106,6 +1136,35 @@ export default {
   }
 }
 
+/* RTL Support */
+.rtl {
+  direction: rtl;
+}
 
+.rtl .vue-btn i {
+  margin-left: 0.5rem;
+  margin-right: 0;
+}
+
+.rtl .vue-btn i:first-child {
+  margin-left: 0;
+  margin-right: 0.5rem;
+}
+
+.rtl .flex {
+  flex-direction: row-reverse;
+}
+
+.rtl .space-x-8 > :not([hidden]) ~ :not([hidden]) {
+  --tw-space-x-reverse: 1;
+}
+
+.rtl .text-left {
+  text-align: right;
+}
+
+.rtl .text-right {
+  text-align: left;
+}
 
 </style>

@@ -118,6 +118,10 @@ class ProductController extends Controller
         $data['user_id'] = Auth::id();
         $data['is_available'] = $request->has('is_available') ? true : false;
 
+        // Set merchant tracking fields (provider dashboard = not merchant)
+        $data['is_merchant'] = false;
+        $data['merchant_name'] = null;
+
         // If branch_id is not provided, try to get the user's default branch
         if (!isset($data['branch_id'])) {
             $user = Auth::user();

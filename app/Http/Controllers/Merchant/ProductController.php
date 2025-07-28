@@ -241,6 +241,10 @@ class ProductController extends Controller
             $data['is_available'] = $request->has('is_available') ? true : false;
             $data['user_id'] = Auth::id();
 
+            // Set merchant tracking fields
+            $data['is_merchant'] = true;
+            $data['merchant_name'] = Auth::user()->name;
+
             // Handle branch assignment - auto-create if no branch is provided
             if (!$request->branch_id || $request->branch_id === 'auto') {
                 // Get or create a branch for the merchant

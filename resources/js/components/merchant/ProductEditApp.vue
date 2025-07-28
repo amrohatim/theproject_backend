@@ -1,5 +1,5 @@
 <template>
-  <div class="vue-page-container">
+  <div class="vue-page-container" :class="{ 'rtl': isRTL }">
     <div class="vue-content-container">
       <!-- Header Section -->
       <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
@@ -432,10 +432,25 @@ export default {
     const showErrorModal = ref(false)
     const errorMessage = ref('')
 
-    // Translation method
-    const $t = (key) => {
-      return window.appTranslations && window.appTranslations[key] ? window.appTranslations[key] : key;
+    // Translation method using Laravel's translation system
+    const $t = (key, replacements = {}) => {
+      if (typeof window.Laravel !== 'undefined' && window.Laravel.translations) {
+        let translation = window.Laravel.translations[key] || key
+        
+        // Handle replacements
+        Object.keys(replacements).forEach(placeholder => {
+          translation = translation.replace(`:${placeholder}`, replacements[placeholder])
+        })
+        
+        return translation
+      }
+      return key
     }
+
+    // RTL support
+    const isRTL = computed(() => {
+      return document.documentElement.dir === 'rtl' || document.documentElement.lang === 'ar'
+    })
 
     // Tab configuration
     const tabs = [
@@ -530,35 +545,35 @@ export default {
 
       // Basic validation
       if (!productData.name?.trim()) {
-        errors.name = 'Product name is required'
+        errors.name = $t('merchant.product_name_required')
         isValid = false
       }
 
       if (!productData.category_id) {
-        errors.category_id = 'Category is required'
+        errors.category_id = $t('merchant.category_required')
         isValid = false
       }
 
       if (!productData.price || productData.price <= 0) {
-        errors.price = 'Price must be greater than 0'
+        errors.price = $t('merchant.price_must_be_greater_than_zero')
         isValid = false
       }
 
       if (!productData.stock || productData.stock < 0) {
-        errors.stock = 'Stock must be 0 or greater'
+        errors.stock = $t('merchant.stock_must_be_zero_or_greater')
         isValid = false
       }
 
       // Color validation
       if (productData.colors.length === 0) {
-        errors.colors = 'At least one color variant is required'
+        errors.colors = $t('merchant.at_least_one_color_variant_required')
         isValid = false
       }
 
       // Check if at least one color has an image
       const hasColorWithImage = productData.colors.some(color => color.image || color.imageFile)
       if (!hasColorWithImage) {
-        errors.colors = 'At least one color must have an image'
+        errors.colors = $t('merchant.at_least_one_color_must_have_image')
         isValid = false
       }
 
@@ -888,6 +903,7 @@ export default {
       isStockOverAllocated,
       showSaleBadge,
       salePercentage,
+      isRTL,
 
       // Methods
       $t,
@@ -1033,6 +1049,75 @@ export default {
 .vue-tab-button:not(.active):hover {
   color: var(--gray-900) !important;
   background-color: var(--gray-50) !important;
+}
+
+/* RTL Support */
+.rtl {
+  direction: rtl;
+}
+
+.rtl .text-left {
+  text-align: right;
+}
+
+.rtl .text-right {
+  text-align: left;
+}
+
+.rtl .ml-2 {
+  margin-left: 0;
+  margin-right: 0.5rem;
+}
+
+.rtl .mr-2 {
+  margin-right: 0;
+  margin-left: 0.5rem;
+}
+
+.rtl .ml-4 {
+  margin-left: 0;
+  margin-right: 1rem;
+}
+
+.rtl .mr-4 {
+  margin-right: 0;
+  margin-left: 1rem;
+}
+
+.rtl .pl-4 {
+  padding-left: 0;
+  padding-right: 1rem;
+}
+
+.rtl .pr-4 {
+  padding-right: 0;
+  padding-left: 1rem;
+}
+
+.rtl .pl-10 {
+  padding-left: 0;
+  padding-right: 2.5rem;
+}
+
+.rtl .flex-row {
+  flex-direction: row-reverse;
+}
+
+.rtl input[type="text"],
+.rtl input[type="number"],
+.rtl input[type="email"],
+.rtl textarea,
+.rtl select {
+  text-align: right;
+}
+
+.rtl .grid {
+  direction: rtl;
+}
+
+.rtl .absolute.left-3 {
+  left: auto;
+  right: 0.75rem;
 }
 
 /* Typography - use merchant dashboard colors */

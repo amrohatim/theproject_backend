@@ -354,6 +354,26 @@ export default {
   },
   emits: ['update', 'remove', 'set-default', 'image-upload', 'sizes-updated', 'stock-corrected'],
   setup(props, { emit }) {
+    // Translation method
+    const $t = (key, params = {}) => {
+      if (window.translations && window.translations[key]) {
+        let translation = window.translations[key]
+        // Replace placeholders with actual values
+        Object.keys(params).forEach(param => {
+          translation = translation.replace(`:${param}`, params[param])
+        })
+        return translation
+      }
+      return key
+    }
+
+    // RTL support
+    const isRTL = computed(() => {
+      return document.documentElement.dir === 'rtl' || 
+             document.documentElement.lang === 'ar' ||
+             document.body.classList.contains('rtl')
+    })
+
     const fileInput = ref(null)
     const imageError = ref('')
     const showColorDropdown = ref(false)
@@ -486,7 +506,11 @@ export default {
     }
 
     const showStockCorrectionFeedback = (attempted, corrected) => {
-      stockCorrectionMessage.value = `Stock automatically adjusted from ${attempted} to ${corrected} units. Available stock: ${availableStock.value} units.`
+      stockCorrectionMessage.value = $t('merchant.stock_auto_adjusted', { 
+        attempted, 
+        corrected, 
+        available: availableStock.value 
+      })
       showStockCorrection.value = true
 
       // Auto-hide the message after 5 seconds
@@ -567,13 +591,13 @@ export default {
       imageError.value = ''
       
       if (!file.type.startsWith('image/')) {
-        imageError.value = 'Please select a valid image file.'
+        imageError.value = $t('merchant.select_valid_image_file')
         return false
       }
 
       if (file.size > 2 * 1024 * 1024) {
         const fileSizeMB = (file.size / (1024 * 1024)).toFixed(2)
-        imageError.value = `File size (${fileSizeMB}MB) exceeds the 2MB limit.`
+        imageError.value = $t('merchant.file_size_exceeds_limit', { size: fileSizeMB })
         return false
       }
 
@@ -600,7 +624,7 @@ export default {
     }
 
     const handleImageError = () => {
-      imageError.value = 'Failed to load image'
+      imageError.value = $t('merchant.failed_load_image')
     }
 
     const handleSizesUpdated = (sizes) => {
@@ -611,7 +635,7 @@ export default {
       try {
         // Validate that the color has required fields
         if (!props.color.name || !props.color.stock) {
-          reject(new Error('Color must have name and stock before adding sizes'))
+          reject(new Error($t('merchant.color_must_have_name_stock_before_sizes')))
           return
         }
 
@@ -642,7 +666,7 @@ export default {
           // Resolve with the saved color data
           resolve(savedColor)
         } else {
-          reject(new Error(response.data.message || 'Failed to save color'))
+          reject(new Error(response.data.message || $t('merchant.failed_save_color')))
         }
       } catch (error) {
         console.error('Error saving color:', error)
@@ -651,6 +675,8 @@ export default {
     }
 
     return {
+      $t,
+      isRTL,
       fileInput,
       imageError,
       showColorDropdown,
