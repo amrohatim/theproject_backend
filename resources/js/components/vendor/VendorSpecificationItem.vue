@@ -52,28 +52,7 @@ export default {
   emits: ['update', 'remove'],
   setup(props, { emit }) {
     const instance = getCurrentInstance()
-
-    // Translation method
-    const translate = (key, replacements = {}) => {
-      // Try multiple translation sources
-      let translation = key;
-
-      if (window.appTranslations && window.appTranslations[key]) {
-        translation = window.appTranslations[key];
-      } else if (window.Laravel && window.Laravel.translations && window.Laravel.translations[key]) {
-        translation = window.Laravel.translations[key];
-      } else if (window.translations && window.translations[key]) {
-        translation = window.translations[key];
-      }
-
-      // Handle placeholder replacements
-      Object.keys(replacements).forEach(placeholder => {
-        translation = translation.replace(`:${placeholder}`, replacements[placeholder]);
-      });
-
-      return translation;
-    };
-
+    
     // RTL support
     const isRTL = computed(() => {
       return ['ar', 'he', 'fa'].includes(window.Laravel?.locale || 'en')
@@ -84,7 +63,6 @@ export default {
     }
 
     return {
-      $t: translate,
       isRTL,
       updateSpecification
     }

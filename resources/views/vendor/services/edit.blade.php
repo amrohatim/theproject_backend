@@ -1,19 +1,19 @@
 @extends('layouts.dashboard')
 
-@section('title', 'Edit Service')
-@section('page-title', 'Edit Service')
+@section('title', __('messages.edit_service'))
+@section('page-title', __('messages.edit_service'))
 
 @section('content')
 <div class="container mx-auto">
     <div class="mb-6">
         <div class="flex items-center justify-between">
             <div>
-                <h2 class="text-2xl font-bold text-gray-800 dark:text-white">Edit Service</h2>
-                <p class="mt-1 text-gray-600 dark:text-gray-400">Update service information</p>
+                <h2 class="text-2xl font-bold text-gray-800 dark:text-white">{{ __('messages.edit_service') }}</h2>
+                <p class="mt-1 text-gray-600 dark:text-gray-400">{{ __('messages.update_service_information') }}</p>
             </div>
             <div>
                 <a href="{{ route('vendor.services.index') }}" class="inline-flex items-center px-4 py-2 bg-gray-600 border border-transparent rounded-md font-semibold text-xs text-white uppercase tracking-widest hover:bg-gray-700 active:bg-gray-900 focus:outline-none focus:border-gray-900 focus:ring ring-gray-300 disabled:opacity-25 transition ease-in-out duration-150">
-                    <i class="fas fa-arrow-left mr-2"></i> Back to Services
+                    <i class="fas fa-arrow-{{ app()->getLocale() == 'ar' ? 'right' : 'left' }} mr-2"></i> {{ __('messages.back_to_services') }}
                 </a>
             </div>
         </div>
@@ -28,11 +28,11 @@
             <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                 <!-- Basic Information -->
                 <div class="space-y-4">
-                    <h3 class="text-lg font-medium text-gray-900 dark:text-white">Basic Information</h3>
+                    <h3 class="text-lg font-medium text-gray-900 dark:text-white">{{ __('messages.basic_information') }}</h3>
 
                     <!-- Name -->
                     <div>
-                        <label for="name" class="block text-sm font-medium text-gray-700 dark:text-gray-300">Service Name <span class="text-red-500">*</span></label>
+                        <label for="name" class="block text-sm font-medium text-gray-700 dark:text-gray-300">{{ __('messages.service_name') }} <span class="text-red-500">*</span></label>
                         <input type="text" name="name" id="name" value="{{ old('name', $service->name) }}" class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-white rounded-md" required>
                         @error('name')
                             <p class="mt-1 text-sm text-red-600 dark:text-red-400">{{ $message }}</p>
@@ -41,9 +41,9 @@
 
                     <!-- Category -->
                     <div>
-                        <label for="category_id" class="block text-sm font-medium text-gray-700 dark:text-gray-300">Category <span class="text-red-500">*</span></label>
+                        <label for="category_id" class="block text-sm font-medium text-gray-700 dark:text-gray-300">{{ __('messages.category') }} <span class="text-red-500">*</span></label>
                         <select id="category_id" name="category_id" class="mt-1 block w-full py-2 px-3 border border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-white bg-white rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm" required>
-                            <option value="">Select Category</option>
+                            <option value="">{{ __('messages.select_category') }}</option>
                             @foreach($categories ?? [] as $category)
                                 <option value="{{ $category->id }}" {{ old('category_id', $service->category_id) == $category->id ? 'selected' : '' }}>{{ $category->name }}</option>
                             @endforeach
@@ -55,9 +55,9 @@
 
                     <!-- Branch -->
                     <div>
-                        <label for="branch_id" class="block text-sm font-medium text-gray-700 dark:text-gray-300">Branch <span class="text-red-500">*</span></label>
+                        <label for="branch_id" class="block text-sm font-medium text-gray-700 dark:text-gray-300">{{ __('messages.branch') }} <span class="text-red-500">*</span></label>
                         <select id="branch_id" name="branch_id" class="mt-1 block w-full py-2 px-3 border border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-white bg-white rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm" required>
-                            <option value="">Select Branch</option>
+                            <option value="">{{ __('messages.select_branch') }}</option>
                             @foreach($branches ?? [] as $branch)
                                 <option value="{{ $branch->id }}" {{ old('branch_id', $service->branch_id) == $branch->id ? 'selected' : '' }}>{{ $branch->name }}</option>
                             @endforeach
@@ -69,7 +69,7 @@
 
                     <!-- Description -->
                     <div>
-                        <label for="description" class="block text-sm font-medium text-gray-700 dark:text-gray-300">Description</label>
+                        <label for="description" class="block text-sm font-medium text-gray-700 dark:text-gray-300">{{ __('messages.description') }}</label>
                         <textarea id="description" name="description" rows="4" class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-white rounded-md">{{ old('description', $service->description) }}</textarea>
                         @error('description')
                             <p class="mt-1 text-sm text-red-600 dark:text-red-400">{{ $message }}</p>
@@ -79,11 +79,11 @@
 
                 <!-- Pricing and Details -->
                 <div class="space-y-4">
-                    <h3 class="text-lg font-medium text-gray-900 dark:text-white">Pricing & Details</h3>
+                    <h3 class="text-lg font-medium text-gray-900 dark:text-white">{{ __('messages.pricing_details') }}</h3>
 
                     <!-- Price -->
                     <div>
-                        <label for="price" class="block text-sm font-medium text-gray-700 dark:text-gray-300">Price <span class="text-red-500">*</span></label>
+                        <label for="price" class="block text-sm font-medium text-gray-700 dark:text-gray-300">{{ __('messages.price') }} <span class="text-red-500">*</span></label>
                         <div class="mt-1 relative rounded-md shadow-sm">
                             <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
                                 <span class="text-gray-500 sm:text-sm">$</span>
@@ -97,7 +97,7 @@
 
                     <!-- Duration -->
                     <div>
-                        <label for="duration" class="block text-sm font-medium text-gray-700 dark:text-gray-300">Duration (minutes) <span class="text-red-500">*</span></label>
+                        <label for="duration" class="block text-sm font-medium text-gray-700 dark:text-gray-300">{{ __('messages.duration_minutes') }} <span class="text-red-500">*</span></label>
                         <input type="number" name="duration" id="duration" min="1" value="{{ old('duration', $service->duration) }}" class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-white rounded-md" required>
                         @error('duration')
                             <p class="mt-1 text-sm text-red-600 dark:text-red-400">{{ $message }}</p>
@@ -111,8 +111,8 @@
                                 <input id="is_available" name="is_available" type="checkbox" class="focus:ring-indigo-500 h-4 w-4 text-indigo-600 border-gray-300 dark:border-gray-600 rounded" {{ old('is_available', $service->is_available) ? 'checked' : '' }}>
                             </div>
                             <div class="ml-3 text-sm">
-                                <label for="is_available" class="font-medium text-gray-700 dark:text-gray-300">Available for booking</label>
-                                <p class="text-gray-500 dark:text-gray-400">Uncheck if this service is not available for booking.</p>
+                                <label for="is_available" class="font-medium text-gray-700 dark:text-gray-300">{{ __('messages.available_for_booking') }}</label>
+                                <p class="text-gray-500 dark:text-gray-400">{{ __('messages.uncheck_if_not_available') }}</p>
                             </div>
                         </div>
                         @error('is_available')
@@ -127,8 +127,8 @@
                                 <input id="home_service" name="home_service" type="checkbox" class="focus:ring-indigo-500 h-4 w-4 text-indigo-600 border-gray-300 dark:border-gray-600 rounded" value="1" {{ old('home_service', $service->home_service ?? false) ? 'checked' : '' }}>
                             </div>
                             <div class="ml-3 text-sm">
-                                <label for="home_service" class="font-medium text-gray-700 dark:text-gray-300">Enable Home Service</label>
-                                <p class="text-gray-500 dark:text-gray-400">Check if this service can be performed at the customer's location.</p>
+                                <label for="home_service" class="font-medium text-gray-700 dark:text-gray-300">{{ __('messages.enable_home_service') }}</label>
+                                <p class="text-gray-500 dark:text-gray-400">{{ __('messages.check_if_home_service') }}</p>
                             </div>
                         </div>
                         @error('home_service')
@@ -139,7 +139,7 @@
                     <!-- Current Image -->
                     @if($service->image)
                     <div>
-                        <label class="block text-sm font-medium text-gray-700 dark:text-gray-300">Current Image</label>
+                        <label class="block text-sm font-medium text-gray-700 dark:text-gray-300">{{ __('messages.current_image') }}</label>
                         <div class="mt-2">
                             <img src="{{ $service->image }}" alt="{{ $service->name }}" class="h-32 w-32 object-cover rounded-md">
                         </div>
@@ -148,7 +148,7 @@
 
                     <!-- Image -->
                     <div>
-                        <label for="image" class="block text-sm font-medium text-gray-700 dark:text-gray-300">{{ $service->image ? 'Change Image' : 'Service Image' }}</label>
+                        <label for="image" class="block text-sm font-medium text-gray-700 dark:text-gray-300">{{ $service->image ? __('messages.change_image') : __('messages.service_image') }}</label>
                         <div class="mt-1 flex justify-center px-6 pt-5 pb-6 border-2 border-gray-300 dark:border-gray-600 border-dashed rounded-md">
                             <div class="space-y-1 text-center" id="image-upload-container">
                                 <svg class="mx-auto h-12 w-12 text-gray-400" stroke="currentColor" fill="none" viewBox="0 0 48 48" aria-hidden="true" id="image-placeholder">
@@ -159,13 +159,13 @@
                                 </div>
                                 <div class="flex text-sm text-gray-600 dark:text-gray-400">
                                     <label for="image" class="relative cursor-pointer bg-white dark:bg-gray-700 rounded-md font-medium text-indigo-600 dark:text-indigo-400 hover:text-indigo-500 dark:hover:text-indigo-300 focus-within:outline-none focus-within:ring-2 focus-within:ring-offset-2 focus-within:ring-indigo-500">
-                                        <span>Upload a file</span>
+                                        <span>{{ __('messages.upload_file') }}</span>
                                         <input id="image" name="image" type="file" class="sr-only" onchange="previewImage(this)">
                                     </label>
-                                    <p class="pl-1" id="file-name">or drag and drop</p>
+                                    <p class="pl-1" id="file-name">{{ __('messages.or_drag_drop') }}</p>
                                 </div>
                                 <p class="text-xs text-gray-500 dark:text-gray-400">
-                                    PNG, JPG, GIF up to 2MB
+                                    {{ __('messages.image_format_size') }}
                                 </p>
                             </div>
                         </div>
@@ -193,7 +193,7 @@
 
             <div class="mt-6 flex justify-end">
                 <button type="submit" class="inline-flex items-center px-4 py-2 bg-indigo-600 border border-transparent rounded-md font-semibold text-xs text-white uppercase tracking-widest hover:bg-indigo-700 active:bg-indigo-900 focus:outline-none focus:border-indigo-900 focus:ring ring-indigo-300 disabled:opacity-25 transition ease-in-out duration-150">
-                    <i class="fas fa-save mr-2"></i> Update Service
+                    <i class="fas fa-save mr-2"></i> {{ __('messages.update_service') }}
                 </button>
             </div>
         </form>
@@ -221,7 +221,7 @@
             // Validate file type
             if (!file.type.startsWith('image/')) {
                 if (errorContainer && errorText) {
-                    showImageError(errorContainer, errorText, 'Please select a valid image file.');
+                    showImageError(errorContainer, errorText, '{{ __('messages.select_valid_image') }}');
                 }
                 input.value = '';
                 return;
@@ -231,7 +231,7 @@
             if (file.size > 2 * 1024 * 1024) {
                 const fileSizeMB = (file.size / (1024 * 1024)).toFixed(2);
                 if (errorContainer && errorText) {
-                    showImageError(errorContainer, errorText, `File size (${fileSizeMB}MB) exceeds the 2MB limit. Please choose a smaller image.`);
+                    showImageError(errorContainer, errorText, `{{ __('messages.file_size_exceeds') }} (${fileSizeMB}MB) {{ __('messages.choose_smaller_image') }}`);
                 }
                 input.value = '';
                 return;
@@ -274,7 +274,7 @@
 
             // Reset file name if element exists
             if (fileNameElement) {
-                fileNameElement.textContent = 'or drag and drop';
+                fileNameElement.textContent = '{{ __('messages.or_drag_drop') }}';
             }
         }
     }
@@ -299,7 +299,7 @@
                 categorySelect.addEventListener('change', function() {
                     const selectedOption = this.options[this.selectedIndex];
                     if (selectedOption && selectedOption.disabled) {
-                        alert('Please select a subcategory, not a main category.');
+                        alert('{{ __('messages.select_subcategory') }}');
                         this.value = '';
                     }
                 });

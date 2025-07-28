@@ -76,6 +76,13 @@
             z-index: 1000;
             box-shadow: 4px 0 20px rgba(0, 0, 0, 0.1);
         }
+        
+        /* RTL Sidebar adjustments */
+        [dir="rtl"] .sidebar {
+            left: auto;
+            right: 0;
+            box-shadow: -4px 0 20px rgba(0, 0, 0, 0.1);
+        }
 
         .sidebar .brand {
             padding: 1.5rem;
@@ -171,6 +178,7 @@
         .main-content {
             margin-left: 280px;
             min-height: 100vh;
+            background-color: var(--gray-50);
         }
 
         .top-bar {
@@ -352,8 +360,11 @@
                     <i class="fas fa-bars"></i>
                 </button>
                 <h1>@yield('header', __('messages.vendor_dashboard'))</h1>
-                <div class="ms-auto">
-                    <div class="dropdown">
+                <div class="ms-auto d-flex align-items-center">
+                    <!-- Language Switcher -->
+                    <x-language-switcher />
+                    
+                    <div class="dropdown ms-3">
                         <button class="btn btn-link dropdown-toggle" type="button" data-bs-toggle="dropdown">
                             {{ Auth::user()->name }}
                             <i class="fas fa-chevron-down ms-1"></i>
