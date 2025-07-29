@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Vendor License Status - Dala3Chic</title>
+    <title>{{ __('messages.vendor_license_status') }} - Dala3Chic</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <style>
@@ -22,10 +22,10 @@
             <div class="text-center">
                 <img src="{{ asset('assets/logo.png') }}" alt="Dala3Chic Logo" class="mx-auto w-20 h-20 object-contain rounded-2xl mb-6">
                 <h1 class="text-3xl font-bold text-gray-900 mb-2">
-                    Vendor License Status
+                    {{ __('messages.vendor_license_status') }}
                 </h1>
                 <p class="text-gray-600">
-                    Track your vendor license verification progress
+                    {{ __('messages.track_license_verification_progress') }}
                 </p>
             </div>
 
@@ -47,31 +47,39 @@
 
                     <h2 class="text-2xl font-bold text-gray-900 mb-2">
                         @if($license_status === 'pending')
-                            License Under Review
+                            {{ __('messages.license_under_review') }}
                         @elseif($license_status === 'active')
-                            License Active!
+                            {{ __('messages.license_active') }}!
                         @elseif($license_status === 'expired')
-                            License Expired
+                            {{ __('messages.license_expired') }}
                         @else
-                            License Rejected
+                            {{ __('messages.license_rejected') }}
                         @endif
                     </h2>
 
                     <p class="text-gray-600 mb-4">
-                        {{ $message }}
+                        @if($license_status === 'pending')
+                            {{ __('messages.license_pending_desc') }}
+                        @elseif($license_status === 'active')
+                            {{ __('messages.license_active_desc') }}
+                        @elseif($license_status === 'expired')
+                            {{ __('messages.license_expired_desc') }}
+                        @else
+                            {{ __('messages.license_rejected_desc') }}
+                        @endif
                     </p>
 
                     @if($license_status === 'active')
                         <a href="{{ route('vendor.dashboard') }}"
                            class="inline-flex items-center px-6 py-3 bg-gradient-to-r from-purple-600 to-indigo-600 text-white font-semibold rounded-lg hover:from-purple-700 hover:to-indigo-700 transition-all duration-300 transform hover:scale-105">
                             <i class="fas fa-tachometer-alt mr-2"></i>
-                            Go to Dashboard
+                            {{ __('messages.go_to_dashboard') }}
                         </a>
                     @elseif($can_upload_new)
                         <a href="{{ route('vendor.license.upload') }}"
-                           class="inline-flex items-center px-6 py-3 bg-gradient-to-r from-blue-600 to-purple-600 text-white font-semibold rounded-lg hover:from-blue-700 hover:to-purple-700 transition-all duration-300 transform hover:scale-105">
+                           class="inline-flex items-center px-6 py-3 bg-gradient-to-r from-blue-500 to-blue-700 text-white font-semibold rounded-lg hover:from-blue-600 hover:to-blue-800 transition-all duration-300 transform hover:scale-105">
                             <i class="fas fa-upload mr-2"></i>
-                            Upload New License
+                            {{ __('messages.upload_new_license') }}
                         </a>
                     @endif
                 </div>
@@ -79,25 +87,25 @@
                 <!-- License Information -->
                 @if($license)
                 <div class="bg-gray-50 rounded-lg p-6 mb-6">
-                    <h3 class="text-lg font-semibold text-gray-900 mb-4">License Information</h3>
+                    <h3 class="text-lg font-semibold text-gray-900 mb-4">{{ __('messages.license_information') }}</h3>
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                         <div>
-                            <label class="block text-sm font-medium text-gray-700">License Type</label>
+                            <label class="block text-sm font-medium text-gray-700">{{ __('messages.license_type') }}</label>
                             <p class="text-gray-900">{{ $license->license_type ?? 'N/A' }}</p>
                         </div>
                         <div>
-                            <label class="block text-sm font-medium text-gray-700">Status</label>
+                            <label class="block text-sm font-medium text-gray-700">{{ __('messages.status') }}</label>
                             <p class="text-gray-900 capitalize">{{ $license->status }}</p>
                         </div>
                         @if($license->start_date)
                         <div>
-                            <label class="block text-sm font-medium text-gray-700">Start Date</label>
+                            <label class="block text-sm font-medium text-gray-700">{{ __('messages.start_date') }}</label>
                             <p class="text-gray-900">{{ $license->start_date->format('d-m-Y') }}</p>
                         </div>
                         @endif
                         @if($license->end_date)
                         <div>
-                            <label class="block text-sm font-medium text-gray-700">End Date</label>
+                            <label class="block text-sm font-medium text-gray-700">{{ __('messages.end_date') }}</label>
                             <p class="text-gray-900">{{ $license->end_date->format('d-m-Y') }}</p>
                         </div>
                         @endif
@@ -107,20 +115,20 @@
 
                 <!-- Contact Support -->
                 <div class="bg-blue-50 rounded-lg p-6">
-                    <h3 class="text-lg font-semibold text-blue-900 mb-2">Need Help?</h3>
-                    <p class="text-blue-700 mb-4">
-                        If you have questions about your license status or need assistance, please contact our support team.
-                    </p>
+                    <h3 class="text-lg font-medium text-gray-900 mb-4">{{ __('messages.need_help') }}?</h3>
+                <p class="text-gray-600 mb-4">
+                    {{ __('messages.license_support_message') }}
+                </p>
                     <div class="flex flex-col sm:flex-row gap-3">
                         <a href="mailto:support@dala3chic.com" 
                            class="inline-flex items-center px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors duration-200">
                             <i class="fas fa-envelope mr-2"></i>
-                            Email Support
+                            {{ __('messages.email_support') }}
                         </a>
                         <a href="tel:+971501234567" 
                            class="inline-flex items-center px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors duration-200">
                             <i class="fas fa-phone mr-2"></i>
-                            Call Support
+                            {{ __('messages.call_support') }}
                         </a>
                     </div>
                 </div>
@@ -132,7 +140,7 @@
                         <button type="submit"
                                 class="text-gray-500 hover:text-gray-700 text-sm transition-colors duration-200">
                             <i class="fas fa-sign-out-alt mr-1"></i>
-                            Logout
+                            {{ __('messages.logout') }}
                         </button>
                     </form>
                 </div>

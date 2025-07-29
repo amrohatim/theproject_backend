@@ -1,6 +1,6 @@
 @extends('layouts.dashboard')
 
-@section('title', 'Booking Calendar')
+@section('title', __('messages.booking_calendar'))
 @section('page-title', 'Booking Calendar')
 
 @section('styles')
@@ -47,12 +47,12 @@
 <div class="container mx-auto">
     <div class="mb-6 flex flex-col md:flex-row md:items-center md:justify-between">
         <div>
-            <h2 class="text-2xl font-bold text-gray-800 dark:text-white">Booking Calendar</h2>
-            <p class="mt-1 text-gray-600 dark:text-gray-400">View and manage your service bookings</p>
+            <h2 class="text-2xl font-bold text-gray-800 dark:text-white">{{ __('messages.booking_calendar') }}</h2>
+            <p class="mt-1 text-gray-600 dark:text-gray-400">{{ __('messages.view_manage_bookings') }}</p>
         </div>
         <div class="mt-4 md:mt-0">
             <a href="{{ route('vendor.bookings.index') }}" class="inline-flex items-center px-4 py-2 bg-gray-600 border border-transparent rounded-md font-semibold text-xs text-white uppercase tracking-widest hover:bg-gray-700 active:bg-gray-900 focus:outline-none focus:border-gray-900 focus:ring ring-gray-300 disabled:opacity-25 transition ease-in-out duration-150">
-                <i class="fas fa-list mr-2"></i> List View
+                <i class="fas fa-list mr-2"></i> {{ __('messages.list_view') }}
             </a>
         </div>
     </div>
@@ -61,23 +61,23 @@
     <div class="bg-white dark:bg-gray-800 rounded-lg shadow mb-6 p-4 border border-gray-200 dark:border-gray-700">
         <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
             <div>
-                <label for="branch_filter" class="block text-sm font-medium text-gray-700 dark:text-gray-300">Branch</label>
+                <label for="branch_filter" class="block text-sm font-medium text-gray-700 dark:text-gray-300">{{ __('messages.branch') }}</label>
                 <select id="branch_filter" class="mt-1 block w-full pl-3 pr-10 py-2 text-base border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-white focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm rounded-md">
-                    <option value="all">All Branches</option>
+                    <option value="all">{{ __('messages.all_branches') }}</option>
                     @foreach($branches ?? [] as $branch)
                         <option value="{{ $branch->id }}">{{ $branch->name }}</option>
                     @endforeach
                 </select>
             </div>
             <div>
-                <label for="status_filter" class="block text-sm font-medium text-gray-700 dark:text-gray-300">Status</label>
+                <label for="status_filter" class="block text-sm font-medium text-gray-700 dark:text-gray-300">{{ __('messages.status') }}</label>
                 <select id="status_filter" class="mt-1 block w-full pl-3 pr-10 py-2 text-base border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-white focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm rounded-md">
-                    <option value="all">All Status</option>
-                    <option value="pending">Pending</option>
-                    <option value="confirmed">Confirmed</option>
-                    <option value="completed">Completed</option>
-                    <option value="cancelled">Cancelled</option>
-                    <option value="no_show">No Show</option>
+                    <option value="all">{{ __('messages.all_status') }}</option>
+                    <option value="pending">{{ __('messages.pending') }}</option>
+                    <option value="confirmed">{{ __('messages.confirmed') }}</option>
+                    <option value="completed">{{ __('messages.completed') }}</option>
+                    <option value="cancelled">{{ __('messages.cancelled') }}</option>
+                    <option value="no_show">{{ __('messages.no_show') }}</option>
                 </select>
             </div>
         </div>
@@ -98,23 +98,23 @@
                     <div class="sm:flex sm:items-start">
                         <div class="mt-3 text-center sm:mt-0 sm:ml-4 sm:text-left w-full">
                             <h3 class="text-lg leading-6 font-medium text-gray-900 dark:text-white" id="modal-title">
-                                Booking Details
+                                {{ __('messages.booking_details') }}
                             </h3>
                             <div class="mt-4 space-y-4">
                                 <div>
-                                    <p class="text-sm text-gray-500 dark:text-gray-400">Customer:</p>
+                                    <p class="text-sm text-gray-500 dark:text-gray-400">{{ __('messages.customer') }}:</p>
                                     <p class="text-sm font-medium text-gray-900 dark:text-white" id="modal-customer">-</p>
                                 </div>
                                 <div>
-                                    <p class="text-sm text-gray-500 dark:text-gray-400">Service:</p>
+                                    <p class="text-sm text-gray-500 dark:text-gray-400">{{ __('messages.service') }}:</p>
                                     <p class="text-sm font-medium text-gray-900 dark:text-white" id="modal-service">-</p>
                                 </div>
                                 <div>
-                                    <p class="text-sm text-gray-500 dark:text-gray-400">Date & Time:</p>
+                                    <p class="text-sm text-gray-500 dark:text-gray-400">{{ __('messages.date_time') }}:</p>
                                     <p class="text-sm font-medium text-gray-900 dark:text-white" id="modal-datetime">-</p>
                                 </div>
                                 <div>
-                                    <p class="text-sm text-gray-500 dark:text-gray-400">Status:</p>
+                                    <p class="text-sm text-gray-500 dark:text-gray-400">{{ __('messages.status') }}:</p>
                                     <p class="text-sm font-medium" id="modal-status">-</p>
                                 </div>
                             </div>
@@ -123,10 +123,10 @@
                 </div>
                 <div class="bg-gray-50 dark:bg-gray-700 px-4 py-3 sm:px-6 sm:flex sm:flex-row-reverse">
                     <a id="modal-view-link" href="#" class="w-full inline-flex justify-center rounded-md border border-transparent shadow-sm px-4 py-2 bg-indigo-600 text-base font-medium text-white hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 sm:ml-3 sm:w-auto sm:text-sm">
-                        View Details
+                        {{ __('messages.view_details') }}
                     </a>
                     <button type="button" id="modal-close" class="mt-3 w-full inline-flex justify-center rounded-md border border-gray-300 dark:border-gray-600 shadow-sm px-4 py-2 bg-white dark:bg-gray-800 text-base font-medium text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 sm:mt-0 sm:ml-3 sm:w-auto sm:text-sm">
-                        Close
+                        {{ __('messages.close') }}
                     </button>
                 </div>
             </div>

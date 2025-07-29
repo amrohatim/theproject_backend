@@ -1,7 +1,7 @@
 @extends('layouts.dashboard')
 
-@section('title', 'Pending Orders')
-@section('page-title', 'Pending Orders')
+@section('title', __('messages.pending_orders'))
+@section('page-title', __('messages.pending_orders'))
 
 @section('styles')
 <style>
@@ -40,8 +40,8 @@
 <div class="container mx-auto">
     <div class="mb-6 flex flex-col md:flex-row md:items-center md:justify-between">
         <div>
-            <h2 class="text-2xl font-bold text-gray-800 dark:text-white">Pending Orders</h2>
-            <p class="mt-1 text-gray-600 dark:text-gray-400">Manage pending orders from customers</p>
+            <h2 class="text-2xl font-bold text-gray-800 dark:text-white">{{ __('messages.pending_orders') }}</h2>
+            <p class="mt-1 text-gray-600 dark:text-gray-400">{{ __('messages.manage_pending_orders') }}</p>
         </div>
     </div>
 
@@ -50,19 +50,19 @@
         @csrf
         <div class="flex flex-col md:flex-row md:items-end space-y-4 md:space-y-0 md:space-x-4">
             <div class="flex-grow">
-                <label for="status" class="block text-sm font-medium text-gray-700 dark:text-gray-300">Update Status</label>
+                <label for="status" class="block text-sm font-medium text-gray-700 dark:text-gray-300">{{ __('messages.update_status') }}</label>
                 <select name="status" id="status" class="mt-1 block w-full pl-3 pr-10 py-2 text-base border-gray-300 dark:border-gray-700 dark:bg-gray-800 dark:text-gray-300 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm rounded-md">
-                    <option value="">Select Status</option>
-                    <option value="processing">Processing</option>
-                    <option value="shipped">Shipped</option>
-                    <option value="delivered">Delivered</option>
-                    <option value="cancelled">Cancelled</option>
+                    <option value="">{{ __('messages.select_status') }}</option>
+                    <option value="processing">{{ __('messages.processing') }}</option>
+                    <option value="shipped">{{ __('messages.shipped') }}</option>
+                    <option value="delivered">{{ __('messages.delivered') }}</option>
+                    <option value="cancelled">{{ __('messages.cancelled') }}</option>
                 </select>
             </div>
            
             <div>
                 <button type="submit" class="inline-flex items-center px-4 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 disabled:opacity-50" id="update-status-btn" disabled>
-                    Update Selected Items
+                    {{ __('messages.update_selected_items') }}
                 </button>
             </div>
         </div>
@@ -77,17 +77,17 @@
                         <th scope="col" class="px-6 py-3 text-left">
                             <div class="flex items-center">
                                 <input type="checkbox" id="select-all" class="h-4 w-4 text-indigo-600 focus:ring-indigo-500 border-gray-300 dark:border-gray-700 dark:bg-gray-800 rounded">
-                                <label for="select-all" class="sr-only">Select All</label>
+                                <label for="select-all" class="sr-only">{{ __('messages.select_all') }}</label>
                             </div>
                         </th>
-                        <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">Order #</th>
-                        <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">Customer</th>
-                        <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">Product</th>
-                        <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">Date</th>
-                        <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">Qty</th>
-                        <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">Total</th>
-                        <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">Status</th>
-                        <th scope="col" class="px-6 py-3 text-right text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">Actions</th>
+                        <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">{{ __('messages.order_number') }}</th>
+                        <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">{{ __('messages.customer') }}</th>
+                        <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">{{ __('messages.product') }}</th>
+                        <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">{{ __('messages.date') }}</th>
+                        <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">{{ __('messages.qty') }}</th>
+                        <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">{{ __('messages.total') }}</th>
+                        <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">{{ __('messages.status') }}</th>
+                        <th scope="col" class="px-6 py-3 text-right text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">{{ __('messages.actions') }}</th>
                     </tr>
                 </thead>
                 <tbody class="bg-white dark:bg-gray-800 divide-y divide-gray-200 dark:divide-gray-700">
@@ -106,11 +106,11 @@
                             </div>
                         </td>
                         <td class="px-6 py-4 whitespace-nowrap">
-                            <div class="text-sm text-gray-900 dark:text-white">{{ $item->order->user->name ?? 'Guest' }}</div>
-                            <div class="text-xs text-gray-500 dark:text-gray-400">{{ $item->order->user->email ?? 'No email' }}</div>
+                            <div class="text-sm text-gray-900 dark:text-white">{{ $item->order->user->name ?? __('messages.guest') }}</div>
+                            <div class="text-xs text-gray-500 dark:text-gray-400">{{ $item->order->user->email ?? __('messages.no_email') }}</div>
                         </td>
                         <td class="px-6 py-4">
-                            <div class="text-sm text-gray-900 dark:text-white">{{ $item->product->name ?? 'Unknown Product' }}</div>
+                            <div class="text-sm text-gray-900 dark:text-white">{{ $item->product->name ?? __('messages.unknown_product') }}</div>
                             @if($item->color_name || $item->size_name)
                                 <div class="text-xs text-gray-500 dark:text-gray-400">
                                     @if($item->color_name)
@@ -141,7 +141,7 @@
                         </td>
                         <td class="px-6 py-4 whitespace-nowrap">
                             <span class="status-badge status-{{ strtolower($item->status) }}">
-                                {{ ucfirst($item->status) }}
+                                {{ __('messages.' . $item->status) }}
                             </span>
                         </td>
                         <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
@@ -158,7 +158,7 @@
                         <td colspan="9" class="px-6 py-4 text-center text-sm text-gray-500 dark:text-gray-400">
                             <div class="flex flex-col items-center justify-center py-4">
                                 <i class="fas fa-check-circle text-green-500 dark:text-green-400 text-5xl mb-4"></i>
-                                <p>No pending orders found</p>
+                                <p>{{ __('messages.no_pending_orders_found') }}</p>
                             </div>
                         </td>
                     </tr>

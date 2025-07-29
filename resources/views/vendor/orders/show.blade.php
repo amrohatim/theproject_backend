@@ -1,7 +1,7 @@
 @extends('layouts.dashboard')
 
-@section('title', 'Order Details')
-@section('page-title', 'Order Details')
+@section('title', __('messages.order_details'))
+@section('page-title', __('messages.order_details'))
 
 @push('styles')
 <style>
@@ -358,46 +358,46 @@
     <!-- Header -->
     <div class="mb-6 flex flex-col md:flex-row md:items-center md:justify-between">
         <div>
-            <h2 class="text-2xl font-bold text-gray-800 dark:text-white">Order #{{ $order->order_number ?? 'N/A' }}</h2>
+            <h2 class="text-2xl font-bold text-gray-800 dark:text-white">{{ __('messages.order_number') }} #{{ $order->order_number ?? 'N/A' }}</h2>
             <p class="mt-1 text-gray-600 dark:text-gray-400">{{ $order->created_at ? $order->created_at->format('F d, Y h:i A') : 'N/A' }}</p>
         </div>
         <div class="mt-4 md:mt-0 flex flex-wrap gap-2">
             @if(isset($allItemsBelongToVendor) && $allItemsBelongToVendor)
             <a href="{{ route('vendor.orders.edit', $order->id) }}" class="inline-flex items-center px-4 py-2 bg-indigo-600 border border-transparent rounded-md font-semibold text-xs text-white uppercase tracking-widest hover:bg-indigo-700 active:bg-indigo-900 focus:outline-none focus:border-indigo-900 focus:ring ring-indigo-300 disabled:opacity-25 transition ease-in-out duration-150">
-                <i class="fas fa-edit mr-2"></i> Edit Order
+                <i class="fas fa-edit mr-2"></i> {{ __('messages.edit_order') }}
             </a>
             @endif
             <a href="{{ route('vendor.orders.invoice', $order->id) }}" class="inline-flex items-center px-4 py-2 bg-green-600 border border-transparent rounded-md font-semibold text-xs text-white uppercase tracking-widest hover:bg-green-700 active:bg-green-900 focus:outline-none focus:border-green-900 focus:ring ring-green-300 disabled:opacity-25 transition ease-in-out duration-150">
-                <i class="fas fa-file-invoice mr-2"></i> Invoice
+                <i class="fas fa-file-invoice mr-2"></i> {{ __('messages.invoice') }}
             </a>
             <!-- <button onclick="toggleBulkActions()" class="inline-flex items-center px-4 py-2 bg-purple-600 border border-transparent rounded-md font-semibold text-xs text-white uppercase tracking-widest hover:bg-purple-700 active:bg-purple-900 focus:outline-none focus:border-purple-900 focus:ring ring-purple-300 disabled:opacity-25 transition ease-in-out duration-150">
                 <i class="fas fa-tasks mr-2"></i> Bulk Actions
             </button> -->
             <a href="{{ route('vendor.orders.index') }}" class="inline-flex items-center px-4 py-2 bg-gray-600 border border-transparent rounded-md font-semibold text-xs text-white uppercase tracking-widest hover:bg-gray-700 active:bg-gray-900 focus:outline-none focus:border-gray-900 focus:ring ring-gray-300 disabled:opacity-25 transition ease-in-out duration-150">
-                <i class="fas fa-arrow-left mr-2"></i> Back
+                <i class="fas fa-arrow-left mr-2"></i> {{ __('messages.back') }}
             </a>
         </div>
     </div>
 
     <!-- Progress Tracker -->
     <div class="bg-white dark:bg-gray-800 rounded-lg shadow p-6 border border-gray-200 dark:border-gray-700 mb-6">
-        <h3 class="text-lg font-medium text-gray-900 dark:text-white mb-4">Order Progress</h3>
+        <h3 class="text-lg font-medium text-gray-900 dark:text-white mb-4">{{ __('messages.order_progress') }}</h3>
         <div class="progress-tracker">
             <div class="progress-step {{ in_array($order->status, ['pending', 'processing', 'shipped', 'delivered']) ? 'completed' : '' }}">
                 <i class="fas fa-clock"></i>
-                <span class="text-xs mt-1">Pending</span>
+                <span class="text-xs mt-1">{{ __('messages.pending') }}</span>
             </div>
             <div class="progress-step {{ in_array($order->status, ['processing', 'shipped', 'delivered']) ? 'completed' : ($order->status == 'processing' ? 'current' : '') }}">
                 <i class="fas fa-cog"></i>
-                <span class="text-xs mt-1">Processing</span>
+                <span class="text-xs mt-1">{{ __('messages.processing') }}</span>
             </div>
             <div class="progress-step {{ in_array($order->status, ['shipped', 'delivered']) ? 'completed' : ($order->status == 'shipped' ? 'current' : '') }}">
                 <i class="fas fa-truck"></i>
-                <span class="text-xs mt-1">Shipped</span>
+                <span class="text-xs mt-1">{{ __('messages.shipped') }}</span>
             </div>
             <div class="progress-step {{ $order->status == 'delivered' ? 'completed current' : '' }}">
                 <i class="fas fa-check"></i>
-                <span class="text-xs mt-1">Delivered</span>
+                <span class="text-xs mt-1">{{ __('messages.delivered') }}</span>
             </div>
         </div>
     </div>
@@ -406,27 +406,27 @@
     <div id="bulkActionsPanel" class="bulk-actions-panel hidden">
         <h3 class="text-lg font-semibold mb-4">
             <i class="fas fa-tasks mr-2"></i>
-            Bulk Status Update
+            {{ __('messages.bulk_status_update') }}
         </h3>
         <div class="grid grid-cols-1 md:grid-cols-4 gap-4">
             <div>
-                <label class="block text-sm font-medium mb-2">Select Status</label>
+                <label class="block text-sm font-medium mb-2">{{ __('messages.select_status') }}</label>
                 <select id="bulkStatus" class="w-full px-3 py-2 border border-gray-300 rounded-md text-gray-900">
-                    <option value="">Choose Status</option>
-                    <option value="processing">Processing</option>
-                    <option value="shipped">Shipped</option>
-                    <option value="delivered">Delivered</option>
-                    <option value="cancelled">Cancelled</option>
+                    <option value="">{{ __('messages.choose_status') }}</option>
+                    <option value="processing">{{ __('messages.processing') }}</option>
+                    <option value="shipped">{{ __('messages.shipped') }}</option>
+                    <option value="delivered">{{ __('messages.delivered') }}</option>
+                    <option value="cancelled">{{ __('messages.cancelled') }}</option>
                 </select>
             </div>
             <div class="md:col-span-2">
-                <label class="block text-sm font-medium mb-2">Notes (Optional)</label>
-                <input type="text" id="bulkNotes" class="w-full px-3 py-2 border border-gray-300 rounded-md text-gray-900" placeholder="Add notes for status update">
+                <label class="block text-sm font-medium mb-2">{{ __('messages.notes_optional') }}</label>
+                <input type="text" id="bulkNotes" class="w-full px-3 py-2 border border-gray-300 rounded-md text-gray-900" placeholder="{{ __('messages.add_notes_for_status_update') }}">
             </div>
             <div class="flex items-end">
                 <button onclick="bulkUpdateStatus()" class="w-full px-4 py-2 bg-white text-purple-600 rounded-md font-semibold hover:bg-gray-100 transition">
                     <i class="fas fa-save mr-2"></i>
-                    Update Selected
+                    {{ __('messages.update_selected') }}
                 </button>
             </div>
         </div>
@@ -481,24 +481,24 @@
             @endif
 
             <div class="space-y-2">
-                <div class="flex justify-between">
-                    <span class="text-sm text-gray-500 dark:text-gray-400">Order Date:</span>
-                    <span class="text-sm text-gray-900 dark:text-white">{{ $order->created_at ? $order->created_at->format('M d, Y') : 'N/A' }}</span>
-                </div>
-                <div class="flex justify-between">
-                    <span class="text-sm text-gray-500 dark:text-gray-400">Payment Status:</span>
-                    <span class="text-sm text-gray-900 dark:text-white">{{ ucfirst($order->payment_status ?? 'pending') }}</span>
-                </div>
-                <div class="flex justify-between">
-                    <span class="text-sm text-gray-500 dark:text-gray-400">Payment Method:</span>
-                    <span class="text-sm text-gray-900 dark:text-white">{{ ucfirst($order->payment_method ?? 'N/A') }}</span>
-                </div>
+            <div class="flex justify-between">
+                <span class="text-sm text-gray-500 dark:text-gray-400">{{ __('messages.order_date') }}:</span>
+                <span class="text-sm text-gray-900 dark:text-white">{{ $order->created_at ? $order->created_at->format('M d, Y') : 'N/A' }}</span>
             </div>
+            <div class="flex justify-between">
+                <span class="text-sm text-gray-500 dark:text-gray-400">{{ __('messages.payment_status') }}:</span>
+                <span class="text-sm text-gray-900 dark:text-white">{{ ucfirst($order->payment_status ?? __('messages.pending')) }}</span>
+            </div>
+            <div class="flex justify-between">
+                <span class="text-sm text-gray-500 dark:text-gray-400">{{ __('messages.payment_method') }}:</span>
+                <span class="text-sm text-gray-900 dark:text-white">{{ ucfirst($order->payment_method ?? 'N/A') }}</span>
+            </div>
+        </div>
         </div>
 
         <!-- Customer Information -->
         <div class="bg-white dark:bg-gray-800 rounded-lg shadow p-6 border border-gray-200 dark:border-gray-700">
-            <h3 class="text-lg font-medium text-gray-900 dark:text-white mb-4">Customer Information</h3>
+            <h3 class="text-lg font-medium text-gray-900 dark:text-white mb-4">{{ __('messages.customer_information') }}</h3>
             <div class="space-y-2">
                 <div>
                     <span class="text-sm text-gray-500 dark:text-gray-400">Name:</span>
@@ -509,7 +509,7 @@
                     <p class="text-sm text-gray-900 dark:text-white">{{ $order->user->email ?? 'N/A' }}</p>
                 </div>
                 <div>
-                    <span class="text-sm text-gray-500 dark:text-gray-400">Phone:</span>
+                    <span class="text-sm text-gray-500 dark:text-gray-400">{{ __('messages.phone') }}:</span>
                     <p class="text-sm text-gray-900 dark:text-white">{{ $order->user->phone ?? 'N/A' }}</p>
                 </div>
             </div>
@@ -517,14 +517,14 @@
 
         <!-- Branch Information -->
         <div class="bg-white dark:bg-gray-800 rounded-lg shadow p-6 border border-gray-200 dark:border-gray-700">
-            <h3 class="text-lg font-medium text-gray-900 dark:text-white mb-4">Branch Information</h3>
+            <h3 class="text-lg font-medium text-gray-900 dark:text-white mb-4">{{ __('messages.branch_information') }}</h3>
             <div class="space-y-2">
                 <div>
-                    <span class="text-sm text-gray-500 dark:text-gray-400">Branch:</span>
+                    <span class="text-sm text-gray-500 dark:text-gray-400">{{ __('messages.branch') }}:</span>
                     <p class="text-sm text-gray-900 dark:text-white">{{ $order->branch->name ?? 'N/A' }}</p>
                 </div>
                 <div>
-                    <span class="text-sm text-gray-500 dark:text-gray-400">Address:</span>
+                    <span class="text-sm text-gray-500 dark:text-gray-400">{{ __('messages.address') }}:</span>
                     <p class="text-sm text-gray-900 dark:text-white">{{ $order->branch->address ?? 'N/A' }}</p>
                 </div>
                 <div>
@@ -543,7 +543,7 @@
             </div>
             <div class="ml-3">
                 <p class="text-sm text-yellow-700">
-                    <strong>Note:</strong> This order contains products from multiple vendors. You are only seeing your products below.
+                    <strong>{{ __('messages.note') }}:</strong> {{ __('messages.multiple_vendors_note') }}
                 </p>
             </div>
         </div>
@@ -554,7 +554,7 @@
     @if(isset($companyId) && $order->items->where('vendor_id', $companyId)->count() > 0)
     <div class="bg-white dark:bg-gray-800 rounded-lg shadow mb-6 border border-gray-200 dark:border-gray-700">
         <div class="px-6 py-4 border-b border-gray-200 dark:border-gray-700">
-            <h3 class="text-lg font-medium text-gray-900 dark:text-white">Update All Your Items</h3>
+            <h3 class="text-lg font-medium text-gray-900 dark:text-white">{{ __('messages.update_all_your_items') }}</h3>
         </div>
         <div class="p-6">
             <form action="{{ route('vendor.order-items.update-vendor-items-status', $order->id) }}" method="POST">
@@ -563,24 +563,24 @@
 
                 <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
                     <div>
-                        <label for="status" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Status</label>
+                        <label for="status" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">{{ __('messages.status') }}</label>
                         <select id="status" name="status" class="mt-1 block w-full pl-3 pr-10 py-2 text-base border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-white focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm rounded-md">
-                            <option value="pending" {{ isset($vendorStatus) && $vendorStatus->status == 'pending' ? 'selected' : '' }}>Pending</option>
-                            <option value="processing" {{ isset($vendorStatus) && $vendorStatus->status == 'processing' ? 'selected' : '' }}>Processing</option>
-                            <option value="shipped" {{ isset($vendorStatus) && $vendorStatus->status == 'shipped' ? 'selected' : '' }}>Shipped</option>
-                            <option value="delivered" {{ isset($vendorStatus) && $vendorStatus->status == 'delivered' ? 'selected' : '' }}>Delivered</option>
-                            <option value="cancelled" {{ isset($vendorStatus) && $vendorStatus->status == 'cancelled' ? 'selected' : '' }}>Cancelled</option>
+                            <option value="pending" {{ isset($vendorStatus) && $vendorStatus->status == 'pending' ? 'selected' : '' }}>{{ __('messages.pending') }}</option>
+                            <option value="processing" {{ isset($vendorStatus) && $vendorStatus->status == 'processing' ? 'selected' : '' }}>{{ __('messages.processing') }}</option>
+                            <option value="shipped" {{ isset($vendorStatus) && $vendorStatus->status == 'shipped' ? 'selected' : '' }}>{{ __('messages.shipped') }}</option>
+                            <option value="delivered" {{ isset($vendorStatus) && $vendorStatus->status == 'delivered' ? 'selected' : '' }}>{{ __('messages.delivered') }}</option>
+                            <option value="cancelled" {{ isset($vendorStatus) && $vendorStatus->status == 'cancelled' ? 'selected' : '' }}>{{ __('messages.cancelled') }}</option>
                         </select>
                     </div>
 
                     <div>
-                        <label for="notes" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Notes</label>
+                        <label for="notes" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">{{ __('messages.notes') }}</label>
                         <textarea id="notes" name="notes" rows="1" class="shadow-sm focus:ring-indigo-500 focus:border-indigo-500 block w-full sm:text-sm border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-white rounded-md"></textarea>
                     </div>
 
                     <div class="flex items-end">
                         <button type="submit" class="inline-flex items-center px-4 py-2 bg-indigo-600 border border-transparent rounded-md font-semibold text-xs text-white uppercase tracking-widest hover:bg-indigo-700 active:bg-indigo-900 focus:outline-none focus:border-indigo-900 focus:ring ring-indigo-300 disabled:opacity-25 transition ease-in-out duration-150">
-                            Update All Your Items
+                            {{ __('messages.update_all_your_items') }}
                         </button>
                     </div>
                 </div>
@@ -753,15 +753,15 @@
                                     <nav class="-mb-px flex space-x-8">
                                         <button class="tab-button" onclick="switchTab('specifications-{{ $item->id }}', this)">
                                             <i class="fas fa-list mr-2"></i>
-                                            Specifications
+                                            {{ __('messages.specifications') }}
                                         </button>
                                         <button class="tab-button" onclick="switchTab('vendor-notes-{{ $item->id }}', this)">
                                             <i class="fas fa-sticky-note mr-2"></i>
-                                            Vendor Notes
+                                            {{ __('messages.vendor_notes') }}
                                         </button>
                                         <button class="tab-button" onclick="switchTab('status-history-{{ $item->id }}', this)">
                                             <i class="fas fa-history mr-2"></i>
-                                            Status History
+                                            {{ __('messages.status_history') }}
                                         </button>
                                     </nav>
                                 </div>
@@ -778,13 +778,13 @@
                                             @endforeach
                                         </div>
                                     @else
-                                        <p class="text-gray-500 dark:text-gray-400">No specifications available.</p>
+                                        <p class="text-gray-500 dark:text-gray-400">{{ __('messages.no_specifications_available') }}</p>
                                     @endif
                                     
                                     <!-- Additional Product Info -->
                                     <div class="mt-4 grid grid-cols-2 md:grid-cols-4 gap-4 text-sm">
                                         <div>
-                                            <span class="font-medium text-gray-700 dark:text-gray-300">Category:</span>
+                                            <span class="font-medium text-gray-700 dark:text-gray-300">{{ __('messages.category') }}:</span>
                                             <p class="text-gray-600 dark:text-gray-400">{{ $item->product->category->name ?? 'N/A' }}</p>
                                         </div>
                                         <!-- <div>
@@ -792,7 +792,7 @@
                                             <p class="text-gray-600 dark:text-gray-400">{{ $item->product->stock ?? 'N/A' }}</p>
                                         </div> -->
                                         <div>
-                                            <span class="font-medium text-gray-700 dark:text-gray-300">Rating:</span>
+                                            <span class="font-medium text-gray-700 dark:text-gray-300">{{ __('messages.rating') }}:</span>
                                             <p class="text-gray-600 dark:text-gray-400">
                                                 @if($item->product->rating)
                                                     {{ number_format($item->product->rating, 1) }}/5
@@ -806,7 +806,7 @@
                                                         @endfor
                                                     </span>
                                                 @else
-                                                    No rating
+                                                    {{ __('messages.no_rating') }}
                                                 @endif
                                             </p>
                                         </div>
@@ -824,7 +824,7 @@
                                     
                                     @if($item->product && $item->product->description)
                                     <div class="mt-4">
-                                        <span class="font-medium text-gray-700 dark:text-gray-300">Description:</span>
+                                        <span class="font-medium text-gray-700 dark:text-gray-300">{{ __('messages.description') }}:</span>
                                         <p class="text-gray-600 dark:text-gray-400 mt-1">{{ $item->product->description }}</p>
                                     </div>
                                     @endif
@@ -833,22 +833,22 @@
                                 <div id="vendor-notes-{{ $item->id }}" class="tab-content">
                                     <div class="space-y-4">
                                         <div>
-                                            <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Add Vendor Note</label>
-                                            <textarea class="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-white rounded-md" rows="3" placeholder="Add notes about this item..."></textarea>
+                                            <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">{{ __('messages.add_vendor_note') }}</label>
+                                            <textarea class="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-white rounded-md" rows="3" placeholder="{{ __('messages.add_notes_placeholder') }}"></textarea>
                                             <button class="mt-2 px-4 py-2 bg-indigo-600 text-white rounded-md hover:bg-indigo-700 transition">
                                                 <i class="fas fa-save mr-2"></i>
-                                                Save Note
+                                                {{ __('messages.save_note') }}
                                             </button>
                                         </div>
                                         
                                         <!-- Existing Notes -->
                                         <div>
-                                            <h4 class="font-medium text-gray-700 dark:text-gray-300 mb-2">Previous Notes</h4>
+                                            <h4 class="font-medium text-gray-700 dark:text-gray-300 mb-2">{{ __('messages.previous_notes') }}</h4>
                                             <div class="space-y-2">
                                                 <!-- Sample note - replace with actual notes from database -->
                                                 <div class="p-3 bg-gray-100 dark:bg-gray-600 rounded-md">
-                                                    <p class="text-sm text-gray-700 dark:text-gray-300">Item processed and ready for shipping.</p>
-                                                    <p class="text-xs text-gray-500 dark:text-gray-400 mt-1">Added on {{ now()->format('M d, Y h:i A') }}</p>
+                                                    <p class="text-sm text-gray-700 dark:text-gray-300">{{ __('messages.item_processed_ready_shipping') }}</p>
+                                                    <p class="text-xs text-gray-500 dark:text-gray-400 mt-1">{{ __('messages.added_on') }} {{ now()->format('M d, Y h:i A') }}</p>
                                                 </div>
                                             </div>
                                         </div>
@@ -865,7 +865,7 @@
                                                 </div>
                                             </div>
                                             <div class="flex-1">
-                                                <p class="text-sm font-medium text-gray-900 dark:text-white">Status updated to: {{ ucfirst($item->status) }}</p>
+                                                <p class="text-sm font-medium text-gray-900 dark:text-white">{{ __('messages.status_updated_to') }}: {{ ucfirst($item->status) }}</p>
                                                 <p class="text-xs text-gray-500 dark:text-gray-400">{{ $item->updated_at ? $item->updated_at->format('M d, Y h:i A') : 'N/A' }}</p>
                                             </div>
                                         </div>
@@ -877,7 +877,7 @@
                                                 </div>
                                             </div>
                                             <div class="flex-1">
-                                                <p class="text-sm font-medium text-gray-900 dark:text-white">Item added to order</p>
+                                                <p class="text-sm font-medium text-gray-900 dark:text-white">{{ __('messages.item_added_to_order') }}</p>
                                                 <p class="text-xs text-gray-500 dark:text-gray-400">{{ $item->created_at ? $item->created_at->format('M d, Y h:i A') : 'N/A' }}</p>
                                             </div>
                                         </div>
@@ -889,7 +889,7 @@
                     @empty
                     <tr>
                         <td colspan="8" class="px-6 py-4 text-center text-sm text-gray-500 dark:text-gray-400">
-                            No items found
+                            {{ __('messages.no_items_found') }}
                         </td>
                     </tr>
                     @endforelse
@@ -898,9 +898,9 @@
                     <tr>
                         <td colspan="5" class="px-6 py-4 text-right text-sm font-medium text-gray-500 dark:text-gray-300">
                             @if(isset($allItemsBelongToVendor) && !$allItemsBelongToVendor)
-                                Your Subtotal:
+                                {{ __('messages.your_subtotal') }}:
                             @else
-                                Total:
+                                {{ __('messages.total') }}:
                             @endif
                         </td>
                         <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900 dark:text-white">
@@ -914,7 +914,7 @@
                     </tr>
                     @if(isset($allItemsBelongToVendor) && !$allItemsBelongToVendor)
                     <tr>
-                        <td colspan="5" class="px-6 py-4 text-right text-sm font-medium text-gray-500 dark:text-gray-300">Order Total (All Vendors):</td>
+                        <td colspan="5" class="px-6 py-4 text-right text-sm font-medium text-gray-500 dark:text-gray-300">{{ __('messages.order_total_all_vendors') }}:</td>
                         <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900 dark:text-white">${{ number_format($order->total, 2) }}</td>
                         <td colspan="2"></td>
                     </tr>
@@ -928,7 +928,7 @@
     @if(isset($vendorStatus) && isset($vendorStatusHistory))
     <div class="bg-white dark:bg-gray-800 rounded-lg shadow mb-6 border border-gray-200 dark:border-gray-700">
         <div class="px-6 py-4 border-b border-gray-200 dark:border-gray-700">
-            <h3 class="text-lg font-medium text-gray-900 dark:text-white">Your Status History</h3>
+            <h3 class="text-lg font-medium text-gray-900 dark:text-white">{{ __('messages.your_status_history') }}</h3>
         </div>
         <div class="p-6">
             @if($vendorStatusHistory->count() > 0)
@@ -936,11 +936,11 @@
                     <table class="min-w-full divide-y divide-gray-200 dark:divide-gray-700">
                         <thead class="bg-gray-50 dark:bg-gray-700">
                             <tr>
-                                <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">Date</th>
-                                <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">Status</th>
-                                <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">Previous Status</th>
-                                <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">Notes</th>
-                                <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">Updated By</th>
+                                <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">{{ __('messages.date') }}</th>
+                                <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">{{ __('messages.status') }}</th>
+                                <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">{{ __('messages.previous_status') }}</th>
+                                <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">{{ __('messages.notes') }}</th>
+                                <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">{{ __('messages.updated_by') }}</th>
                             </tr>
                         </thead>
                         <tbody class="bg-white dark:bg-gray-800 divide-y divide-gray-200 dark:divide-gray-700">
@@ -970,14 +970,14 @@
                                         {{ ucfirst($history->previous_status) }}
                                     </span>
                                     @else
-                                    <span class="text-gray-500 dark:text-gray-400">None</span>
+                                    <span class="text-gray-500 dark:text-gray-400">{{ __('messages.none') }}</span>
                                     @endif
                                 </td>
                                 <td class="px-6 py-4 text-sm text-gray-900 dark:text-white">
-                                    {{ $history->notes ?? 'No notes' }}
+                                    {{ $history->notes ?? __('messages.no_notes') }}
                                 </td>
                                 <td class="px-6 py-4 text-sm text-gray-900 dark:text-white">
-                                    {{ $history->updatedByUser->name ?? 'System' }}
+                                    {{ $history->updatedByUser->name ?? __('messages.system') }}
                                 </td>
                             </tr>
                             @endforeach
@@ -985,7 +985,7 @@
                     </table>
                 </div>
             @else
-                <p class="text-sm text-gray-700 dark:text-gray-300">No status history available.</p>
+                <p class="text-sm text-gray-700 dark:text-gray-300">{{ __('messages.no_status_history_available') }}</p>
             @endif
         </div>
     </div>
@@ -994,10 +994,10 @@
     <!-- Notes -->
     <div class="bg-white dark:bg-gray-800 rounded-lg shadow mb-6 border border-gray-200 dark:border-gray-700">
         <div class="px-6 py-4 border-b border-gray-200 dark:border-gray-700">
-            <h3 class="text-lg font-medium text-gray-900 dark:text-white">Order Notes</h3>
+            <h3 class="text-lg font-medium text-gray-900 dark:text-white">{{ __('messages.order_notes') }}</h3>
         </div>
         <div class="p-6">
-            <p class="text-sm text-gray-700 dark:text-gray-300">{{ $order->notes ?? 'No notes available.' }}</p>
+            <p class="text-sm text-gray-700 dark:text-gray-300">{{ $order->notes ?? __('messages.no_notes_available') }}</p>
         </div>
     </div>
 </div>

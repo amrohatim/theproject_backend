@@ -408,11 +408,11 @@ export default {
     const errorMessage = ref('')
 
     // Tab configuration
-    const tabs = [
-      { id: 'basic', label: 'Basic Info', icon: 'fas fa-box' },
-      { id: 'colors', label: 'Colors & Images', icon: 'fas fa-palette' },
-      { id: 'specifications', label: 'Specifications', icon: 'fas fa-file-text' }
-    ]
+    const tabs = computed(() => [
+      { id: 'basic', label: $t('basic_info'), icon: 'fas fa-box' },
+      { id: 'colors', label: $t('colors_images'), icon: 'fas fa-palette' },
+      { id: 'specifications', label: $t('specifications'), icon: 'fas fa-file-text' }
+    ])
 
     // Computed properties
     const isRTL = computed(() => {

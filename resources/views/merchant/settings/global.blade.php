@@ -4,12 +4,12 @@
 @section('header', 'Global Settings')
 
 @section('content')
-<div class="min-h-screen bg-gradient-to-br from-slate-50 to-slate-100 p-6">
+<div class="min-h-screen bg-gradient-to-br from-slate-50 to-slate-100 p-6 global-settings-container">
     <div class="max-w-6xl mx-auto space-y-8">
         <!-- Header -->
         <div class="text-center space-y-2">
-            <h1 class="text-4xl font-bold text-slate-900">Global Settings</h1>
-            <p class="text-slate-600">Manage your business information and preferences</p>
+            <h1 class="text-4xl font-bold text-slate-900">{{ __('merchant.global_settings_title') }}</h1>
+            <p class="text-slate-600">{{ __('merchant.global_settings_subtitle') }}</p>
         </div>
 
         <!-- Success Alert -->
@@ -26,9 +26,9 @@
                     <div class="w-8 h-8 bg-blue-100 rounded-lg flex items-center justify-center">
                         <i class="fas fa-building text-blue-600 text-sm"></i>
                     </div>
-                    Business Information
+                    {{ __('merchant.business_information') }}
                 </h2>
-                <p class="text-gray-600 text-sm mt-1">Update your business details and settings</p>
+                <p class="text-gray-600 text-sm mt-1">{{ __('merchant.business_information_subtitle') }}</p>
             </div>
             <div class="p-8 space-y-6">
 
@@ -41,7 +41,7 @@
                         <div class="space-y-2">
                             <label for="business_name" class="text-slate-700 font-medium flex items-center gap-2">
                                 <i class="fas fa-building w-4 h-4"></i>
-                                Business Name *
+                                {{ __('merchant.business_name') }} *
                             </label>
                             <input type="text"
                                    class="w-full px-4 py-3 border border-slate-300 rounded-lg focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20 transition-all @error('business_name') border-red-500 @enderror"
@@ -58,19 +58,19 @@
                         <div class="space-y-2">
                             <label for="business_type" class="text-slate-700 font-medium flex items-center gap-2">
                                 <i class="fas fa-tag w-4 h-4"></i>
-                                Business Type
+                                {{ __('merchant.business_type') }}
                             </label>
                             <select class="w-full px-4 py-3 border border-slate-300 rounded-lg focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20 transition-all @error('business_type') border-red-500 @enderror"
                                     id="business_type"
                                     name="business_type">
-                                <option value="">Select Business Type</option>
-                                <option value="retail" {{ old('business_type', $merchant->business_type ?? '') == 'retail' ? 'selected' : '' }}>Retail</option>
-                                <option value="restaurant" {{ old('business_type', $merchant->business_type ?? '') == 'restaurant' ? 'selected' : '' }}>Restaurant</option>
-                                <option value="services" {{ old('business_type', $merchant->business_type ?? '') == 'services' ? 'selected' : '' }}>Services</option>
-                                <option value="fashion" {{ old('business_type', $merchant->business_type ?? '') == 'fashion' ? 'selected' : '' }}>Fashion</option>
-                                <option value="electronics" {{ old('business_type', $merchant->business_type ?? '') == 'electronics' ? 'selected' : '' }}>Electronics</option>
-                                <option value="health" {{ old('business_type', $merchant->business_type ?? '') == 'health' ? 'selected' : '' }}>Health & Beauty</option>
-                                <option value="other" {{ old('business_type', $merchant->business_type ?? '') == 'other' ? 'selected' : '' }}>Other</option>
+                                <option value="">{{ __('merchant.select_business_type') }}</option>
+                                <option value="retail" {{ old('business_type', $merchant->business_type ?? '') == 'retail' ? 'selected' : '' }}>{{ __('merchant.retail') }}</option>
+                                <option value="restaurant" {{ old('business_type', $merchant->business_type ?? '') == 'restaurant' ? 'selected' : '' }}>{{ __('merchant.restaurant') }}</option>
+                                <option value="services" {{ old('business_type', $merchant->business_type ?? '') == 'services' ? 'selected' : '' }}>{{ __('merchant.services') }}</option>
+                                <option value="fashion" {{ old('business_type', $merchant->business_type ?? '') == 'fashion' ? 'selected' : '' }}>{{ __('merchant.fashion') }}</option>
+                                <option value="electronics" {{ old('business_type', $merchant->business_type ?? '') == 'electronics' ? 'selected' : '' }}>{{ __('merchant.electronics') }}</option>
+                                <option value="health" {{ old('business_type', $merchant->business_type ?? '') == 'health' ? 'selected' : '' }}>{{ __('merchant.health_beauty') }}</option>
+                                <option value="other" {{ old('business_type', $merchant->business_type ?? '') == 'other' ? 'selected' : '' }}>{{ __('merchant.other') }}</option>
                             </select>
                             @error('business_type')
                                 <div class="text-red-600 text-sm">{{ $message }}</div>
@@ -81,7 +81,7 @@
                         <div class="space-y-2">
                             <label for="website" class="text-slate-700 font-medium flex items-center gap-2">
                                 <i class="fas fa-globe w-4 h-4"></i>
-                                Website URL
+                                {{ __('merchant.website_url') }}
                             </label>
                             <input type="url"
                                    class="w-full px-4 py-3 border border-slate-300 rounded-lg focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20 transition-all @error('website') border-red-500 @enderror"
@@ -98,7 +98,7 @@
                         <div class="space-y-2">
                             <label for="city" class="text-slate-700 font-medium flex items-center gap-2">
                                 <i class="fas fa-map-pin w-4 h-4"></i>
-                                City
+                                {{ __('merchant.city') }}
                             </label>
                             <input type="text"
                                    class="w-full px-4 py-3 border border-slate-300 rounded-lg focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20 transition-all @error('city') border-red-500 @enderror"
@@ -115,19 +115,19 @@
                         <div class="space-y-2">
                             <label for="emirate" class="text-slate-700 font-medium flex items-center gap-2">
                                 <i class="fas fa-map-pin w-4 h-4"></i>
-                                Emirate
+                                {{ __('merchant.emirate') }}
                             </label>
                             <select class="w-full px-4 py-3 border border-slate-300 rounded-lg focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20 transition-all @error('emirate') border-red-500 @enderror"
                                     id="emirate"
                                     name="emirate">
-                                <option value="">Select Emirate</option>
-                                <option value="Abu Dhabi" {{ old('emirate', $merchant->emirate ?? '') == 'Abu Dhabi' ? 'selected' : '' }}>Abu Dhabi</option>
-                                <option value="Dubai" {{ old('emirate', $merchant->emirate ?? '') == 'Dubai' ? 'selected' : '' }}>Dubai</option>
-                                <option value="Sharjah" {{ old('emirate', $merchant->emirate ?? '') == 'Sharjah' ? 'selected' : '' }}>Sharjah</option>
-                                <option value="Ajman" {{ old('emirate', $merchant->emirate ?? '') == 'Ajman' ? 'selected' : '' }}>Ajman</option>
-                                <option value="Umm Al Quwain" {{ old('emirate', $merchant->emirate ?? '') == 'Umm Al Quwain' ? 'selected' : '' }}>Umm Al Quwain</option>
-                                <option value="Ras Al Khaimah" {{ old('emirate', $merchant->emirate ?? '') == 'Ras Al Khaimah' ? 'selected' : '' }}>Ras Al Khaimah</option>
-                                <option value="Fujairah" {{ old('emirate', $merchant->emirate ?? '') == 'Fujairah' ? 'selected' : '' }}>Fujairah</option>
+                                <option value="">{{ __('merchant.select_emirate') }}</option>
+                                <option value="Abu Dhabi" {{ old('emirate', $merchant->emirate ?? '') == 'Abu Dhabi' ? 'selected' : '' }}>{{ __('merchant.abu_dhabi') }}</option>
+                                 <option value="Dubai" {{ old('emirate', $merchant->emirate ?? '') == 'Dubai' ? 'selected' : '' }}>{{ __('merchant.dubai') }}</option>
+                                 <option value="Sharjah" {{ old('emirate', $merchant->emirate ?? '') == 'Sharjah' ? 'selected' : '' }}>{{ __('merchant.sharjah') }}</option>
+                                 <option value="Ajman" {{ old('emirate', $merchant->emirate ?? '') == 'Ajman' ? 'selected' : '' }}>{{ __('merchant.ajman') }}</option>
+                                 <option value="Umm Al Quwain" {{ old('emirate', $merchant->emirate ?? '') == 'Umm Al Quwain' ? 'selected' : '' }}>{{ __('merchant.umm_al_quwain') }}</option>
+                                 <option value="Ras Al Khaimah" {{ old('emirate', $merchant->emirate ?? '') == 'Ras Al Khaimah' ? 'selected' : '' }}>{{ __('merchant.ras_al_khaimah') }}</option>
+                                 <option value="Fujairah" {{ old('emirate', $merchant->emirate ?? '') == 'Fujairah' ? 'selected' : '' }}>{{ __('merchant.fujairah') }}</option>
                             </select>
                             @error('emirate')
                                 <div class="text-red-600 text-sm">{{ $message }}</div>
@@ -138,7 +138,7 @@
                         <div class="space-y-2">
                             <label for="address" class="text-slate-700 font-medium flex items-center gap-2">
                                 <i class="fas fa-map-pin w-4 h-4"></i>
-                                Business Address
+                                {{ __('merchant.business_address') }}
                             </label>
                             <input type="text"
                                    class="w-full px-4 py-3 border border-slate-300 rounded-lg focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20 transition-all @error('address') border-red-500 @enderror"
@@ -156,7 +156,7 @@
                     <div class="space-y-4">
                         <label class="text-slate-700 font-medium flex items-center gap-2">
                             <i class="fas fa-image w-4 h-4"></i>
-                            Business Logo
+                            {{ __('merchant.business_logo') }}
                         </label>
 
                         <div class="flex items-center gap-6">
@@ -183,12 +183,12 @@
                                     <i class="fas fa-upload text-slate-400 text-2xl mb-2 block"></i>
                                     <p class="text-sm text-slate-600" id="upload-text">
                                         @if($merchant && $merchant->getRawOriginal('logo'))
-                                            Click to change logo
+                                            {{ __('merchant.click_to_change_logo') }}
                                         @else
-                                            Click to upload logo
+                                            {{ __('merchant.click_to_upload_logo') }}
                                         @endif
                                     </p>
-                                    <p class="text-xs text-slate-500 mt-1">Max size: 2MB. Formats: JPEG, PNG, JPG, GIF</p>
+                                    <p class="text-xs text-slate-500 mt-1">{{ __('merchant.logo_requirements') }}</p>
                                 </div>
 
                                 <input type="file"
@@ -208,12 +208,12 @@
                     <div class="space-y-2">
                         <label for="description" class="text-slate-700 font-medium flex items-center gap-2">
                             <i class="fas fa-file-text w-4 h-4"></i>
-                            Business Description
+                            {{ __('merchant.business_description') }}
                         </label>
                         <textarea class="w-full px-4 py-3 border border-slate-300 rounded-lg focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20 transition-all min-h-[100px] @error('description') border-red-500 @enderror"
                                   id="description"
                                   name="description"
-                                  placeholder="Describe your business, products, and services...">{{ old('description', $merchant->description ?? '') }}</textarea>
+                                  placeholder="{{ __('merchant.business_description_placeholder') }}">{{ old('description', $merchant->description ?? '') }}</textarea>
                         @error('description')
                             <div class="text-red-600 text-sm">{{ $message }}</div>
                         @enderror
@@ -222,7 +222,7 @@
                     <div class="flex justify-end">
                         <button type="submit" class="inline-flex items-center mt-5 px-6 py-2.5 bg-blue-600 hover:bg-blue-700 text-white font-medium rounded-lg transition-colors duration-200 shadow-sm">
                             <i class="fas fa-save w-4 h-4 mr-2"></i>
-                            Save Changes
+                            {{ __('merchant.save_changes') }}
                         </button>
                     </div>
                 </form>
@@ -236,9 +236,9 @@
                     <div class="w-8 h-8 bg-emerald-100 rounded-lg flex items-center justify-center">
                         <i class="fas fa-truck text-emerald-600 text-sm"></i>
                     </div>
-                    Delivery Settings
+                    {{ __('merchant.delivery_settings') }}
                 </h2>
-                <p class="text-gray-600 text-sm mt-1">Configure your delivery options and fees</p>
+                <p class="text-gray-600 text-sm mt-1">{{ __('merchant.delivery_settings_subtitle') }}</p>
             </div>
             <div class="p-8 space-y-6">
                 <form action="{{ route('merchant.settings.global.update') }}" method="POST">
@@ -255,7 +255,7 @@
                                class="w-4 h-4 text-emerald-600 bg-gray-100 border-gray-300 rounded focus:ring-emerald-500 focus:ring-2">
                         <label for="delivery_capability" class="text-slate-700 font-medium flex items-center gap-2">
                             <i class="fas fa-truck w-4 h-4"></i>
-                            We offer delivery services
+                            {{ __('merchant.we_offer_delivery') }}
                         </label>
                     </div>
 
@@ -264,7 +264,7 @@
                         <div class="space-y-4 p-6 bg-slate-50 rounded-lg border border-slate-200">
                             <h4 class="text-lg font-semibold text-slate-800 flex items-center gap-2">
                                 <i class="fas fa-dollar-sign w-5 h-5"></i>
-                                Delivery Fees by Emirate (AED)
+                                {{ __('merchant.delivery_fees_by_emirate') }}
                             </h4>
                             <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
                                 <!-- Dubai -->
@@ -378,7 +378,7 @@
                     <div class="flex justify-end">
                         <button type="submit" class="inline-flex items-center mt-5 px-6 py-2.5 bg-emerald-600 hover:bg-emerald-700 text-white font-medium rounded-lg transition-colors duration-200 shadow-sm">
                             <i class="fas fa-save w-4 h-4 mr-2"></i>
-                            Save Delivery Settings
+                            {{ __('merchant.save_delivery_settings') }}
                         </button>
                     </div>
                 </form>
@@ -392,29 +392,29 @@
                     <div class="w-8 h-8 bg-indigo-100 rounded-lg flex items-center justify-center">
                         <i class="fas fa-chart-line text-indigo-600 text-sm"></i>
                     </div>
-                    Business Status
+                    {{ __('merchant.business_status') }}
                 </h2>
-                <p class="text-gray-600 text-sm mt-1">Your current business verification and status information</p>
+                <p class="text-gray-600 text-sm mt-1">{{ __('merchant.business_status_subtitle') }}</p>
             </div>
             <div class="p-8">
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
                     <div class="space-y-4">
                         <div class="flex justify-between items-center py-3 border-b border-slate-200">
-                            <span class="text-slate-600">Business Status:</span>
+                            <span class="text-slate-600">{{ __('merchant.business_status') }}:</span>
                             @if($merchant->is_verified)
                                 <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-emerald-500/10 text-emerald-600 border border-emerald-500/20">
                                     <i class="fas fa-check-circle w-3 h-3 mr-1"></i>
-                                    Verified
+                                    {{ __('merchant.verified') }}
                                 </span>
                             @else
                                 <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-amber-500/10 text-amber-600 border border-amber-500/20">
                                     <i class="fas fa-clock w-3 h-3 mr-1"></i>
-                                    Pending Verification
+                                    {{ __('merchant.pending_verification') }}
                                 </span>
                             @endif
                         </div>
                         <div class="flex justify-between items-center py-3 border-b border-slate-200">
-                            <span class="text-slate-600">Registration Date:</span>
+                            <span class="text-slate-600">{{ __('merchant.registration_date') }}:</span>
                             <span class="font-medium text-slate-800">
                                 {{ $merchant->created_at->format('M d, Y') }}
                             </span>
@@ -422,21 +422,21 @@
                     </div>
                     <div class="space-y-4">
                         <div class="flex justify-between items-center py-3 border-b border-slate-200">
-                            <span class="text-slate-600">Delivery Service:</span>
+                            <span class="text-slate-600">{{ __('merchant.delivery_service') }}:</span>
                             @if($merchant->delivery_capability)
                                 <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-emerald-500/10 text-emerald-600 border border-emerald-500/20">
                                     <i class="fas fa-check-circle w-3 h-3 mr-1"></i>
-                                    Enabled
+                                    {{ __('merchant.enabled') }}
                                 </span>
                             @else
                                 <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-slate-500/10 text-slate-600 border border-slate-500/20">
                                     <i class="fas fa-times w-3 h-3 mr-1"></i>
-                                    Disabled
+                                    {{ __('merchant.disabled') }}
                                 </span>
                             @endif
                         </div>
                         <div class="flex justify-between items-center py-3">
-                            <span class="text-slate-600">Last Updated:</span>
+                            <span class="text-slate-600">{{ __('merchant.last_updated') }}:</span>
                             <span class="font-medium text-slate-800">
                                 {{ $merchant->updated_at->format('M d, Y') }}
                             </span>
@@ -457,9 +457,9 @@
                     <div class="w-8 h-8 bg-purple-100 rounded-lg flex items-center justify-center">
                         <i class="fas fa-shield-alt text-purple-600 text-sm"></i>
                     </div>
-                    License Management
+                    {{ __('merchant.license_management') }}
                 </h2>
-                <p class="text-gray-600 text-sm mt-1">Manage your business license and verification status</p>
+                <p class="text-gray-600 text-sm mt-1">{{ __('merchant.license_management_subtitle') }}</p>
             </div>
             <div class="p-8">
                 <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
@@ -467,7 +467,7 @@
                     <div class="space-y-6">
                         <h4 class="text-lg font-semibold text-slate-800 flex items-center gap-2">
                             <i class="fas fa-shield-alt w-5 h-5"></i>
-                            Current License Status
+                            {{ __('merchant.current_license_status') }}
                         </h4>
 
                         <div class="space-y-4">
@@ -476,35 +476,35 @@
                             @endphp
 
                             <div class="flex justify-between items-center py-3 border-b border-slate-200">
-                                <span class="text-slate-600">License Status:</span>
+                                <span class="text-slate-600">{{ __('merchant.license_status') }}:</span>
                                 @if($licenseStatus['text'] === 'Approved')
                                     <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-emerald-500/10 text-emerald-600 border border-emerald-500/20">
                                         <i class="fas fa-check-circle w-3 h-3 mr-1"></i>
-                                        Approved
+                                        {{ __('merchant.approved') }}
                                     </span>
                                 @elseif($licenseStatus['text'] === 'Rejected')
                                     <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-red-500/10 text-red-600 border border-red-500/20">
                                         <i class="fas fa-times w-3 h-3 mr-1"></i>
-                                        Rejected
+                                        {{ __('merchant.rejected') }}
                                     </span>
                                 @else
                                     <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-amber-500/10 text-amber-600 border border-amber-500/20">
                                         <i class="fas fa-clock w-3 h-3 mr-1"></i>
-                                        Under Review
+                                        {{ __('merchant.under_review') }}
                                     </span>
                                 @endif
                             </div>
 
                             @if($merchant->license_expiry_date)
                                 <div class="flex justify-between items-center py-3 border-b border-slate-200">
-                                    <span class="text-slate-600">Expiry Date:</span>
+                                    <span class="text-slate-600">{{ __('merchant.expiry_date') }}:</span>
                                     <div class="text-right">
                                         <div class="font-medium text-slate-800">
                                             {{ $merchant->license_expiry_date->format('M d, Y') }}
                                         </div>
                                         @if($merchant->license_expiry_date->isFuture())
                                             <div class="text-xs text-slate-500">
-                                                {{ $merchant->daysUntilLicenseExpiration() }} days remaining
+                                                {{ __('merchant.days_remaining', ['days' => $merchant->daysUntilLicenseExpiration()]) }}
                                             </div>
                                         @endif
                                     </div>
@@ -513,11 +513,11 @@
 
                             @if($merchant->license_file)
                                 <div class="flex justify-between items-center py-3 border-b border-slate-200">
-                                    <span class="text-slate-600">Current License:</span>
+                                    <span class="text-slate-600">{{ __('merchant.current_license') }}:</span>
                                     <a href="{{ $merchant->license_file_url }}" target="_blank"
                                        class="inline-flex items-center px-3 py-1 text-sm text-blue-600 border border-blue-200 rounded-md hover:bg-blue-50 transition-colors">
                                         <i class="fas fa-file-text w-3 h-3 mr-1"></i>
-                                        View License
+                                        {{ __('merchant.view_license') }}
                                     </a>
                                 </div>
                             @endif
@@ -527,7 +527,7 @@
                             <div class="bg-red-50 border border-red-200 text-red-800 p-4 rounded-lg">
                                 <div class="flex items-center mb-2">
                                     <i class="fas fa-exclamation-triangle w-4 h-4 mr-2"></i>
-                                    <strong>Rejection Reason:</strong>
+                                    <strong>{{ __('merchant.rejection_reason') }}:</strong>
                                 </div>
                                 <p class="text-sm">{{ $merchant->license_rejection_reason }}</p>
                             </div>
@@ -538,7 +538,7 @@
                     <div class="space-y-6">
                         <h4 class="text-lg font-semibold text-slate-800 flex items-center gap-2">
                             <i class="fas fa-upload w-5 h-5"></i>
-                            Upload New License
+                            {{ __('merchant.upload_new_license') }}
                         </h4>
 
                         <form action="{{ route('merchant.settings.license.update') }}" method="POST" enctype="multipart/form-data" id="license-form">
@@ -550,8 +550,8 @@
                                  onclick="document.getElementById('license_file').click()">
                                 <div id="upload-content">
                                     <i class="fas fa-upload text-slate-400 text-3xl mb-4"></i>
-                                    <p class="font-medium text-slate-800 mb-2">Click to select your license file</p>
-                                    <p class="text-sm text-slate-600">PDF files only, max 5MB</p>
+                                    <p class="font-medium text-slate-800 mb-2">{{ __('merchant.click_to_select_license') }}</p>
+                                    <p class="text-sm text-slate-600">{{ __('merchant.pdf_files_only') }}</p>
                                 </div>
                                 <div id="file-selected" class="hidden">
                                     <i class="fas fa-file-text text-emerald-500 text-3xl mb-4"></i>
@@ -559,7 +559,7 @@
                                     <p class="text-sm text-slate-600" id="file-size"></p>
                                     <p class="text-xs text-emerald-600 flex items-center justify-center gap-1 mt-2">
                                         <i class="fas fa-check-circle w-3 h-3"></i>
-                                        Ready to upload
+                                        {{ __('merchant.ready_to_upload') }}
                                     </p>
                                 </div>
                             </div>
@@ -572,7 +572,7 @@
                             <div class="space-y-2">
                                 <label for="license_expiry_date" class="text-slate-700 font-medium flex items-center gap-2">
                                     <i class="fas fa-calendar w-4 h-4"></i>
-                                    License Expiry Date *
+                                    {{ __('merchant.license_expiry_date') }} *
                                 </label>
                                 <input type="date"
                                        class="w-full px-4 py-3 border border-slate-300 rounded-lg focus:border-purple-500 focus:ring-2 focus:ring-purple-500/20 transition-all @error('license_expiry_date') border-red-500 @enderror"
@@ -591,7 +591,7 @@
                                     id="license-submit-btn"
                                     disabled>
                                 <i class="fas fa-upload w-4 h-4 mr-2"></i>
-                                Upload License
+                                {{ __('merchant.upload_license') }}
                             </button>
                         </form>
                     </div>
@@ -601,6 +601,144 @@
         @endif
     </div>
 </div>
+
+<style>
+/* RTL Support for Global Settings */
+.global-settings-container {
+    direction: ltr;
+}
+
+[dir="rtl"] .global-settings-container {
+    direction: rtl;
+}
+
+/* Form Elements RTL */
+[dir="rtl"] .global-settings-container input,
+[dir="rtl"] .global-settings-container select,
+[dir="rtl"] .global-settings-container textarea {
+    text-align: right;
+}
+
+[dir="rtl"] .global-settings-container input[type="email"],
+[dir="rtl"] .global-settings-container input[type="url"] {
+    text-align: left;
+    direction: ltr;
+}
+
+/* Labels and Text RTL */
+[dir="rtl"] .global-settings-container label {
+    text-align: right;
+}
+
+[dir="rtl"] .global-settings-container .flex.items-center.gap-2 {
+    flex-direction: row-reverse;
+}
+
+/* Button RTL */
+[dir="rtl"] .global-settings-container button .fas {
+    margin-left: 0.5rem;
+    margin-right: 0;
+}
+
+[dir="rtl"] .global-settings-container .inline-flex.items-center {
+    flex-direction: row-reverse;
+}
+
+/* Grid and Layout RTL */
+[dir="rtl"] .global-settings-container .grid {
+    direction: rtl;
+}
+
+[dir="rtl"] .global-settings-container .space-y-6 > * {
+    text-align: right;
+}
+
+/* Card Headers RTL */
+[dir="rtl"] .global-settings-container .bg-gradient-to-r {
+    text-align: right;
+}
+
+[dir="rtl"] .global-settings-container .bg-gradient-to-r h2 {
+    text-align: right;
+}
+
+/* Status and Badge RTL */
+[dir="rtl"] .global-settings-container .flex.justify-between {
+    flex-direction: row-reverse;
+}
+
+[dir="rtl"] .global-settings-container .text-right {
+    text-align: left;
+}
+
+[dir="rtl"] .global-settings-container .text-left {
+    text-align: right;
+}
+
+/* Upload Areas RTL */
+[dir="rtl"] .global-settings-container .border-dashed {
+    text-align: center;
+}
+
+[dir="rtl"] .global-settings-container .border-dashed p {
+    text-align: center;
+}
+
+/* Delivery Settings Grid RTL */
+[dir="rtl"] .global-settings-container .delivery-grid {
+    direction: rtl;
+}
+
+[dir="rtl"] .global-settings-container .delivery-grid label {
+    text-align: right;
+}
+
+/* Toggle Switch RTL */
+[dir="rtl"] .global-settings-container .toggle-container {
+    flex-direction: row-reverse;
+}
+
+/* File Upload RTL */
+[dir="rtl"] .global-settings-container #file-selected {
+    text-align: center;
+}
+
+/* Responsive RTL */
+@media (max-width: 768px) {
+    [dir="rtl"] .global-settings-container .grid-cols-1 {
+        direction: rtl;
+    }
+    
+    [dir="rtl"] .global-settings-container .md\:grid-cols-2 {
+        direction: rtl;
+    }
+    
+    [dir="rtl"] .global-settings-container .lg\:grid-cols-3 {
+        direction: rtl;
+    }
+}
+
+/* Icon RTL Adjustments */
+[dir="rtl"] .global-settings-container .fas {
+    margin-left: 0.5rem;
+    margin-right: 0;
+}
+
+[dir="rtl"] .global-settings-container .w-4.h-4.mr-2 {
+    margin-left: 0.5rem;
+    margin-right: 0;
+}
+
+[dir="rtl"] .global-settings-container .w-4.h-4.mr-1 {
+    margin-left: 0.25rem;
+    margin-right: 0;
+}
+
+[dir="rtl"] .global-settings-container .w-3.h-3.mr-1 {
+    margin-left: 0.25rem;
+    margin-right: 0;
+}
+</style>
 
 <script>
 // Global function to reset logo upload state

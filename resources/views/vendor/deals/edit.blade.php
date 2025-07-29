@@ -1,7 +1,7 @@
 @extends('layouts.dashboard')
 
-@section('title', 'Edit Deal')
-@section('page-title', 'Edit Deal')
+@section('title', __('messages.edit_deal'))
+@section('page-title', __('messages.edit_deal'))
 
 @section('styles')
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
@@ -41,59 +41,59 @@
 
             <!-- Basic Information -->
             <div class="form-section">
-                <h3 class="form-section-title text-xl font-bold text-gray-800 dark:text-white">Deal Information</h3>
+                <h3 class="form-section-title text-xl font-bold text-gray-800 dark:text-white {{ app()->getLocale() == 'ar' ? 'text-right' : 'text-left' }}">{{ __('messages.deal_information') }}</h3>
 
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                     <!-- Title -->
                     <div>
-                        <label for="title" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Title <span class="text-red-500">*</span></label>
-                        <input type="text" name="title" id="title" value="{{ old('title', $deal->title) }}" class="form-input w-full" required>
+                        <label for="title" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1 {{ app()->getLocale() == 'ar' ? 'text-right' : 'text-left' }}">{{ __('messages.title') }} <span class="text-red-500">*</span></label>
+                        <input type="text" name="title" id="title" value="{{ old('title', $deal->title) }}" class="form-input w-full {{ app()->getLocale() == 'ar' ? 'text-right' : 'text-left' }}" placeholder="{{ __('messages.enter_deal_title') }}" required>
                         @error('title')
-                            <p class="text-red-500 text-sm mt-1">{{ $message }}</p>
+                            <p class="text-red-500 text-sm mt-1 {{ app()->getLocale() == 'ar' ? 'text-right' : 'text-left' }}">{{ $message }}</p>
                         @enderror
                     </div>
 
                     <!-- Discount Percentage -->
                     <div>
-                        <label for="discount_percentage" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Discount Percentage <span class="text-red-500">*</span></label>
+                        <label for="discount_percentage" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1 {{ app()->getLocale() == 'ar' ? 'text-right' : 'text-left' }}">{{ __('messages.discount_percentage') }} <span class="text-red-500">*</span></label>
                         <div class="relative">
-                            <input type="number" name="discount_percentage" id="discount_percentage" value="{{ old('discount_percentage', $deal->discount_percentage) }}" min="1" max="100" class="form-input w-full" required>
-                            <div class="absolute inset-y-0 right-0 flex items-center pr-3 pointer-events-none">
+                            <input type="number" name="discount_percentage" id="discount_percentage" value="{{ old('discount_percentage', $deal->discount_percentage) }}" min="1" max="100" class="form-input w-full {{ app()->getLocale() == 'ar' ? 'text-right' : 'text-left' }}" placeholder="{{ __('messages.enter_discount_percentage') }}" required>
+                            <div class="absolute inset-y-0 {{ app()->getLocale() == 'ar' ? 'left-0 pl-3' : 'right-0 pr-3' }} flex items-center pointer-events-none">
                                 <span class="text-gray-500">%</span>
                             </div>
                         </div>
                         @error('discount_percentage')
-                            <p class="text-red-500 text-sm mt-1">{{ $message }}</p>
+                            <p class="text-red-500 text-sm mt-1 {{ app()->getLocale() == 'ar' ? 'text-right' : 'text-left' }}">{{ $message }}</p>
                         @enderror
                     </div>
                 </div>
 
                 <!-- Description -->
                 <div class="mt-4">
-                    <label for="description" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Description</label>
-                    <textarea name="description" id="description" rows="3" class="form-textarea w-full">{{ old('description', $deal->description) }}</textarea>
+                    <label for="description" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1 {{ app()->getLocale() == 'ar' ? 'text-right' : 'text-left' }}">{{ __('messages.description') }}</label>
+                    <textarea name="description" id="description" rows="3" class="form-textarea w-full {{ app()->getLocale() == 'ar' ? 'text-right' : 'text-left' }}" placeholder="{{ __('messages.enter_deal_description') }}">{{ old('description', $deal->description) }}</textarea>
                     @error('description')
-                        <p class="text-red-500 text-sm mt-1">{{ $message }}</p>
+                        <p class="text-red-500 text-sm mt-1 {{ app()->getLocale() == 'ar' ? 'text-right' : 'text-left' }}">{{ $message }}</p>
                     @enderror
                 </div>
 
                 <!-- Promotional Message -->
                 <div class="mt-4">
-                    <label for="promotional_message" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
-                        Promotional Message
-                        <span class="ml-1 text-gray-500" title="A short, eye-catching message to display on the deal. This will appear as a button in the mobile app.">
-                            <i class="fas fa-info-circle"></i>
+                    <label for="promotional_message" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1 {{ app()->getLocale() == 'ar' ? 'text-right' : 'text-left' }}">
+                        {{ __('messages.promotional_message') }}
+                        <span class="{{ app()->getLocale() == 'ar' ? 'mr-1' : 'ml-1' }} text-gray-500 text-xs" title="{{ __('messages.promotional_message_help') }}">
+                            ({{ __('messages.optional') }})
                         </span>
                     </label>
                     <div class="relative">
                         <input type="text" name="promotional_message" id="promotional_message" value="{{ old('promotional_message', $deal->promotional_message) }}"
-                               class="form-input w-full" maxlength="50" placeholder="e.g., 'Limited Time Offer!' or 'Buy Now!'">
-                        <div class="absolute right-2 bottom-2 text-xs text-gray-500">
+                               class="form-input w-full {{ app()->getLocale() == 'ar' ? 'text-right' : 'text-left' }}" maxlength="50" placeholder="{{ __('messages.promotional_message_placeholder') }}">
+                        <div class="absolute {{ app()->getLocale() == 'ar' ? 'left-2' : 'right-2' }} bottom-2 text-xs text-gray-500">
                             <span id="char-count">{{ strlen(old('promotional_message', $deal->promotional_message ?? '')) }}</span>/50
                         </div>
                     </div>
                     @error('promotional_message')
-                        <p class="text-red-500 text-sm mt-1">{{ $message }}</p>
+                        <p class="text-red-500 text-sm mt-1 {{ app()->getLocale() == 'ar' ? 'text-right' : 'text-left' }}">{{ $message }}</p>
                     @enderror
                 </div>
 
@@ -101,26 +101,26 @@
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mt-4">
                     <!-- Start Date -->
                     <div>
-                        <label for="start_date" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Start Date <span class="text-red-500">*</span></label>
-                        <input type="text" name="start_date" id="start_date" value="{{ old('start_date', $deal->start_date->format('Y-m-d')) }}" class="form-input w-full datepicker" required>
+                        <label for="start_date" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1 {{ app()->getLocale() == 'ar' ? 'text-right' : 'text-left' }}">{{ __('messages.start_date') }} <span class="text-red-500">*</span></label>
+                        <input type="text" name="start_date" id="start_date" value="{{ old('start_date', $deal->start_date->format('Y-m-d')) }}" class="form-input w-full datepicker {{ app()->getLocale() == 'ar' ? 'text-right' : 'text-left' }}" required>
                         @error('start_date')
-                            <p class="text-red-500 text-sm mt-1">{{ $message }}</p>
+                            <p class="text-red-500 text-sm mt-1 {{ app()->getLocale() == 'ar' ? 'text-right' : 'text-left' }}">{{ $message }}</p>
                         @enderror
                     </div>
 
                     <!-- End Date -->
                     <div>
-                        <label for="end_date" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">End Date <span class="text-red-500">*</span></label>
-                        <input type="text" name="end_date" id="end_date" value="{{ old('end_date', $deal->end_date->format('Y-m-d')) }}" class="form-input w-full datepicker" required>
+                        <label for="end_date" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1 {{ app()->getLocale() == 'ar' ? 'text-right' : 'text-left' }}">{{ __('messages.end_date') }} <span class="text-red-500">*</span></label>
+                        <input type="text" name="end_date" id="end_date" value="{{ old('end_date', $deal->end_date->format('Y-m-d')) }}" class="form-input w-full datepicker {{ app()->getLocale() == 'ar' ? 'text-right' : 'text-left' }}" required>
                         @error('end_date')
-                            <p class="text-red-500 text-sm mt-1">{{ $message }}</p>
+                            <p class="text-red-500 text-sm mt-1 {{ app()->getLocale() == 'ar' ? 'text-right' : 'text-left' }}">{{ $message }}</p>
                         @enderror
                     </div>
                 </div>
 
                 <!-- Image -->
                 <div class="mt-4">
-                    <label for="image" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Deal Image</label>
+                    <label for="image" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1 {{ app()->getLocale() == 'ar' ? 'text-right' : 'text-left' }}">{{ __('messages.deal_image') }}</label>
 
                     @if($deal->image)
                         <div class="mb-2">
@@ -129,55 +129,55 @@
                     @endif
 
                     <input type="file" name="image" id="image" class="form-input w-full">
-                    <p class="text-gray-500 text-sm mt-1">Recommended size: 1200x600px. Max size: 2MB. Leave empty to keep the current image.</p>
+                    <p class="text-gray-500 text-sm mt-1 {{ app()->getLocale() == 'ar' ? 'text-right' : 'text-left' }}">{{ __('messages.deal_image_requirements') }}</p>
                     @error('image')
-                        <p class="text-red-500 text-sm mt-1">{{ $message }}</p>
+                        <p class="text-red-500 text-sm mt-1 {{ app()->getLocale() == 'ar' ? 'text-right' : 'text-left' }}">{{ $message }}</p>
                     @enderror
                 </div>
 
                 <!-- Status -->
                 <div class="mt-4">
-                    <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Status <span class="text-red-500">*</span></label>
-                    <div class="flex space-x-4">
-                        <label class="inline-flex items-center">
+                    <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1 {{ app()->getLocale() == 'ar' ? 'text-right' : 'text-left' }}">{{ __('messages.status') }} <span class="text-red-500">*</span></label>
+                    <div class="flex {{ app()->getLocale() == 'ar' ? 'space-x-reverse' : '' }} space-x-4">
+                        <label class="inline-flex items-center {{ app()->getLocale() == 'ar' ? 'flex-row-reverse' : '' }}">
                             <input type="radio" name="status" value="active" class="form-radio" {{ old('status', $deal->status) == 'active' ? 'checked' : '' }}>
-                            <span class="ml-2">Active</span>
+                            <span class="{{ app()->getLocale() == 'ar' ? 'mr-2' : 'ml-2' }}">{{ __('messages.active') }}</span>
                         </label>
-                        <label class="inline-flex items-center">
+                        <label class="inline-flex items-center {{ app()->getLocale() == 'ar' ? 'flex-row-reverse' : '' }}">
                             <input type="radio" name="status" value="inactive" class="form-radio" {{ old('status', $deal->status) == 'inactive' ? 'checked' : '' }}>
-                            <span class="ml-2">Inactive</span>
+                            <span class="{{ app()->getLocale() == 'ar' ? 'mr-2' : 'ml-2' }}">{{ __('messages.inactive') }}</span>
                         </label>
                     </div>
                     @error('status')
-                        <p class="text-red-500 text-sm mt-1">{{ $message }}</p>
+                        <p class="text-red-500 text-sm mt-1 {{ app()->getLocale() == 'ar' ? 'text-right' : 'text-left' }}">{{ $message }}</p>
                     @enderror
                 </div>
             </div>
 
             <!-- Application Scope -->
             <div class="form-section">
-                <h3 class="form-section-title text-xl font-bold text-gray-800 dark:text-white">Deal Application</h3>
+                <h3 class="form-section-title text-xl font-bold text-gray-800 dark:text-white {{ app()->getLocale() == 'ar' ? 'text-right' : 'text-left' }}">{{ __('messages.deal_application') }}</h3>
 
                 <div class="mt-4">
-                    <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Deal Type <span class="text-red-500">*</span></label>
+                    <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1 {{ app()->getLocale() == 'ar' ? 'text-right' : 'text-left' }}">{{ __('messages.deal_type') }} <span class="text-red-500">*</span></label>
                     <div class="space-y-2">
-                        <label class="inline-flex items-center">
+                        <label class="inline-flex items-center {{ app()->getLocale() == 'ar' ? 'flex-row-reverse' : '' }}">
                             <input type="radio" name="applies_to" value="products" class="form-radio" {{ old('applies_to', $deal->applies_to) == 'products' ? 'checked' : '' }} onchange="toggleSelectionContainers()">
-                            <span class="ml-2">Product Deal - Apply to selected products only</span>
+                            <span class="{{ app()->getLocale() == 'ar' ? 'mr-2' : 'ml-2' }}">{{ __('messages.product_deal_description') }}</span>
                         </label>
-                        <label class="inline-flex items-center">
+                        <label class="inline-flex items-center {{ app()->getLocale() == 'ar' ? 'flex-row-reverse' : '' }}">
                             <input type="radio" name="applies_to" value="services" class="form-radio" {{ old('applies_to', $deal->applies_to) == 'services' ? 'checked' : '' }} onchange="toggleSelectionContainers()">
-                            <span class="ml-2">Service Deal - Apply to selected services only</span>
+                            <span class="{{ app()->getLocale() == 'ar' ? 'mr-2' : 'ml-2' }}">{{ __('messages.service_deal_description') }}</span>
                         </label>
                     </div>
                     @error('applies_to')
-                        <p class="text-red-500 text-sm mt-1">{{ $message }}</p>
+                        <p class="text-red-500 text-sm mt-1 {{ app()->getLocale() == 'ar' ? 'text-right' : 'text-left' }}">{{ $message }}</p>
                     @enderror
                 </div>
 
                 <!-- Product Selection -->
                 <div id="products-container" class="mt-4" style="display: none;">
-                    <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Select Products</label>
+                    <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1 {{ app()->getLocale() == 'ar' ? 'text-right' : 'text-left' }}">{{ __('messages.select_products') }}</label>
                     <div class="selection-container">
                         @php
                             $selectedProductIds = old('product_ids', $deal->product_ids ?? []);
@@ -187,23 +187,23 @@
                         @endphp
 
                         @foreach($products as $product)
-                            <div class="p-2 hover:bg-gray-100 dark:hover:bg-gray-700 rounded">
-                                <label class="inline-flex items-center w-full">
-                                    <input type="checkbox" name="product_ids[]" value="{{ $product->id }}" class="form-checkbox" {{ in_array($product->id, $selectedProductIds) ? 'checked' : '' }}>
-                                    <span class="ml-2">{{ $product->name }} - ${{ number_format($product->price, 2) }}</span>
-                                    <span class="ml-auto text-sm text-gray-500">{{ $product->branch->name }}</span>
-                                </label>
-                            </div>
-                        @endforeach
+                             <div class="p-2 hover:bg-gray-100 dark:hover:bg-gray-700 rounded">
+                                 <label class="inline-flex items-center w-full {{ app()->getLocale() == 'ar' ? 'flex-row-reverse' : '' }}">
+                                     <input type="checkbox" name="product_ids[]" value="{{ $product->id }}" class="form-checkbox" {{ in_array($product->id, $selectedProductIds) ? 'checked' : '' }}>
+                                     <span class="{{ app()->getLocale() == 'ar' ? 'mr-2' : 'ml-2' }}">{{ $product->name }} - ${{ number_format($product->price, 2) }}</span>
+                                     <span class="{{ app()->getLocale() == 'ar' ? 'mr-auto' : 'ml-auto' }} text-sm text-gray-500">{{ $product->branch->name }}</span>
+                                 </label>
+                             </div>
+                         @endforeach
                     </div>
                     @error('product_ids')
-                        <p class="text-red-500 text-sm mt-1">{{ $message }}</p>
-                    @enderror
+                         <p class="text-red-500 text-sm mt-1 {{ app()->getLocale() == 'ar' ? 'text-right' : 'text-left' }}">{{ $message }}</p>
+                     @enderror
                 </div>
 
                 <!-- Service Selection -->
                 <div id="services-container" class="mt-4" style="display: none;">
-                    <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Select Services</label>
+                    <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1 {{ app()->getLocale() == 'ar' ? 'text-right' : 'text-left' }}">{{ __('messages.select_services') }}</label>
                     <div class="selection-container">
                         @php
                             $selectedServiceIds = old('service_ids', $deal->service_ids ?? []);
@@ -213,27 +213,34 @@
                         @endphp
 
                         @foreach($services as $service)
-                            <div class="p-2 hover:bg-gray-100 dark:hover:bg-gray-700 rounded">
-                                <label class="inline-flex items-center w-full">
-                                    <input type="checkbox" name="service_ids[]" value="{{ $service->id }}" class="form-checkbox" {{ in_array($service->id, $selectedServiceIds) ? 'checked' : '' }}>
-                                    <span class="ml-2">{{ $service->name }} - ${{ number_format($service->price, 2) }} ({{ $service->duration }}min)</span>
-                                    <span class="ml-auto text-sm text-gray-500">{{ $service->branch->name }}</span>
-                                </label>
-                            </div>
-                        @endforeach
+                             <div class="p-2 hover:bg-gray-100 dark:hover:bg-gray-700 rounded">
+                                 <label class="inline-flex items-center w-full {{ app()->getLocale() == 'ar' ? 'flex-row-reverse' : '' }}">
+                                     <input type="checkbox" name="service_ids[]" value="{{ $service->id }}" class="form-checkbox" {{ in_array($service->id, $selectedServiceIds) ? 'checked' : '' }}>
+                                     <span class="{{ app()->getLocale() == 'ar' ? 'mr-2' : 'ml-2' }}">{{ $service->name }} - ${{ number_format($service->price, 2) }} ({{ $service->duration }}{{ __('messages.min') }})</span>
+                                     <span class="{{ app()->getLocale() == 'ar' ? 'mr-auto' : 'ml-auto' }} text-sm text-gray-500">{{ $service->branch->name }}</span>
+                                 </label>
+                             </div>
+                         @endforeach
                     </div>
                     @error('service_ids')
-                        <p class="text-red-500 text-sm mt-1">{{ $message }}</p>
-                    @enderror
+                         <p class="text-red-500 text-sm mt-1 {{ app()->getLocale() == 'ar' ? 'text-right' : 'text-left' }}">{{ $message }}</p>
+                     @enderror
                 </div>
 
 
             </div>
 
             <!-- Submit Buttons -->
-            <div class="flex justify-end space-x-4 mt-6">
-                <a href="{{ route('vendor.deals.index') }}" class="btn-outline">Cancel</a>
-                <button type="submit" class="btn-primary">Update Deal</button>
+            <div class="flex {{ app()->getLocale() == 'ar' ? 'justify-end space-x-reverse' : 'justify-end' }}  gap-4 space-x-4 mt-8">
+                <a href="{{ route('vendor.deals.index') }}" class="btn-cancel">
+                   
+                    {{ __('messages.cancel') }}
+                 
+                </a>
+                <button type="submit" class="btn-create-deal">
+                   
+                    {{ __('messages.update_deal') }}
+                </button>
             </div>
         </form>
     </div>

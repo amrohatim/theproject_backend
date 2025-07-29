@@ -1,6 +1,6 @@
 @extends('layouts.provider')
 
-@section('header', 'Locations')
+@section('header', __('provider.locations'))
 
 @section('styles')
 <style>
@@ -86,32 +86,76 @@
     .action-btn.edit:hover {
         background-color: var(--discord-yellow-hover);
     }
+    
+    /* RTL Support */
+    [dir="rtl"] .discord-card-header h2 {
+        text-align: right;
+    }
+    
+    [dir="rtl"] .discord-card-header p {
+        text-align: right;
+    }
+    
+    [dir="rtl"] .map-controls {
+        direction: rtl;
+    }
+    
+    [dir="rtl"] .emirate-select {
+        text-align: right;
+    }
+    
+    [dir="rtl"] .form-label {
+        text-align: right;
+        display: block;
+    }
+    
+    [dir="rtl"] .location-list h3 {
+        text-align: right;
+    }
+    
+    [dir="rtl"] .location-item {
+        direction: rtl;
+        text-align: right;
+    }
+    
+    [dir="rtl"] .location-actions {
+        flex-direction: row-reverse;
+    }
+    
+    [dir="rtl"] .action-btn {
+        margin-left: 0;
+        margin-right: 10px;
+    }
+    
+    [dir="rtl"] .action-btn:last-child {
+        margin-right: 0;
+    }
 </style>
 @endsection
 
 @section('content')
 <div class="discord-card">
     <div class="discord-card-header">
-        <h2><i class="fas fa-map-marker-alt me-2"></i> Stock Distribution Points</h2>
-        <p>Add and manage your stock distribution locations</p>
+        <h2><i class="fas fa-map-marker-alt me-2"></i> {{ __('provider.stock_distribution_points') }}</h2>
+        <p>{{ __('provider.add_manage_locations') }}</p>
     </div>
     <div class="discord-card-body">
         <div class="map-controls">
             <div class="emirate-select">
-                <label for="emirate" class="form-label">Emirate:</label>
+                <label for="emirate" class="form-label">{{ __('provider.emirate') }}:</label>
                 <select id="emirate" class="form-select">
-                    <option value="">Select Emirate</option>
-                    <option value="Dubai">Dubai</option>
-                    <option value="Abu Dhabi">Abu Dhabi</option>
-                    <option value="Sharjah">Sharjah</option>
-                    <option value="Ajman">Ajman</option>
-                    <option value="Umm Al Quwain">Umm Al Quwain</option>
-                    <option value="Ras Al Khaimah">Ras Al Khaimah</option>
-                    <option value="Fujairah">Fujairah</option>
+                    <option value="">{{ __('provider.select_emirate') }}</option>
+                    <option value="Dubai">{{ __('provider.dubai') }}</option>
+                    <option value="Abu Dhabi">{{ __('provider.abu_dhabi') }}</option>
+                    <option value="Sharjah">{{ __('provider.sharjah') }}</option>
+                    <option value="Ajman">{{ __('provider.ajman') }}</option>
+                    <option value="Umm Al Quwain">{{ __('provider.umm_al_quwain') }}</option>
+                    <option value="Ras Al Khaimah">{{ __('provider.ras_al_khaimah') }}</option>
+                    <option value="Fujairah">{{ __('provider.fujairah') }}</option>
                 </select>
             </div>
             <div class="search-box">
-                <input id="pac-input" class="search-input" type="text" placeholder="Search for a location">
+                <input id="pac-input" class="search-input" type="text" placeholder="{{ __('provider.search_location') }}">
             </div>
         </div>
 
@@ -119,12 +163,12 @@
 
         <div class="d-flex justify-content-end mt-3">
             <button id="save-locations" class="action-btn">
-                <i class="fas fa-save me-2"></i> Save Locations
+                <i class="fas fa-save me-2"></i> {{ __('provider.save_locations') }}
             </button>
         </div>
 
         <div class="location-list">
-            <h3 class="mb-3">Saved Locations</h3>
+            <h3 class="mb-3">{{ __('provider.saved_locations') }}</h3>
             <div id="locations-container">
                 @if(count($locations) > 0)
                     @foreach($locations as $location)
@@ -136,16 +180,16 @@
                         </div>
                         <div class="location-actions">
                             <button class="action-btn edit edit-location" data-id="{{ $location->id }}">
-                                <i class="fas fa-edit"></i>
+                                <i class="fas fa-edit"></i> {{ __('provider.edit') }}
                             </button>
                             <button class="action-btn delete delete-location" data-id="{{ $location->id }}">
-                                <i class="fas fa-trash"></i>
+                                <i class="fas fa-trash"></i> {{ __('provider.delete') }}
                             </button>
                         </div>
                     </div>
                     @endforeach
                 @else
-                    <p>No locations saved yet. Click on the map to add locations.</p>
+                    <p>{{ __('provider.no_locations_saved') }}</p>
                 @endif
             </div>
         </div>
@@ -161,6 +205,26 @@
     let markers = [];
     let searchBox;
     let editingMarker = null;
+    
+    // Translation strings for JavaScript
+    const translations = {
+        location_details: @json(__('provider.location_details')),
+        label: @json(__('provider.label')),
+        emirate: @json(__('provider.emirate')),
+        latitude: @json(__('provider.latitude')),
+        longitude: @json(__('provider.longitude')),
+        remove: @json(__('provider.remove')),
+        locations_saved_successfully: @json(__('provider.locations_saved_successfully')),
+        error_saving_locations: @json(__('provider.error_saving_locations')),
+        unknown_error: @json(__('provider.unknown_error')),
+        error_saving_locations_try_again: @json(__('provider.error_saving_locations_try_again')),
+        confirm_delete_location: @json(__('provider.confirm_delete_location')),
+        location_deleted_successfully: @json(__('provider.location_deleted_successfully')),
+        error_deleting_location: @json(__('provider.error_deleting_location')),
+        error_deleting_location_try_again: @json(__('provider.error_deleting_location_try_again')),
+        edit: @json(__('provider.edit')),
+        delete: @json(__('provider.delete'))
+    };
 
     // Initialize the map
     function initMap() {
@@ -395,13 +459,13 @@
 
         return `
             <div style="padding: 10px; min-width: 200px;">
-                <h3 style="margin-top: 0;">Location Details</h3>
+                <h3 style="margin-top: 0;">${translations.location_details}</h3>
                 <div style="margin-bottom: 10px;">
-                    <label style="display: block; margin-bottom: 5px;">Label:</label>
+                    <label style="display: block; margin-bottom: 5px;">${translations.label}:</label>
                     <input type="text" class="marker-label" data-marker-id="${marker.markerId}" value="${label}" style="width: 100%; padding: 5px;">
                 </div>
                 <div style="margin-bottom: 10px;">
-                    <label style="display: block; margin-bottom: 5px;">Emirate:</label>
+                    <label style="display: block; margin-bottom: 5px;">${translations.emirate}:</label>
                     <select class="marker-emirate" data-marker-id="${marker.markerId}" style="width: 100%; padding: 5px;">
                         <option value="Dubai" ${emirate === 'Dubai' ? 'selected' : ''}>Dubai</option>
                         <option value="Abu Dhabi" ${emirate === 'Abu Dhabi' ? 'selected' : ''}>Abu Dhabi</option>
@@ -413,10 +477,10 @@
                     </select>
                 </div>
                 <div style="margin-bottom: 10px;">
-                    <p>Latitude: ${lat.toFixed(6)}</p>
-                    <p>Longitude: ${lng.toFixed(6)}</p>
+                    <p>${translations.latitude}: ${lat.toFixed(6)}</p>
+                    <p>${translations.longitude}: ${lng.toFixed(6)}</p>
                 </div>
-                <button class="remove-marker" data-marker-id="${marker.markerId}" style="background-color: #f04747; color: white; border: none; padding: 5px 10px; border-radius: 4px; cursor: pointer;">Remove</button>
+                <button class="remove-marker" data-marker-id="${marker.markerId}" style="background-color: #f04747; color: white; border: none; padding: 5px 10px; border-radius: 4px; cursor: pointer;">${translations.remove}</button>
             </div>
         `;
     }
@@ -545,15 +609,15 @@
         .then(response => response.json())
         .then(data => {
             if (data.success) {
-                alert('Locations saved successfully!');
+                alert(translations.locations_saved_successfully);
                 window.location.reload();
             } else {
-                alert('Error saving locations: ' + (data.error || 'Unknown error'));
+                alert(translations.error_saving_locations + ': ' + (data.error || translations.unknown_error));
             }
         })
         .catch(error => {
             console.error('Error:', error);
-            alert('Error saving locations. Please try again.');
+            alert(translations.error_saving_locations_try_again);
         });
     });
 
@@ -582,7 +646,7 @@
     // Delete location
     document.querySelectorAll('.delete-location').forEach(function(button) {
         button.addEventListener('click', function() {
-            if (confirm('Are you sure you want to delete this location?')) {
+            if (confirm(translations.confirm_delete_location)) {
                 const id = this.dataset.id;
 
                 fetch(`{{ url('provider/locations') }}/${id}`, {
@@ -608,14 +672,14 @@
                             locationItem.remove();
                         }
 
-                        alert('Location deleted successfully!');
+                        alert(translations.location_deleted_successfully);
                     } else {
-                        alert('Error deleting location: ' + (data.error || 'Unknown error'));
+                        alert(translations.error_deleting_location + ': ' + (data.error || translations.unknown_error));
                     }
                 })
                 .catch(error => {
                     console.error('Error:', error);
-                    alert('Error deleting location. Please try again.');
+                    alert(translations.error_deleting_location_try_again);
                 });
             }
         });

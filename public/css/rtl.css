@@ -529,3 +529,190 @@
 [dir="rtl"] .language-switcher {
     direction: ltr; /* Keep language switcher LTR for consistency */
 }
+
+/* Products Page RTL Enhancements */
+[dir="rtl"] .products-page-header {
+    text-align: right;
+}
+
+[dir="rtl"] .products-search-container {
+    direction: rtl;
+}
+
+[dir="rtl"] .products-search-input {
+    text-align: right;
+    padding-left: 1rem;
+    padding-right: 2.5rem;
+}
+
+[dir="rtl"] .products-search-icon {
+    left: auto;
+    right: 0.75rem;
+}
+
+[dir="rtl"] .products-filter-button {
+    flex-direction: row-reverse;
+}
+
+[dir="rtl"] .products-filter-icon {
+    margin-left: 0.5rem;
+    margin-right: 0;
+}
+
+[dir="rtl"] .products-table th {
+    text-align: right;
+}
+
+[dir="rtl"] .products-table td {
+    text-align: right;
+}
+
+[dir="rtl"] .product-image-container {
+    margin-left: 1rem;
+    margin-right: 0;
+}
+
+[dir="rtl"] .product-actions {
+    flex-direction: row-reverse;
+}
+
+[dir="rtl"] .product-status-badge {
+    direction: rtl;
+}
+
+[dir="rtl"] .product-stock-warning {
+    flex-direction: row-reverse;
+}
+
+[dir="rtl"] .product-stock-icon {
+    margin-left: 0.25rem;
+    margin-right: 0;
+}
+
+[dir="rtl"] .pagination-container {
+    direction: rtl;
+}
+
+[dir="rtl"] .pagination-info {
+    text-align: right;
+}
+
+[dir="rtl"] .pagination-buttons {
+    flex-direction: row-reverse;
+}
+
+/* Quick stats RTL adjustments */
+[dir="rtl"] .quick-stats-card {
+    text-align: right;
+}
+
+[dir="rtl"] .quick-stats-value {
+    text-align: right;
+}
+
+[dir="rtl"] .quick-stats-label {
+    text-align: right;
+}
+
+/* Empty state RTL adjustments */
+[dir="rtl"] .empty-state {
+    text-align: right;
+}
+
+[dir="rtl"] .empty-state-title {
+    text-align: right;
+}
+
+[dir="rtl"] .empty-state-description {
+    text-align: right;
+}
+
+[dir="rtl"] .empty-state-button {
+    flex-direction: row-reverse;
+}
+
+[dir="rtl"] .empty-state-icon {
+    margin-left: 0.5rem;
+    margin-right: 0;
+}
+
+/* License warning banner RTL adjustments */
+[dir="rtl"] .license-warning-banner {
+    text-align: right;
+}
+
+[dir="rtl"] .license-warning-icon {
+    margin-left: 0.75rem;
+    margin-right: 0;
+}
+
+[dir="rtl"] .license-warning-content {
+    text-align: right;
+}
+
+[dir="rtl"] .license-warning-button {
+    margin-left: auto;
+    margin-right: 0;
+}
+
+/* Tailwind utility overrides for RTL */
+[dir="rtl"] .mr-2 {
+    margin-right: 0;
+    margin-left: 0.5rem;
+}
+
+[dir="rtl"] .ml-2 {
+    margin-left: 0;
+    margin-right: 0.5rem;
+}
+
+[dir="rtl"] .mr-4 {
+    margin-right: 0;
+    margin-left: 1rem;
+}
+
+[dir="rtl"] .ml-4 {
+    margin-left: 0;
+    margin-right: 1rem;
+}
+
+[dir="rtl"] .space-x-2 > * + * {
+    margin-left: 0;
+    margin-right: 0.5rem;
+}
+
+[dir="rtl"] .space-x-3 > * + * {
+    margin-left: 0;
+    margin-right: 0.75rem;
+}
+
+[dir="rtl"] .space-x-4 > * + * {
+    margin-left: 0;
+    margin-right: 1rem;
+}
+
+/* Flex direction adjustments */
+[dir="rtl"] .flex-row {
+    flex-direction: row-reverse;
+}
+
+[dir="rtl"] .justify-between {
+    justify-content: space-between;
+}
+
+[dir="rtl"] .justify-start {
+    justify-content: flex-end;
+}
+
+[dir="rtl"] .justify-end {
+    justify-content: flex-start;
+}
+
+/* Text alignment overrides */
+[dir="rtl"] .text-left {
+    text-align: right !important;
+}
+
+[dir="rtl"] .text-right {
+    text-align: left !important;
+}

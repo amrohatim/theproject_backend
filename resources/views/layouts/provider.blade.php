@@ -1,5 +1,10 @@
+<?php
+$currentLocale = app()->getLocale();
+$isRtl = in_array($currentLocale, ['ar', 'he', 'fa', 'ur']);
+$direction = $isRtl ? 'rtl' : 'ltr';
+?>
 <!DOCTYPE html>
-<html lang="en">
+<html lang="{{ $currentLocale }}" dir="{{ $direction }}">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -14,6 +19,11 @@
 
     <!-- Google Fonts - For Discord-like look -->
     <link href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+    
+    <!-- RTL CSS for Arabic -->
+    @if($isRtl)
+    <link href="{{ asset('css/rtl.css') }}" rel="stylesheet">
+    @endif
 
     <!-- Custom styles for Discord-inspired UI -->
     <style>
@@ -480,6 +490,49 @@
             to { transform: rotate(360deg); }
         }
 
+        /* RTL Support */
+        [dir="rtl"] .channel-sidebar {
+            left: auto;
+            right: 0;
+            border-left: 1px solid #e0e1e5;
+            border-right: none;
+        }
+
+        [dir="rtl"] .content-area {
+            margin-left: 0;
+            margin-right: 0;
+        }
+
+        [dir="rtl"] .user-controls {
+            margin-left: 0;
+            margin-right: auto;
+        }
+
+        [dir="rtl"] .channel-icon {
+            margin-left: 8px;
+            margin-right: 0;
+        }
+
+        [dir="rtl"] .user-avatar {
+            margin-left: 8px;
+            margin-right: 0;
+        }
+
+        [dir="rtl"] .me-2 {
+            margin-left: 0.5rem !important;
+            margin-right: 0 !important;
+        }
+
+        [dir="rtl"] .ms-auto {
+            margin-left: 0 !important;
+            margin-right: auto !important;
+        }
+
+        [dir="rtl"] .ms-1 {
+            margin-left: 0 !important;
+            margin-right: 0.25rem !important;
+        }
+
         /* Responsive adjustments */
         @media (max-width: 992px) {
             .active-users {
@@ -497,12 +550,22 @@
                 z-index: 1000;
             }
 
+            [dir="rtl"] .channel-sidebar {
+                left: auto;
+                right: 0;
+                transform: translateX(100%);
+            }
+
             .channel-sidebar.show {
                 transform: translateX(0);
             }
 
             .content-area {
                 margin-left: 0;
+            }
+
+            [dir="rtl"] .content-area {
+                margin-right: 0;
             }
         }
 
@@ -541,33 +604,33 @@
             <ul class="channel-list">
                 <li class="channel-item {{ request()->is('provider/dashboard*') ? 'active' : '' }}" onclick="window.location.href='{{ route('provider.dashboard') }}'">
                     <i class="fas fa-tachometer-alt channel-icon"></i>
-                    <span class="channel-name">Dashboard</span>
+                    <span class="channel-name">{{ __('provider.dashboard') }}</span>
                 </li>
                 <li class="channel-item {{ request()->is('provider/provider-products*') ? 'active' : '' }}" onclick="window.location.href='{{ route('provider.provider-products.index') }}'">
                     <i class="fas fa-box channel-icon"></i>
-                    <span class="channel-name">Products</span>
+                    <span class="channel-name">{{ __('provider.products') }}</span>
                 </li>
                 <li class="channel-item {{ request()->is('provider/locations*') ? 'active' : '' }}" onclick="window.location.href='{{ route('provider.locations.index') }}'">
                     <i class="fas fa-map-marker-alt channel-icon"></i>
-                    <span class="channel-name">Locations</span>
+                    <span class="channel-name">{{ __('provider.locations') }}</span>
                 </li>
                 <li class="channel-item {{ request()->is('provider/orders*') ? 'active' : '' }}" onclick="window.location.href='{{ route('provider.orders.index') }}'">
                     <i class="fas fa-shopping-cart channel-icon"></i>
-                    <span class="channel-name">Orders</span>
+                    <span class="channel-name">{{ __('provider.orders') }}</span>
                 </li>
             </ul>
 
             <div class="channel-category">
-                <span>Settings</span>
+                <span>{{ __('provider.settings') }}</span>
             </div>
             <ul class="channel-list">
                 <li class="channel-item {{ request()->is('provider/profile*') ? 'active' : '' }}" onclick="window.location.href='{{ route('provider.profile.index') }}'">
                     <i class="fas fa-user channel-icon"></i>
-                    <span class="channel-name">Profile</span>
+                    <span class="channel-name">{{ __('provider.profile') }}</span>
                 </li>
                 <li class="channel-item {{ request()->is('provider/settings*') ? 'active' : '' }}" onclick="window.location.href='{{ route('provider.settings.index') }}'">
                     <i class="fas fa-cog channel-icon"></i>
-                    <span class="channel-name">Settings</span>
+                    <span class="channel-name">{{ __('provider.settings') }}</span>
                 </li>
             </ul>
 
@@ -579,10 +642,10 @@
                 </div>
                 <div class="user-details">
                     <div class="user-name">{{ Auth::user()->name ?? 'Provider' }}</div>
-                    <div class="user-status">Online</div>
+                    <div class="user-status">{{ __('provider.online') }}</div>
                 </div>
                 <div class="user-controls">
-                    <i class="fas fa-sign-out-alt user-control-icon" title="Logout" onclick="event.preventDefault(); document.getElementById('logout-form').submit();"></i>
+                    <i class="fas fa-sign-out-alt user-control-icon" title="{{ __('provider.logout') }}" onclick="event.preventDefault(); document.getElementById('logout-form').submit();"></i>
                 </div>
                 <form id="logout-form" action="{{ route('logout') }}" method="POST" class="d-none">
                     @csrf

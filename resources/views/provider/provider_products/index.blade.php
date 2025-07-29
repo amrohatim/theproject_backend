@@ -1,8 +1,8 @@
 @extends('layouts.provider')
 
-@section('title', 'Inventory')
+@section('title', __('provider.product_inventory'))
 
-@section('header', 'Products Inventory')
+@section('header', __('provider.products_inventory'))
 
 @section('content')
 <div class="d-flex justify-content-between align-items-center mb-4">
@@ -11,12 +11,12 @@
             <i class="fas fa-box-open text-white"></i>
         </div> --}}
         <div>
-            <h4 class="mb-0">Product Inventory</h4>
-            <p class="text-muted mb-0" style="font-size: 14px; color: var(--discord-light);">Manage your store products</p>
+            <h4 class="mb-0">{{ __('provider.product_inventory') }}</h4>
+            <p class="text-muted mb-0" style="font-size: 14px; color: var(--discord-light);">{{ __('provider.manage_store_products') }}</p>
         </div>
     </div>
     <a href="{{ route('provider.provider-products.create') }}" class="discord-btn">
-        <i class="fas fa-plus me-2"></i> Add Product
+        <i class="fas fa-plus me-2"></i> {{ __('provider.add_product') }}
     </a>
 </div>
 
@@ -25,18 +25,20 @@
     <div class="discord-card-header d-flex justify-content-between align-items-center">
         <div>
             <i class="fas fa-box me-2" style="color: var(--discord-primary);"></i>
-            Products ({{ $providerProducts->total() }})
+             
+            {{ __('provider.products') }} ({{ $providerProducts->total() }})
         </div>
+      
         <div class="d-flex">
-            <input type="text" class="discord-input me-2" placeholder="Search products..." id="product-search" style="width: 200px; margin-bottom: 0; height: 36px;">
+            <input type="text" class="discord-input me-2" placeholder="{{ __('provider.search_products') }}" id="product-search" style="width: 200px; margin-bottom: 0; height: 36px;">
             <div class="dropdown">
-                <button class="discord-btn discord-btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton" data-bs-toggle="dropdown" aria-expanded="false">
-                    <i class="fas fa-sliders-h me-1"></i> Actions
+                <button class=" dropdown-toggle" type="button" id="dropdownMenuButton" data-bs-toggle="dropdown" aria-expanded="false">
+                   {{ __('provider.actions') }}
                 </button>
                 <ul class="dropdown-menu dropdown-menu-end" style="background-color: var(--discord-darker); border: 1px solid var(--discord-darkest);" aria-labelledby="dropdownMenuButton">
-                    <li><a class="dropdown-item" href="{{ route('provider.provider-products.create') }}" style="color: var(--discord-lightest);"><i class="fas fa-plus me-2"></i> Add New</a></li>
-                    <li><a class="dropdown-item" href="#" style="color: var(--discord-lightest);"><i class="fas fa-file-export me-2"></i> Export to CSV</a></li>
-                    <li><a class="dropdown-item" href="#" style="color: var(--discord-lightest);"><i class="fas fa-sort-amount-down me-2"></i> Sort by Price</a></li>
+                    <li><a class="dropdown-item" href="{{ route('provider.provider-products.create') }}" style="color: var(--discord-lightest);"><i class="fas fa-plus me-2"></i> {{ __('provider.add_new') }}</a></li>
+                    <li><a class="dropdown-item" href="#" style="color: var(--discord-lightest);"><i class="fas fa-file-export me-2"></i> {{ __('provider.export_csv') }}</a></li>
+                    <li><a class="dropdown-item" href="#" style="color: var(--discord-lightest);"><i class="fas fa-sort-amount-down me-2"></i> {{ __('provider.sort_by') }} {{ __('provider.price') }}</a></li>
                 </ul>
             </div>
         </div>
@@ -47,13 +49,13 @@
             <table class="discord-table" id="products-table">
                 <thead>
                     <tr>
-                        <th style="width: 60px;">Image</th>
-                        <th>Product Name</th>
-                        <th>Price</th>
-                        <th>Stock</th>
-                        <th>Status</th>
-                        <th>Added On</th>
-                        <th style="width: 120px;">Actions</th>
+                        <th style="width: 60px;">{{ __('provider.image') }}</th>
+                        <th>{{ __('provider.name') }}</th>
+                        <th>{{ __('provider.price') }}</th>
+                        <th>{{ __('provider.stock') }}</th>
+                        <th>{{ __('provider.status') }}</th>
+                        <th>{{ __('provider.added_date') }}</th>
+                        <th style="width: 120px;">{{ __('provider.actions') }}</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -83,24 +85,24 @@
                             <td>
                                 @if($item->is_active)
                                     <span style="background-color: var(--discord-green); color: white; padding: 2px 8px; border-radius: 10px; font-size: 12px; display: inline-block;">
-                                        Active
+                                        {{ __('provider.active') }}
                                     </span>
                                 @else
                                     <span style="background-color: var(--discord-darkest); color: var(--discord-light); padding: 2px 8px; border-radius: 10px; font-size: 12px; display: inline-block;">
-                                        Inactive
+                                        {{ __('provider.inactive') }}
                                     </span>
                                 @endif
                             </td>
                             <td>{{ $item->created_at->format('M d, Y') }}</td>
                             <td>
                                 <div class="d-flex gap-2">
-                                    <a href="{{ route('provider.provider-products.edit', $item->id) }}" class="btn btn-sm" style="background-color: var(--discord-primary); color: white; border-radius: 4px;">
+                                    <a href="{{ route('provider.provider-products.edit', $item->id) }}" class="btn btn-sm" style="background-color: var(--discord-primary); color: white; border-radius: 4px;" title="{{ __('provider.edit_product') }}">
                                         <i class="fas fa-edit"></i>
                                     </a>
                                     <form action="{{ route('provider.provider-products.destroy', $item->id) }}" method="POST" class="d-inline">
                                         @csrf
                                         @method('DELETE')
-                                        <button type="submit" class="btn btn-sm" style="background-color: var(--discord-red); color: white; border-radius: 4px;" onclick="return confirm('Are you sure you want to remove this product from your inventory?');">
+                                        <button type="submit" class="btn btn-sm" style="background-color: var(--discord-red); color: white; border-radius: 4px;" onclick="return confirm('{{ __('provider.delete_product_message') }}');" title="{{ __('provider.delete_product') }}">
                                             <i class="fas fa-trash"></i>
                                         </button>
                                     </form>
@@ -115,7 +117,7 @@
         <!-- Pagination with Discord Styling -->
         <div class="p-3 d-flex justify-content-between align-items-center">
             <div style="color: var(--discord-light); font-size: 14px;">
-                Showing {{ $providerProducts->firstItem() ?? 0 }} to {{ $providerProducts->lastItem() ?? 0 }} of {{ $providerProducts->total() }} products
+                {{ __('provider.showing') }} {{ $providerProducts->firstItem() ?? 0 }} {{ __('provider.to') }} {{ $providerProducts->lastItem() ?? 0 }} {{ __('provider.of') }} {{ $providerProducts->total() }} {{ __('provider.products') }}
             </div>
             <div class="discord-pagination">
                 {{ $providerProducts->links() }}
@@ -126,10 +128,10 @@
             <div style="width: 80px; height: 80px; background-color: var(--discord-darkest); border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto 20px;">
                 <i class="fas fa-box-open fa-2x"></i>
             </div>
-            <h4>No products in your inventory</h4>
-            <p class="mb-4">Start adding products to your store to get selling!</p>
+            <h4>{{ __('provider.no_products_inventory') }}</h4>
+            <p class="mb-4">{{ __('provider.start_adding_products') }}</p>
             <a href="{{ route('provider.provider-products.create') }}" class="discord-btn">
-                <i class="fas fa-plus me-2"></i> Add Your First Product
+                <i class="fas fa-plus me-2"></i> {{ __('provider.add_first_product') }}
             </a>
         </div>
     @endif
@@ -141,33 +143,33 @@
         <div class="discord-card h-100">
             <div class="discord-card-header">
                 <i class="fas fa-chart-pie me-2" style="color: var(--discord-primary);"></i>
-                Inventory Stats
+                {{ __('provider.inventory_stats') }}
             </div>
             <div class="p-3">
-                <div class="d-flex align-items-center mb-3">
+                <div class="d-flex align-items-center gap-3 mb-3">
                     <div style="width: 36px; height: 36px; background-color: var(--discord-darkest); border-radius: 8px; display: flex; align-items: center; justify-content: center; margin-right: 15px;">
                         <i class="fas fa-boxes" style="color: var(--discord-primary);"></i>
                     </div>
                     <div style="flex-grow: 1;">
-                        <div style="color: var(--discord-light); font-size: 12px;">Total Products</div>
+                        <div style="color: var(--discord-light); font-size: 12px;">{{ __('provider.total_products') }}</div>
                         <div style="font-weight: 600; font-size: 18px;">{{ $providerProducts->total() }}</div>
                     </div>
                 </div>
-                <div class="d-flex align-items-center mb-3">
+                <div class="d-flex align-items-center gap-3 mb-3">
                     <div style="width: 36px; height: 36px; background-color: var(--discord-darkest); border-radius: 8px; display: flex; align-items: center; justify-content: center; margin-right: 15px;">
                         <i class="fas fa-tag" style="color: var(--discord-green);"></i>
                     </div>
                     <div style="flex-grow: 1;">
-                        <div style="color: var(--discord-light); font-size: 12px;">Active Products</div>
+                        <div style="color: var(--discord-light); font-size: 12px;">{{ __('provider.active_products') }}</div>
                         <div style="font-weight: 600; font-size: 18px;">{{ $providerProducts->where('is_active', true)->count() }}</div>
                     </div>
                 </div>
-                <div class="d-flex align-items-center">
+                <div class="d-flex gap-3 align-items-center">
                     <div style="width: 36px; height: 36px; background-color: var(--discord-darkest); border-radius: 8px; display: flex; align-items: center; justify-content: center; margin-right: 15px;">
                         <i class="fas fa-warehouse" style="color: var(--discord-yellow);"></i>
                     </div>
                     <div style="flex-grow: 1;">
-                        <div style="color: var(--discord-light); font-size: 12px;">Out of Stock</div>
+                        <div style="color: var(--discord-light); font-size: 12px;">{{ __('provider.out_of_stock') }}</div>
                         <div style="font-weight: 600; font-size: 18px;">{{ $providerProducts->where('stock', 0)->count() }}</div>
                     </div>
                 </div>
@@ -179,34 +181,34 @@
         <div class="discord-card h-100">
             <div class="discord-card-header">
                 <i class="fas fa-tasks me-2" style="color: var(--discord-primary);"></i>
-                Quick Actions
+                {{ __('provider.quick_actions') }}
             </div>
             <div class="p-3">
                 <div class="row">
                     <div class="col-md-4 mb-3">
                         <div style="background-color: var(--discord-darkest); border-radius: 8px; padding: 20px; text-align: center; height: 100%;">
                             <i class="fas fa-plus mb-3" style="color: var(--discord-primary); font-size: 24px;"></i>
-                            <div style="font-weight: 600; margin-bottom: 10px;">Add Product</div>
+                            <div style="font-weight: 600; margin-bottom: 10px;">{{ __('provider.add_product') }}</div>
                             <a href="{{ route('provider.provider-products.create') }}" class="discord-btn btn-sm w-100">
-                                Go
+                                {{ __('provider.go') }}
                             </a>
                         </div>
                     </div>
                     <div class="col-md-4 mb-3">
                         <div style="background-color: var(--discord-darkest); border-radius: 8px; padding: 20px; text-align: center; height: 100%;">
                             <i class="fas fa-sync-alt mb-3" style="color: var(--discord-green); font-size: 24px;"></i>
-                            <div style="font-weight: 600; margin-bottom: 10px;">Update Stock</div>
+                            <div style="font-weight: 600; margin-bottom: 10px;">{{ __('provider.update_stock') }}</div>
                             <a href="#" class="discord-btn btn-sm w-100" style="background-color: var(--discord-green);">
-                                Go
+                                {{ __('provider.go') }}
                             </a>
                         </div>
                     </div>
                     <div class="col-md-4 mb-3">
                         <div style="background-color: var(--discord-darkest); border-radius: 8px; padding: 20px; text-align: center; height: 100%;">
                             <i class="fas fa-file-export mb-3" style="color: var(--discord-yellow); font-size: 24px;"></i>
-                            <div style="font-weight: 600; margin-bottom: 10px;">Export CSV</div>
+                            <div style="font-weight: 600; margin-bottom: 10px;">{{ __('provider.export_csv') }}</div>
                             <a href="#" class="discord-btn btn-sm w-100" style="background-color: var(--discord-yellow);">
-                                Go
+                                {{ __('provider.go') }}
                             </a>
                         </div>
                     </div>

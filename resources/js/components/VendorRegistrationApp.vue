@@ -42,16 +42,16 @@
       <div class="bg-white rounded-lg shadow-lg p-8">
         <!-- Error Display -->
         <div v-if="error" class="mb-6 p-4 bg-red-50 border border-red-200 rounded-lg">
-          <div class="flex items-center">
-            <i class="fas fa-exclamation-circle text-red-500 mr-2"></i>
+          <div class="flex items-center" :class="isRTL ? 'flex-row-reverse' : ''">
+            <i class="fas fa-exclamation-circle text-red-500" :class="isRTL ? 'ml-2' : 'mr-2'"></i>
             <span class="text-red-700">{{ error }}</span>
           </div>
         </div>
 
         <!-- Success Display -->
         <div v-if="success" class="mb-6 p-4 bg-green-50 border border-green-200 rounded-lg">
-          <div class="flex items-center">
-            <i class="fas fa-check-circle text-green-500 mr-2"></i>
+          <div class="flex items-center" :class="isRTL ? 'flex-row-reverse' : ''">
+            <i class="fas fa-check-circle text-green-500" :class="isRTL ? 'ml-2' : 'mr-2'"></i>
             <span class="text-green-700">{{ success }}</span>
           </div>
         </div>
@@ -105,7 +105,7 @@
             class="px-6 py-2 border border-gray-300 rounded-lg text-gray-700 hover:bg-gray-50 transition-colors"
             :disabled="loading"
           >
-            <i class="fas fa-arrow-left mr-2"></i>
+            <i class="fas fa-arrow-left" :class="isRTL ? 'ml-2' : 'mr-2'"></i>
             {{ $t('back') }}
           </button>
           <div v-else></div>
@@ -120,7 +120,7 @@
               href="/" 
               class="inline-flex items-center px-6 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors"
             >
-              <i class="fas fa-home mr-2"></i>
+              <i class="fas fa-home" :class="isRTL ? 'ml-2' : 'mr-2'"></i>
               {{ $t('go_to_dashboard') }}
             </a>
           </div>

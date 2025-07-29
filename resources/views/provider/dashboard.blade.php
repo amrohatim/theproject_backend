@@ -9,8 +9,8 @@
 @section('content')
 <div class="dashboard-container">
     <div class="dashboard-header">
-        <h1>Provider Dashboard</h1>
-        <p>Welcome back! Here's an overview of your store performance.</p>
+        <h1>{{ __('provider.provider_dashboard') }}</h1>
+        <p>{{ __('provider.welcome_back') }}</p>
     </div>
     
     @if(isset($message))
@@ -24,55 +24,47 @@
     <!-- Statistics Cards -->
     <div class="stats-grid">
         <div class="stat-card">
-            <div class="stat-card-header">
+            <div class="stat-card-header gap-2">
                 <div class="stat-card-icon bg-primary-light">
                     <i class="fas fa-box"></i>
                 </div>
-                <p class="stat-card-title">Total Products</p>
+                <p class="stat-card-title">{{ __('provider.total_products') }}</p>
             </div>
             <h2 class="stat-card-value">{{ $totalProducts }}</h2>
-            <div class="stat-card-comparison positive">
-                <i class="fas fa-arrow-up mr-1"></i> 12% from last month
-            </div>
+           
         </div>
         
         <div class="stat-card">
-            <div class="stat-card-header">
+            <div class="stat-card-header gap-2">
                 <div class="stat-card-icon bg-secondary-light">
                     <i class="fas fa-shopping-cart"></i>
                 </div>
-                <p class="stat-card-title">Total Orders</p>
+                <p class="stat-card-title">{{ __('provider.total_orders') }}</p>
             </div>
             <h2 class="stat-card-value">{{ $totalOrders }}</h2>
-            <div class="stat-card-comparison positive">
-                <i class="fas fa-arrow-up mr-1"></i> 8% from last month
-            </div>
+           
         </div>
         
         <div class="stat-card">
-            <div class="stat-card-header">
+            <div class="stat-card-header gap-2">
                 <div class="stat-card-icon bg-warning-light">
                     <i class="fas fa-dollar-sign"></i>
                 </div>
-                <p class="stat-card-title">Revenue</p>
+                <p class="stat-card-title">{{ __('provider.revenue') }}</p>
             </div>
             <h2 class="stat-card-value">${{ isset($totalRevenue) ? number_format($totalRevenue, 2) : '0.00' }}</h2>
-            <div class="stat-card-comparison positive">
-                <i class="fas fa-arrow-up mr-1"></i> 15% from last month
-            </div>
+           
         </div>
         
         <div class="stat-card">
-            <div class="stat-card-header">
+            <div class="stat-card-header gap-2">
                 <div class="stat-card-icon bg-danger-light">
                     <i class="fas fa-users"></i>
                 </div>
-                <p class="stat-card-title">Customers</p>
+                <p class="stat-card-title">{{ __('provider.customers') }}</p>
             </div>
             <h2 class="stat-card-value">{{ isset($totalCustomers) ? $totalCustomers : '0' }}</h2>
-            <div class="stat-card-comparison positive">
-                <i class="fas fa-arrow-up mr-1"></i> 5% from last month
-            </div>
+           
         </div>
     </div>
 
@@ -82,17 +74,17 @@
     <div class="col-lg-6 mb-4">
         <div class="content-section">
             <div class="section-header">
-                <h3 class="section-title"><i class="fas fa-box me-2"></i> Recent Products</h3>
-                <a href="{{ route('provider.provider-products.index') }}" class="section-action">View All</a>
+                <h3 class="section-title"><i class="fas fa-box me-2"></i> {{ __('provider.recent_products') }}</h3>
+                <a href="{{ route('provider.provider-products.index') }}" class="section-action">{{ __('provider.view_all') }}</a>
             </div>
             <div class="table-responsive">
                 <table class="modern-table">
                     <thead>
                         <tr>
-                            <th style="width: 60px;">Image</th>
-                            <th>Name</th>
-                            <th>Price</th>
-                            <th style="width: 100px;">Status</th>
+                            <th style="width: 60px;">{{ __('provider.image') }}</th>
+                            <th>{{ __('provider.product_name') }}</th>
+                            <th>{{ __('provider.price') }}</th>
+                            <th style="width: 100px;">{{ __('provider.status') }}</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -111,9 +103,9 @@
                             <td class="product-price">${{ number_format($product->price, 2) }}</td>
                             <td>
                                 @if($product->is_active)
-                                <span class="status-badge status-available">Available</span>
+                                <span class="status-badge status-available">{{ __('provider.available') }}</span>
                                 @else
-                                <span class="status-badge status-unavailable">Unavailable</span>
+                                <span class="status-badge status-unavailable">{{ __('provider.unavailable') }}</span>
                                 @endif
                             </td>
                         </tr>
@@ -126,10 +118,10 @@
                                     <div class="empty-state-icon">
                                         <i class="fas fa-box-open"></i>
                                     </div>
-                                    <h4 class="empty-state-title">No products yet</h4>
-                                    <p class="empty-state-description">Start adding products to your store</p>
+                                    <h4 class="empty-state-title">{{ __('provider.no_products_yet') }}</h4>
+                                    <p class="empty-state-description">{{ __('provider.add_products_to_your_store') }}</p>
                                     <a href="{{ route('provider.provider-products.create') }}" class="dashboard-btn btn-primary">
-                                        <i class="fas fa-plus me-1"></i> Add Product
+                                        <i class="fas fa-plus me-1"></i> {{ __('provider.add_product') }}
                                     </a>
                                 </div>
                             </td>
@@ -145,18 +137,18 @@
     <div class="col-lg-6 mb-4">
         <div class="content-section">
             <div class="section-header">
-                <h3 class="section-title"><i class="fas fa-shopping-cart me-2"></i> Recent Orders</h3>
-                <a href="{{ route('provider.orders.index') }}" class="section-action">View All</a>
+                <h3 class="section-title"><i class="fas fa-shopping-cart me-2"></i> {{ __('provider.recent_orders') }}</h3>
+                <a href="{{ route('provider.orders.index') }}" class="section-action">{{ __('provider.view_all') }}</a>
             </div>
             <div class="table-responsive">
                 <table class="modern-table">
                     <thead>
                         <tr>
-                            <th>Order #</th>
-                            <th>Customer</th>
-                            <th>Total</th>
-                            <th>Status</th>
-                            <th>Date</th>
+                            <th>{{ __('provider.order_number') }}</th>
+                             <th>{{ __('provider.customer') }}</th>
+                             <th>{{ __('provider.total') }}</th>
+                             <th>{{ __('provider.status') }}</th>
+                             <th>{{ __('provider.date') }}</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -171,13 +163,13 @@
                             <td class="order-total">${{ number_format($order->total, 2) }}</td>
                             <td>
                                 @if($order->status == 'completed')
-                                <span class="status-badge status-completed">Completed</span>
+                                <span class="status-badge status-completed">{{ __('provider.completed') }}</span>
                                 @elseif($order->status == 'processing')
-                                <span class="status-badge status-processing">Processing</span>
+                                <span class="status-badge status-processing">{{ __('provider.processing') }}</span>
                                 @elseif($order->status == 'pending')
-                                <span class="status-badge status-pending">Pending</span>
+                                <span class="status-badge status-pending">{{ __('provider.pending') }}</span>
                                 @elseif($order->status == 'cancelled')
-                                <span class="status-badge status-cancelled">Cancelled</span>
+                                <span class="status-badge status-cancelled">{{ __('provider.cancelled') }}</span>
                                 @endif
                             </td>
                             <td>{{ $order->created_at->format('M d, Y') }}</td>
@@ -191,8 +183,8 @@
                                     <div class="empty-state-icon">
                                         <i class="fas fa-shopping-cart"></i>
                                     </div>
-                                    <h4 class="empty-state-title">No orders yet</h4>
-                                    <p class="empty-state-description">Orders will appear here once customers start purchasing</p>
+                                    <h4 class="empty-state-title">{{ __('provider.no_orders_yet') }}</h4>
+                                    <p class="empty-state-description">{{ __('provider.orders_will_appear_here_once_customers_start_purchasing') }}</p>
                                 </div>
                             </td>
                         </tr>
@@ -209,18 +201,18 @@
     <div class="col-12 mb-4">
         <div class="content-section">
             <div class="section-header">
-                <h3 class="section-title"><i class="fas fa-chart-line me-2"></i> Store Activity</h3>
+                <h3 class="section-title"><i class="fas fa-chart-line me-2"></i> {{ __('provider.store_activity') }}</h3>
             </div>
             <div class="welcome-message">
                 <div class="welcome-icon">
                     <i class="fas fa-rocket"></i>
                 </div>
                 <div class="welcome-content">
-                    <h4>Welcome to your Dashboard!</h4>
-                    <p>Manage your products, track orders, and grow your business</p>
+                    <h4>{{ __('provider.welcome_to_dashboard') }}</h4>
+                    <p>{{ __('provider.manage_products_track_orders') }}</p>
                 </div>
                 <a href="{{ route('provider.provider-products.create') }}" class="dashboard-btn btn-primary ms-auto">
-                    <i class="fas fa-plus me-1"></i> Add New Product
+                    <i class="fas fa-plus me-1"></i> {{ __('provider.add_new_product') }}
                 </a>
             </div>
 
@@ -230,28 +222,28 @@
                         <i class="fas fa-eye"></i>
                     </div>
                     <div class="activity-value">{{ isset($totalViews) ? $totalViews : '0' }}</div>
-                    <div class="activity-label">Product Views</div>
+                    <div class="activity-label">{{ __('provider.product_views') }}</div>
                 </div>
                 <div class="activity-card">
                     <div class="activity-icon bg-success-light">
                         <i class="fas fa-shopping-bag"></i>
                     </div>
                     <div class="activity-value">{{ isset($conversionRate) ? $conversionRate : '0' }}%</div>
-                    <div class="activity-label">Conversion Rate</div>
+                    <div class="activity-label">{{ __('provider.conversion_rate') }}</div>
                 </div>
                 <div class="activity-card">
                     <div class="activity-icon bg-warning-light">
                         <i class="fas fa-star"></i>
                     </div>
                     <div class="activity-value">{{ isset($avgRating) ? number_format($avgRating, 1) : '0.0' }}</div>
-                    <div class="activity-label">Avg. Rating</div>
+                    <div class="activity-label">{{ __('provider.avg_rating') }}</div>
                 </div>
                 <div class="activity-card">
                     <div class="activity-icon bg-danger-light">
                         <i class="fas fa-redo"></i>
                     </div>
                     <div class="activity-value">{{ isset($returnRate) ? $returnRate : '0' }}%</div>
-                    <div class="activity-label">Return Rate</div>
+                    <div class="activity-label">{{ __('provider.return_rate') }}</div>
                 </div>
             </div>
         </div>

@@ -15,22 +15,22 @@
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 7v10a2 2 0 002 2h14a2 2 0 002-2V9a2 2 0 00-2-2H5a2 2 0 00-2-2z"></path>
                     </svg>
                 </div>
-                <h2 class="text-3xl font-bold text-gray-900">Welcome back, {{ auth()->user()->name }}!</h2>
+                <h2 class="text-3xl font-bold text-gray-900">{{ __('merchant.welcome_back', ['name' => auth()->user()->name]) }}</h2>
             </div>
-            <p class="text-gray-600">Here's what's happening with your merchant business</p>
+            <p class="text-gray-600">{{ __('merchant.dashboard_subtitle') }}</p>
         </div>
         <div class="mt-4 sm:mt-0 flex space-x-3">
             <a href="{{ route('merchant.products.create') }}" class="inline-flex items-center px-4 py-2 bg-blue-600 text-white text-sm font-medium rounded-lg hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 transition-colors">
                 <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"></path>
                 </svg>
-                Add Product
+                {{ __('merchant.add_product') }}
             </a>
             <a href="{{ route('merchant.services.create') }}" class="inline-flex items-center px-4 py-2 bg-violet-600 text-white text-sm font-medium rounded-lg hover:bg-violet-700 focus:outline-none focus:ring-2 focus:ring-violet-500 focus:ring-offset-2 transition-colors">
                 <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"></path>
                 </svg>
-                Add Service
+                {{ __('merchant.add_service') }}
             </a>
         </div>
     </div>
@@ -46,8 +46,9 @@
                 </svg>
                 <input
                     type="text"
-                    placeholder="Search across all your products and services..."
-                    class="w-full pl-10 pr-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors"
+                    placeholder="{{ __('merchant.search_placeholder') }}"
+                    class="w-full pl-10 pr-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors merchant-search-input"
+                    autocomplete="off"
                 >
             </div>
         </div>
@@ -56,13 +57,13 @@
                 <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10"></path>
                 </svg>
-                Browse Products
+                {{ __('merchant.browse_products') }}
             </a>
             <a href="{{ route('merchant.services.index') }}" class="inline-flex items-center px-4 py-3 border border-gray-300 rounded-lg text-sm font-medium text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 transition-colors">
                 <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"></path>
                 </svg>
-                Browse Services
+                {{ __('merchant.browse_services') }}
             </a>
         </div>
     </div>
@@ -97,29 +98,29 @@
             <div class="ml-4 flex-1">
                 <h3 class="text-sm font-medium {{ $merchant->license_status === 'checking' ? 'text-yellow-800' : ($merchant->license_status === 'rejected' ? 'text-red-800' : ($merchant->license_status === 'expired' ? 'text-gray-800' : 'text-orange-800')) }}">
                     @if($merchant->license_status === 'checking')
-                        License Under Review
+                        {{ __('merchant.license_checking') }}
                     @elseif($merchant->license_status === 'rejected')
-                        License Rejected
+                        {{ __('merchant.license_rejected') }}
                     @elseif($merchant->license_status === 'expired')
-                        License Expired
+                        {{ __('merchant.license_expired') }}
                     @elseif($merchant->needsLicenseRenewal())
-                        License Renewal Required
+                        {{ __('merchant.license_renewal_required') }}
                     @else
-                        License Status Update
+                        {{ __('merchant.license_status_update') }}
                     @endif
                 </h3>
                 <div class="mt-1 text-sm {{ $merchant->license_status === 'checking' ? 'text-yellow-700' : ($merchant->license_status === 'rejected' ? 'text-red-700' : ($merchant->license_status === 'expired' ? 'text-gray-700' : 'text-orange-700')) }}">
                     @if($merchant->license_status === 'checking')
-                        <p>Your license is currently under review. You will receive an email notification once approved.</p>
+                        <p>{{ __('merchant.license_under_review') }}</p>
                     @elseif($merchant->license_status === 'rejected')
-                        <p>Your license has been rejected. Please upload a new license to continue.</p>
+                        <p>{{ __('merchant.license_has_been_rejected') }}</p>
                         @if($merchant->license_rejection_reason)
-                            <p class="mt-1 font-medium">Reason: {{ $merchant->license_rejection_reason }}</p>
+                            <p class="mt-1 font-medium">{{ __('merchant.license_rejection_reason', ['reason' => $merchant->license_rejection_reason]) }}</p>
                         @endif
                     @elseif($merchant->license_status === 'expired')
-                        <p>Your license has expired. Please upload a renewed license to continue using the platform.</p>
+                        <p>{{ __('merchant.license_has_expired') }}</p>
                     @elseif($merchant->needsLicenseRenewal())
-                        <p>Your license expires in {{ $merchant->daysUntilLicenseExpiration() }} days. Please renew your license soon.</p>
+                        <p>{{ __('merchant.license_expires_in_days', ['days' => $merchant->daysUntilLicenseExpiration()]) }}</p>
                     @endif
                 </div>
                 <div class="mt-3">
@@ -128,7 +129,7 @@
                             <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12"></path>
                             </svg>
-                            {{ $merchant->needsLicenseRenewal() ? 'Renew License' : 'Upload New License' }}
+                            {{ $merchant->needsLicenseRenewal() ? __('merchant.renew_license') : __('merchant.upload_new_license') }}
                         </a>
                     @endif
                 </div>
@@ -144,7 +145,7 @@
     <div class="bg-white rounded-xl shadow-sm border border-gray-200 p-4 sm:p-6 transition-all duration-300 hover:shadow-lg hover:-translate-y-1 cursor-pointer group">
         <div class="flex items-center justify-between h-full">
             <div class="flex-1 min-w-0">
-                <p class="text-xs sm:text-sm font-medium text-gray-600 mb-1 sm:mb-2 truncate">Products</p>
+                <p class="text-xs sm:text-sm font-medium text-gray-600 mb-1 sm:mb-2 truncate">{{ __('merchant.products') }}</p>
                 <p class="text-xl sm:text-2xl lg:text-3xl font-bold text-gray-900 leading-tight">{{ $totalProducts }}</p>
             </div>
             <div class="flex-shrink-0 ml-3 sm:ml-4">
@@ -161,7 +162,7 @@
     <div class="bg-white rounded-xl shadow-sm border border-gray-200 p-4 sm:p-6 transition-all duration-300 hover:shadow-lg hover:-translate-y-1 cursor-pointer group">
         <div class="flex items-center justify-between h-full">
             <div class="flex-1 min-w-0">
-                <p class="text-xs sm:text-sm font-medium text-gray-600 mb-1 sm:mb-2 truncate">Services</p>
+                <p class="text-xs sm:text-sm font-medium text-gray-600 mb-1 sm:mb-2 truncate">{{ __('merchant.services') }}</p>
                 <p class="text-xl sm:text-2xl lg:text-3xl font-bold text-gray-900 leading-tight">{{ $totalServices }}</p>
             </div>
             <div class="flex-shrink-0 ml-3 sm:ml-4">
@@ -178,7 +179,7 @@
     <div class="bg-white rounded-xl shadow-sm border border-gray-200 p-4 sm:p-6 transition-all duration-300 hover:shadow-lg hover:-translate-y-1 cursor-pointer group">
         <div class="flex items-center justify-between h-full">
             <div class="flex-1 min-w-0">
-                <p class="text-xs sm:text-sm font-medium text-gray-600 mb-1 sm:mb-2 truncate">Orders</p>
+                <p class="text-xs sm:text-sm font-medium text-gray-600 mb-1 sm:mb-2 truncate">{{ __('merchant.orders') }}</p>
                 <p class="text-xl sm:text-2xl lg:text-3xl font-bold text-gray-900 leading-tight">{{ $totalOrders }}</p>
             </div>
             <div class="flex-shrink-0 ml-3 sm:ml-4">
@@ -195,7 +196,7 @@
     <div class="bg-white rounded-xl shadow-sm border border-gray-200 p-4 sm:p-6 transition-all duration-300 hover:shadow-lg hover:-translate-y-1 cursor-pointer group">
         <div class="flex items-center justify-between h-full">
             <div class="flex-1 min-w-0">
-                <p class="text-xs sm:text-sm font-medium text-gray-600 mb-1 sm:mb-2 truncate">Customers</p>
+                <p class="text-xs sm:text-sm font-medium text-gray-600 mb-1 sm:mb-2 truncate">{{ __('merchant.customers') }}</p>
                 <p class="text-xl sm:text-2xl lg:text-3xl font-bold text-gray-900 leading-tight">{{ $totalCustomers }}</p>
             </div>
             <div class="flex-shrink-0 ml-3 sm:ml-4">
@@ -212,9 +213,9 @@
     <div class="bg-white rounded-xl shadow-sm border border-gray-200 p-4 sm:p-6 transition-all duration-300 hover:shadow-lg hover:-translate-y-1 cursor-pointer group">
         <div class="flex items-center justify-between h-full">
             <div class="flex-1 min-w-0">
-                <p class="text-xs sm:text-sm font-medium text-gray-600 mb-1 sm:mb-2 truncate">Average Rating</p>
+                <p class="text-xs sm:text-sm font-medium text-gray-600 mb-1 sm:mb-2 truncate">{{ __('merchant.average_rating') }}</p>
                 <p class="text-xl sm:text-2xl lg:text-3xl font-bold text-gray-900 leading-tight">{{ number_format($averageRating, 1) }}</p>
-                <p class="text-xs text-gray-500 mt-1 truncate">{{ $totalRatings }} reviews</p>
+                <p class="text-xs text-gray-500 mt-1 truncate">{{ $totalRatings }} {{ __('merchant.reviews') }}</p>
             </div>
             <div class="flex-shrink-0 ml-3 sm:ml-4">
                 <div class="p-2 sm:p-3 bg-orange-100 rounded-lg group-hover:bg-orange-200 transition-colors duration-300">
@@ -230,7 +231,7 @@
     <div class="bg-white rounded-xl shadow-sm border border-gray-200 p-4 sm:p-6 transition-all duration-300 hover:shadow-lg hover:-translate-y-1 cursor-pointer group">
         <div class="flex items-center justify-between h-full">
             <div class="flex-1 min-w-0">
-                <p class="text-xs sm:text-sm font-medium text-gray-600 mb-1 sm:mb-2 truncate">Profile Views</p>
+                <p class="text-xs sm:text-sm font-medium text-gray-600 mb-1 sm:mb-2 truncate">{{ __('merchant.profile_views') }}</p>
                 <p class="text-xl sm:text-2xl lg:text-3xl font-bold text-gray-900 leading-tight">{{ $viewCount }}</p>
             </div>
             <div class="flex-shrink-0 ml-3 sm:ml-4">
@@ -257,14 +258,14 @@
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10"></path>
                         </svg>
                     </div>
-                    Recent Products
+                    {{ __('merchant.recent_products') }}
                 </h3>
                 <a href="{{ route('merchant.products.index') }}" class="inline-flex items-center px-3 py-2 bg-blue-600 text-white text-sm font-medium rounded-lg hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 transition-colors">
                     <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path>
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"></path>
                     </svg>
-                    View All
+                    {{ __('merchant.view_all') }}
                 </a>
             </div>
         </div>
@@ -273,9 +274,9 @@
             <table class="w-full">
                 <thead class="bg-gray-50">
                     <tr>
-                        <th class="px-6 py-4 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Product</th>
-                        <th class="px-6 py-4 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Price</th>
-                        <th class="px-6 py-4 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Status</th>
+                        <th class="px-6 py-4 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">{{ __('merchant.product') }}</th>
+                        <th class="px-6 py-4 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">{{ __('merchant.price') }}</th>
+                        <th class="px-6 py-4 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">{{ __('merchant.status') }}</th>
                     </tr>
                 </thead>
                 <tbody class="bg-white divide-y divide-gray-200">
@@ -304,7 +305,7 @@
                         <td class="px-6 py-4">
                             <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium {{ $product->is_available ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800' }}">
                                 <span class="w-1.5 h-1.5 rounded-full mr-1.5 {{ $product->is_available ? 'bg-green-400' : 'bg-red-400' }}"></span>
-                                {{ $product->is_available ? 'Available' : 'Unavailable' }}
+                                {{ $product->is_available ? __('merchant.available') : __('merchant.unavailable') }}
                             </span>
                         </td>
                     </tr>
@@ -314,14 +315,14 @@
                             <svg class="mx-auto h-12 w-12 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10"></path>
                             </svg>
-                            <h3 class="mt-2 text-sm font-medium text-gray-900">No products</h3>
-                            <p class="mt-1 text-sm text-gray-500">Get started by creating your first product.</p>
+                            <h3 class="mt-2 text-sm font-medium text-gray-900">{{ __('merchant.no_products') }}</h3>
+                            <p class="mt-1 text-sm text-gray-500">{{ __('merchant.get_started_first_product') }}</p>
                             <div class="mt-6">
                                 <a href="{{ route('merchant.products.create') }}" class="inline-flex items-center px-4 py-2 bg-blue-600 text-white text-sm font-medium rounded-lg hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 transition-colors">
                                     <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"></path>
                                     </svg>
-                                    Add Your First Product
+                                    {{ __('merchant.add_your_first_product') }}
                                 </a>
                             </div>
                         </td>
@@ -342,14 +343,14 @@
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"></path>
                         </svg>
                     </div>
-                    Recent Services
+                    {{ __('merchant.recent_services') }}
                 </h3>
                 <a href="{{ route('merchant.services.index') }}" class="inline-flex items-center px-3 py-2 bg-green-600 text-white text-sm font-medium rounded-lg hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-offset-2 transition-colors">
                     <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path>
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"></path>
                     </svg>
-                    View All
+                    {{ __('merchant.view_all') }}
                 </a>
             </div>
         </div>
@@ -358,9 +359,9 @@
             <table class="w-full">
                 <thead class="bg-gray-50">
                     <tr>
-                        <th class="px-6 py-4 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Service</th>
-                        <th class="px-6 py-4 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Price</th>
-                        <th class="px-6 py-4 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Status</th>
+                        <th class="px-6 py-4 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">{{ __('merchant.service') }}</th>
+                        <th class="px-6 py-4 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">{{ __('merchant.price') }}</th>
+                        <th class="px-6 py-4 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">{{ __('merchant.status') }}</th>
                     </tr>
                 </thead>
                 <tbody class="bg-white divide-y divide-gray-200">
@@ -389,7 +390,7 @@
                         <td class="px-6 py-4">
                             <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium {{ ($service->status ?? 'active') === 'active' ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800' }}">
                                 <span class="w-1.5 h-1.5 rounded-full mr-1.5 {{ ($service->status ?? 'active') === 'active' ? 'bg-green-400' : 'bg-red-400' }}"></span>
-                                {{ ucfirst($service->status ?? 'active') }}
+                                {{ ($service->status ?? 'active') === 'active' ? __('merchant.available') : __('merchant.unavailable') }}
                             </span>
                         </td>
                     </tr>
@@ -399,14 +400,14 @@
                             <svg class="mx-auto h-12 w-12 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"></path>
                             </svg>
-                            <h3 class="mt-2 text-sm font-medium text-gray-900">No services</h3>
-                            <p class="mt-1 text-sm text-gray-500">Get started by creating your first service.</p>
+                            <h3 class="mt-2 text-sm font-medium text-gray-900">{{ __('merchant.no_services') }}</h3>
+                            <p class="mt-1 text-sm text-gray-500">{{ __('merchant.get_started_first_service') }}</p>
                             <div class="mt-6">
                                 <a href="{{ route('merchant.services.create') }}" class="inline-flex items-center px-4 py-2 bg-green-600 text-white text-sm font-medium rounded-lg hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-offset-2 transition-colors">
                                     <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"></path>
                                     </svg>
-                                    Add Your First Service
+                                    {{ __('merchant.add_your_first_service') }}
                                 </a>
                             </div>
                         </td>
@@ -427,7 +428,7 @@
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"></path>
                 </svg>
             </div>
-            Account Summary
+            {{ __('merchant.account_summary') }}
         </h3>
     </div>
     <div class="p-6">
@@ -445,7 +446,7 @@
                         <div class="text-xs text-blue-600 font-medium">/ 100</div>
                     </div>
                 </div>
-                <div class="text-sm font-medium text-blue-700">Merchant Score</div>
+                <div class="text-sm font-medium text-blue-700">{{ __('merchant.merchant_score') }}</div>
                 
             </div>
 
@@ -469,12 +470,12 @@
                         </div>
                     </div>
                 </div>
-                <div class="text-sm font-medium {{ $merchant->status === 'active' ? 'text-orange-700' : 'text-red-700' }}">Account Status</div>
+                <div class="text-sm font-medium {{ $merchant->status === 'active' ? 'text-orange-700' : 'text-red-700' }}">{{ __('merchant.account_status') }}</div>
             </div>
 
             <!-- License Status -->
             <div class="bg-gradient-to-br {{ $merchant->license_status === 'verified' ? 'from-green-50 to-green-100' : ($merchant->license_status === 'checking' ? 'from-yellow-50 to-yellow-100' : ($merchant->license_status === 'rejected' ? 'from-red-50 to-red-100' : 'from-gray-50 to-gray-100')) }} rounded-xl p-6 border {{ $merchant->license_status === 'verified' ? 'border-green-200' : ($merchant->license_status === 'checking' ? 'border-yellow-200' : ($merchant->license_status === 'rejected' ? 'border-red-200' : 'border-gray-200')) }}">
-                <div class="flex items-center justify-between mb-4">
+                <div class="flex items-center gap-2 justify-between mb-4">
                     <div class="p-3 {{ $merchant->license_status === 'verified' ? 'bg-green-500' : ($merchant->license_status === 'checking' ? 'bg-yellow-500' : ($merchant->license_status === 'rejected' ? 'bg-red-500' : 'bg-gray-500')) }} rounded-lg">
                         @if($merchant->license_status === 'verified')
                             <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -505,7 +506,7 @@
                         @endif
                     </div>
                 </div>
-                <div class="text-sm font-medium {{ $merchant->license_status === 'verified' ? 'text-green-700' : ($merchant->license_status === 'checking' ? 'text-yellow-700' : ($merchant->license_status === 'rejected' ? 'text-red-700' : 'text-gray-700')) }}">License Status</div>
+                <div class="text-sm font-medium {{ $merchant->license_status === 'verified' ? 'text-green-700' : ($merchant->license_status === 'checking' ? 'text-yellow-700' : ($merchant->license_status === 'rejected' ? 'text-red-700' : 'text-gray-700')) }}">{{ __('merchant.license_status') }}</div>
             </div>
 
             <!-- Location -->
@@ -519,11 +520,11 @@
                     </div>
                     <div class="text-right">
                         <div class="text-lg font-bold text-purple-700">
-                            {{ $merchant->emirate ?? 'Not Set' }}
+                            {{ $merchant->emirate ?? __('merchant.not_set') }}
                         </div>
                     </div>
                 </div>
-                <div class="text-sm font-medium text-purple-700">Location</div>
+                <div class="text-sm font-medium text-purple-700">{{ __('merchant.location') }}</div>
             </div>
         </div>
 
@@ -534,9 +535,9 @@
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-2.5L13.732 4c-.77-.833-1.964-.833-2.732 0L3.732 16.5c-.77.833.192 2.5 1.732 2.5z"></path>
                 </svg>
                 <div>
-                    <h4 class="text-sm font-medium text-yellow-800">Account Verification Pending</h4>
+                    <h4 class="text-sm font-medium text-yellow-800">{{ __('merchant.account_verification_pending') }}</h4>
                     <p class="mt-1 text-sm text-yellow-700">
-                        Your merchant account is pending admin verification. You can still manage your products and services, but some features may be limited until verification is complete.
+                        {{ __('merchant.account_verification_pending_message') }}
                     </p>
                 </div>
             </div>

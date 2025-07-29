@@ -8,12 +8,12 @@
           <div class="w-6 h-6 rounded-full border-2 border-white shadow-sm"
                :style="{ backgroundColor: color.color_code || '#000000' }"></div>
           <h4 class="vue-text-lg">
-            {{ $t('color_variant') }} {{ index + 1 }}
+            {{ t.color_variant }} {{ index + 1 }}
             <span v-if="isDefault"
                   class="ml-2 inline-flex items-center px-2 py-1 text-xs font-medium rounded"
                   style="background-color: var(--gray-100); color: var(--primary-blue-hover);">
               <i class="fas fa-star w-3 h-3 mr-1"></i>
-              {{ $t('default') }}
+              {{ t.default }}
             </span>
           </h4>
         </div>
@@ -23,7 +23,7 @@
                   class="vue-btn-blue-solid text-sm font-medium"
                   @click="$emit('set-default', index)">
             <i class="fas fa-star mr-2"></i>
-            {{ $t('set_as_default') }}
+            {{ t.set_as_default }}
           </button>
           <button type="button" 
                   class="remove-item p-2 text-red-600 hover:text-red-700 hover:bg-red-50 rounded-lg transition-colors"
@@ -41,7 +41,7 @@
           <div class="grid grid-cols-2 gap-4">
             <div class="space-y-2">
               <label class="block vue-text-sm">
-                {{ $t('color_name') }} <span class="text-red-500">*</span>
+                {{ t.color_name }} <span class="text-red-500">*</span>
               </label>
 
               <!-- Custom Color Selection Interface -->
@@ -54,7 +54,7 @@
                     <div class="color-swatch"
                          :style="{ backgroundColor: getColorCode(color.name) || '#e5e7eb' }"></div>
                     <div class="color-info">
-                      <span class="color-name">{{ color.name || $t('select_color') }}</span>
+                      <span class="color-name">{{ color.name || t.select_color }}</span>
                       <span v-if="color.name" class="color-code">{{ getColorCode(color.name) }}</span>
                     </div>
                   </div>
@@ -68,7 +68,7 @@
                   <div class="color-search">
                     <input type="text"
                            v-model="colorSearchQuery"
-                           :placeholder="$t('search_colors')"
+                           :placeholder="t.search_colors"
                            class="color-search-input"
                            @click.stop>
                   </div>
@@ -96,7 +96,7 @@
                       @change="updateColor('name', $event.target.value)"
                       class="hidden"
                       required>
-                <option value="">{{ $t('select_color') }}</option>
+                <option value="">{{ t.select_color }}</option>
                 <option v-for="colorOption in colorOptionsArray"
                         :key="colorOption"
                         :value="colorOption">
@@ -108,7 +108,7 @@
             <div class="space-y-2 mt-2">
               <label class="block vue-text-sm font-medium">
                 <i class="fas fa-palette w-4 h-4 mr-2 text-blue-500"></i>
-                {{ $t('color_code') }}
+                {{ t.color_code }}
               </label>
               <div class="flex gap-3">
                 <div class="relative">
@@ -136,7 +136,7 @@
               <div class="flex items-center justify-between">
                 <label class="block vue-text-sm font-medium">
                   <i class="fas fa-coins w-4 h-4 mr-2 text-blue-500"></i>
-                  {{ $t('price') }} 
+                  {{ t.price }}
                 </label>
                 
               </div>
@@ -153,14 +153,14 @@
               </div>
               <p class="text-xs text-slate-500 mt-1">
                 <i class="fas fa-info-circle mr-1"></i>
-                {{ $t('additional_cost_color_variant') }}
+                {{ t.additional_cost_color_variant }}
               </p>
             </div>
 
             <div class="space-y-2">
               <label class="block vue-text-xs font-medium">
                 <i class="fas fa-boxes w-4 h-4 mr-2 text-blue-500"></i>
-                {{ $t('stock') }} 
+                {{ t.stock }}
               </label>
               <div class="relative">
                 <input type="number"
@@ -170,16 +170,16 @@
                        class="vue-form-control-enhanced-blue pr-16 text-center font-semibold"
                        placeholder="0">
                 <div class="absolute right-3 top-1/2 transform -translate-y-1/2">
-                  <span class="text-xs text-slate-500 bg-slate-100 px-2 py-1 rounded">{{ $t('units') }}</span>
+                  <span class="text-xs text-slate-500 bg-slate-100 px-2 py-1 rounded">{{ t.units }}</span>
                 </div>
               </div>
               <div class="flex items-center justify-between text-xs mt-1">
 
                 <span class="text-blue-600 font-medium" v-if="color.stock > 0">
-                  {{ color.stock }} {{ $t('in_stock') }}
+                  {{ color.stock }} {{ t.in_stock }}
                 </span>
                 <span class="text-red-500 font-medium" v-else>
-                  {{ $t('out_of_stock') }}
+                  {{ t.out_of_stock }}
                 </span>
               </div>
 
@@ -189,7 +189,7 @@
                 <div class="flex items-start gap-2">
                   <i class="fas fa-exclamation-triangle text-amber-500 text-sm mt-0.5"></i>
                   <div class="flex-1">
-                    <p class="text-xs text-amber-700 font-medium">{{ $t('stock_auto_corrected') }}</p>
+                    <p class="text-xs text-amber-700 font-medium">{{ t.stock_auto_corrected }}</p>
                     <p class="text-xs text-amber-600 mt-1">{{ stockCorrectionMessage }}</p>
                   </div>
                   <button type="button"
@@ -204,7 +204,7 @@
             <div class="space-y-2">
               <label class="block vue-text-sm font-medium">
                 <i class="fas fa-sort-numeric-down w-4 h-4 mr-2 text-blue-500"></i>
-                {{ $t('display_order') }}
+                {{ t.display_order }}
               </label>
               <div class="relative">
                 <input type="number"
@@ -220,7 +220,7 @@
               </div>
               <p class="text-xs text-slate-500 mt-1">
                 <i class="fas fa-info-circle mr-1"></i>
-                {{ $t('lower_numbers_appear_first') }}
+                {{ t.lower_numbers_appear_first }}
               </p>
             </div>
           </div>
@@ -229,7 +229,7 @@
         <!-- Image Upload -->
         <div class="space-y-4">
           <label class="block vue-text-sm">
-            {{ $t('product_image') }} <span class="text-red-500">*</span>
+            {{ t.product_image }} <span class="text-red-500">*</span>
           </label>
           <div class="relative">
             <div class="aspect-[3/4] bg-slate-50 border-2 border-dashed border-slate-300 rounded-lg overflow-hidden hover:border-primary-400 transition-colors image-preview-container"
@@ -251,7 +251,7 @@
                           class="flex items-center justify-center w-8 h-8 bg-white bg-opacity-90 hover:bg-opacity-100 text-slate-700 rounded-full shadow-lg hover:shadow-xl transition-all duration-200 trigger-image-upload group/btn"
                           @click.stop="triggerFileInput">
                     <i class="fas fa-camera w-4 h-4 group-hover/btn:scale-110 transition-transform"></i>
-                    <span class="sr-only">{{ $t('change_image') }}</span>
+                    <span class="sr-only">{{ t.change_image }}</span>
                   </button>
                 </div>
                 
@@ -260,7 +260,7 @@
                   <span class="inline-flex items-center px-2 py-1 text-xs font-medium rounded"
                         style="background-color: var(--primary-600); color: white;">
                     <i class="fas fa-star w-3 h-3 mr-1"></i>
-                    {{ $t('main_image') }}
+                    {{ t.main_image }}
                   </span>
                 </div>
               </div>
@@ -268,9 +268,9 @@
               <!-- Upload Placeholder -->
               <div v-else class="w-full h-full flex flex-col items-center justify-center cursor-pointer hover:bg-slate-100 transition-colors image-placeholder">
                 <i class="fas fa-image w-12 h-12 text-slate-400 mb-3"></i>
-                <p class="text-sm font-medium text-slate-600 mb-1">{{ $t('upload_image') }}</p>
-                <p class="text-xs text-slate-500">{{ $t('png_jpg_up_to_2mb') }}</p>
-                <p class="text-xs text-slate-400 mt-1">{{ $t('click_drag_upload') }}</p>
+                <p class="text-sm font-medium text-slate-600 mb-1">{{ t.upload_image }}</p>
+                <p class="text-xs text-slate-500">{{ t.png_jpg_up_to_2mb }}</p>
+                <p class="text-xs text-slate-400 mt-1">{{ t.click_drag_upload }}</p>
               </div>
             </div>
             
@@ -303,13 +303,13 @@
         <div v-else-if="!color.name || !color.stock" class="text-center py-8" style="border-top: 1px solid var(--gray-200); margin-top: 1.5rem; padding-top: 1.5rem;">
           <i class="fas fa-info-circle w-6 h-6 mb-2" style="color: var(--gray-400);"></i>
           <p class="text-sm" style="color: var(--gray-600);">
-            {{ $t('set_color_name_stock_manage_sizes') }}
+            {{ t.set_color_name_stock_manage_sizes }}
           </p>
         </div>
         <div v-else class="text-center py-8" style="border-top: 1px solid var(--gray-200); margin-top: 1.5rem; padding-top: 1.5rem;">
           <i class="fas fa-info-circle w-6 h-6 mb-2" style="color: var(--gray-400);"></i>
           <p class="text-sm" style="color: var(--gray-600);">
-            {{ $t('save_color_variant_first_manage_sizes') }}
+            {{ t.save_color_variant_first_manage_sizes }}
           </p>
         </div>
       </div>
@@ -318,7 +318,7 @@
 </template>
 
 <script>
-import { ref, computed, watch } from 'vue'
+import { ref, computed, watch, onMounted } from 'vue'
 import SizeManagement from './SizeManagement.vue'
 
 export default {
@@ -354,10 +354,32 @@ export default {
   },
   emits: ['update', 'remove', 'set-default', 'image-upload', 'sizes-updated', 'stock-corrected'],
   setup(props, { emit }) {
+    // Reactive translations
+    const translations = ref(window.Laravel?.translations || {})
+
+    // Watch for translation changes
+    const updateTranslations = () => {
+      translations.value = window.Laravel?.translations || {}
+    }
+
+    // Check for translations periodically until they're loaded
+    const checkTranslations = () => {
+      if (window.Laravel?.translations && Object.keys(window.Laravel.translations).length > 0) {
+        updateTranslations()
+      } else {
+        setTimeout(checkTranslations, 100)
+      }
+    }
+
+    onMounted(() => {
+      checkTranslations()
+    })
+
     // Translation method
     const $t = (key, params = {}) => {
-      if (window.translations && window.translations[key]) {
-        let translation = window.translations[key]
+      const trans = translations.value
+      if (trans[key]) {
+        let translation = trans[key]
         // Replace placeholders with actual values
         Object.keys(params).forEach(param => {
           translation = translation.replace(`:${param}`, params[param])
@@ -366,6 +388,33 @@ export default {
       }
       return key
     }
+
+    // Computed translations for commonly used keys
+    const t = computed(() => ({
+      color_variant: $t('color_variant'),
+      default: $t('default'),
+      set_as_default: $t('set_as_default'),
+      color_name: $t('color_name'),
+      select_color: $t('select_color'),
+      color_code: $t('color_code'),
+      price: $t('price'),
+      additional_cost_color_variant: $t('additional_cost_color_variant'),
+      stock: $t('stock'),
+      units: $t('units'),
+      in_stock: $t('in_stock'),
+      out_of_stock: $t('out_of_stock'),
+      display_order: $t('display_order'),
+      lower_numbers_appear_first: $t('lower_numbers_appear_first'),
+      product_image: $t('product_image'),
+      upload_image: $t('upload_image'),
+      png_jpg_up_to_2mb: $t('png_jpg_up_to_2mb'),
+      click_drag_upload: $t('click_drag_upload'),
+      set_color_name_stock_manage_sizes: $t('set_color_name_stock_manage_sizes'),
+      save_color_variant_first_manage_sizes: $t('save_color_variant_first_manage_sizes'),
+      change_image: $t('change_image'),
+      main_image: $t('main_image'),
+      search_colors: $t('search_colors')
+    }))
 
     // RTL support
     const isRTL = computed(() => {
@@ -675,7 +724,7 @@ export default {
     }
 
     return {
-      $t,
+      t,
       isRTL,
       fileInput,
       imageError,

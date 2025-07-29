@@ -1,9 +1,63 @@
 @extends('layouts.merchant')
 
-@section('header', 'Mini Store Management')
+@section('header', __('merchant.mini_store_management'))
 
 @section('styles')
 <style>
+    :root {
+        --discord-primary: #5865F2;
+        --discord-secondary: #4752C4;
+        --discord-success: #57F287;
+        --discord-danger: #ED4245;
+        --discord-warning: #FEE75C;
+        --discord-info: #5DADE2;
+        --discord-light: #99AAB5;
+        --discord-dark: #2C2F33;
+        --discord-darker: #23272A;
+        --discord-lightest: #FFFFFF;
+        --discord-blue: #7289DA;
+    }
+
+    /* RTL Support */
+    [dir="rtl"] {
+        text-align: right;
+    }
+
+    [dir="rtl"] .me-1,
+    [dir="rtl"] .me-2 {
+        margin-right: 0 !important;
+        margin-left: 0.25rem !important;
+    }
+
+    [dir="rtl"] .me-2 {
+        margin-left: 0.5rem !important;
+    }
+
+    [dir="rtl"] .d-flex {
+        flex-direction: row-reverse;
+    }
+
+    [dir="rtl"] .gap-2 > * {
+        margin-left: 0.5rem;
+        margin-right: 0;
+    }
+
+    [dir="rtl"] .gap-2 > *:first-child {
+        margin-left: 0;
+    }
+
+    [dir="rtl"] .text-end {
+        text-align: left !important;
+    }
+
+    [dir="rtl"] .form-label {
+        text-align: right;
+    }
+
+    [dir="rtl"] .alert {
+        text-align: right;
+    }
+
     /* Mobile responsive adjustments for mini-store */
     @media (max-width: 768px) {
         .discord-card-body .row .col-md-6 {
@@ -90,15 +144,15 @@
     <div class="discord-card-header d-flex justify-content-between align-items-center">
         <div>
             <i class="fas fa-map-marker-alt me-2" style="color: var(--discord-primary);"></i>
-            Store Location Management
+            {{ __('merchant.store_location_management') }}
         </div>
         @if($merchant)
             <button type="button" class="discord-btn" onclick="toggleEditMode()">
-                <i class="fas fa-edit me-1"></i> Edit Location
+                <i class="fas fa-edit me-1"></i> {{ __('merchant.edit_location') }}
             </button>
         @else
             <button type="button" class="discord-btn" onclick="showCreateForm()">
-                <i class="fas fa-plus me-1"></i> Set Location
+                <i class="fas fa-plus me-1"></i> {{ __('merchant.set_location') }}
             </button>
         @endif
     </div>
@@ -109,31 +163,31 @@
                 <div class="row">
                     <div class="col-md-6">
                         <div class="mb-3">
-                            <label class="form-label">Store Location Address</label>
-                            <p class="form-control-plaintext">{{ $merchant->store_location_address ?? 'Not set' }}</p>
+                            <label class="form-label">{{ __('merchant.store_location_address') }}</label>
+                            <p class="form-control-plaintext">{{ $merchant->store_location_address ?? __('merchant.not_set') }}</p>
                         </div>
                         <div class="mb-3">
-                            <label class="form-label">Coordinates</label>
+                            <label class="form-label">{{ __('merchant.coordinates') }}</label>
                             <p class="form-control-plaintext">
                                 @if($merchant->store_location_lat && $merchant->store_location_lng)
                                     {{ number_format($merchant->store_location_lat, 6) }}, {{ number_format($merchant->store_location_lng, 6) }}
                                 @else
-                                    Not set
+                                    {{ __('merchant.not_set') }}
                                 @endif
                             </p>
                         </div>
                     </div>
                     <div class="col-md-6">
                         <div class="mb-3">
-                            <label class="form-label">Location Status</label>
+                            <label class="form-label">{{ __('merchant.location_status') }}</label>
                             <p class="form-control-plaintext">
                                 @if($merchant->store_location_address)
                                     <span class="badge bg-success">
-                                        <i class="fas fa-check me-1"></i>Location Set
+                                        <i class="fas fa-check me-1"></i>{{ __('merchant.location_set') }}
                                     </span>
                                 @else
                                     <span class="badge bg-warning">
-                                        <i class="fas fa-exclamation-triangle me-1"></i>Location Not Set
+                                        <i class="fas fa-exclamation-triangle me-1"></i>{{ __('merchant.location_not_set') }}
                                     </span>
                                 @endif
                             </p>
@@ -141,7 +195,7 @@
                         <div class="mb-3">
                             <div class="alert alert-info" style="background-color: var(--discord-blue); border: none; color: white;">
                                 <i class="fas fa-info-circle me-2"></i>
-                                <small>For business details, visit <a href="{{ route('merchant.settings.global') }}" style="color: white; text-decoration: underline;">Global Settings</a></small>
+                                <small>{{ __('merchant.for_business_details_visit') }} <a href="{{ route('merchant.settings.global') }}" style="color: white; text-decoration: underline;">{{ __('merchant.global_settings') }}</a></small>
                             </div>
                         </div>
                     </div>
@@ -157,11 +211,11 @@
                     <div class="row">
                         <div class="col-12">
                             <div class="mb-3">
-                                <label for="store_location_address" class="form-label">Store Location Address</label>
+                                <label for="store_location_address" class="form-label">{{ __('merchant.store_location_address') }}</label>
                                 <input type="text" class="form-control @error('store_location_address') is-invalid @enderror"
                                        id="store_location_address" name="store_location_address"
                                        value="{{ old('store_location_address', $merchant->store_location_address) }}"
-                                       placeholder="Enter your store address or click on the map">
+                                       placeholder="{{ __('merchant.enter_store_address') }}">
                                 @error('store_location_address')
                                     <div class="invalid-feedback" data-server-error>{{ $message }}</div>
                                 @enderror
@@ -177,17 +231,16 @@
 
                     <div class="alert alert-info mb-3" style="background-color: var(--discord-blue); border: none; color: white;">
                         <i class="fas fa-info-circle me-2"></i>
-                        <strong>Note:</strong> This page is for setting your store's physical location only.
-                        To update business details like name, description, logo, etc., please visit
-                        <a href="{{ route('merchant.settings.global') }}" style="color: white; text-decoration: underline;">Global Settings</a>.
+                        <strong>{{ __('merchant.note') }}:</strong> {{ __('merchant.location_note_text') }}
+                        <a href="{{ route('merchant.settings.global') }}" style="color: white; text-decoration: underline;">{{ __('merchant.global_settings') }}</a>.
                     </div>
 
                     <div class="d-flex gap-2">
                         <button type="submit" class="discord-btn">
-                            <i class="fas fa-save me-1"></i> Save Location
+                            <i class="fas fa-save me-1"></i> {{ __('merchant.save_location') }}
                         </button>
                         <button type="button" class="discord-btn discord-btn-secondary" onclick="cancelEdit()">
-                            <i class="fas fa-times me-1"></i> Cancel
+                            <i class="fas fa-times me-1"></i> {{ __('merchant.cancel') }}
                         </button>
                     </div>
                 </form>
@@ -196,11 +249,11 @@
             <!-- No Location Set Message -->
             <div id="no-store-message" class="text-center py-5">
                 <i class="fas fa-map-marker-alt fa-3x mb-3" style="color: var(--discord-light);"></i>
-                <h4 style="color: var(--discord-lightest);">Store Location Not Set</h4>
-                <p style="color: var(--discord-light);">Set your store's physical location to help customers find you.</p>
+                <h4 style="color: var(--discord-lightest);">{{ __('merchant.store_location_not_set') }}</h4>
+                <p style="color: var(--discord-light);">{{ __('merchant.set_store_location_help') }}</p>
                 <div class="alert alert-info mt-3" style="background-color: var(--discord-blue); border: none; color: white;">
                     <i class="fas fa-info-circle me-2"></i>
-                    <small>For business details, visit <a href="{{ route('merchant.settings.global') }}" style="color: white; text-decoration: underline;">Global Settings</a></small>
+                    <small>{{ __('merchant.for_business_details_visit') }} <a href="{{ route('merchant.settings.global') }}" style="color: white; text-decoration: underline;">{{ __('merchant.global_settings') }}</a></small>
                 </div>
             </div>
 
@@ -213,11 +266,11 @@
                     <div class="row">
                         <div class="col-12">
                             <div class="mb-3">
-                                <label for="create_store_location_address" class="form-label">Store Location Address</label>
+                                <label for="create_store_location_address" class="form-label">{{ __('merchant.store_location_address') }}</label>
                                 <input type="text" class="form-control @error('store_location_address') is-invalid @enderror"
                                        id="create_store_location_address" name="store_location_address"
                                        value="{{ old('store_location_address') }}"
-                                       placeholder="Enter your store address or click on the map">
+                                       placeholder="{{ __('merchant.enter_store_address') }}">
                                 @error('store_location_address')
                                     <div class="invalid-feedback" data-server-error>{{ $message }}</div>
                                 @enderror
@@ -240,10 +293,10 @@
 
                     <div class="d-flex gap-2">
                         <button type="submit" class="discord-btn">
-                            <i class="fas fa-save me-1"></i> Set Location
+                            <i class="fas fa-save me-1"></i> {{ __('merchant.set_location') }}
                         </button>
                         <button type="button" class="discord-btn discord-btn-secondary" onclick="cancelCreate()">
-                            <i class="fas fa-times me-1"></i> Cancel
+                            <i class="fas fa-times me-1"></i> {{ __('merchant.cancel') }}
                         </button>
                     </div>
                 </form>
@@ -256,12 +309,12 @@
 <div class="discord-card mt-4">
     <div class="discord-card-header">
         <i class="fas fa-map-marker-alt me-2" style="color: var(--discord-primary);"></i>
-        Store Location
+        {{ __('merchant.store_location') }}
     </div>
     <div class="discord-card-body">
         <div class="mb-3">
             <input type="text" id="map-search" class="form-control"
-                   placeholder="Search for your store location...">
+                   placeholder="{{ __('merchant.search_store_location') }}">
         </div>
         <div id="google-map" style="height: 400px; border-radius: 8px; overflow: hidden;">
             <div class="map-loading">
@@ -269,13 +322,13 @@
                     <div class="spinner-border text-primary mb-2" role="status">
                         <span class="visually-hidden">Loading...</span>
                     </div>
-                    <div>Loading Google Maps...</div>
+                    <div>{{ __('merchant.loading_google_maps') }}</div>
                 </div>
             </div>
         </div>
         <small class="form-text text-muted mt-2">
             <i class="fas fa-info-circle me-1"></i>
-            Click on the map or drag the marker to set your store location. You can also search for an address above.
+            {{ __('merchant.map_instructions') }}
         </small>
     </div>
 </div>
@@ -345,7 +398,7 @@
         } catch (error) {
             console.error('Error initializing Google Maps:', error);
             document.getElementById('google-map').innerHTML =
-                '<div class="alert alert-danger">Error loading Google Maps. Please refresh the page and try again.</div>';
+                '<div class="alert alert-danger">{{ __('merchant.google_maps_error_loading') }}</div>';
             return;
         }
 
@@ -451,7 +504,7 @@
             mapElement.innerHTML =
                 '<div class="alert alert-danger">' +
                 '<i class="fas fa-exclamation-triangle me-2"></i>' +
-                'Google Maps authentication failed. Please check your API key configuration.' +
+                '{{ __('merchant.google_maps_auth_failed') }}' +
                 '</div>';
         }
     };
@@ -464,7 +517,7 @@
             mapElement.innerHTML =
                 '<div class="alert alert-warning">' +
                 '<i class="fas fa-exclamation-triangle me-2"></i>' +
-                'Failed to load Google Maps. Please check your internet connection and try again.' +
+                '{{ __('merchant.google_maps_load_failed') }}' +
                 '</div>';
         }
     }
@@ -482,7 +535,7 @@
                     if (!businessName.nextElementSibling || !businessName.nextElementSibling.classList.contains('invalid-feedback')) {
                         const feedback = document.createElement('div');
                         feedback.className = 'invalid-feedback';
-                        feedback.textContent = 'Business name is required.';
+                        feedback.textContent = '{{ __('merchant.business_name_required') }}';
                         businessName.parentNode.appendChild(feedback);
                     }
                     businessName.focus();

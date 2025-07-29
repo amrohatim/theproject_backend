@@ -1,14 +1,44 @@
 @extends('layouts.provider')
 
-@section('title', 'Settings')
+@section('title', __('provider.settings'))
 
 @section('content')
+<style>
+    [dir="rtl"] .grid {
+        direction: rtl;
+    }
+    [dir="rtl"] .flex {
+        direction: rtl;
+    }
+    [dir="rtl"] .text-left {
+        text-align: right;
+    }
+    [dir="rtl"] .text-right {
+        text-align: left;
+    }
+    [dir="rtl"] .mr-2 {
+        margin-right: 0;
+        margin-left: 0.5rem;
+    }
+    [dir="rtl"] .ml-2 {
+        margin-left: 0;
+        margin-right: 0.5rem;
+    }
+    [dir="rtl"] .mr-1 {
+        margin-right: 0;
+        margin-left: 0.25rem;
+    }
+    [dir="rtl"] .ml-1 {
+        margin-left: 0;
+        margin-right: 0.25rem;
+    }
+</style>
 <!-- Tailwind CSS -->
 <script src="https://cdn.tailwindcss.com"></script>
 <!-- Lucide Icons -->
 <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.js"></script>
 
-<div class="min-h-screen ">
+<div class="min-h-screen " dir="{{ app()->getLocale() === 'ar' ? 'rtl' : 'ltr' }}">
     <div class="container mx-auto px-4 py-8 max-w-6xl">
         <!-- Header -->
         <div class="mb-8">
@@ -16,9 +46,9 @@
                 {{-- <div class="p-2 bg-blue-100 rounded-lg">
                     <i data-lucide="settings" class="w-6 h-6 text-blue-600"></i>
                 </div> --}}
-                <h1 class="text-3xl font-bold text-gray-900">Settings</h1>
+                <h1 class="text-3xl font-bold text-gray-900">{{ __('provider.settings') }}</h1>
             </div>
-            <p class="text-gray-600">Manage your account settings and preferences</p>
+            <p class="text-gray-600">{{ __('provider.manage_account_settings') }}</p>
         </div>
 
         <!-- Alert Container -->
@@ -26,7 +56,7 @@
 
         <!-- Success Alert (Static for demo) -->
         <div class="mb-6 border-green-200 bg-green-50 rounded p-4" style="display: none;" id="success-alert">
-            <p class="text-green-800">Delivery settings updated successfully!</p>
+            <p class="text-green-800">{{ __('provider.delivery_settings_updated_successfully') }}</p>
         </div>
 
         <!-- Quick Links -->
@@ -34,41 +64,41 @@
             <div class="p-6">
                 <div class="flex items-center gap-2 mb-2">
                     <i data-lucide="external-link" class="w-5 h-5 text-blue-600"></i>
-                    <h2 class="text-xl font-semibold">Quick Links</h2>
+                    <h2 class="text-xl font-semibold">{{ __('provider.quick_links') }}</h2>
                 </div>
-                <p class="text-gray-600 mb-4">Access frequently used settings</p>
+                <p class="text-gray-600 mb-4">{{ __('provider.access_frequently_used_settings') }}</p>
                 <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
                     <!-- Profile -->
                     <a href="{{ route('provider.profile.index') }}" class="block p-4 rounded-xl border-2 border-dashed border-gray-200 hover:border-blue-300 transition-all duration-200 hover:shadow-md hover:-translate-y-1">
                         <div class="inline-flex p-3 rounded-lg bg-blue-50 text-blue-600 border border-blue-200 mb-3">
                             <i data-lucide="user" class="w-6 h-6"></i>
                         </div>
-                        <h3 class="font-semibold text-gray-900 mb-1">Profile</h3>
-                        <p class="text-sm text-gray-600">Update name, email & image</p>
+                        <h3 class="font-semibold text-gray-900 mb-1">{{ __('provider.profile') }}</h3>
+                        <p class="text-sm text-gray-600">{{ __('provider.update_name_email_image') }}</p>
                     </a>
                     <!-- Password -->
                     <a href="{{ route('provider.profile.index') }}#password-section" class="block p-4 rounded-xl border-2 border-dashed border-gray-200 hover:border-blue-300 transition-all duration-200 hover:shadow-md hover:-translate-y-1">
                         <div class="inline-flex p-3 rounded-lg bg-green-50 text-green-600 border border-green-200 mb-3">
                             <i data-lucide="lock" class="w-6 h-6"></i>
                         </div>
-                        <h3 class="font-semibold text-gray-900 mb-1">Password</h3>
-                        <p class="text-sm text-gray-600">Change your password</p>
+                        <h3 class="font-semibold text-gray-900 mb-1">{{ __('provider.password') }}</h3>
+                        <p class="text-sm text-gray-600">{{ __('provider.change_your_password') }}</p>
                     </a>
                     <!-- Locations -->
                     <a href="{{ route('provider.locations.index') }}" class="block p-4 rounded-xl border-2 border-dashed border-gray-200 hover:border-blue-300 transition-all duration-200 hover:shadow-md hover:-translate-y-1">
                         <div class="inline-flex p-3 rounded-lg bg-purple-50 text-purple-600 border border-purple-200 mb-3">
                             <i data-lucide="map-pin" class="w-6 h-6"></i>
                         </div>
-                        <h3 class="font-semibold text-gray-900 mb-1">Locations</h3>
-                        <p class="text-sm text-gray-600">Manage your locations</p>
+                        <h3 class="font-semibold text-gray-900 mb-1">{{ __('provider.locations') }}</h3>
+                        <p class="text-sm text-gray-600">{{ __('provider.manage_your_locations') }}</p>
                     </a>
                     <!-- License -->
                     <a href="#license-section" class="block p-4 rounded-xl border-2 border-dashed border-gray-200 hover:border-blue-300 transition-all duration-200 hover:shadow-md hover:-translate-y-1">
                         <div class="inline-flex p-3 rounded-lg bg-orange-50 text-orange-600 border border-orange-200 mb-3">
                             <i data-lucide="award" class="w-6 h-6"></i>
                         </div>
-                        <h3 class="font-semibold text-gray-900 mb-1">License</h3>
-                        <p class="text-sm text-gray-600">Upload & manage license</p>
+                        <h3 class="font-semibold text-gray-900 mb-1">{{ __('provider.license') }}</h3>
+                        <p class="text-sm text-gray-600">{{ __('provider.upload_manage_license') }}</p>
                     </a>
                 </div>
             </div>
@@ -79,9 +109,9 @@
             <div class="p-6">
                 <div class="flex items-center gap-2 mb-2">
                     <i data-lucide="truck" class="w-5 h-5 text-green-600"></i>
-                    <h2 class="text-xl font-semibold">Delivery Settings</h2>
+                    <h2 class="text-xl font-semibold">{{ __('provider.delivery_settings') }}</h2>
                 </div>
-                <p class="text-gray-600 mb-4">Configure your delivery service options</p>
+                <p class="text-gray-600 mb-4">{{ __('provider.configure_delivery_options') }}</p>
 
                 <form id="delivery-form">
                     @csrf
@@ -89,8 +119,8 @@
                         <!-- Delivery Toggle (always on) -->
                         <div class="flex items-center justify-between p-4 bg-gray-50 rounded-lg">
                             <div>
-                                <label class="text-base font-medium">Enable Delivery Service</label>
-                                <p class="text-sm text-gray-600">Allow customers to request delivery</p>
+                                <label class="text-base font-medium">{{ __('provider.enable_delivery_service') }}</label>
+                                <p class="text-sm text-gray-600">{{ __('provider.allow_customers_request_delivery') }}</p>
                             </div>
                             <input type="checkbox" id="delivery_capability" name="delivery_capability"
                                    {{ $provider->delivery_capability ? 'checked' : '' }}
@@ -101,7 +131,7 @@
                         <div id="delivery-fees-section" class="{{ $provider->delivery_capability ? '' : 'hidden' }} space-y-4">
                             <div class="flex items-center gap-2 mb-4">
                                 <i data-lucide="map-pin" class="w-4 h-4 text-gray-600"></i>
-                                <h4 class="font-semibold text-gray-900">Delivery Fees by Emirate</h4>
+                                <h4 class="font-semibold text-gray-900">{{ __('provider.delivery_fees_by_emirate') }}</h4>
                             </div>
                             <div class="grid gap-3">
                                 @php
@@ -129,7 +159,7 @@
 
                         <button type="submit" class="flex items-center px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded">
                             <i data-lucide="save" class="w-4 h-4 mr-2"></i>
-                            Save Delivery Settings
+                            {{ __('provider.save_delivery_settings') }}
                         </button>
                     </div>
                 </form>
@@ -141,41 +171,41 @@
             <div class="p-6">
                 <div class="flex items-center gap-2 mb-2">
                     <i data-lucide="award" class="w-5 h-5 text-purple-600"></i>
-                    <h2 class="text-xl font-semibold">License Management</h2>
+                    <h2 class="text-xl font-semibold">{{ __('provider.license_management') }}</h2>
                 </div>
-                <p class="text-gray-600 mb-6">Manage your business license information</p>
+                <p class="text-gray-600 mb-6">{{ __('provider.manage_business_license') }}</p>
                 @if($license)
                     <!-- Current License -->
                     <div class="p-6 bg-gradient-to-r from-blue-50 to-purple-50 rounded-xl border border-blue-100 mb-6">
                         <h3 class="font-semibold text-gray-900 mb-4 flex items-center gap-2">
                             <i data-lucide="file-text" class="w-4 h-4"></i>
-                            Current License
+                            {{ __('provider.current_license') }}
                         </h3>
                         <div class="grid grid-cols-1 md:grid-cols-4 gap-4 mb-4">
                             <div>
-                                <label class="text-sm font-medium text-gray-600">Status</label>
+                                <label class="text-sm font-medium text-gray-600">{{ __('provider.status') }}</label>
                                 <div class="mt-1 inline-flex items-center bg-green-100 text-green-800 px-2 py-1 rounded">
                                     <i data-lucide="check-circle" class="w-3 h-3 mr-1"></i>
-                                    Active
+                                    {{ __('provider.active') }}
                                 </div>
                             </div>
                             <div>
-                                <label class="text-sm font-medium text-gray-600">Start Date</label>
+                                <label class="text-sm font-medium text-gray-600">{{ __('provider.start_date') }}</label>
                                 <p class="mt-1 font-medium text-gray-900">{{ $license->start_date->format('M d, Y') }}</p>
                             </div>
                             <div>
-                                <label class="text-sm font-medium text-gray-600">End Date</label>
+                                <label class="text-sm font-medium text-gray-600">{{ __('provider.end_date') }}</label>
                                 <p class="mt-1 font-medium text-gray-900">{{ $license->end_date->format('M d, Y') }}</p>
                             </div>
                             <div>
-                                <label class="text-sm font-medium text-gray-600">Days Left</label>
-                                <p class="mt-1 font-medium text-gray-900">{{ $license->daysUntilExpiration() }} days</p>
+                                <label class="text-sm font-medium text-gray-600">{{ __('provider.days_left') }}</label>
+                                <p class="mt-1 font-medium text-gray-900">{{ $license->daysUntilExpiration() }} {{ __('provider.days') }}</p>
                             </div>
                         </div>
                         @if($license->license_file_path)
                             <button class="flex items-center px-3 py-1 border border-blue-200 text-blue-700 rounded hover:bg-blue-50" onclick="window.open('{{ asset('storage/' . $license->license_file_path) }}', '_blank')">
                                 <i data-lucide="file-text" class="w-4 h-4 mr-2"></i>
-                                View License File
+                                {{ __('provider.view_license_file') }}
                             </button>
                         @endif
                     </div>
@@ -187,32 +217,32 @@
                 <div>
                     <h3 class="font-semibold text-gray-900 mb-4 flex items-center gap-2">
                         <i data-lucide="upload" class="w-4 h-4"></i>
-                        {{ $license ? 'Upload New License' : 'Upload License' }}
+                        {{ $license ? __('provider.upload_new_license') : __('provider.upload_license') }}
                     </h3>
                     <form id="license-form" enctype="multipart/form-data" class="space-y-4">
                         @csrf
                         <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                             <div>
-                                <label for="start_date" class="block font-medium">Start Date</label>
+                                <label for="start_date" class="block font-medium">{{ __('provider.start_date') }}</label>
                                 <input type="date" id="start_date" name="start_date" class="mt-1 w-full border rounded px-2 py-1" required />
                             </div>
                             <div>
-                                <label for="end_date" class="block font-medium">End Date</label>
+                                <label for="end_date" class="block font-medium">{{ __('provider.end_date') }}</label>
                                 <input type="date" id="end_date" name="end_date" class="mt-1 w-full border rounded px-2 py-1" required />
                             </div>
                         </div>
                         <div>
-                            <label for="license_file" class="block font-medium">License File (PDF)</label>
+                            <label for="license_file" class="block font-medium">{{ __('provider.license_file_pdf') }}</label>
                             <input type="file" id="license_file" name="license_file" accept=".pdf" class="mt-1 w-full" required />
-                            <p class="text-sm text-gray-600 mt-1">Maximum file size: 10MB</p>
+                            <p class="text-sm text-gray-600 mt-1">{{ __('provider.maximum_file_size_10mb') }}</p>
                         </div>
                         <div>
-                            <label for="notes" class="block font-medium">Notes (Optional)</label>
-                            <textarea id="notes" name="notes" rows="3" class="mt-1 w-full border rounded px-2 py-1" placeholder="Any additional notes about this license..."></textarea>
+                            <label for="notes" class="block font-medium">{{ __('provider.notes_optional') }}</label>
+                            <textarea id="notes" name="notes" rows="3" class="mt-1 w-full border rounded px-2 py-1" placeholder="{{ __('provider.additional_notes_placeholder') }}"></textarea>
                         </div>
                         <button type="submit" class="flex items-center px-4 py-2 bg-green-600 hover:bg-green-700 text-white rounded">
                             <i data-lucide="upload" class="w-4 h-4 mr-2"></i>
-                            Upload License
+                            {{ __('provider.upload_license') }}
                         </button>
                     </form>
                 </div>
@@ -275,14 +305,14 @@ document.addEventListener('DOMContentLoaded', function() {
         .then(response => response.json())
         .then(data => {
             if (data.success) {
-                showAlert('success', data.message);
+                showAlert('success', '{{ __('provider.delivery_settings_updated_successfully') }}');
             } else {
-                showAlert('error', data.message || 'An error occurred');
+                showAlert('error', data.message || '{{ __('provider.error_updating_delivery_settings') }}');
             }
         })
         .catch(error => {
             console.error('Error:', error);
-            showAlert('error', 'An error occurred while updating delivery settings');
+            showAlert('error', '{{ __('provider.error_updating_delivery_settings') }}');
         })
         .finally(() => {
             // Restore button state
@@ -320,7 +350,7 @@ document.addEventListener('DOMContentLoaded', function() {
         .then(response => response.json())
         .then(data => {
             if (data.success) {
-                showAlert('success', data.message);
+                showAlert('success', '{{ __('provider.license_uploaded_successfully') }}');
                 // Reset form
                 this.reset();
                 // Reload page to show updated license info
@@ -337,13 +367,13 @@ document.addEventListener('DOMContentLoaded', function() {
                     });
                     showAlert('error', 'Please fix the following errors: ' + errorMessages.join(', '));
                 } else {
-                    showAlert('error', data.message || 'An error occurred');
+                    showAlert('error', data.message || '{{ __('provider.error_uploading_license') }}');
                 }
             }
         })
         .catch(error => {
             console.error('Error:', error);
-            showAlert('error', 'An error occurred while uploading license');
+            showAlert('error', '{{ __('provider.error_uploading_license') }}');
         })
         .finally(() => {
             // Restore button state

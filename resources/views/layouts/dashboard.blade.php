@@ -11,6 +11,8 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <!-- Modern Forms CSS -->
     <link rel="stylesheet" href="{{ asset('css/modern-forms.css') }}">
+    <!-- Modern Buttons CSS -->
+    <link rel="stylesheet" href="{{ asset('css/modern-buttons.css') }}">
     <!-- Global Styles -->
     <link rel="stylesheet" href="{{ asset('css/global-styles.css') }}">
     <!-- Custom styles -->

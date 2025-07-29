@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Vendor;
 
 use App\Http\Controllers\Controller;
 use App\Models\License;
+use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Validator;
@@ -33,15 +34,21 @@ class LicenseController extends Controller
             $daysUntilExpiry = $license->daysUntilExpiration();
         }
 
+        // Check if there's already a pending renewal
+        $hasPendingRenewal = $user->licenses()->where('status', 'pending')->exists();
+        
         // Check if user can upload a new license (for renewal)
-        $canUploadNew = in_array($licenseStatus, ['rejected', 'expired']) || 
-                       ($license && $license->status === 'active' && $daysUntilExpiry <= 30);
+        $canUploadNew = !$hasPendingRenewal && (
+            in_array($licenseStatus, ['rejected', 'expired']) || 
+            ($license && $license->status === 'active' && $daysUntilExpiry <= 30)
+        );
 
         return view('vendor.license.index', compact(
             'license',
             'licenseStatus', 
             'daysUntilExpiry',
-            'canUploadNew'
+            'canUploadNew',
+            'hasPendingRenewal'
         ));
     }
 
@@ -59,6 +66,14 @@ class LicenseController extends Controller
 
         $license = $user->latestLicense;
         $licenseStatus = $user->getLicenseStatus();
+        
+        // Check if there's already a pending renewal
+        $hasPendingRenewal = $user->licenses()->where('status', 'pending')->exists();
+        
+        if ($hasPendingRenewal) {
+            return redirect()->route('vendor.license.index')
+                ->with('error', 'You already have a pending license renewal. Please wait for admin approval before submitting another renewal.');
+        }
         
         // Check if renewal is allowed
         $canRenew = in_array($licenseStatus, ['rejected', 'expired']) || 
@@ -82,6 +97,16 @@ class LicenseController extends Controller
         // Ensure user is authenticated and is a vendor
         if (!$user || $user->role !== 'vendor') {
             return redirect()->route('login')->withErrors(['error' => 'Please log in as a vendor to access this page.']);
+        }
+
+        // Check if there's already a pending renewal
+        $hasPendingRenewal = $user->licenses()->where('status', 'pending')->exists();
+        
+        if ($hasPendingRenewal) {
+            return response()->json([
+                'success' => false,
+                'message' => 'You already have a pending license renewal. Please wait for admin approval before submitting another renewal.'
+            ], 422);
         }
 
         $validator = Validator::make($request->all(), [

@@ -3,17 +3,17 @@
 <div class="px-6 py-4 border-t border-gray-200">
     <div class="flex items-center justify-between">
         <div class="text-sm text-gray-700">
-            Showing <span class="font-medium">{{ $products->firstItem() }}</span> to <span class="font-medium">{{ $products->lastItem() }}</span> of <span class="font-medium">{{ $products->total() }}</span> results
+            {{ __('merchant.showing') }} <span class="font-medium">{{ $products->firstItem() }}</span> {{ __('merchant.to') }} <span class="font-medium">{{ $products->lastItem() }}</span> {{ __('merchant.of') }} <span class="font-medium">{{ $products->total() }}</span> {{ __('merchant.results') }}
         </div>
         <div class="flex items-center space-x-2">
             {{-- Previous Page Link --}}
             @if ($products->onFirstPage())
                 <button class="px-3 py-2 text-sm font-medium text-gray-500 bg-white border border-gray-300 rounded-lg disabled:opacity-50 disabled:cursor-not-allowed" disabled>
-                    Previous
+                    {{ __('merchant.previous') }}
                 </button>
             @else
                 <button class="px-3 py-2 text-sm font-medium text-gray-500 bg-white border border-gray-300 rounded-lg hover:bg-gray-50" data-page="{{ $products->currentPage() - 1 }}">
-                    Previous
+                    {{ __('merchant.previous') }}
                 </button>
             @endif
 
@@ -25,11 +25,11 @@
             {{-- Next Page Link --}}
             @if ($products->hasMorePages())
                 <button class="px-3 py-2 text-sm font-medium text-gray-500 bg-white border border-gray-300 rounded-lg hover:bg-gray-50" data-page="{{ $products->currentPage() + 1 }}">
-                    Next
+                    {{ __('merchant.next') }}
                 </button>
             @else
                 <button class="px-3 py-2 text-sm font-medium text-gray-500 bg-white border border-gray-300 rounded-lg disabled:opacity-50 disabled:cursor-not-allowed" disabled>
-                    Next
+                    {{ __('merchant.next') }}
                 </button>
             @endif
         </div>

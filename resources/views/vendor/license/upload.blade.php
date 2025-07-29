@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Upload Vendor License - Dala3Chic</title>
+    <title>{{ __('messages.upload_vendor_license') }} - Dala3Chic</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <style>
@@ -119,10 +119,10 @@
             <div class="text-center">
                 <img src="{{ asset('assets/logo.png') }}" alt="Dala3Chic Logo" class="mx-auto w-20 h-20 object-contain rounded-2xl mb-6">
                 <h1 class="text-3xl font-bold text-gray-900 mb-2">
-                    Upload Vendor License
+                    {{ __('messages.upload_vendor_license') }}
                 </h1>
                 <p class="text-gray-600">
-                    Please upload your business license to complete your vendor registration
+                    {{ __('messages.upload_license_description') }}
                 </p>
             </div>
 
@@ -133,7 +133,7 @@
                         <div class="flex">
                             <i class="fas fa-exclamation-circle text-red-400 mr-3 mt-1"></i>
                             <div>
-                                <h3 class="text-sm font-medium text-red-800">Please correct the following errors:</h3>
+                                <h3 class="text-sm font-medium text-red-800">{{ __('messages.please_correct_errors') }}:</h3>
                                 <ul class="mt-2 text-sm text-red-700 list-disc list-inside">
                                     @foreach ($errors->all() as $error)
                                         <li>{{ $error }}</li>
@@ -149,7 +149,7 @@
                         <div class="flex">
                             <i class="fas fa-check-circle text-green-400 mr-3 mt-1"></i>
                             <div>
-                                <h3 class="text-sm font-medium text-green-800">Success!</h3>
+                                <h3 class="text-sm font-medium text-green-800">{{ __('messages.success') }}!</h3>
                                 <p class="mt-1 text-sm text-green-700">{{ session('success') }}</p>
                             </div>
                         </div>
@@ -164,34 +164,34 @@
                     <!-- License File Upload -->
                     <div>
                         <label for="license_file" class="block text-sm font-medium text-gray-700 mb-2">
-                            License Document <span class="text-red-500">*</span>
+                            {{ __('messages.license_document') }} <span class="text-red-500">*</span>
                         </label>
                         <div class="file-drop-zone rounded-lg p-6 text-center" id="fileDropZone">
                             <input type="file" id="license_file" name="license_file" accept=".pdf" required class="hidden">
                             <i class="fas fa-cloud-upload-alt text-4xl text-gray-400 mb-4"></i>
-                            <p class="text-gray-600 mb-2">Click to upload or drag and drop</p>
-                            <p class="text-sm text-gray-500">PDF files only (Max: 10MB)</p>
+                            <p class="text-gray-600 mb-2">{{ __('messages.click_upload_or_drag') }}</p>
+                            <p class="text-sm text-gray-500">{{ __('messages.pdf_files_only_max_10mb') }}</p>
                             <button type="button" onclick="document.getElementById('license_file').click()"
                                     class="mt-4 px-4 py-2 bg-purple-600 text-white rounded-lg hover:bg-purple-700 transition-colors duration-200">
-                                Choose File
+                                {{ __('messages.choose_file') }}
                             </button>
                         </div>
 
                         <!-- PDF Preview (hidden by default) -->
                         <div id="pdfPreview" class="pdf-preview hidden">
                             <i class="fas fa-file-pdf pdf-icon"></i>
-                            <h3 class="text-lg font-semibold text-gray-900 mb-2">PDF uploaded successfully!</h3>
+                            <h3 class="text-lg font-semibold text-gray-900 mb-2">{{ __('messages.pdf_uploaded_successfully') }}!</h3>
                             <p id="pdfFileName" class="text-sm text-gray-600 mb-1"></p>
                             <p id="pdfFileSize" class="text-xs text-gray-500 mb-4"></p>
                             <div class="flex justify-center space-x-3">
                                 <span class="inline-flex items-center px-3 py-1 rounded-full text-xs font-medium bg-green-100 text-green-800">
                                     <i class="fas fa-check-circle mr-1"></i>
-                                    Valid PDF Format
+                                    {{ __('messages.valid_pdf_format') }}
                                 </span>
                                 <button type="button" onclick="clearFileSelection()"
                                         class="inline-flex items-center px-3 py-1 rounded-full text-xs font-medium bg-gray-100 text-gray-700 hover:bg-gray-200 transition-colors">
                                     <i class="fas fa-times mr-1"></i>
-                                    Remove
+                                    {{ __('messages.remove') }}
                                 </button>
                             </div>
                         </div>
@@ -203,7 +203,7 @@
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                         <div>
                             <label for="start_date" class="block text-sm font-medium text-gray-700 mb-2">
-                                License Start Date <span class="text-red-500">*</span>
+                                {{ __('messages.license_start_date') }} <span class="text-red-500">*</span>
                             </label>
                             <input type="date" id="start_date" name="start_date" required
                                    value="{{ old('start_date') }}"
@@ -212,7 +212,7 @@
                         </div>
                         <div>
                             <label for="end_date" class="block text-sm font-medium text-gray-700 mb-2">
-                                License End Date <span class="text-red-500">*</span>
+                                {{ __('messages.license_end_date') }} <span class="text-red-500">*</span>
                             </label>
                             <input type="date" id="end_date" name="end_date" required
                                    value="{{ old('end_date') }}"
@@ -223,11 +223,11 @@
                     <!-- Notes -->
                     <div>
                         <label for="notes" class="block text-sm font-medium text-gray-700 mb-2">
-                            Additional Notes (Optional)
+                            {{ __('messages.additional_notes') }} ({{ __('messages.optional') }})
                         </label>
                         <textarea id="notes" name="notes" rows="3" maxlength="1000"
                                   class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-purple-500"
-                                  placeholder="Any additional information about your license...">{{ old('notes') }}</textarea>
+                                  placeholder="{{ __('messages.enter_additional_license_info') }}...">{{ old('notes') }}</textarea>
                         <div class="mt-1 text-sm text-gray-500">
                             <span id="notes-count">0</span>/1000 characters
                         </div>
@@ -238,12 +238,12 @@
                         <a href="{{ route('vendor.dashboard') }}" 
                            class="text-gray-600 hover:text-gray-800 transition-colors duration-200">
                             <i class="fas fa-arrow-left mr-2"></i>
-                            Back to Dashboard
+                            {{ __('messages.back_to_dashboard') }}
                         </a>
                         <button type="submit" 
                                 class="px-6 py-3 bg-gradient-to-r from-purple-600 to-indigo-600 text-white font-semibold rounded-lg hover:from-purple-700 hover:to-indigo-700 transition-all duration-300 transform hover:scale-105">
                             <i class="fas fa-upload mr-2"></i>
-                            Upload License
+                            {{ __('messages.upload_license') }}
                         </button>
                     </div>
                 </form>
@@ -257,7 +257,7 @@
             <div class="modal-header">
                 <h3 class="text-lg font-semibold text-gray-900 flex items-center">
                     <i class="fas fa-exclamation-triangle text-red-500 mr-2"></i>
-                    File Validation Error
+                    {{ __('messages.validation_error') }}
                 </h3>
                 <button type="button" class="text-gray-400 hover:text-gray-600" onclick="closeValidationModal()">
                     <i class="fas fa-times text-xl"></i>
@@ -268,7 +268,7 @@
             </div>
             <div class="modal-footer">
                 <button type="button" class="px-4 py-2 bg-purple-600 text-white rounded-lg hover:bg-purple-700 transition-colors" onclick="closeValidationModal()">
-                    OK
+                    {{ __('messages.ok') }}
                 </button>
             </div>
         </div>
@@ -307,7 +307,7 @@
             if (file) {
                 // Validate file type (PDF only)
                 if (file.type !== 'application/pdf') {
-                    showValidationModal('Please select a PDF file only. Other file formats are not allowed for license uploads.');
+                    showValidationModal('{{ __('messages.please_select_pdf_only') }}');
                     clearFileSelection();
                     return;
                 }
@@ -315,7 +315,7 @@
                 // Validate file size (10MB max)
                 const maxSize = 10 * 1024 * 1024; // 10MB in bytes
                 if (file.size > maxSize) {
-                    showValidationModal('File size must be less than 10MB. Please select a smaller PDF file.');
+                    showValidationModal('{{ __('messages.file_size_must_be_less_than_10mb') }}');
                     clearFileSelection();
                     return;
                 }
@@ -400,14 +400,14 @@
             // Check if a file is selected
             if (!file) {
                 e.preventDefault();
-                showValidationModal('Please select a PDF file before submitting the form.');
+                showValidationModal('{{ __('messages.please_select_pdf_file') }}');
                 return;
             }
 
             // Double-check file type
             if (file.type !== 'application/pdf') {
                 e.preventDefault();
-                showValidationModal('Please select a valid PDF file. Other file formats are not allowed.');
+                showValidationModal('{{ __('messages.please_select_valid_pdf') }}');
                 return;
             }
 
@@ -415,7 +415,7 @@
             const maxSize = 10 * 1024 * 1024; // 10MB in bytes
             if (file.size > maxSize) {
                 e.preventDefault();
-                showValidationModal('File size must be less than 10MB. Please select a smaller PDF file.');
+                showValidationModal('{{ __('messages.file_size_must_be_less_than_10mb') }}');
                 return;
             }
         });
