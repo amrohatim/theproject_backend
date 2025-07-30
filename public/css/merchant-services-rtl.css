@@ -1,0 +1,781 @@
+/* RTL Support for Merchant Services Page */
+
+/* Create Page Specific Styles */
+[dir="rtl"] .merchant-services-page .discord-card {
+    direction: rtl;
+}
+
+[dir="rtl"] .merchant-services-page .form-label {
+    text-align: right;
+}
+
+[dir="rtl"] .merchant-services-page .form-control,
+[dir="rtl"] .merchant-services-page .form-select {
+    text-align: right;
+    direction: rtl;
+}
+
+[dir="rtl"] .merchant-services-page .form-check {
+    text-align: right;
+    direction: rtl;
+}
+
+[dir="rtl"] .merchant-services-page .form-check-input {
+    margin-left: 0.25rem;
+    margin-right: 0;
+    float: right;
+}
+
+[dir="rtl"] .merchant-services-page .form-check-label {
+    padding-right: 1.25rem;
+    padding-left: 0;
+}
+
+[dir="rtl"] .merchant-services-page .d-flex.gap-3 {
+    flex-direction: row-reverse;
+}
+
+[dir="rtl"] .merchant-services-page .d-flex.justify-content-end {
+    justify-content: flex-start;
+}
+
+[dir="rtl"] .merchant-services-page .d-flex.justify-content-between {
+    flex-direction: row-reverse;
+}
+
+[dir="rtl"] .merchant-services-page .me-1,
+[dir="rtl"] .merchant-services-page .me-2 {
+    margin-left: 0.25rem;
+    margin-right: 0;
+}
+
+[dir="rtl"] .merchant-services-page textarea {
+    text-align: right;
+    direction: rtl;
+}
+
+[dir="rtl"] .merchant-services-page .discord-btn {
+    direction: ltr;
+}
+
+[dir="rtl"] .merchant-services-page .discord-btn i {
+    margin-left: 0.25rem;
+    margin-right: 0;
+}
+
+/* Base RTL styles */
+[dir="rtl"] {
+    text-align: right;
+}
+
+/* Search and filter section */
+[dir="rtl"] .search-container {
+    direction: rtl;
+}
+
+[dir="rtl"] .search-container input {
+    text-align: right;
+    padding-left: 4rem;
+    padding-right: 2.5rem;
+}
+
+[dir="rtl"] .search-icon {
+    left: auto;
+    right: 0.75rem;
+}
+
+/* Button alignments */
+[dir="rtl"] .flex.space-x-4 > * {
+    margin-left: 1rem;
+    margin-right: 0;
+}
+
+[dir="rtl"] .flex.space-x-4 > *:first-child {
+    margin-left: 0;
+}
+
+[dir="rtl"] .flex.space-x-2 > * {
+    margin-left: 0.5rem;
+    margin-right: 0;
+}
+
+[dir="rtl"] .flex.space-x-2 > *:first-child {
+    margin-left: 0;
+}
+
+/* Table RTL support */
+[dir="rtl"] table {
+    direction: rtl;
+}
+
+[dir="rtl"] th,
+[dir="rtl"] td {
+    text-align: right;
+}
+
+[dir="rtl"] .text-left {
+    text-align: right !important;
+}
+
+/* Action buttons in table */
+[dir="rtl"] .action-buttons {
+    justify-content: flex-start;
+}
+
+/* Stats cards */
+[dir="rtl"] .stats-card .flex {
+    flex-direction: row-reverse;
+}
+
+[dir="rtl"] .stats-card .ms-auto {
+    margin-left: 0;
+    margin-right: auto;
+}
+
+/* License banner */
+[dir="rtl"] .license-banner .d-flex {
+    flex-direction: row-reverse;
+}
+
+[dir="rtl"] .license-banner .me-3 {
+    margin-left: 0.75rem;
+    margin-right: 0;
+}
+
+/* Pagination */
+[dir="rtl"] .pagination {
+    direction: rtl;
+}
+
+[dir="rtl"] .pagination .d-flex {
+    flex-direction: row-reverse;
+}
+
+/* Form elements */
+[dir="rtl"] input[type="text"],
+[dir="rtl"] input[type="search"],
+[dir="rtl"] select,
+[dir="rtl"] textarea {
+    text-align: right;
+}
+
+/* Icon adjustments */
+[dir="rtl"] .icon-left {
+    order: 2;
+    margin-left: 0.5rem;
+    margin-right: 0;
+}
+
+[dir="rtl"] .icon-right {
+    order: 0;
+    margin-right: 0.5rem;
+    margin-left: 0;
+}
+
+/* Empty state */
+[dir="rtl"] .empty-state {
+    text-align: center;
+}
+
+/* Quick stats grid */
+[dir="rtl"] .quick-stats .grid {
+    direction: rtl;
+}
+
+/* Service cards */
+[dir="rtl"] .service-card {
+    direction: rtl;
+}
+
+[dir="rtl"] .service-card .flex {
+    flex-direction: row-reverse;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+    [dir="rtl"] .mobile-stack {
+        direction: rtl;
+    }
+    
+    [dir="rtl"] .mobile-stack > * {
+        margin-left: 0;
+        margin-right: 0;
+        margin-bottom: 0.5rem;
+    }
+}
+
+/* Discord theme specific RTL adjustments */
+[dir="rtl"] .discord-card {
+    direction: rtl;
+}
+
+[dir="rtl"] .discord-btn {
+    direction: rtl;
+}
+
+[dir="rtl"] .discord-input {
+    text-align: right;
+}
+
+/* Status badges */
+[dir="rtl"] .status-badge {
+    direction: rtl;
+}
+
+[dir="rtl"] .status-badge .w-1\.5 {
+    margin-left: 0.375rem;
+    margin-right: 0;
+}
+
+/* Dropdown menus */
+[dir="rtl"] .dropdown-menu {
+    right: 0;
+    left: auto;
+}
+
+/* Tooltips */
+[dir="rtl"] .tooltip {
+    direction: rtl;
+}
+
+/* Loading states */
+[dir="rtl"] .loading-spinner {
+    direction: ltr; /* Keep spinner direction consistent */
+}
+
+/* Border adjustments for RTL */
+[dir="rtl"] .border-left-4 {
+    border-left: none;
+    border-right: 4px solid;
+}
+
+/* Text direction for mixed content */
+[dir="rtl"] .ltr-content {
+    direction: ltr;
+    text-align: left;
+}
+
+[dir="rtl"] .rtl-content {
+    direction: rtl;
+    text-align: right;
+}
+
+/* Price and numeric content should remain LTR */
+[dir="rtl"] .price,
+[dir="rtl"] .numeric {
+    direction: ltr;
+    text-align: left;
+    display: inline-block;
+}
+
+/* Service duration */
+[dir="rtl"] .duration {
+    direction: ltr;
+    text-align: left;
+    display: inline-block;
+}
+
+/* Category badges */
+[dir="rtl"] .category-badge {
+    direction: rtl;
+}
+
+/* Search clear button */
+[dir="rtl"] .search-clear {
+    left: 0.75rem;
+    right: auto;
+}
+
+/* Filter dropdown */
+[dir="rtl"] .filter-dropdown {
+    direction: rtl;
+}
+
+/* Sort dropdown */
+[dir="rtl"] .sort-dropdown {
+    direction: rtl;
+}
+
+/* Action menu */
+[dir="rtl"] .action-menu {
+    right: auto;
+    left: 0;
+}
+
+/* Breadcrumb navigation */
+[dir="rtl"] .breadcrumb {
+    direction: rtl;
+}
+
+[dir="rtl"] .breadcrumb-separator {
+    transform: scaleX(-1);
+}
+
+/* Modal dialogs */
+[dir="rtl"] .modal-content {
+    direction: rtl;
+}
+
+[dir="rtl"] .modal-header {
+    text-align: right;
+}
+
+[dir="rtl"] .modal-footer {
+    justify-content: flex-start;
+}
+
+[dir="rtl"] .modal-footer .btn {
+    margin-left: 0.5rem;
+    margin-right: 0;
+}
+
+[dir="rtl"] .modal-footer .btn:first-child {
+    margin-left: 0;
+}
+
+/* Form validation messages */
+[dir="rtl"] .validation-message {
+    text-align: right;
+}
+
+/* Progress indicators */
+[dir="rtl"] .progress-bar {
+    direction: ltr; /* Keep progress direction consistent */
+}
+
+/* Tab navigation */
+[dir="rtl"] .nav-tabs {
+    direction: rtl;
+}
+
+[dir="rtl"] .nav-tabs .nav-link {
+    margin-left: 0.25rem;
+    margin-right: 0;
+}
+
+[dir="rtl"] .nav-tabs .nav-link:first-child {
+    margin-left: 0;
+}
+
+/* Card layouts */
+[dir="rtl"] .card-header {
+    text-align: right;
+}
+
+[dir="rtl"] .card-body {
+    direction: rtl;
+}
+
+[dir="rtl"] .card-footer {
+    text-align: right;
+}
+
+/* List groups */
+[dir="rtl"] .list-group-item {
+    text-align: right;
+}
+
+/* Alert messages */
+[dir="rtl"] .alert {
+    direction: rtl;
+}
+
+[dir="rtl"] .alert-dismissible .btn-close {
+    left: 0;
+    right: auto;
+}
+
+/* Utility classes for RTL */
+[dir="rtl"] .text-start {
+    text-align: right !important;
+}
+
+[dir="rtl"] .text-end {
+    text-align: left !important;
+}
+
+[dir="rtl"] .float-start {
+    float: right !important;
+}
+
+[dir="rtl"] .float-end {
+    float: left !important;
+}
+
+[dir="rtl"] .me-auto {
+    margin-left: auto !important;
+    margin-right: 0 !important;
+}
+
+[dir="rtl"] .ms-auto {
+    margin-right: auto !important;
+    margin-left: 0 !important;
+}
+
+/* Specific adjustments for services page elements */
+[dir="rtl"] .services-header {
+    direction: rtl;
+}
+
+[dir="rtl"] .services-actions {
+    direction: rtl;
+}
+
+[dir="rtl"] .services-filters {
+    direction: rtl;
+}
+
+[dir="rtl"] .services-table {
+    direction: rtl;
+}
+
+[dir="rtl"] .services-pagination {
+    direction: rtl;
+}
+
+/* Ensure proper spacing in RTL */
+[dir="rtl"] .space-x-reverse > * + * {
+    margin-right: 0;
+    margin-left: 1rem;
+}
+
+[dir="rtl"] .space-x-2-reverse > * + * {
+    margin-right: 0;
+    margin-left: 0.5rem;
+}
+
+[dir="rtl"] .space-x-4-reverse > * + * {
+    margin-right: 0;
+    margin-left: 1rem;
+}
+
+/* Fix for flex layouts in RTL */
+[dir="rtl"] .flex-row-reverse {
+    flex-direction: row-reverse;
+}
+
+/* Ensure icons maintain proper orientation */
+[dir="rtl"] .icon-no-flip {
+    transform: none;
+}
+
+[dir="rtl"] .icon-flip {
+    transform: scaleX(-1);
+}
+
+/* Service image thumbnails */
+[dir="rtl"] .service-thumbnail {
+    margin-left: 1rem;
+    margin-right: 0;
+}
+
+/* Service description */
+[dir="rtl"] .service-description {
+    text-align: right;
+}
+
+/* Service metadata */
+[dir="rtl"] .service-meta {
+    direction: rtl;
+}
+
+/* Service actions dropdown */
+[dir="rtl"] .service-actions-dropdown {
+    right: auto;
+    left: 0;
+}
+
+/* Service status indicators */
+[dir="rtl"] .service-status {
+    direction: rtl;
+}
+
+/* Service pricing */
+[dir="rtl"] .service-price {
+    direction: ltr;
+    text-align: left;
+    display: inline-block;
+}
+
+/* Service duration display */
+[dir="rtl"] .service-duration {
+    direction: ltr;
+    text-align: left;
+    display: inline-block;
+}
+
+/* Service category display */
+[dir="rtl"] .service-category {
+    direction: rtl;
+}
+
+/* Service availability toggle */
+[dir="rtl"] .availability-toggle {
+    direction: rtl;
+}
+
+/* Service search results */
+[dir="rtl"] .search-results {
+    direction: rtl;
+}
+
+/* Service filter tags */
+[dir="rtl"] .filter-tags {
+    direction: rtl;
+}
+
+[dir="rtl"] .filter-tag {
+    margin-left: 0.5rem;
+    margin-right: 0;
+}
+
+[dir="rtl"] .filter-tag:first-child {
+    margin-left: 0;
+}
+
+/* Service sort options */
+[dir="rtl"] .sort-options {
+    direction: rtl;
+}
+
+/* Service bulk actions */
+[dir="rtl"] .bulk-actions {
+    direction: rtl;
+}
+
+/* Service export/import buttons */
+[dir="rtl"] .export-import-actions {
+    direction: rtl;
+}
+
+/* Service statistics cards */
+[dir="rtl"] .service-stats {
+    direction: rtl;
+}
+
+[dir="rtl"] .stat-card {
+    direction: rtl;
+}
+
+[dir="rtl"] .stat-icon {
+    margin-left: 1rem;
+    margin-right: 0;
+}
+
+/* Service quick actions */
+[dir="rtl"] .quick-actions {
+    direction: rtl;
+}
+
+/* Service help text */
+[dir="rtl"] .help-text {
+    direction: rtl;
+    text-align: right;
+}
+
+/* Service loading states */
+[dir="rtl"] .loading-overlay {
+    direction: rtl;
+}
+
+/* Service error states */
+[dir="rtl"] .error-message {
+    direction: rtl;
+    text-align: right;
+}
+
+/* Service success states */
+[dir="rtl"] .success-message {
+    direction: rtl;
+    text-align: right;
+}
+
+/* Service warning states */
+[dir="rtl"] .warning-message {
+    direction: rtl;
+    text-align: right;
+}
+
+/* Service info states */
+[dir="rtl"] .info-message {
+    direction: rtl;
+    text-align: right;
+}
+
+/* Responsive design for RTL */
+@media (max-width: 640px) {
+    [dir="rtl"] .mobile-services-table {
+        direction: rtl;
+    }
+    
+    [dir="rtl"] .mobile-service-card {
+        direction: rtl;
+    }
+    
+    [dir="rtl"] .mobile-actions {
+        direction: rtl;
+        justify-content: flex-start;
+    }
+}
+
+@media (max-width: 768px) {
+    [dir="rtl"] .tablet-services-layout {
+        direction: rtl;
+    }
+}
+
+@media (max-width: 1024px) {
+    [dir="rtl"] .desktop-services-layout {
+        direction: rtl;
+    }
+}
+
+/* Print styles for RTL */
+@media print {
+    [dir="rtl"] .print-services {
+        direction: rtl;
+    }
+    
+    [dir="rtl"] .print-hide {
+        display: none;
+    }
+}
+
+/* High contrast mode support */
+@media (prefers-contrast: high) {
+    [dir="rtl"] .high-contrast-border {
+        border: 2px solid;
+    }
+}
+
+/* Reduced motion support */
+@media (prefers-reduced-motion: reduce) {
+    [dir="rtl"] .motion-safe {
+        transition: none;
+        animation: none;
+    }
+}
+
+/* Dark mode support for RTL */
+@media (prefers-color-scheme: dark) {
+    [dir="rtl"] .dark-mode-text {
+        color: #f3f4f6;
+    }
+    
+    [dir="rtl"] .dark-mode-bg {
+        background-color: #1f2937;
+    }
+}
+
+/* Focus styles for RTL */
+[dir="rtl"] .focus-visible:focus {
+    outline: 2px solid #3b82f6;
+    outline-offset: 2px;
+}
+
+/* Accessibility improvements for RTL */
+[dir="rtl"] .sr-only {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    margin: -1px;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    white-space: nowrap;
+    border: 0;
+}
+
+/* Skip links for RTL */
+[dir="rtl"] .skip-link {
+    position: absolute;
+    top: -40px;
+    right: 6px;
+    background: #000;
+    color: #fff;
+    padding: 8px;
+    text-decoration: none;
+    z-index: 1000;
+}
+
+[dir="rtl"] .skip-link:focus {
+    top: 6px;
+}
+
+/* Keyboard navigation improvements */
+[dir="rtl"] .keyboard-nav:focus {
+    outline: 2px solid #3b82f6;
+    outline-offset: 2px;
+}
+
+/* Screen reader improvements */
+[dir="rtl"] .screen-reader-text {
+    clip: rect(1px, 1px, 1px, 1px);
+    position: absolute !important;
+    height: 1px;
+    width: 1px;
+    overflow: hidden;
+}
+
+/* Final utility classes */
+[dir="rtl"] .rtl-hidden {
+    display: none;
+}
+
+[dir="ltr"] .ltr-hidden {
+    display: none;
+}
+
+[dir="rtl"] .rtl-block {
+    display: block;
+}
+
+[dir="ltr"] .ltr-block {
+    display: block;
+}
+
+/* Ensure proper text rendering */
+[dir="rtl"] {
+    text-rendering: optimizeLegibility;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+}
+
+/* Fix for webkit browsers */
+[dir="rtl"] input[type="search"]::-webkit-search-cancel-button {
+    -webkit-appearance: none;
+}
+
+[dir="rtl"] input[type="search"]::-webkit-search-decoration {
+    -webkit-appearance: none;
+}
+
+/* Ensure proper form control alignment */
+[dir="rtl"] .form-control {
+    text-align: right;
+}
+
+[dir="rtl"] .form-label {
+    text-align: right;
+}
+
+[dir="rtl"] .form-text {
+    text-align: right;
+}
+
+/* Final adjustments for specific elements */
+[dir="rtl"] .merchant-services-page {
+    direction: rtl;
+}
+
+[dir="rtl"] .merchant-services-header {
+    direction: rtl;
+}
+
+[dir="rtl"] .merchant-services-content {
+    direction: rtl;
+}
+
+[dir="rtl"] .merchant-services-footer {
+    direction: rtl;
+}

@@ -50,7 +50,7 @@
             type="tel"
             id="phone"
             v-model="phoneNumber"
-            class="form-input phone-input"
+            class="form-input phone-input ltr"
             :class="{ 'error': errors.phone }"
             :placeholder="$t('phone_placeholder')"
             required

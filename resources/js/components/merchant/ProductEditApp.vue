@@ -100,7 +100,8 @@
                       </label>
                       <select id="category_id"
                               v-model="productData.category_id"
-                              class="vue-form-control"
+                              class="vue-form-control text-left"
+                              style="text-align: left; direction: ltr;"
                               :class="{ 'border-red-500': errors.category_id }"
                               required
                               @change="validateCategorySelection">
@@ -156,7 +157,7 @@
                         {{ $t('current_price') }} <span class="text-red-500">*</span>
                       </label>
                       <div class="relative">
-                        <i class="fas fa-dollar-sign absolute left-3 top-1/2 transform -translate-y-1/2 w-4 h-4" style="color: var(--gray-400);"></i>
+                        <i class="fas fa-dollar-sign absolute pt-2 left-3 top-1/2 transform -translate-y-1/2 w-4 h-4" style="color: var(--gray-400);"></i>
                         <input type="number" 
                                id="price" 
                                v-model.number="productData.price"
@@ -174,7 +175,7 @@
                         {{ $t('original_price') }}
                       </label>
                       <div class="relative">
-                        <i class="fas fa-dollar-sign absolute left-3 top-1/2 transform -translate-y-1/2 w-4 h-4" style="color: var(--gray-400);"></i>
+                        <i class="fas fa-dollar-sign absolute left-3 top-1/2 pt-2 transform -translate-y-1/2 w-4 h-4" style="color: var(--gray-400);"></i>
                         <input type="number" 
                                id="original_price" 
                                v-model.number="productData.original_price"
@@ -193,7 +194,7 @@
                         {{ $t('total_stock') }} <span class="text-red-500">*</span>
                       </label>
                       <div class="relative">
-                        <i class="fas fa-warehouse absolute left-3 top-1/2 transform -translate-y-1/2 w-4 h-4" style="color: var(--gray-400);"></i>
+                        <i class="fas fa-warehouse absolute pt-2 left-3 top-1/2 transform -translate-y-1/2 w-4 h-4" style="color: var(--gray-400);"></i>
                         <input type="number"
                                id="stock"
                                v-model.number="productData.stock"
@@ -202,13 +203,13 @@
                                :class="{ 'border-red-500': errors.stock }"
                                required>
                       </div>
-                      <p class="text-xs" style="color: var(--gray-500);">Total inventory to be allocated across color variants</p>
+                      <p class="text-xs" style="color: var(--gray-500);">{{ isRTL ? 'إجمالي المخزون المخصص عبر جميع  الألوان' : 'Total inventory to be allocated across color variants' }}</p>
                       <div v-if="errors.stock" class="text-red-500 text-xs mt-1">{{ errors.stock }}</div>
                     </div>
 
                     <div class="space-y-2">
                       <label for="display_order" class="block vue-text-sm">
-                        Display Order
+                        {{ $t('display_order') }}
                       </label>
                       <div class="relative">
                         <i class="fas fa-sort-numeric-up absolute left-3 top-1/2 transform -translate-y-1/2 w-4 h-4" style="color: var(--gray-400);"></i>
@@ -219,7 +220,7 @@
                                class="vue-form-control pl-10"
                                :class="{ 'border-red-500': errors.display_order }">
                       </div>
-                      <p class="text-xs" style="color: var(--gray-500);">Order in which this product appears in listings</p>
+                      <p class="text-xs" style="color: var(--gray-500);">{{ isRTL ? 'ترتيب المنتج في قائمة المنتجات' :  'Order in which this product appears in listings' }}</p>
                       <div v-if="errors.display_order" class="text-red-500 text-xs mt-1">{{ errors.display_order }}</div>
                     </div>
                   </div>
@@ -231,7 +232,7 @@
                            class="w-4 h-4 bg-gray-100 border-gray-300 rounded"
                            style="color: var(--primary-blue); --tw-ring-color: var(--primary-blue);">
                     <label for="is_available" class="vue-text-sm">
-                      Available for purchase
+                      {{ $t('available_for_purchase') }}
                     </label>
                   </div>
 
@@ -257,12 +258,12 @@
           <div v-show="activeTab === 'colors'" class="vue-tab-content space-y-6">
             <div class="flex items-center justify-between">
               <div>
-                <h3 class="vue-text-lg">Product Colors</h3>
-                <p class="text-sm" style="color: var(--gray-600);">Add color variants with images and size options</p>
+                <h3 class="vue-text-lg">{{ $t('product_colors') }}</h3>
+                <p class="text-sm" style="color: var(--gray-600);">{{ $t('add_color_variants_images') }}</p>
               </div>
               <button type="button" class="vue-btn vue-btn-primary" @click="addNewColor">
                 <i class="fas fa-plus w-4 h-4"></i>
-                Add Color
+                {{ $t('add_color') }}
               </button>
             </div>
 
@@ -306,12 +307,12 @@
           <div v-show="activeTab === 'specifications'" class="vue-tab-content space-y-6">
             <div class="flex items-center justify-between">
               <div>
-                <h3 class="vue-text-lg">Product Specifications</h3>
-                <p class="text-sm" style="color: var(--gray-600);">Add technical details and product features</p>
+                <h3 class="vue-text-lg">{{ $t('product_specifications') }}</h3>
+                <p class="text-sm" style="color: var(--gray-600);">{{ $t('add_detailed_specifications') }}</p>
               </div>
               <button type="button" class="vue-btn vue-btn-primary" @click="addNewSpecification">
                 <i class="fas fa-plus w-4 h-4"></i>
-                Add Specification
+                {{ $t('add_specification') }}
               </button>
             </div>
 
@@ -320,13 +321,13 @@
                 <div class="space-y-4">
                   <div v-if="productData.specifications.length === 0" class="text-center py-8">
                     <i class="fas fa-file-text w-12 h-12 mx-auto mb-4" style="color: var(--gray-400);"></i>
-                    <h3 class="vue-text-lg mb-2">No specifications added</h3>
+                    <h3 class="vue-text-lg mb-2">{{ $t('no_specifications_added_yet') }}</h3>
                     <p class="mb-4" style="color: var(--gray-600);">
-                      Add product specifications to provide detailed information to customers
+                      {{ $t('add_specifications_detailed_info') }}
                     </p>
                     <button type="button" class="vue-btn vue-btn-primary" @click="addNewSpecification">
                       <i class="fas fa-plus w-4 h-4"></i>
-                      Add First Specification
+                      {{ $t('add_first_specification') }}
                     </button>
                   </div>
 
@@ -432,32 +433,52 @@ export default {
     const showErrorModal = ref(false)
     const errorMessage = ref('')
 
-    // Translation method using Laravel's translation system
-    const $t = (key, replacements = {}) => {
-      if (typeof window.Laravel !== 'undefined' && window.Laravel.translations) {
-        let translation = window.Laravel.translations[key] || key
-        
-        // Handle replacements
-        Object.keys(replacements).forEach(placeholder => {
-          translation = translation.replace(`:${placeholder}`, replacements[placeholder])
-        })
-        
-        return translation
-      }
-      return key
-    }
-
     // RTL support
     const isRTL = computed(() => {
       return document.documentElement.dir === 'rtl' || document.documentElement.lang === 'ar'
     })
 
+    // Reactive translations
+    const translations = ref(window.Laravel?.translations || {})
+
+    // Watch for translation changes
+    const updateTranslations = () => {
+      translations.value = window.Laravel?.translations || {}
+    }
+
+    // Check for translations periodically until they're loaded
+    const checkTranslations = () => {
+      if (window.Laravel?.translations && Object.keys(window.Laravel.translations).length > 0) {
+        updateTranslations()
+      } else {
+        setTimeout(checkTranslations, 100)
+      }
+    }
+
+    onMounted(() => {
+      checkTranslations()
+    })
+
+    // Translation method
+    const $t = (key, params = {}) => {
+      const trans = translations.value
+      if (trans[key]) {
+        let translation = trans[key]
+        // Replace placeholders with actual values
+        Object.keys(params).forEach(param => {
+          translation = translation.replace(`:${param}`, params[param])
+        })
+        return translation
+      }
+      return key
+    }
+
     // Tab configuration
-    const tabs = [
-      { id: 'basic', label: 'basic_info', icon: 'fas fa-box' },
-      { id: 'colors', label: 'colors_images', icon: 'fas fa-palette' },
-      { id: 'specifications', label: 'specifications', icon: 'fas fa-file-text' }
-    ]
+    const tabs = computed(() => [
+      { id: 'basic', label: $t('basic_info'), icon: 'fas fa-box' },
+      { id: 'colors', label: $t('colors_images'), icon: 'fas fa-palette' },
+      { id: 'specifications', label: $t('specifications'), icon: 'fas fa-file-text' }
+    ])
 
     // Computed properties
     const totalAllocatedStock = computed(() => {
@@ -906,7 +927,6 @@ export default {
       isRTL,
 
       // Methods
-      $t,
       getTabClasses,
       fetchProductData,
       validateForm,

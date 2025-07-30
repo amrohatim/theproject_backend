@@ -15,6 +15,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Schema;
 use Illuminate\Support\Str;
 use App\Helpers\ImageHelper;
 
@@ -26,20 +27,127 @@ class ProductController extends Controller
     public function index(Request $request)
     {
         $user = Auth::user();
-        $query = Product::where('user_id', $user->id)->with('category');
 
-        // Apply search if provided
+        // Start with optimized base query using indexed columns
+        $query = Product::select('products.*')
+            ->where('products.user_id', $user->id)
+            ->with(['category:id,name']); // Only load necessary category fields
+
+        // Apply search if provided - optimized for indexed columns
         if ($request->filled('search')) {
             $searchTerm = $request->get('search');
             $query->where(function ($q) use ($searchTerm) {
-                $q->where('name', 'like', "%{$searchTerm}%")
-                  ->orWhere('description', 'like', "%{$searchTerm}%")
-                  ->orWhere('sku', 'like', "%{$searchTerm}%")
-                  ->orWhereHas('category', function ($categoryQuery) use ($searchTerm) {
-                      $categoryQuery->where('name', 'like', "%{$searchTerm}%");
-                  });
+                // Search by name first (indexed)
+                $q->where('products.name', 'like', "%{$searchTerm}%");
+
+                // Search by SKU (indexed) - exact match first for better performance
+                if (Schema::hasColumn('products', 'sku')) {
+                    $q->orWhere('products.sku', '=', $searchTerm)
+                      ->orWhere('products.sku', 'like', "%{$searchTerm}%");
+                }
+
+                // Search by description (less indexed, so lower priority)
+                $q->orWhere('products.description', 'like', "%{$searchTerm}%");
+
+                // Search by category name using join for better performance
+                $q->orWhereExists(function ($categoryQuery) use ($searchTerm) {
+                    $categoryQuery->select(DB::raw(1))
+                        ->from('categories')
+                        ->whereColumn('categories.id', 'products.category_id')
+                        ->where('categories.name', 'like', "%{$searchTerm}%");
+                });
             });
         }
+
+        // Apply category filter
+        if ($request->filled('category')) {
+            $query->where('category_id', $request->get('category'));
+        }
+
+        // Apply status filter
+        if ($request->filled('status')) {
+            $status = $request->get('status');
+            if ($status === 'active') {
+                $query->where('is_available', true);
+            } elseif ($status === 'inactive') {
+                $query->where('is_available', false);
+            }
+            // 'all' doesn't add any filter
+        }
+
+        // Apply price range filter
+        if ($request->filled('price_min')) {
+            $query->where('price', '>=', $request->get('price_min'));
+        }
+        if ($request->filled('price_max')) {
+            $query->where('price', '<=', $request->get('price_max'));
+        }
+
+        // Apply stock level filter
+        if ($request->filled('stock_level')) {
+            $stockLevel = $request->get('stock_level');
+            switch ($stockLevel) {
+                case 'in_stock':
+                    $query->where('stock', '>', 0);
+                    break;
+                case 'low_stock':
+                    $query->where('stock', '>', 0)->where('stock', '<', 10);
+                    break;
+                case 'out_of_stock':
+                    $query->where('stock', '<=', 0);
+                    break;
+            }
+        }
+
+        // Apply date range filter
+        if ($request->filled('date_from')) {
+            $query->whereDate('created_at', '>=', $request->get('date_from'));
+        }
+        if ($request->filled('date_to')) {
+            $query->whereDate('created_at', '<=', $request->get('date_to'));
+        }
+
+        // Apply sorting - optimized for indexed columns
+        $sortBy = $request->get('sort', 'created_at');
+        $sortDirection = $request->get('direction', 'desc');
+
+        // Validate sort direction
+        if (!in_array($sortDirection, ['asc', 'desc'])) {
+            $sortDirection = 'desc';
+        }
+
+        switch ($sortBy) {
+            case 'name':
+                // Use indexed name column
+                $query->orderBy('products.name', $sortDirection);
+                break;
+            case 'category':
+                // Use optimized join with indexed columns
+                $query->leftJoin('categories', 'products.category_id', '=', 'categories.id')
+                      ->orderBy('categories.name', $sortDirection)
+                      ->select('products.*');
+                break;
+            case 'price':
+                // Use indexed price column
+                $query->orderBy('products.price', $sortDirection);
+                break;
+            case 'stock':
+                // Use indexed stock column
+                $query->orderBy('products.stock', $sortDirection);
+                break;
+            case 'status':
+                // Use indexed is_available column
+                $query->orderBy('products.is_available', $sortDirection);
+                break;
+            case 'created_at':
+            default:
+                // Use indexed created_at column (default sort)
+                $query->orderBy('products.created_at', $sortDirection);
+                break;
+        }
+
+        // Add secondary sort by ID for consistent pagination
+        $query->orderBy('products.id', 'desc');
 
         // Apply filters
         if ($request->filled('category_id')) {
@@ -101,7 +209,21 @@ class ProductController extends Controller
             $query->orderBy('created_at', 'desc');
         }
 
-        $products = $query->paginate(15)->appends($request->query());
+        // Use optimized pagination with cursor-based pagination for large datasets
+        $perPage = min($request->get('per_page', 15), 50); // Limit max items per page
+        $products = $query->paginate($perPage)->appends($request->query());
+
+        // Handle export request
+        if ($request->filled('export')) {
+            return $this->export($request);
+        }
+
+        // Get filter options for the view - optimized query using indexes
+        $categories = Category::select('id', 'name')
+            ->where('is_active', true)
+            ->whereNotNull('parent_id') // Only subcategories can be selected
+            ->orderBy('name')
+            ->get();
 
         // If this is an AJAX request, return JSON response
         if ($request->ajax()) {
@@ -112,10 +234,191 @@ class ProductController extends Controller
                 'total' => $products->total(),
                 'current_page' => $products->currentPage(),
                 'last_page' => $products->lastPage(),
+                'filters' => [
+                    'search' => $request->get('search', ''),
+                    'category' => $request->get('category', ''),
+                    'status' => $request->get('status', ''),
+                    'price_min' => $request->get('price_min', ''),
+                    'price_max' => $request->get('price_max', ''),
+                    'stock_level' => $request->get('stock_level', ''),
+                    'date_from' => $request->get('date_from', ''),
+                    'date_to' => $request->get('date_to', ''),
+                    'sort' => $request->get('sort', 'created_at'),
+                    'direction' => $request->get('direction', 'desc'),
+                ]
             ]);
         }
 
-        return view('merchant.products.index', compact('products'));
+        return view('merchant.products.index', compact('products', 'categories'));
+    }
+
+    /**
+     * Handle bulk actions on products
+     */
+    public function bulkAction(Request $request)
+    {
+        $request->validate([
+            'action' => 'required|in:activate,deactivate,delete',
+            'product_ids' => 'required|array|min:1',
+            'product_ids.*' => 'exists:products,id'
+        ]);
+
+        $user = Auth::user();
+        $action = $request->get('action');
+        $productIds = $request->get('product_ids');
+
+        // Ensure user can only perform actions on their own products
+        $products = Product::where('user_id', $user->id)
+            ->whereIn('id', $productIds)
+            ->get();
+
+        if ($products->count() !== count($productIds)) {
+            return response()->json([
+                'success' => false,
+                'message' => __('merchant.unauthorized_products_selected')
+            ], 403);
+        }
+
+        try {
+            switch ($action) {
+                case 'activate':
+                    Product::whereIn('id', $productIds)
+                        ->where('user_id', $user->id)
+                        ->update(['is_available' => true]);
+                    $message = __('merchant.products_activated_successfully');
+                    break;
+
+                case 'deactivate':
+                    Product::whereIn('id', $productIds)
+                        ->where('user_id', $user->id)
+                        ->update(['is_available' => false]);
+                    $message = __('merchant.products_deactivated_successfully');
+                    break;
+
+                case 'delete':
+                    Product::whereIn('id', $productIds)
+                        ->where('user_id', $user->id)
+                        ->delete();
+                    $message = __('merchant.products_deleted_successfully');
+                    break;
+            }
+
+            return response()->json([
+                'success' => true,
+                'message' => $message,
+                'affected_count' => $products->count()
+            ]);
+
+        } catch (\Exception $e) {
+            return response()->json([
+                'success' => false,
+                'message' => __('merchant.bulk_action_error')
+            ], 500);
+        }
+    }
+
+    /**
+     * Export products to CSV
+     */
+    public function export(Request $request)
+    {
+        $user = Auth::user();
+        $query = Product::where('user_id', $user->id)->with('category');
+
+        // Apply the same filters as index method
+        if ($request->filled('search')) {
+            $searchTerm = $request->get('search');
+            $query->where(function ($q) use ($searchTerm) {
+                $q->where('name', 'like', "%{$searchTerm}%")
+                  ->orWhere('description', 'like', "%{$searchTerm}%")
+                  ->orWhere('sku', 'like', "%{$searchTerm}%");
+            });
+        }
+
+        if ($request->filled('category')) {
+            $query->where('category_id', $request->get('category'));
+        }
+
+        if ($request->filled('status')) {
+            $status = $request->get('status');
+            if ($status === 'active') {
+                $query->where('is_available', true);
+            } elseif ($status === 'inactive') {
+                $query->where('is_available', false);
+            }
+        }
+
+        if ($request->filled('price_min')) {
+            $query->where('price', '>=', $request->get('price_min'));
+        }
+        if ($request->filled('price_max')) {
+            $query->where('price', '<=', $request->get('price_max'));
+        }
+
+        if ($request->filled('stock_level')) {
+            $stockLevel = $request->get('stock_level');
+            switch ($stockLevel) {
+                case 'in_stock':
+                    $query->where('stock', '>', 0);
+                    break;
+                case 'low_stock':
+                    $query->where('stock', '>', 0)->where('stock', '<', 10);
+                    break;
+                case 'out_of_stock':
+                    $query->where('stock', '<=', 0);
+                    break;
+            }
+        }
+
+        if ($request->filled('date_from')) {
+            $query->whereDate('created_at', '>=', $request->get('date_from'));
+        }
+        if ($request->filled('date_to')) {
+            $query->whereDate('created_at', '<=', $request->get('date_to'));
+        }
+
+        $products = $query->get();
+
+        $filename = 'products-' . date('Y-m-d-H-i-s') . '.csv';
+
+        $headers = [
+            'Content-Type' => 'text/csv',
+            'Content-Disposition' => 'attachment; filename="' . $filename . '"',
+        ];
+
+        $callback = function() use ($products) {
+            $file = fopen('php://output', 'w');
+
+            // CSV headers
+            fputcsv($file, [
+                'ID',
+                'Name',
+                'SKU',
+                'Category',
+                'Price',
+                'Stock',
+                'Status',
+                'Created Date'
+            ]);
+
+            // CSV data
+            foreach ($products as $product) {
+                fputcsv($file, [
+                    $product->id,
+                    $product->name,
+                    $product->sku,
+                    $product->category ? $product->category->name : '',
+                    $product->price,
+                    $product->stock,
+                    $product->is_available ? 'Active' : 'Inactive',
+                    $product->created_at->format('Y-m-d H:i:s')
+                ]);
+            }
+
+            fclose($file);
+        };
+
+        return response()->stream($callback, 200, $headers);
     }
 
     /**

@@ -120,8 +120,17 @@ class ServiceController extends Controller
      */
     public function create()
     {
-        $categories = Category::where('is_active', true)->orderBy('name')->get();
-        return view('merchant.services.create', compact('categories'));
+        // Get service categories with their children
+        $parentCategories = Category::where('type', 'service')
+            ->where('is_active', true)
+            ->whereNull('parent_id')
+            ->with(['children' => function($query) {
+                $query->where('is_active', true)->orderBy('name');
+            }])
+            ->orderBy('name')
+            ->get();
+            
+        return view('merchant.services.create', compact('parentCategories'));
     }
 
     /**
@@ -256,9 +265,18 @@ class ServiceController extends Controller
         $userBranches = \App\Models\Branch::where('user_id', $user->id)->pluck('id');
 
         $service = Service::whereIn('branch_id', $userBranches)->findOrFail($id);
-        $categories = Category::where('is_active', true)->orderBy('name')->get();
+        
+        // Get service categories with their children
+        $parentCategories = Category::where('type', 'service')
+            ->where('is_active', true)
+            ->whereNull('parent_id')
+            ->with(['children' => function($query) {
+                $query->where('is_active', true)->orderBy('name');
+            }])
+            ->orderBy('name')
+            ->get();
 
-        return view('merchant.services.edit', compact('service', 'categories'));
+        return view('merchant.services.edit', compact('service', 'parentCategories'));
     }
 
     /**

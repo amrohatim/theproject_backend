@@ -142,7 +142,7 @@
               </div>
               <div class="relative">
                 <div class="absolute left-3 top-1/2 transform -translate-y-1/2 flex items-center">
-                 <span class="text-xs text-slate-500 bg-slate-100 px-2 py-1 rounded">AED</span>
+                
                 </div>
                 <input type="number"
                        step="1"
@@ -170,7 +170,7 @@
                        class="vue-form-control-enhanced-blue pr-16 text-center font-semibold"
                        placeholder="0">
                 <div class="absolute right-3 top-1/2 transform -translate-y-1/2">
-                  <span class="text-xs text-slate-500 bg-slate-100 px-2 py-1 rounded">{{ t.units }}</span>
+                  
                 </div>
               </div>
               <div class="flex items-center justify-between text-xs mt-1">
@@ -211,11 +211,11 @@
                        :value="color.display_order || 0"
                        @input="updateColor('display_order', parseInt($event.target.value) || 0)"
                        min="0"
-                       class="vue-form-control-enhanced-blue text-center font-semibold text-lg"
+                       class="vue-form-control-enhanced-blue text-center font-semibold text-md"
                        title="Order in which this color variant appears"
                        placeholder="0">
                 <div class="absolute right-3 top-1/2 transform -translate-y-1/2">
-                  <i class="fas fa-arrows-alt-v text-blue-400 text-sm"></i>
+                 
                 </div>
               </div>
               <p class="text-xs text-slate-500 mt-1">
@@ -555,7 +555,7 @@ export default {
     }
 
     const showStockCorrectionFeedback = (attempted, corrected) => {
-      stockCorrectionMessage.value = $t('merchant.stock_auto_adjusted', { 
+      stockCorrectionMessage.value = $t('stock_auto_adjusted', { 
         attempted, 
         corrected, 
         available: availableStock.value 

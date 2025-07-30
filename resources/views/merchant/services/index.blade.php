@@ -1,9 +1,16 @@
 @extends('layouts.merchant')
 
-@section('title', 'Services')
-@section('header', 'Services')
+@section('title', __('merchant.services'))
+@section('header', __('merchant.services'))
+
+@push('styles')
+@if(app()->getLocale() === 'ar')
+<link href="{{ asset('css/merchant-services-rtl.css') }}" rel="stylesheet">
+@endif
+@endpush
 
 @section('content')
+<div class="container-fluid merchant-services-page" dir="{{ app()->getLocale() === 'ar' ? 'rtl' : 'ltr' }}">
 <!-- Page Header -->
 <div class="mb-8">
     <div class="sm:flex sm:items-center sm:justify-between">
@@ -14,9 +21,9 @@
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"></path>
                     </svg>
                 </div>
-                <h2 class="text-3xl font-bold text-gray-900">My Services</h2>
+                <h2 class="text-3xl font-bold text-gray-900">{{ __('merchant.my_services') }}</h2>
             </div>
-            <p class="text-gray-600">Manage your service offerings and bookings</p>
+            <p class="text-gray-600">{{ __('merchant.manage_services_bookings') }}</p>
         </div>
         <div class="mt-4 sm:mt-0">
             @php
@@ -29,12 +36,12 @@
                     <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24" width="20" height="20">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"></path>
                     </svg>
-                    Add New Service
+                    {{ __('merchant.add_new_service') }}
                 </a>
             @else
                 <button class="discord-btn" disabled style="opacity: 0.6; cursor: not-allowed;"
-                        title="License required to add services">
-                    <i class="fas fa-lock me-1"></i> Add New Service
+                        title="{{ __('merchant.license_required') }}">
+                    <i class="fas fa-lock me-1"></i> {{ __('merchant.add_new_service') }}
                 </button>
             @endif
         </div>
@@ -49,31 +56,31 @@
             <i class="fas fa-exclamation-triangle me-3" style="color: var(--discord-yellow); font-size: 24px;"></i>
             <div>
                 <h5 style="margin: 0; color: var(--discord-lightest); font-weight: 600;">
-                    License Required
+                    {{ __('merchant.license_required') }}
                 </h5>
                 <p style="margin: 4px 0 0 0; color: var(--discord-light); font-size: 14px;">
                     @if($merchant)
                         @switch($merchant->license_status)
                             @case('checking')
-                                Your license is currently under review. You'll be able to add services once it's approved.
+                                {{ __('merchant.license_required_message_checking') }}
                                 @break
                             @case('expired')
-                                Your license has expired. Please upload a new license to continue adding services.
+                                {{ __('merchant.license_required_message_expired') }}
                                 @break
                             @case('rejected')
-                                Your license was rejected. Please upload a new license to continue adding services.
+                                {{ __('merchant.license_required_message_rejected') }}
                                 @break
                             @default
-                                Your license is outdated. Please upgrade your license to add products or services.
+                                {{ __('merchant.license_required_message_default') }}
                         @endswitch
                     @else
-                        Please complete your merchant profile setup.
+                        {{ __('merchant.license_required_message_no_merchant') }}
                     @endif
                 </p>
             </div>
             <div class="ms-auto">
                 <a href="{{ route('merchant.license.upload') }}" class="discord-btn-secondary p-1 rounded-md">
-                    <i class="fas fa-upload me-1"></i> Upload License
+                    <i class="fas fa-upload me-1"></i> {{ __('merchant.upload_license') }}
                 </a>
             </div>
         </div>
@@ -91,7 +98,7 @@
                 </svg>
                 <input
                     type="text"
-                    placeholder="Search services by name, description, category..."
+                    placeholder="{{ __('merchant.search_services_placeholder') }}"
                     class="w-full pl-10 pr-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors"
                     value="{{ request('search') }}"
                     id="serviceSearch"
@@ -103,13 +110,13 @@
                 <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24" width="20" height="20">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 4a1 1 0 011-1h16a1 1 0 011 1v2.586a1 1 0 01-.293.707l-6.414 6.414a1 1 0 00-.293.707V17l-4 4v-6.586a1 1 0 00-.293-.707L3.293 7.207A1 1 0 013 6.5V4z"></path>
                 </svg>
-                Filters
+                {{ __('merchant.filters') }}
             </button>
             <select class="px-4 py-3 border border-gray-300 rounded-lg text-sm font-medium text-gray-700 bg-white focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors" id="sortSelect">
-                <option>Sort by: Name</option>
-                <option>Sort by: Price</option>
-                <option>Sort by: Category</option>
-                <option>Sort by: Status</option>
+                <option>{{ __('merchant.sort_by_name') }}</option>
+                <option>{{ __('merchant.sort_by_price') }}</option>
+                <option>{{ __('merchant.sort_by_category') }}</option>
+                <option>{{ __('merchant.sort_by_status') }}</option>
             </select>
         </div>
     </div>
@@ -119,8 +126,8 @@
 <div class="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden">
     <div class="px-6 py-4 border-b border-gray-200">
         <div class="flex items-center justify-between">
-            <h3 class="text-lg font-semibold text-gray-900">Services List</h3>
-            <span class="text-sm text-gray-500">{{ $services->total() }} services found</span>
+            <h3 class="text-lg font-semibold text-gray-900">{{ __('merchant.services_list') }}</h3>
+            <span class="text-sm text-gray-500">{{ $services->total() }} {{ __('merchant.services_found') }}</span>
         </div>
     </div>
 
@@ -150,7 +157,7 @@
                 <div style="font-size: 24px; font-weight: 700; color: var(--discord-primary); margin-bottom: 8px;">
                     {{ $services->where('is_available', true)->count() }}
                 </div>
-                <div style="color: var(--discord-light); font-size: 14px;">Active Services</div>
+                <div style="color: var(--discord-light); font-size: 14px;">{{ __('merchant.active_services') }}</div>
             </div>
         </div>
     </div>
@@ -160,7 +167,7 @@
                 <div style="font-size: 24px; font-weight: 700; color: var(--discord-yellow); margin-bottom: 8px;">
                     {{ $services->where('is_available', false)->count() }}
                 </div>
-                <div style="color: var(--discord-light); font-size: 14px;">Inactive Services</div>
+                <div style="color: var(--discord-light); font-size: 14px;">{{ __('merchant.inactive_services') }}</div>
             </div>
         </div>
     </div>
@@ -170,7 +177,7 @@
                 <div style="font-size: 24px; font-weight: 700; color: var(--discord-green); margin-bottom: 8px;">
                     ${{ number_format($services->avg('price'), 2) }}
                 </div>
-                <div style="color: var(--discord-light); font-size: 14px;">Average Price</div>
+                <div style="color: var(--discord-light); font-size: 14px;">{{ __('merchant.average_price') }}</div>
             </div>
         </div>
     </div>
@@ -180,7 +187,7 @@
                 <div style="font-size: 24px; font-weight: 700; color: var(--discord-lightest); margin-bottom: 8px;">
                     {{ $services->whereNotNull('duration')->avg('duration') ? round($services->whereNotNull('duration')->avg('duration')) : 0 }} min
                 </div>
-                <div style="color: var(--discord-light); font-size: 14px;">Average Duration</div>
+                <div style="color: var(--discord-light); font-size: 14px;">{{ __('merchant.average_duration') }}</div>
             </div>
         </div>
     </div>

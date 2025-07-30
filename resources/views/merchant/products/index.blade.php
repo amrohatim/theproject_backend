@@ -98,20 +98,145 @@
                 >
             </div>
         </div>
-        <div class="flex items-center space-x-3">
-            <button class="inline-flex items-center px-4 py-3 border border-gray-300 rounded-lg text-sm font-medium text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 transition-colors" id="filterToggle">
+        <div class="flex flex-col sm:flex-row items-stretch sm:items-center space-y-2 sm:space-y-0 sm:space-x-3">
+            <button class="inline-flex items-center justify-center px-4 py-3 border border-gray-300 rounded-lg text-sm font-medium text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 transition-colors" id="filterToggle">
                 <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24" width="20" height="20">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 4a1 1 0 011-1h16a1 1 0 011 1v2.586a1 1 0 01-.293.707l-6.414 6.414a1 1 0 00-.293.707V17l-4 4v-6.586a1 1 0 00-.293-.707L3.293 7.207A1 1 0 013 6.5V4z"></path>
                 </svg>
                 {{ __('merchant.filters') }}
+                <span id="activeFiltersCount" class="ml-2 px-2 py-1 text-xs bg-blue-100 text-blue-800 rounded-full hidden">0</span>
             </button>
-            <select class="px-4 py-3 border border-gray-300 rounded-lg text-sm font-medium text-gray-700 bg-white focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors" id="sortSelect">
-                <option>{{ __('merchant.sort_by_name') }}</option>
-                <option>{{ __('merchant.sort_by_price') }}</option>
-                <option>{{ __('merchant.sort_by_stock') }}</option>
-                <option>{{ __('merchant.sort_by_status') }}</option>
-            </select>
+            <button class="inline-flex items-center justify-center px-4 py-3 border border-gray-300 rounded-lg text-sm font-medium text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 transition-colors" id="exportBtn">
+                <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24" width="16" height="16">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
+                </svg>
+                {{ __('merchant.export_csv') }}
+            </button>
         </div>
+    </div>
+
+    <!-- Advanced Filters Panel -->
+    <div id="filtersPanel" class="mt-4 bg-gray-50 border-t border-gray-200 p-6 hidden">
+        <div class="flex items-center justify-between mb-4">
+            <h3 class="text-lg font-medium text-gray-900">{{ __('merchant.advanced_filters') }}</h3>
+            <button id="clearAllFilters" class="text-sm text-red-600 hover:text-red-800">
+                {{ __('merchant.clear_all_filters') }}
+            </button>
+        </div>
+
+        <form id="filtersForm" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
+            <!-- Category Filter -->
+            <div>
+                <label class="block text-sm font-medium text-gray-700 mb-2">{{ __('merchant.filter_by_category') }}</label>
+                <select name="category" class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
+                    <option value="">{{ __('merchant.all_categories') }}</option>
+                    @foreach($categories as $category)
+                        <option value="{{ $category->id }}" {{ request('category') == $category->id ? 'selected' : '' }}>
+                            {{ $category->name }}
+                        </option>
+                    @endforeach
+                </select>
+            </div>
+
+            <!-- Status Filter -->
+            <div>
+                <label class="block text-sm font-medium text-gray-700 mb-2">{{ __('merchant.filter_by_status') }}</label>
+                <select name="status" class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
+                    <option value="">{{ __('merchant.all_statuses') }}</option>
+                    <option value="active" {{ request('status') == 'active' ? 'selected' : '' }}>{{ __('merchant.active') }}</option>
+                    <option value="inactive" {{ request('status') == 'inactive' ? 'selected' : '' }}>{{ __('merchant.inactive') }}</option>
+                </select>
+            </div>
+
+            <!-- Stock Level Filter -->
+            <div>
+                <label class="block text-sm font-medium text-gray-700 mb-2">{{ __('merchant.stock_level') }}</label>
+                <select name="stock_level" class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
+                    <option value="">{{ __('merchant.all_stock_levels') }}</option>
+                    <option value="in_stock" {{ request('stock_level') == 'in_stock' ? 'selected' : '' }}>{{ __('merchant.in_stock') }}</option>
+                    <option value="low_stock" {{ request('stock_level') == 'low_stock' ? 'selected' : '' }}>{{ __('merchant.low_stock') }}</option>
+                    <option value="out_of_stock" {{ request('stock_level') == 'out_of_stock' ? 'selected' : '' }}>{{ __('merchant.out_of_stock') }}</option>
+                </select>
+            </div>
+
+            <!-- Sort Options -->
+            <div>
+                <label class="block text-sm font-medium text-gray-700 mb-2">{{ __('merchant.sort_by') }}</label>
+                <div class="flex space-x-2">
+                    <select name="sort" class="flex-1 px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
+                        <option value="created_at" {{ request('sort') == 'created_at' ? 'selected' : '' }}>{{ __('merchant.sort_by_date') }}</option>
+                        <option value="name" {{ request('sort') == 'name' ? 'selected' : '' }}>{{ __('merchant.sort_by_name') }}</option>
+                        <option value="category" {{ request('sort') == 'category' ? 'selected' : '' }}>{{ __('merchant.sort_by_category') }}</option>
+                        <option value="price" {{ request('sort') == 'price' ? 'selected' : '' }}>{{ __('merchant.sort_by_price') }}</option>
+                        <option value="stock" {{ request('sort') == 'stock' ? 'selected' : '' }}>{{ __('merchant.sort_by_stock') }}</option>
+                        <option value="status" {{ request('sort') == 'status' ? 'selected' : '' }}>{{ __('merchant.sort_by_status') }}</option>
+                    </select>
+                    <select name="direction" class="px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
+                        <option value="desc" {{ request('direction') == 'desc' ? 'selected' : '' }}>{{ __('merchant.sort_descending') }}</option>
+                        <option value="asc" {{ request('direction') == 'asc' ? 'selected' : '' }}>{{ __('merchant.sort_ascending') }}</option>
+                    </select>
+                </div>
+            </div>
+
+            <!-- Price Range -->
+            <div>
+                <label class="block text-sm font-medium text-gray-700 mb-2">{{ __('merchant.price_range') }}</label>
+                <div class="flex space-x-2">
+                    <input type="number" name="price_min" placeholder="{{ __('merchant.min_price') }}"
+                           value="{{ request('price_min') }}"
+                           class="flex-1 px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
+                    <input type="number" name="price_max" placeholder="{{ __('merchant.max_price') }}"
+                           value="{{ request('price_max') }}"
+                           class="flex-1 px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
+                </div>
+            </div>
+
+            <!-- Date Range -->
+            <div>
+                <label class="block text-sm font-medium text-gray-700 mb-2">{{ __('merchant.date_range') }}</label>
+                <div class="flex space-x-2">
+                    <input type="date" name="date_from"
+                           value="{{ request('date_from') }}"
+                           class="flex-1 px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
+                    <input type="date" name="date_to"
+                           value="{{ request('date_to') }}"
+                           class="flex-1 px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
+                </div>
+            </div>
+        </form>
+    </div>
+
+    <!-- Active Filters Display -->
+    <div id="activeFilters" class="mt-4 hidden">
+        <div class="flex items-center space-x-2">
+            <span class="text-sm font-medium text-gray-700">{{ __('merchant.active_filters') }}:</span>
+            <div id="activeFiltersList" class="flex flex-wrap gap-2"></div>
+        </div>
+    </div>
+</div>
+
+<!-- Bulk Actions -->
+<div id="bulkActions" class="bg-blue-50 border border-blue-200 rounded-lg p-4 mb-4 hidden">
+    <div class="flex items-center justify-between">
+        <div class="flex items-center space-x-4">
+            <span class="text-sm font-medium text-blue-900">
+                <span id="selectedCount">0</span> {{ __('merchant.items_selected') }}
+            </span>
+            <div class="flex items-center space-x-2">
+                <button id="bulkActivate" class="px-3 py-1 text-xs font-medium text-green-700 bg-green-100 rounded-full hover:bg-green-200">
+                    {{ __('merchant.activate_selected') }}
+                </button>
+                <button id="bulkDeactivate" class="px-3 py-1 text-xs font-medium text-yellow-700 bg-yellow-100 rounded-full hover:bg-yellow-200">
+                    {{ __('merchant.deactivate_selected') }}
+                </button>
+                <button id="bulkDelete" class="px-3 py-1 text-xs font-medium text-red-700 bg-red-100 rounded-full hover:bg-red-200">
+                    {{ __('merchant.delete_selected') }}
+                </button>
+            </div>
+        </div>
+        <button id="clearSelection" class="text-sm text-gray-500 hover:text-gray-700">
+            {{ __('merchant.clear_filters') }}
+        </button>
     </div>
 </div>
 
@@ -131,12 +256,12 @@
     </div>
 
     {{-- Products Table Container --}}
-    <div class="products-table-container">
+    <div id="productsTableContainer" class="products-table-container">
         @include('merchant.products.partials.products-table', ['products' => $products])
     </div>
 
     {{-- Pagination Container --}}
-    <div class="products-pagination-container">
+    <div id="paginationContainer" class="products-pagination-container">
         @include('merchant.products.partials.pagination', ['products' => $products])
     </div>
 </div>
@@ -189,61 +314,5 @@
 @endsection
 
 @section('scripts')
-<script src="{{ asset('js/merchant-product-filters.js') }}"></script>
-<script>
-// Modern search and filter functionality
-document.addEventListener('DOMContentLoaded', function() {
-    const searchInput = document.getElementById('productSearch');
-    const filterToggle = document.getElementById('filterToggle');
-    const sortSelect = document.getElementById('sortSelect');
-
-    // Search functionality
-    if (searchInput) {
-        let searchTimeout;
-        searchInput.addEventListener('input', function() {
-            clearTimeout(searchTimeout);
-            searchTimeout = setTimeout(() => {
-                performSearch();
-            }, 300);
-        });
-    }
-
-    // Sort functionality
-    if (sortSelect) {
-        sortSelect.addEventListener('change', function() {
-            performSearch();
-        });
-    }
-
-    // Filter toggle (placeholder for future filter panel)
-    if (filterToggle) {
-        filterToggle.addEventListener('click', function() {
-            // TODO: Implement filter panel toggle
-            console.log('Filter toggle clicked');
-        });
-    }
-
-    function performSearch() {
-        const searchQuery = searchInput ? searchInput.value : '';
-        const sortBy = sortSelect ? sortSelect.value : '';
-
-        // Build URL parameters
-        const params = new URLSearchParams();
-        if (searchQuery) params.set('search', searchQuery);
-        if (sortBy && sortBy !== 'Sort by: Name') {
-            const sortValue = sortBy.replace('Sort by: ', '').toLowerCase();
-            params.set('sort', sortValue);
-        }
-
-        // Update URL and reload page (for now)
-        const newUrl = window.location.pathname + (params.toString() ? '?' + params.toString() : '');
-        window.location.href = newUrl;
-    }
-});
-
-// Clear search and filters function
-function clearSearchAndFilters() {
-    window.location.href = window.location.pathname;
-}
-</script>
+<script src="{{ asset('js/merchant/products-advanced-filters.js') }}"></script>
 @endsection

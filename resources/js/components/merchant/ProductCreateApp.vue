@@ -70,11 +70,12 @@
                   </label>
                   <select id="category_id"
                           v-model="productData.category_id"
-                          class="vue-form-control"
+                          class="vue-form-control text-left"
+                          style="text-align: left; direction: ltr;"
                           :class="{ 'border-red-500': errors.category_id }"
                           required
                           @change="validateCategorySelection">
-                    <option value="">{{ $t('select_category') }}</option>
+                    <option  value="">{{ $t('select_category') }}</option>
                     <optgroup v-for="parent in categories" :key="parent.id" :label="parent.name">
                       <!-- <option :value="parent.id"
                               disabled

@@ -3,7 +3,7 @@
 <div class="discord-card-body">
     <div class="d-flex justify-content-between align-items-center">
         <div style="color: var(--discord-light); font-size: 14px;">
-            Showing {{ $services->firstItem() }} to {{ $services->lastItem() }} of {{ $services->total() }} results
+            {{ __('merchant.showing') }} {{ $services->firstItem() }} {{ __('merchant.to') }} {{ $services->lastItem() }} {{ __('merchant.of') }} {{ $services->total() }} {{ __('merchant.results') }}
         </div>
         <div>
             {{-- Custom pagination for AJAX --}}

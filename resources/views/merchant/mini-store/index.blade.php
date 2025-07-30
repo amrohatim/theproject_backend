@@ -1,6 +1,6 @@
 @extends('layouts.merchant')
 
-@section('header', __('merchant.mini_store_management'))
+@section('title', __('merchant.mini_store_management'))
 
 @section('styles')
 <style>
@@ -109,6 +109,7 @@
 @endsection
 
 @section('content')
+<div dir="{{ app()->getLocale() === 'ar' ? 'rtl' : 'ltr' }}">
 <!-- Success/Error Messages -->
 @if(session('success'))
     <div class="alert alert-success alert-dismissible fade show" role="alert">
@@ -331,6 +332,7 @@
             {{ __('merchant.map_instructions') }}
         </small>
     </div>
+</div>
 </div>
 @endsection
 

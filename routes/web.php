@@ -2077,6 +2077,10 @@ Route::prefix('merchant')->name('merchant.')->middleware(['auth', \App\Http\Midd
     Route::get('/products/search/suggestions', [App\Http\Controllers\Merchant\ProductController::class, 'searchSuggestions'])->name('products.search.suggestions');
     Route::get('/products/filter/options', [App\Http\Controllers\Merchant\ProductController::class, 'getFilterOptions'])->name('products.filter.options');
 
+    // Bulk Actions and Export
+    Route::post('/products/bulk-action', [App\Http\Controllers\Merchant\ProductController::class, 'bulkAction'])->name('products.bulk-action');
+    Route::get('/products/export', [App\Http\Controllers\Merchant\ProductController::class, 'export'])->name('products.export');
+
     // Product Specifications and Color-Size Management (Enhanced functionality)
     Route::get('/products/{id}/specifications', [\App\Http\Controllers\Merchant\ProductSpecificationController::class, 'edit'])->name('products.specifications.edit');
     Route::post('/products/{id}/specifications', [\App\Http\Controllers\Merchant\ProductSpecificationController::class, 'updateSpecifications'])->name('products.specifications.update');

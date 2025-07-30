@@ -9,20 +9,22 @@
         </p>
       </div>
       <div class="flex items-center gap-2">
+                <p class="text-xs text-slate-500">{{ $t('please_click_refresh') }}</p>
         <button type="button"
-                class="vue-btn vue-btn-secondary text-sm"
+                class="vue-btn vue-btn-secondary bg-orange-500 text-white p-2  rounded-md text-sm "
                 @click="() => refreshSizes()"
                 :disabled="loading"
                 :title="$t('refresh_sizes_list')">
-          <i class="fas fa-sync-alt w-3 h-3" :class="{ 'fa-spin': loading }"></i>
+          <i class="fas fa-sync-alt  ml-1 mr-1 w-3 h-3" :class="{ 'fa-spin': loading }"></i>
           {{ $t('refresh') }}
         </button>
         <button type="button"
-                class="vue-btn vue-btn-primary text-sm"
+                class="vue-btn vue-btn-primary bg-blue-500 text-white p-2 rounded-md text-sm"
                 @click="showAddSizeModal = true">
           <i class="fas fa-plus w-3 h-3"></i>
           {{ $t('add_size') }}
         </button>
+
       </div>
     </div>
 
@@ -188,7 +190,7 @@
                 {{ $t('price_adjustment') }}
               </label>
               <div class="enhanced-price-input">
-                <div class="currency-prefix">AED</div>
+                <div class="currency-prefix">{{ $t('ae') }}</div>
                 <input type="number"
                        v-model.number="size.price_adjustment"
                        step="0.01"
@@ -218,7 +220,7 @@
               <button type="button" 
                       class="vue-btn vue-btn-secondary text-sm"
                       @click="cancelEdit(index)">
-                {{ $t('cancel') }}
+               " {{ $t('cancel') }}"
               </button>
               <button type="button" 
                       class="vue-btn vue-btn-primary text-sm"
@@ -251,9 +253,10 @@
               {{ $t('size_category') }} <span class="text-red-500">*</span>
             </label>
             <select v-model="newSize.category"
-                    class="vue-form-control-enhanced-blue"
+                    class="vue-form-control-enhanced-blue text-left"
+                    style="text-align: left; direction: ltr;"
                     @change="newSize.name = ''; newSize.value = ''">
-              <option value="clothes">{{ $t('clothing_sizes') }}</option>
+              <option value="clothes">{{ $t('clothing_sizes')}}</option>
               <option value="shoes">{{ $t('shoe_sizes') }}</option>
               <option value="hats">{{ $t('hat_sizes') }}</option>
             </select>
@@ -263,14 +266,15 @@
           <div class="enhanced-form-field space-y-1">
             <label class="enhanced-form-label">
               <i class="fas fa-ruler"></i>
-              Size Name <span class="text-red-500">*</span>
+              {{ $t('size_name') }} <span class="text-red-500">*</span>
             </label>
             <select v-model="newSize.name"
-                    class="vue-form-control-enhanced-blue"
+                    class="vue-form-control-enhanced-blue text-left"
+                    style="text-align: left; direction: ltr;"
                     :class="{ 'border-red-500': newSize.errors?.name }"
                     @change="handleSizeNameChange(newSize.name)"
                     required>
-              <option value="">Select Size</option>
+              <option value="">{{ $t('select_size') }}</option>
               <option v-for="option in sizeNameOptions"
                       :key="option.value"
                       :value="option.value">
@@ -284,21 +288,21 @@
           <div class="enhanced-form-field space-y-1">
             <label class="enhanced-form-label">
               <i class="fas fa-tag"></i>
-              Size Value
+              {{ $t('size_value') }}
             </label>
             <input type="text"
                    v-model="newSize.value"
                    class="vue-form-control-enhanced-blue bg-gray-50"
-                   placeholder="Auto-filled based on selection"
+                   :placeholder="$t('select_size_first')"
                    readonly>
           </div>
 
           <!-- Stock and Price Section -->
           <div class="grid grid-cols-2 gap-3">
             <div class="enhanced-form-field space-y-1">
-              <label class="enhanced-form-label text-sm">
+              <label class="enhanced-form-label gap-1 text-sm">
                 <i class="fas fa-boxes"></i>
-                Stock Quantity
+                {{ $t('stock_quantity') }}
               </label>
               <div class="enhanced-input-group">
                 <input type="number"
@@ -308,21 +312,21 @@
                        :max="availableSizeStock"
                        @input="newSize.stock = validateSizeStock(newSize.stock); validateNewSizeField('stock')"
                        placeholder="0">
-                <div class="input-suffix">units</div>
+                <div class="input-suffix">{{ $t('units') }}</div>
               </div>
               <div class="stock-allocation-info text-xs">
-                <span class="available-stock">Available: {{ availableSizeStock }}</span>
-                <span class="allocated-stock">{{ newSize.stock || 0 }} to allocate</span>
+                <span class="available-stock">{{ $t('available') }}: {{ availableSizeStock }}</span>
+                <span class="allocated-stock">{{ newSize.stock || 0 }} {{ $t('allocated') }}</span>
               </div>
             </div>
 
             <div class="enhanced-form-field space-y-1">
-              <label class="enhanced-form-label text-sm">
+              <label class="enhanced-form-label gap-1 text-sm">
                 <i class="fas fa-dollar-sign"></i>
-                Price Adjustment
+                {{ $t('price_adjustment') }}
               </label>
               <div class="enhanced-price-input">
-                <div class="currency-prefix">AED</div>
+                <div class="currency-prefix">{{$t('aed')}}</div>
                 <input type="number"
                        v-model.number="newSize.price_adjustment"
                        step="0.01"
@@ -331,7 +335,7 @@
               </div>
               <p class="enhanced-help-text text-xs">
                 <i class="fas fa-info-circle"></i>
-                Additional cost for this size
+                {{ $t('additional_cost_size_variant') }}
               </p>
             </div>
           </div>
@@ -343,7 +347,7 @@
                    class="w-4 h-4 bg-gray-100 border-gray-300 rounded"
                    style="color: var(--primary-blue); --tw-ring-color: var(--primary-blue);">
             <label for="new-size-available" class="vue-text-sm">
-              Available for purchase
+              {{ $t('available_for_purchase') }}
             </label>
           </div>
         </div>
@@ -352,15 +356,15 @@
           <button type="button"
                   class="vue-btn vue-btn-secondary"
                   @click="closeAddSizeModal">
-            Cancel
+            {{ $t('cancel') }}
           </button>
           <button type="button"
-                  class="vue-btn vue-btn-primary"
+                  class="vue-btn vue-btn-primary bg-blue-500 text-white p-2 rounded-md"
                   @click="addSize"
                   :disabled="saving">
             <i v-if="saving" class="fas fa-spinner fa-spin w-4 h-4"></i>
             <i v-else class="fas fa-plus w-4 h-4"></i>
-            {{ saving ? 'Adding...' : 'Add Size' }}
+            {{ saving ? $t('adding_size') : $t('add_size') }}
           </button>
         </div>
       </div>

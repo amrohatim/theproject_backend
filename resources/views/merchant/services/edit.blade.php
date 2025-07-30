@@ -1,9 +1,16 @@
 @extends('layouts.merchant')
 
-@section('title', 'Edit Service')
-@section('header', 'Edit Service')
+@section('title', __('merchant.edit_service_title'))
+@section('header', __('merchant.edit_service_title'))
+
+@push('styles')
+@if(app()->getLocale() === 'ar')
+<link href="{{ asset('css/merchant-services-rtl.css') }}" rel="stylesheet">
+@endif
+@endpush
 
 @section('content')
+<div class="merchant-services-page" dir="{{ app()->getLocale() === 'ar' ? 'rtl' : 'ltr' }}">
 <!-- Header Section -->
 <div class="discord-card">
     <div class="discord-card-body">
@@ -11,15 +18,15 @@
             <div>
                 <h2 style="margin: 0; color: var(--discord-lightest); font-size: 24px; font-weight: 600;">
                     <i class="fas fa-edit me-2" style="color: var(--discord-yellow);"></i>
-                    Edit Service
+                    {{ __('merchant.edit_service_title') }}
                 </h2>
                 <p style="margin: 8px 0 0 0; color: var(--discord-light); font-size: 14px;">
-                    Update service information for "{{ $service->name }}"
+                    {{ __('merchant.edit_service_description') }} "{{ $service->name }}"
                 </p>
             </div>
             <div>
                 <a href="{{ route('merchant.services.index') }}" class="discord-btn discord-btn-secondary">
-                    <i class="fas fa-arrow-left me-1"></i> Back to Services
+                    <i class="fas fa-arrow-left me-1"></i> {{ __('merchant.back_to_services') }}
                 </a>
             </div>
         </div>
@@ -30,7 +37,7 @@
 <div class="discord-card">
     <div class="discord-card-header">
         <i class="fas fa-edit me-2" style="color: var(--discord-yellow);"></i>
-        Service Information
+        {{ __('merchant.service_information') }}
     </div>
     <div class="discord-card-body">
         <form action="{{ route('merchant.services.update', $service->id) }}" method="POST" enctype="multipart/form-data">
@@ -42,7 +49,7 @@
                 <div class="col-md-4 mb-4">
                     <x-image-upload
                         name="image"
-                        label="Service Image"
+                        label="{{ __('merchant.service_image') }}"
                         :current-image="$service->image"
                         :error="$errors->first('image')"
                         container-class="mb-0" />
@@ -54,7 +61,7 @@
                         <!-- Service Name -->
                         <div class="col-md-12 mb-3">
                             <label for="name" class="form-label" style="color: var(--discord-lightest); font-weight: 600;">
-                                Service Name *
+                                {{ __('merchant.service_name_required') }}
                             </label>
                             <input type="text" 
                                    class="form-control @error('name') is-invalid @enderror" 
@@ -71,18 +78,23 @@
                         <!-- Category and Price -->
                         <div class="col-md-6 mb-3">
                             <label for="category_id" class="form-label" style="color: var(--discord-lightest); font-weight: 600;">
-                                Category *
+                                {{ __('merchant.category_required') }}
                             </label>
                             <select class="form-select @error('category_id') is-invalid @enderror" 
                                     id="category_id" 
                                     name="category_id" 
                                     required
                                     style="background-color: var(--discord-darkest); border: 1px solid var(--discord-darkest); color: var(--discord-lightest);">
-                                <option value="">Select Category</option>
-                                @foreach($categories as $category)
-                                    <option value="{{ $category->id }}" {{ old('category_id', $service->category_id) == $category->id ? 'selected' : '' }}>
-                                        {{ $category->name }}
-                                    </option>
+                                <option  value="">{{ __('merchant.select_category') }}</option>
+                                @foreach($parentCategories as $parentCategory)
+                                    <optgroup  label="{{ $parentCategory->name }}">
+                                        @foreach($parentCategory->children as $childCategory)
+                                            <option value="{{ $childCategory->id }}" 
+                                                    {{ old('category_id', $service->category_id) == $childCategory->id ? 'selected' : '' }}>
+                                                {{ $childCategory->name }}
+                                            </option>
+                                        @endforeach
+                                    </optgroup>
                                 @endforeach
                             </select>
                             @error('category_id')
@@ -92,7 +104,7 @@
 
                         <div class="col-md-6 mb-3">
                             <label for="price" class="form-label" style="color: var(--discord-lightest); font-weight: 600;">
-                                Price (AED) *
+                                {{ __('merchant.price_aed_required') }}
                             </label>
                             <input type="number" 
                                    class="form-control @error('price') is-invalid @enderror" 
@@ -111,7 +123,7 @@
                         <!-- Duration and Availability -->
                         <div class="col-md-6 mb-3">
                             <label for="duration" class="form-label" style="color: var(--discord-lightest); font-weight: 600;">
-                                Duration (minutes)
+                                {{ __('merchant.duration_minutes') }}
                             </label>
                             <input type="number" 
                                    class="form-control @error('duration') is-invalid @enderror" 
@@ -127,19 +139,20 @@
 
                         <div class="col-md-6 mb-3">
                             <label class="form-label" style="color: var(--discord-lightest); font-weight: 600;">
-                                Service Options
+                                {{ __('merchant.service_options') }}
                             </label>
-                            <div class="d-flex gap-3">
-                                <div class="form-check">
-                                    <input class="form-check-input" type="checkbox" id="is_available" name="is_available" value="1" {{ old('is_available', $service->is_available) ? 'checked' : '' }}>
-                                    <label class="form-check-label" for="is_available" style="color: var(--discord-light);">
-                                        Available
+                            <div class="d-flex flex-column gap-3">
+                                <div class="form-check p-3 rounded" style="background-color: var(--discord-darker); border: 1px solid var(--discord-dark); transition: all 0.3s ease;">
+                                    <input class="form-check-input" type="checkbox" id="is_available" name="is_available" value="1" {{ old('is_available', $service->is_available) ? 'checked' : '' }} style="background-color: rgb(36, 168, 130);!important; border-color: var(--discord-light); margin-top: 0.25rem;">
+                                    <label class="form-check-label fw-medium" for="is_available" style="color: var(--discord-lightest); cursor: pointer; margin-left: 0.5rem;">
+                                        {{ __('merchant.available') }}
                                     </label>
                                 </div>
-                                <div class="form-check">
-                                    <input class="form-check-input" type="checkbox" id="home_service" name="home_service" value="1" {{ old('home_service', $service->home_service) ? 'checked' : '' }}>
-                                    <label class="form-check-label" for="home_service" style="color: var(--discord-light);">
-                                        Home Service
+                                <div class="form-check p-3 rounded" style="background-color: var(--discord-darker); border: 1px solid var(--discord-dark); transition: all 0.3s ease;">
+                                    <input class="form-check-input" type="checkbox" id="home_service" name="home_service" value="1" {{ old('home_service', $service->home_service) ? 'checked' : '' }} style="background-color: rgb(36, 168, 130); !important; border-color: var(--discord-light); margin-top: 0.25rem;">
+                                    <label class="form-check-label fw-medium" for="home_service" style="color: var(--discord-lightest); cursor: pointer; margin-left: 0.5rem;">
+                                        <i class="fas fa-home me-2" style="color: rgb(36, 168, 130);;"></i>
+                                        {{ __('merchant.home_service') }}
                                     </label>
                                 </div>
                             </div>
@@ -151,7 +164,7 @@
             <!-- Description -->
             <div class="mb-4">
                 <label for="description" class="form-label" style="color: var(--discord-lightest); font-weight: 600;">
-                    Service Description *
+                    {{ __('merchant.service_description_required') }}
                 </label>
                 <textarea class="form-control @error('description') is-invalid @enderror" 
                           id="description" 
@@ -167,10 +180,10 @@
             <!-- Form Actions -->
             <div class="d-flex justify-content-end gap-2">
                 <a href="{{ route('merchant.services.index') }}" class="discord-btn discord-btn-secondary">
-                    <i class="fas fa-times me-1"></i> Cancel
+                    <i class="fas fa-times me-1"></i> {{ __('merchant.cancel') }}
                 </a>
                 <button type="submit" class="discord-btn">
-                    <i class="fas fa-save me-1"></i> Update Service
+                    <i class="fas fa-save me-1"></i> {{ __('merchant.update_service') }}
                 </button>
             </div>
         </form>
@@ -192,12 +205,12 @@ $(document).ready(function() {
             let durationText = '';
             
             if (hours > 0) {
-                durationText += hours + ' hour' + (hours > 1 ? 's' : '');
+                durationText += hours + (hours === 1 ? ' {{ __('merchant.hour') }}' : ' {{ __('merchant.hours') }}');
                 if (remainingMinutes > 0) {
-                    durationText += ' ' + remainingMinutes + ' minute' + (remainingMinutes > 1 ? 's' : '');
+                    durationText += ' ' + remainingMinutes + (remainingMinutes === 1 ? ' {{ __('merchant.minute') }}' : ' {{ __('merchant.minutes') }}');
                 }
             } else {
-                durationText = minutes + ' minute' + (minutes > 1 ? 's' : '');
+                durationText = minutes + (minutes === 1 ? ' {{ __('merchant.minute') }}' : ' {{ __('merchant.minutes') }}');
             }
             
             // Show duration text below input

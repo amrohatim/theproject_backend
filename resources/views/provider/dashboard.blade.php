@@ -3,6 +3,9 @@
 @section('title', 'Dashboard')
 
 @section('styles')
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="{{ asset('css/improved-dashboard.css') }}">
 @endsection
 
@@ -24,47 +27,41 @@
     <!-- Statistics Cards -->
     <div class="stats-grid">
         <div class="stat-card">
-            <div class="stat-card-header gap-2">
-                <div class="stat-card-icon bg-primary-light">
-                    <i class="fas fa-box"></i>
-                </div>
+            <div class="stat-card-header">
                 <p class="stat-card-title">{{ __('provider.total_products') }}</p>
             </div>
             <h2 class="stat-card-value">{{ $totalProducts }}</h2>
-           
+            <img src="{{ asset('assets/package-box.png') }}" alt="Package Box" class="stat-card-icon-image">
         </div>
         
-        <div class="stat-card">
-            <div class="stat-card-header gap-2">
-                <div class="stat-card-icon bg-secondary-light">
-                    <i class="fas fa-shopping-cart"></i>
-                </div>
-                <p class="stat-card-title">{{ __('provider.total_orders') }}</p>
-            </div>
+        <div class="enhanced-card">
+            <h3 class="stat-card-title">{{ __('provider.total_orders') }}</h3>
             <h2 class="stat-card-value">{{ $totalOrders }}</h2>
-           
+            <img src="{{ asset('assets/orders.png') }}" alt="Package Box" class="stat-card-icon-image">
         </div>
         
-        <div class="stat-card">
-            <div class="stat-card-header gap-2">
-                <div class="stat-card-icon bg-warning-light">
-                    <i class="fas fa-dollar-sign"></i>
-                </div>
-                <p class="stat-card-title">{{ __('provider.revenue') }}</p>
+        <div class="revenue-card">
+            <div class="card-background"></div>
+            <div class="card-decorative-shape-1 "></div>
+            <div class="card-decorative-shape-2"></div>
+            <div class="card-content">
+                <h3 class="card-title">{{ __('provider.revenue') }}</h3>
+                <h2 class="card-value">${{ isset($totalRevenue) ? number_format($totalRevenue, 2) : '0.00' }}</h2>
             </div>
-            <h2 class="stat-card-value">${{ isset($totalRevenue) ? number_format($totalRevenue, 2) : '0.00' }}</h2>
-           
+            <img src="{{ asset('assets/revenue.png') }}" alt="Package Box" class="stat-card-icon-image">
+            
         </div>
         
-        <div class="stat-card">
-            <div class="stat-card-header gap-2">
-                <div class="stat-card-icon bg-danger-light">
-                    <i class="fas fa-users"></i>
-                </div>
-                <p class="stat-card-title">{{ __('provider.customers') }}</p>
+        <div class="customers-card">
+            <div class="card-background"></div>
+            <div class="card-decorative-shape-1"></div>
+            <div class="card-decorative-shape-2"></div>
+            <div class="card-content">
+                <h3 class="card-title">{{ __('provider.customers') }}</h3>
+                <h2 class="card-value">{{ isset($totalCustomers) ? $totalCustomers : '0' }}</h2>
+                <img src="{{ asset('assets/woman.png') }}" alt="Package Box" class="stat-card-icon-image">
+
             </div>
-            <h2 class="stat-card-value">{{ isset($totalCustomers) ? $totalCustomers : '0' }}</h2>
-           
         </div>
     </div>
 

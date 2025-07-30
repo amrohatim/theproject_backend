@@ -1,21 +1,71 @@
 {{-- Products Table Partial for AJAX responses --}}
 @if($products->count() > 0)
-<div class="overflow-x-auto">
-    <table class="w-full">
+<div class="overflow-x-auto -mx-4 sm:mx-0">
+    <div class="inline-block min-w-full align-middle">
+        <table class="min-w-full divide-y divide-gray-200">
         <thead class="bg-gray-50">
             <tr>
-                <th class="px-6 py-4 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">{{ __('merchant.product') }}</th>
-                <th class="px-6 py-4 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">{{ __('merchant.category') }}</th>
-                <th class="px-6 py-4 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">{{ __('merchant.price') }}</th>
-                <th class="px-6 py-4 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">{{ __('merchant.stock') }}</th>
-                <th class="px-6 py-4 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">{{ __('merchant.status') }}</th>
-                <th class="px-6 py-4 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">{{ __('merchant.actions') }}</th>
+                <th class="px-6 py-4 text-left">
+                    <input type="checkbox" id="selectAll" class="rounded border-gray-300 text-blue-600 focus:ring-blue-500">
+                </th>
+                <th class="px-3 sm:px-6 py-4 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                    <button class="flex items-center space-x-1 hover:text-gray-700 sortable-header min-h-[44px] w-full justify-start" data-sort="name">
+                        <span>{{ __('merchant.product') }}</span>
+                        <svg class="w-4 h-4 sort-icon flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 16V4m0 0L3 8m4-4l4 4m6 0v12m0 0l4-4m-4 4l-4-4"></path>
+                        </svg>
+                    </button>
+                </th>
+                <th class="px-3 sm:px-6 py-4 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                    <button class="flex items-center space-x-1 hover:text-gray-700 sortable-header min-h-[44px] w-full justify-start" data-sort="category">
+                        <span>{{ __('merchant.category') }}</span>
+                        <svg class="w-4 h-4 sort-icon flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 16V4m0 0L3 8m4-4l4 4m6 0v12m0 0l4-4m-4 4l-4-4"></path>
+                        </svg>
+                    </button>
+                </th>
+                <th class="px-3 sm:px-6 py-4 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                    <button class="flex items-center space-x-1 hover:text-gray-700 sortable-header min-h-[44px] w-full justify-start" data-sort="price">
+                        <span>{{ __('merchant.price') }}</span>
+                        <svg class="w-4 h-4 sort-icon flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 16V4m0 0L3 8m4-4l4 4m6 0v12m0 0l4-4m-4 4l-4-4"></path>
+                        </svg>
+                    </button>
+                </th>
+                <th class="px-3 sm:px-6 py-4 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                    <button class="flex items-center space-x-1 hover:text-gray-700 sortable-header min-h-[44px] w-full justify-start" data-sort="stock">
+                        <span>{{ __('merchant.stock') }}</span>
+                        <svg class="w-4 h-4 sort-icon flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 16V4m0 0L3 8m4-4l4 4m6 0v12m0 0l4-4m-4 4l-4-4"></path>
+                        </svg>
+                    </button>
+                </th>
+                <th class="px-3 sm:px-6 py-4 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                    <button class="flex items-center space-x-1 hover:text-gray-700 sortable-header min-h-[44px] w-full justify-start" data-sort="status">
+                        <span>{{ __('merchant.status') }}</span>
+                        <svg class="w-4 h-4 sort-icon flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 16V4m0 0L3 8m4-4l4 4m6 0v12m0 0l4-4m-4 4l-4-4"></path>
+                        </svg>
+                    </button>
+                </th>
+                <th class="px-3 sm:px-6 py-4 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                    <button class="flex items-center space-x-1 hover:text-gray-700 sortable-header min-h-[44px] w-full justify-start" data-sort="created_at">
+                        <span>{{ __('merchant.sort_by_date') }}</span>
+                        <svg class="w-4 h-4 sort-icon flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 16V4m0 0L3 8m4-4l4 4m6 0v12m0 0l4-4m-4 4l-4-4"></path>
+                        </svg>
+                    </button>
+                </th>
+                <th class="px-3 sm:px-6 py-4 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">{{ __('merchant.actions') }}</th>
             </tr>
         </thead>
         <tbody class="bg-white divide-y divide-gray-200">
             @foreach($products as $product)
             <tr class="hover:bg-gray-50 transition-colors">
-                <td class="px-6 py-4">
+                <td class="px-3 sm:px-6 py-4">
+                    <input type="checkbox" class="product-checkbox rounded border-gray-300 text-blue-600 focus:ring-blue-500 w-4 h-4" value="{{ $product->id }}">
+                </td>
+                <td class="px-3 sm:px-6 py-4">
                     <div class="flex items-center">
                         <div class="flex-shrink-0 h-12 w-12">
                             @if($product->image)
@@ -34,13 +84,13 @@
                         </div>
                     </div>
                 </td>
-                <td class="px-6 py-4">
+                <td class="px-3 sm:px-6 py-4">
                     <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-gray-100 text-gray-800">
                         {{ $product->category->name ?? __('merchant.uncategorized') }}
                     </span>
                 </td>
-                <td class="px-6 py-4 text-sm font-medium text-gray-900">${{ number_format($product->price, 2) }}</td>
-                <td class="px-6 py-4">
+                <td class="px-3 sm:px-6 py-4 text-sm font-medium text-gray-900">${{ number_format($product->price, 2) }}</td>
+                <td class="px-3 sm:px-6 py-4">
                     @if($product->stock !== null)
                         <div class="flex items-center">
                             <span class="text-sm font-medium text-gray-900 mr-2">{{ $product->stock }}</span>
@@ -69,6 +119,9 @@
                             {{ __('merchant.unavailable') }}
                         </span>
                     @endif
+                </td>
+                <td class="px-6 py-4 text-sm text-gray-500">
+                    {{ $product->created_at->format('M d, Y') }}
                 </td>
                 <td class="px-6 py-4">
                     <div class="flex items-center space-x-2">
@@ -103,7 +156,8 @@
             </tr>
             @endforeach
         </tbody>
-    </table>
+        </table>
+    </div>
 </div>
 @else
 <!-- Empty State -->
