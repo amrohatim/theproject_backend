@@ -93,7 +93,7 @@
     <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between space-y-4 sm:space-y-0 sm:space-x-4">
         <div class="flex-1 max-w-lg">
             <div class="relative">
-                <svg class="absolute left-3 top-1/2 transform -translate-y-1/2 w-5 h-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24" width="20" height="20">
+                <svg class="absolute left-3 top-1/2 mt-2 transform -translate-y-1/2 w-5 h-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24" width="20" height="20">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
                 </svg>
                 <input
@@ -106,19 +106,126 @@
             </div>
         </div>
         <div class="flex items-center space-x-3">
-            <button class="inline-flex items-center px-4 py-3 border border-gray-300 rounded-lg text-sm font-medium text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 transition-colors" id="filterToggle">
+            <button class="inline-flex items-center px-4 py-3 border border-gray-300 rounded-lg text-sm font-medium text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-amber-500 focus:ring-offset-2 transition-colors" id="filtersToggle">
                 <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24" width="20" height="20">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 4a1 1 0 011-1h16a1 1 0 011 1v2.586a1 1 0 01-.293.707l-6.414 6.414a1 1 0 00-.293.707V17l-4 4v-6.586a1 1 0 00-.293-.707L3.293 7.207A1 1 0 013 6.5V4z"></path>
                 </svg>
                 {{ __('merchant.filters') }}
+                <span id="activeFiltersCount" class="ml-2 px-2 py-1 text-xs font-medium bg-amber-100 text-amber-800 rounded-full hidden"></span>
             </button>
-            <select class="px-4 py-3 border border-gray-300 rounded-lg text-sm font-medium text-gray-700 bg-white focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors" id="sortSelect">
-                <option>{{ __('merchant.sort_by_name') }}</option>
-                <option>{{ __('merchant.sort_by_price') }}</option>
-                <option>{{ __('merchant.sort_by_category') }}</option>
-                <option>{{ __('merchant.sort_by_status') }}</option>
-            </select>
         </div>
+    </div>
+
+    <!-- Advanced Filters Panel -->
+    <div id="filtersPanel" class="mt-4 bg-gray-50 border-t border-gray-200 p-6 hidden">
+        <div class="flex items-center justify-between mb-4">
+            <h3 class="text-lg font-medium text-gray-900">{{ __('merchant.advanced_filters') }}</h3>
+            <button id="clearAllFilters" class="text-sm text-red-600 hover:text-red-800">
+                {{ __('merchant.clear_all_filters') }}
+            </button>
+        </div>
+
+        <form id="filtersForm" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
+            <!-- Category Filter -->
+            <div style="text-align: left;">
+                <label class="block text-sm font-medium text-gray-700 mb-2">{{ __('merchant.filter_by_category') }}</label>
+                <select name="category_id" class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-amber-500 focus:border-amber-500" style="text-align: left;  direction: ltr;">
+                    <option value="">{{ __('merchant.all_categories') }}</option>
+                    @foreach($categories ?? [] as $category)
+                        <option value="{{ $category->id }}" {{ request('category_id') == $category->id ? 'selected' : '' }}>
+                            {{ $category->name }}
+                        </option>
+                    @endforeach
+                </select>
+            </div>
+
+            <!-- Status Filter -->
+            <div>
+                <label class="block text-sm font-medium text-gray-700 mb-2">{{ __('merchant.filter_by_status') }}</label>
+                <select name="status" class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-amber-500 focus:border-amber-500" style="text-align: left;  direction: ltr;">
+                    <option value="">{{ __('merchant.all_statuses') }}</option>
+                    <option value="active" {{ request('status') == 'active' ? 'selected' : '' }}>{{ __('merchant.active') }}</option>
+                    <option value="inactive" {{ request('status') == 'inactive' ? 'selected' : '' }}>{{ __('merchant.inactive') }}</option>
+                </select>
+            </div>
+
+            <!-- Service Type Filter -->
+            <div>
+                <label class="block text-sm font-medium text-gray-700 mb-2">{{ __('merchant.service_type') }}</label>
+                <select name="service_type" class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-amber-500 focus:border-amber-500" style="text-align: left;  direction: ltr;">
+                    <option value="">{{ __('merchant.all_service_types') }}</option>
+                    <option value="home_service" {{ request('service_type') == 'home_service' ? 'selected' : '' }}>{{ __('merchant.home_service') }}</option>
+                    <option value="in_store" {{ request('service_type') == 'in_store' ? 'selected' : '' }}>{{ __('merchant.in_store') }}</option>
+                </select>
+            </div>
+
+            <!-- Sort Options -->
+            <div>
+                <label class="block text-sm font-medium text-gray-700 mb-2">{{ __('merchant.sort_by') }}</label>
+                <div class="flex space-x-2 gap-3">
+                    <select name="sort_by" class="flex-1 px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-amber-500 focus:border-amber-500" style="text-align: left;  direction: ltr;">
+                        <option value="created_at" {{ request('sort_by') == 'created_at' ? 'selected' : '' }}>{{ __('merchant.sort_by_date') }}</option>
+                        <option value="name" {{ request('sort_by') == 'name' ? 'selected' : '' }}>{{ __('merchant.sort_by_name') }}</option>
+                        <option value="price" {{ request('sort_by') == 'price' ? 'selected' : '' }}>{{ __('merchant.sort_by_price') }}</option>
+                        <option value="duration" {{ request('sort_by') == 'duration' ? 'selected' : '' }}>{{ __('merchant.duration') }}</option>
+                    </select>
+                    <select name="sort_order" class="px-7 py-2 border text-sm border-gray-300 rounded-lg focus:ring-2 focus:ring-amber-500 focus:border-amber-500">
+                        <option  value="desc" {{ request('sort_order') == 'desc' ? 'selected' : '' }}>{{ __('merchant.sort_descending') }}</option>
+                        <option value="asc" {{ request('sort_order') == 'asc' ? 'selected' : '' }}>{{ __('merchant.sort_ascending') }}</option>
+                    </select>
+                </div>
+            </div>
+
+            <!-- Price Range -->
+            <div>
+                <label class="block text-sm font-medium text-gray-700 mb-2">{{ __('merchant.price_range') }}</label>
+                <div class="flex space-x-2">
+                    <input type="number" name="price_min" placeholder="{{ __('merchant.min_price') }}"
+                           value="{{ request('price_min') }}"
+                           class="flex-1 px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-amber-500 focus:border-amber-500">
+                    <input type="number" name="price_max" placeholder="{{ __('merchant.max_price') }}"
+                           value="{{ request('price_max') }}"
+                           class="flex-1 px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-amber-500 focus:border-amber-500">
+                </div>
+            </div>
+
+            <!-- Duration Range -->
+            <div>
+                <label class="block text-sm font-medium text-gray-700 mb-2">{{ __('merchant.duration_range') }}</label>
+                <div class="flex space-x-2">
+                    <input type="number" name="duration_min" placeholder="{{ __('merchant.min_duration') }}"
+                           value="{{ request('duration_min') }}"
+                           class="flex-1 px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-amber-500 focus:border-amber-500">
+                    <input type="number" name="duration_max" placeholder="{{ __('merchant.max_duration') }}"
+                           value="{{ request('duration_max') }}"
+                           class="flex-1 px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-amber-500 focus:border-amber-500">
+                </div>
+            </div>
+
+            <!-- Date Range -->
+            <div>
+                <label class="block text-sm font-medium text-gray-700 mb-2">{{ __('merchant.date_range') }}</label>
+                <div class="flex space-x-2">
+                    <input type="date" name="date_from"
+                           value="{{ request('date_from') }}"
+                           class="flex-1 px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-amber-500 focus:border-amber-500">
+                    <input type="date" name="date_to"
+                           value="{{ request('date_to') }}"
+                           class="flex-1 px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-amber-500 focus:border-amber-500">
+                </div>
+            </div>
+
+            <!-- Featured Filter -->
+            <div>
+                <label class="block text-sm font-medium text-gray-700 mb-2">{{ __('merchant.featured') }}</label>
+                <select name="featured" class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-amber-500 focus:border-amber-500" style="text-align: left;  direction: ltr;">
+                    <option value="">{{ __('merchant.all_services') }}</option>
+                    <option value="1" {{ request('featured') == '1' ? 'selected' : '' }}>{{ __('merchant.featured_only') }}</option>
+                    <option value="0" {{ request('featured') == '0' ? 'selected' : '' }}>{{ __('merchant.non_featured') }}</option>
+                </select>
+            </div>
+        </form>
+    </div>
     </div>
 </div>
 
@@ -127,7 +234,7 @@
     <div class="px-6 py-4 border-b border-gray-200">
         <div class="flex items-center justify-between">
             <h3 class="text-lg font-semibold text-gray-900">{{ __('merchant.services_list') }}</h3>
-            <span class="text-sm text-gray-500">{{ $services->total() }} {{ __('merchant.services_found') }}</span>
+            <span class="text-sm text-gray-500 services-count">{{ $services->total() }} {{ __('merchant.services_found') }}</span>
         </div>
     </div>
 
@@ -196,61 +303,5 @@
 @endsection
 
 @section('scripts')
-<script src="{{ asset('js/merchant-product-filters.js') }}"></script>
-<script>
-// Modern search and filter functionality for services
-document.addEventListener('DOMContentLoaded', function() {
-    const searchInput = document.getElementById('serviceSearch');
-    const filterToggle = document.getElementById('filterToggle');
-    const sortSelect = document.getElementById('sortSelect');
-
-    // Search functionality
-    if (searchInput) {
-        let searchTimeout;
-        searchInput.addEventListener('input', function() {
-            clearTimeout(searchTimeout);
-            searchTimeout = setTimeout(() => {
-                performSearch();
-            }, 300);
-        });
-    }
-
-    // Sort functionality
-    if (sortSelect) {
-        sortSelect.addEventListener('change', function() {
-            performSearch();
-        });
-    }
-
-    // Filter toggle (placeholder for future filter panel)
-    if (filterToggle) {
-        filterToggle.addEventListener('click', function() {
-            // TODO: Implement filter panel toggle
-            console.log('Filter toggle clicked');
-        });
-    }
-
-    function performSearch() {
-        const searchQuery = searchInput ? searchInput.value : '';
-        const sortBy = sortSelect ? sortSelect.value : '';
-
-        // Build URL parameters
-        const params = new URLSearchParams();
-        if (searchQuery) params.set('search', searchQuery);
-        if (sortBy && sortBy !== 'Sort by: Name') {
-            const sortValue = sortBy.replace('Sort by: ', '').toLowerCase();
-            params.set('sort', sortValue);
-        }
-
-        // Update URL and reload page (for now)
-        const newUrl = window.location.pathname + (params.toString() ? '?' + params.toString() : '');
-        window.location.href = newUrl;
-    }
-});
-
-// Clear search and filters function
-function clearSearchAndFilters() {
-    window.location.href = window.location.pathname;
-}
-</script>
+<script src="{{ asset('js/merchant/services-advanced-filters.js') }}"></script>
 @endsection

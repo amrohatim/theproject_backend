@@ -100,6 +100,12 @@ class ServiceController extends Controller
 
         $services = $query->paginate(15)->appends($request->query());
 
+        // Get categories for filter dropdown
+        $categories = \App\Models\Category::where('type', 'service')
+            ->where('is_active', true)
+            ->orderBy('name')
+            ->get();
+
         // If this is an AJAX request, return JSON response
         if ($request->ajax()) {
             return response()->json([
@@ -112,7 +118,7 @@ class ServiceController extends Controller
             ]);
         }
 
-        return view('merchant.services.index', compact('services'));
+        return view('merchant.services.index', compact('services', 'categories'));
     }
 
     /**

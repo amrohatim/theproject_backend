@@ -86,7 +86,7 @@
     <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between space-y-4 sm:space-y-0 sm:space-x-4">
         <div class="flex-1 max-w-lg">
             <div class="relative">
-                <svg class="absolute left-3 top-1/2 transform -translate-y-1/2 w-5 h-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24" width="20" height="20">
+                <svg class="absolute left-3 top-1/2 mt-2 transform -translate-y-1/2 w-5 h-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24" width="20" height="20">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
                 </svg>
                 <input
@@ -123,7 +123,7 @@
             <!-- Category Filter -->
             <div>
                 <label class="block text-sm font-medium text-gray-700 mb-2">{{ __('merchant.filter_by_category') }}</label>
-                <select name="category" class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
+                <select  name="category" class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500" style="text-align: left;  direction: ltr;">
                     <option value="">{{ __('merchant.all_categories') }}</option>
                     @foreach($categories as $category)
                         <option value="{{ $category->id }}" {{ request('category') == $category->id ? 'selected' : '' }}>
@@ -136,7 +136,7 @@
             <!-- Status Filter -->
             <div>
                 <label class="block text-sm font-medium text-gray-700 mb-2">{{ __('merchant.filter_by_status') }}</label>
-                <select name="status" class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
+                <select name="status" class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"style="text-align: left;  direction: ltr;">
                     <option value="">{{ __('merchant.all_statuses') }}</option>
                     <option value="active" {{ request('status') == 'active' ? 'selected' : '' }}>{{ __('merchant.active') }}</option>
                     <option value="inactive" {{ request('status') == 'inactive' ? 'selected' : '' }}>{{ __('merchant.inactive') }}</option>
@@ -146,7 +146,7 @@
             <!-- Stock Level Filter -->
             <div>
                 <label class="block text-sm font-medium text-gray-700 mb-2">{{ __('merchant.stock_level') }}</label>
-                <select name="stock_level" class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
+                <select name="stock_level" class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"style="text-align: left;  direction: ltr;">
                     <option value="">{{ __('merchant.all_stock_levels') }}</option>
                     <option value="in_stock" {{ request('stock_level') == 'in_stock' ? 'selected' : '' }}>{{ __('merchant.in_stock') }}</option>
                     <option value="low_stock" {{ request('stock_level') == 'low_stock' ? 'selected' : '' }}>{{ __('merchant.low_stock') }}</option>
@@ -157,8 +157,8 @@
             <!-- Sort Options -->
             <div>
                 <label class="block text-sm font-medium text-gray-700 mb-2">{{ __('merchant.sort_by') }}</label>
-                <div class="flex space-x-2">
-                    <select name="sort" class="flex-1 px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
+                <div class="flex space-x-2 gap-3">
+                    <select name="sort" class="flex-1 px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"style="text-align: left;  direction: ltr;">
                         <option value="created_at" {{ request('sort') == 'created_at' ? 'selected' : '' }}>{{ __('merchant.sort_by_date') }}</option>
                         <option value="name" {{ request('sort') == 'name' ? 'selected' : '' }}>{{ __('merchant.sort_by_name') }}</option>
                         <option value="category" {{ request('sort') == 'category' ? 'selected' : '' }}>{{ __('merchant.sort_by_category') }}</option>
@@ -166,7 +166,7 @@
                         <option value="stock" {{ request('sort') == 'stock' ? 'selected' : '' }}>{{ __('merchant.sort_by_stock') }}</option>
                         <option value="status" {{ request('sort') == 'status' ? 'selected' : '' }}>{{ __('merchant.sort_by_status') }}</option>
                     </select>
-                    <select name="direction" class="px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
+                    <select name="direction" class="px-7 py-2 text-sm border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
                         <option value="desc" {{ request('direction') == 'desc' ? 'selected' : '' }}>{{ __('merchant.sort_descending') }}</option>
                         <option value="asc" {{ request('direction') == 'asc' ? 'selected' : '' }}>{{ __('merchant.sort_ascending') }}</option>
                     </select>

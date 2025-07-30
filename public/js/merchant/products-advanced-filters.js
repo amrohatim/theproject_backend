@@ -50,9 +50,9 @@ function bindEvents() {
     }
 
     // Clear all filters
-    var clearAllFilters = document.getElementById('clearAllFilters');
-    if (clearAllFilters) {
-        clearAllFilters.addEventListener('click', function() {
+    var clearAllFiltersBtn = document.getElementById('clearAllFilters');
+    if (clearAllFiltersBtn) {
+        clearAllFiltersBtn.addEventListener('click', function() {
             clearAllFilters();
         });
     }
@@ -314,6 +314,58 @@ function clearAllFilters() {
         filtersForm.reset();
     }
 
+    // Reset specific form elements to their default values
+    // Category dropdown: Reset to "All Categories" (empty value)
+    var categorySelect = document.querySelector('select[name="category"]');
+    if (categorySelect) {
+        categorySelect.value = '';
+    }
+
+    // Status dropdown: Reset to "All Statuses" (empty value)
+    var statusSelect = document.querySelector('select[name="status"]');
+    if (statusSelect) {
+        statusSelect.value = '';
+    }
+
+    // Stock Level dropdown: Reset to "All Stock Levels" (empty value)
+    var stockLevelSelect = document.querySelector('select[name="stock_level"]');
+    if (stockLevelSelect) {
+        stockLevelSelect.value = '';
+    }
+
+    // Sort By dropdown: Reset to "Date Created" (created_at)
+    var sortSelect = document.querySelector('select[name="sort"]');
+    if (sortSelect) {
+        sortSelect.value = 'created_at';
+    }
+
+    // Sort Direction dropdown: Reset to "Descending" (desc)
+    var directionSelect = document.querySelector('select[name="direction"]');
+    if (directionSelect) {
+        directionSelect.value = 'desc';
+    }
+
+    // Price Range inputs: Clear min and max price fields
+    var priceMinInput = document.querySelector('input[name="price_min"]');
+    if (priceMinInput) {
+        priceMinInput.value = '';
+    }
+    var priceMaxInput = document.querySelector('input[name="price_max"]');
+    if (priceMaxInput) {
+        priceMaxInput.value = '';
+    }
+
+    // Date Range inputs: Clear both from and to date fields
+    var dateFromInput = document.querySelector('input[name="date_from"]');
+    if (dateFromInput) {
+        dateFromInput.value = '';
+    }
+    var dateToInput = document.querySelector('input[name="date_to"]');
+    if (dateToInput) {
+        dateToInput.value = '';
+    }
+
+    // Search input: Clear the search text
     var productSearch = document.getElementById('productSearch');
     if (productSearch) {
         productSearch.value = '';

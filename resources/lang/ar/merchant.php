@@ -386,6 +386,8 @@ return [
     'duration' => 'المدة',
     'services_list' => 'قائمة الخدمات',
     'services_found' => 'خدمة موجودة',
+    'service_type' => 'نوع الخدمة',
+    'all_service_types' => 'جميع أنواع الخدمة',
 
     // Colors & Images Section
     'product_colors' => 'ألوان المنتج',
@@ -408,7 +410,15 @@ return [
     'default' => 'افتراضي',
     'main_image' => 'الصورة الرئيسية',
     'value' => 'القيمة',
-
+    'in_store_servcie' => 'خدمة متاحة في المتجر',
+    'in_store' => 'في المتجر',
+    'featured' => 'مميزة',
+    'min_duration' => 'أقل مدة',
+    'max_duration' => 'أقصى مدة',
+    'all_services' => 'جميع الخدمات',
+    'featured_only' => 'مميزة فقط',
+    'non_featured' => 'غير المميزة',
+'duration_range' => 'نطاق المدة',
     // Specifications Section
     'product_specifications' => 'مواصفات المنتج',
     'add_detailed_specifications' => 'أضف مواصفات مفصلة لمنتجك',
@@ -416,6 +426,7 @@ return [
     'no_specifications_added_yet' => 'لم يتم إضافة مواصفات بعد',
     'add_specifications_detailed_info' => 'أضف المواصفات لتوفير معلومات مفصلة عن منتجك',
     'add_first_specification' => 'إضافة المواصفة الأولى',
+    'try_adjusting_search' => 'حاول تعديل مصطلحات البحث أو المرشحات للعثور على ما تبحث عنه',
 
     // Size Management
     'size_management' => 'إدارة الأحجام',

@@ -118,7 +118,7 @@
     <p class="text-gray-600 mb-6 max-w-md mx-auto">
         {{ __('merchant.try_adjusting_search') }}
     </p>
-    <button type="button" class="discord-btn" onclick="clearSearchAndFilters()">
+    <button type="button" id="clearAllFilters" class="discord-btn" onclick="clearAllFilters()">
         <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24" width="16" height="16">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
         </svg>
@@ -126,3 +126,6 @@
     </button>
 </div>
 @endif
+
+
+
