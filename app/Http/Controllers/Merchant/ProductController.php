@@ -213,10 +213,7 @@ class ProductController extends Controller
         $perPage = min($request->get('per_page', 15), 50); // Limit max items per page
         $products = $query->paginate($perPage)->appends($request->query());
 
-        // Handle export request
-        if ($request->filled('export')) {
-            return $this->export($request);
-        }
+
 
         // Get filter options for the view - optimized query using indexes
         $categories = Category::select('id', 'name')
@@ -317,109 +314,7 @@ class ProductController extends Controller
         }
     }
 
-    /**
-     * Export products to CSV
-     */
-    public function export(Request $request)
-    {
-        $user = Auth::user();
-        $query = Product::where('user_id', $user->id)->with('category');
 
-        // Apply the same filters as index method
-        if ($request->filled('search')) {
-            $searchTerm = $request->get('search');
-            $query->where(function ($q) use ($searchTerm) {
-                $q->where('name', 'like', "%{$searchTerm}%")
-                  ->orWhere('description', 'like', "%{$searchTerm}%")
-                  ->orWhere('sku', 'like', "%{$searchTerm}%");
-            });
-        }
-
-        if ($request->filled('category')) {
-            $query->where('category_id', $request->get('category'));
-        }
-
-        if ($request->filled('status')) {
-            $status = $request->get('status');
-            if ($status === 'active') {
-                $query->where('is_available', true);
-            } elseif ($status === 'inactive') {
-                $query->where('is_available', false);
-            }
-        }
-
-        if ($request->filled('price_min')) {
-            $query->where('price', '>=', $request->get('price_min'));
-        }
-        if ($request->filled('price_max')) {
-            $query->where('price', '<=', $request->get('price_max'));
-        }
-
-        if ($request->filled('stock_level')) {
-            $stockLevel = $request->get('stock_level');
-            switch ($stockLevel) {
-                case 'in_stock':
-                    $query->where('stock', '>', 0);
-                    break;
-                case 'low_stock':
-                    $query->where('stock', '>', 0)->where('stock', '<', 10);
-                    break;
-                case 'out_of_stock':
-                    $query->where('stock', '<=', 0);
-                    break;
-            }
-        }
-
-        if ($request->filled('date_from')) {
-            $query->whereDate('created_at', '>=', $request->get('date_from'));
-        }
-        if ($request->filled('date_to')) {
-            $query->whereDate('created_at', '<=', $request->get('date_to'));
-        }
-
-        $products = $query->get();
-
-        $filename = 'products-' . date('Y-m-d-H-i-s') . '.csv';
-
-        $headers = [
-            'Content-Type' => 'text/csv',
-            'Content-Disposition' => 'attachment; filename="' . $filename . '"',
-        ];
-
-        $callback = function() use ($products) {
-            $file = fopen('php://output', 'w');
-
-            // CSV headers
-            fputcsv($file, [
-                'ID',
-                'Name',
-                'SKU',
-                'Category',
-                'Price',
-                'Stock',
-                'Status',
-                'Created Date'
-            ]);
-
-            // CSV data
-            foreach ($products as $product) {
-                fputcsv($file, [
-                    $product->id,
-                    $product->name,
-                    $product->sku,
-                    $product->category ? $product->category->name : '',
-                    $product->price,
-                    $product->stock,
-                    $product->is_available ? 'Active' : 'Inactive',
-                    $product->created_at->format('Y-m-d H:i:s')
-                ]);
-            }
-
-            fclose($file);
-        };
-
-        return response()->stream($callback, 200, $headers);
-    }
 
     /**
      * Show the form for creating a new product.

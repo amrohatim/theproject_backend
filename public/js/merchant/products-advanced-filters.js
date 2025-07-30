@@ -110,13 +110,7 @@ function bindEvents() {
         });
     }
 
-    // Export button
-    var exportBtn = document.getElementById('exportBtn');
-    if (exportBtn) {
-        exportBtn.addEventListener('click', function() {
-            exportData();
-        });
-    }
+
 }
 
 function toggleFiltersPanel() {
@@ -279,35 +273,35 @@ function updateSortIcons() {
     }
 }
 
-    applyFilters() {
-        if (this.isLoading) return;
-        
-        this.isLoading = true;
-        this.showLoadingState();
+function applyFilters() {
+    if (isLoading) return;
 
-        const params = new URLSearchParams(this.currentFilters);
+    isLoading = true;
+    showLoadingState();
+
+        var params = new URLSearchParams(currentFilters);
         
-        fetch(`${window.location.pathname}?${params.toString()}`, {
+        fetch(window.location.pathname + '?' + params.toString(), {
             headers: {
                 'X-Requested-With': 'XMLHttpRequest',
                 'Accept': 'application/json'
             }
         })
-        .then(response => response.json())
-        .then(data => {
+        .then(function(response) { return response.json(); })
+        .then(function(data) {
             if (data.success) {
-                this.updateProductsTable(data.html);
-                this.updatePagination(data.pagination);
-                this.updateResultsCount(data.total);
+                updateProductsTable(data.html);
+                updatePagination(data.pagination);
+                updateResultsCount(data.total);
             }
         })
-        .catch(error => {
+        .catch(function(error) {
             console.error('Filter error:', error);
-            this.showError('Failed to apply filters');
+            showError('Failed to apply filters');
         })
-        .finally(() => {
-            this.isLoading = false;
-            this.hideLoadingState();
+        .finally(function() {
+            isLoading = false;
+            hideLoadingState();
         });
     }
 
@@ -505,22 +499,4 @@ function performBulkAction(action) {
     });
 }
 
-function exportData() {
-    var params = new URLSearchParams();
-    for (var key in currentFilters) {
-        if (currentFilters.hasOwnProperty(key)) {
-            params.set(key, currentFilters[key]);
-        }
-    }
-    params.set('export', 'csv');
 
-    var exportUrl = window.location.pathname + '?' + params.toString();
-
-    // Create temporary link and trigger download
-    var link = document.createElement('a');
-    link.href = exportUrl;
-    link.download = 'products-' + new Date().toISOString().split('T')[0] + '.csv';
-    document.body.appendChild(link);
-    link.click();
-    document.body.removeChild(link);
-}
