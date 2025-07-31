@@ -378,7 +378,11 @@
         'vendor.currency_aed': '{{ __('vendor.currency_aed') }}',
         'vendor.pieces': '{{ __('vendor.pieces') }}',
         'vendor.sale_badge': '{{ __('vendor.sale_badge') }}',
-        'vendor.off': '{{ __('vendor.off') }}'
+        'vendor.off': '{{ __('vendor.off') }}',
+        'enter_product_name_english' => '{{ __('vendor.enter_product_name_english') }}',
+        'enter_product_name_arabic' => '{{ __('vendor.enter_product_name_arabic') }}',
+        'enter_product_description_english' => '{{ __('vendor.enter_product_description_english') }}',
+        'enter_product_description_arabic' => '{{ __('vendor.enter_product_description_arabic') }}',
     };
 
     // Also set up appTranslations for backward compatibility

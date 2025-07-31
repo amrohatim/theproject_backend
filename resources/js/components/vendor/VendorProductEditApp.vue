@@ -88,13 +88,36 @@
                     <label for="name" class="block vue-text-sm">
                       {{ $t('vendor.product_name') }} <span class="text-red-500">*</span>
                     </label>
-                    <input type="text" 
-                           id="name" 
-                           v-model="productData.name"
-                           class="vue-form-control"
-                           :class="{ 'border-red-500': errors.name }"
-                           required>
-                    <div v-if="errors.name" class="text-red-500 text-xs mt-1">{{ errors.name }}</div>
+
+                    <!-- Language Switch for Product Name -->
+                    <LanguageSwitch
+                      v-model="currentLanguage"
+                      @language-changed="handleLanguageChange"
+                    />
+
+                    <!-- English Product Name -->
+                    <div v-show="currentLanguage === 'en'">
+                      <input type="text"
+                             id="name"
+                             v-model="productData.name"
+                             class="vue-form-control"
+                             :class="{ 'border-red-500': errors.name }"
+                             :placeholder="$t('vendor.enter_product_name_english')"
+                             required>
+                      <div v-if="errors.name" class="text-red-500 text-xs mt-1">{{ errors.name }}</div>
+                    </div>
+
+                    <!-- Arabic Product Name -->
+                    <div v-show="currentLanguage === 'ar'" :dir="isRTL ? 'rtl' : 'ltr'">
+                      <input type="text"
+                             id="product_name_arabic"
+                             v-model="productData.product_name_arabic"
+                             class="vue-form-control"
+                             :class="{ 'border-red-500': errors.product_name_arabic, 'text-right': isRTL }"
+                             :placeholder="$t('vendor.enter_product_name_arabic')"
+                             required>
+                      <div v-if="errors.product_name_arabic" class="text-red-500 text-xs mt-1">{{ errors.product_name_arabic }}</div>
+                    </div>
                   </div>
 
                   <div class="grid grid-cols-2 gap-4">
@@ -146,13 +169,36 @@
                     <label for="description" class="block vue-text-sm">
                       {{ $t('vendor.description') }}
                     </label>
-                    <textarea id="description" 
-                              v-model="productData.description" 
-                              rows="4"
-                              class="vue-form-control"
-                              :class="{ 'border-red-500': errors.description }">
-                    </textarea>
-                    <div v-if="errors.description" class="text-red-500 text-xs mt-1">{{ errors.description }}</div>
+
+                    <!-- Language Switch for Description -->
+                    <LanguageSwitch
+                      v-model="currentLanguage"
+                      @language-changed="handleLanguageChange"
+                    />
+
+                    <!-- English Description -->
+                    <div v-show="currentLanguage === 'en'">
+                      <textarea id="description"
+                                v-model="productData.description"
+                                rows="4"
+                                class="vue-form-control"
+                                :class="{ 'border-red-500': errors.description }"
+                                :placeholder="$t('vendor.enter_product_description_english')">
+                      </textarea>
+                      <div v-if="errors.description" class="text-red-500 text-xs mt-1">{{ errors.description }}</div>
+                    </div>
+
+                    <!-- Arabic Description -->
+                    <div v-show="currentLanguage === 'ar'" :dir="isRTL ? 'rtl' : 'ltr'">
+                      <textarea id="product_description_arabic"
+                                v-model="productData.product_description_arabic"
+                                rows="4"
+                                class="vue-form-control"
+                                :class="{ 'border-red-500': errors.product_description_arabic, 'text-right': isRTL }"
+                                :placeholder="$t('vendor.enter_product_description_arabic')">
+                      </textarea>
+                      <div v-if="errors.product_description_arabic" class="text-red-500 text-xs mt-1">{{ errors.product_description_arabic }}</div>
+                    </div>
                   </div>
                 </div>
               </div>
@@ -402,12 +448,14 @@
 import { ref, reactive, computed, onMounted, watch } from 'vue'
 import VendorColorVariantCard from './VendorColorVariantCard.vue'
 import VendorSpecificationItem from './VendorSpecificationItem.vue'
+import LanguageSwitch from '../common/LanguageSwitch.vue'
 
 export default {
   name: 'VendorProductEditApp',
   components: {
     VendorColorVariantCard,
-    VendorSpecificationItem
+    VendorSpecificationItem,
+    LanguageSwitch
   },
   props: {
     productId: {
@@ -450,12 +498,14 @@ export default {
     const productData = reactive({
       id: null,
       name: '',
+      product_name_arabic: '',
       category_id: '',
       branch_id: '',
       price: 0,
       original_price: null,
       stock: 0,
       description: '',
+      product_description_arabic: '',
       is_available: true,
       display_order: 0,
       colors: [],
@@ -469,6 +519,13 @@ export default {
     const showSuccessModal = ref(false)
     const showErrorModal = ref(false)
     const errorMessage = ref('')
+
+    // Language switching
+    const currentLanguage = ref('en')
+
+    const handleLanguageChange = (language) => {
+      currentLanguage.value = language
+    }
 
     // Tab configuration
     const tabs = [
@@ -564,42 +621,58 @@ export default {
 
       let isValid = true
 
-      // Basic validation
+      // Basic validation - Product name required in both languages
       if (!productData.name?.trim()) {
-        errors.name = 'Product name is required'
+        errors.name = translate('vendor.product_name_english_required') || 'Product name in English is required'
+        isValid = false
+      }
+
+      if (!productData.product_name_arabic?.trim()) {
+        errors.product_name_arabic = translate('vendor.product_name_arabic_required') || 'Product name in Arabic is required'
+        isValid = false
+      }
+
+      // Description validation - if one is filled, both are required
+      if (productData.description?.trim() && !productData.product_description_arabic?.trim()) {
+        errors.product_description_arabic = translate('vendor.arabic_description_required_when_english_provided') || 'Arabic description is required when English description is provided'
+        isValid = false
+      }
+
+      if (productData.product_description_arabic?.trim() && !productData.description?.trim()) {
+        errors.description = translate('vendor.english_description_required_when_arabic_provided') || 'English description is required when Arabic description is provided'
         isValid = false
       }
 
       if (!productData.category_id) {
-        errors.category_id = 'Category is required'
+        errors.category_id = translate('vendor.category_selection_required') || 'Please select a product category'
         isValid = false
       }
 
       if (!productData.branch_id) {
-        errors.branch_id = 'Branch is required'
+        errors.branch_id = translate('vendor.branch_selection_required') || 'Please select a branch for this product'
         isValid = false
       }
 
       if (!productData.price || productData.price <= 0) {
-        errors.price = 'Price must be greater than 0'
+        errors.price = translate('vendor.price_must_be_greater_than_zero') || 'Product price must be greater than 0 AED'
         isValid = false
       }
 
       if (!productData.stock || productData.stock < 0) {
-        errors.stock = 'Stock must be 0 or greater'
+        errors.stock = translate('vendor.stock_must_be_zero_or_greater') || 'Stock quantity must be 0 or greater'
         isValid = false
       }
 
       // Color validation
       if (productData.colors.length === 0) {
-        errors.colors = 'At least one color variant is required'
+        errors.colors = translate('vendor.at_least_one_color_required') || 'At least one color variant is required for this product'
         isValid = false
       }
 
       // Check if at least one color has an image
       const hasColorWithImage = productData.colors.some(color => color.image || color.imageFile)
       if (!hasColorWithImage) {
-        errors.colors = 'At least one color must have an image'
+        errors.colors = translate('vendor.at_least_one_color_must_have_image') || 'At least one color must have an image'
         isValid = false
       }
 
@@ -609,8 +682,31 @@ export default {
     // Save product method
     const saveProduct = async () => {
       if (!validateForm()) {
+        // Create a more specific error message based on the errors
+        const errorFields = Object.keys(errors)
+        let specificMessage = translate('vendor.please_fix_validation_errors') || 'Please fix the following validation errors:'
+
+        if (errorFields.includes('name') || errorFields.includes('product_name_arabic')) {
+          specificMessage += '\n• ' + (translate('vendor.product_name_both_languages_required') || 'Product name is required in both English and Arabic')
+        }
+        if (errorFields.includes('category_id')) {
+          specificMessage += '\n• ' + (translate('vendor.category_selection_required') || 'Please select a product category')
+        }
+        if (errorFields.includes('branch_id')) {
+          specificMessage += '\n• ' + (translate('vendor.branch_selection_required') || 'Please select a branch')
+        }
+        if (errorFields.includes('price')) {
+          specificMessage += '\n• ' + (translate('vendor.price_must_be_greater_than_zero') || 'Price must be greater than 0')
+        }
+        if (errorFields.includes('colors')) {
+          specificMessage += '\n• ' + (translate('vendor.color_variants_required') || 'Color variants and images are required')
+        }
+
+        errorMessage.value = specificMessage
+        showErrorModal.value = true
+
         // Switch to the tab with errors
-        if (errors.name || errors.category_id || errors.branch_id || errors.price || errors.stock) {
+        if (errors.name || errors.product_name_arabic || errors.category_id || errors.branch_id || errors.price || errors.stock) {
           activeTab.value = 'basic'
         } else if (errors.colors) {
           activeTab.value = 'colors'
@@ -628,12 +724,14 @@ export default {
         const basicFields = {
           id: productData.id,
           name: productData.name || '',
+          product_name_arabic: productData.product_name_arabic || '',
           category_id: productData.category_id || '',
           branch_id: productData.branch_id || '',
           price: productData.price || 0,
           original_price: productData.original_price || null,
           stock: productData.stock || 0,
           description: productData.description || '',
+          product_description_arabic: productData.product_description_arabic || '',
           is_available: productData.is_available ? 1 : 0,
           display_order: productData.display_order || 0
         }
@@ -929,7 +1027,7 @@ export default {
     return {
       // Translation function
       $t: translate,
-      
+
       // Reactive data
       activeTab,
       saving,
@@ -942,6 +1040,7 @@ export default {
       showSuccessModal,
       showErrorModal,
       errorMessage,
+      currentLanguage,
 
       // Computed
       totalAllocatedStock,
@@ -970,7 +1069,8 @@ export default {
       closeSuccessModal,
       closeErrorModal,
       findCategoryById,
-      validateCategorySelection
+      validateCategorySelection,
+      handleLanguageChange
     }
   }
 }

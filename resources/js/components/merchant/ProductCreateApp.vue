@@ -51,17 +51,42 @@
                 </h3>
               </div>
               <div class="p-6 space-y-4">
+                <!-- Product Name with Language Switch -->
                 <div class="space-y-2">
-                  <label for="name" class="block vue-text-sm">
+                  <label class="block vue-text-sm">
                     {{ $t('product_name') }} <span class="text-red-500">*</span>
                   </label>
-                  <input type="text" 
-                         id="name" 
-                         v-model="productData.name"
-                         class="vue-form-control"
-                         :class="{ 'border-red-500': errors.name }"
-                         required>
-                  <p v-if="errors.name" class="text-red-500 text-sm">{{ errors.name }}</p>
+
+                  <!-- Language Switch for Product Name -->
+                  <LanguageSwitch
+                    v-model="currentLanguage"
+                    @language-changed="handleLanguageChange"
+                  />
+
+                  <!-- English Product Name -->
+                  <div v-show="currentLanguage === 'en'">
+                    <input type="text"
+                           id="name"
+                           v-model="productData.name"
+                           class="vue-form-control"
+                           :class="{ 'border-red-500': errors.name }"
+                           :placeholder="$t('product_name_english')"
+                           required>
+                    <p v-if="errors.name" class="text-red-500 text-sm">{{ errors.name }}</p>
+                  </div>
+
+                  <!-- Arabic Product Name -->
+                  <div v-show="currentLanguage === 'ar'" dir="rtl">
+                    <input type="text"
+                           id="product_name_arabic"
+                           v-model="productData.product_name_arabic"
+                           class="vue-form-control"
+                           :class="{ 'border-red-500': errors.product_name_arabic }"
+                           :placeholder="$t('product_name_arabic')"
+                           style="text-align: right; direction: rtl;"
+                           required>
+                    <p v-if="errors.product_name_arabic" class="text-red-500 text-sm">{{ errors.product_name_arabic }}</p>
+                  </div>
                 </div>
 
                 <div class="space-y-2">
@@ -94,13 +119,36 @@
                   <p v-if="errors.category_id" class="text-red-500 text-sm">{{ errors.category_id }}</p>
                 </div>
 
+                <!-- Product Description with Language Switch -->
                 <div class="space-y-2">
-                  <label for="description" class="block vue-text-sm">{{ $t('description') }}</label>
-                  <textarea id="description" 
-                            v-model="productData.description"
-                            rows="4"
-                            class="vue-form-control"
-                            :placeholder="$t('enter_product_description')"></textarea>
+                  <label class="block vue-text-sm">{{ $t('description') }}</label>
+
+                  <!-- Language Switch for Description -->
+                  <LanguageSwitch
+                    v-model="currentLanguage"
+                    @language-changed="handleLanguageChange"
+                  />
+
+                  <!-- English Description -->
+                  <div v-show="currentLanguage === 'en'">
+                    <textarea id="description"
+                              v-model="productData.description"
+                              rows="4"
+                              class="vue-form-control"
+                              :placeholder="$t('enter_product_description_english')"></textarea>
+                    <p v-if="errors.description" class="text-red-500 text-sm">{{ errors.description }}</p>
+                  </div>
+
+                  <!-- Arabic Description -->
+                  <div v-show="currentLanguage === 'ar'" dir="rtl">
+                    <textarea id="product_description_arabic"
+                              v-model="productData.product_description_arabic"
+                              rows="4"
+                              class="vue-form-control"
+                              :placeholder="$t('enter_product_description_arabic')"
+                              style="text-align: right; direction: rtl;"></textarea>
+                    <p v-if="errors.product_description_arabic" class="text-red-500 text-sm">{{ errors.product_description_arabic }}</p>
+                  </div>
                 </div>
 
 
@@ -367,12 +415,14 @@
 import { ref, reactive, computed, onMounted } from 'vue'
 import ColorVariantCard from './ColorVariantCard.vue'
 import SpecificationItem from './SpecificationItem.vue'
+import LanguageSwitch from '../common/LanguageSwitch.vue'
 
 export default {
   name: 'ProductCreateApp',
   components: {
     ColorVariantCard,
-    SpecificationItem
+    SpecificationItem,
+    LanguageSwitch
   },
   props: {
     backUrl: {
@@ -389,11 +439,13 @@ export default {
 
     const productData = reactive({
       name: '',
+      product_name_arabic: '',
       category_id: '',
       price: 0,
       original_price: null,
       stock: 0,
       description: '',
+      product_description_arabic: '',
       is_available: true,
       display_order: 0,
       colors: [],
@@ -407,6 +459,13 @@ export default {
     const showSuccessModal = ref(false)
     const showErrorModal = ref(false)
     const errorMessage = ref('')
+
+    // Language switching
+    const currentLanguage = ref('en')
+
+    const handleLanguageChange = (language) => {
+      currentLanguage.value = language
+    }
 
     // Tab configuration
     const tabs = computed(() => [
@@ -490,9 +549,28 @@ export default {
 
       let isValid = true
 
-      // Basic validation
+      // Basic validation - Product name required in both languages
       if (!productData.name.trim()) {
         errors.name = $t('merchant.product_name_required')
+        isValid = false
+      }
+
+      if (!productData.product_name_arabic.trim()) {
+        errors.product_name_arabic = $t('merchant.product_name_required')
+        isValid = false
+      }
+
+      // Description validation - if entered in one language, required in the other
+      const hasEnglishDescription = productData.description && productData.description.trim()
+      const hasArabicDescription = productData.product_description_arabic && productData.product_description_arabic.trim()
+
+      if (hasEnglishDescription && !hasArabicDescription) {
+        errors.product_description_arabic = $t('merchant.description_required_when_english_provided')
+        isValid = false
+      }
+
+      if (hasArabicDescription && !hasEnglishDescription) {
+        errors.description = $t('merchant.description_required_when_arabic_provided')
         isValid = false
       }
 
@@ -537,7 +615,7 @@ export default {
     const saveProduct = async () => {
       if (!validateForm()) {
         // Switch to the tab with errors
-        if (errors.name || errors.category_id || errors.price || errors.stock) {
+        if (errors.name || errors.product_name_arabic || errors.description || errors.product_description_arabic || errors.category_id || errors.price || errors.stock) {
           activeTab.value = 'basic'
         } else if (errors.colors) {
           activeTab.value = 'colors'
@@ -551,16 +629,16 @@ export default {
         const formData = new FormData()
 
         // Add basic product data
-        formData.append('name', productData.name)
+        formData.append('name', productData.name || '')
+        formData.append('product_name_arabic', productData.product_name_arabic || '')
         formData.append('category_id', productData.category_id)
         formData.append('price', productData.price)
         if (productData.original_price) {
           formData.append('original_price', productData.original_price)
         }
         formData.append('stock', productData.stock)
-        if (productData.description) {
-          formData.append('description', productData.description)
-        }
+        formData.append('description', productData.description || '')
+        formData.append('product_description_arabic', productData.product_description_arabic || '')
         formData.append('is_available', productData.is_available ? '1' : '0')
         formData.append('display_order', productData.display_order || 0)
 
@@ -781,6 +859,7 @@ export default {
       showSuccessModal,
       showErrorModal,
       errorMessage,
+      currentLanguage,
 
       // Computed
       isRTL,
@@ -810,7 +889,8 @@ export default {
       closeErrorModal,
       createAnother,
       findCategoryById,
-      validateCategorySelection
+      validateCategorySelection,
+      handleLanguageChange
     }
   }
 }

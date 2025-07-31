@@ -218,12 +218,14 @@ class ProductController extends Controller
         try {
             $request->validate([
             'name' => 'required|string|max:255',
+            'product_name_arabic' => 'required|string|max:255',
             'category_id' => 'required|exists:categories,id',
             'branch_id' => 'required|exists:branches,id',
             'price' => 'required|numeric|min:0',
             'original_price' => 'nullable|numeric|min:0',
             'stock' => 'required|integer|min:0',
-            'description' => 'nullable|string',
+            'description' => 'nullable|string|required_with:product_description_arabic',
+            'product_description_arabic' => 'nullable|string|required_with:description',
             // Colors validation - now required
             'colors' => 'required|array|min:1',
             'colors.*.name' => 'required|string|max:255',
@@ -625,12 +627,14 @@ class ProductController extends Controller
             'product' => [
                 'id' => $product->id,
                 'name' => $product->name,
+                'product_name_arabic' => $product->product_name_arabic,
                 'category_id' => $product->category_id,
                 'branch_id' => $product->branch_id,
                 'price' => $product->price,
                 'original_price' => $product->original_price,
                 'stock' => $product->stock,
                 'description' => $product->description,
+                'product_description_arabic' => $product->product_description_arabic,
                 'is_available' => $product->is_available,
                 'display_order' => $product->display_order,
                 'colors' => $colors,
@@ -659,12 +663,14 @@ class ProductController extends Controller
         // Enhanced validation - colors are now optional for updates
         $request->validate([
             'name' => 'required|string|max:255',
+            'product_name_arabic' => 'required|string|max:255',
             'category_id' => 'required|exists:categories,id',
             'branch_id' => 'required|exists:branches,id',
             'price' => 'required|numeric|min:0',
             'original_price' => 'nullable|numeric|min:0',
             'stock' => 'required|integer|min:0',
-            'description' => 'nullable|string',
+            'description' => 'nullable|string|required_with:product_description_arabic',
+            'product_description_arabic' => 'nullable|string|required_with:description',
             // Colors validation - now optional for updates
             'colors' => 'nullable|array',
             'colors.*.name' => 'required_with:colors|string|max:255',

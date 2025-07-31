@@ -80,7 +80,22 @@ class ProviderProductController extends Controller
     {
         $request->validate([
             'product_name' => 'required|string|max:255',
+            'product_name_arabic' => 'required|string|max:255',
             'description' => 'nullable|string',
+            'product_description_arabic' => [
+                'nullable',
+                'string',
+                function ($attribute, $value, $fail) use ($request) {
+                    // If English description is provided, Arabic description becomes required
+                    if ($request->filled('description') && empty($value)) {
+                        $fail(__('provider.arabic_description_required_when_english_provided'));
+                    }
+                    // If Arabic description is provided, English description becomes required
+                    if (!empty($value) && !$request->filled('description')) {
+                        $fail(__('provider.english_description_required_when_arabic_provided'));
+                    }
+                },
+            ],
             'price' => 'required|numeric|min:0',
             'original_price' => 'nullable|numeric|min:0',
             'stock' => 'required|integer|min:0',
@@ -117,7 +132,9 @@ class ProviderProductController extends Controller
         $providerProduct->provider_id = $provider->id;
         $providerProduct->product_id = null; // No longer linked to a product in the products table
         $providerProduct->product_name = $request->product_name;
+        $providerProduct->product_name_arabic = $request->product_name_arabic;
         $providerProduct->description = $request->description;
+        $providerProduct->product_description_arabic = $request->product_description_arabic;
         $providerProduct->price = $request->price;
         $providerProduct->original_price = $request->original_price;
         $providerProduct->stock = $request->stock;
@@ -212,7 +229,22 @@ class ProviderProductController extends Controller
     {
         $request->validate([
             'product_name' => 'required|string|max:255',
+            'product_name_arabic' => 'required|string|max:255',
             'description' => 'nullable|string',
+            'product_description_arabic' => [
+                'nullable',
+                'string',
+                function ($attribute, $value, $fail) use ($request) {
+                    // If English description is provided, Arabic description becomes required
+                    if ($request->filled('description') && empty($value)) {
+                        $fail(__('provider.arabic_description_required_when_english_provided'));
+                    }
+                    // If Arabic description is provided, English description becomes required
+                    if (!empty($value) && !$request->filled('description')) {
+                        $fail(__('provider.english_description_required_when_arabic_provided'));
+                    }
+                },
+            ],
             'price' => 'required|numeric|min:0',
             'original_price' => 'nullable|numeric|min:0',
             'stock' => 'required|integer|min:0',
@@ -242,7 +274,9 @@ class ProviderProductController extends Controller
 
         // Update provider product fields
         $providerProduct->product_name = $request->product_name;
+        $providerProduct->product_name_arabic = $request->product_name_arabic;
         $providerProduct->description = $request->description;
+        $providerProduct->product_description_arabic = $request->product_description_arabic;
         $providerProduct->price = $request->price;
         $providerProduct->original_price = $request->original_price;
         $providerProduct->stock = $request->stock;

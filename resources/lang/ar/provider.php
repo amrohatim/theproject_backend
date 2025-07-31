@@ -205,6 +205,26 @@ return [
     'image_too_large' => 'حجم ملف الصورة كبير جداً',
     'invalid_image_format' => 'تنسيق الصورة غير صحيح',
 
+    // Bilingual Product Forms
+    'english' => 'إنجليزي',
+    'arabic' => 'عربي',
+    'language_switch' => 'تبديل اللغة',
+    'product_name_english' => 'اسم المنتج (إنجليزي)',
+    'product_name_arabic' => 'اسم المنتج (عربي)',
+    'product_description_english' => 'وصف المنتج (إنجليزي)',
+    'product_description_arabic' => 'وصف المنتج (عربي)',
+    'enter_product_name_english' => 'أدخل اسم المنتج بالإنجليزية',
+    'enter_product_name_arabic' => 'أدخل اسم المنتج بالعربية',
+    'enter_product_description_english' => 'أدخل وصف المنتج بالإنجليزية',
+    'enter_product_description_arabic' => 'أدخل وصف المنتج بالعربية',
+    'product_name_english_required' => 'اسم المنتج باللغة الإنجليزية مطلوب',
+    'product_name_arabic_required' => 'اسم المنتج باللغة العربية مطلوب',
+    'product_name_both_languages_required' => 'اسم المنتج مطلوب باللغتين الإنجليزية والعربية',
+    'description_required_when_english_provided' => 'الوصف بالعربية مطلوب عند إدخال الوصف بالإنجليزية',
+    'description_required_when_arabic_provided' => 'الوصف بالإنجليزية مطلوب عند إدخال الوصف بالعربية',
+    'arabic_description_required_when_english_provided' => 'الوصف باللغة العربية مطلوب عند توفير الوصف باللغة الإنجليزية',
+    'english_description_required_when_arabic_provided' => 'الوصف باللغة الإنجليزية مطلوب عند توفير الوصف باللغة العربية',
+
     // Success Messages
     'product_created_success' => 'تم إنشاء المنتج بنجاح',
     'product_updated_success' => 'تم تحديث المنتج بنجاح',

@@ -236,6 +236,24 @@ return [
     'invalid_image_format' => 'Invalid image format',
     'save_draft' => 'Save Draft',
 
+    // Enhanced Validation Messages
+    'product_name_english_required' => 'Product name in English is required',
+    'product_name_arabic_required' => 'Product name in Arabic is required',
+    'arabic_description_required_when_english_provided' => 'Arabic description is required when English description is provided',
+    'english_description_required_when_arabic_provided' => 'English description is required when Arabic description is provided',
+    'category_selection_required' => 'Please select a product category',
+    'branch_selection_required' => 'Please select a branch for this product',
+    'price_must_be_greater_than_zero' => 'Product price must be greater than 0 AED',
+    'stock_must_be_zero_or_greater' => 'Stock quantity must be 0 or greater',
+    'one_color_must_be_default' => 'Please mark one color as the default option',
+    'each_color_must_have_image' => 'Each color variant must have an image',
+    'color_name_required' => 'Color name is required',
+    'color_image_required' => 'Please upload an image for this color',
+    'at_least_one_color_must_have_image' => 'At least one color must have an image',
+    'please_fix_validation_errors' => 'Please fix the following validation errors:',
+    'product_name_both_languages_required' => 'Product name is required in both English and Arabic',
+    'color_variants_required' => 'Color variants and images are required',
+
     // Color-specific translations
     'image_format_info' => 'Supported formats: JPEG, PNG, JPG, GIF (Max: 2MB)',
     'main_product_image_info' => 'This will be used as the main product image',

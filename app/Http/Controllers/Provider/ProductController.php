@@ -96,12 +96,27 @@ class ProductController extends Controller
     {
         $request->validate([
             'name' => 'required|string|max:255',
+            'product_name_arabic' => 'required|string|max:255',
             'category_id' => 'required|exists:categories,id',
             'price' => 'required|numeric|min:0',
             'original_price' => 'nullable|numeric|min:0',
             'stock' => 'required|integer|min:0',
             'sku' => 'nullable|string|max:100',
             'description' => 'nullable|string',
+            'product_description_arabic' => [
+                'nullable',
+                'string',
+                function ($attribute, $value, $fail) use ($request) {
+                    // If English description is provided, Arabic description becomes required
+                    if ($request->filled('description') && empty($value)) {
+                        $fail(__('provider.arabic_description_required_when_english_provided'));
+                    }
+                    // If Arabic description is provided, English description becomes required
+                    if (!empty($value) && !$request->filled('description')) {
+                        $fail(__('provider.english_description_required_when_arabic_provided'));
+                    }
+                },
+            ],
             'branch_id' => 'nullable|exists:branches,id',
             // Colors validation - now required
             'colors' => 'required|array|min:1',
@@ -117,6 +132,10 @@ class ProductController extends Controller
         $data = $request->except(['image', 'colors', 'color_images']);
         $data['user_id'] = Auth::id();
         $data['is_available'] = $request->has('is_available') ? true : false;
+
+        // Ensure Arabic fields are included
+        $data['product_name_arabic'] = $request->input('product_name_arabic');
+        $data['product_description_arabic'] = $request->input('product_description_arabic');
 
         // Set merchant tracking fields (provider dashboard = not merchant)
         $data['is_merchant'] = false;
@@ -289,17 +308,36 @@ class ProductController extends Controller
 
         $request->validate([
             'name' => 'required|string|max:255',
+            'product_name_arabic' => 'required|string|max:255',
             'category_id' => 'required|exists:categories,id',
             'price' => 'required|numeric|min:0',
             'original_price' => 'nullable|numeric|min:0',
             'stock' => 'required|integer|min:0',
             'sku' => 'nullable|string|max:100',
             'description' => 'nullable|string',
+            'product_description_arabic' => [
+                'nullable',
+                'string',
+                function ($attribute, $value, $fail) use ($request) {
+                    // If English description is provided, Arabic description becomes required
+                    if ($request->filled('description') && empty($value)) {
+                        $fail(__('provider.arabic_description_required_when_english_provided'));
+                    }
+                    // If Arabic description is provided, English description becomes required
+                    if (!empty($value) && !$request->filled('description')) {
+                        $fail(__('provider.english_description_required_when_arabic_provided'));
+                    }
+                },
+            ],
         ]);
 
         $data = $request->all();
         $data['is_available'] = $request->has('is_available') ? true : false;
         $data['featured'] = $request->has('featured') ? true : false;
+
+        // Ensure Arabic fields are included
+        $data['product_name_arabic'] = $request->input('product_name_arabic');
+        $data['product_description_arabic'] = $request->input('product_description_arabic');
 
         // The product's main image is always derived from the default color image
         // We'll update it in the ProductSpecificationController when colors are updated

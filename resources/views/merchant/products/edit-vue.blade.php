@@ -170,6 +170,13 @@
         'select_size_first' => __('merchant.select_size_first'),
         'please_click_refresh' => __('merchant.please_click_refresh'),
         'aed' => __('merchant.aed'),
+         'product_name_arabic' => __('merchant.product_name_arabic'),
+        'product_name_english' => __('merchant.product_name_english'),
+        'enter_product_description_english' => __('merchant.enter_product_description_english'),
+        'enter_product_description_arabic' => __('merchant.enter_product_description_arabic'),
+        'prodcut_created_avaliable_inventory' => __('merchant.prodcut_created_avaliable_inventory'),
+        'description_required_when_arabic_provided' => __('merchant.description_required_when_arabic_provided'),
+        'description_required_when_english_provided' => __('merchant.description_required_when_english_provided'),
 
         // Stock Allocation Summary translations
         'stock_allocation_summary' => __('merchant.stock_allocation_summary'),

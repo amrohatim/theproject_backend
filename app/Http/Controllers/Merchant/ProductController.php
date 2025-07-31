@@ -370,12 +370,14 @@ class ProductController extends Controller
         try {
             $request->validate([
                 'name' => 'required|string|max:255',
+                'product_name_arabic' => 'required|string|max:255',
                 'category_id' => ['required', 'exists:categories,id', new \App\Rules\LeafCategoryRule()],
                 'branch_id' => 'nullable|string', // Allow 'auto' or existing branch ID
                 'price' => 'required|numeric|min:0',
                 'original_price' => 'nullable|numeric|min:0',
                 'stock' => 'required|integer|min:0',
-                'description' => 'nullable|string',
+                'description' => 'nullable|string|required_with:product_description_arabic',
+                'product_description_arabic' => 'nullable|string|required_with:description',
                 // Colors validation - now required
                 'colors' => 'required|array|min:1',
                 'colors.*.name' => 'required|string|max:255',
@@ -436,7 +438,8 @@ class ProductController extends Controller
 
             // Prepare data for product creation
             $data = $request->except(['specifications', 'colors', 'sizes', 'branches', 'color_images']);
-            $data['is_available'] = $request->has('is_available') ? true : false;
+            // Handle is_available checkbox properly - check the actual value, not just presence
+            $data['is_available'] = $request->input('is_available') == '1' || $request->input('is_available') === true;
             $data['user_id'] = Auth::id();
 
             // Set merchant tracking fields
@@ -811,12 +814,14 @@ class ProductController extends Controller
         // Enhanced validation to match create method
         $request->validate([
             'name' => 'required|string|max:255',
+            'product_name_arabic' => 'required|string|max:255',
             'category_id' => ['required', 'exists:categories,id', new \App\Rules\LeafCategoryRule()],
             'branch_id' => 'nullable|exists:branches,id',
             'price' => 'required|numeric|min:0',
             'original_price' => 'nullable|numeric|min:0',
             'stock' => 'required|integer|min:0',
-            'description' => 'nullable|string',
+            'description' => 'nullable|string|required_with:product_description_arabic',
+            'product_description_arabic' => 'nullable|string|required_with:description',
             // Colors validation - now required for updates too
             'colors' => 'required|array|min:1',
             'colors.*.name' => 'required|string|max:255',
@@ -866,7 +871,8 @@ class ProductController extends Controller
 
         // Prepare data for product update
         $data = $request->except(['specifications', 'colors', 'sizes', 'branches', 'color_images', 'color_sizes', 'color_size_allocations']);
-        $data['is_available'] = $request->has('is_available') ? true : false;
+        // Handle is_available checkbox properly - check the actual value, not just presence
+        $data['is_available'] = $request->input('is_available') == '1' || $request->input('is_available') === true;
 
         // Update basic product information
         $product->update($data);

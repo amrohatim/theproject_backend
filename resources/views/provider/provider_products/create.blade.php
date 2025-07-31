@@ -36,24 +36,61 @@
                                 <h5 class="mb-3" style="font-weight: 600; font-size: 16px; color: var(--discord-lightest);">{{ __('provider.basic_information') }}</h5>
                             
                             <div class="mb-3">
-                                <label for="product_name" style="display: block; margin-bottom: 8px; color: var(--discord-lightest); font-weight: 500;">
+                                <label style="display: block; margin-bottom: 8px; color: var(--discord-lightest); font-weight: 500;">
                                     {{ __('provider.product_name') }} <span style="color: var(--discord-red);">*</span>
                                 </label>
-                                <input type="text" class="form-control" id="product_name" name="product_name" value="{{ old('product_name') }}" required 
-                                    style="background-color: var(--discord-dark); border: none; color: var(--discord-lightest); padding: 10px 12px; border-radius: 4px; width: 100%;">
-                                @error('product_name')
-                                    <div style="color: var(--discord-red); font-size: 14px; margin-top: 5px;">{{ $message }}</div>
-                                @enderror
+
+                                <!-- Language Switch for Product Name -->
+                                <x-form-language-switch field-name="product_name" />
+
+                                <!-- English Product Name -->
+                                <div data-lang-field="product_name" data-lang="en" style="display: block;">
+                                    <input type="text" class="form-control" id="product_name" name="product_name" value="{{ old('product_name') }}" required
+                                        placeholder="{{ __('provider.enter_product_name_english') }}"
+                                        style="background-color: var(--discord-dark); border: none; color: var(--discord-lightest); padding: 10px 12px; border-radius: 4px; width: 100%;">
+                                    @error('product_name')
+                                        <div style="color: var(--discord-red); font-size: 14px; margin-top: 5px;">{{ $message }}</div>
+                                    @enderror
+                                </div>
+
+                                <!-- Arabic Product Name -->
+                                <div data-lang-field="product_name" data-lang="ar" style="display: none;" dir="rtl">
+                                    <input type="text" class="form-control" id="product_name_arabic" name="product_name_arabic" value="{{ old('product_name_arabic') }}" required
+                                        placeholder="{{ __('provider.enter_product_name_arabic') }}"
+                                        style="background-color: var(--discord-dark); border: none; color: var(--discord-lightest); padding: 10px 12px; border-radius: 4px; width: 100%;">
+                                    @error('product_name_arabic')
+                                        <div style="color: var(--discord-red); font-size: 14px; margin-top: 5px;">{{ $message }}</div>
+                                    @enderror
+                                </div>
                             </div>
                             
                             <div class="mb-3">
-                                <label for="description" style="display: block; margin-bottom: 8px; color: var(--discord-lightest); font-weight: 500;">
+                                <label style="display: block; margin-bottom: 8px; color: var(--discord-lightest); font-weight: 500;">
                                     {{ __('provider.description') }}
                                 </label>
-                                <textarea class="form-control" id="description" name="description" rows="5" style="background-color: var(--discord-dark); border: none; color: var(--discord-lightest); padding: 10px 12px; border-radius: 4px; width: 100%; resize: vertical;">{{ old('description') }}</textarea>
-                                @error('description')
-                                    <div style="color: var(--discord-red); font-size: 14px; margin-top: 5px;">{{ $message }}</div>
-                                @enderror
+
+                                <!-- Language Switch for Product Description -->
+                                <x-form-language-switch field-name="product_description" />
+
+                                <!-- English Product Description -->
+                                <div data-lang-field="product_description" data-lang="en" style="display: block;">
+                                    <textarea class="form-control" id="description" name="description" rows="5"
+                                        placeholder="{{ __('provider.enter_product_description_english') }}"
+                                        style="background-color: var(--discord-dark); border: none; color: var(--discord-lightest); padding: 10px 12px; border-radius: 4px; width: 100%; resize: vertical;">{{ old('description') }}</textarea>
+                                    @error('description')
+                                        <div style="color: var(--discord-red); font-size: 14px; margin-top: 5px;">{{ $message }}</div>
+                                    @enderror
+                                </div>
+
+                                <!-- Arabic Product Description -->
+                                <div data-lang-field="product_description" data-lang="ar" style="display: none;" dir="rtl">
+                                    <textarea class="form-control" id="product_description_arabic" name="product_description_arabic" rows="5"
+                                        placeholder="{{ __('provider.enter_product_description_arabic') }}"
+                                        style="background-color: var(--discord-dark); border: none; color: var(--discord-lightest); padding: 10px 12px; border-radius: 4px; width: 100%; resize: vertical;">{{ old('product_description_arabic') }}</textarea>
+                                    @error('product_description_arabic')
+                                        <div style="color: var(--discord-red); font-size: 14px; margin-top: 5px;">{{ $message }}</div>
+                                    @enderror
+                                </div>
                             </div>
                         </div>
                         

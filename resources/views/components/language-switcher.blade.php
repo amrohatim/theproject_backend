@@ -12,11 +12,11 @@
         <span class="d-none d-md-inline">{{ $supportedLocales[$currentLocale]['native'] ?? 'Language' }}</span>
         <span class="d-md-none">{{ strtoupper($currentLocale) }}</span>
     </button>
-    
+
     <ul class="dropdown-menu" aria-labelledby="languageDropdown">
         @foreach($supportedLocales as $locale => $details)
             <li>
-                <a class="dropdown-item language-option {{ $locale === $currentLocale ? 'active' : '' }}" 
+                <a class="dropdown-item language-option {{ $locale === $currentLocale ? 'active' : '' }}"
                    href="{{ route('language.switch', $locale) }}"
                    onclick="switchLanguage('{{ $locale }}'); return false;">
                     <span class="flag-icon">{{ $details['flag'] }}</span>

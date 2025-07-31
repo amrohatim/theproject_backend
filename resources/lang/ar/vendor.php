@@ -248,6 +248,24 @@ return [
     'invalid_image_format' => 'صيغة الصورة غير صالحة',
     'save_draft' => 'حفظ المسودة',
 
+    // Enhanced Validation Messages
+    'product_name_english_required' => 'اسم المنتج باللغة الإنجليزية مطلوب',
+    'product_name_arabic_required' => 'اسم المنتج باللغة العربية مطلوب',
+    'arabic_description_required_when_english_provided' => 'الوصف باللغة العربية مطلوب عند توفير الوصف باللغة الإنجليزية',
+    'english_description_required_when_arabic_provided' => 'الوصف باللغة الإنجليزية مطلوب عند توفير الوصف باللغة العربية',
+    'category_selection_required' => 'يرجى اختيار فئة المنتج',
+    'branch_selection_required' => 'يرجى اختيار فرع لهذا المنتج',
+    'price_must_be_greater_than_zero' => 'سعر المنتج يجب أن يكون أكبر من 0 درهم',
+    'stock_must_be_zero_or_greater' => 'كمية المخزون يجب أن تكون 0 أو أكثر',
+    'one_color_must_be_default' => 'يرجى تحديد لون واحد كخيار افتراضي',
+    'each_color_must_have_image' => 'كل متغير لون يجب أن يحتوي على صورة',
+    'color_name_required' => 'اسم اللون مطلوب',
+    'color_image_required' => 'يرجى تحميل صورة لهذا اللون',
+    'at_least_one_color_must_have_image' => 'لون واحد على الأقل يجب أن يحتوي على صورة',
+    'please_fix_validation_errors' => 'يرجى إصلاح أخطاء التحقق التالية:',
+    'product_name_both_languages_required' => 'اسم المنتج مطلوب باللغتين الإنجليزية والعربية',
+    'color_variants_required' => 'متغيرات الألوان والصور مطلوبة',
+
     // Color-specific translations
     'image_format_info' => 'الصيغ المدعومة: JPEG، PNG، JPG، GIF (الحد الأقصى: 2 ميجابايت)',
     'main_product_image_info' => 'سيتم استخدام هذه كصورة المنتج الرئيسية',

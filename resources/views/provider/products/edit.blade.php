@@ -29,19 +29,69 @@
                     <!-- Basic Information -->
                     <div class="col-lg-8">
                         <div class="form-group">
-                            <label for="name">Product Name <span class="text-danger">*</span></label>
-                            <input type="text" class="form-control @error('name') is-invalid @enderror" id="name" name="name" value="{{ old('name', $product->name) }}" required>
-                            @error('name')
-                                <div class="invalid-feedback">{{ $message }}</div>
-                            @enderror
+                            <label>{{ __('provider.product_name') }} <span class="text-danger">*</span></label>
+
+                            <!-- Language Switch for Product Name -->
+                            <x-form-language-switch field-name="product_name" />
+
+                            <!-- English Product Name -->
+                            <div data-lang-field="product_name" data-lang="en" style="display: block;">
+                                <input type="text"
+                                       class="form-control @error('name') is-invalid @enderror"
+                                       id="name"
+                                       name="name"
+                                       value="{{ old('name', $product->name) }}"
+                                       placeholder="{{ __('provider.enter_product_name_english') }}"
+                                       required>
+                                @error('name')
+                                    <div class="invalid-feedback">{{ $message }}</div>
+                                @enderror
+                            </div>
+
+                            <!-- Arabic Product Name -->
+                            <div data-lang-field="product_name" data-lang="ar" style="display: none;" dir="rtl">
+                                <input type="text"
+                                       class="form-control @error('product_name_arabic') is-invalid @enderror"
+                                       id="product_name_arabic"
+                                       name="product_name_arabic"
+                                       value="{{ old('product_name_arabic', $product->product_name_arabic ?? '') }}"
+                                       placeholder="{{ __('provider.enter_product_name_arabic') }}"
+                                       required>
+                                @error('product_name_arabic')
+                                    <div class="invalid-feedback">{{ $message }}</div>
+                                @enderror
+                            </div>
                         </div>
                         
                         <div class="form-group">
-                            <label for="description">Description <span class="text-danger">*</span></label>
-                            <textarea class="form-control @error('description') is-invalid @enderror" id="description" name="description" rows="5" required>{{ old('description', $product->description) }}</textarea>
-                            @error('description')
-                                <div class="invalid-feedback">{{ $message }}</div>
-                            @enderror
+                            <label>{{ __('provider.product_description') }}</label>
+
+                            <!-- Language Switch for Product Description -->
+                            <x-form-language-switch field-name="product_description" />
+
+                            <!-- English Product Description -->
+                            <div data-lang-field="product_description" data-lang="en" style="display: block;">
+                                <textarea class="form-control @error('description') is-invalid @enderror"
+                                          id="description"
+                                          name="description"
+                                          rows="5"
+                                          placeholder="{{ __('provider.enter_product_description_english') }}">{{ old('description', $product->description) }}</textarea>
+                                @error('description')
+                                    <div class="invalid-feedback">{{ $message }}</div>
+                                @enderror
+                            </div>
+
+                            <!-- Arabic Product Description -->
+                            <div data-lang-field="product_description" data-lang="ar" style="display: none;" dir="rtl">
+                                <textarea class="form-control @error('product_description_arabic') is-invalid @enderror"
+                                          id="product_description_arabic"
+                                          name="product_description_arabic"
+                                          rows="5"
+                                          placeholder="{{ __('provider.enter_product_description_arabic') }}">{{ old('product_description_arabic', $product->product_description_arabic ?? '') }}</textarea>
+                                @error('product_description_arabic')
+                                    <div class="invalid-feedback">{{ $message }}</div>
+                                @enderror
+                            </div>
                         </div>
                         
                         <div class="row">

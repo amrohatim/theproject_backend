@@ -385,6 +385,10 @@
         'vendor.try_again' => __('vendor.try_again'),
         'vendor.view_products' => __('vendor.view_products'),
         'vendor.product_created_available_inventory' => __('vendor.product_created_available_inventory'),
+        'enter_product_name_english' => __('vendor.enter_product_name_english'),
+        'enter_product_name_arabic' => __('vendor.enter_product_name_arabic'),
+        'enter_product_description_english' => __('vendor.enter_product_description_english'),
+        'enter_product_description_arabic' => __('vendor.enter_product_description_arabic'),
     ]) !!};
 
     // Also set up appTranslations for backward compatibility
