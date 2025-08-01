@@ -82,8 +82,24 @@
 
         .card-badge {
             position: absolute;
-            top: 1rem;
+            top:  1rem;
             right: 1rem;
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border-radius: 50%;
+            width: 3.5rem;
+            height: 3.5rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+            transition: all 0.3s ease;
+            z-index: 10;
+        }
+         .card-badge-ar {
+            position: absolute;
+            top:  1rem;
+            left:  1rem;
             background: rgba(255, 255, 255, 0.95);
             backdrop-filter: blur(10px);
             border-radius: 50%;
@@ -471,7 +487,7 @@
                 <div class="card-overlay"></div>
 
                 <!-- Badge -->
-                <div class="card-badge">
+                <div class="{{ app()->getLocale() === 'ar' ? 'card-badge-ar' : 'card-badge' }}">
                     <span class="material-icons text-2xl vendor-icon">store</span>
                 </div>
 
@@ -511,7 +527,7 @@
                 <div class="card-overlay"></div>
 
                 <!-- Badge -->
-                <div class="card-badge">
+                <div class="{{ app()->getLocale() === 'ar' ? 'card-badge-ar' : 'card-badge' }}">
                     <span class="material-icons text-2xl provider-icon">local_shipping</span>
                 </div>
 
@@ -551,7 +567,7 @@
                 <div class="card-overlay"></div>
 
                 <!-- Badge -->
-                <div class="card-badge">
+                <div class="{{ app()->getLocale() === 'ar' ? 'card-badge-ar' : 'card-badge' }}">
                     <span class="material-icons text-2xl merchant-icon">person</span>
                 </div>
 

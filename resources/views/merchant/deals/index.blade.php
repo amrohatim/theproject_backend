@@ -1,4 +1,4 @@
-@extends('layouts.dashboard')
+@extends('layouts.merchant')
 
 @section('title', __('messages.deals_management'))
 @section('page-title', __('messages.deals_management'))
@@ -60,11 +60,11 @@
             <h2 class="text-2xl font-bold text-gray-800 dark:text-white">{{ __('messages.your_deals') }}</h2>
             <p class="text-gray-600 dark:text-gray-400">{{ __('messages.create_and_manage_special_offers') }}</p>
         </div>
-        <a href="{{ route('vendor.deals.create') }}" class="btn-create-deal flex flex-row items-center justify-center px-4 py-2  rounded-[4px]">
-            <svg class="w-6 h-6 fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <a href="{{ route('merchant.deals.create') }}" class="btn-create-deal flex flex-row items-center justify-center px-4 py-2 rounded-[4px]">
+            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path>
             </svg>
-          
+            {{ __('messages.create_deal') }}
         </a>
     </div>
 
@@ -91,17 +91,21 @@
 
                 <!-- Deal content -->
                 <div class="deal-content">
-                    <h3 class="text-xl font-bold text-gray-800 dark:text-white mb-2">{{ $deal->title }}</h3>
+                    <h3 class="text-xl font-bold text-gray-800 dark:text-white mb-2">
+                        {{ app()->getLocale() == 'ar' && $deal->title_arabic ? $deal->title_arabic : $deal->title }}
+                    </h3>
 
-                    @if ($deal->description)
-                        <p class="text-gray-600 dark:text-gray-400 mb-3 line-clamp-2 {{ app()->getLocale() == 'ar' ? 'text-right' : 'text-left' }}">{{ $deal->description }}</p>
+                    @if ($deal->description || $deal->description_arabic)
+                        <p class="text-gray-600 dark:text-gray-400 mb-3 line-clamp-2 {{ app()->getLocale() == 'ar' ? 'text-right' : 'text-left' }}">
+                            {{ app()->getLocale() == 'ar' && $deal->description_arabic ? $deal->description_arabic : $deal->description }}
+                        </p>
                     @endif
 
-                    @if ($deal->promotional_message)
+                    @if ($deal->promotional_message || $deal->promotional_message_arabic)
                         <div class="mb-3">
                             <span class="inline-block px-3 py-1 rounded-full text-sm font-medium bg-blue-100 text-blue-800 dark:bg-blue-800 dark:text-blue-100 {{ app()->getLocale() == 'ar' ? 'text-right' : 'text-left' }}">
                                 <i class="fas fa-bullhorn {{ app()->getLocale() == 'ar' ? 'ml-2' : 'mr-2' }}"></i>
-                                {{ $deal->promotional_message }}
+                                {{ app()->getLocale() == 'ar' && $deal->promotional_message_arabic ? $deal->promotional_message_arabic : $deal->promotional_message }}
                             </span>
                         </div>
                     @endif
@@ -114,34 +118,30 @@
 
                     <div class="deal-applies-to text-gray-600 dark:text-gray-400">
                         <i class="fas fa-tag {{ app()->getLocale() == 'ar' ? 'ml-2' : 'mr-2' }}"></i>
-                        @if ($deal->applies_to == 'all')
-                            {{ __('messages.all_products') }}
-                        @elseif ($deal->applies_to == 'products')
+                        @if ($deal->applies_to == 'products')
                             {{ __('messages.selected_products') }}
-                        @elseif ($deal->applies_to == 'categories')
-                            {{ __('messages.selected_categories') }}
+                        @elseif ($deal->applies_to == 'services')
+                            {{ __('messages.selected_services') }}
                         @endif
                     </div>
 
                     <!-- Action buttons -->
                     <div class="flex justify-end mt-4 gap-2">
-                        <a href="{{ route('vendor.deals.edit', $deal) }}" class="flex flex-row items-center gap-1 btn-edit-deal {{ app()->getLocale() == 'ar' ? 'ml-2' : 'mr-2' }}">
+                        <a href="{{ route('merchant.deals.edit', $deal) }}" class="flex flex-row items-center gap-1 btn-edit-deal {{ app()->getLocale() == 'ar' ? 'ml-2' : 'mr-2' }}">
                             {{ __('messages.edit') }}
                             <svg class="w-4 h-6 {{ app()->getLocale() == 'ar' ? 'ml-1.5' : 'mr-1.5' }}" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"></path>
                             </svg>
-                            
                         </a>
 
-                        <form action="{{ route('vendor.deals.destroy', $deal) }}" method="POST" class="inline-block" onsubmit="return confirm('{{ __('messages.confirm_delete_deal') }}')">
+                        <form action="{{ route('merchant.deals.destroy', $deal) }}" method="POST" class="inline-block" onsubmit="return confirm('{{ __('messages.confirm_delete_deal') }}')">
                             @csrf
                             @method('DELETE')
                             <button type="submit" class="flex flex-row gap-1 items-center btn-delete-deal">
-                                  {{ __('messages.delete') }}
+                                {{ __('messages.delete') }}
                                 <svg class="w-4 h-4 {{ app()->getLocale() == 'ar' ? 'ml-1.5' : 'mr-1.5' }}" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path>
                                 </svg>
-                              
                             </button>
                         </form>
                     </div>
@@ -153,7 +153,7 @@
                     <i class="fas fa-tags text-gray-400 dark:text-gray-600 text-6xl mb-4"></i>
                     <h3 class="text-xl font-bold text-gray-800 dark:text-white mb-2">{{ __('messages.no_deals_yet') }}</h3>
                     <p class="text-gray-600 dark:text-gray-400 mb-6">{{ __('messages.create_first_deal_message') }}</p>
-                    <a href="{{ route('vendor.deals.create') }}" class="btn-create-deal">
+                    <a href="{{ route('merchant.deals.create') }}" class="btn-create-deal">
                         <svg class="w-5 h-5 {{ app()->getLocale() == 'ar' ? 'ml-2' : 'mr-2' }}" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path>
                         </svg>

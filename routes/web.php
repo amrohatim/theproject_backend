@@ -681,10 +681,12 @@ Route::prefix('admin')->name('admin.')->middleware(['auth', \App\Http\Middleware
     Route::post('/categories', function (\Illuminate\Http\Request $request) {
         $validated = $request->validate([
             'name' => 'required|string|max:255',
+            'category_name_arabic' => 'required|string|max:255',
             'type' => 'required|string|in:product,service',
             'parent_id' => 'nullable|exists:categories,id',
             'icon' => 'nullable|string|max:255',
             'description' => 'nullable|string',
+            'category_description_arabic' => 'nullable|string',
             'image' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
         ]);
 
@@ -742,10 +744,12 @@ Route::prefix('admin')->name('admin.')->middleware(['auth', \App\Http\Middleware
 
         $validated = $request->validate([
             'name' => 'required|string|max:255',
+            'category_name_arabic' => 'required|string|max:255',
             'type' => 'required|string|in:product,service',
             'parent_id' => 'nullable|exists:categories,id',
             'icon' => 'nullable|string|max:255',
             'description' => 'nullable|string',
+            'category_description_arabic' => 'nullable|string',
             'image' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
         ]);
 
@@ -1340,6 +1344,16 @@ Route::prefix('admin')->name('admin.')->middleware(['auth', \App\Http\Middleware
             'license_8' => \App\Models\License::with('user')->find(8)
         ]);
     })->name('test.admin');
+
+    // Test route for vendor login and service form
+    Route::get('/test-vendor-service', function() {
+        $user = \App\Models\User::where('email', 'gogoh3296@gmail.com')->first();
+        if ($user) {
+            Auth::login($user);
+            return redirect('/vendor/services/create');
+        }
+        return 'User not found';
+    })->name('test.vendor.service');
 });
 
 // Vendor routes
@@ -2116,6 +2130,15 @@ Route::prefix('merchant')->name('merchant.')->middleware(['auth', \App\Http\Midd
     // Service Search and Filter APIs
     Route::get('/services/search/suggestions', [App\Http\Controllers\Merchant\ServiceController::class, 'searchSuggestions'])->name('services.search.suggestions');
     Route::get('/services/filter/options', [App\Http\Controllers\Merchant\ServiceController::class, 'getFilterOptions'])->name('services.filter.options');
+
+    // Deals (Merchant deal management)
+    Route::get('/deals', [App\Http\Controllers\Merchant\DealController::class, 'index'])->name('deals.index');
+    Route::get('/deals/create', [App\Http\Controllers\Merchant\DealController::class, 'create'])->middleware('valid.license')->name('deals.create');
+    Route::post('/deals', [App\Http\Controllers\Merchant\DealController::class, 'store'])->middleware('valid.license')->name('deals.store');
+    Route::get('/deals/{id}', [App\Http\Controllers\Merchant\DealController::class, 'show'])->name('deals.show');
+    Route::get('/deals/{id}/edit', [App\Http\Controllers\Merchant\DealController::class, 'edit'])->middleware('valid.license')->name('deals.edit');
+    Route::put('/deals/{id}', [App\Http\Controllers\Merchant\DealController::class, 'update'])->middleware('valid.license')->name('deals.update');
+    Route::delete('/deals/{id}', [App\Http\Controllers\Merchant\DealController::class, 'destroy'])->middleware('valid.license')->name('deals.destroy');
 
     // Orders
     Route::get('/orders', [App\Http\Controllers\Merchant\OrderController::class, 'index'])->name('orders.index');

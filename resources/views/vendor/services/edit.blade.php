@@ -30,13 +30,32 @@
                 <div class="space-y-4">
                     <h3 class="text-lg font-medium text-gray-900 dark:text-white">{{ __('messages.basic_information') }}</h3>
 
-                    <!-- Name -->
+                    <!-- Service Name (Bilingual) -->
                     <div>
-                        <label for="name" class="block text-sm font-medium text-gray-700 dark:text-gray-300">{{ __('messages.service_name') }} <span class="text-red-500">*</span></label>
-                        <input type="text" name="name" id="name" value="{{ old('name', $service->name) }}" class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-white rounded-md" required>
-                        @error('name')
-                            <p class="mt-1 text-sm text-red-600 dark:text-red-400">{{ $message }}</p>
-                        @enderror
+                        <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">{{ __('messages.service_name') }} <span class="text-red-500">*</span></label>
+
+                        <!-- Language Switcher for Service Name -->
+                        <x-form-language-switcher field-name="service_name" />
+
+                        <!-- English Service Name -->
+                        <div data-language-field="service_name" data-language="en" class="active-language-field">
+                            <input type="text" name="name" id="name" value="{{ old('name', $service->name) }}"
+                                   class="mt-1 focus:ring-indigo-500 px-2 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-white rounded-md"
+                                   placeholder="{{ __('messages.service_name_english') }}" required>
+                            @error('name')
+                                <p class="mt-1 text-sm text-red-600 dark:text-red-400">{{ $message }}</p>
+                            @enderror
+                        </div>
+
+                        <!-- Arabic Service Name -->
+                        <div data-language-field="service_name" data-language="ar" style="display: none;">
+                            <input type="text" name="service_name_arabic" id="service_name_arabic" value="{{ old('service_name_arabic', $service->service_name_arabic) }}"
+                                   class="mt-1 focus:ring-indigo-500 pr-10 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-white rounded-md"
+                                   placeholder="{{ __('messages.service_name_arabic') }}" dir="rtl" required>
+                            @error('service_name_arabic')
+                                <p class="mt-1 text-sm text-red-600 dark:text-red-400">{{ $message }}</p>
+                            @enderror
+                        </div>
                     </div>
 
                     <!-- Category -->
@@ -67,13 +86,33 @@
                         @enderror
                     </div>
 
-                    <!-- Description -->
+                    <!-- Service Description (Bilingual) -->
                     <div>
-                        <label for="description" class="block text-sm font-medium text-gray-700 dark:text-gray-300">{{ __('messages.description') }}</label>
-                        <textarea id="description" name="description" rows="4" class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-white rounded-md">{{ old('description', $service->description) }}</textarea>
-                        @error('description')
-                            <p class="mt-1 text-sm text-red-600 dark:text-red-400">{{ $message }}</p>
-                        @enderror
+                        <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">{{ __('messages.description') }}</label>
+                        <p class="text-xs text-gray-500 dark:text-gray-400 mb-2">{{ __('messages.description_optional_both_or_none') }}</p>
+
+                        <!-- Language Switcher for Description -->
+                        <x-form-language-switcher field-name="service_description" />
+
+                        <!-- English Description -->
+                        <div data-language-field="service_description" data-language="en" class="active-language-field">
+                            <textarea id="description" name="description" rows="4"
+                                      class="mt-1 focus:ring-indigo-500 px-4 py-2 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-white rounded-md"
+                                      >{{ old('description', $service->description) }}</textarea>
+                            @error('description')
+                                <p class="mt-1 text-sm text-red-600 dark:text-red-400">{{ $message }}</p>
+                            @enderror
+                        </div>
+
+                        <!-- Arabic Description -->
+                        <div data-language-field="service_description" data-language="ar" style="display: none;">
+                            <textarea id="service_description_arabic" name="service_description_arabic" rows="4"
+                                      class="mt-1 focus:ring-indigo-500 px-4 py-2 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-white rounded-md"
+                                       dir="rtl">{{ old('service_description_arabic', $service->service_description_arabic) }}</textarea>
+                            @error('service_description_arabic')
+                                <p class="mt-1 text-sm text-red-600 dark:text-red-400">{{ $message }}</p>
+                            @enderror
+                        </div>
                     </div>
                 </div>
 
@@ -309,6 +348,11 @@
         // Initialize category validation
         setupCategoryValidation();
 
+        // Initialize bilingual form validation
+        setupBilingualValidation();
+
+        // Initialize dynamic placeholder functionality
+
         // Add image change listener
         const imageInput = document.getElementById('image');
         if (imageInput) {
@@ -317,5 +361,68 @@
             });
         }
     });
+
+    function setupBilingualValidation() {
+        const form = document.querySelector('form');
+        if (!form) return;
+
+        form.addEventListener('submit', function(e) {
+            let hasErrors = false;
+            const errors = [];
+
+            // Validate service name (required in both languages)
+            if (!validateBilingualField('service_name', true)) {
+                hasErrors = true;
+                errors.push('{{ __('messages.service_name_required_both_languages') }}');
+            }
+
+            // Validate description (optional, but if one is filled, both must be filled)
+            if (!validateBilingualField('service_description', false)) {
+                hasErrors = true;
+                errors.push('{{ __('messages.description_both_or_none') }}');
+            }
+
+            if (hasErrors) {
+                e.preventDefault();
+                showValidationModal(errors);
+                return false;
+            }
+        });
+    }
+
+    function showValidationModal(errors) {
+        const errorList = errors.map(error => `<li class="text-red-600">${error}</li>`).join('');
+        const modalHtml = `
+            <div id="validationModal" class="fixed inset-0 bg-gray-600 bg-opacity-50 overflow-y-auto h-full w-full z-50">
+                <div class="relative top-20 mx-auto p-5 border w-96 shadow-lg rounded-md bg-white">
+                    <div class="mt-3 text-center">
+                        <div class="mx-auto flex items-center justify-center h-12 w-12 rounded-full bg-red-100">
+                            <i class="fas fa-exclamation-triangle text-red-600"></i>
+                        </div>
+                        <h3 class="text-lg font-medium text-gray-900 mt-2">{{ __('messages.validation_errors') }}</h3>
+                        <div class="mt-2 px-7 py-3">
+                            <ul class="text-sm text-left list-disc list-inside">
+                                ${errorList}
+                            </ul>
+                        </div>
+                        <div class="items-center px-4 py-3">
+                            <button id="closeModal" class="px-4 py-2 bg-red-500 text-white text-base font-medium rounded-md w-full shadow-sm hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-red-300">
+                                {{ __('messages.close') }}
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        `;
+
+        document.body.insertAdjacentHTML('beforeend', modalHtml);
+
+        document.getElementById('closeModal').addEventListener('click', function() {
+            document.getElementById('validationModal').remove();
+        });
+    }
+
+
+    
 </script>
 @endsection

@@ -96,15 +96,28 @@ class ServiceController extends Controller
      */
     public function store(Request $request)
     {
+        // Custom validation for bilingual fields
         $request->validate([
             'name' => 'required|string|max:255',
+            'service_name_arabic' => 'required|string|max:255',
             'category_id' => 'required|exists:categories,id',
             'branch_id' => 'required|exists:branches,id',
             'price' => 'required|numeric|min:0',
             'duration' => 'required|integer|min:1',
             'description' => 'nullable|string',
+            'service_description_arabic' => 'nullable|string',
             'image' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
         ]);
+
+        // Validate conditional description requirement
+        $hasEnglishDescription = !empty($request->description);
+        $hasArabicDescription = !empty($request->service_description_arabic);
+
+        if ($hasEnglishDescription !== $hasArabicDescription) {
+            return redirect()->back()
+                ->withErrors(['description' => __('messages.description_both_or_none')])
+                ->withInput();
+        }
 
         // Verify that the branch belongs to the vendor's company
         $branch = Branch::findOrFail($request->branch_id);
@@ -173,15 +186,28 @@ class ServiceController extends Controller
                 ->with('error', 'You do not have permission to update this service.');
         }
 
+        // Custom validation for bilingual fields
         $request->validate([
             'name' => 'required|string|max:255',
+            'service_name_arabic' => 'required|string|max:255',
             'category_id' => 'required|exists:categories,id',
             'branch_id' => 'required|exists:branches,id',
             'price' => 'required|numeric|min:0',
             'duration' => 'required|integer|min:1',
             'description' => 'nullable|string',
+            'service_description_arabic' => 'nullable|string',
             'image' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
         ]);
+
+        // Validate conditional description requirement
+        $hasEnglishDescription = !empty($request->description);
+        $hasArabicDescription = !empty($request->service_description_arabic);
+
+        if ($hasEnglishDescription !== $hasArabicDescription) {
+            return redirect()->back()
+                ->withErrors(['description' => __('messages.description_both_or_none')])
+                ->withInput();
+        }
 
         // Verify that the branch belongs to the vendor's company
         $branch = Branch::findOrFail($request->branch_id);

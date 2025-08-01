@@ -28,6 +28,7 @@ return [
     // Statistics Cards
     'products' => 'المنتجات',
     'services' => 'الخدمات',
+    'deals' => 'العروض',
     'orders' => 'الطلبات',
     'customers' => 'العملاء',
     'average_rating' => 'متوسط التقييم',
@@ -312,6 +313,10 @@ return [
     'home_service' => 'خدمة منزلية',
     'service_description' => 'وصف الخدمة',
     'service_description_required' => 'وصف الخدمة *',
+    'enter_service_name_english' => 'أدخل اسم الخدمة باللغة الإنجليزية',
+    'enter_service_name_arabic' => 'أدخل اسم الخدمة باللغة العربية',
+    'enter_service_description_english' => 'أدخل وصف الخدمة باللغة الإنجليزية',
+    'enter_service_description_arabic' => 'أدخل وصف الخدمة باللغة العربية',
     'create_service' => 'إنشاء الخدمة',
     'hour' => 'ساعة',
     'hours' => 'ساعات',

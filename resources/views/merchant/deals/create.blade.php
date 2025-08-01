@@ -1,7 +1,7 @@
-@extends('layouts.dashboard')
+@extends('layouts.merchant')
 
-@section('title', __('messages.edit_deal'))
-@section('page-title', __('messages.edit_deal'))
+@section('title', __('messages.create_deal'))
+@section('page-title', __('messages.create_deal'))
 
 @section('styles')
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
@@ -21,27 +21,18 @@
         border-radius: 0.375rem;
         padding: 0.5rem;
     }
-    .deal-image-preview {
-        width: 100%;
-        max-width: 300px;
-        height: 150px;
-        object-fit: cover;
-        border-radius: 0.375rem;
-        margin-top: 0.5rem;
-    }
 </style>
 @endsection
 
 @section('content')
 <div class="container mx-auto">
     <div class="bg-white dark:bg-gray-800 rounded-lg shadow p-6">
-        <form action="{{ route('vendor.deals.update', $deal->id) }}" method="POST" enctype="multipart/form-data">
+        <form action="{{ route('merchant.deals.store') }}" method="POST" enctype="multipart/form-data">
             @csrf
-            @method('PUT')
 
             <!-- Basic Information -->
             <div class="form-section">
-                <h3 class="form-section-title text-xl font-bold text-gray-800 dark:text-white {{ app()->getLocale() == 'ar' ? 'text-right' : 'text-left' }}">{{ __('messages.deal_information') }}</h3>
+                <h3 class="form-section-title text-xl font-bold text-gray-800 dark:text-white">{{ __('messages.deal_information') }}</h3>
 
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                     <!-- Title (Bilingual) -->
@@ -53,8 +44,8 @@
 
                         <!-- English Title -->
                         <div data-language-field="title" data-language="en" class="mb-3">
-                            <input type="text" name="title" id="title" value="{{ old('title', $deal->title) }}"
-                                   class="form-input w-full px-2" placeholder="{{ __('messages.enter_deal_title') }}" required>
+                            <input type="text" name="title" id="title" value="{{ old('title') }}"
+                                   class="modern-input px-4 py-2.5 w-full" placeholder="{{ __('messages.enter_deal_title') }}" required>
                             @error('title')
                                 <p class="text-red-500 text-sm mt-1">{{ $message }}</p>
                             @enderror
@@ -62,8 +53,8 @@
 
                         <!-- Arabic Title -->
                         <div data-language-field="title" data-language="ar" class="mb-3" style="display: none;">
-                            <input type="text" name="title_arabic" id="title_arabic" value="{{ old('title_arabic', $deal->title_arabic) }}"
-                                   class="form-input w-full text-right pr-8" placeholder="أدخل عنوان الصفقة" required dir="rtl">
+                            <input type="text" name="title_arabic" id="title_arabic" value="{{ old('title_arabic') }}"
+                                   class="modern-input px-4 py-2.5 w-full text-right" placeholder="أدخل عنوان الصفقة" required dir="rtl">
                             @error('title_arabic')
                                 <p class="text-red-500 text-sm mt-1 text-right">{{ $message }}</p>
                             @enderror
@@ -74,8 +65,8 @@
                     <div>
                         <label for="discount_percentage" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1 {{ app()->getLocale() == 'ar' ? 'text-right' : 'text-left' }}">{{ __('messages.discount_percentage') }} <span class="text-red-500">*</span></label>
                         <div class="relative">
-                            <input type="number" name="discount_percentage" id="discount_percentage" value="{{ old('discount_percentage', $deal->discount_percentage) }}" min="1" max="100" class="form-input pr-14 pl-4 w-full {{ app()->getLocale() == 'ar' ? 'text-right' : 'text-left' }}" placeholder="{{ __('messages.enter_discount_percentage') }}" required>
-                            <div class="absolute inset-y-0 {{ app()->getLocale() == 'ar' ? 'left-0 pl-3' : 'right-0 pr-3' }}  flex items-center pointer-events-none">
+                            <input type="number" name="discount_percentage" id="discount_percentage" value="{{ old('discount_percentage') }}" min="1" max="100" class="modern-input px-4 py-2.5 pr-14 w-full {{ app()->getLocale() == 'ar' ? 'text-right' : 'text-left' }}" placeholder="{{ __('messages.enter_discount_percentage') }}" required>
+                            <div class="absolute inset-y-0 {{ app()->getLocale() == 'ar' ? 'left-0 pl-3' : 'right-0 pr-3' }} flex items-center pointer-events-none">
                                 <span class="text-gray-500 pr-6">%</span>
                             </div>
                         </div>
@@ -95,7 +86,7 @@
 
                     <!-- English Description -->
                     <div data-language-field="description" data-language="en" class="mb-3">
-                        <textarea name="description" id="description" rows="3" class="form-textarea px-4 py-2 w-full">{{ old('description', $deal->description) }}</textarea>
+                        <textarea name="description" id="description" rows="3" class="modern-textarea px-4 py-3 w-full">{{ old('description') }}</textarea>
                         @error('description')
                             <p class="text-red-500 text-sm mt-1">{{ $message }}</p>
                         @enderror
@@ -103,7 +94,7 @@
 
                     <!-- Arabic Description -->
                     <div data-language-field="description" data-language="ar" class="mb-3" style="display: none;">
-                        <textarea name="description_arabic" id="description_arabic" rows="3" class="form-textarea w-full text-right px-4 py-2" dir="rtl">{{ old('description_arabic', $deal->description_arabic) }}</textarea>
+                        <textarea name="description_arabic" id="description_arabic" rows="3" class="modern-textarea px-4 py-3 w-full text-right"  dir="rtl">{{ old('description_arabic') }}</textarea>
                         @error('description_arabic')
                             <p class="text-red-500 text-sm mt-1 text-right">{{ $message }}</p>
                         @enderror
@@ -125,9 +116,9 @@
                     <!-- English Promotional Message -->
                     <div data-language-field="promotional_message" data-language="en" class="mb-3">
                         <div class="relative">
-                            <input type="text" name="promotional_message" id="promotional_message" value="{{ old('promotional_message', $deal->promotional_message) }}"
-                                   class="form-input px-2 w-full" maxlength="50" placeholder="{{ __('messages.promotional_message_placeholder') }}">
-                            
+                            <input type="text" name="promotional_message" id="promotional_message" value="{{ old('promotional_message') }}"
+                                   class="modern-input px-4 py-2.5 w-full" maxlength="50" placeholder="{{ __('messages.promotional_message_placeholder') }}">
+
                         </div>
                         @error('promotional_message')
                             <p class="text-red-500 text-sm mt-1">{{ $message }}</p>
@@ -137,9 +128,11 @@
                     <!-- Arabic Promotional Message -->
                     <div data-language-field="promotional_message" data-language="ar" class="mb-3" style="display: none;">
                         <div class="relative">
-                            <input type="text" name="promotional_message_arabic" id="promotional_message_arabic" value="{{ old('promotional_message_arabic', $deal->promotional_message_arabic) }}"
-                                   class="form-input px-6 w-full text-right" maxlength="50" placeholder="أدخل الرسالة الترويجية" dir="rtl">
-                        
+                            <input type="text" name="promotional_message_arabic" id="promotional_message_arabic" value="{{ old('promotional_message_arabic') }}"
+                                   class="modern-input px-4 py-2.5 w-full text-right" maxlength="50" placeholder="أدخل الرسالة الترويجية" dir="rtl">
+                            <div class="absolute left-2 bottom-2 text-xs text-gray-500">
+                                <span id="char-count-ar">0</span>/50
+                            </div>
                         </div>
                         @error('promotional_message_arabic')
                             <p class="text-red-500 text-sm mt-1 text-right">{{ $message }}</p>
@@ -152,7 +145,7 @@
                     <!-- Start Date -->
                     <div>
                         <label for="start_date" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1 {{ app()->getLocale() == 'ar' ? 'text-right' : 'text-left' }}">{{ __('messages.start_date') }} <span class="text-red-500">*</span></label>
-                        <input type="text" name="start_date" id="start_date" value="{{ old('start_date', $deal->start_date->format('Y-m-d')) }}" class="form-input w-full datepicker {{ app()->getLocale() == 'ar' ? 'text-right' : 'text-left' }}" required>
+                        <input type="text" name="start_date" id="start_date" value="{{ old('start_date', date('Y-m-d')) }}" class="modern-input px-4 py-2.5 w-full datepicker {{ app()->getLocale() == 'ar' ? 'text-right' : 'text-left' }}" placeholder="{{ __('messages.select_start_date') }}" required>
                         @error('start_date')
                             <p class="text-red-500 text-sm mt-1 {{ app()->getLocale() == 'ar' ? 'text-right' : 'text-left' }}">{{ $message }}</p>
                         @enderror
@@ -161,7 +154,7 @@
                     <!-- End Date -->
                     <div>
                         <label for="end_date" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1 {{ app()->getLocale() == 'ar' ? 'text-right' : 'text-left' }}">{{ __('messages.end_date') }} <span class="text-red-500">*</span></label>
-                        <input type="text" name="end_date" id="end_date" value="{{ old('end_date', $deal->end_date->format('Y-m-d')) }}" class="form-input w-full datepicker {{ app()->getLocale() == 'ar' ? 'text-right' : 'text-left' }}" required>
+                        <input type="text" name="end_date" id="end_date" value="{{ old('end_date', date('Y-m-d', strtotime('+30 days'))) }}" class="modern-input px-4 py-2.5 w-full datepicker {{ app()->getLocale() == 'ar' ? 'text-right' : 'text-left' }}" placeholder="{{ __('messages.select_end_date') }}" required>
                         @error('end_date')
                             <p class="text-red-500 text-sm mt-1 {{ app()->getLocale() == 'ar' ? 'text-right' : 'text-left' }}">{{ $message }}</p>
                         @enderror
@@ -171,14 +164,7 @@
                 <!-- Image -->
                 <div class="mt-4">
                     <label for="image" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1 {{ app()->getLocale() == 'ar' ? 'text-right' : 'text-left' }}">{{ __('messages.deal_image') }}</label>
-
-                    @if($deal->image)
-                        <div class="mb-2">
-                            <img src="{{ asset($deal->image) }}" alt="{{ $deal->title }}" class="deal-image-preview">
-                        </div>
-                    @endif
-
-                    <input type="file" name="image" id="image" class="form-input w-full">
+                    <input type="file" name="image" id="image" class="modern-input px-4 py-2.5 w-full">
                     <p class="text-gray-500 text-sm mt-1 {{ app()->getLocale() == 'ar' ? 'text-right' : 'text-left' }}">{{ __('messages.deal_image_requirements') }}</p>
                     @error('image')
                         <p class="text-red-500 text-sm mt-1 {{ app()->getLocale() == 'ar' ? 'text-right' : 'text-left' }}">{{ $message }}</p>
@@ -188,13 +174,13 @@
                 <!-- Status -->
                 <div class="mt-4">
                     <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1 {{ app()->getLocale() == 'ar' ? 'text-right' : 'text-left' }}">{{ __('messages.status') }} <span class="text-red-500">*</span></label>
-                    <div class="flex {{ app()->getLocale() == 'ar' ? 'space-x-reverse' : '' }} space-x-4">
-                        <label class="inline-flex items-center {{ app()->getLocale() == 'ar' ? 'flex-row-reverse' : '' }}">
-                            <input type="radio" name="status" value="active" class="form-radio" {{ old('status', $deal->status) == 'active' ? 'checked' : '' }}>
+                    <div class="flex {{ app()->getLocale() == 'ar' ? 'space-x-reverse space-x-4' : 'space-x-4' }}">
+                        <label class="inline-flex items-center">
+                            <input type="radio" name="status" value="active" class="form-radio" {{ old('status', 'active') == 'active' ? 'checked' : '' }}>
                             <span class="{{ app()->getLocale() == 'ar' ? 'mr-2' : 'ml-2' }}">{{ __('messages.active') }}</span>
                         </label>
-                        <label class="inline-flex items-center {{ app()->getLocale() == 'ar' ? 'flex-row-reverse' : '' }}">
-                            <input type="radio" name="status" value="inactive" class="form-radio" {{ old('status', $deal->status) == 'inactive' ? 'checked' : '' }}>
+                        <label class="inline-flex items-center">
+                            <input type="radio" name="status" value="inactive" class="form-radio" {{ old('status') == 'inactive' ? 'checked' : '' }}>
                             <span class="{{ app()->getLocale() == 'ar' ? 'mr-2' : 'ml-2' }}">{{ __('messages.inactive') }}</span>
                         </label>
                     </div>
@@ -206,21 +192,21 @@
 
             <!-- Application Scope -->
             <div class="form-section">
-                <h3 class="form-section-title text-xl font-bold text-gray-800 dark:text-white {{ app()->getLocale() == 'ar' ? 'text-right' : 'text-left' }}">{{ __('messages.deal_application') }}</h3>
+                <h3 class="form-section-title text-xl font-bold text-gray-800 dark:text-white">{{ __('messages.deal_application') }}</h3>
 
                 <div class="mt-4">
                     <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1 {{ app()->getLocale() == 'ar' ? 'text-right' : 'text-left' }}">{{ __('messages.deal_type') }} <span class="text-red-500">*</span></label>
                     <div class="space-y-2">
-                        <label class="inline-flex items-center {{ app()->getLocale() == 'ar' ? 'flex-row-reverse' : '' }}">
-                            <input type="radio" name="applies_to" value="products" class="form-radio" {{ old('applies_to', $deal->applies_to) == 'products' ? 'checked' : '' }} onchange="toggleSelectionContainers()">
+                        <label class="inline-flex items-center">
+                            <input type="radio" name="applies_to" value="products" class="form-radio" {{ old('applies_to', 'products') == 'products' ? 'checked' : '' }} onchange="toggleSelectionContainers()">
                             <span class="{{ app()->getLocale() == 'ar' ? 'mr-2' : 'ml-2' }}">{{ __('messages.product_deal_description') }}</span>
                         </label>
-                        <label class="inline-flex items-center {{ app()->getLocale() == 'ar' ? 'flex-row-reverse' : '' }}">
-                            <input type="radio" name="applies_to" value="services" class="form-radio" {{ old('applies_to', $deal->applies_to) == 'services' ? 'checked' : '' }} onchange="toggleSelectionContainers()">
+                        <label class="inline-flex items-center">
+                            <input type="radio" name="applies_to" value="services" class="form-radio" {{ old('applies_to') == 'services' ? 'checked' : '' }} onchange="toggleSelectionContainers()">
                             <span class="{{ app()->getLocale() == 'ar' ? 'mr-2' : 'ml-2' }}">{{ __('messages.service_deal_description') }}</span>
                         </label>
-                        <label class="inline-flex items-center {{ app()->getLocale() == 'ar' ? 'flex-row-reverse' : '' }}">
-                            <input type="radio" name="applies_to" value="products_and_services" class="form-radio" {{ old('applies_to', $deal->applies_to) == 'products_and_services' ? 'checked' : '' }} onchange="toggleSelectionContainers()">
+                        <label class="inline-flex items-center">
+                            <input type="radio" name="applies_to" value="products_and_services" class="form-radio" {{ old('applies_to') == 'products_and_services' ? 'checked' : '' }} onchange="toggleSelectionContainers()">
                             <span class="{{ app()->getLocale() == 'ar' ? 'mr-2' : 'ml-2' }}">Apply this deal to both products and services</span>
                         </label>
                     </div>
@@ -233,67 +219,50 @@
                 <div id="products-container" class="mt-4" style="display: none;">
                     <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1 {{ app()->getLocale() == 'ar' ? 'text-right' : 'text-left' }}">{{ __('messages.select_products') }}</label>
                     <div class="selection-container">
-                        @php
-                            $selectedProductIds = old('product_ids', $deal->product_ids ?? []);
-                            if (is_string($selectedProductIds)) {
-                                $selectedProductIds = json_decode($selectedProductIds, true) ?? [];
-                            }
-                        @endphp
-
                         @foreach($products as $product)
-                             <div class="p-2 hover:bg-gray-100 dark:hover:bg-gray-700 rounded">
-                                 <label class="inline-flex items-center w-full {{ app()->getLocale() == 'ar' ? 'flex-row-reverse' : '' }}">
-                                     <input type="checkbox" name="product_ids[]" value="{{ $product->id }}" class="form-checkbox" {{ in_array($product->id, $selectedProductIds) ? 'checked' : '' }}>
-                                     <span class="{{ app()->getLocale() == 'ar' ? 'mr-2' : 'ml-2' }}">{{ $product->name }} - ${{ number_format($product->price, 2) }}</span>
-                                     <span class="{{ app()->getLocale() == 'ar' ? 'mr-auto' : 'ml-auto' }} text-sm text-gray-500">{{ $product->branch->name }}</span>
-                                 </label>
-                             </div>
-                         @endforeach
+                            <div class="p-2 hover:bg-gray-100 dark:hover:bg-gray-700 rounded">
+                                <label class="inline-flex items-center w-full {{ app()->getLocale() == 'ar' ? 'flex-row-reverse' : '' }}">
+                                    <input type="checkbox" name="product_ids[]" value="{{ $product->id }}" class="form-checkbox" {{ in_array($product->id, old('product_ids', [])) ? 'checked' : '' }}>
+                                    <span class="{{ app()->getLocale() == 'ar' ? 'mr-2' : 'ml-2' }}">{{ $product->name }} - ${{ number_format($product->price, 2) }}</span>
+                                    <span class="{{ app()->getLocale() == 'ar' ? 'mr-auto' : 'ml-auto' }} text-sm text-gray-500">{{ $product->branch->name }}</span>
+                                </label>
+                            </div>
+                        @endforeach
                     </div>
                     @error('product_ids')
-                         <p class="text-red-500 text-sm mt-1 {{ app()->getLocale() == 'ar' ? 'text-right' : 'text-left' }}">{{ $message }}</p>
-                     @enderror
+                        <p class="text-red-500 text-sm mt-1 {{ app()->getLocale() == 'ar' ? 'text-right' : 'text-left' }}">{{ $message }}</p>
+                    @enderror
                 </div>
 
                 <!-- Service Selection -->
                 <div id="services-container" class="mt-4" style="display: none;">
                     <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1 {{ app()->getLocale() == 'ar' ? 'text-right' : 'text-left' }}">{{ __('messages.select_services') }}</label>
                     <div class="selection-container">
-                        @php
-                            $selectedServiceIds = old('service_ids', $deal->service_ids ?? []);
-                            if (is_string($selectedServiceIds)) {
-                                $selectedServiceIds = json_decode($selectedServiceIds, true) ?? [];
-                            }
-                        @endphp
-
                         @foreach($services as $service)
-                             <div class="p-2 hover:bg-gray-100 dark:hover:bg-gray-700 rounded">
-                                 <label class="inline-flex items-center w-full {{ app()->getLocale() == 'ar' ? 'flex-row-reverse' : '' }}">
-                                     <input type="checkbox" name="service_ids[]" value="{{ $service->id }}" class="form-checkbox" {{ in_array($service->id, $selectedServiceIds) ? 'checked' : '' }}>
-                                     <span class="{{ app()->getLocale() == 'ar' ? 'mr-2' : 'ml-2' }}">{{ $service->name }} - ${{ number_format($service->price, 2) }} ({{ $service->duration }}{{ __('messages.min') }})</span>
-                                     <span class="{{ app()->getLocale() == 'ar' ? 'mr-auto' : 'ml-auto' }} text-sm text-gray-500">{{ $service->branch->name }}</span>
-                                 </label>
-                             </div>
-                         @endforeach
+                            <div class="p-2 hover:bg-gray-100 dark:hover:bg-gray-700 rounded">
+                                <label class="inline-flex items-center w-full {{ app()->getLocale() == 'ar' ? 'flex-row-reverse' : '' }}">
+                                    <input type="checkbox" name="service_ids[]" value="{{ $service->id }}" class="form-checkbox" {{ in_array($service->id, old('service_ids', [])) ? 'checked' : '' }}>
+                                    <span class="{{ app()->getLocale() == 'ar' ? 'mr-2' : 'ml-2' }}">{{ $service->name }} - ${{ number_format($service->price, 2) }} ({{ $service->duration }}{{ __('messages.min') }})</span>
+                                    <span class="{{ app()->getLocale() == 'ar' ? 'mr-auto' : 'ml-auto' }} text-sm text-gray-500">{{ $service->branch ? $service->branch->name : __('messages.direct_merchant_service') }}</span>
+                                </label>
+                            </div>
+                        @endforeach
                     </div>
                     @error('service_ids')
-                         <p class="text-red-500 text-sm mt-1 {{ app()->getLocale() == 'ar' ? 'text-right' : 'text-left' }}">{{ $message }}</p>
-                     @enderror
+                        <p class="text-red-500 text-sm mt-1 {{ app()->getLocale() == 'ar' ? 'text-right' : 'text-left' }}">{{ $message }}</p>
+                    @enderror
                 </div>
 
 
             </div>
 
             <!-- Submit Buttons -->
-            <div class="flex {{ app()->getLocale() == 'ar' ? 'justify-end space-x-reverse' : 'justify-end' }}  gap-4 space-x-4 mt-8">
-                <a href="{{ route('vendor.deals.index') }}" class="btn-cancel rounded-[6px]">
-                   
+            <div class="flex {{ app()->getLocale() == 'ar' ? 'justify-end space-x-reverse' : 'justify-end' }} space-x-4 gap-4 mt-8">
+                <a href="{{ route('merchant.deals.index') }}" class="btn-cancel rounded-[6px]">
                     {{ __('messages.cancel') }}
-                 
                 </a>
                 <button type="submit" class="btn-create-deal rounded-[6px]">
-                   
-                    {{ __('messages.update_deal') }}
+                    {{ __('messages.create_deal') }}
                 </button>
             </div>
         </form>
@@ -383,6 +352,27 @@
         }
     }
 
+    function validateBilingualField(fieldName, required) {
+        const englishField = document.getElementById(fieldName);
+        const arabicField = document.getElementById(fieldName + '_arabic');
+
+        if (!englishField || !arabicField) return true; // Skip validation if fields don't exist
+
+        const englishValue = englishField.value.trim();
+        const arabicValue = arabicField.value.trim();
+
+        if (required) {
+            // Both fields are required
+            return englishValue !== '' && arabicValue !== '';
+        } else {
+            // Optional fields: if one is filled, both must be filled
+            if (englishValue === '' && arabicValue === '') {
+                return true; // Both empty is OK
+            }
+            return englishValue !== '' && arabicValue !== '';
+        }
+    }
+
     function setupBilingualValidation() {
         const form = document.querySelector('form');
         if (!form) return;
@@ -394,13 +384,13 @@
             // Validate title (required in both languages)
             if (!validateBilingualField('title', true)) {
                 hasErrors = true;
-                errors.push('{{ __('messages.title_required_both_languages') }}');
+                errors.push('Title is required in both English and Arabic');
             }
 
             // Validate description (optional, but if one is filled, both must be filled)
             if (!validateBilingualField('description', false)) {
                 hasErrors = true;
-                errors.push('{{ __('messages.description_both_or_none') }}');
+                errors.push('If you enter a description in one language, you must enter it in both languages');
             }
 
             if (hasErrors) {

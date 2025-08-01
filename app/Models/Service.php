@@ -18,12 +18,15 @@ class Service extends Model
      */
     protected $fillable = [
         'branch_id',
+        'merchant_id',
         'category_id',
         'name',
+        'service_name_arabic',
         'price',
         'duration',
         'featured',
         'description',
+        'service_description_arabic',
         'image',
         'rating',
         'is_available',
@@ -101,6 +104,14 @@ class Service extends Model
     public function branch()
     {
         return $this->belongsTo(Branch::class);
+    }
+
+    /**
+     * Get the merchant that owns the service.
+     */
+    public function merchant()
+    {
+        return $this->belongsTo(User::class, 'merchant_id');
     }
 
     /**

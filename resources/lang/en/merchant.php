@@ -28,6 +28,7 @@ return [
     // Statistics Cards
     'products' => 'Products',
     'services' => 'Services',
+    'deals' => 'Deals',
     'orders' => 'Orders',
     'customers' => 'Customers',
     'average_rating' => 'Average Rating',
@@ -312,6 +313,10 @@ return [
     'home_service' => 'Home Service',
     'service_description' => 'Service Description',
     'service_description_required' => 'Service Description *',
+    'enter_service_name_english' => 'Enter service name in English',
+    'enter_service_name_arabic' => 'Enter service name in Arabic',
+    'enter_service_description_english' => 'Enter service description in English',
+    'enter_service_description_arabic' => 'Enter service description in Arabic',
     'create_service' => 'Create Service',
     'hour' => 'hour',
     'hours' => 'hours',

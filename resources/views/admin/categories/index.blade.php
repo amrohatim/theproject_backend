@@ -110,7 +110,18 @@
                                     @endif
                                 </div>
                                 <div class="ml-4">
-                                    <div class="text-sm font-medium text-gray-900 dark:text-white">{{ $category->name }}</div>
+                                    <div class="text-sm font-medium text-gray-900 dark:text-white">
+                                        @if(app()->getLocale() == 'ar' && $category->category_name_arabic)
+                                            {{ $category->category_name_arabic }}
+                                        @else
+                                            {{ $category->name }}
+                                        @endif
+                                    </div>
+                                    @if(app()->getLocale() == 'ar' && $category->category_name_arabic)
+                                        <div class="text-xs text-gray-500 dark:text-gray-400">{{ $category->name }}</div>
+                                    @elseif($category->category_name_arabic)
+                                        <div class="text-xs text-gray-500 dark:text-gray-400">{{ $category->category_name_arabic }}</div>
+                                    @endif
                                 </div>
                             </div>
                         </td>
@@ -198,8 +209,12 @@
                             </h3>
                             <div class="mt-4 space-y-4">
                                 <div>
-                                    <label for="parent_name" class="block text-sm font-medium text-gray-700 dark:text-gray-300">Category Name</label>
+                                    <label for="parent_name" class="block text-sm font-medium text-gray-700 dark:text-gray-300">Category Name (English) *</label>
                                     <input type="text" name="name" id="parent_name" class="mt-1 focus:ring-green-500 focus:border-green-500 block w-full shadow-sm sm:text-sm border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-white rounded-md" required>
+                                </div>
+                                <div>
+                                    <label for="parent_name_arabic" class="block text-sm font-medium text-gray-700 dark:text-gray-300">Category Name (Arabic) *</label>
+                                    <input type="text" name="category_name_arabic" id="parent_name_arabic" dir="rtl" class="mt-1 focus:ring-green-500 focus:border-green-500 block w-full shadow-sm sm:text-sm border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-white rounded-md" required>
                                 </div>
                                 <div>
                                     <label for="parent_type" class="block text-sm font-medium text-gray-700 dark:text-gray-300">Type</label>
@@ -219,8 +234,12 @@
                                     <p class="mt-1 text-sm text-gray-500 dark:text-gray-400">Used as fallback if no image is provided</p>
                                 </div>
                                 <div>
-                                    <label for="parent_description" class="block text-sm font-medium text-gray-700 dark:text-gray-300">Description</label>
+                                    <label for="parent_description" class="block text-sm font-medium text-gray-700 dark:text-gray-300">Description (English)</label>
                                     <textarea name="description" id="parent_description" rows="3" class="mt-1 focus:ring-green-500 focus:border-green-500 block w-full shadow-sm sm:text-sm border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-white rounded-md"></textarea>
+                                </div>
+                                <div>
+                                    <label for="parent_description_arabic" class="block text-sm font-medium text-gray-700 dark:text-gray-300">Description (Arabic)</label>
+                                    <textarea name="category_description_arabic" id="parent_description_arabic" dir="rtl" rows="3" class="mt-1 focus:ring-green-500 focus:border-green-500 block w-full shadow-sm sm:text-sm border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-white rounded-md"></textarea>
                                 </div>
                             </div>
                         </div>
@@ -251,8 +270,12 @@
                     <h3 class="text-lg leading-6 font-medium text-gray-900 dark:text-white" id="modal-title">Add Category</h3>
                     <div class="mt-4 space-y-4">
                         <div>
-                            <label for="name" class="block text-sm font-medium text-gray-700 dark:text-gray-300">Name</label>
+                            <label for="name" class="block text-sm font-medium text-gray-700 dark:text-gray-300">Name (English) *</label>
                             <input type="text" name="name" id="name" class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-white rounded-md" required>
+                        </div>
+                        <div>
+                            <label for="name_arabic" class="block text-sm font-medium text-gray-700 dark:text-gray-300">Name (Arabic) *</label>
+                            <input type="text" name="category_name_arabic" id="name_arabic" dir="rtl" class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-white rounded-md" required>
                         </div>
                         <div>
                             <label for="type" class="block text-sm font-medium text-gray-700 dark:text-gray-300">Type</label>
@@ -281,8 +304,12 @@
                             <p class="mt-1 text-sm text-gray-500 dark:text-gray-400">Used as fallback if no image is provided</p>
                         </div>
                         <div>
-                            <label for="description" class="block text-sm font-medium text-gray-700 dark:text-gray-300">Description</label>
+                            <label for="description" class="block text-sm font-medium text-gray-700 dark:text-gray-300">Description (English)</label>
                             <textarea name="description" id="description" rows="3" class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-white rounded-md"></textarea>
+                        </div>
+                        <div>
+                            <label for="description_arabic" class="block text-sm font-medium text-gray-700 dark:text-gray-300">Description (Arabic)</label>
+                            <textarea name="category_description_arabic" id="description_arabic" dir="rtl" rows="3" class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-white rounded-md"></textarea>
                         </div>
                     </div>
                 </div>
@@ -313,8 +340,12 @@
                     <h3 class="text-lg leading-6 font-medium text-gray-900 dark:text-white" id="modal-title">Edit Category</h3>
                     <div class="mt-4 space-y-4">
                         <div>
-                            <label for="edit_name" class="block text-sm font-medium text-gray-700 dark:text-gray-300">Name</label>
+                            <label for="edit_name" class="block text-sm font-medium text-gray-700 dark:text-gray-300">Name (English) *</label>
                             <input type="text" name="name" id="edit_name" class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-white rounded-md" required>
+                        </div>
+                        <div>
+                            <label for="edit_name_arabic" class="block text-sm font-medium text-gray-700 dark:text-gray-300">Name (Arabic) *</label>
+                            <input type="text" name="category_name_arabic" id="edit_name_arabic" dir="rtl" class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-white rounded-md" required>
                         </div>
                         <div>
                             <label for="edit_type" class="block text-sm font-medium text-gray-700 dark:text-gray-300">Type</label>
@@ -334,8 +365,12 @@
                             <input type="text" name="icon" id="edit_icon" placeholder="e.g., fas fa-shopping-cart" class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-white rounded-md">
                         </div>
                         <div>
-                            <label for="edit_description" class="block text-sm font-medium text-gray-700 dark:text-gray-300">Description</label>
+                            <label for="edit_description" class="block text-sm font-medium text-gray-700 dark:text-gray-300">Description (English)</label>
                             <textarea name="description" id="edit_description" rows="3" class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-white rounded-md"></textarea>
+                        </div>
+                        <div>
+                            <label for="edit_description_arabic" class="block text-sm font-medium text-gray-700 dark:text-gray-300">Description (Arabic)</label>
+                            <textarea name="category_description_arabic" id="edit_description_arabic" dir="rtl" rows="3" class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-white rounded-md"></textarea>
                         </div>
                         <div>
                             <label for="edit_image" class="block text-sm font-medium text-gray-700 dark:text-gray-300">Image</label>
@@ -435,9 +470,11 @@
                 // Populate the form with category data
                 document.getElementById('edit_category_id').value = categoryId;
                 document.getElementById('edit_name').value = data.category.name || '';
+                document.getElementById('edit_name_arabic').value = data.category.category_name_arabic || '';
                 document.getElementById('edit_type').value = data.category.type || 'product';
                 document.getElementById('edit_icon').value = data.category.icon || '';
                 document.getElementById('edit_description').value = data.category.description || '';
+                document.getElementById('edit_description_arabic').value = data.category.category_description_arabic || '';
 
                 // Populate parent categories dropdown
                 const parentSelect = document.getElementById('edit_parent_id');

@@ -20,9 +20,8 @@ class ServiceController extends Controller
     {
         $user = Auth::user();
 
-        // Get services from user's branches
-        $userBranches = \App\Models\Branch::where('user_id', $user->id)->pluck('id');
-        $query = Service::whereIn('branch_id', $userBranches)->with('category');
+        // Get services owned directly by this merchant
+        $query = Service::where('merchant_id', $user->id)->with('category');
 
         // Apply search if provided
         if ($request->filled('search')) {
@@ -146,7 +145,9 @@ class ServiceController extends Controller
     {
         $request->validate([
             'name' => 'required|string|max:255',
-            'description' => 'required|string',
+            'service_name_arabic' => 'required|string|max:255',
+            'description' => 'nullable|string',
+            'service_description_arabic' => 'nullable|string',
             'price' => 'required|numeric|min:0',
             'category_id' => 'required|exists:categories,id',
             'image' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
@@ -156,8 +157,8 @@ class ServiceController extends Controller
             'image.image' => 'The uploaded file must be an image.',
             'image.mimes' => 'The image must be a file of type: JPEG, PNG, JPG, GIF.',
             'image.max' => 'The image size must not exceed 2MB.',
-            'name.required' => 'Service name is required.',
-            'description.required' => 'Service description is required.',
+            'name.required' => 'Service name in English is required.',
+            'service_name_arabic.required' => 'Service name in Arabic is required.',
             'price.required' => 'Service price is required.',
             'price.numeric' => 'Service price must be a valid number.',
             'price.min' => 'Service price must be greater than or equal to 0.',
@@ -166,22 +167,24 @@ class ServiceController extends Controller
             'duration.min' => 'Duration must be at least 1 minute.',
         ]);
 
-        $user = Auth::user();
-
-        // Get user's first branch (or create one if none exists)
-        $branch = \App\Models\Branch::where('user_id', $user->id)->first();
-        if (!$branch) {
-            $branch = \App\Models\Branch::create([
-                'user_id' => $user->id,
-                'name' => 'Main Store',
-                'address' => 'Main Location',
-                'emirate' => 'Dubai',
-                'status' => 'active',
+        // Custom validation: if description is provided in one language, it must be provided in both
+        if ($request->filled('description') || $request->filled('service_description_arabic')) {
+            $request->validate([
+                'description' => 'required|string',
+                'service_description_arabic' => 'required|string',
+            ], [
+                'description.required' => 'If you provide a description in Arabic, you must also provide it in English.',
+                'service_description_arabic.required' => 'If you provide a description in English, you must also provide it in Arabic.',
             ]);
         }
 
+        $user = Auth::user();
+
         $data = $request->all();
-        $data['branch_id'] = $branch->id;
+        // Set merchant_id for direct merchant ownership
+        $data['merchant_id'] = $user->id;
+        // Remove branch_id as we're using direct merchant ownership
+        unset($data['branch_id']);
 
         // Handle image upload with enhanced validation and error handling
         if ($request->hasFile('image')) {
@@ -253,9 +256,8 @@ class ServiceController extends Controller
     public function show($id)
     {
         $user = Auth::user();
-        $userBranches = \App\Models\Branch::where('user_id', $user->id)->pluck('id');
 
-        $service = Service::whereIn('branch_id', $userBranches)
+        $service = Service::where('merchant_id', $user->id)
             ->with('category')
             ->findOrFail($id);
 
@@ -268,9 +270,8 @@ class ServiceController extends Controller
     public function edit($id)
     {
         $user = Auth::user();
-        $userBranches = \App\Models\Branch::where('user_id', $user->id)->pluck('id');
 
-        $service = Service::whereIn('branch_id', $userBranches)->findOrFail($id);
+        $service = Service::where('merchant_id', $user->id)->findOrFail($id);
         
         // Get service categories with their children
         $parentCategories = Category::where('type', 'service')
@@ -291,13 +292,14 @@ class ServiceController extends Controller
     public function update(Request $request, $id)
     {
         $user = Auth::user();
-        $userBranches = \App\Models\Branch::where('user_id', $user->id)->pluck('id');
 
-        $service = Service::whereIn('branch_id', $userBranches)->findOrFail($id);
+        $service = Service::where('merchant_id', $user->id)->findOrFail($id);
 
         $request->validate([
             'name' => 'required|string|max:255',
-            'description' => 'required|string',
+            'service_name_arabic' => 'required|string|max:255',
+            'description' => 'nullable|string',
+            'service_description_arabic' => 'nullable|string',
             'price' => 'required|numeric|min:0',
             'category_id' => 'required|exists:categories,id',
             'image' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
@@ -308,8 +310,8 @@ class ServiceController extends Controller
             'image.image' => 'The uploaded file must be an image.',
             'image.mimes' => 'The image must be a file of type: JPEG, PNG, JPG, GIF.',
             'image.max' => 'The image size must not exceed 2MB.',
-            'name.required' => 'Service name is required.',
-            'description.required' => 'Service description is required.',
+            'name.required' => 'Service name in English is required.',
+            'service_name_arabic.required' => 'Service name in Arabic is required.',
             'price.required' => 'Service price is required.',
             'price.numeric' => 'Service price must be a valid number.',
             'price.min' => 'Service price must be greater than or equal to 0.',
@@ -317,6 +319,17 @@ class ServiceController extends Controller
             'category_id.exists' => 'The selected category is invalid.',
             'duration.min' => 'Duration must be at least 1 minute.',
         ]);
+
+        // Custom validation: if description is provided in one language, it must be provided in both
+        if ($request->filled('description') || $request->filled('service_description_arabic')) {
+            $request->validate([
+                'description' => 'required|string',
+                'service_description_arabic' => 'required|string',
+            ], [
+                'description.required' => 'If you provide a description in Arabic, you must also provide it in English.',
+                'service_description_arabic.required' => 'If you provide a description in English, you must also provide it in Arabic.',
+            ]);
+        }
 
         $data = $request->all();
 
@@ -407,9 +420,8 @@ class ServiceController extends Controller
     public function destroy($id)
     {
         $user = Auth::user();
-        $userBranches = \App\Models\Branch::where('user_id', $user->id)->pluck('id');
 
-        $service = Service::whereIn('branch_id', $userBranches)->findOrFail($id);
+        $service = Service::where('merchant_id', $user->id)->findOrFail($id);
 
         // Image cleanup is handled automatically by the Service model's booted method
         $service->delete();

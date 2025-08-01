@@ -72,7 +72,7 @@
                     v-model="productData.name"
                     type="text"
                     class="vue-form-control"
-                    :placeholder="$t('vendor.enter_product_name_english')"
+                    :placeholder="$t('enter_product_name_english')"
                     required
                   />
                   <div v-if="errors.name" class="text-red-500 text-sm mt-1">{{ errors.name }}</div>
@@ -85,7 +85,7 @@
                     type="text"
                     class="vue-form-control"
                     :class="{ 'text-right': isRTL }"
-                    :placeholder="$t('vendor.enter_product_name_arabic')"
+                    :placeholder="$t('enter_product_name_arabic')"
                     required
                   />
                   <div v-if="errors.product_name_arabic" class="text-red-500 text-sm mt-1">{{ errors.product_name_arabic }}</div>
@@ -223,7 +223,7 @@
                   v-model="productData.description"
                   rows="4"
                   class="vue-form-control"
-                  :placeholder="$t('vendor.enter_product_description_english')"
+                  :placeholder="$t('enter_product_description_english')"
                 ></textarea>
                 <div v-if="errors.description" class="text-red-500 text-sm mt-1">{{ errors.description }}</div>
               </div>
@@ -235,7 +235,7 @@
                   rows="4"
                   class="vue-form-control"
                   :class="{ 'text-right': isRTL }"
-                  :placeholder="$t('vendor.enter_product_description_arabic')"
+                  :placeholder="$t('enter_product_description_arabic')"
                 ></textarea>
                 <div v-if="errors.product_description_arabic" class="text-red-500 text-sm mt-1">{{ errors.product_description_arabic }}</div>
               </div>

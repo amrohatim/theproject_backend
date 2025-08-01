@@ -66,6 +66,7 @@ class CategoryController extends Controller
     {
         $validated = $request->validate([
             'name' => 'required|string|max:255',
+            'category_name_arabic' => 'required|string|max:255',
             'type' => 'required|string|in:product,service',
             'parent_id' => 'nullable|exists:categories,id',
             'icon' => 'nullable|string|max:255',
@@ -98,11 +99,21 @@ class CategoryController extends Controller
     public function edit($id)
     {
         $category = Category::findOrFail($id);
-        
+
         if (request()->ajax()) {
-            return response()->json($category);
+            // Get parent categories for the dropdown
+            $parentCategories = Category::whereNull('parent_id')
+                ->where('id', '!=', $id) // Exclude current category
+                ->orderBy('name')
+                ->get();
+
+            return response()->json([
+                'success' => true,
+                'category' => $category,
+                'parentCategories' => $parentCategories
+            ]);
         }
-        
+
         return view('admin.categories.edit', compact('category'));
     }
 
@@ -119,6 +130,7 @@ class CategoryController extends Controller
 
         $validated = $request->validate([
             'name' => 'required|string|max:255',
+            'category_name_arabic' => 'required|string|max:255',
             'type' => 'required|string|in:product,service',
             'parent_id' => 'nullable|exists:categories,id',
             'icon' => 'nullable|string|max:255',

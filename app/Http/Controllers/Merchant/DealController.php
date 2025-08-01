@@ -1,20 +1,20 @@
 <?php
 
-namespace App\Http\Controllers\Vendor;
+namespace App\Http\Controllers\Merchant;
 
 use App\Http\Controllers\Controller;
 use App\Models\Deal;
 use App\Models\Product;
 use App\Models\Service;
-use App\Models\Category;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Facades\Log;
 
 class DealController extends Controller
 {
     /**
-     * Display a listing of the resource.
+     * Display a listing of the merchant's deals.
      *
      * @return \Illuminate\Http\Response
      */
@@ -24,7 +24,7 @@ class DealController extends Controller
             ->orderBy('created_at', 'desc')
             ->paginate(10);
 
-        return view('vendor.deals.index', compact('deals'));
+        return view('merchant.deals.index', compact('deals'));
     }
 
     /**
@@ -34,21 +34,13 @@ class DealController extends Controller
      */
     public function create()
     {
-        // Get products for this vendor
-        $products = Product::join('branches', 'products.branch_id', '=', 'branches.id')
-            ->join('companies', 'branches.company_id', '=', 'companies.id')
-            ->where('companies.user_id', Auth::id())
-            ->select('products.*')
-            ->get();
+        // Get products for this merchant
+        $products = Product::where('user_id', Auth::id())->get();
 
-        // Get services for this vendor
-        $services = Service::join('branches', 'services.branch_id', '=', 'branches.id')
-            ->join('companies', 'branches.company_id', '=', 'companies.id')
-            ->where('companies.user_id', Auth::id())
-            ->select('services.*')
-            ->get();
+        // Get services for this merchant (direct ownership)
+        $services = Service::where('merchant_id', Auth::id())->get();
 
-        return view('vendor.deals.create', compact('products', 'services'));
+        return view('merchant.deals.create', compact('products', 'services'));
     }
 
     /**
@@ -111,7 +103,7 @@ class DealController extends Controller
         // Create the deal
         $deal = Deal::create($data);
 
-        return redirect()->route('vendor.deals.index')
+        return redirect()->route('merchant.deals.index')
             ->with('success', 'Deal created successfully.');
     }
 
@@ -126,7 +118,7 @@ class DealController extends Controller
         $deal = Deal::where('user_id', Auth::id())
             ->findOrFail($id);
 
-        return view('vendor.deals.show', compact('deal'));
+        return view('merchant.deals.show', compact('deal'));
     }
 
     /**
@@ -140,21 +132,13 @@ class DealController extends Controller
         $deal = Deal::where('user_id', Auth::id())
             ->findOrFail($id);
 
-        // Get products for this vendor
-        $products = Product::join('branches', 'products.branch_id', '=', 'branches.id')
-            ->join('companies', 'branches.company_id', '=', 'companies.id')
-            ->where('companies.user_id', Auth::id())
-            ->select('products.*')
-            ->get();
+        // Get products for this merchant
+        $products = Product::where('user_id', Auth::id())->get();
 
-        // Get services for this vendor
-        $services = Service::join('branches', 'services.branch_id', '=', 'branches.id')
-            ->join('companies', 'branches.company_id', '=', 'companies.id')
-            ->where('companies.user_id', Auth::id())
-            ->select('services.*')
-            ->get();
+        // Get services for this merchant (direct ownership)
+        $services = Service::where('merchant_id', Auth::id())->get();
 
-        return view('vendor.deals.edit', compact('deal', 'products', 'services'));
+        return view('merchant.deals.edit', compact('deal', 'products', 'services'));
     }
 
     /**
@@ -213,7 +197,7 @@ class DealController extends Controller
                     }
                 } catch (\Exception $e) {
                     // Log the error but don't stop the update process
-                    \Log::warning('Failed to delete old deal image: ' . $e->getMessage(), [
+                    Log::warning('Failed to delete old deal image: ' . $e->getMessage(), [
                         'deal_id' => $deal->id,
                         'image_path' => $oldImagePath
                     ]);
@@ -237,7 +221,7 @@ class DealController extends Controller
         // Update the deal
         $deal->update($data);
 
-        return redirect()->route('vendor.deals.index')
+        return redirect()->route('merchant.deals.index')
             ->with('success', 'Deal updated successfully.');
     }
 
@@ -262,7 +246,7 @@ class DealController extends Controller
                 }
             } catch (\Exception $e) {
                 // Log the error but don't stop the deletion process
-                \Log::warning('Failed to delete deal image: ' . $e->getMessage(), [
+                Log::warning('Failed to delete deal image: ' . $e->getMessage(), [
                     'deal_id' => $deal->id,
                     'image_path' => $imagePath
                 ]);
@@ -271,7 +255,7 @@ class DealController extends Controller
 
         $deal->delete();
 
-        return redirect()->route('vendor.deals.index')
+        return redirect()->route('merchant.deals.index')
             ->with('success', 'Deal deleted successfully.');
     }
 }

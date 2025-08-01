@@ -56,21 +56,45 @@
                 <!-- Service Details -->
                 <div class="col-md-8">
                     <div class="row">
-                        <!-- Service Name -->
+                        <!-- Service Name (Bilingual) -->
                         <div class="col-md-12 mb-3">
-                            <label for="name" class="form-label" style="color: var(--discord-lightest); font-weight: 600;">
+                            <label class="form-label" style="color: var(--discord-lightest); font-weight: 600;">
                                 {{ __('merchant.service_name_required') }}
                             </label>
-                            <input type="text" 
-                                   class="form-control @error('name') is-invalid @enderror" 
-                                   id="name" 
-                                   name="name" 
-                                   value="{{ old('name') }}" 
-                                   required
-                                   style="background-color: var(--discord-darkest); border: 1px solid var(--discord-darkest); color: var(--discord-lightest);">
-                            @error('name')
-                                <div style="color: var(--discord-red); font-size: 12px; margin-top: 4px;">{{ $message }}</div>
-                            @enderror
+
+                            <!-- Language Switcher -->
+                            <x-form-language-switcher field-name="service_name" />
+
+                            <!-- English Service Name -->
+                            <div data-language-field="service_name" data-language="en" class="active-language-field">
+                                <input type="text"
+                                       class="form-control @error('name') is-invalid @enderror"
+                                       id="name"
+                                       name="name"
+                                       value="{{ old('name') }}"
+                                       placeholder="{{ __('merchant.enter_service_name_english') }}"
+                                       required
+                                       style="background-color: var(--discord-darkest); border: 1px solid var(--discord-darkest); color: var(--discord-lightest);">
+                                @error('name')
+                                    <div style="color: var(--discord-red); font-size: 12px; margin-top: 4px;">{{ $message }}</div>
+                                @enderror
+                            </div>
+
+                            <!-- Arabic Service Name -->
+                            <div data-language-field="service_name" data-language="ar" style="display: none;">
+                                <input type="text"
+                                       class="form-control @error('service_name_arabic') is-invalid @enderror"
+                                       id="service_name_arabic"
+                                       name="service_name_arabic"
+                                       value="{{ old('service_name_arabic') }}"
+                                       placeholder="{{ __('merchant.enter_service_name_arabic') }}"
+                                       required
+                                       dir="rtl"
+                                       style="background-color: var(--discord-darkest); border: 1px solid var(--discord-darkest); color: var(--discord-lightest);">
+                                @error('service_name_arabic')
+                                    <div style="color: var(--discord-red); font-size: 12px; margin-top: 4px;">{{ $message }}</div>
+                                @enderror
+                            </div>
                         </div>
 
                         <!-- Category and Price -->
@@ -158,20 +182,41 @@
                 </div>
             </div>
 
-            <!-- Description -->
+            <!-- Description (Bilingual) -->
             <div class="mb-4">
-                <label for="description" class="form-label" style="color: var(--discord-lightest); font-weight: 600;">
-                    {{ __('merchant.service_description_required') }}
+                <label class="form-label" style="color: var(--discord-lightest); font-weight: 600;">
+                    {{ __('merchant.service_description') }}
                 </label>
-                <textarea class="form-control @error('description') is-invalid @enderror" 
-                          id="description" 
-                          name="description" 
-                          rows="4" 
-                          required
-                          style="background-color: var(--discord-darkest); border: 1px solid var(--discord-darkest); color: var(--discord-lightest);">{{ old('description') }}</textarea>
-                @error('description')
-                    <div style="color: var(--discord-red); font-size: 12px; margin-top: 4px;">{{ $message }}</div>
-                @enderror
+
+                <!-- Language Switcher -->
+                <x-form-language-switcher field-name="service_description" />
+
+                <!-- English Description -->
+                <div data-language-field="service_description" data-language="en" class="active-language-field">
+                    <textarea class="form-control @error('description') is-invalid @enderror"
+                              id="description"
+                              name="description"
+                              rows="4"
+                              placeholder="{{ __('merchant.enter_service_description_english') }}"
+                              style="background-color: var(--discord-darkest); border: 1px solid var(--discord-darkest); color: var(--discord-lightest);">{{ old('description') }}</textarea>
+                    @error('description')
+                        <div style="color: var(--discord-red); font-size: 12px; margin-top: 4px;">{{ $message }}</div>
+                    @enderror
+                </div>
+
+                <!-- Arabic Description -->
+                <div data-language-field="service_description" data-language="ar" style="display: none;">
+                    <textarea class="form-control @error('service_description_arabic') is-invalid @enderror"
+                              id="service_description_arabic"
+                              name="service_description_arabic"
+                              rows="4"
+                              placeholder="{{ __('merchant.enter_service_description_arabic') }}"
+                              dir="rtl"
+                              style="background-color: var(--discord-darkest); border: 1px solid var(--discord-darkest); color: var(--discord-lightest);">{{ old('service_description_arabic') }}</textarea>
+                    @error('service_description_arabic')
+                        <div style="color: var(--discord-red); font-size: 12px; margin-top: 4px;">{{ $message }}</div>
+                    @enderror
+                </div>
             </div>
 
             <!-- Form Actions -->

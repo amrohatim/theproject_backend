@@ -16,8 +16,11 @@ class Deal extends Model
     protected $fillable = [
         'user_id',
         'title',
+        'title_arabic',
         'description',
+        'description_arabic',
         'promotional_message',
+        'promotional_message_arabic',
         'discount_percentage',
         'start_date',
         'end_date',

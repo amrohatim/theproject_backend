@@ -35,22 +35,39 @@
                 <h3 class="form-section-title text-xl font-bold text-gray-800 dark:text-white">{{ __('messages.deal_information') }}</h3>
 
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                    <!-- Title -->
+                    <!-- Title (Bilingual) -->
                     <div>
-                        <label for="title" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1 {{ app()->getLocale() == 'ar' ? 'text-right' : 'text-left' }}">{{ __('messages.title') }} <span class="text-red-500">*</span></label>
-                        <input type="text" name="title" id="title" value="{{ old('title') }}" class="form-input w-full {{ app()->getLocale() == 'ar' ? 'text-right' : 'text-left' }}" placeholder="{{ __('messages.enter_deal_title') }}" required>
-                        @error('title')
-                            <p class="text-red-500 text-sm mt-1 {{ app()->getLocale() == 'ar' ? 'text-right' : 'text-left' }}">{{ $message }}</p>
-                        @enderror
+                        <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2 {{ app()->getLocale() == 'ar' ? 'text-right' : 'text-left' }}">{{ __('messages.title') }} <span class="text-red-500">*</span></label>
+
+                        <!-- Language Switcher for Title -->
+                        <x-form-language-switcher field-name="title" />
+
+                        <!-- English Title -->
+                        <div data-language-field="title" data-language="en" class="mb-3">
+                            <input type="text" name="title" id="title" value="{{ old('title') }}"
+                                   class="form-input px-2 w-full" placeholder="{{ __('messages.enter_deal_title') }}" required>
+                            @error('title')
+                                <p class="text-red-500 text-sm mt-1">{{ $message }}</p>
+                            @enderror
+                        </div>
+
+                        <!-- Arabic Title -->
+                        <div data-language-field="title" data-language="ar" class="mb-3" style="display: none;">
+                            <input type="text" name="title_arabic" id="title_arabic" value="{{ old('title_arabic') }}"
+                                   class="form-input w-full pr-9 text-right" placeholder="أدخل عنوان الصفقة" required dir="rtl">
+                            @error('title_arabic')
+                                <p class="text-red-500 text-sm mt-1 text-right">{{ $message }}</p>
+                            @enderror
+                        </div>
                     </div>
 
                     <!-- Discount Percentage -->
                     <div>
                         <label for="discount_percentage" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1 {{ app()->getLocale() == 'ar' ? 'text-right' : 'text-left' }}">{{ __('messages.discount_percentage') }} <span class="text-red-500">*</span></label>
                         <div class="relative">
-                            <input type="number" name="discount_percentage" id="discount_percentage" value="{{ old('discount_percentage') }}" min="1" max="100" class="form-input w-full {{ app()->getLocale() == 'ar' ? 'text-right' : 'text-left' }}" placeholder="{{ __('messages.enter_discount_percentage') }}" required>
+                            <input type="number" name="discount_percentage" id="discount_percentage" value="{{ old('discount_percentage') }}" min="1" max="100" class="form-input pl-2 pr-14 w-full {{ app()->getLocale() == 'ar' ? 'text-right' : 'text-left' }}" placeholder="{{ __('messages.enter_discount_percentage') }}" required>
                             <div class="absolute inset-y-0 {{ app()->getLocale() == 'ar' ? 'left-0 pl-3' : 'right-0 pr-3' }} flex items-center pointer-events-none">
-                                <span class="text-gray-500">%</span>
+                                <span class="text-gray-500 pr-6">%</span>
                             </div>
                         </div>
                         @error('discount_percentage')
@@ -59,33 +76,68 @@
                     </div>
                 </div>
 
-                <!-- Description -->
+                <!-- Description (Bilingual) -->
                 <div class="mt-4">
-                    <label for="description" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1 {{ app()->getLocale() == 'ar' ? 'text-right' : 'text-left' }}">{{ __('messages.description') }}</label>
-                    <textarea name="description" id="description" rows="3" class="form-textarea w-full {{ app()->getLocale() == 'ar' ? 'text-right' : 'text-left' }}">{{ old('description') }}</textarea>
-                    @error('description')
-                        <p class="text-red-500 text-sm mt-1 {{ app()->getLocale() == 'ar' ? 'text-right' : 'text-left' }}">{{ $message }}</p>
-                    @enderror
+                    <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2 {{ app()->getLocale() == 'ar' ? 'text-right' : 'text-left' }}">{{ __('messages.description') }}</label>
+                    <p class="text-xs text-gray-500 dark:text-gray-400 mb-2 {{ app()->getLocale() == 'ar' ? 'text-right' : 'text-left' }}">{{ __('messages.description_optional_both_or_none') }}</p>
+
+                    <!-- Language Switcher for Description -->
+                    <x-form-language-switcher field-name="description" />
+
+                    <!-- English Description -->
+                    <div data-language-field="description" data-language="en" class="mb-3">
+                        <textarea name="description" id="description" rows="3" class="form-textarea py-2 px-4 w-full">{{ old('description') }}</textarea>
+                        @error('description')
+                            <p class="text-red-500 text-sm mt-1">{{ $message }}</p>
+                        @enderror
+                    </div>
+
+                    <!-- Arabic Description -->
+                    <div data-language-field="description" data-language="ar" class="mb-3" style="display: none;">
+                        <textarea name="description_arabic" id="description_arabic" rows="3" class="form-textarea py-2 px-4 w-full text-right"  dir="rtl">{{ old('description_arabic') }}</textarea>
+                        @error('description_arabic')
+                            <p class="text-red-500 text-sm mt-1 text-right">{{ $message }}</p>
+                        @enderror
+                    </div>
                 </div>
 
-                <!-- Promotional Message -->
+                <!-- Promotional Message (Bilingual) -->
                 <div class="mt-4">
-                    <label for="promotional_message" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1 {{ app()->getLocale() == 'ar' ? 'text-right' : 'text-left' }}">
+                    <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2 {{ app()->getLocale() == 'ar' ? 'text-right' : 'text-left' }}">
                         {{ __('messages.promotional_message') }}
                         <span class="{{ app()->getLocale() == 'ar' ? 'mr-1' : 'ml-1' }} text-gray-500 text-xs" title="{{ __('messages.promotional_message_help') }}">
                             ({{ __('messages.optional') }})
                         </span>
                     </label>
-                    <div class="relative">
-                        <input type="text" name="promotional_message" id="promotional_message" value="{{ old('promotional_message') }}"
-                               class="form-input w-full {{ app()->getLocale() == 'ar' ? 'text-right' : 'text-left' }}" maxlength="50" placeholder="{{ __('messages.promotional_message_placeholder') }}">
-                        <div class="absolute {{ app()->getLocale() == 'ar' ? 'left-2' : 'right-2' }} bottom-2 text-xs text-gray-500">
-                            <span id="char-count">0</span>/50
+
+                    <!-- Language Switcher for Promotional Message -->
+                    <x-form-language-switcher field-name="promotional_message" />
+
+                    <!-- English Promotional Message -->
+                    <div data-language-field="promotional_message" data-language="en" class="mb-3">
+                        <div class="relative">
+                            <input type="text" name="promotional_message" id="promotional_message" value="{{ old('promotional_message') }}"
+                                   class="form-input px-2 w-full" maxlength="50" placeholder="{{ __('messages.promotional_message_placeholder') }}">
+                           
                         </div>
+                        @error('promotional_message')
+                            <p class="text-red-500 text-sm mt-1">{{ $message }}</p>
+                        @enderror
                     </div>
-                    @error('promotional_message')
-                        <p class="text-red-500 text-sm mt-1 {{ app()->getLocale() == 'ar' ? 'text-right' : 'text-left' }}">{{ $message }}</p>
-                    @enderror
+
+                    <!-- Arabic Promotional Message -->
+                    <div data-language-field="promotional_message" data-language="ar" class="mb-3" style="display: none;">
+                        <div class="relative">
+                            <input type="text" name="promotional_message_arabic" id="promotional_message_arabic" value="{{ old('promotional_message_arabic') }}"
+                                   class="form-input w-full px-2  text-right" maxlength="50" placeholder="أدخل الرسالة الترويجية" dir="rtl">
+                            <div class="absolute left-2 bottom-2 text-xs text-gray-500">
+                                <span id="char-count-ar">0</span>/50
+                            </div>
+                        </div>
+                        @error('promotional_message_arabic')
+                            <p class="text-red-500 text-sm mt-1 text-right">{{ $message }}</p>
+                        @enderror
+                    </div>
                 </div>
 
                 <!-- Date Range -->
@@ -153,6 +205,10 @@
                             <input type="radio" name="applies_to" value="services" class="form-radio" {{ old('applies_to') == 'services' ? 'checked' : '' }} onchange="toggleSelectionContainers()">
                             <span class="{{ app()->getLocale() == 'ar' ? 'mr-2' : 'ml-2' }}">{{ __('messages.service_deal_description') }}</span>
                         </label>
+                        <label class="inline-flex items-center">
+                            <input type="radio" name="applies_to" value="products_and_services" class="form-radio" {{ old('applies_to') == 'products_and_services' ? 'checked' : '' }} onchange="toggleSelectionContainers()">
+                            <span class="{{ app()->getLocale() == 'ar' ? 'mr-2' : 'ml-2' }}">Apply this deal to both products and services</span>
+                        </label>
                     </div>
                     @error('applies_to')
                         <p class="text-red-500 text-sm mt-1 {{ app()->getLocale() == 'ar' ? 'text-right' : 'text-left' }}">{{ $message }}</p>
@@ -202,10 +258,10 @@
 
             <!-- Submit Buttons -->
             <div class="flex {{ app()->getLocale() == 'ar' ? 'justify-end space-x-reverse' : 'justify-end' }} space-x-4 gap-4 mt-8">
-                <a href="{{ route('vendor.deals.index') }}" class="btn-cancel">
+                <a href="{{ route('vendor.deals.index') }}" class="btn-cancel rounded-[6px]">
                     {{ __('messages.cancel') }}
                 </a>
-                <button type="submit" class="btn-create-deal">
+                <button type="submit" class="btn-create-deal rounded-[6px]">
                     {{ __('messages.create_deal') }}
                 </button>
             </div>
@@ -227,33 +283,11 @@
         // Initialize selection containers
         toggleSelectionContainers();
 
-        // Initialize character counter for promotional message
-        const promotionalMessage = document.getElementById('promotional_message');
-        const charCount = document.getElementById('char-count');
+        // Initialize character counters for promotional messages
+        initializeCharacterCounters();
 
-        if (promotionalMessage && charCount) {
-            // Update initial count
-            charCount.textContent = promotionalMessage.value.length;
-
-            // Update count on input
-            promotionalMessage.addEventListener('input', function() {
-                charCount.textContent = this.value.length;
-
-                // Change color when approaching limit
-                if (this.value.length > 40) {
-                    charCount.classList.add('text-orange-500');
-                } else {
-                    charCount.classList.remove('text-orange-500');
-                }
-
-                // Change color when at limit
-                if (this.value.length >= 50) {
-                    charCount.classList.add('text-red-500');
-                } else {
-                    charCount.classList.remove('text-red-500');
-                }
-            });
-        }
+        // Initialize bilingual validation
+        setupBilingualValidation();
     });
 
     function toggleSelectionContainers() {
@@ -270,7 +304,112 @@
             productsContainer.style.display = 'block';
         } else if (appliesTo === 'services') {
             servicesContainer.style.display = 'block';
+        } else if (appliesTo === 'products_and_services') {
+            productsContainer.style.display = 'block';
+            servicesContainer.style.display = 'block';
         }
+    }
+
+    function initializeCharacterCounters() {
+        // English promotional message counter
+        const promotionalMessageEn = document.getElementById('promotional_message');
+        const charCountEn = document.getElementById('char-count-en');
+
+        if (promotionalMessageEn && charCountEn) {
+            charCountEn.textContent = promotionalMessageEn.value.length;
+            promotionalMessageEn.addEventListener('input', function() {
+                updateCharacterCount(this, charCountEn);
+            });
+        }
+
+        // Arabic promotional message counter
+        const promotionalMessageAr = document.getElementById('promotional_message_arabic');
+        const charCountAr = document.getElementById('char-count-ar');
+
+        if (promotionalMessageAr && charCountAr) {
+            charCountAr.textContent = promotionalMessageAr.value.length;
+            promotionalMessageAr.addEventListener('input', function() {
+                updateCharacterCount(this, charCountAr);
+            });
+        }
+    }
+
+    function updateCharacterCount(input, counter) {
+        counter.textContent = input.value.length;
+
+        // Change color when approaching limit
+        if (input.value.length > 40) {
+            counter.classList.add('text-orange-500');
+        } else {
+            counter.classList.remove('text-orange-500');
+        }
+
+        // Change color when at limit
+        if (input.value.length >= 50) {
+            counter.classList.add('text-red-500');
+        } else {
+            counter.classList.remove('text-red-500');
+        }
+    }
+
+    function setupBilingualValidation() {
+        const form = document.querySelector('form');
+        if (!form) return;
+
+        form.addEventListener('submit', function(e) {
+            let hasErrors = false;
+            const errors = [];
+
+            // Validate title (required in both languages)
+            if (!validateBilingualField('title', true)) {
+                hasErrors = true;
+                errors.push('{{ __('messages.title_required_both_languages') }}');
+            }
+
+            // Validate description (optional, but if one is filled, both must be filled)
+            if (!validateBilingualField('description', false)) {
+                hasErrors = true;
+                errors.push('{{ __('messages.description_both_or_none') }}');
+            }
+
+            if (hasErrors) {
+                e.preventDefault();
+                showValidationModal(errors);
+                return false;
+            }
+        });
+    }
+
+    function showValidationModal(errors) {
+        const errorList = errors.map(error => `<li>${error}</li>`).join('');
+        const modalContent = `
+            <div class="fixed inset-0 bg-gray-600 bg-opacity-50 overflow-y-auto h-full w-full z-50" id="validation-modal">
+                <div class="relative top-20 mx-auto p-5 border w-96 shadow-lg rounded-md bg-white">
+                    <div class="mt-3 text-center">
+                        <div class="mx-auto flex items-center justify-center h-12 w-12 rounded-full bg-red-100">
+                            <i class="fas fa-exclamation-triangle text-red-600"></i>
+                        </div>
+                        <h3 class="text-lg font-medium text-gray-900 mt-2">{{ __('messages.validation_errors') }}</h3>
+                        <div class="mt-2 px-7 py-3">
+                            <ul class="text-sm text-red-600 text-left">
+                                ${errorList}
+                            </ul>
+                        </div>
+                        <div class="items-center px-4 py-3">
+                            <button id="close-modal" class="px-4 py-2 bg-red-500 text-white text-base font-medium rounded-md w-full shadow-sm hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-red-300">
+                                {{ __('messages.ok') }}
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        `;
+
+        document.body.insertAdjacentHTML('beforeend', modalContent);
+
+        document.getElementById('close-modal').addEventListener('click', function() {
+            document.getElementById('validation-modal').remove();
+        });
     }
 </script>
 @endsection
