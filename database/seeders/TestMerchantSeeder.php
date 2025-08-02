@@ -9,8 +9,10 @@ use App\Models\Product;
 use App\Models\Service;
 use App\Models\Category;
 use App\Models\Branch;
+use App\Models\Deal;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Str;
+use Carbon\Carbon;
 
 class TestMerchantSeeder extends Seeder
 {
@@ -209,7 +211,64 @@ class TestMerchantSeeder extends Seeder
 
         foreach ($services as $serviceData) {
             $serviceData['branch_id'] = $branch->id;
+            $serviceData['merchant_id'] = $merchantUser->id; // Add merchant_id for proper association
             Service::create($serviceData);
+        }
+
+        // Create sample deals for the merchant
+        $deals = [
+            [
+                'user_id' => $merchantUser->id,
+                'title' => 'Summer Jewelry Sale',
+                'description' => 'Get 25% off on all handmade jewelry items! Limited time offer on our beautiful collection of earrings, bracelets, and necklaces.',
+                'promotional_message' => 'Summer Special!',
+                'discount_percentage' => 25.00,
+                'start_date' => Carbon::now()->subDays(3),
+                'end_date' => Carbon::now()->addDays(30),
+                'image' => null,
+                'status' => 'active',
+                'applies_to' => 'products',
+                'product_ids' => null, // Applies to all products
+                'service_ids' => null,
+                'created_at' => now(),
+                'updated_at' => now(),
+            ],
+            [
+                'user_id' => $merchantUser->id,
+                'title' => 'Custom Design Service Deal',
+                'description' => 'Book our custom jewelry design service and get 20% off! Perfect for creating unique pieces for special occasions.',
+                'promotional_message' => 'Custom Design Special!',
+                'discount_percentage' => 20.00,
+                'start_date' => Carbon::now()->subDays(1),
+                'end_date' => Carbon::now()->addDays(45),
+                'image' => null,
+                'status' => 'active',
+                'applies_to' => 'services',
+                'product_ids' => null,
+                'service_ids' => null, // Applies to all services
+                'created_at' => now(),
+                'updated_at' => now(),
+            ],
+            [
+                'user_id' => $merchantUser->id,
+                'title' => 'Store-wide Flash Sale',
+                'description' => 'Everything must go! 30% off on all products and services. Don\'t miss this incredible opportunity to save big!',
+                'promotional_message' => 'Flash Sale!',
+                'discount_percentage' => 30.00,
+                'start_date' => Carbon::now()->subDays(2),
+                'end_date' => Carbon::now()->addDays(7),
+                'image' => null,
+                'status' => 'active',
+                'applies_to' => 'all',
+                'product_ids' => null,
+                'service_ids' => null,
+                'created_at' => now(),
+                'updated_at' => now(),
+            ],
+        ];
+
+        foreach ($deals as $dealData) {
+            Deal::create($dealData);
         }
 
         $this->command->info('✅ Test merchant account created successfully!');
@@ -219,6 +278,7 @@ class TestMerchantSeeder extends Seeder
         $this->command->info('📊 Status: Verified and Active');
         $this->command->info('📦 Products: 6 sample products created');
         $this->command->info('🛠️ Services: 4 sample services created');
+        $this->command->info('🎯 Deals: 3 sample deals created');
         $this->command->info('🌐 Access: https://dala3chic.com/merchant/dashboard');
     }
 }

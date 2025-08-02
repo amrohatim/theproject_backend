@@ -5,6 +5,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\API\AuthController;
 use App\Http\Controllers\API\UserController;
 use App\Http\Controllers\API\BranchController;
+use App\Http\Controllers\API\BranchRatingController;
 use App\Http\Controllers\API\ServiceController;
 use App\Http\Controllers\API\ProductController;
 use App\Http\Controllers\API\BookingController;
@@ -15,6 +16,8 @@ use App\Http\Controllers\API\CategoryController;
 use App\Http\Controllers\API\DashboardController;
 use App\Http\Controllers\API\ProviderController;
 use App\Http\Controllers\API\ProviderRatingController;
+use App\Http\Controllers\API\VendorRatingController;
+use App\Http\Controllers\API\ReviewController;
 use App\Http\Controllers\API\DealController;
 use App\Http\Controllers\API\FilterController;
 use App\Http\Controllers\API\SearchController;
@@ -23,6 +26,7 @@ use App\Http\Controllers\API\UserLocationController;
 use App\Http\Controllers\API\VendorRegistrationController;
 use App\Http\Controllers\API\ProviderRegistrationController;
 use App\Http\Controllers\API\MerchantRegistrationController;
+use App\Http\Controllers\API\MerchantController;
 use App\Http\Controllers\API\EmailVerificationController;
 use App\Http\Controllers\LanguageController;
 
@@ -68,10 +72,30 @@ Route::prefix('public')->group(function () {
 
     // Provider public routes
     Route::get('/providers/{id}/ratings', [ProviderRatingController::class, 'index']);
+
+    // Vendor public routes
+    Route::get('/vendors/{id}/ratings', [VendorRatingController::class, 'index']);
+    Route::get('/companies/{id}/vendor-ratings', [VendorRatingController::class, 'getByCompanyId']);
+
+    // Branch public routes
+    Route::get('/branches/{id}/ratings', [BranchRatingController::class, 'index']);
+
+    // Review public routes
+    Route::get('/{type}/{id}/reviews', [ReviewController::class, 'index']);
+
+    // Merchant public routes
+    Route::get('/merchants', [MerchantController::class, 'index']);
+    Route::get('/merchants/{id}', [MerchantController::class, 'show']);
+    Route::get('/merchants/{id}/products', [MerchantController::class, 'getProducts']);
+    Route::get('/merchants/{id}/services', [MerchantController::class, 'getServices']);
+    Route::get('/merchants/{id}/deals', [MerchantController::class, 'getDeals']);
+    Route::post('/merchants/{id}/track-view', [MerchantController::class, 'trackView']);
 });
 
 // Public deal routes (no authentication required)
 Route::get('/active-deals', [DealController::class, 'getActiveDeals']);
+Route::get('/deals/{id}/products', [DealController::class, 'getProducts']);
+Route::get('/deals/{id}/services', [DealController::class, 'getServices']);
 
 // Public trending routes (no authentication required)
 Route::get('/top-vendors', [CompanyController::class, 'topVendors']);
@@ -226,6 +250,29 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::get('/providers/{id}/my-rating', [ProviderRatingController::class, 'show']);
     Route::delete('/providers/{id}/ratings', [ProviderRatingController::class, 'destroy']);
 
+    // Vendor rating routes
+    Route::get('/vendors/{id}/ratings', [VendorRatingController::class, 'index']);
+    Route::post('/vendors/{id}/ratings', [VendorRatingController::class, 'store']);
+    Route::get('/vendors/{id}/my-rating', [VendorRatingController::class, 'show']);
+    Route::delete('/vendors/{id}/ratings', [VendorRatingController::class, 'destroy']);
+
+    // Company vendor rating routes (company-based vendor rating)
+    Route::post('/companies/{id}/vendor-ratings', [VendorRatingController::class, 'storeByCompanyId']);
+    Route::get('/companies/{id}/my-vendor-rating', [VendorRatingController::class, 'showByCompanyId']);
+
+    // Branch rating routes
+    Route::get('/branches/{id}/ratings', [BranchRatingController::class, 'index']);
+    Route::post('/branches/{id}/ratings', [BranchRatingController::class, 'store']);
+    Route::get('/branches/{id}/my-rating', [BranchRatingController::class, 'show']);
+    Route::delete('/branches/{id}/ratings', [BranchRatingController::class, 'destroy']);
+
+    // Review routes
+    Route::get('/{type}/{id}/reviews', [ReviewController::class, 'index']);
+    Route::post('/{type}/{id}/reviews', [ReviewController::class, 'store']);
+    Route::get('/{type}/{id}/my-review', [ReviewController::class, 'getUserReview']);
+    Route::put('/reviews/{reviewId}', [ReviewController::class, 'update']);
+    Route::delete('/reviews/{reviewId}', [ReviewController::class, 'destroy']);
+
     // Booking routes
     Route::get('/bookings', [BookingController::class, 'index']);
     Route::get('/bookings/{id}', [BookingController::class, 'show']);
@@ -267,13 +314,11 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::get('/dashboard/admin', [DashboardController::class, 'getAdminStats']);
     Route::get('/dashboard/vendor', [DashboardController::class, 'getVendorStats']);
 
-    // Deal routes
+    // Deal routes (authenticated)
     Route::get('/deals', [DealController::class, 'index']);
     Route::post('/deals', [DealController::class, 'store']);
     Route::put('/deals/{id}', [DealController::class, 'update']);
     Route::delete('/deals/{id}', [DealController::class, 'destroy']);
-    Route::get('/deals/{id}/products', [DealController::class, 'getProducts']);
-    Route::get('/deals/{id}/services', [DealController::class, 'getServices']);
     Route::get('/deals/{id}/analytics', [DealController::class, 'getAnalytics']);
     Route::get('/deals/analytics', [DealController::class, 'getAllAnalytics']);
 

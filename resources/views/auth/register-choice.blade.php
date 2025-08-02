@@ -57,11 +57,11 @@
         }
 
         .provider-card {
-            background-image: url('{{ asset("assets/provider.jpg") }}');
+            background-image: url('{{ asset("assets/provider.avif") }}');
         }
 
         .merchant-card {
-            background-image: url('{{ asset("assets/merchant.jpg") }}');
+            background-image: url('{{ asset("assets/merchant.avif") }}');
         }
 
         /* Semi-transparent overlay for text readability */

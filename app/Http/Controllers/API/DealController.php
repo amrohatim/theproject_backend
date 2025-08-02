@@ -270,7 +270,7 @@ class DealController extends Controller
         // Get products based on the deal's applies_to value
         $products = collect();
 
-        if ($deal->applies_to === 'products' && !empty($deal->product_ids)) {
+        if (($deal->applies_to === 'products' || $deal->applies_to === 'products_and_services') && !empty($deal->product_ids)) {
             // Get specific products
             $productIds = is_string($deal->product_ids)
                 ? json_decode($deal->product_ids, true)
@@ -288,7 +288,7 @@ class DealController extends Controller
             $dealInfo = $this->dealService->calculateDiscountedPrice($product);
 
             // Add branch_name to the product
-            $product->branch_name = $product->branch->name;
+            $product->branch_name = $product->branch ? $product->branch->name : null;
 
             // Apply the calculated discount information to the product
             $product->deal = $deal;
@@ -321,7 +321,7 @@ class DealController extends Controller
         // Get services based on the deal's applies_to value
         $services = collect();
 
-        if ($deal->applies_to === 'services' && !empty($deal->service_ids)) {
+        if (($deal->applies_to === 'services' || $deal->applies_to === 'products_and_services') && !empty($deal->service_ids)) {
             // Get specific services
             $serviceIds = is_string($deal->service_ids)
                 ? json_decode($deal->service_ids, true)
@@ -339,7 +339,7 @@ class DealController extends Controller
             $dealInfo = $this->serviceDealService->calculateDiscountedPrice($service);
 
             // Add branch_name to the service
-            $service->branch_name = $service->branch->name;
+            $service->branch_name = $service->branch ? $service->branch->name : null;
 
             // Apply the calculated discount information to the service
             $service->deal = $deal;

@@ -5,6 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class Merchant extends Model
 {
@@ -85,6 +86,30 @@ class Merchant extends Model
     public function user(): BelongsTo
     {
         return $this->belongsTo(User::class);
+    }
+
+    /**
+     * Get the products for the merchant.
+     */
+    public function products(): HasMany
+    {
+        return $this->hasMany(Product::class, 'merchant_id');
+    }
+
+    /**
+     * Get the services for the merchant.
+     */
+    public function services(): HasMany
+    {
+        return $this->hasMany(Service::class, 'merchant_id', 'user_id');
+    }
+
+    /**
+     * Get the deals for the merchant.
+     */
+    public function deals(): HasMany
+    {
+        return $this->hasMany(Deal::class, 'user_id', 'user_id');
     }
 
     /**

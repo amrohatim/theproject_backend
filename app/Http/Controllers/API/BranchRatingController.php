@@ -99,6 +99,9 @@ class BranchRatingController extends Controller
                 ]);
             }
 
+            // Update branch's average rating and total ratings
+            $this->updateBranchRatingStats($branchId);
+
             return response()->json([
                 'success' => true,
                 'message' => 'Rating submitted successfully',
@@ -159,6 +162,9 @@ class BranchRatingController extends Controller
 
             $rating->delete();
 
+            // Update branch's average rating and total ratings
+            $this->updateBranchRatingStats($branchId);
+
             return response()->json([
                 'success' => true,
                 'message' => 'Rating deleted successfully',
@@ -170,5 +176,23 @@ class BranchRatingController extends Controller
                 'error' => $e->getMessage(),
             ], 500);
         }
+    }
+
+    /**
+     * Update branch's average rating and total ratings.
+     */
+    private function updateBranchRatingStats($branchId)
+    {
+        $branch = Branch::find($branchId);
+        if (!$branch) return;
+
+        $ratings = BranchRating::where('branch_id', $branchId)->get();
+        $totalRatings = $ratings->count();
+        $averageRating = $totalRatings > 0 ? $ratings->avg('rating') : 0;
+
+        $branch->update([
+            'average_rating' => round($averageRating, 2),
+            'total_ratings' => $totalRatings,
+        ]);
     }
 }

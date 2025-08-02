@@ -20,6 +20,7 @@ class Product extends Model
      */
     protected $fillable = [
         'branch_id',
+        'merchant_id',
         'category_id',
         'user_id',
         'name',
@@ -241,6 +242,14 @@ class Product extends Model
     public function user()
     {
         return $this->belongsTo(User::class);
+    }
+
+    /**
+     * Get the merchant that owns the product (for direct merchant ownership).
+     */
+    public function merchant()
+    {
+        return $this->belongsTo(Merchant::class, 'merchant_id');
     }
 
     /**

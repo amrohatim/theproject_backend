@@ -30,7 +30,7 @@ class ProductController extends Controller
 
         // Start with optimized base query using indexed columns
         $query = Product::select('products.*')
-            ->where('products.user_id', $user->id)
+            ->where('products.merchant_id', $user->merchantRecord->id)
             ->with(['category:id,name']); // Only load necessary category fields
 
         // Apply search if provided - optimized for indexed columns
@@ -440,38 +440,16 @@ class ProductController extends Controller
             $data = $request->except(['specifications', 'colors', 'sizes', 'branches', 'color_images']);
             // Handle is_available checkbox properly - check the actual value, not just presence
             $data['is_available'] = $request->input('is_available') == '1' || $request->input('is_available') === true;
-            $data['user_id'] = Auth::id();
+            $data['user_id'] = Auth::id(); // Keep user_id for tracking who created the product
 
             // Set merchant tracking fields
             $data['is_merchant'] = true;
             $data['merchant_name'] = Auth::user()->name;
 
-            // Handle branch assignment - auto-create if no branch is provided
-            if (!$request->branch_id || $request->branch_id === 'auto') {
-                // Get or create a branch for the merchant
-                $user = Auth::user();
-                $userBranch = $user->branches()->first();
-
-                // If no branch exists, create a default one for the merchant
-                if (!$userBranch) {
-                    $merchant = $user->merchantRecord;
-                    $branchName = $merchant ? $merchant->business_name : $user->name . "'s Store";
-
-                    $userBranch = Branch::create([
-                        'user_id' => $user->id,
-                        'name' => $branchName,
-                        'address' => $merchant->store_location_address ?? 'Default Address',
-                        'emirate' => $merchant->emirate ?? 'Dubai',
-                        'lat' => $merchant->store_location_lat ?? 25.2048,
-                        'lng' => $merchant->store_location_lng ?? 55.2708,
-                        'status' => 'active',
-                        'phone' => $user->phone,
-                        'email' => $user->email,
-                    ]);
-                    \Log::info('Created new branch for merchant', ['branch_id' => $userBranch->id]);
-                }
-                $data['branch_id'] = $userBranch->id;
-            }
+            // Set merchant_id for direct merchant ownership
+            $data['merchant_id'] = Auth::user()->merchantRecord->id;
+            // Remove branch_id as we're using direct merchant ownership
+            unset($data['branch_id']);
 
             // Create the product
             $product = Product::create($data);
@@ -642,7 +620,7 @@ class ProductController extends Controller
      */
     public function show($id)
     {
-        $product = Product::where('user_id', Auth::id())
+        $product = Product::where('merchant_id', Auth::user()->merchantRecord->id)
             ->with([
                 'category',
                 'specifications' => function($query) {
@@ -667,7 +645,7 @@ class ProductController extends Controller
      */
     public function edit($id)
     {
-        $product = Product::where('user_id', Auth::id())
+        $product = Product::where('merchant_id', Auth::user()->merchantRecord->id)
             ->with([
                 'colors' => function($query) {
                     $query->orderBy('display_order');
@@ -731,7 +709,7 @@ class ProductController extends Controller
      */
     public function getEditData($id)
     {
-        $product = Product::where('user_id', Auth::id())
+        $product = Product::where('merchant_id', Auth::user()->merchantRecord->id)
             ->with([
                 'colors' => function($query) {
                     $query->orderBy('display_order');
@@ -809,7 +787,7 @@ class ProductController extends Controller
     {
 
 
-        $product = Product::where('user_id', Auth::id())->findOrFail($id);
+        $product = Product::where('merchant_id', Auth::user()->merchantRecord->id)->findOrFail($id);
 
         // Enhanced validation to match create method
         $request->validate([
@@ -972,7 +950,7 @@ class ProductController extends Controller
      */
     public function destroy($id)
     {
-        $product = Product::where('user_id', Auth::id())->findOrFail($id);
+        $product = Product::where('merchant_id', Auth::user()->merchantRecord->id)->findOrFail($id);
 
         // Image cleanup is handled automatically by the Product model's booted method
         $product->delete();
@@ -1426,7 +1404,7 @@ class ProductController extends Controller
      */
     public function getLatestProductId()
     {
-        $latestProduct = Product::where('user_id', Auth::id())
+        $latestProduct = Product::where('merchant_id', Auth::user()->merchantRecord->id)
             ->orderBy('created_at', 'desc')
             ->first();
 
@@ -1440,7 +1418,7 @@ class ProductController extends Controller
      */
     public function verifySizes($id)
     {
-        $product = Product::where('user_id', Auth::id())
+        $product = Product::where('merchant_id', Auth::user()->merchantRecord->id)
             ->with(['sizes.sizeCategory', 'colors.sizes.sizeCategory'])
             ->findOrFail($id);
 

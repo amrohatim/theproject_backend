@@ -98,18 +98,59 @@ class CompanyController extends Controller
     {
         $company = Company::with(['user', 'branches'])->findOrFail($id);
 
-        // Only admin or company owner can view company details
-        if (!Auth::user()->isAdmin() && Auth::id() !== $company->user_id) {
-            return response()->json([
-                'success' => false,
-                'message' => 'Unauthorized access',
-            ], 403);
-        }
+        // Check if user is authenticated
+        $user = Auth::user();
 
-        return response()->json([
-            'success' => true,
-            'company' => $company,
-        ]);
+        if ($user) {
+            // If user is authenticated, apply authorization logic
+            // Only admin or company owner can view full company details
+            if (!$user->isAdmin() && Auth::id() !== $company->user_id) {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'Unauthorized access',
+                ], 403);
+            }
+
+            // Return full company data for authenticated authorized users
+            return response()->json([
+                'success' => true,
+                'company' => $company,
+            ]);
+        } else {
+            // Public access - return limited company information
+            // Remove sensitive information for public access
+            $publicCompanyData = [
+                'id' => $company->id,
+                'name' => $company->name,
+                'description' => $company->description,
+                'website' => $company->website,
+                'logo' => $company->logo,
+                'email' => $company->email,
+                'phone' => $company->phone,
+                'address' => $company->address,
+                'city' => $company->city,
+                'state' => $company->state,
+                'zip_code' => $company->zip_code,
+                'country' => $company->country,
+                'status' => $company->status,
+                'can_deliver' => $company->can_deliver,
+                'business_type' => $company->business_type,
+                'is_verified' => $company->is_verified,
+                'average_rating' => $company->average_rating,
+                'total_ratings' => $company->total_ratings,
+                'rating_count' => $company->total_ratings, // Alias for compatibility
+                'view_count' => $company->view_count,
+                'order_count' => $company->order_count ?? 0,
+                'vendor_score' => $company->vendor_score ?? 0,
+                'created_at' => $company->created_at,
+                'branches' => $company->branches,
+            ];
+
+            return response()->json([
+                'success' => true,
+                'company' => $publicCompanyData,
+            ]);
+        }
     }
 
     /**
@@ -325,6 +366,34 @@ class CompanyController extends Controller
     {
         $company = Company::findOrFail($id);
         $branches = $company->branches;
+
+        return response()->json([
+            'success' => true,
+            'branches' => $branches,
+        ]);
+    }
+
+    /**
+     * Get branches for a company (supports both public and authenticated access).
+     *
+     * @param  int  $id
+     * @return \Illuminate\Http\Response
+     */
+    public function getBranches($id)
+    {
+        $company = Company::findOrFail($id);
+
+        // Check if user is authenticated
+        $user = Auth::user();
+
+        if ($user) {
+            // If user is authenticated, apply authorization logic if needed
+            // For now, allow all authenticated users to view branches
+            $branches = $company->branches()->with(['products', 'services'])->get();
+        } else {
+            // Public access - return basic branch information
+            $branches = $company->branches;
+        }
 
         return response()->json([
             'success' => true,

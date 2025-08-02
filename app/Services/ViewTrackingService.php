@@ -254,6 +254,9 @@ class ViewTrackingService
                 case 'provider':
                     $table = 'providers';
                     break;
+                case 'merchant':
+                    $table = 'merchants';
+                    break;
                 case 'category':
                     $table = 'categories';
                     break;
@@ -339,6 +342,9 @@ class ViewTrackingService
                         break;
                     case 'provider':
                         $model = \App\Models\Provider::find($entityId);
+                        break;
+                    case 'merchant':
+                        $model = \App\Models\Merchant::find($entityId);
                         break;
                     case 'category':
                         $model = \App\Models\Category::find($entityId);
