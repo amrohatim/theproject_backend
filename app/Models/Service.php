@@ -19,6 +19,7 @@ class Service extends Model
     protected $fillable = [
         'branch_id',
         'merchant_id',
+        'merchant_name',
         'category_id',
         'name',
         'service_name_arabic',

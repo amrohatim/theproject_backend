@@ -183,6 +183,13 @@ class ServiceController extends Controller
         $data = $request->all();
         // Set merchant_id for direct merchant ownership
         $data['merchant_id'] = $user->id;
+
+        // Set merchant_name from the merchant's business_name
+        $merchantProfile = $user->merchant;
+        if ($merchantProfile && $merchantProfile->business_name) {
+            $data['merchant_name'] = $merchantProfile->business_name;
+        }
+
         // Remove branch_id as we're using direct merchant ownership
         unset($data['branch_id']);
 

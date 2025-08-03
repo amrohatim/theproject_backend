@@ -82,7 +82,7 @@ class ServiceController extends Controller
 
         // Add branch_name and deal information to each service
         $services->getCollection()->transform(function ($service) {
-            $service->branch_name = $service->branch->name;
+            $service->branch_name = $service->branch ? $service->branch->name : 'Unknown Branch';
 
             // Calculate deal information for this service
             $dealInfo = $this->serviceDealService->calculateDiscountedPrice($service);
@@ -113,7 +113,7 @@ class ServiceController extends Controller
         $service = Service::with(['branch', 'category', 'reviews.user'])->findOrFail($id);
 
         // Add branch_name to the service
-        $service->branch_name = $service->branch->name;
+        $service->branch_name = $service->branch ? $service->branch->name : 'Unknown Branch';
 
         // Calculate deal information for this service
         $dealInfo = $this->serviceDealService->calculateDiscountedPrice($service);
@@ -229,7 +229,7 @@ class ServiceController extends Controller
 
         // Add branch_name and deal information to each service
         $services->transform(function ($service) {
-            $service->branch_name = $service->branch->name;
+            $service->branch_name = $service->branch ? $service->branch->name : 'Unknown Branch';
 
             // Calculate deal information for this service
             $dealInfo = $this->serviceDealService->calculateDiscountedPrice($service);
