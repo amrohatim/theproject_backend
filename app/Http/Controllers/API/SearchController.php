@@ -124,6 +124,60 @@ class SearchController extends Controller
                 }
             }
 
+            // Validate date parameters
+            if ($request->has('from_date')) {
+                $fromDate = $request->input('from_date');
+                if ($fromDate !== null) {
+                    try {
+                        new \DateTime($fromDate);
+                    } catch (\Exception $e) {
+                        return response()->json([
+                            'success' => false,
+                            'message' => 'Invalid from_date format. Must be a valid ISO8601 date string.',
+                            'data' => []
+                        ], 400);
+                    }
+                }
+            }
+
+            if ($request->has('to_date')) {
+                $toDate = $request->input('to_date');
+                if ($toDate !== null) {
+                    try {
+                        new \DateTime($toDate);
+                    } catch (\Exception $e) {
+                        return response()->json([
+                            'success' => false,
+                            'message' => 'Invalid to_date format. Must be a valid ISO8601 date string.',
+                            'data' => []
+                        ], 400);
+                    }
+                }
+            }
+
+            // Validate date range logic
+            if ($request->has('from_date') && $request->has('to_date')) {
+                $fromDate = $request->input('from_date');
+                $toDate = $request->input('to_date');
+
+                if ($fromDate !== null && $toDate !== null) {
+                    try {
+                        $fromDateTime = new \DateTime($fromDate);
+                        $toDateTime = new \DateTime($toDate);
+
+                        if ($toDateTime < $fromDateTime) {
+                            return response()->json([
+                                'success' => false,
+                                'message' => 'to_date must be greater than or equal to from_date.',
+                                'data' => []
+                            ], 400);
+                        }
+                    } catch (\Exception $e) {
+                        // Already handled above
+                    }
+                }
+            }
+
             return true;
         } catch (\Exception $e) {
             Log::error('Error validating filter request: ' . $e->getMessage());
@@ -259,6 +313,36 @@ class SearchController extends Controller
             Log::info('Emirate filter applied successfully');
         }
 
+        // Apply date filter - only if provided
+        if ($request->filled('from_date') || $request->filled('to_date')) {
+            $fromDate = $request->from_date;
+            $toDate = $request->to_date;
+
+            Log::info('Applying date filter', ['from_date' => $fromDate, 'to_date' => $toDate]);
+
+            if ($fromDate) {
+                try {
+                    $fromDateTime = new \DateTime($fromDate);
+                    $query->whereDate('created_at', '>=', $fromDateTime->format('Y-m-d'));
+                    Log::info('From date filter applied', ['from_date' => $fromDateTime->format('Y-m-d')]);
+                } catch (\Exception $e) {
+                    Log::warning('Invalid from_date format', ['from_date' => $fromDate, 'error' => $e->getMessage()]);
+                }
+            }
+
+            if ($toDate) {
+                try {
+                    $toDateTime = new \DateTime($toDate);
+                    $query->whereDate('created_at', '<=', $toDateTime->format('Y-m-d'));
+                    Log::info('To date filter applied', ['to_date' => $toDateTime->format('Y-m-d')]);
+                } catch (\Exception $e) {
+                    Log::warning('Invalid to_date format', ['to_date' => $toDate, 'error' => $e->getMessage()]);
+                }
+            }
+
+            Log::info('Date filter applied successfully');
+        }
+
         // Apply availability filter
         $query->filterByAvailability(true);
 
@@ -359,6 +443,36 @@ class SearchController extends Controller
             Log::info('Applying emirate filter to services', ['emirate' => $emirate]);
             $query->filterByEmirate($emirate);
             Log::info('Emirate filter applied to services successfully');
+        }
+
+        // Apply date filter - only if provided
+        if ($request->filled('from_date') || $request->filled('to_date')) {
+            $fromDate = $request->from_date;
+            $toDate = $request->to_date;
+
+            Log::info('Applying date filter to services', ['from_date' => $fromDate, 'to_date' => $toDate]);
+
+            if ($fromDate) {
+                try {
+                    $fromDateTime = new \DateTime($fromDate);
+                    $query->whereDate('created_at', '>=', $fromDateTime->format('Y-m-d'));
+                    Log::info('From date filter applied to services', ['from_date' => $fromDateTime->format('Y-m-d')]);
+                } catch (\Exception $e) {
+                    Log::warning('Invalid from_date format for services', ['from_date' => $fromDate, 'error' => $e->getMessage()]);
+                }
+            }
+
+            if ($toDate) {
+                try {
+                    $toDateTime = new \DateTime($toDate);
+                    $query->whereDate('created_at', '<=', $toDateTime->format('Y-m-d'));
+                    Log::info('To date filter applied to services', ['to_date' => $toDateTime->format('Y-m-d')]);
+                } catch (\Exception $e) {
+                    Log::warning('Invalid to_date format for services', ['to_date' => $toDate, 'error' => $e->getMessage()]);
+                }
+            }
+
+            Log::info('Date filter applied to services successfully');
         }
 
         // Apply availability filter
