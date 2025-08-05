@@ -106,6 +106,7 @@ Route::get('/trending-categories', [CategoryController::class, 'trending']);
 // Public filter routes (no authentication required)
 Route::get('/product-colors', [\App\Http\Controllers\API\ProductSpecificationController::class, 'getAllProductColors']);
 Route::get('/standardized-sizes', [\App\Http\Controllers\API\ProductSpecificationController::class, 'getStandardizedSizes']);
+Route::get('/available-sizes', [\App\Http\Controllers\API\ProductSpecificationController::class, 'getAvailableSizes']);
 
 // Authentication routes
 Route::post('/register', [AuthController::class, 'register']);

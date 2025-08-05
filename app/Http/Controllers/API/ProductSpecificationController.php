@@ -11,6 +11,7 @@ use App\Models\ProductSize;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\DB;
 
 class ProductSpecificationController extends Controller
 {
@@ -410,6 +411,7 @@ class ProductSpecificationController extends Controller
 
             // Return the standardized size list that matches the filter system
             $standardizedSizes = [
+                // Clothing sizes
                 ['id' => 1, 'name' => 'XXS', 'value' => 'XXS', 'category' => 'clothes'],
                 ['id' => 2, 'name' => 'XS', 'value' => 'XS', 'category' => 'clothes'],
                 ['id' => 3, 'name' => 'S', 'value' => 'S', 'category' => 'clothes'],
@@ -420,6 +422,33 @@ class ProductSpecificationController extends Controller
                 ['id' => 8, 'name' => '3XL', 'value' => '3XL', 'category' => 'clothes'],
                 ['id' => 9, 'name' => '4XL', 'value' => '4XL', 'category' => 'clothes'],
                 ['id' => 10, 'name' => '5XL', 'value' => '5XL', 'category' => 'clothes'],
+
+                // Shoe sizes (US sizing)
+                ['id' => 11, 'name' => '5', 'value' => 'US 5', 'category' => 'shoes'],
+                ['id' => 12, 'name' => '5.5', 'value' => 'US 5.5', 'category' => 'shoes'],
+                ['id' => 13, 'name' => '6', 'value' => 'US 6', 'category' => 'shoes'],
+                ['id' => 14, 'name' => '6.5', 'value' => 'US 6.5', 'category' => 'shoes'],
+                ['id' => 15, 'name' => '7', 'value' => 'US 7', 'category' => 'shoes'],
+                ['id' => 16, 'name' => '7.5', 'value' => 'US 7.5', 'category' => 'shoes'],
+                ['id' => 17, 'name' => '8', 'value' => 'US 8', 'category' => 'shoes'],
+                ['id' => 18, 'name' => '8.5', 'value' => 'US 8.5', 'category' => 'shoes'],
+                ['id' => 19, 'name' => '9', 'value' => 'US 9', 'category' => 'shoes'],
+                ['id' => 20, 'name' => '9.5', 'value' => 'US 9.5', 'category' => 'shoes'],
+                ['id' => 21, 'name' => '10', 'value' => 'US 10', 'category' => 'shoes'],
+                ['id' => 22, 'name' => '10.5', 'value' => 'US 10.5', 'category' => 'shoes'],
+                ['id' => 23, 'name' => '11', 'value' => 'US 11', 'category' => 'shoes'],
+                ['id' => 24, 'name' => '11.5', 'value' => 'US 11.5', 'category' => 'shoes'],
+                ['id' => 25, 'name' => '12', 'value' => 'US 12', 'category' => 'shoes'],
+                ['id' => 26, 'name' => '13', 'value' => 'US 13', 'category' => 'shoes'],
+                ['id' => 27, 'name' => '14', 'value' => 'US 14', 'category' => 'shoes'],
+
+                // Hat sizes (circumference in cm and inches)
+                ['id' => 28, 'name' => 'XS', 'value' => '53-54 cm (20.9-21.3")', 'category' => 'hats'],
+                ['id' => 29, 'name' => 'S', 'value' => '55-56 cm (21.7-22.0")', 'category' => 'hats'],
+                ['id' => 30, 'name' => 'M', 'value' => '57-58 cm (22.4-22.8")', 'category' => 'hats'],
+                ['id' => 31, 'name' => 'L', 'value' => '59-60 cm (23.2-23.6")', 'category' => 'hats'],
+                ['id' => 32, 'name' => 'XL', 'value' => '61-62 cm (24.0-24.4")', 'category' => 'hats'],
+                ['id' => 33, 'name' => 'XXL', 'value' => '63-64 cm (24.8-25.2")', 'category' => 'hats'],
             ];
 
             Log::info("Returning {count} standardized sizes", ['count' => count($standardizedSizes)]);
@@ -436,6 +465,84 @@ class ProductSpecificationController extends Controller
                 'success' => false,
                 'message' => 'Failed to fetch standardized sizes',
                 'error' => $e->getMessage(),
+            ], 500);
+        }
+    }
+
+    /**
+     * Get available sizes from actual products (only sizes that exist in product_sizes table)
+     *
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function getAvailableSizes()
+    {
+        try {
+            // Get all unique sizes from product_sizes table and map them to standardized_sizes
+            $availableSizes = DB::table('product_sizes as ps')
+                ->join('products as p', 'ps.product_id', '=', 'p.id')
+                ->leftJoin('standardized_sizes as ss', 'ps.name', '=', 'ss.name')
+                ->leftJoin('size_categories as sc', 'ss.size_category_id', '=', 'sc.id')
+                ->select(
+                    'ss.id as standardized_id',
+                    'ps.name',
+                    'ps.value',
+                    DB::raw('COALESCE(sc.name, CASE
+                        WHEN ps.name IN ("XXS", "XS", "S", "M", "L", "XL", "XXL", "3XL", "4XL", "5XL") THEN "clothes"
+                        WHEN ps.name REGEXP "^[0-9]+$" AND CAST(ps.name AS UNSIGNED) BETWEEN 16 AND 48 THEN "shoes"
+                        WHEN ps.name REGEXP "^[0-9]+$" AND CAST(ps.name AS UNSIGNED) BETWEEN 50 AND 64 THEN "hats"
+                        ELSE "clothes"
+                    END) as category'),
+                    DB::raw('COUNT(DISTINCT ps.product_id) as product_count'),
+                    DB::raw('SUM(ps.stock) as total_stock')
+                )
+                ->where('p.is_available', true)
+                ->where('ps.stock', '>', 0)
+                ->groupBy('ss.id', 'ps.name', 'ps.value', 'sc.name')
+                ->orderBy('category')
+                ->orderBy('ps.name')
+                ->get();
+
+            // Transform to match the expected format, using standardized_sizes IDs where available
+            $formattedSizes = [];
+            $fallbackIdCounter = 1000; // Start high to avoid conflicts
+
+            foreach ($availableSizes as $size) {
+                // Use standardized_size ID if available, otherwise generate a fallback ID
+                $sizeId = $size->standardized_id ?: $fallbackIdCounter++;
+
+                $formattedSizes[] = [
+                    'id' => $sizeId,
+                    'name' => $size->name,
+                    'value' => $size->value ?: $size->name,
+                    'category' => $size->category,
+                    'product_count' => $size->product_count,
+                    'total_stock' => $size->total_stock,
+                    'has_standardized_id' => $size->standardized_id !== null
+                ];
+            }
+
+            Log::info('Available sizes fetched', [
+                'total_sizes' => count($formattedSizes),
+                'categories' => array_unique(array_column($formattedSizes, 'category'))
+            ]);
+
+            return response()->json([
+                'success' => true,
+                'sizes' => $formattedSizes,
+                'count' => count($formattedSizes),
+                'categories' => array_values(array_unique(array_column($formattedSizes, 'category')))
+            ]);
+
+        } catch (\Exception $e) {
+            Log::error('Error fetching available sizes', [
+                'error' => $e->getMessage(),
+                'trace' => $e->getTraceAsString()
+            ]);
+
+            return response()->json([
+                'success' => false,
+                'message' => 'Error fetching available sizes',
+                'error' => $e->getMessage()
             ], 500);
         }
     }

@@ -621,4 +621,5 @@ return [
     'create_another' => 'Create Another',
     'description_required_when_arabic_provided' => 'Description in English is required when Arabic description is provided',
     'description_required_when_english_provided' => 'Description in Arabic is required when English description is provided',
+    'product_created_available_inventory' => 'Your product has been created and is now available in your inventory.',
 ];

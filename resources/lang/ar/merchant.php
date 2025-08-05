@@ -591,4 +591,5 @@ return [
     'create_another' => 'إنشاء آخر',
     'description_required_when_arabic_provided' => 'الوصف بالإنجليزية مطلوب عند إدخال الوصف بالعربية',
     'description_required_when_english_provided' => 'الوصف بالعربية مطلوب عند إدخال الوصف بالإنجليزية',
+    'product_created_available_inventory' => 'تم إنشاء منتجك وهو متاح الآن في مخزونك',
 ];

@@ -457,6 +457,8 @@ class Product extends Model
 
     /**
      * Scope a query to filter products by emirate.
+     * Includes products from branches with matching emirate OR products with null branch_id
+     * where the merchant has the matching emirate.
      *
      * @param  \Illuminate\Database\Eloquent\Builder  $query
      * @param  string  $emirate
@@ -478,11 +480,23 @@ class Product extends Model
         // Check if the provided emirate is a code or name
         $emirateName = $emirateMapping[$emirate] ?? $emirate;
 
-        return $query->whereHas('branch', function ($branchQuery) use ($emirateName, $emirate) {
-            // Filter by either the mapped name or the original value (in case it's already a name)
-            $branchQuery->where(function ($q) use ($emirateName, $emirate) {
-                $q->where('emirate', $emirateName)
-                  ->orWhere('emirate', $emirate);
+        return $query->where(function ($mainQuery) use ($emirateName, $emirate) {
+            // Case 1: Products with branch_id that have matching emirate in their branch
+            $mainQuery->whereHas('branch', function ($branchQuery) use ($emirateName, $emirate) {
+                $branchQuery->where(function ($q) use ($emirateName, $emirate) {
+                    $q->where('emirate', $emirateName)
+                      ->orWhere('emirate', $emirate);
+                });
+            })
+            // Case 2: Products with branch_id = NULL where merchant has matching emirate
+            ->orWhere(function ($nullBranchQuery) use ($emirateName, $emirate) {
+                $nullBranchQuery->whereNull('branch_id')
+                    ->whereHas('merchant', function ($merchantQuery) use ($emirateName, $emirate) {
+                        $merchantQuery->where(function ($q) use ($emirateName, $emirate) {
+                            $q->where('emirate', $emirateName)
+                              ->orWhere('emirate', $emirate);
+                        });
+                    });
             });
         });
     }

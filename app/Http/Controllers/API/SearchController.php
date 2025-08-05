@@ -7,6 +7,7 @@ use Illuminate\Http\Request;
 use App\Models\Product;
 use App\Models\Service;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\DB;
 
 class SearchController extends Controller
 {
@@ -177,12 +178,9 @@ class SearchController extends Controller
             }
         }
 
-        // Apply category filter - only if array is provided and not empty
+        // Apply hierarchical category filter
         if ($request->has('category_ids') && is_array($request->category_ids) && !empty($request->category_ids)) {
-            // Filter out any null or invalid values
-            $categoryIds = array_filter($request->category_ids, function($id) {
-                return is_numeric($id) && $id > 0;
-            });
+            $categoryIds = $this->processHierarchicalCategoryFilter($request->category_ids);
 
             if (!empty($categoryIds)) {
                 $query->whereIn('category_id', $categoryIds);
@@ -336,12 +334,9 @@ class SearchController extends Controller
             }
         }
 
-        // Apply category filter - only if array is provided and not empty
+        // Apply hierarchical category filter
         if ($request->has('category_ids') && is_array($request->category_ids) && !empty($request->category_ids)) {
-            // Filter out any null or invalid values
-            $categoryIds = array_filter($request->category_ids, function($id) {
-                return is_numeric($id) && $id > 0;
-            });
+            $categoryIds = $this->processHierarchicalCategoryFilter($request->category_ids);
 
             if (!empty($categoryIds)) {
                 $query->whereIn('category_id', $categoryIds);
@@ -478,32 +473,125 @@ class SearchController extends Controller
      */
     private function getSizeNamesByIds(array $sizeIds)
     {
-        // Define the global size mapping (matching the Flutter fallback sizes)
-        $globalSizes = [
-            1 => 'XXS',
-            2 => 'XS',
-            3 => 'S',
-            4 => 'M',
-            5 => 'L',
-            6 => 'XL',
-            7 => 'XXL',
-            8 => '3XL',
-            9 => '4XL',
-            10 => '5XL',
-        ];
+        // Query the standardized_sizes table to get the actual size names
+        try {
+            $standardizedSizes = DB::table('standardized_sizes')
+                ->whereIn('id', $sizeIds)
+                ->pluck('name', 'id')
+                ->toArray();
 
-        $sizeNames = [];
-        foreach ($sizeIds as $id) {
-            if (isset($globalSizes[$id])) {
-                $sizeNames[] = $globalSizes[$id];
+            $sizeNames = array_values($standardizedSizes);
+
+            Log::info('Size filter mapping from database', [
+                'input_ids' => $sizeIds,
+                'found_sizes' => $standardizedSizes,
+                'mapped_names' => $sizeNames
+            ]);
+
+            return $sizeNames;
+        } catch (\Exception $e) {
+            Log::error('Error querying standardized sizes', [
+                'error' => $e->getMessage(),
+                'size_ids' => $sizeIds
+            ]);
+
+            // Fallback to hardcoded mapping for basic clothing sizes
+            $fallbackSizes = [
+                1 => 'XXS', 2 => 'XS', 3 => 'S', 4 => 'M', 5 => 'L',
+                6 => 'XL', 7 => 'XXL', 8 => '3XL', 9 => '4XL', 10 => '5XL',
+            ];
+
+            $sizeNames = [];
+            foreach ($sizeIds as $id) {
+                if (isset($fallbackSizes[$id])) {
+                    $sizeNames[] = $fallbackSizes[$id];
+                }
+            }
+
+            return $sizeNames;
+        }
+    }
+
+    /**
+     * Process hierarchical category filter logic
+     *
+     * Core Logic:
+     * - If only parent categories are selected, include all their children
+     * - If parent + specific subcategories are selected, only include the specific subcategories
+     * - If only subcategories are selected, include only those subcategories
+     *
+     * @param array $selectedCategoryIds
+     * @return array
+     */
+    private function processHierarchicalCategoryFilter(array $selectedCategoryIds)
+    {
+        // Filter out any null or invalid values
+        $categoryIds = array_filter($selectedCategoryIds, function($id) {
+            return is_numeric($id) && $id > 0;
+        });
+
+        if (empty($categoryIds)) {
+            return [];
+        }
+
+        Log::info('Processing hierarchical category filter', ['input_ids' => $categoryIds]);
+
+        // Get all categories with their parent-child relationships
+        $allCategories = \App\Models\Category::whereIn('id', $categoryIds)
+            ->orWhereIn('parent_id', $categoryIds)
+            ->get();
+
+        $parentCategories = [];
+        $subcategories = [];
+        $finalCategoryIds = [];
+
+        // Separate parent categories from subcategories
+        foreach ($categoryIds as $categoryId) {
+            $category = $allCategories->firstWhere('id', $categoryId);
+            if ($category) {
+                if ($category->parent_id === null) {
+                    // This is a parent category
+                    $parentCategories[] = $categoryId;
+                } else {
+                    // This is a subcategory
+                    $subcategories[] = $categoryId;
+                }
             }
         }
 
-        Log::info('Size filter mapping', [
-            'input_ids' => $sizeIds,
-            'mapped_names' => $sizeNames
+        Log::info('Categorized selections', [
+            'parent_categories' => $parentCategories,
+            'subcategories' => $subcategories
         ]);
 
-        return $sizeNames;
+        // Apply hierarchical logic
+        foreach ($parentCategories as $parentId) {
+            // Check if any subcategories of this parent are explicitly selected
+            $childrenOfThisParent = $allCategories->where('parent_id', $parentId)->pluck('id')->toArray();
+
+            $hasExplicitSubcategories = !empty(array_intersect($childrenOfThisParent, $subcategories));
+
+            if ($hasExplicitSubcategories) {
+                // Parent has explicit subcategories selected - don't include parent automatically
+                Log::info("Parent category {$parentId} has explicit subcategories selected, skipping auto-inclusion");
+            } else {
+                // Parent category selected without specific subcategories - include all children
+                $finalCategoryIds[] = $parentId;
+                $finalCategoryIds = array_merge($finalCategoryIds, $childrenOfThisParent);
+                Log::info("Parent category {$parentId} selected without subcategories, including all children", [
+                    'children' => $childrenOfThisParent
+                ]);
+            }
+        }
+
+        // Add explicitly selected subcategories
+        $finalCategoryIds = array_merge($finalCategoryIds, $subcategories);
+
+        // Remove duplicates and return
+        $finalCategoryIds = array_unique($finalCategoryIds);
+
+        Log::info('Final category IDs for filtering', ['final_ids' => $finalCategoryIds]);
+
+        return $finalCategoryIds;
     }
 }
