@@ -237,7 +237,7 @@ class ProductSpecificationController extends Controller
             Log::info("Total colors in database: {$totalColors}");
 
             // Get all unique colors from product_colors table
-            $colors = ProductColor::select('id', 'name', 'color_code', 'image')
+            $colors = ProductColor::select('id', 'name', 'color_code')
                 ->distinct()
                 ->orderBy('name')
                 ->get();
@@ -250,31 +250,11 @@ class ProductSpecificationController extends Controller
             }
 
             $formattedColors = $colors->map(function($color) {
-                // Fix image URLs if needed
-                if (!empty($color->image)) {
-                    $host = request()->getHost();
-                    $port = request()->getPort();
-                    $scheme = request()->getScheme();
-
-                    $portString = '';
-                    if (($scheme === 'http' && $port != 80) || ($scheme === 'https' && $port != 443)) {
-                        $portString = ":{$port}";
-                    }
-
-                    $path = parse_url($color->image, PHP_URL_PATH);
-                    if (empty($path)) {
-                        $path = $color->image;
-                    }
-
-                    $color->image = "{$scheme}://{$host}{$portString}{$path}";
-                }
-
                 return [
                     'id' => $color->id,
                     'name' => $color->name,
                     'color_code' => $color->color_code,
                     'hex_code' => $color->color_code, // For compatibility
-                    'image' => $color->image,
                 ];
             });
 

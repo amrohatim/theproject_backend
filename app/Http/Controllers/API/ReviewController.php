@@ -344,6 +344,8 @@ class ReviewController extends Controller
                 return Service::find($id);
             case 'provider_product':
                 return ProviderProduct::find($id);
+            case 'merchant':
+                return \App\Models\Merchant::find($id);
             default:
                 return null;
         }

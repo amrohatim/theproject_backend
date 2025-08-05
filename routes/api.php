@@ -28,6 +28,7 @@ use App\Http\Controllers\API\ProviderRegistrationController;
 use App\Http\Controllers\API\MerchantRegistrationController;
 use App\Http\Controllers\API\MerchantController;
 use App\Http\Controllers\API\EmailVerificationController;
+use App\Http\Controllers\API\ProductSpecificationController;
 use App\Http\Controllers\LanguageController;
 
 /*
@@ -101,6 +102,10 @@ Route::get('/deals/{id}/services', [DealController::class, 'getServices']);
 Route::get('/top-vendors', [CompanyController::class, 'topVendors']);
 Route::get('/popular-branches', [BranchController::class, 'popular']);
 Route::get('/trending-categories', [CategoryController::class, 'trending']);
+
+// Public filter routes (no authentication required)
+Route::get('/product-colors', [\App\Http\Controllers\API\ProductSpecificationController::class, 'getAllProductColors']);
+Route::get('/standardized-sizes', [\App\Http\Controllers\API\ProductSpecificationController::class, 'getStandardizedSizes']);
 
 // Authentication routes
 Route::post('/register', [AuthController::class, 'register']);
@@ -323,8 +328,6 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::get('/deals/analytics', [DealController::class, 'getAllAnalytics']);
 
     // Filter routes
-    // Route::get('/product-colors', [FilterController::class, 'getColors']);
-    // Route::get('/standardized-sizes', [FilterController::class, 'getSizes']);
     Route::post('/search/filter', [\App\Http\Controllers\API\SearchController::class, 'filter']);
 
     // Image serving routes

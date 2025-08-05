@@ -113,6 +113,14 @@ class Merchant extends Model
     }
 
     /**
+     * Get the reviews for the merchant.
+     */
+    public function reviews()
+    {
+        return $this->morphMany(Review::class, 'reviewable');
+    }
+
+    /**
      * Get the logo attribute with full URL.
      *
      * @param  string|null  $value

@@ -39,16 +39,17 @@
       </div>
 
       <!-- Phone -->
-      <div class="form-group">
+      <div class="form-group" style="direction: ltr;" >
         <label for="phone" class="form-label">{{ $t('phone_number') }} *</label>
         <div class="phone-input-container">
           <div class="country-code-display">
-            <img src="data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMjQiIGhlaWdodD0iMTgiIHZpZXdCb3g9IjAgMCAyNCAxOCIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KPHJlY3Qgd2lkdGg9IjI0IiBoZWlnaHQ9IjYiIGZpbGw9IiMwMDczMzMiLz4KPHJlY3QgeT0iNiIgd2lkdGg9IjI0IiBoZWlnaHQ9IjYiIGZpbGw9IiNGRkZGRkYiLz4KPHJlY3QgeT0iMTIiIHdpZHRoPSIyNCIgaGVpZ2h0PSI2IiBmaWxsPSIjRkYwMDAwIi8+Cjwvc3ZnPgo=" :alt="$t('uae_flag')" class="flag-icon">
-            <span class="country-code">+971</span>
+           
+            <span class="country-code">🇦🇪+971</span>
           </div>
           <input
             type="tel"
             id="phone"
+            style="text-align: left;"
             v-model="phoneNumber"
             class="form-input phone-input ltr"
             :class="{ 'error': errors.phone }"
