@@ -6,10 +6,13 @@ use App\Models\Merchant;
 use App\Models\User;
 use App\Models\License;
 use App\Models\Provider;
+use App\Mail\LicenseApproved;
+use App\Mail\LicenseRejected;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Mail;
 
 class LicenseManagementService
 {
@@ -122,8 +125,8 @@ class LicenseManagementService
 
             Log::info("License approved for merchant: {$merchant->business_name} (ID: {$merchant->id}) by admin: {$approvedBy->name}");
 
-            // TODO: Send approval notification to merchant
-            // $this->sendLicenseApprovalNotification($merchant, $message);
+            // Send approval notification to merchant
+            $this->sendLicenseApprovalNotification($merchant->user, 'merchant', $message);
 
             return true;
         } catch (\Exception $e) {
@@ -156,8 +159,8 @@ class LicenseManagementService
 
             Log::info("License rejected for merchant: {$merchant->business_name} (ID: {$merchant->id}) by admin: {$rejectedBy->name}");
 
-            // TODO: Send rejection notification to merchant
-            // $this->sendLicenseRejectionNotification($merchant, $reason);
+            // Send rejection notification to merchant
+            $this->sendLicenseRejectionNotification($merchant->user, 'merchant', $reason);
 
             return true;
         } catch (\Exception $e) {
@@ -447,8 +450,8 @@ class LicenseManagementService
 
             Log::info("Provider license approved for user: {$user->name} (ID: {$user->id}) by admin: {$approvedBy->name}");
 
-            // TODO: Send approval notification to provider
-            // $this->sendProviderLicenseApprovalNotification($license, $message);
+            // Send approval notification to provider
+            $this->sendLicenseApprovalNotification($user, 'provider', $message);
 
             return true;
         } catch (\Exception $e) {
@@ -479,8 +482,8 @@ class LicenseManagementService
 
             Log::info("Provider license rejected for user: {$license->user->name} (ID: {$license->user_id}) by admin: {$rejectedBy->name}");
 
-            // TODO: Send rejection notification to provider
-            // $this->sendProviderLicenseRejectionNotification($license, $reason);
+            // Send rejection notification to provider
+            $this->sendLicenseRejectionNotification($license->user, 'provider', $reason);
 
             return true;
         } catch (\Exception $e) {
@@ -552,6 +555,9 @@ class LicenseManagementService
                 'admin_message' => $message
             ]);
 
+            // Send approval notification to vendor
+            $this->sendLicenseApprovalNotification($license->user, 'vendor', $message);
+
             return true;
         } catch (\Exception $e) {
             DB::rollBack();
@@ -598,6 +604,9 @@ class LicenseManagementService
                 'rejection_reason' => $reason
             ]);
 
+            // Send rejection notification to vendor
+            $this->sendLicenseRejectionNotification($license->user, 'vendor', $reason);
+
             return true;
         } catch (\Exception $e) {
             DB::rollBack();
@@ -638,5 +647,272 @@ class LicenseManagementService
         }
 
         return $results;
+    }
+
+    /**
+     * Send license approval notification email.
+     */
+    private function sendLicenseApprovalNotification(User $user, string $licenseType, ?string $adminMessage = null): void
+    {
+        try {
+            Mail::to($user->email)->send(new LicenseApproved($user, $licenseType, $adminMessage));
+
+            Log::info("License approval email sent successfully", [
+                'user_id' => $user->id,
+                'user_email' => $user->email,
+                'license_type' => $licenseType
+            ]);
+        } catch (\Exception $e) {
+            Log::error("Failed to send license approval email", [
+                'user_id' => $user->id,
+                'user_email' => $user->email,
+                'license_type' => $licenseType,
+                'error' => $e->getMessage()
+            ]);
+            // Don't throw the exception to avoid breaking the approval process
+        }
+    }
+
+    /**
+     * Send license rejection notification email.
+     */
+    private function sendLicenseRejectionNotification(User $user, string $licenseType, string $rejectionReason): void
+    {
+        try {
+            Mail::to($user->email)->queue(new LicenseRejected($user, $licenseType, $rejectionReason));
+
+            Log::info("License rejection email sent successfully", [
+                'user_id' => $user->id,
+                'user_email' => $user->email,
+                'license_type' => $licenseType,
+                'rejection_reason' => $rejectionReason
+            ]);
+        } catch (\Exception $e) {
+            Log::error("Failed to send license rejection email", [
+                'user_id' => $user->id,
+                'user_email' => $user->email,
+                'license_type' => $licenseType,
+                'rejection_reason' => $rejectionReason,
+                'error' => $e->getMessage()
+            ]);
+            // Don't throw the exception to avoid breaking the rejection process
+        }
+    }
+
+    /**
+     * Delete user and all associated data after license rejection.
+     */
+    public function deleteUserAndAssociatedData(User $user): bool
+    {
+        try {
+            DB::beginTransaction();
+
+            Log::info("Starting user deletion process", [
+                'user_id' => $user->id,
+                'user_email' => $user->email,
+                'user_role' => $user->role
+            ]);
+
+            // Delete associated files first
+            $this->deleteUserFiles($user);
+
+            // Delete role-specific data
+            switch ($user->role) {
+                case 'vendor':
+                    $this->deleteVendorData($user);
+                    break;
+                case 'merchant':
+                    $this->deleteMerchantData($user);
+                    break;
+                case 'provider':
+                    $this->deleteProviderData($user);
+                    break;
+            }
+
+            // Delete other user-related data
+            $this->deleteUserRelatedData($user);
+
+            // Delete licenses
+            License::where('user_id', $user->id)->delete();
+
+            // Delete the user
+            $user->delete();
+
+            DB::commit();
+
+            Log::info("User deletion completed successfully", [
+                'user_id' => $user->id,
+                'user_email' => $user->email
+            ]);
+
+            return true;
+
+        } catch (\Exception $e) {
+            DB::rollBack();
+
+            Log::error("Failed to delete user and associated data", [
+                'user_id' => $user->id,
+                'user_email' => $user->email,
+                'error' => $e->getMessage(),
+                'trace' => $e->getTraceAsString()
+            ]);
+
+            return false;
+        }
+    }
+
+    /**
+     * Delete user files from storage.
+     */
+    private function deleteUserFiles(User $user): void
+    {
+        try {
+            // Delete license documents
+            $licenses = License::where('user_id', $user->id)->get();
+            foreach ($licenses as $license) {
+                if ($license->license_document_path && Storage::exists($license->license_document_path)) {
+                    Storage::delete($license->license_document_path);
+                    Log::info("Deleted license document", ['path' => $license->license_document_path]);
+                }
+            }
+
+            // Delete user avatar/profile images if they exist
+            if ($user->avatar && Storage::exists($user->avatar)) {
+                Storage::delete($user->avatar);
+                Log::info("Deleted user avatar", ['path' => $user->avatar]);
+            }
+
+            // Delete role-specific files
+            switch ($user->role) {
+                case 'vendor':
+                    // Delete vendor-specific files (company logo, etc.)
+                    $vendor = $user->vendor;
+                    if ($vendor && $vendor->company_logo && Storage::exists($vendor->company_logo)) {
+                        Storage::delete($vendor->company_logo);
+                        Log::info("Deleted vendor company logo", ['path' => $vendor->company_logo]);
+                    }
+                    break;
+                case 'merchant':
+                    // Delete merchant-specific files
+                    $merchant = $user->merchant;
+                    if ($merchant && $merchant->business_logo && Storage::exists($merchant->business_logo)) {
+                        Storage::delete($merchant->business_logo);
+                        Log::info("Deleted merchant business logo", ['path' => $merchant->business_logo]);
+                    }
+                    break;
+                case 'provider':
+                    // Delete provider-specific files
+                    $provider = $user->provider;
+                    if ($provider && $provider->profile_image && Storage::exists($provider->profile_image)) {
+                        Storage::delete($provider->profile_image);
+                        Log::info("Deleted provider profile image", ['path' => $provider->profile_image]);
+                    }
+                    break;
+            }
+        } catch (\Exception $e) {
+            Log::warning("Error deleting user files", [
+                'user_id' => $user->id,
+                'error' => $e->getMessage()
+            ]);
+        }
+    }
+
+    /**
+     * Delete other user-related data that might have foreign key constraints.
+     */
+    private function deleteUserRelatedData(User $user): void
+    {
+        try {
+            // Delete products
+            if (class_exists('\App\Models\Product')) {
+                $productCount = \App\Models\Product::where('user_id', $user->id)->count();
+                if ($productCount > 0) {
+                    \App\Models\Product::where('user_id', $user->id)->delete();
+                    Log::info("Deleted {$productCount} products", ['user_id' => $user->id]);
+                }
+            }
+
+            // Delete services
+            if (class_exists('\App\Models\Service')) {
+                $serviceCount = \App\Models\Service::where('user_id', $user->id)->count();
+                if ($serviceCount > 0) {
+                    \App\Models\Service::where('user_id', $user->id)->delete();
+                    Log::info("Deleted {$serviceCount} services", ['user_id' => $user->id]);
+                }
+            }
+
+            // Delete orders (as buyer or seller)
+            if (class_exists('\App\Models\Order')) {
+                $orderCount = \App\Models\Order::where('user_id', $user->id)
+                    ->orWhere('vendor_id', $user->id)
+                    ->count();
+                if ($orderCount > 0) {
+                    \App\Models\Order::where('user_id', $user->id)
+                        ->orWhere('vendor_id', $user->id)
+                        ->delete();
+                    Log::info("Deleted {$orderCount} orders", ['user_id' => $user->id]);
+                }
+            }
+
+            // Delete reviews
+            if (class_exists('\App\Models\Review')) {
+                $reviewCount = \App\Models\Review::where('user_id', $user->id)->count();
+                if ($reviewCount > 0) {
+                    \App\Models\Review::where('user_id', $user->id)->delete();
+                    Log::info("Deleted {$reviewCount} reviews", ['user_id' => $user->id]);
+                }
+            }
+
+            // Delete companies
+            if (class_exists('\App\Models\Company')) {
+                $companyCount = \App\Models\Company::where('user_id', $user->id)->count();
+                if ($companyCount > 0) {
+                    \App\Models\Company::where('user_id', $user->id)->delete();
+                    Log::info("Deleted {$companyCount} companies", ['user_id' => $user->id]);
+                }
+            }
+
+        } catch (\Exception $e) {
+            Log::warning("Error deleting user-related data", [
+                'user_id' => $user->id,
+                'error' => $e->getMessage()
+            ]);
+        }
+    }
+
+    /**
+     * Delete vendor-specific data.
+     */
+    private function deleteVendorData(User $user): void
+    {
+        // Delete vendor record if exists
+        if ($user->vendor) {
+            $user->vendor->delete();
+            Log::info("Deleted vendor record", ['user_id' => $user->id]);
+        }
+    }
+
+    /**
+     * Delete merchant-specific data.
+     */
+    private function deleteMerchantData(User $user): void
+    {
+        // Delete merchant record if exists
+        if ($user->merchant) {
+            $user->merchant->delete();
+            Log::info("Deleted merchant record", ['user_id' => $user->id]);
+        }
+    }
+
+    /**
+     * Delete provider-specific data.
+     */
+    private function deleteProviderData(User $user): void
+    {
+        // Delete provider record if exists
+        if ($user->provider) {
+            $user->provider->delete();
+            Log::info("Deleted provider record", ['user_id' => $user->id]);
+        }
     }
 }

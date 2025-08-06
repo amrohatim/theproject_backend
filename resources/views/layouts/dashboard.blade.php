@@ -33,8 +33,8 @@
 <body class="bg-gray-100 dark:bg-gray-900 text-gray-800 dark:text-gray-200">
     <div class="flex h-screen overflow-hidden">
         <!-- Sidebar -->
-        <div class="hidden md:flex md:flex-shrink-0">
-            <div class="flex flex-col w-64 bg-white dark:bg-gray-800 border-r border-gray-200 dark:border-gray-700">
+        <div id="sidebar" class="fixed inset-y-0 left-0 z-50 w-64 bg-white dark:bg-gray-800 border-r border-gray-200 dark:border-gray-700 transform -translate-x-full transition-transform duration-300 ease-in-out md:translate-x-0 md:static md:inset-0">
+            <div class="flex flex-col h-full">
                 <!-- Sidebar header -->
                 <div class="flex items-center justify-center h-16 px-4 border-b border-gray-200 dark:border-gray-700">
                     <h1 class="text-xl font-bold text-indigo-600 dark:text-indigo-400">Dala3Chic</h1>
@@ -84,12 +84,15 @@
             </div>
         </div>
 
+        <!-- Sidebar overlay for mobile -->
+        <div id="sidebar-overlay" class="fixed inset-0 z-40 bg-black bg-opacity-50 hidden md:hidden"></div>
+
         <!-- Main content -->
         <div class="flex flex-col flex-1 overflow-hidden">
             <!-- Top navbar -->
             <div class="flex items-center justify-between h-16 px-4 bg-white dark:bg-gray-800 border-b border-gray-200 dark:border-gray-700">
                 <!-- Mobile menu button -->
-                <button type="button" class="md:hidden text-gray-500 dark:text-gray-400 hover:text-gray-600 dark:hover:text-gray-300">
+                <button type="button" id="mobile-menu-toggle" class="md:hidden text-gray-500 dark:text-gray-400 hover:text-gray-600 dark:hover:text-gray-300">
                     <i class="fas fa-bars"></i>
                 </button>
 
@@ -225,6 +228,40 @@
         } else {
             document.documentElement.classList.remove('dark');
         }
+
+        // Mobile sidebar functionality
+        document.addEventListener('DOMContentLoaded', function() {
+            const sidebar = document.getElementById('sidebar');
+            const sidebarOverlay = document.getElementById('sidebar-overlay');
+            const mobileMenuToggle = document.getElementById('mobile-menu-toggle');
+
+            // Toggle sidebar on mobile
+            if (mobileMenuToggle) {
+                mobileMenuToggle.addEventListener('click', function() {
+                    sidebar.classList.toggle('-translate-x-full');
+                    sidebarOverlay.classList.toggle('hidden');
+                    document.body.classList.toggle('overflow-hidden');
+                });
+            }
+
+            // Close sidebar when clicking overlay
+            if (sidebarOverlay) {
+                sidebarOverlay.addEventListener('click', function() {
+                    sidebar.classList.add('-translate-x-full');
+                    sidebarOverlay.classList.add('hidden');
+                    document.body.classList.remove('overflow-hidden');
+                });
+            }
+
+            // Handle window resize
+            window.addEventListener('resize', function() {
+                if (window.innerWidth >= 768) {
+                    sidebar.classList.remove('-translate-x-full');
+                    sidebarOverlay.classList.add('hidden');
+                    document.body.classList.remove('overflow-hidden');
+                }
+            });
+        });
     </script>
     @yield('scripts')
     @stack('scripts')

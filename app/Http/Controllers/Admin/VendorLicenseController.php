@@ -8,6 +8,7 @@ use App\Models\User;
 use App\Services\LicenseManagementService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Storage;
 
 class VendorLicenseController extends Controller
@@ -103,11 +104,71 @@ class VendorLicenseController extends Controller
         /** @var User $admin */
         $admin = Auth::user();
         if ($licenseService->rejectVendorLicense($license, $admin, $request->rejection_reason)) {
-            return redirect()->route('admin.vendor-licenses.index')
-                ->with('success', "License rejected for {$license->user->name}.");
+            // Redirect to admin choice page instead of directly back to index
+            return redirect()->route('admin.vendor-licenses.post-rejection-choice', [
+                'license' => $license->id,
+                'user' => $license->user_id
+            ])->with('success', "License rejected for {$license->user->name}. Email notification sent to the vendor.");
         } else {
             return redirect()->back()
                 ->with('error', 'Failed to reject license. Please try again.');
+        }
+    }
+
+    /**
+     * Show post-rejection choice page for admin to decide user fate.
+     */
+    public function postRejectionChoice(Request $request, $license, $user)
+    {
+        $licenseModel = License::findOrFail($license);
+        $userModel = User::findOrFail($user);
+
+        // Ensure this is a vendor license
+        if ($licenseModel->user->role !== 'vendor') {
+            abort(404, 'Vendor license not found.');
+        }
+
+        return view('admin.vendor-licenses.post-rejection-choice', [
+            'license' => $licenseModel,
+            'user' => $userModel,
+            'successMessage' => $request->session()->get('success')
+        ]);
+    }
+
+    /**
+     * Handle admin choice after rejection - keep or remove user.
+     */
+    public function handlePostRejectionChoice(Request $request, LicenseManagementService $licenseService)
+    {
+        $request->validate([
+            'action' => 'required|in:keep,remove',
+            'user_id' => 'required|exists:users,id',
+            'license_id' => 'required|exists:licenses,id'
+        ]);
+
+        $user = User::findOrFail($request->user_id);
+        $license = License::findOrFail($request->license_id);
+
+        if ($request->action === 'remove') {
+            try {
+                $result = $licenseService->deleteUserAndAssociatedData($user);
+
+                if ($result) {
+                    return redirect()->route('admin.vendor-licenses.index')
+                        ->with('success', "User {$user->name} and all associated data have been permanently deleted.");
+                } else {
+                    return redirect()->back()
+                        ->with('error', 'Failed to delete user. Please try again.');
+                }
+            } catch (\Exception $e) {
+                Log::error('Error deleting user after license rejection: ' . $e->getMessage());
+                return redirect()->back()
+                    ->with('error', 'An error occurred while deleting the user.');
+            }
+        } else {
+            // Keep user - just redirect back to index
+            return redirect()->route('admin.vendor-licenses.index')
+                ->with('success', "User {$user->name} has been kept. They can resubmit their license application.");
         }
     }
 

@@ -1298,6 +1298,8 @@ Route::prefix('admin')->name('admin.')->middleware(['auth', \App\Http\Middleware
     Route::get('/vendor-licenses/{id}/download', [App\Http\Controllers\Admin\VendorLicenseController::class, 'downloadLicense'])->name('vendor-licenses.download');
     Route::get('/vendor-licenses/{id}/view', [App\Http\Controllers\Admin\VendorLicenseController::class, 'viewLicense'])->name('vendor-licenses.view');
     Route::post('/vendor-licenses/bulk-approve', [App\Http\Controllers\Admin\VendorLicenseController::class, 'bulkApprove'])->name('vendor-licenses.bulk-approve');
+    Route::get('/vendor-licenses/{license}/{user}/post-rejection-choice', [App\Http\Controllers\Admin\VendorLicenseController::class, 'postRejectionChoice'])->name('vendor-licenses.post-rejection-choice');
+    Route::post('/vendor-licenses/handle-post-rejection-choice', [App\Http\Controllers\Admin\VendorLicenseController::class, 'handlePostRejectionChoice'])->name('vendor-licenses.handle-post-rejection-choice');
 
     // Settings
     Route::get('/settings', function () {
