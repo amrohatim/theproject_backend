@@ -44,6 +44,12 @@ class RedirectIfAuthenticated
                 } elseif ($user->role === 'merchant') {
                     \Illuminate\Support\Facades\Log::info('🔄 Redirecting to merchant dashboard');
                     return redirect()->route('merchant.dashboard');
+                } elseif ($user->role === 'service_provider') {
+                    \Illuminate\Support\Facades\Log::info('🔄 Redirecting to service provider dashboard');
+                    return redirect()->route('service-provider.dashboard');
+                } elseif ($user->role === 'products_manager') {
+                    \Illuminate\Support\Facades\Log::info('🔄 Redirecting to products manager dashboard');
+                    return redirect()->route('products-manager.dashboard');
                 } else {
                     \Illuminate\Support\Facades\Log::info('🔄 Redirecting to home page - unknown role', [
                         'role' => $user->role

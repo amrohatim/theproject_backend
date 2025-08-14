@@ -86,6 +86,22 @@ class User extends Authenticatable
     }
 
     /**
+     * Get the service provider profile associated with the user.
+     */
+    public function serviceProvider()
+    {
+        return $this->hasOne(ServiceProvider::class);
+    }
+
+    /**
+     * Get the products manager profile associated with the user.
+     */
+    public function productsManager()
+    {
+        return $this->hasOne(ProductsManager::class);
+    }
+
+    /**
      * Get the licenses associated with the user.
      */
     public function licenses()
@@ -141,6 +157,22 @@ class User extends Authenticatable
     public function isMerchant(): bool
     {
         return $this->role === 'merchant';
+    }
+
+    /**
+     * Check if user is a service provider.
+     */
+    public function isServiceProvider(): bool
+    {
+        return $this->role === 'service_provider';
+    }
+
+    /**
+     * Check if user is a products manager.
+     */
+    public function isProductsManager(): bool
+    {
+        return $this->role === 'products_manager';
     }
 
 

@@ -303,13 +303,13 @@
             </div>
 
             <!-- Stock Allocation Summary -->
-            <div v-if="productData.colors.length > 0 && productData.stock > 0" class="mt-6 p-4 bg-blue-50 border border-blue-200 rounded-lg">
+            <div v-if="productData.colors.length > 0 && productData.stock > 0" class="mt-6 p-4 bg-orange-50 border border-orange-200 rounded-lg">
               <div class="flex items-center justify-between mb-2">
-                <span class="text-sm font-medium text-blue-900">{{ $t('vendor.stock_allocation_progress') }}</span>
-              <span class="text-sm text-blue-700">{{ totalAllocatedStock }} / {{ productData.stock }} {{ $t('vendor.allocated_stock') }}</span>
+                <span class="text-sm font-medium text-orange-900">{{ $t('vendor.stock_allocation_progress') }}</span>
+              <span class="text-sm text-orange-700">{{ totalAllocatedStock }} / {{ productData.stock }} {{ $t('vendor.allocated_stock') }}</span>
               </div>
-              <div class="w-full bg-blue-200 rounded-full h-3">
-                <div class="bg-blue-600 h-3 rounded-full transition-all duration-300"
+              <div class="w-full bg-orange-200 rounded-full h-3">
+                <div class="bg-orange-600 h-3 rounded-full transition-all duration-300"
                      :style="{ width: stockProgressPercentage + '%' }"
                      :class="{ 'bg-red-600': isStockOverAllocated }"></div>
               </div>

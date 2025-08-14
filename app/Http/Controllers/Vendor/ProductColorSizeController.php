@@ -15,6 +15,22 @@ use Illuminate\Support\Facades\DB;
 class ProductColorSizeController extends Controller
 {
     /**
+     * Resolve the acting vendor user ID for queries and ownership checks.
+     * If current user is a products manager, use their company's vendor owner user_id.
+     */
+    private function getActingVendorUserId(): int
+    {
+        $user = Auth::user();
+        if ($user && $user->role === 'products_manager' && method_exists($user, 'productsManager') && $user->productsManager) {
+            $company = $user->productsManager->company ?? null;
+            if ($company && isset($company->user_id)) {
+                return (int) $company->user_id;
+            }
+        }
+        return (int) Auth::id();
+    }
+
+    /**
      * Get sizes available for a specific color.
      */
     public function getSizesForColor(Request $request): JsonResponse
@@ -27,8 +43,8 @@ class ProductColorSizeController extends Controller
 
         $color = ProductColor::findOrFail($request->color_id);
 
-        // Verify the color belongs to a product owned by the authenticated vendor
-        $product = Product::where('user_id', Auth::id())->findOrFail($request->product_id);
+        // Verify the color belongs to a product owned by the authenticated vendor or managed by products manager
+        $product = Product::where('user_id', $this->getActingVendorUserId())->findOrFail($request->product_id);
 
         if ($color->product_id !== $product->id) {
             return response()->json([
@@ -234,8 +250,8 @@ class ProductColorSizeController extends Controller
             'is_available' => 'nullable|boolean',
         ]);
 
-        // Verify the product belongs to the authenticated vendor
-        $product = Product::where('user_id', Auth::id())->findOrFail($request->product_id);
+        // Verify the product belongs to the authenticated vendor or managed by products manager
+        $product = Product::where('user_id', $this->getActingVendorUserId())->findOrFail($request->product_id);
 
         // Verify the color belongs to this product
         $color = ProductColor::where('product_id', $product->id)->findOrFail($request->color_id);
@@ -326,8 +342,8 @@ class ProductColorSizeController extends Controller
         $size = ProductSize::findOrFail($request->size_id);
         $color = ProductColor::findOrFail($request->color_id);
 
-        // Verify the size and color belong to a product owned by the authenticated vendor
-        $product = Product::where('user_id', Auth::id())->findOrFail($size->product_id);
+        // Verify the size and color belong to a product owned by the authenticated vendor or managed by products manager
+        $product = Product::where('user_id', $this->getActingVendorUserId())->findOrFail($size->product_id);
 
         if ($color->product_id !== $product->id) {
             return response()->json([
@@ -414,8 +430,8 @@ class ProductColorSizeController extends Controller
         $size = ProductSize::findOrFail($request->size_id);
         $color = ProductColor::findOrFail($request->color_id);
 
-        // Verify the size and color belong to a product owned by the authenticated vendor
-        $product = Product::where('user_id', Auth::id())->findOrFail($size->product_id);
+        // Verify the size and color belong to a product owned by the authenticated vendor or managed by products manager
+        $product = Product::where('user_id', $this->getActingVendorUserId())->findOrFail($size->product_id);
 
         if ($color->product_id !== $product->id) {
             return response()->json([

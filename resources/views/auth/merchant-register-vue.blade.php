@@ -307,6 +307,9 @@
             'ras_al_khaimah': '{{ __('messages.ras_al_khaimah') }}',
             'umm_al_quwain': '{{ __('messages.umm_al_quwain') }}',
             'creating_account': '{{ __('messages.creating_account') }}',
+            'map_instructions': '{{ __('messages.map_instructions') }}',
+            'close': '{{ __('messages.close') }}',
+            'account_already_exists':'{{ __('messages.account_already_exists') }}',
         };
     </script>
 

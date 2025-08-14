@@ -128,8 +128,11 @@ class ProviderLicenseController extends Controller
         }
 
         if ($licenseService->rejectProviderLicense($license, Auth::user(), $request->rejection_reason)) {
-            return redirect()->route('admin.provider-licenses.index')
-                ->with('success', "License rejected for {$license->user->name}.");
+            // Redirect to admin choice page instead of directly back to index
+            return redirect()->route('admin.provider-licenses.post-rejection-choice', [
+                'license' => $license->id,
+                'user' => $license->user_id
+            ])->with('success', "License rejected for {$license->user->name}. Email notification sent to the provider.");
         } else {
             return redirect()->back()
                 ->with('error', 'Failed to reject license. Please try again.');
@@ -161,6 +164,60 @@ class ProviderLicenseController extends Controller
             return redirect()->route('admin.provider-licenses.index')->with('success', $message);
         } else {
             return redirect()->back()->with('error', 'Failed to approve any licenses. Please try again.');
+        }
+    }
+
+    /**
+     * Show post-rejection choice page for admin to decide user fate.
+     */
+    public function postRejectionChoice(Request $request, $license, $user)
+    {
+        $licenseModel = License::findOrFail($license);
+        $userModel = User::findOrFail($user);
+
+        // Ensure this is a provider license
+        if ($licenseModel->user->role !== 'provider') {
+            abort(404, 'Provider license not found.');
+        }
+
+        return view('admin.provider-licenses.post-rejection-choice', [
+            'license' => $licenseModel,
+            'user' => $userModel,
+            'successMessage' => $request->session()->get('success')
+        ]);
+    }
+
+    /**
+     * Handle admin choice after rejection - keep or remove user.
+     */
+    public function handlePostRejectionChoice(Request $request, LicenseManagementService $licenseService)
+    {
+        $request->validate([
+            'action' => 'required|in:keep,remove',
+            'user_id' => 'required|exists:users,id',
+            'license_id' => 'required|exists:licenses,id'
+        ]);
+
+        $user = User::findOrFail($request->user_id);
+        $license = License::findOrFail($request->license_id);
+
+        // Ensure this is a provider license
+        if ($license->user->role !== 'provider') {
+            abort(404, 'Provider license not found.');
+        }
+
+        if ($request->action === 'keep') {
+            return redirect()->route('admin.provider-licenses.index')
+                ->with('success', "User {$user->name} has been kept. They can resubmit their license application.");
+        } else {
+            // Remove user and all associated data
+            if ($licenseService->deleteUserAndAssociatedData($user)) {
+                return redirect()->route('admin.provider-licenses.index')
+                    ->with('success', "User {$user->name} and all associated data have been permanently removed from the system.");
+            } else {
+                return redirect()->back()
+                    ->with('error', 'Failed to remove user. Please try again or contact system administrator.');
+            }
         }
     }
 }

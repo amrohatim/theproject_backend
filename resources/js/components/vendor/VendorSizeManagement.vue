@@ -14,13 +14,13 @@
     </div>
 
     <!-- Stock Allocation Summary -->
-    <div v-if="colorStock > 0" class="mb-6 p-4 bg-blue-50 border border-blue-200 rounded-lg">
+    <div v-if="colorStock > 0" class="mb-6 p-4 bg-orange-50 border border-orange-200 rounded-lg">
       <div class="flex items-center justify-between mb-2">
-        <span class="text-sm font-medium text-blue-900"> {{ $t('vendor.stock_allocation_for_color') }}</span>
-        <span class="text-sm text-blue-700">{{ totalSizeStock }} / {{ colorStock }} {{ $t('vendor.allocated') }}</span>
+        <span class="text-sm font-medium text-orange-900"> {{ $t('vendor.stock_allocation_for_color') }}</span>
+        <span class="text-sm text-orange-700">{{ totalSizeStock }} / {{ colorStock }} {{ $t('vendor.allocated') }}</span>
       </div>
-      <div class="w-full bg-blue-200 rounded-full h-2">
-        <div class="bg-blue-600 h-2 rounded-full transition-all duration-300"
+      <div class="w-full bg-orange-200 rounded-full h-2">
+        <div class="bg-orange-600 h-2 rounded-full transition-all duration-300"
              :style="{ width: Math.min((totalSizeStock / colorStock) * 100, 100) + '%' }"
              :class="{ 'bg-red-600': totalSizeStock > colorStock }"></div>
       </div>
@@ -58,9 +58,9 @@
             
             <!-- Actions -->
             <div class="flex items-center gap-2 justify-end">
-              <button type="button" 
+              <button type="button"
                       @click="editSize(index)"
-                      class="text-blue-600 hover:text-blue-700 text-sm">
+                      class="text-orange-600 hover:text-orange-700 text-sm">
                 <i class="fas fa-edit"></i>
               </button>
               <button type="button" 

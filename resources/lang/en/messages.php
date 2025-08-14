@@ -1267,4 +1267,14 @@ return [
     'check_out_deal' => 'Check out this amazing deal!',
     'link_copied' => 'Link copied to clipboard!',
     'save_feature_coming_soon' => 'Save feature coming soon!',
+    'map_instructions' => 'Click on the map or drag the marker to set your store location.',
+    'account_already_exists' => 'You have a registered company with this email you cannot create two accounts with the same email , please log in',
+    'company_management' => 'Company Management',
+    'manage_your_company_information_and_settings'=> 'Manage your company information and settings',
+    'can_deliver_description' => 'This determines if your company can deliver products to customers directly or if a third-party delivery service will be required.',
+    'brief_description_of_your_company_for_your_customers' => 'Brief description of your company for your customers',
+    'yes_we_can_handle_our_own_deliveries' => 'Yes, we can handle our own deliveries',
+    'no_we_need_a_third_party_delivery_service' => 'No, we need a third-party delivery service',
+
+    
 ];

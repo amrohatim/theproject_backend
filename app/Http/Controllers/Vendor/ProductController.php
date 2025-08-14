@@ -14,15 +14,71 @@ use Illuminate\Support\Facades\Log;
 class ProductController extends Controller
 {
     /**
+     * Resolve the acting vendor user ID for queries and ownership checks.
+     * If current user is a products manager, use their company's vendor owner user_id.
+     */
+    private function getActingVendorUserId(): int
+    {
+        $user = Auth::user();
+        if ($user && $user->role === 'products_manager' && method_exists($user, 'productsManager') && $user->productsManager) {
+            $company = $user->productsManager->company ?? null;
+            if ($company && isset($company->user_id)) {
+                return (int) $company->user_id;
+            }
+        }
+        return (int) Auth::id();
+    }
+
+    /**
+     * Check if this is a Products Manager AJAX request (for content-only views)
+     */
+    private function isProductsManagerRequest($request)
+    {
+        $user = Auth::user();
+
+        // For Products Manager users, only return content-only views for AJAX requests
+        if ($user && $user->role === 'products_manager') {
+            // If it's an AJAX request, return content-only view
+            if ($request->ajax() || $request->header('X-Requested-With') === 'XMLHttpRequest') {
+                return true;
+            }
+            // If it's a direct URL access, return false to use full layout view
+            return false;
+        }
+
+        // Check if the request is coming from products-manager routes via AJAX
+        $referer = $request->header('referer');
+        if ($referer && strpos($referer, '/products-manager/') !== false && $request->ajax()) {
+            return true;
+        }
+
+        // Check if this is an AJAX request from products manager context
+        if ($request->ajax() && $request->header('X-Products-Manager-Context')) {
+            return true;
+        }
+
+        return false;
+    }
+
+    /**
+     * Check if this is a Products Manager user (regardless of request type)
+     */
+    private function isProductsManagerUser()
+    {
+        $user = Auth::user();
+        return $user && $user->role === 'products_manager';
+    }
+
+    /**
      * Display a listing of the resource.
      */
     public function index(Request $request)
     {
         $query = Product::query()
-            ->with(['branch', 'category'])
+            ->with(['branch', 'category', 'colors'])
             ->whereHas('branch', function ($query) {
                 $query->whereHas('company', function ($query) {
-                    $query->where('user_id', Auth::id());
+                    $query->where('user_id', $this->getActingVendorUserId());
                 });
             });
 
@@ -52,8 +108,19 @@ class ProductController extends Controller
 
         // Get branches that belong to the vendor's company for filter dropdown
         $branches = Branch::whereHas('company', function ($query) {
-            $query->where('user_id', Auth::id());
+            $query->where('user_id', $this->getActingVendorUserId());
         })->orderBy('name')->get();
+
+        // Check if this is a Products Manager AJAX request (content-only)
+        if ($this->isProductsManagerRequest($request)) {
+            // Return only the content for AJAX loading
+            return view('products-manager.products.index-content', compact('products', 'categories', 'branches'));
+        }
+
+        // Check if this is a Products Manager user accessing directly (full layout)
+        if ($this->isProductsManagerUser()) {
+            return view('products-manager.products.index', compact('products', 'categories', 'branches'));
+        }
 
         return view('vendor.products.index', compact('products', 'categories', 'branches'));
     }
@@ -61,7 +128,7 @@ class ProductController extends Controller
     /**
      * Show the form for creating a new resource.
      */
-    public function create()
+    public function create(Request $request)
     {
         // Get product categories with their children - force a fresh query to get the latest data
         $parentCategories = Category::where('type', 'product')
@@ -74,19 +141,43 @@ class ProductController extends Controller
 
         // Get branches that belong to the vendor's company
         $branches = Branch::whereHas('company', function ($query) {
-            $query->where('user_id', Auth::id());
+            $query->where('user_id', $this->getActingVendorUserId());
         })->orderBy('name')->get();
 
         // Check if the vendor has any branches
         if ($branches->isEmpty()) {
+            if ($this->isProductsManagerRequest($request)) {
+                // For Products Manager AJAX requests, return content that will redirect to branch creation
+                return view('products-manager.products.create-content', [
+                    'needsBranch' => true,
+                    'message' => 'You need to create a branch before adding products. Please create a branch first.'
+                ]);
+            }
             return redirect()->route('vendor.branches.create')
                 ->with('warning', 'You need to create a branch before adding products. Please create a branch first.');
         }
 
         // Check if there are any categories
         if ($parentCategories->isEmpty()) {
+            if ($this->isProductsManagerRequest($request)) {
+                return view('products-manager.products.create-content', [
+                    'needsCategories' => true,
+                    'message' => 'No product categories found. Please contact the administrator.'
+                ]);
+            }
             return redirect()->route('vendor.products.index')
                 ->with('warning', 'No product categories found. Please contact the administrator.');
+        }
+
+        // Check if this is a Products Manager AJAX request (content-only)
+        if ($this->isProductsManagerRequest($request)) {
+            // Return only the content for AJAX loading
+            return view('products-manager.products.create-content', compact('parentCategories', 'branches'));
+        }
+
+        // Check if this is a Products Manager user accessing directly (full layout)
+        if ($this->isProductsManagerUser()) {
+            return view('products-manager.products.create', compact('parentCategories', 'branches'));
         }
 
         return view('vendor.products.create-vue', compact('parentCategories', 'branches'));
@@ -109,7 +200,7 @@ class ProductController extends Controller
 
             // Get branches that belong to the vendor's company
             $branches = Branch::whereHas('company', function ($query) {
-                $query->where('user_id', Auth::id());
+                $query->where('user_id', $this->getActingVendorUserId());
             })->orderBy('name')->get();
 
             // Check if the vendor has any branches
@@ -298,7 +389,7 @@ class ProductController extends Controller
         $branch = Branch::findOrFail($request->branch_id);
 
         // Check if the branch's company belongs to the authenticated user
-        $companyBelongsToUser = $branch->company && $branch->company->user_id === Auth::id();
+        $companyBelongsToUser = $branch->company && $branch->company->user_id === $this->getActingVendorUserId();
 
         if (!$companyBelongsToUser) {
             return redirect()->back()->with('error', 'You do not have permission to add products to this branch.');
@@ -307,7 +398,7 @@ class ProductController extends Controller
         $data = $request->except(['specifications', 'colors', 'sizes', 'branches', 'color_images']);
         $data['is_available'] = $request->has('is_available') ? true : false;
         $data['is_multi_branch'] = $request->has('is_multi_branch') ? true : false;
-        $data['user_id'] = Auth::id(); // Assign the authenticated vendor's user ID
+        $data['user_id'] = $this->getActingVendorUserId(); // Assign the acting vendor's user ID
 
         // Set merchant tracking fields (vendor dashboard = not merchant)
         $data['is_merchant'] = false;
@@ -508,14 +599,19 @@ class ProductController extends Controller
     /**
      * Show the form for editing the specified resource.
      */
-    public function edit(Product $product)
+    public function edit(Product $product, Request $request)
     {
         // Check if the product belongs to the vendor's company
         $userBranches = Branch::whereHas('company', function ($query) {
-            $query->where('user_id', Auth::id());
+            $query->where('user_id', $this->getActingVendorUserId());
         })->pluck('id')->toArray();
 
         if (!in_array($product->branch_id, $userBranches)) {
+            if ($this->isProductsManagerRequest($request)) {
+                return view('products-manager.products.edit-content', [
+                    'error' => 'You do not have permission to edit this product.'
+                ]);
+            }
             return redirect()->route('vendor.products.index')
                 ->with('error', 'You do not have permission to edit this product.');
         }
@@ -531,11 +627,22 @@ class ProductController extends Controller
 
         // Get branches that belong to the vendor's company
         $branches = Branch::whereHas('company', function ($query) {
-            $query->where('user_id', Auth::id());
+            $query->where('user_id', $this->getActingVendorUserId());
         })->orderBy('name')->get();
 
         // Load product with all related data
         $product->load(['specifications', 'colors', 'sizes', 'branches']);
+
+        // Check if this is a Products Manager AJAX request (content-only)
+        if ($this->isProductsManagerRequest($request)) {
+            // Return only the content for AJAX loading
+            return view('products-manager.products.edit-content', compact('product', 'parentCategories', 'branches'));
+        }
+
+        // Check if this is a Products Manager user accessing directly (full layout)
+        if ($this->isProductsManagerUser()) {
+            return view('products-manager.products.edit', compact('product', 'parentCategories', 'branches'));
+        }
 
         return view('vendor.products.edit-vue', compact('product'));
     }
@@ -547,7 +654,7 @@ class ProductController extends Controller
     {
         // Check if the product belongs to the vendor's company
         $userBranches = Branch::whereHas('company', function ($query) {
-            $query->where('user_id', Auth::id());
+            $query->where('user_id', $this->getActingVendorUserId());
         })->pluck('id')->toArray();
 
         if (!in_array($product->branch_id, $userBranches)) {
@@ -568,7 +675,7 @@ class ProductController extends Controller
 
         // Get branches that belong to the vendor's company
         $branches = Branch::whereHas('company', function ($query) {
-            $query->where('user_id', Auth::id());
+            $query->where('user_id', $this->getActingVendorUserId());
         })->orderBy('name')->get();
 
         // Load product with all related data including colors with their sizes
@@ -652,7 +759,7 @@ class ProductController extends Controller
     {
         // Check if the product belongs to the vendor's company
         $userBranches = Branch::whereHas('company', function ($query) {
-            $query->where('user_id', Auth::id());
+            $query->where('user_id', $this->getActingVendorUserId());
         })->pluck('id')->toArray();
 
         if (!in_array($product->branch_id, $userBranches)) {
@@ -720,7 +827,7 @@ class ProductController extends Controller
         $branch = Branch::findOrFail($request->branch_id);
 
         // Check if the branch's company belongs to the authenticated user
-        $companyBelongsToUser = $branch->company && $branch->company->user_id === Auth::id();
+        $companyBelongsToUser = $branch->company && $branch->company->user_id === $this->getActingVendorUserId();
 
         if (!$companyBelongsToUser) {
             return redirect()->back()->with('error', 'You do not have permission to move products to this branch.');
@@ -799,7 +906,7 @@ class ProductController extends Controller
         try {
             // Check if the product belongs to the vendor's company
             $userBranches = Branch::whereHas('company', function ($query) {
-                $query->where('user_id', Auth::id());
+                $query->where('user_id', $this->getActingVendorUserId());
             })->pluck('id')->toArray();
 
             if (!in_array($product->branch_id, $userBranches)) {
@@ -822,7 +929,7 @@ class ProductController extends Controller
         } catch (\Exception $e) {
             Log::error('Error deleting vendor product: ' . $e->getMessage(), [
                 'product_id' => $product->id,
-                'user_id' => Auth::id(),
+                'user_id' => $this->getActingVendorUserId(),
                 'trace' => $e->getTraceAsString()
             ]);
 
@@ -1180,7 +1287,7 @@ class ProductController extends Controller
     {
         $latestProduct = Product::whereHas('branch', function ($query) {
                 $query->whereHas('company', function ($query) {
-                    $query->where('user_id', Auth::id());
+                    $query->where('user_id', $this->getActingVendorUserId());
                 });
             })
             ->orderBy('created_at', 'desc')
@@ -1198,7 +1305,7 @@ class ProductController extends Controller
     {
         $product = Product::whereHas('branch', function ($query) {
                 $query->whereHas('company', function ($query) {
-                    $query->where('user_id', Auth::id());
+                    $query->where('user_id', $this->getActingVendorUserId());
                 });
             })
             ->with(['sizes.sizeCategory', 'colors.sizes.sizeCategory'])
@@ -1253,7 +1360,7 @@ class ProductController extends Controller
             ->with(['branch', 'category'])
             ->whereHas('branch', function ($q) {
                 $q->whereHas('company', function ($q) {
-                    $q->where('user_id', Auth::id());
+                    $q->where('user_id', $this->getActingVendorUserId());
                 });
             })
             ->where(function ($q) use ($query) {

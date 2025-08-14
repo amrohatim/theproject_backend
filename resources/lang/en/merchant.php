@@ -622,4 +622,5 @@ return [
     'description_required_when_arabic_provided' => 'Description in English is required when Arabic description is provided',
     'description_required_when_english_provided' => 'Description in Arabic is required when English description is provided',
     'product_created_available_inventory' => 'Your product has been created and is now available in your inventory.',
+    'account_already_exists' => 'You have a registered company with this email you cannot create two accounts with the same email , please log in to your existing account.',
 ];

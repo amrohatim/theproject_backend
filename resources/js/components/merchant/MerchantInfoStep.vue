@@ -261,10 +261,10 @@
           </div>
 
           <!-- Selected Address (only show when map is visible and address exists) -->
-          <div v-if="!mapLoading && !mapError && formData.store_location_address" class="selected-address">
+          <!-- <div v-if="!mapLoading && !mapError && formData.store_location_address" class="selected-address">
             <i class="fas fa-map-marker-alt"></i>
             <span>{{ formData.store_location_address }}</span>
-          </div>
+          </div> -->
         </div>
         <div v-if="formData.store_location_address" class="selected-location">
           <input
@@ -339,7 +339,7 @@
         </div>
         <div class="modal-footer">
           <button type="button" class="modal-btn modal-btn-primary" @click="closeValidationModal">
-            {{ $t('fix_errors') }}
+            {{ $t('close') }}
           </button>
         </div>
       </div>
@@ -351,7 +351,7 @@
         <div class="modal-header">
           <h3 class="modal-title">
             <i class="fas fa-user-check"></i>
-            {{ $t('account_already_exists') }}
+           " {{ $t('account_already_exists') }}"
           </h3>
           <button type="button" class="modal-close" @click="closeLoginModal">
             <i class="fas fa-times"></i>

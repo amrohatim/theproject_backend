@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Upload License - Provider Portal</title>
+    <title>{{ __('provider.upload_license_title') }}</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <style>
@@ -34,10 +34,10 @@
                     <i class="fas fa-certificate text-blue-600 text-xl"></i>
                 </div>
                 <h2 class="mt-6 text-3xl font-extrabold text-gray-900">
-                    Upload Your License
+                    {{ __('provider.upload_your_license') }}
                 </h2>
                 <p class="mt-2 text-sm text-gray-600">
-                    Please upload your professional license to access the provider dashboard
+                    {{ __('provider.upload_professional_license_description') }}
                 </p>
             </div>
 
@@ -50,7 +50,7 @@
                         </div>
                         <div class="ml-3">
                             <h3 class="text-sm font-medium text-red-800">
-                                Please correct the following errors:
+                                {{ __('provider.please_correct_following_errors') }}
                             </h3>
                             <div class="mt-2 text-sm text-red-700">
                                 <ul class="list-disc list-inside space-y-1">
@@ -92,14 +92,14 @@
                         </div>
                         <div class="ml-3">
                             <h3 class="text-sm font-medium text-blue-800">
-                                License Requirements
+                                {{ __('provider.license_requirements') }}
                             </h3>
                             <div class="mt-2 text-sm text-blue-700">
                                 <ul class="list-disc list-inside space-y-1">
-                                    <li>Upload a clear copy of your professional license</li>
-                                    <li>Accepted format: PDF only</li>
-                                    <li>Maximum file size: 10MB</li>
-                                    <li>Ensure all text is clearly readable</li>
+                                    <li>{{ __('provider.upload_clear_copy_professional_license') }}</li>
+                                    <li>{{ __('provider.accepted_format_pdf_only') }}</li>
+                                    <li>{{ __('provider.maximum_file_size_10mb') }}</li>
+                                    <li>{{ __('provider.ensure_text_clearly_readable') }}</li>
                                 </ul>
                             </div>
                         </div>
@@ -110,9 +110,9 @@
                 <div class="upload-area rounded-lg p-8 text-center" id="uploadArea">
                     <div class="upload-content" id="uploadContent">
                         <i class="fas fa-cloud-upload-alt text-4xl text-gray-400 mb-4"></i>
-                        <h3 class="text-lg font-medium text-gray-900 mb-2">Upload Professional License</h3>
+                        <h3 class="text-lg font-medium text-gray-900 mb-2">{{ __('provider.upload_professional_license') }}</h3>
                         <p class="text-sm text-gray-600 mb-4">
-                            Drag and drop your license file here, or click to browse
+                            {{ __('provider.drag_drop_license_file') }}
                         </p>
                         <input
                             type="file"
@@ -127,7 +127,7 @@
                             onclick="document.getElementById('license_file').click()"
                             class="bg-blue-600 text-white px-6 py-2 rounded-lg hover:bg-blue-700 transition-colors duration-300"
                         >
-                            Choose File
+                            {{ __('provider.choose_file') }}
                         </button>
                     </div>
                     <div class="file-preview hidden" id="filePreview">
@@ -139,7 +139,7 @@
                             onclick="removeFile()"
                             class="text-red-600 hover:text-red-800 text-sm"
                         >
-                            <i class="fas fa-times mr-1"></i>Remove
+                            <i class="fas fa-times mr-1"></i>{{ __('provider.remove') }}
                         </button>
                     </div>
                 </div>
@@ -149,7 +149,7 @@
                     <!-- License Start Date -->
                     <div>
                         <label for="license_start_date" class="block text-sm font-medium text-gray-700 mb-2">
-                            License Start Date *
+                            {{ __('provider.license_start_date') }}
                         </label>
                         <input
                             type="date"
@@ -165,7 +165,7 @@
                     <!-- License Expiry Date -->
                     <div>
                         <label for="license_expiry_date" class="block text-sm font-medium text-gray-700 mb-2">
-                            License Expiry Date *
+                            {{ __('provider.license_expiry_date') }}
                         </label>
                         <input
                             type="date"
@@ -182,17 +182,17 @@
                 <!-- Notes -->
                 <div>
                     <label for="notes" class="block text-sm font-medium text-gray-700 mb-2">
-                        Additional Notes (Optional)
+                        {{ __('provider.additional_notes_optional') }}
                     </label>
                     <textarea
                         id="notes"
                         name="notes"
                         rows="3"
                         maxlength="500"
-                        placeholder="Any additional information about your license..."
+                        placeholder="{{ __('provider.additional_info_license_placeholder') }}"
                         class="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500"
                     >{{ old('notes') }}</textarea>
-                    <p class="mt-1 text-xs text-gray-500">Maximum 500 characters</p>
+                    <p class="mt-1 text-xs text-gray-500">{{ __('provider.maximum_500_characters') }}</p>
                 </div>
 
                 <!-- Submit Button -->
@@ -206,7 +206,7 @@
                         <span class="absolute left-0 inset-y-0 flex items-center pl-3">
                             <i class="fas fa-upload text-blue-500 group-hover:text-blue-400"></i>
                         </span>
-                        Upload License
+                        {{ __('provider.upload_license') }}
                     </button>
                 </div>
 
@@ -214,7 +214,7 @@
                 <div class="text-center">
                     <a href="{{ route('login') }}" class="text-sm text-blue-600 hover:text-blue-500">
                         <i class="fas fa-arrow-left mr-1"></i>
-                        Back to Login
+                        {{ __('provider.back_to_login') }}
                     </a>
                 </div>
             </form>
@@ -261,13 +261,13 @@
         function handleFile(file) {
             // Validate file type
             if (file.type !== 'application/pdf') {
-                alert('Please upload a PDF file only.');
+                alert('{{ __('provider.upload_pdf_file_only') }}');
                 return;
             }
 
             // Validate file size (10MB)
             if (file.size > 10 * 1024 * 1024) {
-                alert('File size must be less than 10MB.');
+                alert('{{ __('provider.file_size_less_than_10mb') }}');
                 return;
             }
 
@@ -314,7 +314,7 @@
 
             // Check if start date is in the past
             if (startDate < today) {
-                showValidationModal('License start date cannot be in the past.');
+                showValidationModal('{{ __('provider.license_start_date_cannot_past') }}');
                 this.value = '';
                 return;
             }
@@ -336,7 +336,7 @@
             const endDate = new Date(this.value);
 
             if (startDateInput.value && endDate <= startDate) {
-                showValidationModal('License end date must be after the start date.');
+                showValidationModal('{{ __('provider.license_end_date_after_start') }}');
                 this.value = '';
                 return;
             }
@@ -356,13 +356,13 @@
                             <div class="mx-auto flex items-center justify-center h-12 w-12 rounded-full bg-red-100">
                                 <i class="fas fa-exclamation-triangle text-red-600"></i>
                             </div>
-                            <h3 class="text-lg font-medium text-gray-900 mt-2">Validation Error</h3>
+                            <h3 class="text-lg font-medium text-gray-900 mt-2">{{ __('provider.validation_error') }}</h3>
                             <div class="mt-2 px-7 py-3">
                                 <p class="text-sm text-gray-500" id="modalMessage"></p>
                             </div>
                             <div class="items-center px-4 py-3">
                                 <button id="modalCloseBtn" class="px-4 py-2 bg-red-500 text-white text-base font-medium rounded-md w-full shadow-sm hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-red-300">
-                                    OK
+                                    {{ __('provider.ok') }}
                                 </button>
                             </div>
                         </div>

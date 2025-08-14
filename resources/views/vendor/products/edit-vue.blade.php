@@ -205,6 +205,7 @@
         'vendor.units_allocated': '{{ __('vendor.units_allocated') }}',
         'vendor.total_inventory_allocation_note': '{{ __('vendor.total_inventory_allocation_note') }}',
         'vendor.display_order_note': '{{ __('vendor.display_order_note') }}',
+        'vendor.unit': '{{ __('vendor.unit') }}',
 
         // Basic product information
         'vendor.product_name': '{{ __('vendor.product_name') }}',

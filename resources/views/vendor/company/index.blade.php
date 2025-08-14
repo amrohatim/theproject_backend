@@ -6,8 +6,8 @@
 @section('content')
 <div class="container mx-auto">
     <div class="mb-6">
-        <h2 class="text-2xl font-bold text-gray-800 dark:text-white">Company Management</h2>
-        <p class="mt-1 text-gray-600 dark:text-gray-400">Manage your company information and settings</p>
+        <h2 class="text-2xl font-bold text-gray-800 dark:text-white">{{ __('messages.company_management') }}</h2>
+        <p class="mt-1 text-gray-600 dark:text-gray-400">{{ __('messages.manage_your_company_information_and_settings') }}</p>
     </div>
 
     <!-- Company Information -->
@@ -67,16 +67,16 @@
                         <div class="col-span-6 sm:col-span-3">
                             <label for="can_deliver" class="block text-sm font-medium text-gray-700 dark:text-gray-300">{{ __('messages.delivery_capability') }}</label>
                             <select id="can_deliver" name="can_deliver" class="mt-1 block w-full py-2 px-3 border border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-white bg-white rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
-                                <option value="1" {{ ($company->can_deliver ?? old('can_deliver', '1')) == '1' || ($company->can_deliver ?? old('can_deliver', true)) === true ? 'selected' : '' }}>Yes, we can handle our own deliveries</option>
-                                <option value="0" {{ ($company->can_deliver ?? old('can_deliver')) == '0' || ($company->can_deliver ?? old('can_deliver')) === false ? 'selected' : '' }}>No, we need a third-party delivery service</option>
+                                <option value="1" {{ ($company->can_deliver ?? old('can_deliver', '1')) == '1' || ($company->can_deliver ?? old('can_deliver', true)) === true ? 'selected' : '' }}>{{ __('messages.yes_we_can_handle_our_own_deliveries') }}</option>
+                                <option value="0" {{ ($company->can_deliver ?? old('can_deliver')) == '0' || ($company->can_deliver ?? old('can_deliver')) === false ? 'selected' : '' }}>{{ __('messages.no_we_need_a_third_party_delivery_service') }}</option>
                             </select>
-                            <p class="mt-2 text-sm text-gray-500 dark:text-gray-400">This determines if your company can deliver products to customers directly.</p>
+                            <p class="mt-2 text-sm text-gray-500 dark:text-gray-400">{{ __('messages.can_deliver_description') }}</p>
                         </div>
 
                         <div class="col-span-6">
                             <label for="description" class="block text-sm font-medium text-gray-700 dark:text-gray-300">{{ __('messages.description') }}</label>
                             <textarea id="description" name="description" rows="3" class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-white rounded-md">{{ $company->description ?? old('description') }}</textarea>
-                            <p class="mt-2 text-sm text-gray-500 dark:text-gray-400">Brief description of your company for your customers.</p>
+                            <p class="mt-2 text-sm text-gray-500 dark:text-gray-400">{{ __('messages.brief_description_of_your_company_for_your_customers') }}</p>
                         </div>
 
                         <div class="col-span-6">

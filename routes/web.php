@@ -269,6 +269,14 @@ Route::post('/login', function (\Illuminate\Http\Request $request) {
             $redirectUrl = route('merchant.dashboard');
             \Illuminate\Support\Facades\Log::info('🏪 MERCHANT LOGIN - Redirecting to: ' . $redirectUrl);
             return redirect()->route('merchant.dashboard');
+        } elseif ($user->role === 'service_provider') {
+            $redirectUrl = route('service-provider.dashboard');
+            \Illuminate\Support\Facades\Log::info('🔧 SERVICE PROVIDER LOGIN - Redirecting to: ' . $redirectUrl);
+            return redirect()->route('service-provider.dashboard');
+        } elseif ($user->role === 'products_manager') {
+            $redirectUrl = route('products-manager.dashboard');
+            \Illuminate\Support\Facades\Log::info('📦 PRODUCTS MANAGER LOGIN - Redirecting to: ' . $redirectUrl);
+            return redirect()->route('products-manager.dashboard');
         } else {
             \Illuminate\Support\Facades\Log::info('Redirecting user with unknown role to home: ' . $user->role);
             return redirect('/');
@@ -627,7 +635,7 @@ Route::prefix('admin')->name('admin.')->middleware(['auth', \App\Http\Middleware
             'name' => 'required|string|max:255',
             'email' => 'required|string|email|max:255|unique:users',
             'password' => 'required|string|min:8|confirmed',
-            'role' => 'required|string|in:admin,vendor,customer,provider,merchant',
+            'role' => 'required|string|in:admin,vendor,customer,provider,merchant,service_provider,products_manager',
             'status' => 'required|string|in:active,inactive',
         ]);
 
@@ -1281,6 +1289,8 @@ Route::prefix('admin')->name('admin.')->middleware(['auth', \App\Http\Middleware
     Route::get('/merchant-licenses/{id}/download', [App\Http\Controllers\Admin\MerchantLicenseController::class, 'downloadLicense'])->name('merchant-licenses.download');
     Route::get('/merchant-licenses/{id}/view', [App\Http\Controllers\Admin\MerchantLicenseController::class, 'viewLicense'])->name('merchant-licenses.view');
     Route::post('/merchant-licenses/bulk-approve', [App\Http\Controllers\Admin\MerchantLicenseController::class, 'bulkApprove'])->name('merchant-licenses.bulk-approve');
+    Route::get('/merchant-licenses/{merchant}/{user}/post-rejection-choice', [App\Http\Controllers\Admin\MerchantLicenseController::class, 'postRejectionChoice'])->name('merchant-licenses.post-rejection-choice');
+    Route::post('/merchant-licenses/handle-post-rejection-choice', [App\Http\Controllers\Admin\MerchantLicenseController::class, 'handlePostRejectionChoice'])->name('merchant-licenses.handle-post-rejection-choice');
 
     // Provider License Management
     Route::get('/provider-licenses', [App\Http\Controllers\Admin\ProviderLicenseController::class, 'index'])->name('provider-licenses.index');
@@ -1288,6 +1298,8 @@ Route::prefix('admin')->name('admin.')->middleware(['auth', \App\Http\Middleware
     Route::post('/provider-licenses/{id}/approve', [App\Http\Controllers\Admin\ProviderLicenseController::class, 'approve'])->name('provider-licenses.approve');
     Route::post('/provider-licenses/{id}/reject', [App\Http\Controllers\Admin\ProviderLicenseController::class, 'reject'])->name('provider-licenses.reject');
     Route::post('/provider-licenses/bulk-approve', [App\Http\Controllers\Admin\ProviderLicenseController::class, 'bulkApprove'])->name('provider-licenses.bulk-approve');
+    Route::get('/provider-licenses/{license}/{user}/post-rejection-choice', [App\Http\Controllers\Admin\ProviderLicenseController::class, 'postRejectionChoice'])->name('provider-licenses.post-rejection-choice');
+    Route::post('/provider-licenses/handle-post-rejection-choice', [App\Http\Controllers\Admin\ProviderLicenseController::class, 'handlePostRejectionChoice'])->name('provider-licenses.handle-post-rejection-choice');
 
     // Vendor License Management
     Route::get('/vendor-licenses', [App\Http\Controllers\Admin\VendorLicenseController::class, 'index'])->name('vendor-licenses.index');
@@ -1998,6 +2010,114 @@ Route::prefix('vendor')->name('vendor.')->middleware(['auth', \App\Http\Middlewa
     Route::post('/dashboard/license/renewal', [\App\Http\Controllers\Vendor\LicenseController::class, 'storeRenewal'])->name('license.renewal.store');
     Route::get('/dashboard/license/{id}/view', [\App\Http\Controllers\Vendor\LicenseController::class, 'viewDocument'])->name('license.view');
     Route::get('/dashboard/license/{id}/preview', [\App\Http\Controllers\Vendor\LicenseController::class, 'preview'])->name('license.preview');
+
+    // Service Provider Management
+    Route::prefix('settings/service-providers')->name('settings.service-providers.')->group(function () {
+        Route::get('/', [\App\Http\Controllers\Vendor\ServiceProviderController::class, 'index'])->name('index');
+        Route::get('/create', [\App\Http\Controllers\Vendor\ServiceProviderController::class, 'create'])->name('create');
+        Route::post('/', [\App\Http\Controllers\Vendor\ServiceProviderController::class, 'store'])->name('store');
+        Route::get('/{serviceProvider}', [\App\Http\Controllers\Vendor\ServiceProviderController::class, 'show'])->name('show');
+        Route::get('/{serviceProvider}/edit', [\App\Http\Controllers\Vendor\ServiceProviderController::class, 'edit'])->name('edit');
+        Route::put('/{serviceProvider}', [\App\Http\Controllers\Vendor\ServiceProviderController::class, 'update'])->name('update');
+        Route::delete('/{serviceProvider}', [\App\Http\Controllers\Vendor\ServiceProviderController::class, 'destroy'])->name('destroy');
+        Route::patch('/{serviceProvider}/toggle-status', [\App\Http\Controllers\Vendor\ServiceProviderController::class, 'toggleStatus'])->name('toggle-status');
+    });
+
+    // Products Manager Management
+    Route::prefix('settings/products-managers')->name('settings.products-managers.')->group(function () {
+        Route::get('/', [\App\Http\Controllers\Vendor\ProductsManagerController::class, 'index'])->name('index');
+        Route::get('/create', [\App\Http\Controllers\Vendor\ProductsManagerController::class, 'create'])->name('create');
+        Route::post('/', [\App\Http\Controllers\Vendor\ProductsManagerController::class, 'store'])->name('store');
+        Route::get('/{productsManager}', [\App\Http\Controllers\Vendor\ProductsManagerController::class, 'show'])->name('show');
+        Route::get('/{productsManager}/edit', [\App\Http\Controllers\Vendor\ProductsManagerController::class, 'edit'])->name('edit');
+        Route::put('/{productsManager}', [\App\Http\Controllers\Vendor\ProductsManagerController::class, 'update'])->name('update');
+        Route::delete('/{productsManager}', [\App\Http\Controllers\Vendor\ProductsManagerController::class, 'destroy'])->name('destroy');
+        Route::patch('/{productsManager}/toggle-status', [\App\Http\Controllers\Vendor\ProductsManagerController::class, 'toggleStatus'])->name('toggle-status');
+        Route::get('/{productsManager}/statistics', [\App\Http\Controllers\Vendor\ProductsManagerController::class, 'getStatistics'])->name('statistics');
+    });
+});
+
+// Service Provider Routes
+Route::middleware(['auth', \App\Http\Middleware\ServiceProviderMiddleware::class])->prefix('service-provider')->name('service-provider.')->group(function () {
+    // Dashboard
+    Route::get('/dashboard', [\App\Http\Controllers\ServiceProvider\DashboardController::class, 'index'])->name('dashboard');
+    Route::get('/dashboard/stats', [\App\Http\Controllers\ServiceProvider\DashboardController::class, 'getStats'])->name('dashboard.stats');
+    Route::get('/dashboard/activity', [\App\Http\Controllers\ServiceProvider\DashboardController::class, 'getRecentActivity'])->name('dashboard.activity');
+
+    // Services Management
+    Route::resource('services', \App\Http\Controllers\ServiceProvider\ServiceController::class);
+
+    // Bookings Management
+    Route::get('/bookings', [\App\Http\Controllers\ServiceProvider\BookingController::class, 'index'])->name('bookings.index');
+    Route::get('/bookings/{booking}', [\App\Http\Controllers\ServiceProvider\BookingController::class, 'show'])->name('bookings.show');
+    Route::patch('/bookings/{booking}/status', [\App\Http\Controllers\ServiceProvider\BookingController::class, 'updateStatus'])->name('bookings.update-status');
+    Route::get('/bookings/stats', [\App\Http\Controllers\ServiceProvider\BookingController::class, 'getStats'])->name('bookings.stats');
+    Route::get('/bookings/today', [\App\Http\Controllers\ServiceProvider\BookingController::class, 'getTodayBookings'])->name('bookings.today');
+    Route::patch('/bookings/bulk-status', [\App\Http\Controllers\ServiceProvider\BookingController::class, 'bulkUpdateStatus'])->name('bookings.bulk-status');
+
+    // Deals Management (placeholder for future implementation)
+    Route::get('/deals', function () {
+        return view('service-provider.deals.index');
+    })->name('deals.index');
+});
+
+// Products Manager Routes
+Route::middleware(['auth', \App\Http\Middleware\ProductsManagerMiddleware::class])->prefix('products-manager')->name('products-manager.')->group(function () {
+    // Dashboard
+    Route::get('/dashboard', [\App\Http\Controllers\ProductsManager\DashboardController::class, 'index'])->name('dashboard');
+    Route::get('/dashboard/stats', [\App\Http\Controllers\ProductsManager\DashboardController::class, 'getStats'])->name('dashboard.stats');
+    Route::get('/dashboard/activity', [\App\Http\Controllers\ProductsManager\DashboardController::class, 'getRecentActivity'])->name('dashboard.activity');
+
+    // Products Management - reuse vendor product management pages/controllers
+    Route::get('/products', [\App\Http\Controllers\Vendor\ProductController::class, 'index'])->name('products.index');
+    Route::get('/products/create', [\App\Http\Controllers\Vendor\ProductController::class, 'create'])->name('products.create');
+    Route::get('/products/create-data', [\App\Http\Controllers\Vendor\ProductController::class, 'getCreateData'])->name('products.create.data');
+    Route::post('/products', [\App\Http\Controllers\Vendor\ProductController::class, 'store'])->name('products.store');
+    Route::get('/products/{product}', [\App\Http\Controllers\Vendor\ProductController::class, 'show'])->name('products.show');
+    Route::get('/products/{product}/edit', [\App\Http\Controllers\Vendor\ProductController::class, 'edit'])->name('products.edit');
+    Route::get('/products/{product}/edit-data', [\App\Http\Controllers\Vendor\ProductController::class, 'getEditData'])->name('products.edit.data');
+    Route::put('/products/{product}', [\App\Http\Controllers\Vendor\ProductController::class, 'update'])->name('products.update');
+    Route::delete('/products/{product}', [\App\Http\Controllers\Vendor\ProductController::class, 'destroy'])->name('products.destroy');
+    Route::get('/products/search-suggestions', [\App\Http\Controllers\Vendor\ProductController::class, 'searchSuggestions'])->name('products.search-suggestions');
+    Route::get('/api/latest-product-id', [\App\Http\Controllers\Vendor\ProductController::class, 'getLatestProductId'])->name('api.latest-product-id');
+    Route::get('/api/products/{id}/verify-sizes', [\App\Http\Controllers\Vendor\ProductController::class, 'verifySizes'])->name('api.products.verify-sizes');
+
+    // Orders Management
+    Route::get('/orders', function () {
+        return view('products-manager.orders.index');
+    })->name('orders.index');
+    Route::get('/orders/pending', function () {
+        return view('products-manager.orders.pending');
+    })->name('orders.pending');
+
+    // Deals Management
+    Route::get('/deals', [\App\Http\Controllers\ProductsManager\DealController::class, 'index'])->name('deals.index');
+    Route::get('/deals/create', [\App\Http\Controllers\ProductsManager\DealController::class, 'create'])->name('deals.create');
+    Route::post('/deals', [\App\Http\Controllers\ProductsManager\DealController::class, 'store'])->name('deals.store');
+    Route::get('/deals/{deal}/edit', [\App\Http\Controllers\ProductsManager\DealController::class, 'edit'])->name('deals.edit');
+    Route::put('/deals/{deal}', [\App\Http\Controllers\ProductsManager\DealController::class, 'update'])->name('deals.update');
+    Route::delete('/deals/{deal}', [\App\Http\Controllers\ProductsManager\DealController::class, 'destroy'])->name('deals.destroy');
+
+    // API routes for product management (reuse vendor controllers)
+    Route::post('/api/color-sizes/get-sizes-for-color', [\App\Http\Controllers\Vendor\ProductColorSizeController::class, 'getSizesForColor'])->name('api.color-sizes.get-sizes-for-color');
+    Route::post('/api/color-sizes/validate-stock-allocation', [\App\Http\Controllers\Vendor\ProductColorSizeController::class, 'validateStockAllocation'])->name('api.color-sizes.validate-stock-allocation');
+    Route::post('/api/color-sizes/get-color-stock-info', [\App\Http\Controllers\Vendor\ProductColorSizeController::class, 'getColorStockInfo'])->name('api.color-sizes.get-color-stock-info');
+    Route::post('/api/color-sizes/save-combinations', [\App\Http\Controllers\Vendor\ProductColorSizeController::class, 'saveColorSizeCombinations'])->name('api.color-sizes.save-combinations');
+
+    // Size Management API routes
+    Route::post('/api/sizes/create', [\App\Http\Controllers\Vendor\ProductSizeController::class, 'store'])->name('api.sizes.create');
+    Route::post('/api/sizes/update', [\App\Http\Controllers\Vendor\ProductSizeController::class, 'update'])->name('api.sizes.update');
+    Route::delete('/api/sizes/{id}', [\App\Http\Controllers\Vendor\ProductSizeController::class, 'destroy'])->name('api.sizes.destroy');
+
+    // Color Management API routes
+    Route::post('/api/colors/create', [\App\Http\Controllers\Vendor\ProductColorController::class, 'store'])->name('api.colors.create');
+    Route::post('/api/colors/update', [\App\Http\Controllers\Vendor\ProductColorController::class, 'update'])->name('api.colors.update');
+    Route::delete('/api/colors/{id}', [\App\Http\Controllers\Vendor\ProductColorController::class, 'destroy'])->name('api.colors.destroy');
+
+    // Product session management
+    Route::post('/products/session/store', [\App\Http\Controllers\Vendor\ProductController::class, 'storeSession'])->name('products.session.store');
+    Route::get('/products/session/get', [\App\Http\Controllers\Vendor\ProductController::class, 'getSession'])->name('products.session.get');
+    Route::delete('/products/session/clear', [\App\Http\Controllers\Vendor\ProductController::class, 'clearSession'])->name('products.session.clear');
 });
 
 // Vendor license status routes (accessible without active license)

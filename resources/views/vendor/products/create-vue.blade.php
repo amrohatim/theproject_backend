@@ -300,6 +300,7 @@
         'stock_quantity' => __('vendor.stock_quantity'),
         'price_adjustment' => __('vendor.price_adjustment'),
         'units' => __('vendor.units'),
+        'unit' => __('vendor.unit'),
         'aed' => __('vendor.aed'),
         'available' => __('vendor.available'),
         'to_allocate' => __('vendor.to_allocate'),

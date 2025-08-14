@@ -72,6 +72,8 @@ class Kernel extends HttpKernel
         'merchant' => \App\Http\Middleware\MerchantMiddleware::class,
         'merchant.license' => \App\Http\Middleware\MerchantLicenseAccessMiddleware::class,
         'approved' => \App\Http\Middleware\ApprovedUserMiddleware::class,
+        'service_provider' => \App\Http\Middleware\ServiceProviderMiddleware::class,
+        'products_manager' => \App\Http\Middleware\ProductsManagerMiddleware::class,
         'locale' => \App\Http\Middleware\SetLocale::class,
     ];
 }

@@ -39,16 +39,16 @@
             </a>
         </div>
 
-        <!-- Notification Settings -->
+        <!-- Service Provider Management -->
         <div class="bg-white dark:bg-gray-800 rounded-lg shadow p-6 border border-gray-200 dark:border-gray-700">
             <div class="flex items-center mb-4">
                 <div class="rounded-md bg-blue-100 dark:bg-blue-900 p-3 mr-4">
-                    <i class="fas fa-bell text-blue-600 dark:text-blue-400"></i>
+                    <i class="fas fa-users text-blue-600 dark:text-blue-400"></i>
                 </div>
-                <h3 class="text-lg font-medium text-gray-900 dark:text-white">Notification Settings</h3>
+                <h3 class="text-lg font-medium text-gray-900 dark:text-white">Service Providers</h3>
             </div>
-            <p class="text-sm text-gray-500 dark:text-gray-400 mb-4">Configure email and push notification preferences.</p>
-            <a href="{{ route('vendor.settings.notifications') }}" class="inline-flex items-center px-4 py-2 bg-blue-600 border border-transparent rounded-md font-semibold text-xs text-white uppercase tracking-widest hover:bg-blue-700 active:bg-blue-900 focus:outline-none focus:border-blue-900 focus:ring ring-blue-300 disabled:opacity-25 transition ease-in-out duration-150">
+            <p class="text-sm text-gray-500 dark:text-gray-400 mb-4">Manage service providers who can handle day-to-day service operations for your branches.</p>
+            <a href="{{ route('vendor.settings.service-providers.index') }}" class="inline-flex items-center px-4 py-2 bg-blue-600 border border-transparent rounded-md font-semibold text-xs text-white uppercase tracking-widest hover:bg-blue-700 active:bg-blue-900 focus:outline-none focus:border-blue-900 focus:ring ring-blue-300 disabled:opacity-25 transition ease-in-out duration-150">
                 Manage
             </a>
         </div>
@@ -81,16 +81,16 @@
             </a>
         </div>
 
-        <!-- Tax Settings -->
+        <!-- Products Manager Management -->
         <div class="bg-white dark:bg-gray-800 rounded-lg shadow p-6 border border-gray-200 dark:border-gray-700">
             <div class="flex items-center mb-4">
-                <div class="rounded-md bg-red-100 dark:bg-red-900 p-3 mr-4">
-                    <i class="fas fa-file-invoice-dollar text-red-600 dark:text-red-400"></i>
+                <div class="rounded-md bg-purple-100 dark:bg-purple-900 p-3 mr-4">
+                    <i class="fas fa-box text-purple-600 dark:text-purple-400"></i>
                 </div>
-                <h3 class="text-lg font-medium text-gray-900 dark:text-white">Tax Settings</h3>
+                <h3 class="text-lg font-medium text-gray-900 dark:text-white">Products Managers</h3>
             </div>
-            <p class="text-sm text-gray-500 dark:text-gray-400 mb-4">Configure tax rates and tax-related information.</p>
-            <a href="{{ route('vendor.settings.tax') }}" class="inline-flex items-center px-4 py-2 bg-red-600 border border-transparent rounded-md font-semibold text-xs text-white uppercase tracking-widest hover:bg-red-700 active:bg-red-900 focus:outline-none focus:border-red-900 focus:ring ring-red-300 disabled:opacity-25 transition ease-in-out duration-150">
+            <p class="text-sm text-gray-500 dark:text-gray-400 mb-4">Manage products managers who can handle all company products across all branches.</p>
+            <a href="{{ route('vendor.settings.products-managers.index') }}" class="inline-flex items-center px-4 py-2 bg-purple-600 border border-transparent rounded-md font-semibold text-xs text-white uppercase tracking-widest hover:bg-purple-700 active:bg-purple-900 focus:outline-none focus:border-purple-900 focus:ring ring-purple-300 disabled:opacity-25 transition ease-in-out duration-150">
                 Manage
             </a>
         </div>

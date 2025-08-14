@@ -84,11 +84,71 @@ class MerchantLicenseController extends Controller
         }
 
         if ($licenseService->rejectLicense($merchant, Auth::user(), $request->rejection_reason)) {
-            return redirect()->route('admin.merchant-licenses.index')
-                ->with('success', "License rejected for {$merchant->business_name}.");
+            // Redirect to admin choice page instead of directly back to index
+            return redirect()->route('admin.merchant-licenses.post-rejection-choice', [
+                'merchant' => $merchant->id,
+                'user' => $merchant->user_id
+            ])->with('success', "License rejected for {$merchant->business_name}. Email notification sent to the merchant.");
         } else {
             return redirect()->back()
                 ->with('error', 'Failed to reject license. Please try again.');
+        }
+    }
+
+    /**
+     * Show post-rejection choice page for admin to decide user fate.
+     */
+    public function postRejectionChoice(Request $request, $merchant, $user)
+    {
+        $merchantModel = Merchant::findOrFail($merchant);
+        $userModel = User::findOrFail($user);
+
+        // Ensure this is a merchant
+        if ($userModel->role !== 'merchant') {
+            abort(404, 'Merchant not found.');
+        }
+
+        return view('admin.merchant-licenses.post-rejection-choice', [
+            'merchant' => $merchantModel,
+            'user' => $userModel,
+            'successMessage' => $request->session()->get('success')
+        ]);
+    }
+
+    /**
+     * Handle admin choice after rejection - keep or remove user.
+     */
+    public function handlePostRejectionChoice(Request $request, LicenseManagementService $licenseService)
+    {
+        $request->validate([
+            'action' => 'required|in:keep,remove',
+            'user_id' => 'required|exists:users,id',
+            'merchant_id' => 'required|exists:merchants,id'
+        ]);
+
+        $user = User::findOrFail($request->user_id);
+        $merchant = Merchant::findOrFail($request->merchant_id);
+
+        if ($request->action === 'remove') {
+            try {
+                $result = $licenseService->deleteUserAndAssociatedData($user);
+
+                if ($result) {
+                    return redirect()->route('admin.merchant-licenses.index')
+                        ->with('success', "User {$user->name} and all associated data have been permanently deleted.");
+                } else {
+                    return redirect()->back()
+                        ->with('error', 'Failed to delete user. Please try again.');
+                }
+            } catch (\Exception $e) {
+                Log::error('Error deleting user after merchant license rejection: ' . $e->getMessage());
+                return redirect()->back()
+                    ->with('error', 'An error occurred while deleting the user.');
+            }
+        } else {
+            // Keep user - just redirect back to index
+            return redirect()->route('admin.merchant-licenses.index')
+                ->with('success', "User {$user->name} has been kept. They can resubmit their license application.");
         }
     }
 

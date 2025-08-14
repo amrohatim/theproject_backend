@@ -2070,5 +2070,11 @@ return [
     'check_out_deal' => 'تحقق من هذه الصفقة المذهلة!',
     'link_copied' => 'تم نسخ الرابط إلى الحافظة!',
     'save_feature_coming_soon' => 'ميزة الحفظ قادمة قريباً!',
+    'account_already_exists' => 'لديك شركة مسجلة بهذا البريد الإلكتروني، لا يمكنك إنشاء حسابين بريد إلكتروني متطابقين. يرجى تسجيل الدخول إلى حسابك الحالي',
+    'manage_your_company_information_and_settings' => 'إدارة معلومات شركتك وإعداداتك',
+    'can_deliver_description' => 'هذا يحدد ما إذا كان بإمكان شركتك توصيل المنتجات إلى العملاء مباشرة أم إذا كان من الضروري خدمة توصيل طرف ثالث',
+    'brief_description_of_your_company_for_your_customers' => 'وصف موجز لشركتك لعملائك',
+    'yes_we_can_handle_our_own_deliveries' => 'نعم، يمكننا التعامل مع توصيلاتنا الخاصة',
+    'no_we_need_a_third_party_delivery_service' => 'لا، نحتاج إلى خدمة توصيل طرف ثالث',
 
 ];

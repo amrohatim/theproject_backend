@@ -119,7 +119,7 @@ class UserController extends Controller
             'name' => 'required|string|max:255',
             'email' => ['required', 'string', 'email', 'max:255', Rule::unique('users')->ignore($user->id)],
             'password' => 'nullable|string|min:8|confirmed',
-            'role' => 'required|string|in:admin,vendor,customer,provider',
+            'role' => 'required|string|in:admin,vendor,customer,provider,merchant,service_provider,products_manager',
             'status' => 'required|string|in:active,inactive',
         ]);
 

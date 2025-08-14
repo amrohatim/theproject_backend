@@ -30,15 +30,15 @@
       </div>
 
       <!-- Stock Progress Indicator -->
-      <div class="bg-blue-50 dark:bg-blue-900/20 border border-blue-200 dark:border-blue-800 rounded-lg p-4 mb-6">
+      <div class="bg-orange-50 dark:bg-orange-900/20 border border-orange-200 dark:border-orange-800 rounded-lg p-4 mb-6">
         <div class="flex items-center justify-between mb-2">
-          <span class="text-sm font-medium text-blue-700 dark:text-blue-300">{{ $t('vendor.stock_allocation_progress') }}</span>
-          <span class="text-sm text-blue-600 dark:text-blue-400">
+          <span class="text-sm font-medium text-orange-700 dark:text-orange-300">{{ $t('vendor.stock_allocation_progress') }}</span>
+          <span class="text-sm text-orange-600 dark:text-orange-400">
             <span>{{ totalAllocatedStock }}</span> / {{ productData.stock }} {{ $t('vendor.units_allocated') }}
           </span>
         </div>
         <div class="w-full bg-gray-200 dark:bg-gray-700 rounded-full h-2">
-          <div class="bg-blue-600 h-2 rounded-full transition-all duration-300"
+          <div class="bg-orange-600 h-2 rounded-full transition-all duration-300"
                :style="{ width: stockProgressPercentage + '%' }">
           </div>
         </div>

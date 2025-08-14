@@ -95,7 +95,11 @@ class Deal extends Model
      */
     public function products()
     {
-        return $this->belongsToMany(Product::class, 'deal_product');
+        if (!$this->product_ids) {
+            return collect();
+        }
+
+        return \App\Models\Product::whereIn('id', $this->product_ids)->get();
     }
 
 
