@@ -13,7 +13,7 @@ class ServiceController extends Controller
     /**
      * Display a listing of services that the service provider can manage.
      */
-    public function index()
+    public function index(Request $request)
     {
         $user = Auth::user();
         $serviceProvider = $user->serviceProvider;
@@ -22,15 +22,102 @@ class ServiceController extends Controller
             return redirect('/')->with('error', 'Service provider profile not found.');
         }
 
-        // Get services that this service provider can manage
-        $services = Service::whereIn('id', $serviceProvider->service_ids ?? [])
-            ->with(['branch'])
-            ->paginate(10);
+        // Start with services that this service provider can manage
+        $query = Service::whereIn('id', $serviceProvider->service_ids ?? [])
+            ->with(['branch', 'category']);
+
+        // Apply search filter
+        if ($request->filled('search')) {
+            $search = $request->get('search');
+            $query->where(function ($q) use ($search) {
+                $q->where('name', 'like', "%{$search}%")
+                  ->orWhere('service_name_arabic', 'like', "%{$search}%")
+                  ->orWhere('description', 'like', "%{$search}%")
+                  ->orWhere('service_description_arabic', 'like', "%{$search}%");
+            });
+        }
+
+        // Apply branch filter
+        if ($request->filled('branch_id')) {
+            $query->where('branch_id', $request->get('branch_id'));
+        }
+
+        // Apply category filter
+        if ($request->filled('category_id')) {
+            $query->where('category_id', $request->get('category_id'));
+        }
+
+        // Apply status filter
+        if ($request->filled('status')) {
+            $status = $request->get('status');
+            if ($status === 'available') {
+                $query->where('is_available', true);
+            } elseif ($status === 'unavailable') {
+                $query->where('is_available', false);
+            }
+        }
+
+        // Apply price range filter
+        if ($request->filled('min_price')) {
+            $query->where('price', '>=', $request->get('min_price'));
+        }
+        if ($request->filled('max_price')) {
+            $query->where('price', '<=', $request->get('max_price'));
+        }
+
+        // Apply sorting
+        $sortBy = $request->get('sort_by', 'name');
+        switch ($sortBy) {
+            case 'price_low':
+                $query->orderBy('price', 'asc');
+                break;
+            case 'price_high':
+                $query->orderBy('price', 'desc');
+                break;
+            case 'duration_low':
+                $query->orderBy('duration', 'asc');
+                break;
+            case 'duration_high':
+                $query->orderBy('duration', 'desc');
+                break;
+            case 'newest':
+                $query->orderBy('created_at', 'desc');
+                break;
+            case 'name':
+            default:
+                $query->orderBy('name', 'asc');
+                break;
+        }
+
+        $services = $query->paginate(10)->appends($request->query());
 
         // Get branches this service provider can access
         $branches = Branch::whereIn('id', $serviceProvider->branch_ids ?? [])->get();
 
-        return view('service-provider.services.index', compact('services', 'branches', 'serviceProvider'));
+        // Get categories for services this provider manages
+        $categories = \App\Models\Category::whereIn('id',
+            Service::whereIn('id', $serviceProvider->service_ids ?? [])
+                ->pluck('category_id')
+                ->unique()
+        )->orderBy('name')->get();
+
+        // Count active filters
+        $activeFilters = collect([
+            'search' => $request->get('search'),
+            'branch_id' => $request->get('branch_id'),
+            'category_id' => $request->get('category_id'),
+            'status' => $request->get('status'),
+            'min_price' => $request->get('min_price'),
+            'max_price' => $request->get('max_price'),
+        ])->filter()->count();
+
+        return view('service-provider.services.index', compact(
+            'services',
+            'branches',
+            'categories',
+            'serviceProvider',
+            'activeFilters'
+        ));
     }
 
     /**
@@ -45,10 +132,25 @@ class ServiceController extends Controller
             return redirect('/')->with('error', 'Service provider profile not found.');
         }
 
+        // Get service categories with their children - force a fresh query to get the latest data
+        $parentCategories = \App\Models\Category::where('type', 'service')
+            ->whereNull('parent_id')
+            ->with(['children' => function($query) {
+                $query->orderBy('name');
+            }])
+            ->orderBy('name')
+            ->get();
+
         // Get branches this service provider can access
         $branches = Branch::whereIn('id', $serviceProvider->branch_ids ?? [])->get();
 
-        return view('service-provider.services.create', compact('branches', 'serviceProvider'));
+        // Check if the service provider has any branches
+        if ($branches->isEmpty()) {
+            return redirect()->route('service-provider.dashboard')
+                ->with('warning', 'You need access to branches before adding services. Please contact your vendor.');
+        }
+
+        return view('service-provider.services.create', compact('parentCategories', 'branches', 'serviceProvider'));
     }
 
     /**
@@ -63,13 +165,16 @@ class ServiceController extends Controller
             return redirect('/')->with('error', 'Service provider profile not found.');
         }
 
+        // Custom validation for bilingual fields
         $request->validate([
             'name' => 'required|string|max:255',
-            'description' => 'nullable|string',
+            'service_name_arabic' => 'required|string|max:255',
+            'category_id' => 'required|exists:categories,id',
+            'branch_id' => 'required|exists:branches,id',
             'price' => 'required|numeric|min:0',
             'duration' => 'required|integer|min:1',
-            'branch_id' => 'required|exists:branches,id',
-            'category' => 'nullable|string|max:255',
+            'description' => 'nullable|string',
+            'service_description_arabic' => 'nullable|string',
             'image' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
         ]);
 
@@ -80,18 +185,17 @@ class ServiceController extends Controller
                 ->withInput();
         }
 
-        $serviceData = $request->except('image');
-        $serviceData['status'] = 'active';
+        $data = $request->except('image');
+        $data['is_available'] = $request->has('is_available') ? true : false;
+        $data['home_service'] = $request->has('home_service') ? true : false;
 
         // Handle image upload
         if ($request->hasFile('image')) {
-            $image = $request->file('image');
-            $imageName = time() . '_' . $image->getClientOriginalName();
-            $image->move(public_path('images/services'), $imageName);
-            $serviceData['image'] = 'images/services/' . $imageName;
+            $imagePath = $request->file('image')->store('services', 'public');
+            $data['image'] = \Illuminate\Support\Facades\Storage::url($imagePath);
         }
 
-        $service = Service::create($serviceData);
+        $service = Service::create($data);
 
         // Add this service to the service provider's service list
         $serviceIds = $serviceProvider->service_ids ?? [];
@@ -148,10 +252,13 @@ class ServiceController extends Controller
             abort(403, 'You do not have access to this service.');
         }
 
+        // Get categories
+        $categories = \App\Models\Category::orderBy('name')->get();
+
         // Get branches this service provider can access
         $branches = Branch::whereIn('id', $serviceProvider->branch_ids ?? [])->get();
 
-        return view('service-provider.services.edit', compact('service', 'branches', 'serviceProvider'));
+        return view('service-provider.services.edit', compact('service', 'categories', 'branches', 'serviceProvider'));
     }
 
     /**
@@ -171,14 +278,16 @@ class ServiceController extends Controller
             abort(403, 'You do not have access to this service.');
         }
 
+        // Custom validation for bilingual fields
         $request->validate([
             'name' => 'required|string|max:255',
-            'description' => 'nullable|string',
+            'service_name_arabic' => 'required|string|max:255',
+            'category_id' => 'required|exists:categories,id',
+            'branch_id' => 'required|exists:branches,id',
             'price' => 'required|numeric|min:0',
             'duration' => 'required|integer|min:1',
-            'branch_id' => 'required|exists:branches,id',
-            'category' => 'nullable|string|max:255',
-            'status' => 'required|in:active,inactive',
+            'description' => 'nullable|string',
+            'service_description_arabic' => 'nullable|string',
             'image' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
         ]);
 
@@ -189,22 +298,22 @@ class ServiceController extends Controller
                 ->withInput();
         }
 
-        $serviceData = $request->except('image');
+        $data = $request->except('image');
+        $data['is_available'] = $request->has('is_available') ? true : false;
+        $data['home_service'] = $request->has('home_service') ? true : false;
 
         // Handle image upload
         if ($request->hasFile('image')) {
             // Delete old image if exists
-            if ($service->image && file_exists(public_path($service->image))) {
-                unlink(public_path($service->image));
+            if ($service->image && \Illuminate\Support\Facades\Storage::exists('public/' . str_replace('/storage/', '', $service->image))) {
+                \Illuminate\Support\Facades\Storage::delete('public/' . str_replace('/storage/', '', $service->image));
             }
 
-            $image = $request->file('image');
-            $imageName = time() . '_' . $image->getClientOriginalName();
-            $image->move(public_path('images/services'), $imageName);
-            $serviceData['image'] = 'images/services/' . $imageName;
+            $imagePath = $request->file('image')->store('services', 'public');
+            $data['image'] = \Illuminate\Support\Facades\Storage::url($imagePath);
         }
 
-        $service->update($serviceData);
+        $service->update($data);
 
         return redirect()->route('service-provider.services.index')
             ->with('success', 'Service updated successfully.');
@@ -247,5 +356,95 @@ class ServiceController extends Controller
 
         return redirect()->route('service-provider.services.index')
             ->with('success', 'Service deleted successfully.');
+    }
+
+    /**
+     * AJAX endpoint for real-time filtering and searching.
+     */
+    public function filter(Request $request)
+    {
+        $user = Auth::user();
+        $serviceProvider = $user->serviceProvider;
+
+        if (!$serviceProvider) {
+            return response()->json(['error' => 'Service provider profile not found.'], 403);
+        }
+
+        // Start with services that this service provider can manage
+        $query = Service::whereIn('id', $serviceProvider->service_ids ?? [])
+            ->with(['branch', 'category']);
+
+        // Apply search filter
+        if ($request->filled('search')) {
+            $search = $request->get('search');
+            $query->where(function ($q) use ($search) {
+                $q->where('name', 'like', "%{$search}%")
+                  ->orWhere('service_name_arabic', 'like', "%{$search}%")
+                  ->orWhere('description', 'like', "%{$search}%")
+                  ->orWhere('service_description_arabic', 'like', "%{$search}%");
+            });
+        }
+
+        // Apply branch filter
+        if ($request->filled('branch_id')) {
+            $query->where('branch_id', $request->get('branch_id'));
+        }
+
+        // Apply category filter
+        if ($request->filled('category_id')) {
+            $query->where('category_id', $request->get('category_id'));
+        }
+
+        // Apply status filter
+        if ($request->filled('status')) {
+            $status = $request->get('status');
+            if ($status === 'available') {
+                $query->where('is_available', true);
+            } elseif ($status === 'unavailable') {
+                $query->where('is_available', false);
+            }
+        }
+
+        // Apply price range filter
+        if ($request->filled('min_price')) {
+            $query->where('price', '>=', $request->get('min_price'));
+        }
+        if ($request->filled('max_price')) {
+            $query->where('price', '<=', $request->get('max_price'));
+        }
+
+        // Apply sorting
+        $sortBy = $request->get('sort_by', 'name');
+        switch ($sortBy) {
+            case 'price_low':
+                $query->orderBy('price', 'asc');
+                break;
+            case 'price_high':
+                $query->orderBy('price', 'desc');
+                break;
+            case 'duration_low':
+                $query->orderBy('duration', 'asc');
+                break;
+            case 'duration_high':
+                $query->orderBy('duration', 'desc');
+                break;
+            case 'newest':
+                $query->orderBy('created_at', 'desc');
+                break;
+            case 'name':
+            default:
+                $query->orderBy('name', 'asc');
+                break;
+        }
+
+        $services = $query->paginate(10)->appends($request->query());
+
+        // Return JSON response with the filtered services
+        return response()->json([
+            'success' => true,
+            'html' => view('service-provider.services.partials.services-table', compact('services'))->render(),
+            'pagination' => $services->links()->render(),
+            'count' => $services->total(),
+        ]);
     }
 }

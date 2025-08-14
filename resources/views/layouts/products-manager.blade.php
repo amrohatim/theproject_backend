@@ -35,8 +35,8 @@
         <div class="w-64 bg-white dark:bg-gray-800 shadow-lg">
             <div class="flex flex-col h-full">
                 <!-- Logo -->
-                <div class="flex items-center justify-center h-16 px-4 bg-purple-600 dark:bg-purple-700">
-                    <h1 class="text-xl font-bold text-white">{{ config('app.name', 'Dala3Chic') }}</h1>
+                <div class="flex items-center justify-center h-16 px-4 bg-orange-500 dark:bg-orange-600">
+                    <h1 class="text-xl font-bold text-white">{{__('products_manager.products_manager_role')}}</h1>
                 </div>
 
                 <!-- User Info -->
@@ -44,7 +44,7 @@
                     <div class="flex items-center">
                         <div class="flex-shrink-0">
                             <div class="h-10 w-10 rounded-full bg-purple-100 dark:bg-purple-900 flex items-center justify-center">
-                                <i class="fas fa-user text-purple-600 dark:text-purple-400"></i>
+                                <i class="fas fa-user text-orange-600 dark:text-orange-400"></i>
                             </div>
                         </div>
                         <div class="ml-3">
@@ -150,17 +150,6 @@
                                 <i class="fas fa-bell"></i>
                             </button>
 
-                            <!-- User Menu -->
-                            <div class="relative">
-                                <button class="flex items-center text-sm rounded-full focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-purple-500" id="user-menu-button">
-                                    <span class="sr-only">{{ __('products_manager.open_user_menu') }}</span>
-                                    <div class="h-8 w-8 rounded-full bg-purple-100 dark:bg-purple-900 flex items-center justify-center">
-                                        <i class="fas fa-user text-purple-600 dark:text-purple-400 text-sm"></i>
-                                    </div>
-                                    <span class="ml-2 text-gray-700 dark:text-gray-300">{{ Auth::user()->name }}</span>
-                                    <i class="fas fa-chevron-down ml-2 text-gray-400"></i>
-                                </button>
-                            </div>
                         </div>
                     </div>
                 </div>
@@ -291,6 +280,9 @@
 
                 // Set initial state
                 history.replaceState({ url: window.location.href }, '', window.location.href);
+
+                // Check if we need to load content for the current page
+                this.checkAndLoadInitialContent();
             }
 
             interceptNavigationClicks() {
@@ -309,6 +301,27 @@
                 });
             }
 
+            checkAndLoadInitialContent() {
+                // Check if the current URL should have AJAX-loaded content
+                const currentUrl = window.location.href;
+                if (this.shouldInterceptUrl(currentUrl)) {
+                    // Check if the dynamic content container is empty or has placeholder content
+                    const contentContainer = this.dynamicContent;
+                    if (contentContainer) {
+                        const content = contentContainer.innerHTML.trim();
+                        const hasPlaceholder = content.includes('This will be populated via AJAX') ||
+                                             content.includes('Loading product creation form') ||
+                                             content.length < 200; // Very minimal content
+
+                        if (hasPlaceholder) {
+                            console.log('🔄 Loading initial AJAX content for:', currentUrl);
+                            // Load content without updating history since we're already on this page
+                            this.loadContent(currentUrl, false);
+                        }
+                    }
+                }
+            }
+
             shouldInterceptUrl(url) {
                 const productUrls = [
                     '/products-manager/products',
@@ -325,17 +338,15 @@
                 try {
                     this.showLoading();
 
-                    // Convert products-manager URLs to vendor URLs for AJAX requests
+                    // Use the original URL for AJAX requests (Products Manager routes are configured correctly)
                     let ajaxUrl = url;
-                    if (url.includes('/products-manager/products')) {
-                        ajaxUrl = url.replace('/products-manager/products', '/vendor/products');
-                    }
 
                     const response = await fetch(ajaxUrl, {
                         method: 'GET',
                         headers: {
                             'X-Requested-With': 'XMLHttpRequest',
                             'X-CSRF-TOKEN': this.csrfToken,
+                            'X-Products-Manager-Context': 'true',
                             'Accept': 'text/html'
                         }
                     });
@@ -407,7 +418,7 @@
 
                     const s = document.createElement('script');
                     s.type = 'module';
-                    s.src = '/build/assets/vendor-product-create-mfLB0wsw.js'; // latest built hash
+                    s.src = '{{ Vite::asset("resources/js/vendor-product-create.js") }}';
                     s.onload = () => {
                         console.log('✅ vendor-product-create script force loaded and executed');
                         // Try to initialize with force cleanup after a short delay
@@ -438,7 +449,7 @@
 
                     const s = document.createElement('script');
                     s.type = 'module';
-                    s.src = '/build/assets/vendor-product-edit-CajSERjV.js';
+                    s.src = '{{ Vite::asset("resources/js/vendor-product-edit.js") }}';
                     s.onload = () => {
                         console.log('✅ vendor-product-edit script force loaded and executed');
                         // Try to initialize with force cleanup after a short delay

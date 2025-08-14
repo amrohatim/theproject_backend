@@ -78,13 +78,23 @@ class DashboardController extends Controller
         }
 
         // Get deals for services this provider manages
-        $activeDeals = Deal::whereIn('service_id', $serviceProvider->service_ids ?? [])
-            ->where('status', 'active')
-            ->where('start_date', '<=', now())
-            ->where('end_date', '>=', now())
-            ->with(['service'])
-            ->limit(5)
-            ->get();
+        try {
+            $activeDeals = Deal::where('applies_to', 'services')
+                ->where('status', 'active')
+                ->where('start_date', '<=', now())
+                ->where('end_date', '>=', now())
+                ->where(function ($query) use ($serviceProvider) {
+                    // Check if any of the service provider's service IDs are in the deal's service_ids JSON array
+                    foreach ($serviceProvider->service_ids ?? [] as $serviceId) {
+                        $query->orWhereJsonContains('service_ids', $serviceId);
+                    }
+                })
+                ->limit(5)
+                ->get();
+        } catch (\Exception $e) {
+            // Fallback to empty collection if query fails
+            $activeDeals = collect();
+        }
 
         return view('service-provider.dashboard', compact(
             'user',

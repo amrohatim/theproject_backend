@@ -26,7 +26,7 @@
         <div class="w-64 bg-white dark:bg-gray-800 shadow-lg">
             <div class="flex flex-col h-full">
                 <!-- Logo -->
-                <div class="flex items-center justify-center h-16 px-4 bg-blue-600 dark:bg-blue-700">
+                <div class="flex items-center justify-center h-16 px-4 bg-[#53D2DC] dark:bg-[#53D2DC]">
                     <h1 class="text-xl font-bold text-white">{{ config('app.name', 'Dala3Chic') }}</h1>
                 </div>
 
@@ -35,7 +35,7 @@
                     <div class="flex items-center">
                         <div class="flex-shrink-0">
                             <div class="h-10 w-10 rounded-full bg-blue-100 dark:bg-blue-900 flex items-center justify-center">
-                                <i class="fas fa-user text-blue-600 dark:text-blue-400"></i>
+                                <i class="fas fa-user text-[#53D2DC] dark:text-blue-400"></i>
                             </div>
                         </div>
                         <div class="ml-3">
@@ -49,28 +49,28 @@
                 <nav class="flex-1 px-4 py-4 space-y-2">
                     <!-- Dashboard -->
                     <a href="{{ route('service-provider.dashboard') }}" 
-                       class="flex items-center px-3 py-2 text-sm font-medium rounded-md {{ request()->routeIs('service-provider.dashboard') ? 'bg-blue-100 text-blue-700 dark:bg-blue-900 dark:text-blue-200' : 'text-gray-700 hover:bg-gray-100 dark:text-gray-300 dark:hover:bg-gray-700' }}">
+                       class="flex items-center px-3 py-2 text-sm font-medium rounded-md {{ request()->routeIs('service-provider.dashboard') ? 'bg-blue-100 text-[#53D2DC] dark:bg-blue-900 dark:text-blue-200' : 'text-gray-700 hover:bg-gray-100 dark:text-gray-300 dark:hover:bg-gray-700' }}">
                         <i class="fas fa-tachometer-alt mr-3"></i>
                         Dashboard
                     </a>
 
                     <!-- Services -->
                     <a href="{{ route('service-provider.services.index') }}" 
-                       class="flex items-center px-3 py-2 text-sm font-medium rounded-md {{ request()->routeIs('service-provider.services.*') ? 'bg-blue-100 text-blue-700 dark:bg-blue-900 dark:text-blue-200' : 'text-gray-700 hover:bg-gray-100 dark:text-gray-300 dark:hover:bg-gray-700' }}">
+                       class="flex items-center px-3 py-2 text-sm font-medium rounded-md {{ request()->routeIs('service-provider.services.*') ? 'bg-blue-100 text-[#53D2DC] dark:bg-blue-900 dark:text-blue-200' : 'text-gray-700 hover:bg-gray-100 dark:text-gray-300 dark:hover:bg-gray-700' }}">
                         <i class="fas fa-cog mr-3"></i>
                         Services
                     </a>
 
                     <!-- Bookings -->
                     <a href="{{ route('service-provider.bookings.index') }}" 
-                       class="flex items-center px-3 py-2 text-sm font-medium rounded-md {{ request()->routeIs('service-provider.bookings.*') ? 'bg-blue-100 text-blue-700 dark:bg-blue-900 dark:text-blue-200' : 'text-gray-700 hover:bg-gray-100 dark:text-gray-300 dark:hover:bg-gray-700' }}">
+                       class="flex items-center px-3 py-2 text-sm font-medium rounded-md {{ request()->routeIs('service-provider.bookings.*') ? 'bg-blue-100 text-[#53D2DC] dark:bg-blue-900 dark:text-blue-200' : 'text-gray-700 hover:bg-gray-100 dark:text-gray-300 dark:hover:bg-gray-700' }}">
                         <i class="fas fa-calendar-check mr-3"></i>
                         Bookings
                     </a>
 
                     <!-- Deals -->
                     <a href="{{ route('service-provider.deals.index') }}" 
-                       class="flex items-center px-3 py-2 text-sm font-medium rounded-md {{ request()->routeIs('service-provider.deals.*') ? 'bg-blue-100 text-blue-700 dark:bg-blue-900 dark:text-blue-200' : 'text-gray-700 hover:bg-gray-100 dark:text-gray-300 dark:hover:bg-gray-700' }}">
+                       class="flex items-center px-3 py-2 text-sm font-medium rounded-md {{ request()->routeIs('service-provider.deals.*') ? 'bg-blue-100 text-[#53D2DC] dark:bg-blue-900 dark:text-blue-200' : 'text-gray-700 hover:bg-gray-100 dark:text-gray-300 dark:hover:bg-gray-700' }}">
                         <i class="fas fa-percent mr-3"></i>
                         Deals
                     </a>
@@ -109,7 +109,7 @@
                                 <button class="flex items-center text-sm rounded-full focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500" id="user-menu-button">
                                     <span class="sr-only">Open user menu</span>
                                     <div class="h-8 w-8 rounded-full bg-blue-100 dark:bg-blue-900 flex items-center justify-center">
-                                        <i class="fas fa-user text-blue-600 dark:text-blue-400 text-sm"></i>
+                                        <i class="fas fa-user text-[#53D2DC] dark:text-blue-400 text-sm"></i>
                                     </div>
                                     <span class="ml-2 text-gray-700 dark:text-gray-300">{{ Auth::user()->name }}</span>
                                     <i class="fas fa-chevron-down ml-2 text-gray-400"></i>
@@ -151,7 +151,7 @@
                 @endif
 
                 @if(session('info'))
-                    <div class="mb-6 bg-blue-100 border border-blue-400 text-blue-700 px-4 py-3 rounded relative" role="alert">
+                    <div class="mb-6 bg-blue-100 border border-blue-400 text-[#53D2DC] px-4 py-3 rounded relative" role="alert">
                         <span class="block sm:inline">{{ session('info') }}</span>
                         <span class="absolute top-0 bottom-0 right-0 px-4 py-3">
                             <i class="fas fa-times cursor-pointer" onclick="this.parentElement.parentElement.style.display='none'"></i>

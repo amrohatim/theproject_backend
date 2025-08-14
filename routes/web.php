@@ -2046,6 +2046,10 @@ Route::middleware(['auth', \App\Http\Middleware\ServiceProviderMiddleware::class
 
     // Services Management
     Route::resource('services', \App\Http\Controllers\ServiceProvider\ServiceController::class);
+    Route::get('/services-filter', [\App\Http\Controllers\ServiceProvider\ServiceController::class, 'filter'])->name('services.filter');
+
+    // Deals Management
+    Route::resource('deals', \App\Http\Controllers\ServiceProvider\DealController::class);
 
     // Bookings Management
     Route::get('/bookings', [\App\Http\Controllers\ServiceProvider\BookingController::class, 'index'])->name('bookings.index');
@@ -2055,10 +2059,7 @@ Route::middleware(['auth', \App\Http\Middleware\ServiceProviderMiddleware::class
     Route::get('/bookings/today', [\App\Http\Controllers\ServiceProvider\BookingController::class, 'getTodayBookings'])->name('bookings.today');
     Route::patch('/bookings/bulk-status', [\App\Http\Controllers\ServiceProvider\BookingController::class, 'bulkUpdateStatus'])->name('bookings.bulk-status');
 
-    // Deals Management (placeholder for future implementation)
-    Route::get('/deals', function () {
-        return view('service-provider.deals.index');
-    })->name('deals.index');
+
 });
 
 // Products Manager Routes

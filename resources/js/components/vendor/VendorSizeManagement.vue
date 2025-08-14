@@ -5,11 +5,11 @@
         <h4 class="vue-text-lg">{{ $t('vendor.size_management') }}</h4>
         <p class="text-sm text-gray-600">{{ $t('vendor.manage_sizes_stock_allocation') }}</p>
       </div>
-      <button type="button" 
+      <button type="button"
               @click="showAddSizeModal = true"
               class="vue-btn vue-btn-primary">
         <i class="fas fa-plus w-4 h-4"></i>
-        Add Size
+        {{ $t('vendor.add_size') }}
       </button>
     </div>
 
@@ -121,8 +121,8 @@
                   <div class="input-suffix">{{ $t('units') }}</div>
                 </div>
                 <div class="stock-allocation-info">
-                  <span class="available-stock">Available: {{ availableSizeStock + (parseInt(size.stock) || 0) }}</span>
-                  <span class="allocated-stock">{{ size.stock || 0 }} allocated</span>
+                  <span class="available-stock">{{ $t('vendor.available') }}: {{ availableSizeStock + (parseInt(size.stock) || 0) }}</span>
+                  <span class="allocated-stock">{{ size.stock || 0 }} {{ $t('vendor.allocated') }}</span>
                 </div>
                 <div v-if="size.errors?.stock" class="text-red-500 text-xs">{{ size.errors.stock }}</div>
               </div>
@@ -171,14 +171,14 @@
     <div v-else class="text-center py-8 text-gray-500">
       <i class="fas fa-ruler-combined text-3xl mb-3"></i>
       <p class="text-sm">{{ $t('vendor.no_sizes_added_yet') }}</p>
-      <p class="text-xs">{{ $t('click_add_size_to_start_managing') }}</p>
+      <p class="text-xs">{{ $t('vendor.click_add_size_to_start_managing') }}</p>
     </div>
 
     <!-- Add Size Modal -->
     <div v-if="showAddSizeModal" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
       <div class="bg-white rounded-lg p-6 w-full max-w-md mx-4">
         <div class="flex items-center justify-between mb-4">
-          <h3 class="text-lg font-semibold">{{ $t('add_new_size') }}</h3>
+          <h3 class="text-lg font-semibold">{{ $t('vendor.add_new_size') }}</h3>
           <button @click="closeAddSizeModal" class="text-gray-400 hover:text-gray-600">
             <i class="fas fa-times"></i>
           </button>
@@ -189,7 +189,7 @@
           <div class="enhanced-form-field space-y-1">
             <label class="enhanced-form-label text-sm">
               <i class="fas fa-layer-group"></i>
-              {{ $t('size_category') }}
+              {{ $t('vendor.size_category') }}
             </label>
             <select v-model="newSize.category"
                     class="vue-form-control-enhanced-blue"
@@ -214,7 +214,7 @@
                     :class="{ 'border-red-500': newSize.errors?.name }"
                     @change="onSizeNameChange"
                     :disabled="!newSize.category">
-              <option value="">{{ $t('select_size_name') }}</option>
+              <option value="">{{ $t('vendor.select_size_name') }}</option>
               <option v-for="sizeOption in availableSizeNames"
                       :key="sizeOption.value"
                       :value="sizeOption.value">{{ sizeOption.label }}</option>
@@ -235,7 +235,7 @@
                    @input="validateNewSizeField('value')"
                    :disabled="!newSize.name"
                    readonly
-                   :placeholder="$t('auto_filled_based_on_size_name')">
+                   :placeholder="$t('vendor.auto_filled_based_on_size_name')">
             <div v-if="newSize.errors?.value" class="text-red-500 text-xs">{{ newSize.errors.value }}</div>
           </div>
 
@@ -257,8 +257,8 @@
                 <div class="input-suffix">{{ $t('vendor.units') }}</div>
               </div>
               <div class="stock-allocation-info text-xs">
-                <span class="available-stock">{{ $t('available') }}: {{ availableSizeStock }}</span>
-                <span class="allocated-stock">{{ newSize.stock || 0 }} {{ $t('to_allocate') }}</span>
+                <span class="available-stock">{{ $t('vendor.available') }}: {{ availableSizeStock }}</span>
+                <span class="allocated-stock">{{ newSize.stock || 0 }} {{ $t('vendor.to_allocate') }}</span>
               </div>
               <div v-if="newSize.errors?.stock" class="text-red-500 text-xs">{{ newSize.errors.stock }}</div>
             </div>
@@ -289,12 +289,12 @@
                   :disabled="saving"
                   class="vue-btn vue-btn-primary flex-1">
             <i class="fas fa-plus"></i>
-            {{ saving ? $t('adding') : $t('add_size') }}
+            {{ saving ? $t('vendor.adding') : $t('vendor.add_size') }}
           </button>
           <button type="button" 
                   @click="closeAddSizeModal"
                   class="vue-btn vue-btn-secondary">
-            {{ $t('cancel') }}
+            {{ $t('vendor.cancel') }}
           </button>
         </div>
       </div>

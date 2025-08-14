@@ -172,19 +172,196 @@
 
 @section('content')
 <div class="products-manager-theme">
-    <!-- Loading indicator -->
-    <div id="loading-indicator" class="flex items-center justify-center py-12" style="display: none;">
-        <div class="spinner-border text-orange-500"></div>
-        <span class="ml-3 text-gray-600">Loading product creation form...</span>
-    </div>
+    {{-- Set up translations for Vue app - ensure they're available immediately --}}
+    <script>
+    // Ensure Laravel object exists
+    window.Laravel = window.Laravel || {};
 
-    <!-- Content container for AJAX loading -->
-    <div id="product-create-content">
-        <!-- This will be populated via AJAX with vendor product create content -->
+    // Set up translations immediately and make them persistent
+    const translations = {!! json_encode([
+            // Page headers and main sections
+            'vendor.create_new_product' => __('vendor.create_new_product'),
+            'vendor.add_new_product_inventory' => __('vendor.add_new_product_inventory'),
+            'vendor.product_details' => __('vendor.product_details'),
+            'vendor.colors_and_images' => __('vendor.colors_and_images'),
+            'vendor.specifications' => __('vendor.specifications'),
+            'vendor.enter_basic_details' => __('vendor.enter_basic_details'),
+            'vendor.next' => __('vendor.next'),
+            'vendor.previous' => __('vendor.previous'),
+            'vendor.back_to_products' => __('vendor.back_to_products'),
+            'vendor.create_another' => __('vendor.create_another'),
+
+            // Basic product information
+            'vendor.product_name' => __('vendor.product_name'),
+            'vendor.enter_product_name' => __('vendor.enter_product_name'),
+            'vendor.enter_product_name_english' => __('vendor.enter_product_name_english'),
+            'vendor.enter_product_name_arabic' => __('vendor.enter_product_name_arabic'),
+            'vendor.category' => __('vendor.category'),
+            'vendor.select_category' => __('vendor.select_category'),
+            'vendor.branch' => __('vendor.branch'),
+            'vendor.select_branch' => __('vendor.select_branch'),
+            'vendor.branch_automatically_selected' => __('vendor.branch_automatically_selected'),
+            'vendor.description' => __('vendor.description'),
+            'vendor.enter_description' => __('vendor.enter_description'),
+            'vendor.enter_product_description_english' => __('vendor.enter_product_description_english'),
+            'vendor.enter_product_description_arabic' => __('vendor.enter_product_description_arabic'),
+            'vendor.price' => __('vendor.price'),
+            'vendor.enter_price' => __('vendor.enter_price'),
+            'vendor.original_price' => __('vendor.original_price'),
+            'vendor.enter_original_price' => __('vendor.enter_original_price'),
+            'vendor.total_stock' => __('vendor.total_stock'),
+            'vendor.enter_stock' => __('vendor.enter_stock'),
+            'vendor.total_stock_quantity_available' => __('vendor.total_stock_quantity_available'),
+            'vendor.product_available_sale' => __('vendor.product_available_sale'),
+            'vendor.uncheck_if_not_available' => __('vendor.uncheck_if_not_available'),
+            'vendor.sku' => __('vendor.sku'),
+            'vendor.enter_sku' => __('vendor.enter_sku'),
+
+            // Colors and variants
+            'vendor.colors' => __('vendor.colors'),
+            'vendor.product_colors' => __('vendor.product_colors'),
+            'vendor.add_color' => __('vendor.add_color'),
+            'vendor.add_first_color' => __('vendor.add_first_color'),
+            'vendor.no_colors_added_yet' => __('vendor.no_colors_added_yet'),
+            'vendor.add_color_variants_with_images' => __('vendor.add_color_variants_with_images'),
+            'vendor.add_color_variants_images' => __('vendor.add_color_variants_images'),
+            'vendor.add_color_variants_appealing' => __('vendor.add_color_variants_appealing'),
+            'vendor.color_name' => __('vendor.color_name'),
+            'vendor.select_color' => __('vendor.select_color'),
+            'vendor.search_colors' => __('vendor.search_colors'),
+            'vendor.color_code' => __('vendor.color_code'),
+            'vendor.price_adjustment' => __('vendor.price_adjustment'),
+            'vendor.color_stock' => __('vendor.color_stock'),
+            'vendor.stock' => __('vendor.stock'),
+            'vendor.display_order' => __('vendor.display_order'),
+            'vendor.color_image' => __('vendor.color_image'),
+            'vendor.default_color' => __('vendor.default_color'),
+            'vendor.no_image_selected' => __('vendor.no_image_selected'),
+            'vendor.image_preview_size' => __('vendor.image_preview_size'),
+            'vendor.image_format_info' => __('vendor.image_format_info'),
+            'vendor.main_product_image_info' => __('vendor.main_product_image_info'),
+            'vendor.available_for_this_color' => __('vendor.available_for_this_color'),
+            'vendor.currently_allocated' => __('vendor.currently_allocated'),
+            'vendor.set_color_name_stock_for_sizes' => __('vendor.set_color_name_stock_for_sizes'),
+            'vendor.color_variant' => __('vendor.color_variant'),
+            'vendor.default' => __('vendor.default'),
+            'vendor.set_as_default' => __('vendor.set_as_default'),
+            'vendor.upload_image' => __('vendor.upload_image'),
+            'vendor.change_image' => __('vendor.change_image'),
+            'vendor.remove_image' => __('vendor.remove_image'),
+            'vendor.drag_drop_image' => __('vendor.drag_drop_image'),
+            'vendor.click_to_upload' => __('vendor.click_to_upload'),
+            'vendor.supported_formats' => __('vendor.supported_formats'),
+            'vendor.max_file_size' => __('vendor.max_file_size'),
+
+            // Sizes
+            'vendor.sizes' => __('vendor.sizes'),
+            'vendor.size_management' => __('vendor.size_management'),
+            'vendor.manage_sizes_stock_allocation' => __('vendor.manage_sizes_stock_allocation'),
+            'vendor.stock_allocation_for_color' => __('vendor.stock_allocation_for_color'),
+            'vendor.allocated' => __('vendor.allocated'),
+            'vendor.units' => __('vendor.units'),
+            'vendor.unit' => __('vendor.unit'),
+            'vendor.available' => __('vendor.available'),
+            'vendor.add_size' => __('vendor.add_size'),
+            'vendor.size_name' => __('vendor.size_name'),
+            'vendor.size_value' => __('vendor.size_value'),
+            'vendor.size_stock' => __('vendor.size_stock'),
+            'vendor.size_price_adjustment' => __('vendor.size_price_adjustment'),
+            'vendor.no_sizes_added_yet' => __('vendor.no_sizes_added_yet'),
+            'vendor.add_first_size' => __('vendor.add_first_size'),
+            'vendor.size_chart' => __('vendor.size_chart'),
+            'vendor.standard_sizes' => __('vendor.standard_sizes'),
+            'vendor.custom_size' => __('vendor.custom_size'),
+            'vendor.enter_custom_size' => __('vendor.enter_custom_size'),
+            'vendor.click_add_size_to_start_managing' => __('vendor.click_add_size_to_start_managing'),
+
+            // Specifications
+            'vendor.specifications' => __('vendor.specifications'),
+            'vendor.product_specifications' => __('vendor.product_specifications'),
+            'vendor.add_detailed_specifications' => __('vendor.add_detailed_specifications'),
+            'vendor.add_specifications_detailed_info' => __('vendor.add_specifications_detailed_info'),
+            'vendor.add_specification' => __('vendor.add_specification'),
+            'vendor.specification_name' => __('vendor.specification_name'),
+            'vendor.specification_value' => __('vendor.specification_value'),
+            'vendor.no_specifications_added_yet' => __('vendor.no_specifications_added_yet'),
+            'vendor.add_first_specification' => __('vendor.add_first_specification'),
+            'vendor.enter_specification_name' => __('vendor.enter_specification_name'),
+            'vendor.enter_specification_value' => __('vendor.enter_specification_value'),
+
+            // Actions and buttons
+            'vendor.save_product' => __('vendor.save_product'),
+            'vendor.save_changes' => __('vendor.save_changes'),
+            'vendor.cancel' => __('vendor.cancel'),
+            'vendor.delete' => __('vendor.delete'),
+            'vendor.remove' => __('vendor.remove'),
+            'vendor.edit' => __('vendor.edit'),
+            'vendor.view' => __('vendor.view'),
+            'vendor.duplicate' => __('vendor.duplicate'),
+
+            // Status and messages
+            'vendor.loading' => __('vendor.loading'),
+            'vendor.saving' => __('vendor.saving'),
+            'vendor.saved' => __('vendor.saved'),
+            'vendor.error' => __('vendor.error'),
+            'vendor.success' => __('vendor.success'),
+            'vendor.warning' => __('vendor.warning'),
+            'vendor.confirm' => __('vendor.confirm'),
+            'vendor.yes' => __('vendor.yes'),
+            'vendor.no' => __('vendor.no'),
+            'vendor.ok' => __('vendor.ok'),
+
+            // Validation messages
+            'vendor.required' => __('vendor.required'),
+            'vendor.invalid_email' => __('vendor.invalid_email'),
+            'vendor.invalid_phone' => __('vendor.invalid_phone'),
+            'vendor.min_length' => __('vendor.min_length'),
+            'vendor.max_length' => __('vendor.max_length'),
+            'vendor.numeric_only' => __('vendor.numeric_only'),
+            'vendor.positive_number' => __('vendor.positive_number'),
+
+            // Legacy keys for backward compatibility
+            'select_category' => __('vendor.select_category'),
+            'select_branch' => __('vendor.select_branch'),
+            'product_name' => __('vendor.product_name'),
+            'product_description' => __('vendor.description'),
+            'price' => __('vendor.price'),
+            'save_product' => __('vendor.save_product'),
+            'cancel' => __('vendor.cancel'),
+    ]) !!};
+
+    // Set up translations immediately and make them persistent
+    window.Laravel.translations = translations;
+    window.appTranslations = translations;
+
+    // Ensure translations are available for Vue app initialization
+    console.log('🌐 Translations set up for Products Manager create page:', Object.keys(translations).length, 'keys');
+
+    // Make translations globally accessible
+    if (typeof window.getTranslation === 'undefined') {
+        window.getTranslation = function(key, fallback = key) {
+            return window.Laravel.translations[key] || fallback;
+        };
+    }
+    </script>
+
+    {{-- Vue App Container --}}
+    <div id="vendor-product-create-app"
+         class="vue-app-container"
+         data-back-url="{{ route('products-manager.products.index') }}"
+         data-create-data-url="{{ route('products-manager.products.create.data') }}"
+         data-store-url="{{ route('products-manager.products.store') }}"
+         data-session-store-url="{{ route('vendor.products.session.store') }}"
+         data-session-get-url="{{ route('vendor.products.session.get') }}"
+         data-session-clear-url="{{ route('vendor.products.session.clear') }}">
     </div>
 </div>
 @endsection
 
 @section('scripts')
-{{-- AJAX navigation is handled by the global Products Manager navigation system --}}
+<!-- Font Awesome for icons -->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+
+<!-- Vue App Script -->
+@vite(['resources/js/vendor-product-create.js'])
 @endsection

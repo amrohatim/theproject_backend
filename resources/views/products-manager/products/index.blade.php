@@ -111,17 +111,17 @@
                                 <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900 dark:text-white">{{ $product->branch->name ?? '-' }}</td>
                                 <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900 dark:text-white">${{ number_format($product->price, 2) }}</td>
                                 <td class="px-6 py-4 whitespace-nowrap">
-                                    @if($product->stock_quantity <= 0)
+                                    @if($product->stock <= 0)
                                         <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-red-100 text-red-800 dark:bg-red-900 dark:text-red-200">
                                             {{ __('products_manager.out_of_stock') }}
                                         </span>
-                                    @elseif($product->stock_quantity <= 10)
+                                    @elseif($product->stock <= 10)
                                         <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-yellow-100 text-yellow-800 dark:bg-yellow-900 dark:text-yellow-200">
-                                            {{ __('products_manager.low_stock_with_count', ['count' => $product->stock_quantity]) }}
+                                            {{ __('products_manager.low_stock_with_count', ['count' => $product->stock]) }}
                                         </span>
                                     @else
                                         <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-200">
-                                            {{ __('products_manager.in_stock_with_count', ['count' => $product->stock_quantity]) }}
+                                            {{ __('products_manager.in_stock_with_count', ['count' => $product->stock]) }}
                                         </span>
                                     @endif
                                 </td>

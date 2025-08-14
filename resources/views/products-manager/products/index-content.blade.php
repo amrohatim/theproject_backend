@@ -131,10 +131,10 @@
                                 </td>
                                 <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900 dark:text-white">
                                     <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium
-                                        @if($product->stock_quantity > 10) bg-orange-100 text-orange-800 dark:bg-orange-900 dark:text-orange-200
-                                        @elseif($product->stock_quantity > 0) bg-orange-200 text-orange-900 dark:bg-orange-800 dark:text-orange-100
+                                        @if($product->stock > 10) bg-orange-100 text-orange-800 dark:bg-orange-900 dark:text-orange-200
+                                        @elseif($product->stock > 0) bg-orange-200 text-orange-900 dark:bg-orange-800 dark:text-orange-100
                                         @else bg-red-100 text-red-800 dark:bg-red-900 dark:text-red-200 @endif">
-                                        {{ $product->stock_quantity }}
+                                        {{ $product->stock }}
                                     </span>
                                 </td>
                                 <td class="px-6 py-4 whitespace-nowrap">

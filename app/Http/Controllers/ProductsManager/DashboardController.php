@@ -45,8 +45,8 @@ class DashboardController extends Controller
                 'total_products' => $products->count(),
                 'total_branches' => Branch::where('company_id', $company->id)->count(),
                 'available_products' => $products->where('status', 'available')->count(),
-                'out_of_stock' => $products->where('stock_quantity', 0)->count(),
-                'low_stock' => $products->where('stock_quantity', '>', 0)->where('stock_quantity', '<=', 10)->count(),
+                'out_of_stock' => $products->where('stock', 0)->count(),
+                'low_stock' => $products->where('stock', '>', 0)->where('stock', '<=', 10)->count(),
                 'total_orders' => 0, // Default to 0 for now
                 'pending_orders' => 0, // Default to 0 for now
                 'completed_orders' => 0, // Default to 0 for now
@@ -122,8 +122,8 @@ class DashboardController extends Controller
             'total_products' => $products->count(),
             'total_branches' => Branch::where('company_id', $company->id)->count(),
             'available_products' => $products->where('status', 'available')->count(),
-            'out_of_stock' => $products->where('stock_quantity', 0)->count(),
-            'low_stock' => $products->where('stock_quantity', '>', 0)->where('stock_quantity', '<=', 10)->count(),
+            'out_of_stock' => $products->where('stock', 0)->count(),
+            'low_stock' => $products->where('stock', '>', 0)->where('stock', '<=', 10)->count(),
             'total_orders' => Order::whereHas('orderItems.product.branch', function ($query) use ($company) {
                 $query->where('company_id', $company->id);
             })->count(),

@@ -11,7 +11,7 @@
             <div class="md:col-span-2">
                 <label class="block text-sm text-gray-600 dark:text-gray-300 mb-1">Search</label>
                 <input type="text" name="search" value="{{ request('search') }}" placeholder="Customer or service..."
-                    class="w-full rounded-md border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-white focus:ring-0 focus:border-[#53D2DC]" />
+                    class="w-full rounded-md  p-1 border border-[#53D2DC] dark:border-gray-600 dark:bg-gray-700 dark:text-white focus:ring-0 focus:border-transparent" />
             </div>
             <div>
                 <label class="block text-sm text-gray-600 dark:text-gray-300 mb-1">Status</label>
