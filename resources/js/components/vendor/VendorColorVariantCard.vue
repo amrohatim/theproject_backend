@@ -252,6 +252,7 @@
       <div class="col-span-full">
         <VendorSizeManagement
           v-if="shouldShowSizeManagement"
+          ref="sizeManagementRef"
           :key="`size-mgmt-${index}-${color.id || 'new'}`"
           :color-id="color.id"
           :product-id="productId"
@@ -393,6 +394,9 @@ export default {
     const showColorDropdown = ref(false)
     const colorSearchQuery = ref('')
     const imagePreviewUrl = ref('')
+
+    // Component refs
+    const sizeManagementRef = ref(null)
 
     // Stock validation reactive refs
     const stockCorrectionMessage = ref('')
@@ -579,9 +583,23 @@ export default {
       emit('sizes-updated', props.index, sizes)
     }
 
-    const handleSaveColorFirst = () => {
-      // Emit event to parent to save color first
-      emit('save-color-first', props.index)
+    const handleSaveColorFirst = (pendingSizeData) => {
+      // Emit event to parent to save color first, including pending size data
+      emit('save-color-first', props.index, pendingSizeData)
+    }
+
+    /**
+     * Resume size creation after color has been saved.
+     * This method is called from the parent component.
+     */
+    const resumeSizeCreation = (pendingSizeData) => {
+      console.log('🔄 VendorColorVariantCard: Resuming size creation for color', props.index, pendingSizeData)
+
+      if (sizeManagementRef.value && sizeManagementRef.value.resumeSizeCreation) {
+        sizeManagementRef.value.resumeSizeCreation(pendingSizeData)
+      } else {
+        console.error('Could not access size management component or resumeSizeCreation method for color', props.index)
+      }
     }
 
     const handleImageUpload = (event) => {
@@ -652,6 +670,7 @@ export default {
       showColorDropdown,
       colorSearchQuery,
       imagePreviewUrl,
+      sizeManagementRef,
       stockCorrectionMessage,
       showStockCorrection,
       stockCorrectionApplied,
@@ -673,7 +692,8 @@ export default {
       handleStockKeydown,
       handleImageUpload,
       handleSizesUpdated,
-      handleSaveColorFirst
+      handleSaveColorFirst,
+      resumeSizeCreation
     }
   }
 }

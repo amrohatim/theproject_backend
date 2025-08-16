@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="csrf-token" content="{{ csrf_token() }}">
 
-    <title>@yield('title', 'Service Provider Dashboard') - {{ config('app.name', 'Dala3Chic') }}</title>
+    <title>@yield('title', __('service_provider.dashboard')) - {{ config('app.name', 'Dala3Chic') }}</title>
 
     <!-- Fonts -->
     <link rel="preconnect" href="https://fonts.bunny.net">
@@ -51,30 +51,35 @@
                     <a href="{{ route('service-provider.dashboard') }}" 
                        class="flex items-center px-3 py-2 text-sm font-medium rounded-md {{ request()->routeIs('service-provider.dashboard') ? 'bg-blue-100 text-[#53D2DC] dark:bg-blue-900 dark:text-blue-200' : 'text-gray-700 hover:bg-gray-100 dark:text-gray-300 dark:hover:bg-gray-700' }}">
                         <i class="fas fa-tachometer-alt mr-3"></i>
-                        Dashboard
+                        {{ __('service_provider.dashboard') }}
                     </a>
 
                     <!-- Services -->
-                    <a href="{{ route('service-provider.services.index') }}" 
+                    <a href="{{ route('service-provider.services.index') }}"
                        class="flex items-center px-3 py-2 text-sm font-medium rounded-md {{ request()->routeIs('service-provider.services.*') ? 'bg-blue-100 text-[#53D2DC] dark:bg-blue-900 dark:text-blue-200' : 'text-gray-700 hover:bg-gray-100 dark:text-gray-300 dark:hover:bg-gray-700' }}">
                         <i class="fas fa-cog mr-3"></i>
-                        Services
+                        {{ __('service_provider.services') }}
                     </a>
 
                     <!-- Bookings -->
-                    <a href="{{ route('service-provider.bookings.index') }}" 
+                    <a href="{{ route('service-provider.bookings.index') }}"
                        class="flex items-center px-3 py-2 text-sm font-medium rounded-md {{ request()->routeIs('service-provider.bookings.*') ? 'bg-blue-100 text-[#53D2DC] dark:bg-blue-900 dark:text-blue-200' : 'text-gray-700 hover:bg-gray-100 dark:text-gray-300 dark:hover:bg-gray-700' }}">
                         <i class="fas fa-calendar-check mr-3"></i>
-                        Bookings
+                        {{ __('service_provider.bookings') }}
                     </a>
 
                     <!-- Deals -->
-                    <a href="{{ route('service-provider.deals.index') }}" 
+                    <a href="{{ route('service-provider.deals.index') }}"
                        class="flex items-center px-3 py-2 text-sm font-medium rounded-md {{ request()->routeIs('service-provider.deals.*') ? 'bg-blue-100 text-[#53D2DC] dark:bg-blue-900 dark:text-blue-200' : 'text-gray-700 hover:bg-gray-100 dark:text-gray-300 dark:hover:bg-gray-700' }}">
                         <i class="fas fa-percent mr-3"></i>
-                        Deals
+                        {{ __('service_provider.deals') }}
                     </a>
                 </nav>
+
+                <!-- Language Switcher -->
+                <div class="px-4 py-4 border-t border-gray-200 dark:border-gray-700">
+                    <x-service-provider-sidebar-language-switcher />
+                </div>
 
                 <!-- Logout -->
                 <div class="px-4 py-4 border-t border-gray-200 dark:border-gray-700">
@@ -82,7 +87,7 @@
                         @csrf
                         <button type="submit" class="flex items-center w-full px-3 py-2 text-sm font-medium text-gray-700 rounded-md hover:bg-gray-100 dark:text-gray-300 dark:hover:bg-gray-700">
                             <i class="fas fa-sign-out-alt mr-3"></i>
-                            Logout
+                            {{ __('service_provider.logout') }}
                         </button>
                     </form>
                 </div>
@@ -96,14 +101,14 @@
                 <div class="px-6 py-4">
                     <div class="flex items-center justify-between">
                         <div>
-                            <h1 class="text-2xl font-semibold text-gray-900 dark:text-white">@yield('page-title', 'Service Provider Dashboard')</h1>
+                            <h1 class="text-2xl font-semibold text-gray-900 dark:text-white">@yield('page-title', __('service_provider.dashboard'))</h1>
                         </div>
                         <div class="flex items-center space-x-4">
                             <!-- Notifications -->
                             <button class="p-2 text-gray-400 hover:text-gray-500 dark:hover:text-gray-300">
                                 <i class="fas fa-bell"></i>
                             </button>
-                            
+
                             <!-- User Menu -->
                             <div class="relative">
                                 <button class="flex items-center text-sm rounded-full focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500" id="user-menu-button">

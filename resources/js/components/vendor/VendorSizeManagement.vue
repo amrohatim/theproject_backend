@@ -589,26 +589,63 @@ export default {
       // For existing products, save to backend
       try {
         saving.value = true
+        console.log('🔄 Updating size via API:', {
+          size_id: size.id,
+          color_id: props.colorId,
+          name: size.name,
+          value: size.value,
+          stock: size.stock,
+          price_adjustment: size.price_adjustment
+        })
 
         const response = await window.axios.post('/vendor/api/sizes/update', {
           size_id: size.id,
           color_id: props.colorId,
           name: size.name,
           value: size.value,
+          additional_info: size.additional_info || '',
           stock: size.stock || 0,
           price_adjustment: size.price_adjustment || 0,
           is_available: size.is_available !== false
         })
 
         if (response.data.success) {
-          size.editing = false
-          size.errors = {}
-          size.originalData = { ...size }
+          console.log('✅ Size updated successfully:', response.data.size)
+
+          // Update the size with the response data to ensure consistency
+          Object.assign(size, {
+            id: response.data.size.id,
+            name: response.data.size.name,
+            value: response.data.size.value,
+            additional_info: response.data.size.additional_info,
+            stock: response.data.size.allocated_stock || response.data.size.stock || 0,
+            price_adjustment: response.data.size.price_adjustment || 0,
+            is_available: response.data.size.is_available !== false,
+            editing: false,
+            errors: {},
+            originalData: {
+              id: response.data.size.id,
+              name: response.data.size.name,
+              value: response.data.size.value,
+              additional_info: response.data.size.additional_info,
+              stock: response.data.size.allocated_stock || response.data.size.stock || 0,
+              price_adjustment: response.data.size.price_adjustment || 0,
+              is_available: response.data.size.is_available !== false
+            }
+          })
+
           emit('sizes-updated', sizes.value)
+        } else {
+          console.error('Failed to update size:', response.data)
+          errorMessage.value = response.data.message || $t('vendor.failed_update_size')
         }
       } catch (error) {
-        console.error('Error saving size:', error)
-        errorMessage.value = $t('vendor.failed_save_size')
+        console.error('Error updating size:', error)
+        if (error.response && error.response.data && error.response.data.message) {
+          errorMessage.value = error.response.data.message
+        } else {
+          errorMessage.value = $t('vendor.failed_update_size')
+        }
       } finally {
         saving.value = false
       }
@@ -664,6 +701,85 @@ export default {
       })
     }
 
+    /**
+     * Resume size creation after color has been saved.
+     * This method is called from the parent component after a color is saved.
+     */
+    const resumeSizeCreation = async (pendingSizeData) => {
+      console.log('🔄 Resuming size creation after color save:', pendingSizeData)
+
+      try {
+        saving.value = true
+
+        const colorId = props.colorId
+        if (!colorId) {
+          console.error('❌ Color ID still not available after save')
+          errorMessage.value = $t('vendor.color_save_failed')
+          return
+        }
+
+        // Call the API to create the size with the pending data
+        const response = await window.axios.post('/vendor/api/sizes/create', {
+          product_id: props.productId,
+          color_id: colorId,
+          name: pendingSizeData.name,
+          value: pendingSizeData.value,
+          category: pendingSizeData.category || 'clothes',
+          price_adjustment: pendingSizeData.price_adjustment || 0,
+          stock: pendingSizeData.stock || 0,
+          is_available: pendingSizeData.is_available
+        })
+
+        if (response.data.success) {
+          console.log('✅ Size created successfully after color save:', response.data.size)
+
+          // Close the modal
+          closeAddSizeModal()
+
+          // Add the new size to the list with proper stock mapping
+          const newSizeData = {
+            id: response.data.size.id,
+            name: response.data.size.name,
+            value: response.data.size.value,
+            category: response.data.size.category || 'clothes',
+            additional_info: response.data.size.additional_info,
+            stock: response.data.size.allocated_stock || response.data.size.stock || 0,
+            price_adjustment: response.data.size.price_adjustment || 0,
+            is_available: response.data.size.is_available !== false,
+            display_order: response.data.size.display_order || sizes.value.length,
+            editing: false,
+            errors: {},
+            originalData: {
+              id: response.data.size.id,
+              name: response.data.size.name,
+              value: response.data.size.value,
+              category: response.data.size.category || 'clothes',
+              additional_info: response.data.size.additional_info,
+              stock: response.data.size.allocated_stock || response.data.size.stock || 0,
+              price_adjustment: response.data.size.price_adjustment || 0,
+              is_available: response.data.size.is_available !== false,
+              display_order: response.data.size.display_order || sizes.value.length
+            }
+          }
+
+          sizes.value.push(newSizeData)
+          emit('sizes-updated', sizes.value)
+        } else {
+          console.error('Failed to create size after color save:', response.data)
+          errorMessage.value = response.data.message || $t('vendor.failed_create_size')
+        }
+      } catch (error) {
+        console.error('Error creating size after color save:', error)
+        if (error.response && error.response.data && error.response.data.message) {
+          errorMessage.value = error.response.data.message
+        } else {
+          errorMessage.value = $t('vendor.failed_create_size')
+        }
+      } finally {
+        saving.value = false
+      }
+    }
+
     const addSize = async () => {
       const errors = validateSize(newSize)
 
@@ -711,7 +827,17 @@ export default {
         // For existing products, save to backend
         const colorId = props.colorId
         if (!colorId) {
-          emit('save-color-first')
+          console.log('🔄 Color needs to be saved first, storing pending size data')
+          // Store the pending size data to resume creation after color is saved
+          const pendingSizeData = {
+            name: newSize.name,
+            value: newSize.value,
+            category: newSize.category || 'clothes',
+            price_adjustment: newSize.price_adjustment || 0,
+            stock: newSize.stock || 0,
+            is_available: newSize.is_available
+          }
+          emit('save-color-first', pendingSizeData)
           return
         }
 
@@ -837,6 +963,7 @@ export default {
       removeSize,
       closeAddSizeModal,
       addSize,
+      resumeSizeCreation,
       $t
     }
   }

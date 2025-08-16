@@ -1,7 +1,7 @@
 @extends('layouts.service-provider')
 
-@section('title', 'Service Provider Dashboard')
-@section('page-title', 'Service Provider Dashboard')
+@section('title', __('service_provider.dashboard'))
+@section('page-title', __('service_provider.dashboard'))
 
 @section('content')
 <div class="container mx-auto">
@@ -10,12 +10,12 @@
         <div class="bg-white dark:bg-gray-800 rounded-lg shadow p-6 border border-gray-200 dark:border-gray-700">
             <div class="flex flex-col md:flex-row md:items-center md:justify-between">
                 <div>
-                    <h2 class="text-2xl font-bold text-gray-800 dark:text-white">Welcome, {{ $user->name }}!</h2>
-                    <p class="mt-1 text-gray-600 dark:text-gray-400">Here's an overview of your service management activities</p>
+                    <h2 class="text-2xl font-bold text-gray-800 dark:text-white">{{ __('service_provider.welcome_user', ['name' => $user->name]) }}</h2>
+                    <p class="mt-1 text-gray-600 dark:text-gray-400">{{ __('service_provider.dashboard_overview') }}</p>
                 </div>
                 <div class="mt-4 md:mt-0">
                     <span class="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium bg-blue-100 text-blue-800 dark:bg-blue-900 dark:text-blue-200">
-                        Service Provider
+                        {{ __('service_provider.service_provider') }}
                     </span>
                 </div>
             </div>
@@ -33,7 +33,7 @@
                     </div>
                 </div>
                 <div class="ml-4">
-                    <div class="text-sm font-medium text-gray-500 dark:text-gray-400">Total Services</div>
+                    <div class="text-sm font-medium text-gray-500 dark:text-gray-400">{{ __('service_provider.total_services') }}</div>
                     <div class="text-2xl font-bold text-gray-900 dark:text-white">{{ $stats['total_services'] }}</div>
                 </div>
             </div>
@@ -48,7 +48,7 @@
                     </div>
                 </div>
                 <div class="ml-4">
-                    <div class="text-sm font-medium text-gray-500 dark:text-gray-400">Accessible Branches</div>
+                    <div class="text-sm font-medium text-gray-500 dark:text-gray-400">{{ __('service_provider.accessible_branches') }}</div>
                     <div class="text-2xl font-bold text-gray-900 dark:text-white">{{ $stats['total_branches'] }}</div>
                 </div>
             </div>
@@ -63,7 +63,7 @@
                     </div>
                 </div>
                 <div class="ml-4">
-                    <div class="text-sm font-medium text-gray-500 dark:text-gray-400">Total Bookings</div>
+                    <div class="text-sm font-medium text-gray-500 dark:text-gray-400">{{ __('service_provider.total_bookings') }}</div>
                     <div class="text-2xl font-bold text-gray-900 dark:text-white">{{ $stats['total_bookings'] }}</div>
                 </div>
             </div>
@@ -78,7 +78,7 @@
                     </div>
                 </div>
                 <div class="ml-4">
-                    <div class="text-sm font-medium text-gray-500 dark:text-gray-400">Pending Bookings</div>
+                    <div class="text-sm font-medium text-gray-500 dark:text-gray-400">{{ __('service_provider.pending_bookings') }}</div>
                     <div class="text-2xl font-bold text-gray-900 dark:text-white">{{ $stats['pending_bookings'] }}</div>
                 </div>
             </div>
@@ -90,9 +90,9 @@
         <div class="bg-white dark:bg-gray-800 rounded-lg shadow border border-gray-200 dark:border-gray-700">
             <div class="px-6 py-4 border-b border-gray-200 dark:border-gray-700">
                 <div class="flex items-center justify-between">
-                    <h3 class="text-lg font-medium text-gray-900 dark:text-white">Your Services</h3>
+                    <h3 class="text-lg font-medium text-gray-900 dark:text-white">{{ __('service_provider.your_services') }}</h3>
                     <a href="{{ route('service-provider.services.index') }}" class="text-blue-600 hover:text-blue-800 dark:text-blue-400 dark:hover:text-blue-300 text-sm font-medium">
-                        View All
+                        {{ __('service_provider.view_all') }}
                     </a>
                 </div>
             </div>
@@ -113,7 +113,7 @@
                                     </div>
                                     <div class="ml-3">
                                         <p class="text-sm font-medium text-gray-900 dark:text-white">{{ $service->name }}</p>
-                                        <p class="text-sm text-gray-500 dark:text-gray-400">{{ $service->branch->name ?? 'No branch' }}</p>
+                                        <p class="text-sm text-gray-500 dark:text-gray-400">{{ $service->branch->name ?? __('service_provider.no_branch') }}</p>
                                     </div>
                                 </div>
                                 <div class="text-right">
@@ -128,8 +128,8 @@
                         <div class="mx-auto h-12 w-12 text-gray-400">
                             <i class="fas fa-cog text-4xl"></i>
                         </div>
-                        <h3 class="mt-2 text-sm font-medium text-gray-900 dark:text-white">No services assigned</h3>
-                        <p class="mt-1 text-sm text-gray-500 dark:text-gray-400">Contact your administrator to assign services to your account.</p>
+                        <h3 class="mt-2 text-sm font-medium text-gray-900 dark:text-white">{{ __('service_provider.no_services_assigned') }}</h3>
+                        <p class="mt-1 text-sm text-gray-500 dark:text-gray-400">{{ __('service_provider.contact_admin_services') }}</p>
                     </div>
                 @endif
             </div>
@@ -139,9 +139,9 @@
         <div class="bg-white dark:bg-gray-800 rounded-lg shadow border border-gray-200 dark:border-gray-700">
             <div class="px-6 py-4 border-b border-gray-200 dark:border-gray-700">
                 <div class="flex items-center justify-between">
-                    <h3 class="text-lg font-medium text-gray-900 dark:text-white">Recent Bookings</h3>
+                    <h3 class="text-lg font-medium text-gray-900 dark:text-white">{{ __('service_provider.recent_bookings') }}</h3>
                     <a href="{{ route('service-provider.bookings.index') }}" class="text-blue-600 hover:text-blue-800 dark:text-blue-400 dark:hover:text-blue-300 text-sm font-medium">
-                        View All
+                        {{ __('service_provider.view_all') }}
                     </a>
                 </div>
             </div>
@@ -157,8 +157,8 @@
                                         </div>
                                     </div>
                                     <div class="ml-3">
-                                        <p class="text-sm font-medium text-gray-900 dark:text-white">{{ $booking->user->name ?? 'Unknown Customer' }}</p>
-                                        <p class="text-sm text-gray-500 dark:text-gray-400">{{ $booking->service->name ?? 'Unknown Service' }}</p>
+                                        <p class="text-sm font-medium text-gray-900 dark:text-white">{{ $booking->user->name ?? __('service_provider.unknown_customer') }}</p>
+                                        <p class="text-sm text-gray-500 dark:text-gray-400">{{ $booking->service->name ?? __('service_provider.unknown_service') }}</p>
                                     </div>
                                 </div>
                                 <div class="text-right">
@@ -180,8 +180,8 @@
                         <div class="mx-auto h-12 w-12 text-gray-400">
                             <i class="fas fa-calendar-check text-4xl"></i>
                         </div>
-                        <h3 class="mt-2 text-sm font-medium text-gray-900 dark:text-white">No recent bookings</h3>
-                        <p class="mt-1 text-sm text-gray-500 dark:text-gray-400">Bookings for your services will appear here.</p>
+                        <h3 class="mt-2 text-sm font-medium text-gray-900 dark:text-white">{{ __('service_provider.no_recent_bookings') }}</h3>
+                        <p class="mt-1 text-sm text-gray-500 dark:text-gray-400">{{ __('service_provider.bookings_appear_here') }}</p>
                     </div>
                 @endif
             </div>
@@ -193,7 +193,7 @@
         <div class="mt-6">
             <div class="bg-white dark:bg-gray-800 rounded-lg shadow border border-gray-200 dark:border-gray-700">
                 <div class="px-6 py-4 border-b border-gray-200 dark:border-gray-700">
-                    <h3 class="text-lg font-medium text-gray-900 dark:text-white">Active Deals</h3>
+                    <h3 class="text-lg font-medium text-gray-900 dark:text-white">{{ __('service_provider.active_deals') }}</h3>
                 </div>
                 <div class="p-6">
                     <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
@@ -202,7 +202,7 @@
                                 <div class="flex items-center justify-between">
                                     <div>
                                         <h4 class="text-sm font-medium text-green-900 dark:text-green-100">{{ $deal->title }}</h4>
-                                        <p class="text-sm text-green-700 dark:text-green-300">{{ $deal->service->name ?? 'Service' }}</p>
+                                        <p class="text-sm text-green-700 dark:text-green-300">{{ $deal->service->name ?? __('service_provider.service') }}</p>
                                     </div>
                                     <div class="text-right">
                                         <span class="text-lg font-bold text-green-900 dark:text-green-100">{{ $deal->discount_percentage }}% OFF</span>
@@ -210,7 +210,7 @@
                                 </div>
                                 <div class="mt-2">
                                     <p class="text-xs text-green-600 dark:text-green-400">
-                                        Valid until {{ $deal->end_date->format('M d, Y') }}
+                                        {{ __('service_provider.valid_until', ['date' => $deal->end_date->format('M d, Y')]) }}
                                     </p>
                                 </div>
                             </div>

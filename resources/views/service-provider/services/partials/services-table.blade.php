@@ -3,12 +3,12 @@
         <table class="min-w-full divide-y divide-gray-200 dark:divide-gray-700">
             <thead class="bg-gray-50 dark:bg-gray-700/50">
                 <tr>
-                    <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">Service</th>
-                    <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">Branch</th>
-                    <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">Category</th>
-                    <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">Price</th>
-                    <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">Duration</th>
-                    <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">Status</th>
+                    <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">{{ __('service_provider.service') }}</th>
+                    <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">{{ __('service_provider.branch') }}</th>
+                    <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">{{ __('service_provider.category') }}</th>
+                    <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">{{ __('service_provider.price') }}</th>
+                    <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">{{ __('service_provider.duration') }}</th>
+                    <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">{{ __('service_provider.status') }}</th>
                     <th class="px-4 py-3"></th>
                 </tr>
             </thead>
@@ -48,12 +48,12 @@
                             @if($service->is_available)
                                 <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-200">
                                     <i class="fas fa-check-circle mr-1"></i>
-                                    Available
+                                    {{ __('service_provider.available') }}
                                 </span>
                             @else
                                 <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-red-100 text-red-800 dark:bg-red-900 dark:text-red-200">
                                     <i class="fas fa-times-circle mr-1"></i>
-                                    Unavailable
+                                    {{ __('service_provider.unavailable') }}
                                 </span>
                             @endif
                         </td>
@@ -62,12 +62,12 @@
                                 <a href="{{ route('service-provider.services.show', $service) }}" 
                                    class="inline-flex items-center px-2 py-1 text-xs font-medium text-[#53D2DC] hover:text-[#53D2DC]/80 hover:bg-[#53D2DC]/10 rounded transition-colors">
                                     <i class="fas fa-eye mr-1"></i>
-                                    View
+                                    {{ __('service_provider.view') }}
                                 </a>
-                                <a href="{{ route('service-provider.services.edit', $service) }}" 
+                                <a href="{{ route('service-provider.services.edit', $service) }}"
                                    class="inline-flex items-center px-2 py-1 text-xs font-medium text-[#53D2DC] hover:text-[#53D2DC]/80 hover:bg-[#53D2DC]/10 rounded transition-colors">
                                     <i class="fas fa-edit mr-1"></i>
-                                    Edit
+                                    {{ __('service_provider.edit') }}
                                 </a>
                             </div>
                         </td>
@@ -81,11 +81,11 @@
         <div class="mx-auto h-14 w-14 rounded-full bg-[#53D2DC]/15 flex items-center justify-center">
             <i class="fas fa-search text-[#53D2DC]"></i>
         </div>
-        <h4 class="mt-3 text-gray-900 dark:text-white font-medium">No services found</h4>
-        <p class="text-sm text-gray-500 dark:text-gray-400">Try adjusting your search criteria or filters.</p>
+        <h4 class="mt-3 text-gray-900 dark:text-white font-medium">{{ __('service_provider.no_services_found') }}</h4>
+        <p class="text-sm text-gray-500 dark:text-gray-400">{{ __('service_provider.try_adjusting_filters') }}</p>
         <button onclick="clearAllFilters()" class="mt-3 inline-flex items-center px-3 py-2 text-sm font-medium text-[#53D2DC] hover:text-[#53D2DC]/80">
             <i class="fas fa-times mr-2"></i>
-            Clear all filters
+            {{ __('service_provider.clear_all_filters') }}
         </button>
     </div>
 @endif

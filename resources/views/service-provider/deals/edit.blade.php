@@ -1,7 +1,7 @@
 @extends('layouts.service-provider')
 
-@section('title', __('messages.edit_deal'))
-@section('page-title', __('messages.edit_deal'))
+@section('title', __('service_provider.edit_deal'))
+@section('page-title', __('service_provider.edit_deal'))
 
 @section('styles')
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
@@ -44,12 +44,12 @@
     <div class="mb-6">
         <div class="flex items-center justify-between">
             <div>
-                <h2 class="text-2xl font-bold text-gray-800 dark:text-white">{{ __('messages.edit_deal') }}</h2>
-                <p class="mt-1 text-gray-600 dark:text-gray-400">{{ __('messages.update_deal_information') }}</p>
+                <h2 class="text-2xl font-bold text-gray-800 dark:text-white">{{ __('service_provider.edit_deal') }}</h2>
+                <p class="mt-1 text-gray-600 dark:text-gray-400">{{ __('service_provider.update_deal_information') }}</p>
             </div>
             <div>
                 <a href="{{ route('service-provider.deals.index') }}" class="inline-flex items-center px-4 py-2 bg-gray-600 border border-transparent rounded-md font-semibold text-xs text-white uppercase tracking-widest hover:bg-gray-700 active:bg-gray-900 focus:outline-none focus:border-gray-900 focus:ring ring-gray-300 disabled:opacity-25 transition ease-in-out duration-150">
-                    <i class="fas fa-arrow-{{ app()->getLocale() == 'ar' ? 'right' : 'left' }} mr-2"></i> {{ __('messages.back_to_deals') }}
+                    <i class="fas fa-arrow-{{ app()->getLocale() == 'ar' ? 'right' : 'left' }} mr-2"></i> {{ __('service_provider.back_to_deals') }}
                 </a>
             </div>
         </div>
@@ -62,12 +62,12 @@
 
             <!-- Basic Information -->
             <div class="form-section">
-                <h3 class="form-section-title text-xl font-bold text-gray-800 dark:text-white">{{ __('messages.deal_information') }}</h3>
+                <h3 class="form-section-title text-xl font-bold text-gray-800 dark:text-white">{{ __('service_provider.deal_information') }}</h3>
 
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                     <!-- Title (Bilingual) -->
                     <div>
-                        <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">{{ __('messages.title') }} <span class="text-red-500">*</span></label>
+                        <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">{{ __('service_provider.title') }} <span class="text-red-500">*</span></label>
 
                         <!-- Language Switcher for Title -->
                         <x-form-language-switcher field-name="title" />
@@ -76,7 +76,7 @@
                         <div data-language-field="title" data-language="en" class="mb-3 active-language-field">
                             <input type="text" name="title" id="title" value="{{ old('title', $deal->title) }}"
                                    class="mt-1 focus:ring-[#53D2DC] focus:border-[#53D2DC] px-2 block w-full shadow-sm sm:text-sm border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-white rounded-md"
-                                   placeholder="{{ __('messages.enter_deal_title') }}" required>
+                                   placeholder="{{ __('service_provider.enter_deal_title') }}" required>
                             @error('title')
                                 <p class="text-red-500 text-sm mt-1">{{ $message }}</p>
                             @enderror
@@ -86,7 +86,7 @@
                         <div data-language-field="title" data-language="ar" style="display: none;">
                             <input type="text" name="title_arabic" id="title_arabic" value="{{ old('title_arabic', $deal->title_arabic) }}"
                                    class="mt-1 focus:ring-[#53D2DC] focus:border-[#53D2DC] px-2 block w-full shadow-sm sm:text-sm border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-white rounded-md"
-                                   placeholder="{{ __('messages.enter_deal_title_arabic') }}" dir="rtl" required>
+                                   placeholder="{{ __('service_provider.enter_deal_title_arabic') }}" dir="rtl" required>
                             @error('title_arabic')
                                 <p class="text-red-500 text-sm mt-1">{{ $message }}</p>
                             @enderror
@@ -95,7 +95,7 @@
 
                     <!-- Discount Percentage -->
                     <div>
-                        <label for="discount_percentage" class="block text-sm font-medium text-gray-700 dark:text-gray-300">{{ __('messages.discount_percentage') }} <span class="text-red-500">*</span></label>
+                        <label for="discount_percentage" class="block text-sm font-medium text-gray-700 dark:text-gray-300">{{ __('service_provider.discount_percentage') }} <span class="text-red-500">*</span></label>
                         <div class="mt-1 relative rounded-md shadow-sm">
                             <input type="number" name="discount_percentage" id="discount_percentage" min="1" max="100" step="0.01" value="{{ old('discount_percentage', $deal->discount_percentage) }}" 
                                    class="focus:ring-[#53D2DC] focus:border-[#53D2DC] block w-full pr-12 sm:text-sm border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-white rounded-md" 
@@ -112,8 +112,8 @@
 
                 <!-- Description (Bilingual) -->
                 <div class="mt-6">
-                    <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">{{ __('messages.description') }}</label>
-                    <p class="text-xs text-gray-500 dark:text-gray-400 mb-2">{{ __('messages.description_optional_both_or_none') }}</p>
+                    <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">{{ __('service_provider.description') }}</label>
+                    <p class="text-xs text-gray-500 dark:text-gray-400 mb-2">{{ __('service_provider.description_optional_both_or_none') }}</p>
 
                     <!-- Language Switcher for Description -->
                     <x-form-language-switcher field-name="description" />
@@ -122,7 +122,7 @@
                     <div data-language-field="description" data-language="en" class="mb-3 active-language-field">
                         <textarea id="description" name="description" rows="3"
                                   class="mt-1 focus:ring-[#53D2DC] focus:border-[#53D2DC] px-4 py-2 block w-full shadow-sm sm:text-sm border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-white rounded-md"
-                                  placeholder="{{ __('messages.enter_deal_description') }}">{{ old('description', $deal->description) }}</textarea>
+                                  placeholder="{{ __('service_provider.enter_deal_description') }}">{{ old('description', $deal->description) }}</textarea>
                         @error('description')
                             <p class="text-red-500 text-sm mt-1">{{ $message }}</p>
                         @enderror
@@ -132,7 +132,7 @@
                     <div data-language-field="description" data-language="ar" style="display: none;">
                         <textarea id="description_arabic" name="description_arabic" rows="3"
                                   class="mt-1 focus:ring-[#53D2DC] focus:border-[#53D2DC] px-4 py-2 block w-full shadow-sm sm:text-sm border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-white rounded-md"
-                                  placeholder="{{ __('messages.enter_deal_description_arabic') }}" dir="rtl">{{ old('description_arabic', $deal->description_arabic) }}</textarea>
+                                  placeholder="{{ __('service_provider.enter_deal_description_arabic') }}" dir="rtl">{{ old('description_arabic', $deal->description_arabic) }}</textarea>
                         @error('description_arabic')
                             <p class="text-red-500 text-sm mt-1">{{ $message }}</p>
                         @enderror
@@ -141,8 +141,8 @@
 
                 <!-- Promotional Message (Bilingual) -->
                 <div class="mt-6">
-                    <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">{{ __('messages.promotional_message') }}</label>
-                    <p class="text-xs text-gray-500 dark:text-gray-400 mb-2">{{ __('messages.promotional_message_optional_both_or_none') }}</p>
+                    <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">{{ __('service_provider.promotional_message') }}</label>
+                    <p class="text-xs text-gray-500 dark:text-gray-400 mb-2">{{ __('service_provider.promotional_message_optional_both_or_none') }}</p>
 
                     <!-- Language Switcher for Promotional Message -->
                     <x-form-language-switcher field-name="promotional_message" />
@@ -152,7 +152,7 @@
                         <div class="relative">
                             <input type="text" name="promotional_message" id="promotional_message" maxlength="50" value="{{ old('promotional_message', $deal->promotional_message) }}"
                                    class="mt-1 focus:ring-[#53D2DC] focus:border-[#53D2DC] px-2 block w-full shadow-sm sm:text-sm border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-white rounded-md"
-                                   placeholder="{{ __('messages.enter_promotional_message') }}">
+                                   placeholder="{{ __('service_provider.enter_promotional_message') }}">
                             <div class="absolute inset-y-0 right-0 pr-3 flex items-center pointer-events-none">
                                 <span class="text-gray-400 text-xs" id="promo_count_en">0/50</span>
                             </div>
@@ -167,7 +167,7 @@
                         <div class="relative">
                             <input type="text" name="promotional_message_arabic" id="promotional_message_arabic" maxlength="50" value="{{ old('promotional_message_arabic', $deal->promotional_message_arabic) }}"
                                    class="mt-1 focus:ring-[#53D2DC] focus:border-[#53D2DC] px-2 block w-full shadow-sm sm:text-sm border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-white rounded-md"
-                                   placeholder="{{ __('messages.enter_promotional_message_arabic') }}" dir="rtl">
+                                   placeholder="{{ __('service_provider.enter_promotional_message_arabic') }}" dir="rtl">
                             <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
                                 <span class="text-gray-400 text-xs" id="promo_count_ar">0/50</span>
                             </div>
@@ -181,7 +181,7 @@
                 <!-- Date Range -->
                 <div class="mt-6 grid grid-cols-1 md:grid-cols-2 gap-6">
                     <div>
-                        <label for="start_date" class="block text-sm font-medium text-gray-700 dark:text-gray-300">{{ __('messages.start_date') }} <span class="text-red-500">*</span></label>
+                        <label for="start_date" class="block text-sm font-medium text-gray-700 dark:text-gray-300">{{ __('service_provider.start_date') }} <span class="text-red-500">*</span></label>
                         <input type="date" name="start_date" id="start_date" value="{{ old('start_date', $deal->start_date ? $deal->start_date->format('Y-m-d') : '') }}" 
                                class="mt-1 focus:ring-[#53D2DC] focus:border-[#53D2DC] block w-full shadow-sm sm:text-sm border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-white rounded-md" required>
                         @error('start_date')
@@ -190,7 +190,7 @@
                     </div>
 
                     <div>
-                        <label for="end_date" class="block text-sm font-medium text-gray-700 dark:text-gray-300">{{ __('messages.end_date') }} <span class="text-red-500">*</span></label>
+                        <label for="end_date" class="block text-sm font-medium text-gray-700 dark:text-gray-300">{{ __('service_provider.end_date') }} <span class="text-red-500">*</span></label>
                         <input type="date" name="end_date" id="end_date" value="{{ old('end_date', $deal->end_date ? $deal->end_date->format('Y-m-d') : '') }}" 
                                class="mt-1 focus:ring-[#53D2DC] focus:border-[#53D2DC] block w-full shadow-sm sm:text-sm border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-white rounded-md" required>
                         @error('end_date')
@@ -202,7 +202,7 @@
                 <!-- Current Image -->
                 @if($deal->image)
                 <div class="mt-6">
-                    <label class="block text-sm font-medium text-gray-700 dark:text-gray-300">{{ __('messages.current_image') }}</label>
+                    <label class="block text-sm font-medium text-gray-700 dark:text-gray-300">{{ __('service_provider.current_image') }}</label>
                     <div class="mt-2">
                         <img src="{{ $deal->image }}" alt="{{ $deal->title }}" class="h-32 w-auto object-cover rounded-md">
                     </div>
@@ -211,7 +211,7 @@
 
                 <!-- Deal Image -->
                 <div class="mt-6">
-                    <label for="image" class="block text-sm font-medium text-gray-700 dark:text-gray-300">{{ $deal->image ? __('messages.change_image') : __('messages.deal_image') }}</label>
+                    <label for="image" class="block text-sm font-medium text-gray-700 dark:text-gray-300">{{ $deal->image ? __('service_provider.change_image') : __('service_provider.deal_image') }}</label>
                     <div class="mt-1 flex justify-center px-6 pt-5 pb-6 border-2 border-gray-300 dark:border-gray-600 border-dashed rounded-md">
                         <div class="space-y-1 text-center" id="image-upload-container">
                             <svg class="mx-auto h-12 w-12 text-gray-400" stroke="currentColor" fill="none" viewBox="0 0 48 48" aria-hidden="true" id="image-placeholder">
@@ -222,13 +222,13 @@
                             </div>
                             <div class="flex text-sm text-gray-600 dark:text-gray-400">
                                 <label for="image" class="relative cursor-pointer bg-white dark:bg-gray-700 rounded-md font-medium text-[#53D2DC] hover:text-[#53D2DC]/80 focus-within:outline-none focus-within:ring-2 focus-within:ring-offset-2 focus-within:ring-[#53D2DC]">
-                                    <span>{{ __('messages.upload_file') }}</span>
+                                    <span>{{ __('service_provider.upload_file') }}</span>
                                     <input id="image" name="image" type="file" class="sr-only" onchange="previewImage(this)">
                                 </label>
-                                <p class="pl-1" id="file-name">{{ __('messages.or_drag_drop') }}</p>
+                                <p class="pl-1" id="file-name">{{ __('service_provider.or_drag_drop') }}</p>
                             </div>
                             <p class="text-xs text-gray-500 dark:text-gray-400">
-                                {{ __('messages.deal_image_format_size') }}
+                                {{ __('service_provider.deal_image_format_size') }}
                             </p>
                         </div>
                     </div>
@@ -254,15 +254,15 @@
 
                 <!-- Status -->
                 <div class="mt-6">
-                    <label class="block text-sm font-medium text-gray-700 dark:text-gray-300">{{ __('messages.status') }} <span class="text-red-500">*</span></label>
+                    <label class="block text-sm font-medium text-gray-700 dark:text-gray-300">{{ __('service_provider.status') }} <span class="text-red-500">*</span></label>
                     <div class="mt-2 space-y-2">
                         <div class="flex items-center">
                             <input id="status_active" name="status" type="radio" value="active" class="focus:ring-[#53D2DC] h-4 w-4 text-[#53D2DC] border-gray-300 dark:border-gray-600" {{ old('status', $deal->status) == 'active' ? 'checked' : '' }}>
-                            <label for="status_active" class="ml-3 block text-sm font-medium text-gray-700 dark:text-gray-300">{{ __('messages.active') }}</label>
+                            <label for="status_active" class="ml-3 block text-sm font-medium text-gray-700 dark:text-gray-300">{{ __('service_provider.active') }}</label>
                         </div>
                         <div class="flex items-center">
                             <input id="status_inactive" name="status" type="radio" value="inactive" class="focus:ring-[#53D2DC] h-4 w-4 text-[#53D2DC] border-gray-300 dark:border-gray-600" {{ old('status', $deal->status) == 'inactive' ? 'checked' : '' }}>
-                            <label for="status_inactive" class="ml-3 block text-sm font-medium text-gray-700 dark:text-gray-300">{{ __('messages.inactive') }}</label>
+                            <label for="status_inactive" class="ml-3 block text-sm font-medium text-gray-700 dark:text-gray-300">{{ __('service_provider.inactive') }}</label>
                         </div>
                     </div>
                     @error('status')
@@ -273,10 +273,10 @@
 
             <!-- Service Selection -->
             <div class="form-section">
-                <h3 class="form-section-title text-xl font-bold text-gray-800 dark:text-white">{{ __('messages.select_services') }}</h3>
+                <h3 class="form-section-title text-xl font-bold text-gray-800 dark:text-white">{{ __('service_provider.select_services') }}</h3>
                 
                 <div class="mb-4">
-                    <p class="text-sm text-gray-600 dark:text-gray-400">{{ __('messages.select_services_for_deal') }}</p>
+                    <p class="text-sm text-gray-600 dark:text-gray-400">{{ __('service_provider.select_services_for_deal') }}</p>
                 </div>
 
                 @if($services->count())
@@ -311,8 +311,8 @@
                         <div class="mx-auto h-14 w-14 rounded-full bg-[#53D2DC]/15 flex items-center justify-center">
                             <i class="fas fa-cog text-[#53D2DC]"></i>
                         </div>
-                        <h4 class="mt-3 text-gray-900 dark:text-white font-medium">{{ __('messages.no_services_available') }}</h4>
-                        <p class="text-sm text-gray-500 dark:text-gray-400">{{ __('messages.no_services_to_create_deals') }}</p>
+                        <h4 class="mt-3 text-gray-900 dark:text-white font-medium">{{ __('service_provider.no_services_available') }}</h4>
+                        <p class="text-sm text-gray-500 dark:text-gray-400">{{ __('service_provider.no_services_to_create_deals') }}</p>
                     </div>
                 @endif
 
@@ -324,10 +324,10 @@
             <!-- Form Actions -->
             <div class="flex items-center justify-end space-x-4 pt-6 border-t border-gray-200 dark:border-gray-700">
                 <a href="{{ route('service-provider.deals.index') }}" class="inline-flex items-center px-4 py-2 bg-gray-300 border border-transparent rounded-md font-semibold text-xs text-gray-700 uppercase tracking-widest hover:bg-gray-400 active:bg-gray-500 focus:outline-none focus:border-gray-500 focus:ring ring-gray-300 disabled:opacity-25 transition ease-in-out duration-150">
-                    {{ __('messages.cancel') }}
+                    {{ __('service_provider.cancel') }}
                 </a>
                 <button type="submit" class="inline-flex items-center px-4 py-2 bg-[#53D2DC] border border-transparent rounded-md font-semibold text-xs text-white uppercase tracking-widest hover:bg-[#53D2DC]/90 active:bg-[#53D2DC]/80 focus:outline-none focus:border-[#53D2DC] focus:ring ring-[#53D2DC]/30 disabled:opacity-25 transition ease-in-out duration-150">
-                    <i class="fas fa-save mr-2"></i> {{ __('messages.update_deal') }}
+                    <i class="fas fa-save mr-2"></i> {{ __('service_provider.update_deal') }}
                 </button>
             </div>
         </form>
@@ -404,24 +404,24 @@ document.addEventListener('DOMContentLoaded', function() {
         // Validate bilingual fields
         if (!validateBilingualField('title', true)) {
             hasErrors = true;
-            errors.push('{{ __('messages.title_required_both_languages') }}');
+            errors.push('{{ __('service_provider.title_required_both_languages') }}');
         }
 
         if (!validateBilingualField('description', false)) {
             hasErrors = true;
-            errors.push('{{ __('messages.description_both_or_none') }}');
+            errors.push('{{ __('service_provider.description_both_or_none') }}');
         }
 
         if (!validateBilingualField('promotional_message', false)) {
             hasErrors = true;
-            errors.push('{{ __('messages.promotional_message_both_or_none') }}');
+            errors.push('{{ __('service_provider.promotional_message_both_or_none') }}');
         }
 
         // Validate service selection
         const selectedServices = document.querySelectorAll('input[name="service_ids[]"]:checked');
         if (selectedServices.length === 0) {
             hasErrors = true;
-            errors.push('{{ __('messages.select_at_least_one_service') }}');
+            errors.push('{{ __('service_provider.select_at_least_one_service') }}');
         }
 
         // Validate date range
@@ -429,7 +429,7 @@ document.addEventListener('DOMContentLoaded', function() {
         const endDate = new Date(document.getElementById('end_date').value);
         if (endDate <= startDate) {
             hasErrors = true;
-            errors.push('{{ __('messages.end_date_must_be_after_start_date') }}');
+            errors.push('{{ __('service_provider.end_date_must_be_after_start_date') }}');
         }
 
         if (hasErrors) {
@@ -458,7 +458,7 @@ function previewImage(input) {
         // Validate file type
         if (!file.type.startsWith('image/')) {
             if (errorContainer && errorText) {
-                showImageError(errorContainer, errorText, '{{ __('messages.select_valid_image') }}');
+                showImageError(errorContainer, errorText, '{{ __('service_provider.select_valid_image') }}');
             }
             input.value = '';
             return;
@@ -468,7 +468,7 @@ function previewImage(input) {
         if (file.size > 2 * 1024 * 1024) {
             const fileSizeMB = (file.size / (1024 * 1024)).toFixed(2);
             if (errorContainer && errorText) {
-                showImageError(errorContainer, errorText, `{{ __('messages.file_size_exceeds') }} (${fileSizeMB}MB) {{ __('messages.choose_smaller_image') }}`);
+                showImageError(errorContainer, errorText, `{{ __('service_provider.file_size_exceeds') }} (${fileSizeMB}MB) {{ __('service_provider.choose_smaller_image') }}`);
             }
             input.value = '';
             return;
@@ -511,7 +511,7 @@ function previewImage(input) {
 
         // Reset file name if element exists
         if (fileNameElement) {
-            fileNameElement.textContent = '{{ __('messages.or_drag_drop') }}';
+            fileNameElement.textContent = '{{ __('service_provider.or_drag_drop') }}';
         }
     }
 }
@@ -555,7 +555,7 @@ function showValidationModal(errors) {
                     <div class="mx-auto flex items-center justify-center h-12 w-12 rounded-full bg-red-100">
                         <i class="fas fa-exclamation-triangle text-red-600"></i>
                     </div>
-                    <h3 class="text-lg font-medium text-gray-900 mt-2">{{ __('messages.validation_errors') }}</h3>
+                    <h3 class="text-lg font-medium text-gray-900 mt-2">{{ __('service_provider.validation_errors') }}</h3>
                     <div class="mt-2 px-7 py-3">
                         <ul class="text-sm text-left list-disc list-inside">
                             ${errorList}
@@ -563,7 +563,7 @@ function showValidationModal(errors) {
                     </div>
                     <div class="items-center px-4 py-3">
                         <button id="closeModal" class="px-4 py-2 bg-red-500 text-white text-base font-medium rounded-md w-full shadow-sm hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-red-300">
-                            {{ __('messages.close') }}
+                            {{ __('service_provider.close') }}
                         </button>
                     </div>
                 </div>

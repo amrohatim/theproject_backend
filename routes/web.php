@@ -2035,6 +2035,19 @@ Route::prefix('vendor')->name('vendor.')->middleware(['auth', \App\Http\Middlewa
         Route::patch('/{productsManager}/toggle-status', [\App\Http\Controllers\Vendor\ProductsManagerController::class, 'toggleStatus'])->name('toggle-status');
         Route::get('/{productsManager}/statistics', [\App\Http\Controllers\Vendor\ProductsManagerController::class, 'getStatistics'])->name('statistics');
     });
+
+    // API routes for product management
+    Route::post('/api/color-sizes/get-sizes-for-color', [\App\Http\Controllers\Vendor\ProductColorSizeController::class, 'getSizesForColor'])->name('api.color-sizes.get-sizes-for-color');
+    Route::post('/api/color-sizes/validate-stock-allocation', [\App\Http\Controllers\Vendor\ProductColorSizeController::class, 'validateStockAllocation'])->name('api.color-sizes.validate-stock-allocation');
+    Route::post('/api/color-sizes/get-color-stock-info', [\App\Http\Controllers\Vendor\ProductColorSizeController::class, 'getColorStockInfo'])->name('api.color-sizes.get-color-stock-info');
+    Route::post('/api/color-sizes/save-combinations', [\App\Http\Controllers\Vendor\ProductColorSizeController::class, 'saveColorSizeCombinations'])->name('api.color-sizes.save-combinations');
+
+    // Size Management API routes (removed - using ProductColorSizeController instead for color-size combinations)
+
+    // Color Management API routes
+    Route::post('/api/colors/create', [\App\Http\Controllers\Vendor\ProductColorController::class, 'store'])->name('api.colors.create');
+    Route::post('/api/colors/update', [\App\Http\Controllers\Vendor\ProductColorController::class, 'update'])->name('api.colors.update');
+    Route::delete('/api/colors/{id}', [\App\Http\Controllers\Vendor\ProductColorController::class, 'destroy'])->name('api.colors.destroy');
 });
 
 // Service Provider Routes

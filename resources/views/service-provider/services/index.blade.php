@@ -1,7 +1,7 @@
 @extends('layouts.service-provider')
 
-@section('title', 'Services')
-@section('page-title', 'Services')
+@section('title', __('service_provider.services'))
+@section('page-title', __('service_provider.services'))
 
 @section('content')
 <div class="container mx-auto">
@@ -10,10 +10,10 @@
         <!-- Filter Header -->
         <div class="px-4 py-3 border-b border-gray-200 dark:border-gray-700 flex items-center justify-between">
             <div class="flex items-center">
-                <h3 class="text-lg font-medium text-gray-900 dark:text-white">Filters</h3>
+                <h3 class="text-lg font-medium text-gray-900 dark:text-white">{{ __('service_provider.filters') }}</h3>
                 @if($activeFilters > 0)
                     <span class="ml-2 inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-[#53D2DC] text-white">
-                        {{ $activeFilters }} active
+                        {{ __('service_provider.filters_active', ['count' => $activeFilters]) }}
                     </span>
                 @endif
             </div>
@@ -30,29 +30,29 @@
                     <div>
                         <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
                             <i class="fas fa-search mr-1"></i>
-                            Search Services
+                            {{ __('service_provider.search_services') }}
                         </label>
                         <input type="text"
                                name="search"
                                id="searchInput"
                                value="{{ request('search') }}"
-                               placeholder="Search by name (English/Arabic) or description..."
+                               placeholder="{{ __('service_provider.search_placeholder') }}"
                                class="w-full rounded-md border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-white focus:ring-2 focus:ring-[#53D2DC] focus:border-[#53D2DC] transition-colors" />
                     </div>
                     <div>
                         <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
                             <i class="fas fa-sort mr-1"></i>
-                            Sort By
+                            {{ __('service_provider.sort_by') }}
                         </label>
                         <select name="sort_by"
                                 id="sortBy"
                                 class="w-full rounded-md border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-white focus:ring-2 focus:ring-[#53D2DC] focus:border-[#53D2DC]">
-                            <option value="name" @selected(request('sort_by') == 'name')>Name (A-Z)</option>
-                            <option value="price_low" @selected(request('sort_by') == 'price_low')>Price (Low to High)</option>
-                            <option value="price_high" @selected(request('sort_by') == 'price_high')>Price (High to Low)</option>
-                            <option value="duration_low" @selected(request('sort_by') == 'duration_low')>Duration (Short to Long)</option>
-                            <option value="duration_high" @selected(request('sort_by') == 'duration_high')>Duration (Long to Short)</option>
-                            <option value="newest" @selected(request('sort_by') == 'newest')>Newest First</option>
+                            <option value="name" @selected(request('sort_by') == 'name')>{{ __('service_provider.sort_name_az') }}</option>
+                            <option value="price_low" @selected(request('sort_by') == 'price_low')>{{ __('service_provider.sort_price_low_high') }}</option>
+                            <option value="price_high" @selected(request('sort_by') == 'price_high')>{{ __('service_provider.sort_price_high_low') }}</option>
+                            <option value="duration_low" @selected(request('sort_by') == 'duration_low')>{{ __('service_provider.sort_duration_short_long') }}</option>
+                            <option value="duration_high" @selected(request('sort_by') == 'duration_high')>{{ __('service_provider.sort_duration_long_short') }}</option>
+                            <option value="newest" @selected(request('sort_by') == 'newest')>{{ __('service_provider.sort_newest_first') }}</option>
                         </select>
                     </div>
                 </div>
@@ -62,12 +62,12 @@
                     <div>
                         <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
                             <i class="fas fa-building mr-1"></i>
-                            Branch
+                            {{ __('service_provider.branch') }}
                         </label>
                         <select name="branch_id"
                                 id="branchFilter"
                                 class="w-full rounded-md border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-white focus:ring-2 focus:ring-[#53D2DC] focus:border-[#53D2DC]">
-                            <option value="">All Branches</option>
+                            <option value="">{{ __('service_provider.all_branches') }}</option>
                             @foreach(($branches ?? []) as $branch)
                                 <option value="{{ $branch->id }}" @selected(request('branch_id') == $branch->id)>{{ $branch->name }}</option>
                             @endforeach
@@ -76,12 +76,12 @@
                     <div>
                         <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
                             <i class="fas fa-tags mr-1"></i>
-                            Category
+                            {{ __('service_provider.category') }}
                         </label>
                         <select name="category_id"
                                 id="categoryFilter"
                                 class="w-full rounded-md border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-white focus:ring-2 focus:ring-[#53D2DC] focus:border-[#53D2DC]">
-                            <option value="">All Categories</option>
+                            <option value="">{{ __('service_provider.all_categories') }}</option>
                             @foreach(($categories ?? []) as $category)
                                 <option value="{{ $category->id }}" @selected(request('category_id') == $category->id)>{{ $category->name }}</option>
                             @endforeach
@@ -90,27 +90,27 @@
                     <div>
                         <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
                             <i class="fas fa-toggle-on mr-1"></i>
-                            Status
+                            {{ __('service_provider.status') }}
                         </label>
                         <select name="status"
                                 id="statusFilter"
                                 class="w-full rounded-md border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-white focus:ring-2 focus:ring-[#53D2DC] focus:border-[#53D2DC]">
-                            <option value="">All Status</option>
-                            <option value="available" @selected(request('status') == 'available')>Available</option>
-                            <option value="unavailable" @selected(request('status') == 'unavailable')>Unavailable</option>
+                            <option value="">{{ __('service_provider.all_status') }}</option>
+                            <option value="available" @selected(request('status') == 'available')>{{ __('service_provider.available') }}</option>
+                            <option value="unavailable" @selected(request('status') == 'unavailable')>{{ __('service_provider.unavailable') }}</option>
                         </select>
                     </div>
                     <div>
                         <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
                             <i class="fas fa-dollar-sign mr-1"></i>
-                            Price Range
+                            {{ __('service_provider.price_range') }}
                         </label>
                         <div class="flex space-x-2">
                             <input type="number"
                                    name="min_price"
                                    id="minPrice"
                                    value="{{ request('min_price') }}"
-                                   placeholder="Min"
+                                   placeholder="{{ __('service_provider.min') }}"
                                    min="0"
                                    step="0.01"
                                    class="w-full rounded-md border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-white focus:ring-2 focus:ring-[#53D2DC] focus:border-[#53D2DC] text-sm" />
@@ -118,7 +118,7 @@
                                    name="max_price"
                                    id="maxPrice"
                                    value="{{ request('max_price') }}"
-                                   placeholder="Max"
+                                   placeholder="{{ __('service_provider.max') }}"
                                    min="0"
                                    step="0.01"
                                    class="w-full rounded-md border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-white focus:ring-2 focus:ring-[#53D2DC] focus:border-[#53D2DC] text-sm" />
@@ -133,7 +133,7 @@
                                 id="clearFilters"
                                 class="inline-flex items-center px-3 py-2 text-sm font-medium text-gray-700 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white">
                             <i class="fas fa-times mr-2"></i>
-                            Clear All Filters
+                            {{ __('service_provider.clear_all_filters') }}
                         </button>
                         <div id="resultsCount" class="text-sm text-gray-500 dark:text-gray-400">
                             <!-- Results count will be updated via AJAX -->
@@ -143,7 +143,7 @@
                         <button type="submit"
                                 class="inline-flex items-center px-4 py-2 bg-[#53D2DC] text-white rounded-md hover:bg-[#53D2DC]/90 focus:ring-2 focus:ring-[#53D2DC] focus:ring-offset-2 transition-colors">
                             <i class="fas fa-filter mr-2"></i>
-                            Apply Filters
+                            {{ __('service_provider.apply_filters') }}
                         </button>
                     </div>
                 </div>
@@ -155,7 +155,7 @@
     <div class="bg-white dark:bg-gray-800 rounded-lg shadow border border-gray-200 dark:border-gray-700">
         <div class="px-4 py-3 border-b border-gray-200 dark:border-gray-700 flex items-center justify-between">
             <div class="flex items-center">
-                <h3 class="text-lg font-medium text-gray-900 dark:text-white">Your Services</h3>
+                <h3 class="text-lg font-medium text-gray-900 dark:text-white">{{ __('service_provider.your_services') }}</h3>
                 <div id="loadingSpinner" class="ml-3 hidden">
                     <i class="fas fa-spinner fa-spin text-[#53D2DC]"></i>
                 </div>
@@ -163,7 +163,7 @@
             <a href="{{ route('service-provider.services.create') }}"
                class="inline-flex items-center px-3 py-2 bg-[#53D2DC] text-white rounded-md hover:bg-[#53D2DC]/90 focus:ring-2 focus:ring-[#53D2DC] focus:ring-offset-2 transition-colors text-sm">
                 <i class="fas fa-plus mr-2"></i>
-                Add Service
+                {{ __('service_provider.add_service') }}
             </a>
         </div>
 

@@ -1275,6 +1275,7 @@ return [
     'brief_description_of_your_company_for_your_customers' => 'Brief description of your company for your customers',
     'yes_we_can_handle_our_own_deliveries' => 'Yes, we can handle our own deliveries',
     'no_we_need_a_third_party_delivery_service' => 'No, we need a third-party delivery service',
+    'select_services_for_deal' => 'Select the services you want to apply this deal to',
 
     
 ];

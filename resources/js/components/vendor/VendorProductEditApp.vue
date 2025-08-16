@@ -347,6 +347,7 @@
             <div class="grid gap-6">
               <VendorColorVariantCard
                 v-for="(color, index) in productData.colors"
+                :ref="el => colorVariantRefs[index] = el"
                 :key="color.id || index"
                 :color="color"
                 :index="index"
@@ -360,6 +361,7 @@
                 @image-upload="handleImageUpload"
                 @sizes-updated="handleColorSizesUpdated"
                 @stock-corrected="handleStockCorrected"
+                @save-color-first="handleSaveColorFirst"
               />
             </div>
           </div>
@@ -445,7 +447,7 @@
 </template>
 
 <script>
-import { ref, reactive, computed, onMounted, watch } from 'vue'
+import { ref, reactive, computed, onMounted, watch, nextTick } from 'vue'
 import VendorColorVariantCard from './VendorColorVariantCard.vue'
 import VendorSpecificationItem from './VendorSpecificationItem.vue'
 import LanguageSwitch from '../common/LanguageSwitch.vue'
@@ -514,6 +516,9 @@ export default {
 
     const categories = ref([])
     const branches = ref([])
+
+    // Component refs for accessing child components
+    const colorVariantRefs = ref([])
 
     // Modal states
     const showSuccessModal = ref(false)
@@ -943,6 +948,91 @@ export default {
       // - Updating other related data
     }
 
+    // Store pending size creation data
+    const pendingSizeCreation = ref(null)
+
+    const handleSaveColorFirst = async (colorIndex, pendingSizeData = null) => {
+      console.log('🎨 Save color first requested for color index:', colorIndex, 'with pending size data:', pendingSizeData)
+
+      if (colorIndex < 0 || colorIndex >= productData.colors.length) {
+        console.error('Invalid color index:', colorIndex)
+        return
+      }
+
+      const color = productData.colors[colorIndex]
+
+      // Validate that the color has required fields
+      if (!color.name || !color.color_code) {
+        console.error('Color missing required fields (name or color_code)')
+        // You could show an error message to the user here
+        return
+      }
+
+      // Store pending size data if provided
+      if (pendingSizeData) {
+        pendingSizeCreation.value = {
+          colorIndex,
+          sizeData: pendingSizeData
+        }
+        console.log('📝 Stored pending size creation data:', pendingSizeCreation.value)
+      }
+
+      try {
+        console.log('💾 Saving color to backend before adding size...')
+
+        // Prepare color data for saving
+        const colorData = {
+          name: color.name,
+          color_code: color.color_code,
+          price_adjustment: color.price_adjustment || 0,
+          stock: color.stock || 0,
+          display_order: color.display_order || colorIndex,
+          is_default: color.is_default || false
+        }
+
+        // Save the color to the backend
+        const response = await window.axios.post('/vendor/api/colors/create', {
+          product_id: productData.id,
+          ...colorData
+        })
+
+        if (response.data.success && response.data.color) {
+          console.log('✅ Color saved successfully:', response.data.color)
+
+          // Update the color object with the returned ID and data
+          Object.assign(productData.colors[colorIndex], {
+            id: response.data.color.id,
+            ...response.data.color
+          })
+
+          console.log('🔄 Color updated with ID:', response.data.color.id)
+
+          // Resume size creation if there's pending data
+          if (pendingSizeCreation.value && pendingSizeCreation.value.colorIndex === colorIndex) {
+            console.log('🔄 Resuming size creation after color save...')
+            await nextTick() // Wait for DOM updates
+
+            // Get the color variant component ref for this color index
+            const colorVariantComponent = colorVariantRefs.value[colorIndex]
+
+            if (colorVariantComponent && colorVariantComponent.resumeSizeCreation) {
+              colorVariantComponent.resumeSizeCreation(pendingSizeCreation.value.sizeData)
+
+              // Clear pending data
+              pendingSizeCreation.value = null
+            } else {
+              console.error('Could not find color variant component to resume size creation for index:', colorIndex)
+            }
+          }
+        } else {
+          console.error('Failed to save color:', response.data)
+        }
+      } catch (error) {
+        console.error('Error saving color:', error)
+        // You could show an error message to the user here
+      }
+    }
+
     // Specification management methods
     const addNewSpecification = () => {
       const newSpec = {
@@ -1063,6 +1153,7 @@ export default {
       handleImageUpload,
       handleColorSizesUpdated,
       handleStockCorrected,
+      handleSaveColorFirst,
       addNewSpecification,
       updateSpecification,
       removeSpecification,

@@ -235,6 +235,26 @@
         </form>
     </div>
 </div>
+
+<!-- Image Validation Modal -->
+<div id="imageValidationModal" class="fixed inset-0 bg-gray-600 bg-opacity-50 overflow-y-auto h-full w-full hidden z-50">
+    <div class="relative top-20 mx-auto p-5 border w-96 shadow-lg rounded-md bg-white dark:bg-gray-800">
+        <div class="mt-3 text-center">
+            <div class="mx-auto flex items-center justify-center h-12 w-12 rounded-full bg-red-100 dark:bg-red-900">
+                <i class="fas fa-exclamation-triangle text-red-600 dark:text-red-400 text-xl"></i>
+            </div>
+            <h3 class="text-lg leading-6 font-medium text-gray-900 dark:text-white mt-4">{{ __('service_provider.image_required') }}</h3>
+            <div class="mt-2 px-7 py-3">
+                <p class="text-sm text-gray-500 dark:text-gray-400">{{ __('service_provider.image_required_message') }}</p>
+            </div>
+            <div class="items-center px-4 py-3">
+                <button id="closeImageModal" class="px-4 py-2 bg-red-500 text-white text-base font-medium rounded-md w-full shadow-sm hover:bg-red-600 focus:outline-none focus:ring-2 focus:ring-red-300 transition-colors duration-200">
+                    {{ __('service_provider.close') }}
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
 @endsection
 
 @section('scripts')
@@ -337,6 +357,14 @@
             let hasErrors = false;
             const errors = [];
 
+            // Validate image upload (mandatory for service creation)
+            const imageInput = document.getElementById('image');
+            if (!imageInput || !imageInput.files || imageInput.files.length === 0) {
+                e.preventDefault();
+                showImageValidationModal();
+                return false;
+            }
+
             // Validate service name (required in both languages)
             if (!validateBilingualField('service_name', true)) {
                 hasErrors = true;
@@ -389,6 +417,57 @@
         });
     }
 
+    function validateBilingualField(fieldName, required) {
+        const englishField = document.querySelector(`[data-language-field="${fieldName}"][data-language="en"] input, [data-language-field="${fieldName}"][data-language="en"] textarea`);
+        const arabicField = document.querySelector(`[data-language-field="${fieldName}"][data-language="ar"] input, [data-language-field="${fieldName}"][data-language="ar"] textarea`);
+
+        if (!englishField || !arabicField) return true;
+
+        const englishValue = englishField.value.trim();
+        const arabicValue = arabicField.value.trim();
+
+        if (required) {
+            return englishValue !== '' && arabicValue !== '';
+        } else {
+            // Optional: both empty or both filled
+            return (englishValue === '' && arabicValue === '') || (englishValue !== '' && arabicValue !== '');
+        }
+    }
+
+    // Show image validation modal
+    function showImageValidationModal() {
+        const modal = document.getElementById('imageValidationModal');
+        if (modal) {
+            modal.classList.remove('hidden');
+        }
+    }
+
+    // Hide image validation modal
+    function hideImageValidationModal() {
+        const modal = document.getElementById('imageValidationModal');
+        if (modal) {
+            modal.classList.add('hidden');
+        }
+    }
+
+    // Initialize modal functionality when DOM is loaded
+    document.addEventListener('DOMContentLoaded', function() {
+        // Setup modal close functionality
+        const closeModalBtn = document.getElementById('closeImageModal');
+        if (closeModalBtn) {
+            closeModalBtn.addEventListener('click', hideImageValidationModal);
+        }
+
+        // Close modal when clicking outside
+        const modal = document.getElementById('imageValidationModal');
+        if (modal) {
+            modal.addEventListener('click', function(e) {
+                if (e.target === modal) {
+                    hideImageValidationModal();
+                }
+            });
+        }
+    });
 
 </script>
 @endsection

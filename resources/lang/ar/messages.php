@@ -2076,5 +2076,6 @@ return [
     'brief_description_of_your_company_for_your_customers' => 'وصف موجز لشركتك لعملائك',
     'yes_we_can_handle_our_own_deliveries' => 'نعم، يمكننا التعامل مع توصيلاتنا الخاصة',
     'no_we_need_a_third_party_delivery_service' => 'لا، نحتاج إلى خدمة توصيل طرف ثالث',
+    'select_services_for_deal' => 'حدد الخدمات التي ترغب في تطبيقها على هذه الصفقة',
 
 ];

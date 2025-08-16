@@ -55,17 +55,23 @@ class DealController extends Controller
     {
         $user = Auth::user();
 
+        // Get the service provider record
+        $serviceProvider = $user->serviceProvider;
+
+        if (!$serviceProvider) {
+            return redirect()->route('service-provider.dashboard')
+                ->with('error', 'Service provider profile not found.');
+        }
+
         // Get services that this service provider can manage
-        // For service providers, get services where they are the creator/owner
-        $services = Service::where('created_by', $user->id)
-            ->orWhere('user_id', $user->id)
+        $serviceIds = $serviceProvider->service_ids ?? [];
+        $services = Service::whereIn('id', $serviceIds)
             ->with(['branch'])
             ->get();
 
         // Get branches this service provider has access to
-        $branches = Branch::whereHas('services', function($query) use ($user) {
-            $query->where('created_by', $user->id)->orWhere('user_id', $user->id);
-        })->get();
+        $branchIds = $serviceProvider->branch_ids ?? [];
+        $branches = Branch::whereIn('id', $branchIds)->get();
 
         return view('service-provider.deals.create', compact('services', 'branches'));
     }
@@ -122,9 +128,8 @@ class DealController extends Controller
 
         // Validate that all selected services belong to this service provider
         $selectedServices = $request->input('service_ids', []);
-        $allowedServices = Service::where(function($query) use ($user) {
-            $query->where('created_by', $user->id)->orWhere('user_id', $user->id);
-        })->pluck('id')->toArray();
+        $serviceProvider = $user->serviceProvider;
+        $allowedServices = $serviceProvider->service_ids ?? [];
 
         foreach ($selectedServices as $serviceId) {
             if (!in_array($serviceId, $allowedServices)) {
@@ -192,7 +197,7 @@ class DealController extends Controller
         // Verify that the deal's services are within the service provider's scope
         $dealServiceIds = $deal->service_ids ?? [];
         $allowedServiceIds = $serviceProvider->service_ids ?? [];
-        
+
         foreach ($dealServiceIds as $serviceId) {
             if (!in_array($serviceId, $allowedServiceIds)) {
                 return redirect()->route('service-provider.deals.index')
@@ -201,12 +206,13 @@ class DealController extends Controller
         }
 
         // Get services that this service provider can manage
-        $services = Service::whereIn('id', $serviceProvider->service_ids ?? [])
+        $services = Service::whereIn('id', $allowedServiceIds)
             ->with(['branch'])
             ->get();
 
         // Get branches this service provider has access to
-        $branches = Branch::whereIn('id', $serviceProvider->branch_ids ?? [])->get();
+        $branchIds = $serviceProvider->branch_ids ?? [];
+        $branches = Branch::whereIn('id', $branchIds)->get();
 
         return view('service-provider.deals.edit', compact('deal', 'services', 'branches', 'serviceProvider'));
     }
@@ -274,10 +280,10 @@ class DealController extends Controller
 
         // Validate that all selected services belong to this service provider
         $selectedServices = $request->input('service_ids', []);
-        $allowedServices = $serviceProvider->service_ids ?? [];
-        
+        $allowedServiceIds = $serviceProvider->service_ids ?? [];
+
         foreach ($selectedServices as $serviceId) {
-            if (!in_array($serviceId, $allowedServices)) {
+            if (!in_array($serviceId, $allowedServiceIds)) {
                 return back()->withErrors(['service_ids' => 'You can only create deals for services you manage.']);
             }
         }

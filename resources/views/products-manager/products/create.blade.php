@@ -362,6 +362,107 @@
 <!-- Font Awesome for icons -->
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
 
+<!-- Auto-refresh functionality for Products Manager create page -->
+<script>
+(function() {
+    'use strict';
+
+    // Check if this is the specific URL that needs auto-refresh
+    const currentUrl = window.location.href;
+    const targetPath = '/products-manager/products/create';
+
+    // Only proceed if we're on the exact target URL
+    if (!currentUrl.includes(targetPath)) {
+        console.log('🔄 Auto-refresh: Not on target URL, skipping');
+        return;
+    }
+
+    // Check if page has already been refreshed to prevent infinite loops
+    const sessionRefreshKey = 'pm_create_session_refreshed';
+
+    // Use both sessionStorage and a URL parameter to track refresh state
+    const urlParams = new URLSearchParams(window.location.search);
+    const hasRefreshParam = urlParams.has('auto_refreshed');
+    const hasSessionFlag = sessionStorage.getItem(sessionRefreshKey) === 'true';
+
+    if (hasRefreshParam || hasSessionFlag) {
+        console.log('🔄 Auto-refresh: Page already refreshed, skipping to prevent loop');
+        // Clean up the URL parameter if it exists
+        if (hasRefreshParam) {
+            urlParams.delete('auto_refreshed');
+            const newUrl = window.location.pathname + (urlParams.toString() ? '?' + urlParams.toString() : '');
+            window.history.replaceState({}, '', newUrl);
+        }
+        return;
+    }
+
+    // Check if we came from the products listing page (normal navigation)
+    const referrer = document.referrer;
+    const isFromProductsListing = referrer.includes('/products-manager/products') && !referrer.includes('/products-manager/products/create');
+
+    // Check navigation type - we want to refresh for normal navigation, not direct access
+    const navigationType = performance.getEntriesByType('navigation')[0]?.type;
+    const isDirectAccess = navigationType === 'navigate' && !referrer;
+
+    console.log('🔄 Auto-refresh: Navigation analysis', {
+        referrer: referrer,
+        isFromProductsListing: isFromProductsListing,
+        navigationType: navigationType,
+        isDirectAccess: isDirectAccess
+    });
+
+    // Only refresh if we came from the products listing page (normal navigation)
+    // Do NOT refresh for direct URL access
+    if (!isFromProductsListing || isDirectAccess) {
+        console.log('🔄 Auto-refresh: Skipping - not from products listing page or is direct access');
+        return;
+    }
+
+    // Set flags to prevent future refreshes
+    sessionStorage.setItem(sessionRefreshKey, 'true');
+
+    // Wait for the page to fully load before refreshing
+    if (document.readyState === 'loading') {
+        document.addEventListener('DOMContentLoaded', performAutoRefresh);
+    } else {
+        // Page is already loaded
+        performAutoRefresh();
+    }
+
+    function performAutoRefresh() {
+        console.log('🔄 Auto-refresh: Performing automatic page refresh for Products Manager create page (from products listing)');
+
+        // Add a parameter to track that we've refreshed
+        const currentUrl = new URL(window.location);
+        currentUrl.searchParams.set('auto_refreshed', '1');
+
+        // Perform the refresh
+        window.location.href = currentUrl.toString();
+    }
+
+    // Clean up session storage when navigating away from the page
+    window.addEventListener('beforeunload', function() {
+        // Only clear if we're actually navigating away (not refreshing)
+        if (!performance.getEntriesByType('navigation')[0] ||
+            performance.getEntriesByType('navigation')[0].type !== 'reload') {
+            sessionStorage.removeItem(sessionRefreshKey);
+        }
+    });
+
+    // Also clean up when the page becomes hidden (user switches tabs, etc.)
+    document.addEventListener('visibilitychange', function() {
+        if (document.visibilityState === 'hidden') {
+            // Set a timeout to clear the flag after a reasonable time
+            setTimeout(function() {
+                if (document.visibilityState === 'hidden') {
+                    sessionStorage.removeItem(sessionRefreshKey);
+                }
+            }, 30000); // 30 seconds
+        }
+    });
+})();
+</script>
+
 <!-- Vue App Script -->
 @vite(['resources/js/vendor-product-create.js'])
 @endsection

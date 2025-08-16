@@ -283,6 +283,9 @@
 
                 // Check if we need to load content for the current page
                 this.checkAndLoadInitialContent();
+
+                // Set up auto-refresh cleanup
+                this.setupAutoRefreshCleanup();
             }
 
             interceptNavigationClicks() {
@@ -365,7 +368,12 @@
                         history.pushState({ url: url }, '', url);
                     }
 
+                    // Store previous URL before updating current URL for auto-refresh check
+                    const previousUrl = this.currentUrl;
                     this.currentUrl = url;
+
+                    // Check for auto-refresh after URL is updated, passing previous URL
+                    this.checkAutoRefresh(previousUrl);
 
                 } catch (error) {
                     console.error('AJAX navigation error:', error);
@@ -692,6 +700,94 @@
                 } finally {
                     this.hideLoading();
                 }
+            }
+
+            setupAutoRefreshCleanup() {
+                // Clean up session storage when navigating away from the page
+                window.addEventListener('beforeunload', () => {
+                    // Only clear if we're actually navigating away (not refreshing)
+                    if (!performance.getEntriesByType('navigation')[0] ||
+                        performance.getEntriesByType('navigation')[0].type !== 'reload') {
+                        sessionStorage.removeItem('pm_create_ajax_refreshed');
+                    }
+                });
+
+                // Also clean up when the page becomes hidden (user switches tabs, etc.)
+                document.addEventListener('visibilitychange', () => {
+                    if (document.visibilityState === 'hidden') {
+                        // Set a timeout to clear the flag after a reasonable time
+                        setTimeout(() => {
+                            if (document.visibilityState === 'hidden') {
+                                sessionStorage.removeItem('pm_create_ajax_refreshed');
+                            }
+                        }, 30000); // 30 seconds
+                    }
+                });
+            }
+
+            checkAutoRefresh(previousUrl = null) {
+                // Check if this is the create page loaded via AJAX navigation
+                const currentUrl = window.location.href;
+                const targetPath = '/products-manager/products/create';
+
+
+
+                // Only proceed if we're on the exact target URL
+                if (!currentUrl.includes(targetPath)) {
+                    console.log('🔄 Auto-refresh: Not on target URL, skipping');
+                    return;
+                }
+
+                // Check if page has already been refreshed to prevent infinite loops
+                const sessionRefreshKey = 'pm_create_ajax_refreshed';
+
+                // Use both sessionStorage and a URL parameter to track refresh state
+                const urlParams = new URLSearchParams(window.location.search);
+                const hasRefreshParam = urlParams.has('auto_refreshed');
+                const hasSessionFlag = sessionStorage.getItem(sessionRefreshKey) === 'true';
+
+                if (hasRefreshParam || hasSessionFlag) {
+                    console.log('🔄 Auto-refresh: Page already refreshed, skipping to prevent loop');
+                    // Clean up the URL parameter if it exists
+                    if (hasRefreshParam) {
+                        urlParams.delete('auto_refreshed');
+                        const newUrl = window.location.pathname + (urlParams.toString() ? '?' + urlParams.toString() : '');
+                        window.history.replaceState({}, '', newUrl);
+                    }
+                    return;
+                }
+
+                // Check if we came from the products listing page (AJAX navigation)
+                // Use the previousUrl parameter passed from the navigation
+                const isFromProductsListing = previousUrl && previousUrl.includes('/products-manager/products') &&
+                                            !previousUrl.includes('/products-manager/products/create');
+
+
+
+                // Only refresh if we navigated from the products listing page via AJAX
+                if (!isFromProductsListing) {
+                    console.log('🔄 Auto-refresh: Skipping - not from AJAX navigation from products listing');
+                    return;
+                }
+
+                // Set flags to prevent future refreshes
+                sessionStorage.setItem(sessionRefreshKey, 'true');
+
+                // Perform the refresh after a small delay to ensure content is fully loaded
+                setTimeout(() => {
+                    this.performAutoRefresh();
+                }, 100);
+            }
+
+            performAutoRefresh() {
+                console.log('🔄 Auto-refresh: Performing automatic page refresh for Products Manager create page (from AJAX navigation)');
+
+                // Add a parameter to track that we've refreshed
+                const currentUrl = new URL(window.location);
+                currentUrl.searchParams.set('auto_refreshed', '1');
+
+                // Perform the refresh
+                window.location.href = currentUrl.toString();
             }
 
             showLoading() {
