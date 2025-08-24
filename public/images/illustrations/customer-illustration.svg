@@ -1,0 +1,63 @@
+<svg width="64" height="64" viewBox="0 0 64 64" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <linearGradient id="customerGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#0EA5E9;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#6366F1;stop-opacity:1" />
+    </linearGradient>
+  </defs>
+  
+  <!-- Shopping Bag -->
+  <path d="M20 24 L44 24 L42 52 L22 52 Z" fill="url(#customerGradient)" opacity="0.1" stroke="url(#customerGradient)" stroke-width="1" opacity="0.3"/>
+  
+  <!-- Bag Handles -->
+  <path d="M26 24 C26 20 28 18 32 18 C36 18 38 20 38 24" stroke="url(#customerGradient)" stroke-width="2" fill="none" opacity="0.4"/>
+  
+  <!-- Shopping Items in Bag -->
+  <rect x="24" y="28" width="6" height="8" rx="1" fill="url(#customerGradient)" opacity="0.4"/>
+  <rect x="32" y="30" width="4" height="6" rx="1" fill="url(#customerGradient)" opacity="0.5"/>
+  <rect x="36" y="26" width="5" height="10" rx="1" fill="url(#customerGradient)" opacity="0.3"/>
+  
+  <!-- Product Tags/Labels -->
+  <rect x="25" y="26" width="3" height="1.5" rx="0.5" fill="white" opacity="0.8"/>
+  <rect x="33" y="28" width="2" height="1" rx="0.5" fill="white" opacity="0.8"/>
+  
+  <!-- Mobile Phone/App -->
+  <rect x="48" y="16" width="12" height="20" rx="3" fill="url(#customerGradient)" opacity="0.2"/>
+  <rect x="50" y="18" width="8" height="12" rx="1" fill="white" opacity="0.9"/>
+  
+  <!-- App Interface -->
+  <rect x="51" y="19" width="6" height="1" rx="0.5" fill="url(#customerGradient)" opacity="0.4"/>
+  <rect x="51" y="21" width="3" height="3" rx="0.5" fill="url(#customerGradient)" opacity="0.3"/>
+  <rect x="55" y="21" width="2" height="1" rx="0.5" fill="url(#customerGradient)" opacity="0.3"/>
+  <rect x="55" y="23" width="2" height="1" rx="0.5" fill="url(#customerGradient)" opacity="0.3"/>
+  <rect x="51" y="25" width="6" height="0.5" rx="0.25" fill="url(#customerGradient)" opacity="0.2"/>
+  <rect x="51" y="26.5" width="4" height="0.5" rx="0.25" fill="url(#customerGradient)" opacity="0.2"/>
+  <rect x="51" y="28" width="5" height="0.5" rx="0.25" fill="url(#customerGradient)" opacity="0.2"/>
+  
+  <!-- Home Button -->
+  <circle cx="54" cy="33" r="1.5" fill="url(#customerGradient)" opacity="0.3"/>
+  
+  <!-- Heart/Favorite -->
+  <path d="M8 20 C8 16 12 14 16 18 C20 14 24 16 24 20 C24 24 16 32 16 32 C16 32 8 24 8 20 Z" fill="url(#customerGradient)" opacity="0.3"/>
+  
+  <!-- Star Rating -->
+  <path d="M12 44 L14 48 L18 48 L15 51 L16 55 L12 53 L8 55 L9 51 L6 48 L10 48 Z" fill="url(#customerGradient)" opacity="0.4"/>
+  
+  <!-- Security Shield -->
+  <path d="M48 44 C48 44 52 42 56 44 C56 48 56 52 52 56 C48 52 48 48 48 44 Z" fill="url(#customerGradient)" opacity="0.2"/>
+  <path d="M50 48 L51.5 49.5 L54 47" stroke="url(#customerGradient)" stroke-width="1.5" fill="none" stroke-linecap="round"/>
+  
+  <!-- Price Tags -->
+  <circle cx="8" cy="56" r="4" fill="url(#customerGradient)" opacity="0.2"/>
+  <text x="8" y="58" text-anchor="middle" font-size="6" fill="url(#customerGradient)" opacity="0.6">$</text>
+  
+  <!-- Delivery/Shipping -->
+  <rect x="28" y="56" width="8" height="4" rx="1" fill="url(#customerGradient)" opacity="0.3"/>
+  <circle cx="30" cy="62" r="1.5" fill="url(#customerGradient)" opacity="0.4"/>
+  <circle cx="34" cy="62" r="1.5" fill="url(#customerGradient)" opacity="0.4"/>
+  
+  <!-- Decorative Elements -->
+  <circle cx="4" cy="8" r="1.5" fill="url(#customerGradient)" opacity="0.3"/>
+  <circle cx="60" cy="60" r="2" fill="url(#customerGradient)" opacity="0.2"/>
+  <circle cx="56" cy="4" r="1" fill="url(#customerGradient)" opacity="0.4"/>
+</svg>

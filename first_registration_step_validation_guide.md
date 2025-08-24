@@ -1,0 +1,6 @@
+**First step validation rules for merchant**
+-IF the Full name is found in the database throw a validation error "Full name is already taken".
+-Check IF the email is found in the database and this email has registration step with value 'verified' throw a validation error "You have a registered company with this email you cannot create two accounts with the same email , please log in" and show a dialog to login to the existing account.
+-Check IF the email is found in the database and this email has registration step with value 'license_completed' throw a validation error "You have a submit company information wait for admin approval you will receive an email or a call from our support team , Thank you for your patience.",and show a dialog to login to the existing account.
+-Check IF the phone is found in the database and this phone has registration step with value 'verified' throw a validation error "You have a registered company with this phone you cannot create two accounts with the same phone",and show a dialog to login to the existing account.
+-IF the phone exist and it has been verified and the email exist and has been verified but the registration step dont have value 'verified' or 'license_completed' skip the email verification and the phone verification steps and move the user to the license upload step.

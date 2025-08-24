@@ -1,0 +1,817 @@
+/* RTL (Right-to-Left) Styles for Arabic Language Support */
+
+/* Base RTL styles */
+[dir="rtl"] {
+    direction: rtl;
+    text-align: right;
+}
+
+[dir="rtl"] body {
+    direction: rtl;
+    text-align: right;
+}
+
+/* Text alignment */
+[dir="rtl"] .text-left {
+    text-align: right !important;
+}
+
+[dir="rtl"] .text-right {
+    text-align: left !important;
+}
+
+/* Float adjustments */
+[dir="rtl"] .float-left {
+    float: right !important;
+}
+
+[dir="rtl"] .float-right {
+    float: left !important;
+}
+
+/* Margin adjustments */
+[dir="rtl"] .ml-1 { margin-right: 0.25rem !important; margin-left: 0 !important; }
+[dir="rtl"] .ml-2 { margin-right: 0.5rem !important; margin-left: 0 !important; }
+[dir="rtl"] .ml-3 { margin-right: 0.75rem !important; margin-left: 0 !important; }
+[dir="rtl"] .ml-4 { margin-right: 1rem !important; margin-left: 0 !important; }
+[dir="rtl"] .ml-5 { margin-right: 1.25rem !important; margin-left: 0 !important; }
+
+[dir="rtl"] .mr-1 { margin-left: 0.25rem !important; margin-right: 0 !important; }
+[dir="rtl"] .mr-2 { margin-left: 0.5rem !important; margin-right: 0 !important; }
+[dir="rtl"] .mr-3 { margin-left: 0.75rem !important; margin-right: 0 !important; }
+[dir="rtl"] .mr-4 { margin-left: 1rem !important; margin-right: 0 !important; }
+[dir="rtl"] .mr-5 { margin-left: 1.25rem !important; margin-right: 0 !important; }
+
+/* Padding adjustments */
+[dir="rtl"] .pl-1 { padding-right: 0.25rem !important; padding-left: 0 !important; }
+[dir="rtl"] .pl-2 { padding-right: 0.5rem !important; padding-left: 0 !important; }
+[dir="rtl"] .pl-3 { padding-right: 0.75rem !important; padding-left: 0 !important; }
+[dir="rtl"] .pl-4 { padding-right: 1rem !important; padding-left: 0 !important; }
+[dir="rtl"] .pl-5 { padding-right: 1.25rem !important; padding-left: 0 !important; }
+
+[dir="rtl"] .pr-1 { padding-left: 0.25rem !important; padding-right: 0 !important; }
+[dir="rtl"] .pr-2 { padding-left: 0.5rem !important; padding-right: 0 !important; }
+[dir="rtl"] .pr-3 { padding-left: 0.75rem !important; padding-right: 0 !important; }
+[dir="rtl"] .pr-4 { padding-left: 1rem !important; padding-right: 0 !important; }
+[dir="rtl"] .pr-5 { padding-left: 1.25rem !important; padding-right: 0 !important; }
+
+/* Border radius adjustments */
+[dir="rtl"] .rounded-l {
+    border-top-right-radius: 0.375rem !important;
+    border-bottom-right-radius: 0.375rem !important;
+    border-top-left-radius: 0 !important;
+    border-bottom-left-radius: 0 !important;
+}
+
+[dir="rtl"] .rounded-r {
+    border-top-left-radius: 0.375rem !important;
+    border-bottom-left-radius: 0.375rem !important;
+    border-top-right-radius: 0 !important;
+    border-bottom-right-radius: 0 !important;
+}
+
+/* Navigation and menu adjustments */
+[dir="rtl"] .navbar-nav {
+    flex-direction: row-reverse;
+}
+
+[dir="rtl"] .dropdown-menu {
+    right: 0;
+    left: auto;
+}
+
+[dir="rtl"] .dropdown-toggle::after {
+    margin-right: 0.255em;
+    margin-left: 0;
+}
+
+/* Form adjustments */
+[dir="rtl"] .form-check {
+    padding-right: 1.25em;
+    padding-left: 0;
+}
+
+[dir="rtl"] .form-check-input {
+    margin-right: -1.25em;
+    margin-left: 0;
+}
+
+[dir="rtl"] .form-check-label {
+    padding-right: 0.5em;
+    padding-left: 0;
+}
+
+/* Button group adjustments */
+[dir="rtl"] .btn-group > .btn:not(:last-child):not(.dropdown-toggle) {
+    border-top-left-radius: 0;
+    border-bottom-left-radius: 0;
+    border-top-right-radius: 0.375rem;
+    border-bottom-right-radius: 0.375rem;
+}
+
+[dir="rtl"] .btn-group > .btn:not(:first-child) {
+    border-top-right-radius: 0;
+    border-bottom-right-radius: 0;
+    border-top-left-radius: 0.375rem;
+    border-bottom-left-radius: 0.375rem;
+}
+
+/* Table adjustments */
+[dir="rtl"] .table th,
+[dir="rtl"] .table td {
+    text-align: right;
+}
+
+[dir="rtl"] .table th:first-child,
+[dir="rtl"] .table td:first-child {
+    border-right: 0;
+}
+
+[dir="rtl"] .table th:last-child,
+[dir="rtl"] .table td:last-child {
+    border-left: 0;
+}
+
+/* Card adjustments */
+[dir="rtl"] .card-header {
+    text-align: right;
+}
+
+[dir="rtl"] .card-body {
+    text-align: right;
+}
+
+/* List adjustments */
+[dir="rtl"] .list-group-item {
+    text-align: right;
+}
+
+[dir="rtl"] ul,
+[dir="rtl"] ol {
+    padding-right: 2rem;
+    padding-left: 0;
+}
+
+/* Icon adjustments */
+[dir="rtl"] .icon-left {
+    margin-right: 0;
+    margin-left: 0.5rem;
+}
+
+[dir="rtl"] .icon-right {
+    margin-left: 0;
+    margin-right: 0.5rem;
+}
+
+/* Breadcrumb adjustments */
+[dir="rtl"] .breadcrumb-item + .breadcrumb-item::before {
+    content: "\\";
+    transform: rotate(180deg);
+}
+
+/* Modal adjustments */
+[dir="rtl"] .modal-header {
+    text-align: right;
+}
+
+[dir="rtl"] .modal-body {
+    text-align: right;
+}
+
+[dir="rtl"] .modal-footer {
+    justify-content: flex-start;
+}
+
+/* Sidebar adjustments */
+[dir="rtl"] .sidebar {
+    right: 0;
+    left: auto;
+}
+
+[dir="rtl"] .sidebar-toggle {
+    right: auto;
+    left: 1rem;
+}
+
+/* Progress bar adjustments */
+[dir="rtl"] .progress-bar {
+    right: 0;
+    left: auto;
+}
+
+/* Tooltip adjustments */
+[dir="rtl"] .tooltip {
+    text-align: right;
+}
+
+/* Custom RTL utilities */
+.rtl-flip {
+    transform: scaleX(-1);
+}
+
+[dir="rtl"] .rtl-flip {
+    transform: scaleX(1);
+}
+
+/* Language switcher styles */
+.language-switcher {
+    position: relative;
+    display: inline-block;
+}
+
+.language-switcher .dropdown-menu {
+    min-width: 150px;
+}
+
+.language-switcher .flag-icon {
+    width: 20px;
+    height: 15px;
+    margin-right: 8px;
+    border-radius: 2px;
+}
+
+[dir="rtl"] .language-switcher .flag-icon {
+    margin-right: 0;
+    margin-left: 8px;
+}
+
+.language-option {
+    display: flex;
+    align-items: center;
+    padding: 8px 12px;
+    text-decoration: none;
+    color: #333;
+    transition: background-color 0.2s;
+}
+
+.language-option:hover {
+    background-color: #f8f9fa;
+    text-decoration: none;
+    color: #333;
+}
+
+.language-option.active {
+    background-color: #007bff;
+    color: white;
+}
+
+/* Arabic font improvements */
+[dir="rtl"] {
+    font-family: 'Segoe UI', 'Tahoma', 'Arial', 'Helvetica Neue', sans-serif;
+}
+
+/* Ensure proper Arabic text rendering */
+[dir="rtl"] * {
+    font-feature-settings: "liga" 1, "kern" 1;
+    text-rendering: optimizeLegibility;
+}
+
+/* Fix for input fields in RTL */
+[dir="rtl"] input[type="text"],
+[dir="rtl"] input[type="email"],
+[dir="rtl"] input[type="password"],
+[dir="rtl"] textarea,
+[dir="rtl"] select {
+    text-align: right;
+    direction: rtl;
+}
+
+/* Fix for number inputs to remain LTR */
+[dir="rtl"] input[type="number"],
+[dir="rtl"] input[type="tel"] {
+    text-align: left;
+    direction: ltr;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+    [dir="rtl"] .navbar-toggler {
+        margin-left: auto;
+        margin-right: 0;
+    }
+    
+    [dir="rtl"] .navbar-collapse {
+        text-align: right;
+    }
+}
+
+/* Print styles for RTL */
+@media print {
+    [dir="rtl"] {
+        direction: rtl;
+        text-align: right;
+    }
+}
+
+/* Landing Page RTL Enhancements */
+[dir="rtl"] .hero-section {
+    text-align: right;
+}
+
+[dir="rtl"] .hero-title {
+    text-align: right;
+}
+
+[dir="rtl"] .hero-subtitle {
+    text-align: right;
+}
+
+[dir="rtl"] .hero-cta {
+    justify-content: flex-end;
+    align-items: flex-start;
+    flex-direction: row-reverse;
+}
+
+/* Ensure hero text and buttons have consistent right alignment */
+[dir="rtl"] .hero-text {
+    text-align: right;
+    align-items: flex-end;
+}
+
+/* Responsive adjustments for RTL buttons */
+@media (max-width: 768px) {
+    [dir="rtl"] .hero-cta {
+        justify-content: center;
+        flex-direction: column;
+        align-items: center;
+    }
+}
+
+[dir="rtl"] .features-header {
+    text-align: right;
+}
+
+[dir="rtl"] .features-title {
+    text-align: right;
+}
+
+[dir="rtl"] .features-subtitle {
+    text-align: right;
+}
+
+[dir="rtl"] .feature-card {
+    text-align: right;
+}
+
+[dir="rtl"] .feature-title {
+    text-align: right;
+}
+
+[dir="rtl"] .feature-description {
+    text-align: right;
+}
+
+[dir="rtl"] .stats-section {
+    text-align: right;
+}
+
+[dir="rtl"] .stat-label {
+    text-align: right;
+}
+
+[dir="rtl"] .cta-section {
+    text-align: right;
+}
+
+[dir="rtl"] .cta-title {
+    text-align: right;
+}
+
+[dir="rtl"] .cta-subtitle {
+    text-align: right;
+}
+
+/* Auth Pages RTL Enhancements */
+[dir="rtl"] .auth-brand-title {
+    text-align: right;
+}
+
+[dir="rtl"] .auth-brand-subtitle {
+    text-align: right;
+}
+
+[dir="rtl"] .auth-form-title {
+    text-align: right;
+}
+
+[dir="rtl"] .auth-form-subtitle {
+    text-align: right;
+}
+
+[dir="rtl"] .auth-form-label {
+    text-align: right;
+}
+
+[dir="rtl"] .auth-input-group {
+    flex-direction: row-reverse;
+}
+
+[dir="rtl"] .auth-input-icon {
+    right: auto;
+    left: 12px;
+}
+
+[dir="rtl"] .auth-form-input {
+    padding-right: 12px;
+    padding-left: 40px;
+}
+
+[dir="rtl"] .auth-checkbox-group {
+    flex-direction: row-reverse;
+}
+
+[dir="rtl"] .auth-checkbox-label {
+    margin-right: 8px;
+    margin-left: 0;
+}
+
+[dir="rtl"] .auth-form-footer {
+    text-align: right;
+}
+
+/* Registration Choice Page RTL Enhancements */
+[dir="rtl"] .card-title-modern {
+    text-align: right;
+}
+
+[dir="rtl"] .card-subtitle-modern {
+    text-align: right;
+}
+
+[dir="rtl"] .feature-list-modern {
+    text-align: right;
+}
+
+[dir="rtl"] .feature-item-modern {
+    flex-direction: row-reverse;
+}
+
+[dir="rtl"] .feature-text-modern {
+    margin-right: 8px;
+    margin-left: 0;
+}
+
+/* Flexbox RTL adjustments */
+[dir="rtl"] .flex-row {
+    flex-direction: row-reverse;
+}
+
+[dir="rtl"] .justify-start {
+    justify-content: flex-end;
+}
+
+[dir="rtl"] .justify-end {
+    justify-content: flex-start;
+}
+
+[dir="rtl"] .items-start {
+    align-items: flex-end;
+}
+
+[dir="rtl"] .items-end {
+    align-items: flex-start;
+}
+
+/* Spacing adjustments for RTL */
+[dir="rtl"] .mr-2 {
+    margin-right: 0;
+    margin-left: 0.5rem;
+}
+
+[dir="rtl"] .ml-2 {
+    margin-left: 0;
+    margin-right: 0.5rem;
+}
+
+[dir="rtl"] .mr-3 {
+    margin-right: 0;
+    margin-left: 0.75rem;
+}
+
+[dir="rtl"] .ml-3 {
+    margin-left: 0;
+    margin-right: 0.75rem;
+}
+
+[dir="rtl"] .mr-4 {
+    margin-right: 0;
+    margin-left: 1rem;
+}
+
+[dir="rtl"] .ml-4 {
+    margin-left: 0;
+    margin-right: 1rem;
+}
+
+/* Grid and layout adjustments */
+[dir="rtl"] .grid {
+    direction: rtl;
+}
+
+[dir="rtl"] .space-x-4 > * + * {
+    margin-left: 0;
+    margin-right: 1rem;
+}
+
+[dir="rtl"] .space-x-2 > * + * {
+    margin-left: 0;
+    margin-right: 0.5rem;
+}
+
+/* Button icon adjustments */
+[dir="rtl"] .btn-primary i,
+[dir="rtl"] .btn-secondary i {
+    margin-right: 0;
+    margin-left: 8px;
+}
+
+/* Language switcher RTL adjustments */
+[dir="rtl"] .language-switcher {
+    direction: ltr; /* Keep language switcher LTR for consistency */
+}
+
+/* Products Page RTL Enhancements */
+[dir="rtl"] .products-page-header {
+    text-align: right;
+}
+
+[dir="rtl"] .products-search-container {
+    direction: rtl;
+}
+
+[dir="rtl"] .products-search-input {
+    text-align: right;
+    padding-left: 1rem;
+    padding-right: 2.5rem;
+}
+
+[dir="rtl"] .products-search-icon {
+    left: auto;
+    right: 0.75rem;
+}
+
+[dir="rtl"] .products-filter-button {
+    flex-direction: row-reverse;
+}
+
+[dir="rtl"] .products-filter-icon {
+    margin-left: 0.5rem;
+    margin-right: 0;
+}
+
+[dir="rtl"] .products-table th {
+    text-align: right;
+}
+
+[dir="rtl"] .products-table td {
+    text-align: right;
+}
+
+[dir="rtl"] .product-image-container {
+    margin-left: 1rem;
+    margin-right: 0;
+}
+
+[dir="rtl"] .product-actions {
+    flex-direction: row-reverse;
+}
+
+[dir="rtl"] .product-status-badge {
+    direction: rtl;
+}
+
+[dir="rtl"] .product-stock-warning {
+    flex-direction: row-reverse;
+}
+
+[dir="rtl"] .product-stock-icon {
+    margin-left: 0.25rem;
+    margin-right: 0;
+}
+
+[dir="rtl"] .pagination-container {
+    direction: rtl;
+}
+
+[dir="rtl"] .pagination-info {
+    text-align: right;
+}
+
+[dir="rtl"] .pagination-buttons {
+    flex-direction: row-reverse;
+}
+
+/* Quick stats RTL adjustments */
+[dir="rtl"] .quick-stats-card {
+    text-align: right;
+}
+
+[dir="rtl"] .quick-stats-value {
+    text-align: right;
+}
+
+[dir="rtl"] .quick-stats-label {
+    text-align: right;
+}
+
+/* Empty state RTL adjustments */
+[dir="rtl"] .empty-state {
+    text-align: right;
+}
+
+[dir="rtl"] .empty-state-title {
+    text-align: right;
+}
+
+[dir="rtl"] .empty-state-description {
+    text-align: right;
+}
+
+[dir="rtl"] .empty-state-button {
+    flex-direction: row-reverse;
+}
+
+[dir="rtl"] .empty-state-icon {
+    margin-left: 0.5rem;
+    margin-right: 0;
+}
+
+/* License warning banner RTL adjustments */
+[dir="rtl"] .license-warning-banner {
+    text-align: right;
+}
+
+[dir="rtl"] .license-warning-icon {
+    margin-left: 0.75rem;
+    margin-right: 0;
+}
+
+[dir="rtl"] .license-warning-content {
+    text-align: right;
+}
+
+[dir="rtl"] .license-warning-button {
+    margin-left: auto;
+    margin-right: 0;
+}
+
+/* Tailwind utility overrides for RTL */
+[dir="rtl"] .mr-2 {
+    margin-right: 0;
+    margin-left: 0.5rem;
+}
+
+[dir="rtl"] .ml-2 {
+    margin-left: 0;
+    margin-right: 0.5rem;
+}
+
+[dir="rtl"] .mr-4 {
+    margin-right: 0;
+    margin-left: 1rem;
+}
+
+[dir="rtl"] .ml-4 {
+    margin-left: 0;
+    margin-right: 1rem;
+}
+
+[dir="rtl"] .space-x-2 > * + * {
+    margin-left: 0;
+    margin-right: 0.5rem;
+}
+
+[dir="rtl"] .space-x-3 > * + * {
+    margin-left: 0;
+    margin-right: 0.75rem;
+}
+
+[dir="rtl"] .space-x-4 > * + * {
+    margin-left: 0;
+    margin-right: 1rem;
+}
+
+/* Flex direction adjustments */
+[dir="rtl"] .flex-row {
+    flex-direction: row-reverse;
+}
+
+[dir="rtl"] .justify-between {
+    justify-content: space-between;
+}
+
+[dir="rtl"] .justify-start {
+    justify-content: flex-end;
+}
+
+[dir="rtl"] .justify-end {
+    justify-content: flex-start;
+}
+
+/* Text alignment overrides */
+[dir="rtl"] .text-left {
+    text-align: right !important;
+}
+
+[dir="rtl"] .text-right {
+    text-align: left !important;
+}
+
+/* Vendor Settings Page RTL Styles */
+[dir="rtl"] .vendor-settings-container {
+    direction: rtl;
+}
+
+/* Settings cards icon positioning */
+[dir="rtl"] .vendor-settings .settings-card .icon-container {
+    margin-left: 1rem;
+    margin-right: 0;
+}
+
+/* Settings form fields */
+[dir="rtl"] .vendor-settings .form-field {
+    text-align: right;
+}
+
+/* Password visibility toggle buttons */
+[dir="rtl"] .vendor-settings .password-toggle {
+    left: 0.75rem;
+    right: auto;
+}
+
+/* Back button icon */
+[dir="rtl"] .vendor-settings .back-button i {
+    margin-left: 0.5rem;
+    margin-right: 0;
+}
+
+/* Account information grid */
+[dir="rtl"] .vendor-settings .account-info-grid {
+    text-align: right;
+}
+
+/* Danger zone buttons */
+[dir="rtl"] .vendor-settings .danger-zone .action-buttons {
+    text-align: left;
+}
+
+/* Profile picture upload section */
+[dir="rtl"] .vendor-settings .profile-picture-section .upload-controls {
+    margin-right: 1.25rem;
+    margin-left: 0;
+}
+
+/* Form buttons alignment */
+[dir="rtl"] .vendor-settings .form-actions {
+    justify-content: flex-start;
+}
+
+/* Settings navigation breadcrumbs */
+[dir="rtl"] .vendor-settings .breadcrumb {
+    direction: rtl;
+}
+
+[dir="rtl"] .vendor-settings .breadcrumb-separator {
+    transform: scaleX(-1);
+}
+
+/* Notification toggles */
+[dir="rtl"] .vendor-settings .notification-toggle {
+    flex-direction: row-reverse;
+}
+
+/* Business hours time inputs */
+[dir="rtl"] .vendor-settings .time-input-group {
+    flex-direction: row-reverse;
+}
+
+/* Tax settings table */
+[dir="rtl"] .vendor-settings .tax-table {
+    direction: rtl;
+}
+
+[dir="rtl"] .vendor-settings .tax-table th,
+[dir="rtl"] .vendor-settings .tax-table td {
+    text-align: right;
+}
+
+[dir="rtl"] .vendor-settings .tax-table .actions-column {
+    text-align: left;
+}
+
+/* Products manager permissions list */
+[dir="rtl"] .vendor-settings .permissions-list {
+    padding-right: 1rem;
+    padding-left: 0;
+}
+
+/* Payment method cards */
+[dir="rtl"] .vendor-settings .payment-method-card {
+    text-align: right;
+}
+
+/* Success/Error message icons */
+[dir="rtl"] .vendor-settings .alert-icon {
+    margin-left: 0.5rem;
+    margin-right: 0;
+}

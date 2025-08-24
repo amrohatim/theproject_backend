@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Test localStorage</title>
+</head>
+<body>
+    <h1>Test localStorage</h1>
+    <button onclick="setToken()">Set Token</button>
+    <button onclick="getToken()">Get Token</button>
+    <button onclick="clearToken()">Clear Token</button>
+    <div id="result"></div>
+
+    <script>
+        function setToken() {
+            localStorage.setItem('provider_registration_token', 'test-token-123');
+            document.getElementById('result').innerHTML = 'Token set!';
+        }
+
+        function getToken() {
+            const token = localStorage.getItem('provider_registration_token');
+            document.getElementById('result').innerHTML = 'Token: ' + (token || 'Not found');
+        }
+
+        function clearToken() {
+            localStorage.removeItem('provider_registration_token');
+            document.getElementById('result').innerHTML = 'Token cleared!';
+        }
+
+        // Test on page load
+        window.addEventListener('load', function() {
+            getToken();
+        });
+    </script>
+</body>
+</html>

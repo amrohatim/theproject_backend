@@ -1,0 +1,229 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Vendor Registration Translation Test</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+            line-height: 1.6;
+        }
+        .test-section {
+            margin: 20px 0;
+            padding: 15px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+        }
+        .language-btn {
+            padding: 10px 20px;
+            margin: 5px;
+            background: #007bff;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        .language-btn:hover {
+            background: #0056b3;
+        }
+        .test-result {
+            margin: 10px 0;
+            padding: 10px;
+            border-radius: 5px;
+        }
+        .success {
+            background: #d4edda;
+            color: #155724;
+            border: 1px solid #c3e6cb;
+        }
+        .error {
+            background: #f8d7da;
+            color: #721c24;
+            border: 1px solid #f5c6cb;
+        }
+        .info {
+            background: #d1ecf1;
+            color: #0c5460;
+            border: 1px solid #bee5eb;
+        }
+        iframe {
+            width: 100%;
+            height: 600px;
+            border: 1px solid #ddd;
+            margin: 10px 0;
+        }
+    </style>
+</head>
+<body>
+    <h1>Vendor Registration Translation Test</h1>
+    
+    <div class="test-section">
+        <h2>Language Switching Test</h2>
+        <button class="language-btn" onclick="switchToArabic()">Switch to Arabic</button>
+        <button class="language-btn" onclick="switchToEnglish()">Switch to English</button>
+        <button class="language-btn" onclick="testVendorPage()">Test Vendor Registration Page</button>
+        <div id="language-status" class="test-result info">Ready to test...</div>
+    </div>
+
+    <div class="test-section">
+        <h2>Vendor Registration Page</h2>
+        <iframe id="vendor-frame" src="http://localhost:8000/register/vendor"></iframe>
+    </div>
+
+    <div class="test-section">
+        <h2>Test Results</h2>
+        <div id="test-results"></div>
+    </div>
+
+    <script>
+        let currentLanguage = 'en';
+        
+        function updateStatus(message, type = 'info') {
+            const statusDiv = document.getElementById('language-status');
+            statusDiv.className = `test-result ${type}`;
+            statusDiv.textContent = message;
+        }
+        
+        function addTestResult(message, type = 'info') {
+            const resultsDiv = document.getElementById('test-results');
+            const resultDiv = document.createElement('div');
+            resultDiv.className = `test-result ${type}`;
+            resultDiv.textContent = `[${new Date().toLocaleTimeString()}] ${message}`;
+            resultsDiv.appendChild(resultDiv);
+        }
+        
+        async function switchToArabic() {
+            updateStatus('Switching to Arabic...', 'info');
+            try {
+                const response = await fetch('http://localhost:8000/language/ar', {
+                    method: 'GET',
+                    credentials: 'include'
+                });
+                
+                if (response.ok) {
+                    currentLanguage = 'ar';
+                    updateStatus('Successfully switched to Arabic', 'success');
+                    addTestResult('Language switched to Arabic', 'success');
+                    
+                    // Reload the iframe
+                    const iframe = document.getElementById('vendor-frame');
+                    iframe.src = iframe.src;
+                } else {
+                    updateStatus('Failed to switch to Arabic', 'error');
+                    addTestResult('Failed to switch to Arabic', 'error');
+                }
+            } catch (error) {
+                updateStatus('Error switching to Arabic: ' + error.message, 'error');
+                addTestResult('Error switching to Arabic: ' + error.message, 'error');
+            }
+        }
+        
+        async function switchToEnglish() {
+            updateStatus('Switching to English...', 'info');
+            try {
+                const response = await fetch('http://localhost:8000/language/en', {
+                    method: 'GET',
+                    credentials: 'include'
+                });
+                
+                if (response.ok) {
+                    currentLanguage = 'en';
+                    updateStatus('Successfully switched to English', 'success');
+                    addTestResult('Language switched to English', 'success');
+                    
+                    // Reload the iframe
+                    const iframe = document.getElementById('vendor-frame');
+                    iframe.src = iframe.src;
+                } else {
+                    updateStatus('Failed to switch to English', 'error');
+                    addTestResult('Failed to switch to English', 'error');
+                }
+            } catch (error) {
+                updateStatus('Error switching to English: ' + error.message, 'error');
+                addTestResult('Error switching to English: ' + error.message, 'error');
+            }
+        }
+        
+        function testVendorPage() {
+            updateStatus('Testing vendor registration page...', 'info');
+            
+            const iframe = document.getElementById('vendor-frame');
+            
+            iframe.onload = function() {
+                try {
+                    const iframeDoc = iframe.contentDocument || iframe.contentWindow.document;
+                    
+                    // Test if page loaded successfully
+                    if (iframeDoc.title) {
+                        addTestResult(`Page loaded successfully. Title: ${iframeDoc.title}`, 'success');
+                    }
+                    
+                    // Check for Arabic content
+                    const bodyText = iframeDoc.body.textContent || iframeDoc.body.innerText;
+                    const hasArabicText = /[\u0600-\u06FF]/.test(bodyText);
+                    
+                    if (currentLanguage === 'ar' && hasArabicText) {
+                        addTestResult('Arabic text detected on page', 'success');
+                    } else if (currentLanguage === 'ar' && !hasArabicText) {
+                        addTestResult('No Arabic text detected on page (may need translation)', 'error');
+                    }
+                    
+                    // Check for RTL direction
+                    const htmlElement = iframeDoc.documentElement;
+                    const direction = htmlElement.getAttribute('dir') || htmlElement.style.direction;
+                    
+                    if (currentLanguage === 'ar' && direction === 'rtl') {
+                        addTestResult('RTL direction detected for Arabic', 'success');
+                    } else if (currentLanguage === 'ar' && direction !== 'rtl') {
+                        addTestResult('RTL direction not set for Arabic', 'error');
+                    }
+                    
+                    // Check for specific form elements
+                    const formElements = [
+                        { id: 'fullName', label: 'Full Name' },
+                        { id: 'email', label: 'Email' },
+                        { id: 'phone', label: 'Phone' },
+                        { id: 'password', label: 'Password' },
+                        { id: 'confirmPassword', label: 'Confirm Password' }
+                    ];
+                    
+                    formElements.forEach(element => {
+                        const input = iframeDoc.getElementById(element.id);
+                        if (input) {
+                            addTestResult(`Found form element: ${element.label}`, 'success');
+                            
+                            // Check placeholder text
+                            if (input.placeholder) {
+                                const hasArabicPlaceholder = /[\u0600-\u06FF]/.test(input.placeholder);
+                                if (currentLanguage === 'ar' && hasArabicPlaceholder) {
+                                    addTestResult(`Arabic placeholder found for ${element.label}: ${input.placeholder}`, 'success');
+                                } else if (currentLanguage === 'ar' && !hasArabicPlaceholder) {
+                                    addTestResult(`No Arabic placeholder for ${element.label}: ${input.placeholder}`, 'error');
+                                }
+                            }
+                        } else {
+                            addTestResult(`Form element not found: ${element.label}`, 'error');
+                        }
+                    });
+                    
+                    updateStatus(`Test completed for ${currentLanguage.toUpperCase()}`, 'success');
+                    
+                } catch (error) {
+                    addTestResult('Error accessing iframe content: ' + error.message, 'error');
+                    updateStatus('Test failed due to iframe access error', 'error');
+                }
+            };
+            
+            // Reload the iframe to trigger the test
+            iframe.src = iframe.src;
+        }
+        
+        // Auto-test on page load
+        window.onload = function() {
+            addTestResult('Translation test page loaded', 'info');
+        };
+    </script>
+</body>
+</html>

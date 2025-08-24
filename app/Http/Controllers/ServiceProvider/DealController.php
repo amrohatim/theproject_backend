@@ -1,0 +1,366 @@
+<?php
+
+namespace App\Http\Controllers\ServiceProvider;
+
+use App\Http\Controllers\Controller;
+use App\Models\Deal;
+use App\Models\Service;
+use App\Models\Branch;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Facades\Log;
+
+class DealController extends Controller
+{
+    /**
+     * Display a listing of deals for services this provider manages.
+     */
+    public function index()
+    {
+        $user = Auth::user();
+
+        // For service providers, we don't need the serviceProvider relationship
+        // They can create deals directly as users with service_provider role
+
+        // Get deals created by this service provider user
+        try {
+            $activeDeals = Deal::where('user_id', $user->id)
+                ->where('applies_to', 'services')
+                ->where('status', 'active')
+                ->where('start_date', '<=', now())
+                ->where('end_date', '>=', now())
+                ->orderBy('created_at', 'desc')
+                ->limit(10)
+                ->get();
+
+            Log::info('Service Provider Deals Query Result', [
+                'user_id' => $user->id,
+                'deals_count' => $activeDeals->count(),
+                'deals' => $activeDeals->pluck('title', 'id')->toArray()
+            ]);
+        } catch (\Exception $e) {
+            // Fallback to empty collection if query fails
+            $activeDeals = collect();
+            Log::error('Error fetching service provider deals: ' . $e->getMessage());
+        }
+
+        return view('service-provider.deals.index', compact('activeDeals'));
+    }
+
+    /**
+     * Show the form for creating a new deal.
+     */
+    public function create()
+    {
+        $user = Auth::user();
+
+        // Get the service provider record
+        $serviceProvider = $user->serviceProvider;
+
+        if (!$serviceProvider) {
+            return redirect()->route('service-provider.dashboard')
+                ->with('error', 'Service provider profile not found.');
+        }
+
+        // Get services that this service provider can manage
+        $serviceIds = $serviceProvider->service_ids ?? [];
+        $services = Service::whereIn('id', $serviceIds)
+            ->with(['branch'])
+            ->get();
+
+        // Get branches this service provider has access to
+        $branchIds = $serviceProvider->branch_ids ?? [];
+        $branches = Branch::whereIn('id', $branchIds)->get();
+
+        return view('service-provider.deals.create', compact('services', 'branches'));
+    }
+
+    /**
+     * Store a newly created deal.
+     */
+    public function store(Request $request)
+    {
+        $user = Auth::user();
+
+        $request->validate([
+            'title' => 'required|string|max:255',
+            'title_arabic' => 'required|string|max:255',
+            'description' => 'nullable|string',
+            'description_arabic' => [
+                'nullable',
+                'string',
+                function ($attribute, $value, $fail) use ($request) {
+                    $description = $request->input('description');
+                    $descriptionArabic = $value;
+
+                    // If one is filled, both must be filled
+                    if ((!empty($description) && empty($descriptionArabic)) ||
+                        (empty($description) && !empty($descriptionArabic))) {
+                        $fail(__('messages.description_both_or_none'));
+                    }
+                },
+            ],
+            'promotional_message' => 'nullable|string|max:50',
+            'promotional_message_arabic' => [
+                'nullable',
+                'string',
+                'max:50',
+                function ($attribute, $value, $fail) use ($request) {
+                    $promotional = $request->input('promotional_message');
+                    $promotionalArabic = $value;
+
+                    // If one is filled, both must be filled
+                    if ((!empty($promotional) && empty($promotionalArabic)) ||
+                        (empty($promotional) && !empty($promotionalArabic))) {
+                        $fail(__('messages.promotional_message_both_or_none'));
+                    }
+                },
+            ],
+            'discount_percentage' => 'required|numeric|min:1|max:100',
+            'start_date' => 'required|date|after_or_equal:today',
+            'end_date' => 'required|date|after:start_date',
+            'image' => 'nullable|image|mimes:jpeg,png,jpg,gif,webp|max:2048',
+            'status' => 'required|in:active,inactive',
+            'service_ids' => 'required|array|min:1',
+            'service_ids.*' => 'exists:services,id',
+        ]);
+
+        // Validate that all selected services belong to this service provider
+        $selectedServices = $request->input('service_ids', []);
+        $serviceProvider = $user->serviceProvider;
+        $allowedServices = $serviceProvider->service_ids ?? [];
+
+        foreach ($selectedServices as $serviceId) {
+            if (!in_array($serviceId, $allowedServices)) {
+                return back()->withErrors(['service_ids' => 'You can only create deals for services you manage.']);
+            }
+        }
+
+        $dealData = [
+            'user_id' => $user->id,
+            'title' => $request->input('title'),
+            'title_arabic' => $request->input('title_arabic'),
+            'description' => $request->input('description'),
+            'description_arabic' => $request->input('description_arabic'),
+            'promotional_message' => $request->input('promotional_message'),
+            'promotional_message_arabic' => $request->input('promotional_message_arabic'),
+            'discount_percentage' => $request->input('discount_percentage'),
+            'start_date' => $request->input('start_date'),
+            'end_date' => $request->input('end_date'),
+            'status' => $request->input('status'),
+            'applies_to' => 'services',
+            'service_ids' => $selectedServices,
+        ];
+
+        // Handle image upload
+        if ($request->hasFile('image')) {
+            try {
+                $image = $request->file('image');
+                $filename = time() . '_' . uniqid() . '.' . $image->getClientOriginalExtension();
+                $path = $image->storeAs('deals', $filename, 'public');
+                $dealData['image'] = $path;
+            } catch (\Exception $e) {
+                Log::error('Deal image upload failed: ' . $e->getMessage());
+                return back()->withErrors(['image' => 'Failed to upload image. Please try again.']);
+            }
+        }
+
+        try {
+            Deal::create($dealData);
+            return redirect()->route('service-provider.deals.index')
+                ->with('success', 'Deal created successfully.');
+        } catch (\Exception $e) {
+            Log::error('Deal creation failed: ' . $e->getMessage());
+            return back()->withErrors(['general' => 'Failed to create deal. Please try again.']);
+        }
+    }
+
+    /**
+     * Show the form for editing a deal.
+     */
+    public function edit(Deal $deal)
+    {
+        $user = Auth::user();
+        $serviceProvider = $user->serviceProvider;
+
+        if (!$serviceProvider) {
+            return redirect('/')->with('error', 'Service provider profile not found.');
+        }
+
+        // Check if this deal belongs to the current user and applies to services
+        if ($deal->user_id !== $user->id || $deal->applies_to !== 'services') {
+            return redirect()->route('service-provider.deals.index')
+                ->with('error', 'Deal not found or access denied.');
+        }
+
+        // Verify that the deal's services are within the service provider's scope
+        $dealServiceIds = $deal->service_ids ?? [];
+        $allowedServiceIds = $serviceProvider->service_ids ?? [];
+
+        foreach ($dealServiceIds as $serviceId) {
+            if (!in_array($serviceId, $allowedServiceIds)) {
+                return redirect()->route('service-provider.deals.index')
+                    ->with('error', 'You do not have permission to edit this deal.');
+            }
+        }
+
+        // Get services that this service provider can manage
+        $services = Service::whereIn('id', $allowedServiceIds)
+            ->with(['branch'])
+            ->get();
+
+        // Get branches this service provider has access to
+        $branchIds = $serviceProvider->branch_ids ?? [];
+        $branches = Branch::whereIn('id', $branchIds)->get();
+
+        return view('service-provider.deals.edit', compact('deal', 'services', 'branches', 'serviceProvider'));
+    }
+
+    /**
+     * Update the specified deal.
+     */
+    public function update(Request $request, Deal $deal)
+    {
+        $user = Auth::user();
+        $serviceProvider = $user->serviceProvider;
+
+        if (!$serviceProvider) {
+            return redirect('/')->with('error', 'Service provider profile not found.');
+        }
+
+        // Check if this deal belongs to the current user and applies to services
+        if ($deal->user_id !== $user->id || $deal->applies_to !== 'services') {
+            return redirect()->route('service-provider.deals.index')
+                ->with('error', 'Deal not found or access denied.');
+        }
+
+        $request->validate([
+            'title' => 'required|string|max:255',
+            'title_arabic' => 'required|string|max:255',
+            'description' => 'nullable|string',
+            'description_arabic' => [
+                'nullable',
+                'string',
+                function ($attribute, $value, $fail) use ($request) {
+                    $description = $request->input('description');
+                    $descriptionArabic = $value;
+
+                    // If one is filled, both must be filled
+                    if ((!empty($description) && empty($descriptionArabic)) ||
+                        (empty($description) && !empty($descriptionArabic))) {
+                        $fail(__('messages.description_both_or_none'));
+                    }
+                },
+            ],
+            'promotional_message' => 'nullable|string|max:50',
+            'promotional_message_arabic' => [
+                'nullable',
+                'string',
+                'max:50',
+                function ($attribute, $value, $fail) use ($request) {
+                    $promotional = $request->input('promotional_message');
+                    $promotionalArabic = $value;
+
+                    // If one is filled, both must be filled
+                    if ((!empty($promotional) && empty($promotionalArabic)) ||
+                        (empty($promotional) && !empty($promotionalArabic))) {
+                        $fail(__('messages.promotional_message_both_or_none'));
+                    }
+                },
+            ],
+            'discount_percentage' => 'required|numeric|min:1|max:100',
+            'start_date' => 'required|date',
+            'end_date' => 'required|date|after:start_date',
+            'image' => 'nullable|image|mimes:jpeg,png,jpg,gif,webp|max:2048',
+            'status' => 'required|in:active,inactive',
+            'service_ids' => 'required|array|min:1',
+            'service_ids.*' => 'exists:services,id',
+        ]);
+
+        // Validate that all selected services belong to this service provider
+        $selectedServices = $request->input('service_ids', []);
+        $allowedServiceIds = $serviceProvider->service_ids ?? [];
+
+        foreach ($selectedServices as $serviceId) {
+            if (!in_array($serviceId, $allowedServiceIds)) {
+                return back()->withErrors(['service_ids' => 'You can only create deals for services you manage.']);
+            }
+        }
+
+        $dealData = [
+            'title' => $request->input('title'),
+            'title_arabic' => $request->input('title_arabic'),
+            'description' => $request->input('description'),
+            'description_arabic' => $request->input('description_arabic'),
+            'promotional_message' => $request->input('promotional_message'),
+            'promotional_message_arabic' => $request->input('promotional_message_arabic'),
+            'discount_percentage' => $request->input('discount_percentage'),
+            'start_date' => $request->input('start_date'),
+            'end_date' => $request->input('end_date'),
+            'status' => $request->input('status'),
+            'service_ids' => $selectedServices,
+        ];
+
+        // Handle image upload
+        if ($request->hasFile('image')) {
+            try {
+                // Delete old image if it exists
+                if ($deal->getRawOriginalImage()) {
+                    Storage::disk('public')->delete($deal->getRawOriginalImage());
+                }
+
+                $image = $request->file('image');
+                $filename = time() . '_' . uniqid() . '.' . $image->getClientOriginalExtension();
+                $path = $image->storeAs('deals', $filename, 'public');
+                $dealData['image'] = $path;
+            } catch (\Exception $e) {
+                Log::error('Deal image upload failed: ' . $e->getMessage());
+                return back()->withErrors(['image' => 'Failed to upload image. Please try again.']);
+            }
+        }
+
+        try {
+            $deal->update($dealData);
+            return redirect()->route('service-provider.deals.index')
+                ->with('success', 'Deal updated successfully.');
+        } catch (\Exception $e) {
+            Log::error('Deal update failed: ' . $e->getMessage());
+            return back()->withErrors(['general' => 'Failed to update deal. Please try again.']);
+        }
+    }
+
+    /**
+     * Remove the specified deal.
+     */
+    public function destroy(Deal $deal)
+    {
+        $user = Auth::user();
+        $serviceProvider = $user->serviceProvider;
+
+        if (!$serviceProvider) {
+            return redirect('/')->with('error', 'Service provider profile not found.');
+        }
+
+        // Check if this deal belongs to the current user and applies to services
+        if ($deal->user_id !== $user->id || $deal->applies_to !== 'services') {
+            return redirect()->route('service-provider.deals.index')
+                ->with('error', 'Deal not found or access denied.');
+        }
+
+        try {
+            // Delete image if it exists
+            if ($deal->getRawOriginalImage()) {
+                Storage::disk('public')->delete($deal->getRawOriginalImage());
+            }
+
+            $deal->delete();
+            return redirect()->route('service-provider.deals.index')
+                ->with('success', 'Deal deleted successfully.');
+        } catch (\Exception $e) {
+            Log::error('Deal deletion failed: ' . $e->getMessage());
+            return redirect()->route('service-provider.deals.index')
+                ->with('error', 'Failed to delete deal. Please try again.');
+        }
+    }
+}

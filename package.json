@@ -1,0 +1,48 @@
+{
+    "private": true,
+    "type": "module",
+    "scripts": {
+        "build": "vite build",
+        "dev": "vite",
+        "test": "playwright test",
+        "test:headed": "playwright test --headed",
+        "test:debug": "playwright test --debug",
+        "test:license": "playwright test tests/Browser/LicenseManagementTest.js",
+        "test:license:headed": "playwright test tests/Browser/LicenseManagementTest.js --headed",
+        "test:license:debug": "playwright test tests/Browser/LicenseManagementTest.js --debug",
+        "test:search": "playwright test tests/Browser/MerchantSearchAndFiltersTest.js",
+        "test:search:headed": "playwright test tests/Browser/MerchantSearchAndFiltersTest.js --headed",
+        "test:search:debug": "playwright test tests/Browser/MerchantSearchAndFiltersTest.js --debug",
+        "test:search:mobile": "playwright test tests/Browser/MerchantSearchAndFiltersTest.js --project='Mobile Chrome' --project='Mobile Safari'",
+        "test:search:desktop": "playwright test tests/Browser/MerchantSearchAndFiltersTest.js --project=chromium --project=firefox --project=webkit",
+        "test:provider": "playwright test tests/playwright/provider-registration.spec.js",
+        "test:provider:headed": "playwright test tests/playwright/provider-registration.spec.js --headed",
+        "test:provider:debug": "playwright test tests/playwright/provider-registration.spec.js --debug",
+        "test:mobile": "playwright test --project='Mobile Chrome' --project='Mobile Safari'",
+        "test:desktop": "playwright test --project=chromium --project=firefox --project=webkit",
+        "test:chrome": "playwright test --project=chromium",
+        "test:firefox": "playwright test --project=firefox",
+        "test:safari": "playwright test --project=webkit",
+        "report": "playwright show-report",
+        "install-browsers": "playwright install",
+        "test:ci": "playwright test --reporter=github",
+        "test:html-report": "playwright test --reporter=html"
+    },
+    "devDependencies": {
+        "@playwright/test": "^1.53.2",
+        "@tailwindcss/vite": "^4.0.0",
+        "axios": "^1.8.2",
+        "concurrently": "^9.0.1",
+        "laravel-vite-plugin": "^1.2.0",
+        "npx": "^10.2.2",
+        "tailwindcss": "^4.0.0",
+        "vite": "^6.3.5"
+    },
+    "dependencies": {
+        "@vitejs/plugin-vue": "^6.0.0",
+        "figma-api": "^2.0.2-beta",
+        "playwright": "^1.54.0",
+        "vue": "^3.5.17",
+        "vue-i18n": "^11.1.11"
+    }
+}

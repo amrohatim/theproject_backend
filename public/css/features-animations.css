@@ -1,0 +1,225 @@
+/* Features Section Animations */
+
+/* Fade in animation for feature cards */
+@keyframes fadeInUp {
+    from {
+        opacity: 0;
+        transform: translateY(30px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* Pulse animation for number badges */
+@keyframes pulse {
+    0%, 100% {
+        transform: scale(1);
+    }
+    50% {
+        transform: scale(1.05);
+    }
+}
+
+/* Floating animation for illustrations */
+@keyframes float {
+    0%, 100% {
+        transform: translateY(0px);
+    }
+    50% {
+        transform: translateY(-10px);
+    }
+}
+
+/* Shimmer effect for feature cards */
+@keyframes shimmer {
+    0% {
+        background-position: -200% 0;
+    }
+    100% {
+        background-position: 200% 0;
+    }
+}
+
+/* Character animations */
+@keyframes characterFloat {
+    0%, 100% {
+        transform: translateY(0px) rotate(0deg);
+    }
+    50% {
+        transform: translateY(-10px) rotate(1deg);
+    }
+}
+
+@keyframes characterGlow {
+    0%, 100% {
+        filter: none;
+    }
+    50% {
+        filter: none;
+    }
+}
+
+.character-container {
+    animation: characterFloat 6s ease-in-out infinite;
+}
+
+.character-container img {
+    transition: transform 0.3s ease;
+}
+
+.character-container:hover img {
+    transform: scale(1.05);
+}
+
+/* Glow effect for cards on hover */
+@keyframes glow {
+    0%, 100% {
+        box-shadow: 0 0 20px rgba(59, 130, 246, 0.3);
+    }
+    50% {
+        box-shadow: 0 0 30px rgba(59, 130, 246, 0.5);
+    }
+}
+
+/* Feature cards animation classes */
+.feature-card {
+    animation: fadeInUp 0.6s ease-out;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.feature-card:nth-child(1) {
+    animation-delay: 0.1s;
+}
+
+.feature-card:nth-child(2) {
+    animation-delay: 0.2s;
+}
+
+.feature-card:nth-child(3) {
+    animation-delay: 0.3s;
+}
+
+.feature-card:nth-child(4) {
+    animation-delay: 0.4s;
+}
+
+/* Number badge animations */
+.number-badge {
+    animation: pulse 2s infinite;
+    transition: all 0.3s ease;
+}
+
+.feature-card:hover .number-badge {
+    animation: none;
+    transform: scale(1.1) rotate(5deg);
+}
+
+/* Illustration animations */
+.illustration-container {
+    animation: float 3s ease-in-out infinite;
+}
+
+.feature-card:hover .illustration-container {
+    animation-play-state: paused;
+    transform: scale(1.05);
+}
+
+/* Background blur effects */
+.bg-blur-effect {
+    transition: all 0.5s ease;
+}
+
+.feature-card:hover .bg-blur-effect {
+    transform: scale(1.1);
+    opacity: 0.4;
+}
+
+/* Text animations */
+.feature-title {
+    transition: all 0.3s ease;
+}
+
+.feature-card:hover .feature-title {
+    transform: translateY(-2px);
+    color: #1e40af;
+}
+
+/* Stagger animation for grid */
+.features-grid {
+    opacity: 0;
+    animation: fadeIn 0.8s ease-out 0.3s forwards;
+}
+
+@keyframes fadeIn {
+    to {
+        opacity: 1;
+    }
+}
+
+/* Section header animations */
+.section-badge {
+    animation: fadeInUp 0.6s ease-out;
+}
+
+.section-title {
+    animation: fadeInUp 0.6s ease-out 0.1s both;
+}
+
+.section-description {
+    animation: fadeInUp 0.6s ease-out 0.2s both;
+}
+
+/* Decorative elements animation */
+.decorative-blob {
+    animation: float 4s ease-in-out infinite;
+}
+
+.decorative-blob:nth-child(2) {
+    animation-delay: -2s;
+    animation-duration: 5s;
+}
+
+/* Hover effects for better interactivity */
+.feature-card {
+    cursor: pointer;
+}
+
+.feature-card:hover {
+    transform: translateY(-8px) scale(1.02);
+}
+
+/* Smooth transitions for all interactive elements */
+.feature-card * {
+    transition: all 0.3s ease;
+}
+
+/* Mobile optimizations */
+@media (max-width: 768px) {
+    .feature-card {
+        animation-delay: 0s;
+    }
+    
+    .illustration-container {
+        animation-duration: 4s;
+    }
+    
+    .feature-card:hover {
+        transform: translateY(-4px) scale(1.01);
+    }
+}
+
+/* Reduced motion preferences */
+@media (prefers-reduced-motion: reduce) {
+    .feature-card,
+    .number-badge,
+    .illustration-container,
+    .decorative-blob {
+        animation: none;
+    }
+    
+    .feature-card:hover {
+        transform: none;
+    }
+}

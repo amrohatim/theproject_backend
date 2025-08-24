@@ -1,0 +1,349 @@
+/* Shadcn/UI Inspired Modern Button Styles for Vendor Deals */
+
+/* Base button styles inspired by shadcn/ui */
+.btn-modern-base {
+    @apply inline-flex items-center justify-center rounded-md text-sm font-medium transition-colors;
+    @apply focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2;
+    @apply disabled:pointer-events-none disabled:opacity-50;
+    @apply whitespace-nowrap;
+    min-height: 40px;
+    letter-spacing: 0.025em;
+    font-weight: 500;
+}
+
+/* Primary Button - shadcn/ui inspired with our blue color */
+.btn-modern-primary {
+    @extend .btn-modern-base;
+    @apply px-4 py-2 text-white;
+    background: #3b82f6;
+    @apply border border-transparent;
+    @apply rounded-lg;
+    @apply shadow-sm hover:shadow-md;
+    @apply focus-visible:ring-blue-500 focus-visible:ring-offset-white;
+    @apply hover:bg-blue-600;
+    @apply active:bg-blue-700;
+    @apply transition-all duration-200 ease-in-out;
+    @apply transform hover:scale-[1.02] active:scale-[0.98];
+}
+
+.btn-modern-primary:hover {
+    box-shadow: 0 4px 8px -2px rgba(59, 130, 246, 0.3), 0 2px 4px -2px rgba(59, 130, 246, 0.2);
+}
+
+.btn-modern-primary:disabled {
+    @apply bg-blue-100 text-blue-400;
+    @apply transform-none hover:transform-none;
+    @apply shadow-none hover:shadow-none;
+}
+
+/* Secondary Button - shadcn/ui style with gray tones */
+.btn-modern-secondary {
+    @extend .btn-modern-base;
+    @apply px-4 py-2 text-gray-700 dark:text-gray-300;
+    @apply bg-gray-100 dark:bg-gray-800;
+    @apply border border-gray-200 dark:border-gray-700;
+    @apply rounded-lg;
+    @apply shadow-sm hover:shadow-md;
+    @apply focus-visible:ring-gray-500 focus-visible:ring-offset-white;
+    @apply hover:bg-gray-200 dark:hover:bg-gray-700;
+    @apply active:bg-gray-300 dark:active:bg-gray-600;
+    @apply transition-all duration-200 ease-in-out;
+    @apply transform hover:scale-[1.02] active:scale-[0.98];
+}
+
+.btn-modern-secondary:hover {
+    box-shadow: 0 4px 8px -2px rgba(0, 0, 0, 0.1), 0 2px 4px -2px rgba(0, 0, 0, 0.06);
+}
+
+.btn-modern-secondary:disabled {
+    @apply bg-gray-50 text-gray-400;
+    @apply transform-none hover:transform-none;
+    @apply shadow-none hover:shadow-none;
+}
+
+/* Success Button - shadcn/ui style with green */
+.btn-modern-success {
+    @extend .btn-modern-base;
+    @apply px-4 py-2 text-white;
+    background: #10b981;
+    @apply border border-transparent;
+    @apply rounded-lg;
+    @apply shadow-sm hover:shadow-md;
+    @apply focus-visible:ring-emerald-500 focus-visible:ring-offset-white;
+    @apply hover:bg-emerald-600;
+    @apply active:bg-emerald-700;
+    @apply transition-all duration-200 ease-in-out;
+    @apply transform hover:scale-[1.02] active:scale-[0.98];
+}
+
+.btn-modern-success:hover {
+    box-shadow: 0 4px 8px -2px rgba(16, 185, 129, 0.3), 0 2px 4px -2px rgba(16, 185, 129, 0.2);
+}
+
+.btn-modern-success:disabled {
+    @apply bg-emerald-100 text-emerald-400;
+    @apply transform-none hover:transform-none;
+    @apply shadow-none hover:shadow-none;
+}
+
+/* Danger Button - shadcn/ui style with red */
+.btn-modern-danger {
+    @extend .btn-modern-base;
+    @apply px-4 py-2 text-white;
+    background: #ef4444;
+    @apply border border-transparent;
+    @apply rounded-lg;
+    @apply shadow-sm hover:shadow-md;
+    @apply focus-visible:ring-red-500 focus-visible:ring-offset-white;
+    @apply hover:bg-red-600;
+    @apply active:bg-red-700;
+    @apply transition-all duration-200 ease-in-out;
+    @apply transform hover:scale-[1.02] active:scale-[0.98];
+}
+
+.btn-modern-danger:hover {
+    box-shadow: 0 4px 8px -2px rgba(239, 68, 68, 0.3), 0 2px 4px -2px rgba(239, 68, 68, 0.2);
+}
+
+.btn-modern-danger:disabled {
+    @apply bg-red-100 text-red-400;
+    @apply transform-none hover:transform-none;
+    @apply shadow-none hover:shadow-none;
+}
+
+/* Warning Button - shadcn/ui style with yellow */
+.btn-modern-warning {
+    @extend .btn-modern-base;
+    @apply px-4 py-2 text-gray-900;
+    background: #f59e0b;
+    @apply border border-transparent;
+    @apply rounded-lg;
+    @apply shadow-sm hover:shadow-md;
+    @apply focus-visible:ring-yellow-500 focus-visible:ring-offset-white;
+    @apply hover:bg-yellow-500;
+    @apply active:bg-yellow-600;
+    @apply transition-all duration-200 ease-in-out;
+    @apply transform hover:scale-[1.02] active:scale-[0.98];
+}
+
+.btn-modern-warning:hover {
+    box-shadow: 0 4px 8px -2px rgba(245, 158, 11, 0.3), 0 2px 4px -2px rgba(245, 158, 11, 0.2);
+}
+
+.btn-modern-warning:disabled {
+    @apply bg-yellow-100 text-yellow-400;
+    @apply transform-none hover:transform-none;
+    @apply shadow-none hover:shadow-none;
+}
+
+/* Enhanced Outline Variants - shadcn/ui style */
+.btn-modern-outline-primary {
+    @extend .btn-modern-base;
+    @apply px-4 py-2 text-blue-600 dark:text-blue-400;
+    @apply bg-transparent;
+    @apply border border-blue-600 dark:border-blue-400;
+    @apply rounded-lg;
+    @apply shadow-sm hover:shadow-md;
+    @apply focus-visible:ring-blue-500 focus-visible:ring-offset-white;
+    @apply hover:bg-blue-50 dark:hover:bg-blue-900/10;
+    @apply active:bg-blue-100 dark:active:bg-blue-900/20;
+    @apply transition-all duration-200 ease-in-out;
+    @apply transform hover:scale-[1.02] active:scale-[0.98];
+}
+
+.btn-modern-outline-primary:hover {
+    box-shadow: 0 4px 8px -2px rgba(59, 130, 246, 0.1), 0 2px 4px -2px rgba(59, 130, 246, 0.06);
+}
+
+.btn-modern-outline-danger {
+    @extend .btn-modern-base;
+    @apply px-4 py-2 text-red-600 dark:text-red-400;
+    @apply bg-transparent;
+    @apply border border-red-600 dark:border-red-400;
+    @apply rounded-lg;
+    @apply shadow-sm hover:shadow-md;
+    @apply focus-visible:ring-red-500 focus-visible:ring-offset-white;
+    @apply hover:bg-red-50 dark:hover:bg-red-900/10;
+    @apply active:bg-red-100 dark:active:bg-red-900/20;
+    @apply transition-all duration-200 ease-in-out;
+    @apply transform hover:scale-[1.02] active:scale-[0.98];
+}
+
+.btn-modern-outline-danger:hover {
+    @apply bg-red-600 text-white border-red-600;
+    @apply dark:bg-red-500 dark:border-red-500;
+    box-shadow: 0 4px 14px 0 rgba(239, 68, 68, 0.3), 0 2px 4px 0 rgba(0, 0, 0, 0.1);
+}
+
+/* Small Button Variants */
+.btn-modern-sm {
+    @apply px-4 py-2 text-xs;
+}
+
+/* Large Button Variants */
+.btn-modern-lg {
+    @apply px-8 py-4 text-base;
+}
+
+/* Icon spacing in buttons */
+.btn-modern-primary i,
+.btn-modern-secondary i,
+.btn-modern-success i,
+.btn-modern-danger i,
+.btn-modern-warning i,
+.btn-modern-outline-primary i,
+.btn-modern-outline-danger i {
+    @apply mr-2;
+}
+
+/* RTL support for button icons */
+.rtl .btn-modern-primary i,
+.rtl .btn-modern-secondary i,
+.rtl .btn-modern-success i,
+.rtl .btn-modern-danger i,
+.rtl .btn-modern-warning i,
+.rtl .btn-modern-outline-primary i,
+.rtl .btn-modern-outline-danger i {
+    @apply mr-0 ml-2;
+}
+
+/* Button group styling */
+.btn-group {
+    @apply flex space-x-3;
+}
+
+.btn-group.rtl {
+    @apply space-x-reverse;
+}
+
+/* Loading state for buttons */
+.btn-loading {
+    @apply relative;
+}
+
+.btn-loading::after {
+    content: '';
+    @apply absolute inset-0 flex items-center justify-center;
+    @apply bg-current opacity-20 rounded-lg;
+}
+
+.btn-loading::before {
+    content: '';
+    @apply absolute;
+    @apply w-4 h-4 border-2 border-current border-t-transparent;
+    @apply rounded-full animate-spin;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
+}
+
+.btn-loading span {
+    @apply opacity-0;
+}
+
+/* Enhanced Button Variants for Deals Management */
+
+/* Create Deal Button - Special styling for primary actions */
+.btn-create-deal {
+    @apply inline-flex items-center justify-center px-8 py-3 text-sm font-semibold text-white;
+    background:  #3b82f6;
+    @apply border border-transparent rounded-xl;
+    box-shadow: 0 4px 14px 0 rgba(5, 150, 105, 0.35), 0 2px 4px 0 rgba(0, 0, 0, 0.1);
+    @apply transition-all duration-300 ease-out;
+    @apply focus:outline-none focus:ring-4 focus:ring-emerald-500 focus:ring-opacity-30;
+    @apply transform hover:-translate-y-1 hover:scale-[1.03];
+    @apply active:scale-[0.97] active:translate-y-0;
+    position: relative;
+    border-radius: 4%;
+    padding: 3px;
+    padding-inline: 30px;
+    color: white;
+    overflow: hidden;
+    font-size: medium;
+    min-height: 48px;
+    font-weight: 500;
+    letter-spacing: 0.05em;
+}
+
+.btn-create-deal::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.25), transparent);
+    transition: left 0.7s ease;
+}
+
+.btn-create-deal:hover::before {
+    left: 100%;
+}
+
+.btn-create-deal:hover {
+    background: linear-gradient(135deg, #0ab685 0%, #0dad80 100%);
+    box-shadow: 0 8px 25px 0 rgba(5, 150, 105, 0.45), 0 4px 8px 0 rgba(0, 0, 0, 0.15);
+}
+
+/* Edit Deal Button - Distinctive styling for edit actions */
+.btn-edit-deal {
+
+    background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%);
+    @apply border border-transparent rounded-lg;
+    color: rgb(240, 240, 240);
+    box-shadow: 0 3px 10px 0 rgba(245, 158, 11, 0.3), 0 1px 3px 0 rgba(0, 0, 0, 0.1);
+    position: relative;
+    overflow: hidden;
+    min-height: 40px;
+    font-weight: 600;
+    border-radius: 30px;
+    padding: 5px;
+    padding-inline: 20px;
+}
+
+.btn-edit-deal:hover {
+    background: linear-gradient(135deg, #d97706 0%, #b45309 100%);
+    box-shadow: 0 6px 18px 0 rgba(245, 158, 11, 0.4), 0 3px 6px 0 rgba(0, 0, 0, 0.15);
+}
+
+/* Delete Deal Button - Warning styling for destructive actions */
+.btn-delete-deal {
+    
+    background: linear-gradient(135deg, #ef4444 0%, #dc2626 100%);
+    @apply border border-transparent rounded-lg;
+     color: rgb(240, 240, 240);
+    box-shadow: 0 3px 10px 0 rgba(239, 68, 68, 0.3), 0 1px 3px 0 rgba(0, 0, 0, 0.1);
+    position: relative;
+    overflow: hidden;
+    min-height: 40px;
+    font-weight: 600;
+    border-radius: 30px;
+    padding: 5px;
+    padding-inline: 20px;
+}
+
+.btn-delete-deal:hover {
+    background: linear-gradient(135deg, #dc2626 0%, #b91c1c 100%);
+    box-shadow: 0 6px 18px 0 rgba(239, 68, 68, 0.4), 0 3px 6px 0 rgba(0, 0, 0, 0.15);
+}
+
+/* Cancel Button - Subtle styling for secondary actions */
+.btn-cancel {
+    border: 1px solid #6c6f74;
+    background-color: white;
+    border-radius: 8%;
+    min-height: 44px;
+    font-weight: 500;
+    text-align: center;
+    justify-content: center;
+    align-items: center;
+    padding: 8px;
+    padding-inline: 30px;
+}
+
+.btn-cancel:hover {
+    box-shadow: 0 4px 10px 0 rgba(255, 118, 118, 0.1);
+    color: white;
+    border: 1px solid rgba(255, 255, 255, 0.903);
+    background-color:  rgba(212, 49, 49, 0.903);
+}

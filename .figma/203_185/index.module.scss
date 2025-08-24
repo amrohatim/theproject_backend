@@ -1,0 +1,115 @@
+* {
+  box-sizing: border-box;
+}
+
+.illustrations {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  background: #ffffff;
+  padding: 380px 287px 177px 317px;
+  width: 15609px;
+  height: 8487px;
+  overflow: hidden;
+
+  .achievementsTeamwork {
+    width: 1379px;
+    height: 1379px;
+  }
+
+  .autoWrapper {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    align-self: stretch;
+
+    .achievementsTeamwork2 {
+      display: flex;
+      align-items: center;
+      align-self: stretch;
+      padding: 29px;
+    }
+
+    .settingsOptionsPrefe {
+      display: flex;
+      align-items: center;
+      align-self: stretch;
+      margin-top: 72px;
+      padding: 29px;
+    }
+
+    .errorParachuteBroken {
+      display: flex;
+      align-items: center;
+      align-self: stretch;
+      margin-top: 71px;
+      padding: 29px;
+    }
+  }
+
+  .autoWrapper5 {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    align-self: stretch;
+
+    .eCommerceMobileOnlin {
+      display: flex;
+      align-items: center;
+      padding: 29px;
+    }
+
+    .autoWrapper2 {
+      display: flex;
+      align-items: center;
+      align-self: stretch;
+      justify-content: space-between;
+      padding-right: 0;
+      padding-left: 0;
+    }
+
+    .autoWrapper3 {
+      display: flex;
+      align-items: center;
+      align-self: stretch;
+      justify-content: space-between;
+      margin-top: 72px;
+      padding-right: 0;
+      padding-left: 0;
+    }
+
+    .autoWrapper4 {
+      display: flex;
+      align-items: center;
+      align-self: stretch;
+      justify-content: space-between;
+      margin-top: 71px;
+      padding-right: 0;
+      padding-left: 0;
+    }
+
+    .link2 {
+      display: flex;
+      align-items: flex-start;
+      align-self: stretch;
+      margin: 334px 101px 0px 1088px;
+
+      .link {
+        margin-top: 34px;
+        width: 82px;
+        height: 82px;
+      }
+
+      .downloadFullVersionG {
+        margin: 0px 0px 0px 57px;
+        line-height: 128px;
+        letter-spacing: -1.63px;
+        color: #000000;
+        font-family: Inter, "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", SimHei, Arial, Helvetica, sans-serif;
+        font-size: 81px;
+        font-weight: 600;
+        text-decoration: underline;
+      }
+    }
+  }
+}

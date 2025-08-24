@@ -1,0 +1,189 @@
+/* Modern Form Elements Styling */
+
+/* Advanced Text Area Styling */
+.modern-textarea {
+    @apply block w-full px-4 py-3 border-0 rounded-lg;
+    @apply bg-gray-50 dark:bg-gray-800;
+    @apply text-gray-900 dark:text-gray-100;
+    @apply shadow-sm;
+    @apply transition-all duration-300 ease-in-out;
+    @apply focus:ring-2 focus:ring-opacity-30 focus:ring-indigo-500 focus:border-indigo-500 focus:outline-none;
+    @apply dark:focus:ring-indigo-600 dark:focus:border-indigo-600;
+    @apply placeholder-gray-400 dark:placeholder-gray-500;
+    @apply resize-y;
+    min-height: 100px;
+    backdrop-filter: blur(4px);
+    border-width: 1px;
+    border-color: rgba(209, 213, 219, 0.8);
+}
+
+.modern-textarea:hover {
+    @apply bg-white dark:bg-gray-700;
+    @apply shadow-md;
+    transform: translateY(-1px);
+}
+
+.modern-textarea:focus {
+    @apply bg-white dark:bg-gray-700;
+    @apply shadow-lg;
+    transform: translateY(-2px);
+}
+
+/* Dark mode specific styles */
+.dark .modern-textarea {
+    border-color: rgba(75, 85, 99, 0.8);
+    box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px 0 rgba(0, 0, 0, 0.06);
+}
+
+.dark .modern-textarea:hover,
+.dark .modern-textarea:focus {
+    border-color: rgba(59, 130, 246, 0.8); /* Blue color */
+}
+
+/* Modern Input Styling */
+.modern-input {
+    @apply block w-full px-4 py-2.5 border-0 rounded-lg;
+    @apply bg-gray-50 dark:bg-gray-800;
+    @apply text-gray-900 dark:text-gray-100;
+    @apply shadow-sm;
+    @apply transition-all duration-300 ease-in-out;
+    @apply focus:ring-2 focus:ring-opacity-30 focus:ring-indigo-500 focus:border-indigo-500 focus:outline-none;
+    @apply dark:focus:ring-indigo-600 dark:focus:border-indigo-600;
+    @apply placeholder-gray-400 dark:placeholder-gray-500;
+    backdrop-filter: blur(4px);
+    border-width: 1px;
+    border-color: rgba(209, 213, 219, 0.8);
+    min-height: 2.75rem; /* More reasonable height */
+}
+
+.modern-input:hover {
+    @apply bg-white dark:bg-gray-700;
+    @apply shadow-md;
+    transform: translateY(-1px);
+}
+
+.modern-input:focus {
+    @apply bg-white dark:bg-gray-700;
+    @apply shadow-lg;
+    transform: translateY(-2px);
+}
+
+/* Dark mode specific styles for inputs */
+.dark .modern-input {
+    border-color: rgba(75, 85, 99, 0.8);
+    box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px 0 rgba(0, 0, 0, 0.06);
+}
+
+.dark .modern-input:hover,
+.dark .modern-input:focus {
+    border-color: rgba(59, 130, 246, 0.8); /* Blue color */
+}
+
+/* Label styling for modern forms */
+.modern-label {
+    @apply block mb-2 text-sm font-medium;
+    @apply text-gray-700 dark:text-gray-300;
+    @apply transition-colors duration-200;
+}
+
+/* Error state for form elements */
+.modern-textarea.error,
+.modern-input.error,
+input.error {
+    @apply border-red-500 dark:border-red-500;
+    @apply focus:ring-red-500 focus:border-red-500;
+    @apply dark:focus:ring-red-500 dark:focus:border-red-500;
+}
+
+/* Success state for form elements */
+.modern-textarea.success,
+.modern-input.success,
+input.success {
+    @apply border-green-500 dark:border-green-500;
+    @apply focus:ring-green-500 focus:border-green-500;
+    @apply dark:focus:ring-green-500 dark:focus:border-green-500;
+}
+
+/* Disabled state for form elements */
+.modern-textarea:disabled,
+.modern-input:disabled,
+input:disabled {
+    @apply opacity-70 cursor-not-allowed;
+    @apply bg-gray-100 dark:bg-gray-900;
+    transform: none !important;
+    box-shadow: none !important;
+}
+
+/* Form group styling */
+.modern-form-group {
+    @apply mb-4;
+}
+
+/* Character counter for form elements */
+.char-counter {
+    @apply text-xs text-gray-500 dark:text-gray-400 mt-1 text-right;
+    @apply transition-colors duration-200;
+}
+
+.char-counter.limit-near {
+    @apply text-yellow-600 dark:text-yellow-400;
+}
+
+.char-counter.limit-reached {
+    @apply text-red-600 dark:text-red-400;
+}
+
+/* Input wrapper styling */
+.input-wrapper {
+    @apply relative;
+}
+
+.input-wrapper.focused::after {
+    content: '';
+    @apply absolute inset-0 rounded-lg pointer-events-none;
+    box-shadow: 0 0 0 1px rgba(99, 102, 241, 0.3); /* Subtle indigo color */
+    /* animation: pulse 1.5s cubic-bezier(0.4, 0, 0.6, 1) infinite; */
+}
+
+.input-wrapper.hovered::after {
+    content: '';
+    @apply absolute inset-0 rounded-lg pointer-events-none;
+    box-shadow: 0 0 0 1px rgba(99, 102, 241, 0.2); /* Subtle indigo color */
+}
+
+/* Floating label styling - DISABLED FOR STATIC PLACEHOLDERS */
+/*
+.floating-label {
+    @apply transition-all duration-200 ease-in-out;
+}
+
+.floating-label.active {
+    @apply text-blue-500 dark:text-blue-400;
+}
+*/
+
+/* Pulse animation for focus */
+@keyframes pulse {
+    0%, 100% {
+        opacity: 0.5;
+    }
+    50% {
+        opacity: 0.2;
+    }
+}
+
+.pulse-focus {
+    animation: input-pulse 0.5s ease-in-out;
+}
+
+@keyframes input-pulse {
+    0% {
+        box-shadow: 0 0 0 0 rgba(99, 102, 241, 0.4); /* Subtle indigo color */
+    }
+    70% {
+        box-shadow: 0 0 0 3px rgba(99, 102, 241, 0); /* Subtle indigo color */
+    }
+    100% {
+        box-shadow: 0 0 0 0 rgba(99, 102, 241, 0); /* Subtle indigo color */
+    }
+}
