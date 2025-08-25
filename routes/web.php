@@ -2361,6 +2361,7 @@ Route::get('/storage/product-colors/{filename}', [App\Http\Controllers\ImageCont
 Route::get('/storage/provider_products/{filename}', [App\Http\Controllers\ImageController::class, 'serveProviderProductImage'])->name('storage.provider_products');
 Route::get('/storage/deals/{filename}', [App\Http\Controllers\ImageController::class, 'serveDealImage'])->name('storage.deals');
 Route::get('/storage/categories/{filename}', [App\Http\Controllers\ImageController::class, 'serveCategoryImage'])->name('storage.categories');
+Route::get('/images/avatars/{filename}', [App\Http\Controllers\ImageController::class, 'serveAvatarImage'])->name('images.avatars');
 
 // Generic storage route (fallback for other types)
 Route::get('/images/{folder}/{filename}', [App\Http\Controllers\ImageController::class, 'serveStorageImage'])->name('images.storage');
