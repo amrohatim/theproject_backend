@@ -637,7 +637,7 @@ class ImageController extends Controller
      */
     private function isValidFolder($folder)
     {
-        $allowedFolders = ['products', 'services', 'categories', 'users', 'merchants', 'branches', 'companies', 'merchant-logos', 'images/uae_ids'];
+        $allowedFolders = ['products', 'services', 'categories', 'users', 'merchants', 'branches', 'companies', 'merchant-logos', 'images/uae_ids', 'avatars'];
         return in_array($folder, $allowedFolders);
     }
 
