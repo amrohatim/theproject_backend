@@ -13,7 +13,12 @@
         <i class="fas fa-tags mr-3"></i>
         Categories
     </a>
-    
+
+    <a href="{{ route('admin.business-types.index') }}" class="sidebar-item flex items-center px-4 py-2 text-sm font-medium rounded-md {{ request()->routeIs('admin.business-types.*') ? 'sidebar-active' : 'text-gray-700 dark:text-gray-300' }}">
+        <i class="fas fa-industry mr-3"></i>
+        Business Types
+    </a>
+
     <a href="{{ route('admin.avatars.index') }}" class="sidebar-item flex items-center px-4 py-2 text-sm font-medium rounded-md {{ request()->routeIs('admin.avatars.*') ? 'sidebar-active' : 'text-gray-700 dark:text-gray-300' }}">
         <i class="fas fa-user-circle mr-3"></i>
         Avatar Management

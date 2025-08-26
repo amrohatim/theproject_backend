@@ -1653,6 +1653,28 @@ return [
     'using_default_image' => 'استخدام الصورة الافتراضية',
     'no_image_available' => 'لا توجد صورة متاحة',
     'no_description_available' => 'لا يوجد وصف متاح.',
+
+    // Branch License
+    'license_status' => 'حالة الترخيص',
+    'branch_license_information' => 'معلومات ترخيص الفرع',
+    'branch_license_requirement_description' => 'يتطلب كل فرع ترخيصًا صالحًا للعمل وإنشاء المنتجات/الخدمات.',
+    'license_start_date' => 'تاريخ بداية الترخيص',
+    'license_end_date' => 'تاريخ انتهاء الترخيص',
+    'branch_license_document' => 'وثيقة ترخيص الفرع',
+    'click_to_upload' => 'انقر للرفع',
+    'or_drag_and_drop' => 'أو اسحب وأفلت',
+    'pdf_files_only_max_10mb' => 'ملفات PDF فقط (الحد الأقصى: 10 ميجابايت)',
+    'pdf_files_only_message' => 'يرجى اختيار ملف PDF فقط.',
+    'file_too_large_10mb' => 'يجب ألا يتجاوز حجم الملف 10 ميجابايت.',
+    'license_end_date_must_be_after_start_date' => 'يجب أن يكون تاريخ انتهاء الترخيص بعد تاريخ البداية.',
+    'branch_license_requirements_notice' => 'سيتم تفعيل هذا الترخيص تلقائيًا للموردين. تأكد من دقة جميع المعلومات.',
+    'remove' => 'إزالة',
+    'important' => 'مهم',
+    'pending' => 'قيد الانتظار',
+    'expired' => 'منتهي الصلاحية',
+    'rejected' => 'مرفوض',
+    'no_license' => 'لا يوجد ترخيص',
+
     'add_product' => 'إضافة منتج',
     'add_service' => 'إضافة خدمة',
     'no_products_found_branch' => 'لم يتم العثور على منتجات لهذا الفرع.',
@@ -2141,6 +2163,7 @@ return [
     'select_services_for_deal' => 'حدد الخدمات التي ترغب في تطبيقها على هذه الصفقة',
     'please_fix_the_following_errors_before_submitting' => 'يرجى إصلاح الأخطاء التالية قبل الإرسال',
     'correct_the_errors' => 'تصحيح الأخطاء',
+    
 
 
     //Product manager 
@@ -2156,4 +2179,11 @@ return [
 'products_manager_support_message' => 'إذا كان لديك أسئلة حول الوصول إلى واجهة برمجة تطبيقات البائع أو تحتاج إلى مساعدة، يرجى الاتصال بفريق الدعم',
 'store_inactive_desc' => 'يجب أن تتم مراجعة ترخيصك قبل أن تتمكن من إنشاء منتجات جديدة. يرجى الاتصال بمسؤولي المتجر للاطلاع على المزيد من التفاصيل',
 'store_access_restricted' => 'تم تقييد الوصول إلى المتجر',
+
+// Branch License Edit Form
+'update_branch_license_info' => 'تحديث معلومات ترخيص الفرع. التغييرات تتطلب موافقة المدير.',
+'current_license_file' => 'ملف الترخيص الحالي',
+'license_update_notice' => 'تحديث معلومات الترخيص سيعيد تعيين الحالة إلى في الانتظار ويتطلب إعادة موافقة المدير.',
+'please_select_pdf_file' => 'يرجى تحديد ملف PDF فقط.',
+
 ];

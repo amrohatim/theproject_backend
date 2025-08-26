@@ -157,7 +157,6 @@ Route::prefix('vendor-registration')->middleware(['web'])->group(function () {
     Route::post('/info', [VendorRegistrationController::class, 'registerVendorInfo']);
     Route::post('/verify-email', [VendorRegistrationController::class, 'verifyEmail']);
     Route::post('/company', [VendorRegistrationController::class, 'registerCompanyInfo']);
-    Route::post('/license', [VendorRegistrationController::class, 'uploadLicense']);
     Route::post('/send-otp', [VendorRegistrationController::class, 'sendOtp']);
     Route::post('/verify-otp', [VendorRegistrationController::class, 'verifyOtp']);
     Route::get('/status', [VendorRegistrationController::class, 'getRegistrationStatus']);

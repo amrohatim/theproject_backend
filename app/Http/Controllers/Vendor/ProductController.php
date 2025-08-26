@@ -7,6 +7,7 @@ use App\Models\Branch;
 use App\Models\Category;
 use App\Models\Product;
 use App\Services\WebPImageService;
+use App\Rules\ActiveBranchLicense;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
@@ -107,7 +108,7 @@ class ProductController extends Controller
             ->orderBy('name')
             ->get();
 
-        // Get branches that belong to the vendor's company for filter dropdown
+        // Get branches that belong to the vendor's company for filter dropdown (include all for filtering)
         $branches = Branch::whereHas('company', function ($query) {
             $query->where('user_id', $this->getActingVendorUserId());
         })->orderBy('name')->get();
@@ -140,10 +141,10 @@ class ProductController extends Controller
             ->orderBy('name')
             ->get();
 
-        // Get branches that belong to the vendor's company
+        // Get branches that belong to the vendor's company and have active licenses
         $branches = Branch::whereHas('company', function ($query) {
             $query->where('user_id', $this->getActingVendorUserId());
-        })->orderBy('name')->get();
+        })->withActiveLicense()->orderBy('name')->get();
 
         // Check if the vendor has any branches
         if ($branches->isEmpty()) {
@@ -368,10 +369,10 @@ class ProductController extends Controller
                 ->orderBy('name')
                 ->get();
 
-            // Get branches that belong to the vendor's company
+            // Get branches that belong to the vendor's company and have active licenses
             $branches = Branch::whereHas('company', function ($query) {
                 $query->where('user_id', $this->getActingVendorUserId());
-            })->orderBy('name')->get();
+            })->withActiveLicense()->orderBy('name')->get();
 
             // Check if the vendor has any branches
             if ($branches->isEmpty()) {
@@ -481,7 +482,7 @@ class ProductController extends Controller
             'name' => 'required|string|max:255',
             'product_name_arabic' => 'required|string|max:255',
             'category_id' => 'required|exists:categories,id',
-            'branch_id' => 'required|exists:branches,id',
+            'branch_id' => ['required', 'exists:branches,id', new ActiveBranchLicense()],
             'price' => 'required|numeric|min:0',
             'original_price' => 'nullable|numeric|min:0',
             'stock' => 'required|integer|min:0',
@@ -526,7 +527,7 @@ class ProductController extends Controller
             // Multi-branch validation
             'is_multi_branch' => 'nullable|boolean',
             'branches' => 'nullable|array',
-            'branches.*.branch_id' => 'required_with:branches|exists:branches,id',
+            'branches.*.branch_id' => ['required_with:branches', 'exists:branches,id', new ActiveBranchLicense()],
             'branches.*.stock' => 'nullable|integer|min:0',
             'branches.*.price' => 'nullable|numeric|min:0',
             'branches.*.is_available' => 'nullable|boolean',
@@ -801,10 +802,10 @@ class ProductController extends Controller
             ->orderBy('name')
             ->get();
 
-        // Get branches that belong to the vendor's company
+        // Get branches that belong to the vendor's company and have active licenses
         $branches = Branch::whereHas('company', function ($query) {
             $query->where('user_id', $this->getActingVendorUserId());
-        })->orderBy('name')->get();
+        })->withActiveLicense()->orderBy('name')->get();
 
         // Load product with all related data
         $product->load(['specifications', 'colors', 'sizes', 'branches']);
@@ -849,10 +850,10 @@ class ProductController extends Controller
             ->orderBy('name')
             ->get();
 
-        // Get branches that belong to the vendor's company
+        // Get branches that belong to the vendor's company and have active licenses
         $branches = Branch::whereHas('company', function ($query) {
             $query->where('user_id', $this->getActingVendorUserId());
-        })->orderBy('name')->get();
+        })->withActiveLicense()->orderBy('name')->get();
 
         // Load product with all related data including colors with their sizes
         $product->load([
@@ -948,7 +949,7 @@ class ProductController extends Controller
             'name' => 'required|string|max:255',
             'product_name_arabic' => 'required|string|max:255',
             'category_id' => 'required|exists:categories,id',
-            'branch_id' => 'required|exists:branches,id',
+            'branch_id' => ['required', 'exists:branches,id', new ActiveBranchLicense()],
             'price' => 'required|numeric|min:0',
             'original_price' => 'nullable|numeric|min:0',
             'stock' => 'required|integer|min:0',
@@ -993,7 +994,7 @@ class ProductController extends Controller
             // Multi-branch validation
             'is_multi_branch' => 'nullable|boolean',
             'branches' => 'nullable|array',
-            'branches.*.branch_id' => 'required_with:branches|exists:branches,id',
+            'branches.*.branch_id' => ['required_with:branches', 'exists:branches,id', new ActiveBranchLicense()],
             'branches.*.stock' => 'nullable|integer|min:0',
             'branches.*.price' => 'nullable|numeric|min:0',
             'branches.*.is_available' => 'nullable|boolean',

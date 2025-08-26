@@ -44,11 +44,6 @@
         {{ __('messages.bookings') }}
     </a>
 
-    <a href="{{ route('vendor.license.index') }}" class="sidebar-item flex items-center px-4 py-2 text-sm font-medium rounded-md {{ request()->routeIs('vendor.license.*') ? 'sidebar-active' : 'text-gray-700 dark:text-gray-300' }}">
-        <i class="fas fa-certificate mr-3"></i>
-        {{ __('messages.license_management') }}
-    </a>
-
     <a href="{{ route('vendor.settings') }}" class="sidebar-item flex items-center px-4 py-2 text-sm font-medium rounded-md {{ request()->routeIs('vendor.settings') ? 'sidebar-active' : 'text-gray-700 dark:text-gray-300' }}">
         <i class="fas fa-cog mr-3"></i>
         {{ __('messages.settings') }}

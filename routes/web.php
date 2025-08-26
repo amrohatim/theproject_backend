@@ -885,6 +885,9 @@ Route::prefix('admin')->name('admin.')->middleware(['auth', \App\Http\Middleware
         }
     })->name('categories.destroy');
 
+    // Business Types
+    Route::resource('business-types', \App\Http\Controllers\Admin\BusinessTypeController::class);
+
     // Companies
     Route::get('/companies', function () {
         $companies = \App\Models\Company::with('user')->orderBy('created_at', 'desc')->paginate(10);
@@ -1371,7 +1374,19 @@ Route::prefix('admin')->name('admin.')->middleware(['auth', \App\Http\Middleware
         }
         return 'User not found';
     })->name('test.vendor.service');
+
+    // Test route for admin login and business types
+    Route::get('/test-admin-login', function() {
+        $user = \App\Models\User::where('email', 'admin@example.com')->first();
+        if ($user) {
+            Auth::login($user);
+            return redirect('/admin/business-types');
+        }
+        return 'Admin user not found';
+    })->name('test.admin.login');
 });
+
+
 
 // Vendor routes
 Route::prefix('vendor')->name('vendor.')->middleware(['auth', \App\Http\Middleware\VendorMiddleware::class])->group(function () {
@@ -1661,6 +1676,10 @@ Route::prefix('vendor')->name('vendor.')->middleware(['auth', \App\Http\Middlewa
             'opening_hours' => 'nullable|array',
             'branch_image' => 'nullable|image|mimes:jpeg,png,jpg,webp|max:2048',
             'use_company_image' => 'sometimes|boolean',
+            // License fields
+            'license_file' => 'required|file|mimes:pdf|max:10240',
+            'license_start_date' => 'required|date',
+            'license_end_date' => 'required|date|after:license_start_date',
         ]);
 
         // Verify that the company belongs to the authenticated user
@@ -1728,9 +1747,33 @@ Route::prefix('vendor')->name('vendor.')->middleware(['auth', \App\Http\Middlewa
         // Remove the days_open field as it's not in the model
         unset($validated['days_open']);
 
+        // Extract license data before creating branch
+        $licenseData = [
+            'license_file' => $request->file('license_file'),
+            'start_date' => $validated['license_start_date'],
+            'end_date' => $validated['license_end_date'],
+        ];
+
+        // Remove license fields from branch data
+        unset($validated['license_file'], $validated['license_start_date'], $validated['license_end_date']);
+
+        // Create the branch
         $branch = \App\Models\Branch::create($validated);
 
-        return redirect()->route('vendor.branches.index')->with('success', 'Branch created successfully');
+        // Handle license file upload and create license record
+        $licenseFilePath = $licenseData['license_file']->store('branch_licenses', 'public');
+
+        // Create the branch license record with pending status
+        $branch->licenses()->create([
+            'license_file_path' => $licenseFilePath,
+            'start_date' => $licenseData['start_date'],
+            'end_date' => $licenseData['end_date'],
+            'status' => 'pending', // Set to pending for vendor-created licenses
+            'uploaded_at' => now(),
+            'verified_at' => null, // Will be set when admin approves
+        ]);
+
+        return redirect()->route('vendor.branches.index')->with('success', 'Branch created successfully. License is pending approval.');
     })->name('branches.store');
 
     Route::get('/branches/{id}', function ($id) {
@@ -1785,6 +1828,10 @@ Route::prefix('vendor')->name('vendor.')->middleware(['auth', \App\Http\Middlewa
             'opening_hours' => 'nullable|array',
             'branch_image' => 'nullable|image|mimes:jpeg,png,jpg,webp|max:2048',
             'use_company_image' => 'sometimes|boolean',
+            // License fields
+            'license_file' => 'nullable|file|mimes:pdf|max:10240',
+            'license_start_date' => 'required|date',
+            'license_end_date' => 'required|date|after:license_start_date',
         ]);
 
         // Verify that the company belongs to the authenticated user
@@ -1869,9 +1916,64 @@ Route::prefix('vendor')->name('vendor.')->middleware(['auth', \App\Http\Middlewa
         // Remove the days_open field as it's not in the model
         unset($validated['days_open']);
 
+        // Extract license data before updating branch
+        $licenseData = [
+            'start_date' => $validated['license_start_date'],
+            'end_date' => $validated['license_end_date'],
+        ];
+
+        // Remove license fields from branch data
+        unset($validated['license_file'], $validated['license_start_date'], $validated['license_end_date']);
+
         $branch->update($validated);
 
-        return redirect()->route('vendor.branches.show', $branch->id)->with('success', 'Branch updated successfully');
+        // Handle license update
+        $currentLicense = $branch->licenses()->latest()->first();
+
+        if ($currentLicense) {
+            // Update existing license
+            $licenseUpdateData = [
+                'start_date' => $licenseData['start_date'],
+                'end_date' => $licenseData['end_date'],
+                'status' => 'pending', // Reset to pending for re-approval
+                'verified_at' => null, // Clear verification timestamp
+            ];
+
+            // Handle license file upload if provided
+            if ($request->hasFile('license_file')) {
+                // Delete old license file if exists
+                if ($currentLicense->license_file_path && \Illuminate\Support\Facades\Storage::disk('public')->exists($currentLicense->license_file_path)) {
+                    \Illuminate\Support\Facades\Storage::disk('public')->delete($currentLicense->license_file_path);
+                }
+
+                // Upload new license file
+                $licenseFilePath = $request->file('license_file')->store('branch_licenses', 'public');
+                $licenseUpdateData['license_file_path'] = $licenseFilePath;
+                $licenseUpdateData['uploaded_at'] = now();
+            }
+
+            $currentLicense->update($licenseUpdateData);
+            $successMessage = 'Branch and license updated successfully. License is pending approval.';
+        } else {
+            // Create new license if none exists (shouldn't happen in normal flow, but safety check)
+            if ($request->hasFile('license_file')) {
+                $licenseFilePath = $request->file('license_file')->store('branch_licenses', 'public');
+
+                $branch->licenses()->create([
+                    'license_file_path' => $licenseFilePath,
+                    'start_date' => $licenseData['start_date'],
+                    'end_date' => $licenseData['end_date'],
+                    'status' => 'pending',
+                    'uploaded_at' => now(),
+                    'verified_at' => null,
+                ]);
+                $successMessage = 'Branch updated and license created successfully. License is pending approval.';
+            } else {
+                $successMessage = 'Branch updated successfully. Please upload a license file.';
+            }
+        }
+
+        return redirect()->route('vendor.branches.show', $branch->id)->with('success', $successMessage);
     })->name('branches.update');
 
     Route::delete('/branches/{id}', function ($id) {
@@ -1999,12 +2101,7 @@ Route::prefix('vendor')->name('vendor.')->middleware(['auth', \App\Http\Middlewa
         return redirect()->route('login')->with('success', 'Account deleted successfully');
     })->name('settings.delete');
 
-    // License Management
-    Route::get('/dashboard/license', [\App\Http\Controllers\Vendor\LicenseController::class, 'index'])->name('license.index');
-    Route::get('/dashboard/license/renewal', [\App\Http\Controllers\Vendor\LicenseController::class, 'showRenewal'])->name('license.renewal');
-    Route::post('/dashboard/license/renewal', [\App\Http\Controllers\Vendor\LicenseController::class, 'storeRenewal'])->name('license.renewal.store');
-    Route::get('/dashboard/license/{id}/view', [\App\Http\Controllers\Vendor\LicenseController::class, 'viewDocument'])->name('license.view');
-    Route::get('/dashboard/license/{id}/preview', [\App\Http\Controllers\Vendor\LicenseController::class, 'preview'])->name('license.preview');
+
 
     // Service Provider Management
     Route::prefix('settings/service-providers')->name('settings.service-providers.')->group(function () {
@@ -2138,15 +2235,7 @@ Route::middleware(['auth', \App\Http\Middleware\ProductsManagerMiddleware::class
     Route::delete('/products/session/clear', [\App\Http\Controllers\Vendor\ProductController::class, 'clearSession'])->name('products.session.clear');
 });
 
-// Vendor license status routes (accessible without active license)
-Route::prefix('vendor')->name('vendor.')->middleware(['auth'])->group(function () {
-    // License status pages - accessible even with inactive license
-    Route::get('/license/status/{status?}', [App\Http\Controllers\Vendor\LicenseStatusController::class, 'show'])->name('license.status');
 
-    // License upload routes - accessible for vendors who completed company registration but need to upload license
-    Route::get('/license/upload', [App\Http\Controllers\Vendor\LicenseUploadController::class, 'show'])->name('license.upload');
-    Route::post('/license/upload', [App\Http\Controllers\Vendor\LicenseUploadController::class, 'upload'])->name('license.upload.submit');
-});
 
 // Provider routes
 Route::prefix('provider')->name('provider.')->middleware(['auth', \App\Http\Middleware\ProviderMiddleware::class])->group(function () {

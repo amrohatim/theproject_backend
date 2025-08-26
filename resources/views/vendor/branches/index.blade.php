@@ -74,6 +74,7 @@ use Illuminate\Support\Facades\Storage;
                         <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">{{ __('messages.contact') }}</th>
                         <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">{{ __('messages.products') }}</th>
                         <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">{{ __('messages.services') }}</th>
+                        <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">{{ __('messages.license_status') }}</th>
                         <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">{{ __('messages.status') }}</th>
                         <th scope="col" class="px-6 py-3 text-right text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">{{ __('messages.actions') }}</th>
                     </tr>
@@ -118,6 +119,29 @@ use Illuminate\Support\Facades\Storage;
                             <div class="text-sm text-gray-500 dark:text-gray-400">{{ $branch->services_count ?? 0 }}</div>
                         </td>
                         <td class="px-6 py-4 whitespace-nowrap">
+                            @php
+                                $licenseStatus = $branch->getLicenseStatus();
+                            @endphp
+                            <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full
+                                @if($licenseStatus == 'active') bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-200
+                                @elseif($licenseStatus == 'pending') bg-yellow-100 text-yellow-800 dark:bg-yellow-900 dark:text-yellow-200
+                                @elseif($licenseStatus == 'expired') bg-red-100 text-red-800 dark:bg-red-900 dark:text-red-200
+                                @elseif($licenseStatus == 'rejected') bg-red-100 text-red-800 dark:bg-red-900 dark:text-red-200
+                                @else bg-gray-100 text-gray-800 dark:bg-gray-900 dark:text-gray-200 @endif">
+                                @if($licenseStatus == 'active')
+                                    <i class="fas fa-check-circle mr-1"></i> {{ __('messages.active') }}
+                                @elseif($licenseStatus == 'pending')
+                                    <i class="fas fa-clock mr-1"></i> {{ __('messages.pending') }}
+                                @elseif($licenseStatus == 'expired')
+                                    <i class="fas fa-exclamation-triangle mr-1"></i> {{ __('messages.expired') }}
+                                @elseif($licenseStatus == 'rejected')
+                                    <i class="fas fa-times-circle mr-1"></i> {{ __('messages.rejected') }}
+                                @else
+                                    <i class="fas fa-question-circle mr-1"></i> {{ __('messages.no_license') }}
+                                @endif
+                            </span>
+                        </td>
+                        <td class="px-6 py-4 whitespace-nowrap">
                             <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full
                                 @if($branch->status == 'active') bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-200
                                 @else bg-red-100 text-red-800 dark:bg-red-900 dark:text-red-200 @endif">
@@ -146,7 +170,7 @@ use Illuminate\Support\Facades\Storage;
                     </tr>
                     @empty
                     <tr>
-                        <td colspan="7" class="px-6 py-4 text-center text-sm text-gray-500 dark:text-gray-400">
+                        <td colspan="8" class="px-6 py-4 text-center text-sm text-gray-500 dark:text-gray-400">
                             <div class="flex flex-col items-center justify-center py-4">
                                 <i class="fas fa-store text-gray-300 dark:text-gray-600 text-5xl mb-4"></i>
                                 <p>{{ __('messages.no_branches_found') }}</p>

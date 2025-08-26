@@ -666,14 +666,14 @@ class RegistrationService
 
             DB::beginTransaction();
 
-            // Create the user
+            // Create the user - vendors are now active immediately after registration
             $user = User::create([
                 'name' => $personalInfo['name'],
                 'email' => $personalInfo['email'],
                 'password' => Hash::make($personalInfo['password']),
                 'phone' => $personalInfo['phone'],
                 'role' => 'vendor',
-                'status' => 'inactive',
+                'status' => 'active',
                 'registration_step' => 'company_completed',
                 'email_verified_at' => now(),
                 'phone_verified' => true,
@@ -710,10 +710,10 @@ class RegistrationService
 
             return [
                 'success' => true,
-                'message' => 'Registration completed successfully! You can now proceed to license upload.',
+                'message' => 'Registration completed successfully! You can now log in to access your dashboard.',
                 'user_id' => $user->id,
                 'company_id' => $company->id,
-                'next_step' => 'license_upload',
+                'next_step' => 'completed',
             ];
         } catch (Exception $e) {
             DB::rollBack();

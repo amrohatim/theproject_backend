@@ -7,6 +7,8 @@ use App\Models\Branch;
 use App\Models\Company;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
 
 class BranchController extends Controller
 {
@@ -77,10 +79,13 @@ class BranchController extends Controller
      */
     public function store(Request $request)
     {
+        Log::info('Branch store method called');
+
         $validated = $request->validate([
             'name' => 'required|string|max:255',
             'company_id' => 'required|exists:companies,id',
             'address' => 'required|string|max:255',
+            'emirate' => 'required|string|max:255',
             'lat' => 'required|numeric',
             'lng' => 'required|numeric',
             'phone' => 'nullable|string|max:20',
@@ -88,6 +93,20 @@ class BranchController extends Controller
             'description' => 'nullable|string',
             'branch_image' => 'nullable|image|mimes:jpeg,png,jpg,gif,webp|max:2048',
             'use_company_image' => 'nullable|boolean',
+            // License validation
+            'license_file' => 'required|file|mimes:pdf|max:10240', // 10MB max, PDF only
+            'license_start_date' => 'required|date',
+            'license_end_date' => 'required|date|after:license_start_date',
+        ], [
+            'license_file.required' => 'Please upload a branch license document.',
+            'license_file.file' => 'The license document must be a valid file.',
+            'license_file.mimes' => 'The license document must be a PDF file only.',
+            'license_file.max' => 'The license document must not exceed 10MB in size.',
+            'license_start_date.required' => 'Please provide the license start date.',
+            'license_start_date.date' => 'Please provide a valid license start date.',
+            'license_end_date.required' => 'Please provide the license end date.',
+            'license_end_date.date' => 'Please provide a valid license end date.',
+            'license_end_date.after' => 'The license end date must be after the start date.',
         ]);
 
         // Verify the company belongs to the authenticated user
@@ -95,28 +114,68 @@ class BranchController extends Controller
             ->where('user_id', Auth::id())
             ->firstOrFail();
 
-        $data = $validated;
-        $data['status'] = 'active';
+        try {
+            DB::beginTransaction();
 
-        // Handle branch image upload
-        if ($request->hasFile('branch_image')) {
-            $imagePath = $request->file('branch_image')->store('branches', 'public');
-            $data['branch_image'] = $imagePath;
-            $data['use_company_image'] = false;
-        }
+            // Prepare branch data (exclude license fields)
+            $branchData = [
+                'name' => $validated['name'],
+                'company_id' => $validated['company_id'],
+                'address' => $validated['address'],
+                'emirate' => $validated['emirate'] ?? null,
+                'lat' => $validated['lat'],
+                'lng' => $validated['lng'],
+                'phone' => $validated['phone'] ?? null,
+                'email' => $validated['email'] ?? null,
+                'description' => $validated['description'] ?? null,
+                'status' => 'active',
+                'user_id' => Auth::id(),
+            ];
 
-        // Set use_company_image flag
-        if ($request->has('use_company_image')) {
-            $data['use_company_image'] = $request->boolean('use_company_image');
-            // If using company image, clear branch image
-            if ($data['use_company_image']) {
-                $data['branch_image'] = null;
+            // Handle branch image upload
+            if ($request->hasFile('branch_image')) {
+                $imagePath = $request->file('branch_image')->store('branches', 'public');
+                $branchData['branch_image'] = $imagePath;
+                $branchData['use_company_image'] = false;
             }
+
+            // Set use_company_image flag
+            if ($request->has('use_company_image')) {
+                $branchData['use_company_image'] = $request->boolean('use_company_image');
+                // If using company image, clear branch image
+                if ($branchData['use_company_image']) {
+                    $branchData['branch_image'] = null;
+                }
+            }
+
+            // Create the branch
+            $branch = Branch::create($branchData);
+
+            // Handle license file upload and create license record
+            $licenseFilePath = $request->file('license_file')->store('branch_licenses', 'public');
+
+            // Create the branch license record with pending status
+            $branch->licenses()->create([
+                'license_file_path' => $licenseFilePath,
+                'start_date' => $validated['license_start_date'],
+                'end_date' => $validated['license_end_date'],
+                'status' => 'pending', // Set to pending for vendor-created licenses
+                'uploaded_at' => now(),
+                'verified_at' => null, // Will be set when admin approves
+            ]);
+
+            DB::commit();
+
+            return redirect()->route('vendor.branches.index')
+                ->with('success', 'Branch created successfully. License is pending approval.');
+
+        } catch (\Exception $e) {
+            DB::rollBack();
+
+            return redirect()->back()
+                ->withInput()
+                ->with('error', 'Failed to create branch: ' . $e->getMessage());
         }
-
-        Branch::create($data);
-
-        return redirect()->route('vendor.branches.index')->with('success', 'Branch created successfully');
     }
 
     /**
