@@ -37,6 +37,19 @@
                 </div>
 
                 <div>
+                    <label for="business_type" class="block text-sm font-medium text-gray-700 dark:text-gray-300">Business Type <span class="text-red-500">*</span></label>
+                    <select id="business_type" name="business_type" class="mt-1 block w-full pl-3 pr-10 py-2 text-base border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-white focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm rounded-md" required>
+                        <option value="">Select Business Type</option>
+                        @foreach($businessTypes ?? [] as $businessType)
+                            <option value="{{ $businessType->business_name }}" {{ old('business_type', $branch->business_type) == $businessType->business_name ? 'selected' : '' }}>{{ $businessType->business_name }}</option>
+                        @endforeach
+                    </select>
+                    @error('business_type')
+                        <p class="mt-1 text-sm text-red-600 dark:text-red-400">{{ $message }}</p>
+                    @enderror
+                </div>
+
+                <div>
                     <label for="phone" class="block text-sm font-medium text-gray-700 dark:text-gray-300">{{ __('messages.phone_number') }}</label>
                     <input type="text" name="phone" id="phone" value="{{ old('phone', $branch->phone) }}" class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-white rounded-md">
                     @error('phone')

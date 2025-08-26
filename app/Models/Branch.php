@@ -43,6 +43,7 @@ class Branch extends Model
         'branch_image',
         'use_company_image',
         'description',
+        'business_type',
         'rating',
         'phone',
         'email',

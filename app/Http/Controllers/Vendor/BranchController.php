@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Vendor;
 
 use App\Http\Controllers\Controller;
 use App\Models\Branch;
+use App\Models\BusinessType;
 use App\Models\Company;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -71,7 +72,8 @@ class BranchController extends Controller
     public function create()
     {
         $companies = Company::where('user_id', Auth::id())->orderBy('name')->get();
-        return view('vendor.branches.create', compact('companies'));
+        $businessTypes = BusinessType::orderBy('business_name')->get();
+        return view('vendor.branches.create', compact('companies', 'businessTypes'));
     }
 
     /**
@@ -79,7 +81,22 @@ class BranchController extends Controller
      */
     public function store(Request $request)
     {
-        Log::info('Branch store method called');
+        // Debug: Log all incoming request data
+        Log::info('=== BRANCH STORE DEBUG ===');
+        Log::info('Request method: ' . $request->method());
+        Log::info('Request URL: ' . $request->url());
+        Log::info('All request data: ', $request->all());
+        Log::info('Business type specifically: ' . ($request->input('business_type') ?? 'NULL'));
+        Log::info('Business type backup: ' . ($request->input('business_type_backup') ?? 'NULL'));
+        Log::info('Request has business_type: ' . ($request->has('business_type') ? 'YES' : 'NO'));
+
+        // Fix: If business_type is missing but backup exists, use the backup
+        if (!$request->has('business_type') || empty($request->input('business_type'))) {
+            if ($request->has('business_type_backup') && !empty($request->input('business_type_backup'))) {
+                $request->merge(['business_type' => $request->input('business_type_backup')]);
+                Log::info('Used business_type_backup: ' . $request->input('business_type'));
+            }
+        }
 
         $validated = $request->validate([
             'name' => 'required|string|max:255',
@@ -91,6 +108,7 @@ class BranchController extends Controller
             'phone' => 'nullable|string|max:20',
             'email' => 'nullable|email|max:255',
             'description' => 'nullable|string',
+            'business_type' => 'required|string|exists:business_types,business_name',
             'branch_image' => 'nullable|image|mimes:jpeg,png,jpg,gif,webp|max:2048',
             'use_company_image' => 'nullable|boolean',
             // License validation
@@ -98,6 +116,8 @@ class BranchController extends Controller
             'license_start_date' => 'required|date',
             'license_end_date' => 'required|date|after:license_start_date',
         ], [
+            'business_type.required' => 'Please select a business type.',
+            'business_type.exists' => 'The selected business type is invalid.',
             'license_file.required' => 'Please upload a branch license document.',
             'license_file.file' => 'The license document must be a valid file.',
             'license_file.mimes' => 'The license document must be a PDF file only.',
@@ -108,6 +128,8 @@ class BranchController extends Controller
             'license_end_date.date' => 'Please provide a valid license end date.',
             'license_end_date.after' => 'The license end date must be after the start date.',
         ]);
+
+        Log::info('Validation passed. Validated data: ', $validated);
 
         // Verify the company belongs to the authenticated user
         $company = Company::where('id', $validated['company_id'])
@@ -128,6 +150,7 @@ class BranchController extends Controller
                 'phone' => $validated['phone'] ?? null,
                 'email' => $validated['email'] ?? null,
                 'description' => $validated['description'] ?? null,
+                'business_type' => $validated['business_type'],
                 'status' => 'active',
                 'user_id' => Auth::id(),
             ];
@@ -205,8 +228,9 @@ class BranchController extends Controller
             ->firstOrFail();
         
         $companies = Company::where('user_id', Auth::id())->orderBy('name')->get();
-        
-        return view('vendor.branches.edit', compact('branch', 'companies'));
+        $businessTypes = BusinessType::orderBy('business_name')->get();
+
+        return view('vendor.branches.edit', compact('branch', 'companies', 'businessTypes'));
     }
 
     /**
@@ -229,8 +253,12 @@ class BranchController extends Controller
             'phone' => 'nullable|string|max:20',
             'email' => 'nullable|email|max:255',
             'description' => 'nullable|string',
+            'business_type' => 'required|string|exists:business_types,business_name',
             'branch_image' => 'nullable|image|mimes:jpeg,png,jpg,gif,webp|max:2048',
             'use_company_image' => 'nullable|boolean',
+        ], [
+            'business_type.required' => 'Please select a business type.',
+            'business_type.exists' => 'The selected business type is invalid.',
         ]);
 
         // Verify the company belongs to the authenticated user

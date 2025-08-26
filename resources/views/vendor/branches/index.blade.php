@@ -71,6 +71,7 @@ use Illuminate\Support\Facades\Storage;
                     <tr>
                         <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">{{ __('messages.branch') }}</th>
                         <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">{{ __('messages.location') }}</th>
+                        <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">Business Type</th>
                         <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">{{ __('messages.contact') }}</th>
                         <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">{{ __('messages.products') }}</th>
                         <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">{{ __('messages.services') }}</th>
@@ -107,6 +108,18 @@ use Illuminate\Support\Facades\Storage;
                         <td class="px-6 py-4 whitespace-nowrap">
                             <div class="text-sm text-gray-500 dark:text-gray-400">{{ $branch->address ?? 'N/A' }}</div>
                             <div class="text-xs text-gray-500 dark:text-gray-400">{{ $branch->city ?? '' }}, {{ $branch->state ?? '' }}</div>
+                        </td>
+                        <td class="px-6 py-4 whitespace-nowrap">
+                            <div class="text-sm text-gray-900 dark:text-white">
+                                @if($branch->business_type)
+                                    <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-blue-100 text-blue-800 dark:bg-blue-900 dark:text-blue-200">
+                                        <i class="fas fa-industry mr-1"></i>
+                                        {{ $branch->business_type }}
+                                    </span>
+                                @else
+                                    <span class="text-gray-400 dark:text-gray-500">Not Set</span>
+                                @endif
+                            </div>
                         </td>
                         <td class="px-6 py-4 whitespace-nowrap">
                             <div class="text-sm text-gray-500 dark:text-gray-400">{{ $branch->phone ?? 'N/A' }}</div>

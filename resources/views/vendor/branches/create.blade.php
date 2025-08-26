@@ -36,6 +36,27 @@
                 </div>
 
                 <div>
+                    <label for="business_type" class="block text-sm font-medium text-gray-700 dark:text-gray-300">Business Type <span class="text-red-500">*</span></label>
+                    <select id="business_type" name="business_type" class="mt-1 block w-full pl-3 pr-10 py-2 text-base border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-white focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm rounded-md" required onchange="updateBusinessTypeHidden(this.value)">
+                        <option value="">Select Business Type</option>
+                        @php
+                            // Ensure business types are available
+                            if (!isset($businessTypes) || (isset($businessTypes) && $businessTypes->isEmpty())) {
+                                $businessTypes = \App\Models\BusinessType::orderBy('business_name')->get();
+                            }
+                        @endphp
+                        @foreach($businessTypes ?? [] as $businessType)
+                            <option value="{{ $businessType->business_name }}" {{ old('business_type') == $businessType->business_name ? 'selected' : '' }}>{{ $businessType->business_name }}</option>
+                        @endforeach
+                    </select>
+                    <!-- Hidden backup field to ensure business type is always submitted -->
+                    <input type="hidden" id="business_type_hidden" name="business_type_backup" value="{{ old('business_type') }}">
+                    @error('business_type')
+                        <p class="mt-1 text-sm text-red-600 dark:text-red-400">{{ $message }}</p>
+                    @enderror
+                </div>
+
+                <div>
                     <label for="phone" class="block text-sm font-medium text-gray-700 dark:text-gray-300">{{ __('messages.phone_number') }}</label>
                     <input type="text" name="phone" id="phone" value="{{ old('phone') }}" class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-white rounded-md">
                     @error('phone')
@@ -525,7 +546,39 @@
         });
     }
 
+    // Business type backup function
+    function updateBusinessTypeHidden(value) {
+        const hiddenField = document.getElementById('business_type_hidden');
+        if (hiddenField) {
+            hiddenField.value = value;
+        }
+        console.log('Business type updated:', value);
+    }
+
     document.addEventListener('DOMContentLoaded', function() {
+        // Initialize business type backup on page load
+        const businessTypeSelect = document.getElementById('business_type');
+        if (businessTypeSelect && businessTypeSelect.value) {
+            updateBusinessTypeHidden(businessTypeSelect.value);
+        }
+
+        // Add form submission debugging
+        const form = document.querySelector('form');
+        if (form) {
+            form.addEventListener('submit', function(e) {
+                const businessType = document.getElementById('business_type').value;
+                const businessTypeHidden = document.getElementById('business_type_hidden').value;
+                console.log('Form submission - Business Type Select:', businessType);
+                console.log('Form submission - Business Type Hidden:', businessTypeHidden);
+
+                // Ensure business type is set before submission
+                if (!businessType && businessTypeHidden) {
+                    document.getElementById('business_type').value = businessTypeHidden;
+                    console.log('Restored business type from hidden field:', businessTypeHidden);
+                }
+            });
+        }
+
         // Initialize business hours functionality
         const days = ['monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday', 'sunday'];
 

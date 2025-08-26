@@ -1295,6 +1295,15 @@ Route::prefix('admin')->name('admin.')->middleware(['auth', \App\Http\Middleware
     Route::get('/merchant-licenses/{id}/download', [App\Http\Controllers\Admin\MerchantLicenseController::class, 'downloadLicense'])->name('merchant-licenses.download');
     Route::get('/merchant-licenses/{id}/view', [App\Http\Controllers\Admin\MerchantLicenseController::class, 'viewLicense'])->name('merchant-licenses.view');
     Route::post('/merchant-licenses/bulk-approve', [App\Http\Controllers\Admin\MerchantLicenseController::class, 'bulkApprove'])->name('merchant-licenses.bulk-approve');
+
+    // Branch License Management
+    Route::get('/branch-licenses', [App\Http\Controllers\Admin\BranchLicenseController::class, 'index'])->name('branch-licenses.index');
+    Route::get('/branch-licenses/{id}', [App\Http\Controllers\Admin\BranchLicenseController::class, 'show'])->name('branch-licenses.show');
+    Route::post('/branch-licenses/{id}/approve', [App\Http\Controllers\Admin\BranchLicenseController::class, 'approve'])->name('branch-licenses.approve');
+    Route::post('/branch-licenses/{id}/reject', [App\Http\Controllers\Admin\BranchLicenseController::class, 'reject'])->name('branch-licenses.reject');
+    Route::get('/branch-licenses/{id}/download', [App\Http\Controllers\Admin\BranchLicenseController::class, 'downloadLicense'])->name('branch-licenses.download');
+    Route::get('/branch-licenses/{id}/view', [App\Http\Controllers\Admin\BranchLicenseController::class, 'viewLicense'])->name('branch-licenses.view');
+    Route::post('/branch-licenses/bulk-approve', [App\Http\Controllers\Admin\BranchLicenseController::class, 'bulkApprove'])->name('branch-licenses.bulk-approve');
     Route::get('/merchant-licenses/{merchant}/{user}/post-rejection-choice', [App\Http\Controllers\Admin\MerchantLicenseController::class, 'postRejectionChoice'])->name('merchant-licenses.post-rejection-choice');
     Route::post('/merchant-licenses/handle-post-rejection-choice', [App\Http\Controllers\Admin\MerchantLicenseController::class, 'handlePostRejectionChoice'])->name('merchant-licenses.handle-post-rejection-choice');
 
@@ -1307,16 +1316,7 @@ Route::prefix('admin')->name('admin.')->middleware(['auth', \App\Http\Middleware
     Route::get('/provider-licenses/{license}/{user}/post-rejection-choice', [App\Http\Controllers\Admin\ProviderLicenseController::class, 'postRejectionChoice'])->name('provider-licenses.post-rejection-choice');
     Route::post('/provider-licenses/handle-post-rejection-choice', [App\Http\Controllers\Admin\ProviderLicenseController::class, 'handlePostRejectionChoice'])->name('provider-licenses.handle-post-rejection-choice');
 
-    // Vendor License Management
-    Route::get('/vendor-licenses', [App\Http\Controllers\Admin\VendorLicenseController::class, 'index'])->name('vendor-licenses.index');
-    Route::get('/vendor-licenses/{id}', [App\Http\Controllers\Admin\VendorLicenseController::class, 'show'])->name('vendor-licenses.show');
-    Route::get('/vendor-licenses/{id}/image', [App\Http\Controllers\Admin\VendorLicenseController::class, 'viewImage'])->name('vendor-licenses.image');
-    Route::post('/vendor-licenses/{id}/approve', [App\Http\Controllers\Admin\VendorLicenseController::class, 'approve'])->name('vendor-licenses.approve');
-    Route::post('/vendor-licenses/{id}/reject', [App\Http\Controllers\Admin\VendorLicenseController::class, 'reject'])->name('vendor-licenses.reject');
-    Route::get('/vendor-licenses/{id}/download', [App\Http\Controllers\Admin\VendorLicenseController::class, 'downloadLicense'])->name('vendor-licenses.download');
-    Route::get('/vendor-licenses/{id}/view', [App\Http\Controllers\Admin\VendorLicenseController::class, 'viewLicense'])->name('vendor-licenses.view');
-    Route::post('/vendor-licenses/bulk-approve', [App\Http\Controllers\Admin\VendorLicenseController::class, 'bulkApprove'])->name('vendor-licenses.bulk-approve');
-    Route::get('/vendor-licenses/{license}/{user}/post-rejection-choice', [App\Http\Controllers\Admin\VendorLicenseController::class, 'postRejectionChoice'])->name('vendor-licenses.post-rejection-choice');
+
     Route::post('/vendor-licenses/handle-post-rejection-choice', [App\Http\Controllers\Admin\VendorLicenseController::class, 'handlePostRejectionChoice'])->name('vendor-licenses.handle-post-rejection-choice');
 
     // Settings
@@ -1384,6 +1384,32 @@ Route::prefix('admin')->name('admin.')->middleware(['auth', \App\Http\Middleware
         }
         return 'Admin user not found';
     })->name('test.admin.login');
+
+    // Test route for branch license management
+    Route::get('/test-branch-licenses', function() {
+        $licenses = \App\Models\BranchLicense::with(['branch.user', 'branch.company'])->get();
+        return response()->json([
+            'total_licenses' => $licenses->count(),
+            'pending_licenses' => $licenses->where('status', 'pending')->count(),
+            'active_licenses' => $licenses->where('status', 'active')->count(),
+            'rejected_licenses' => $licenses->where('status', 'rejected')->count(),
+            'licenses' => $licenses->map(function($license) {
+                return [
+                    'id' => $license->id,
+                    'status' => $license->status,
+                    'branch_name' => $license->branch->name,
+                    'vendor_name' => $license->branch->user->name,
+                    'vendor_email' => $license->branch->user->email,
+                    'business_type' => $license->branch->business_type,
+                    'start_date' => $license->start_date->format('Y-m-d'),
+                    'end_date' => $license->end_date->format('Y-m-d'),
+                    'uploaded_at' => $license->uploaded_at->format('Y-m-d H:i:s'),
+                ];
+            })
+        ]);
+    })->name('test.branch.licenses');
+
+
 });
 
 
@@ -1664,6 +1690,7 @@ Route::prefix('vendor')->name('vendor.')->middleware(['auth', \App\Http\Middlewa
         $validated = $request->validate([
             'name' => 'required|string|max:255',
             'company_id' => 'required|exists:companies,id',
+            'business_type' => 'required|string|exists:business_types,business_name',
             'phone' => 'nullable|string|max:255',
             'email' => 'nullable|email|max:255',
             'address' => 'required|string|max:255',
@@ -1680,6 +1707,9 @@ Route::prefix('vendor')->name('vendor.')->middleware(['auth', \App\Http\Middlewa
             'license_file' => 'required|file|mimes:pdf|max:10240',
             'license_start_date' => 'required|date',
             'license_end_date' => 'required|date|after:license_start_date',
+        ], [
+            'business_type.required' => 'Please select a business type.',
+            'business_type.exists' => 'The selected business type is invalid.',
         ]);
 
         // Verify that the company belongs to the authenticated user
@@ -1793,7 +1823,8 @@ Route::prefix('vendor')->name('vendor.')->middleware(['auth', \App\Http\Middlewa
             ->select('branches.*')
             ->firstOrFail();
         $companies = \App\Models\Company::where('user_id', \Illuminate\Support\Facades\Auth::id())->orderBy('name')->get();
-        return view('vendor.branches.edit', compact('branch', 'companies'));
+        $businessTypes = \App\Models\BusinessType::orderBy('business_name')->get();
+        return view('vendor.branches.edit', compact('branch', 'companies', 'businessTypes'));
     })->name('branches.edit');
 
     Route::get('/branches/{id}/image', function ($id) {
@@ -1816,6 +1847,7 @@ Route::prefix('vendor')->name('vendor.')->middleware(['auth', \App\Http\Middlewa
         $validated = $request->validate([
             'name' => 'required|string|max:255',
             'company_id' => 'required|exists:companies,id',
+            'business_type' => 'required|string|exists:business_types,business_name',
             'phone' => 'nullable|string|max:255',
             'email' => 'nullable|email|max:255',
             'address' => 'required|string|max:255',
@@ -1832,6 +1864,9 @@ Route::prefix('vendor')->name('vendor.')->middleware(['auth', \App\Http\Middlewa
             'license_file' => 'nullable|file|mimes:pdf|max:10240',
             'license_start_date' => 'required|date',
             'license_end_date' => 'required|date|after:license_start_date',
+        ], [
+            'business_type.required' => 'Please select a business type.',
+            'business_type.exists' => 'The selected business type is invalid.',
         ]);
 
         // Verify that the company belongs to the authenticated user
