@@ -15,6 +15,8 @@ require __DIR__.'/payment.php';
 
 Route::get('/', [LandingController::class, 'index']);
 
+// Test route for Vendor login - removed after successful testing
+
 // Language switching routes
 Route::get('/language/{locale}', [LanguageController::class, 'switchLanguageWeb'])->name('language.switch');
 Route::post('/language/switch', [LanguageController::class, 'switchLanguage'])->name('language.switch.post');
@@ -1385,6 +1387,10 @@ Route::prefix('admin')->name('admin.')->middleware(['auth', \App\Http\Middleware
         return 'Admin user not found';
     })->name('test.admin.login');
 
+    // Test route for Products Manager login - removed after successful testing
+
+    // Test route for Vendor login - moved to top of file
+
     // Test route for branch license management
     Route::get('/test-branch-licenses', function() {
         $licenses = \App\Models\BranchLicense::with(['branch.user', 'branch.company'])->get();
@@ -2021,6 +2027,10 @@ Route::prefix('vendor')->name('vendor.')->middleware(['auth', \App\Http\Middlewa
         return redirect()->route('vendor.branches.index')->with('success', 'Branch deleted successfully');
     })->name('branches.destroy');
 
+    // Separate branch and license update routes
+    Route::put('/branches/{id}/info', [\App\Http\Controllers\Vendor\BranchController::class, 'updateBranchInfo'])->name('branches.update-info');
+    Route::put('/branches/{id}/license', [\App\Http\Controllers\Vendor\BranchController::class, 'updateLicense'])->name('branches.update-license');
+
     // Additional routes for Vue.js product creation interface (must be before resource routes)
     Route::get('/products/create-data', [\App\Http\Controllers\Vendor\ProductController::class, 'getCreateData'])->name('products.create.data');
     Route::post('/products/session/store', [\App\Http\Controllers\Vendor\ProductController::class, 'storeSessionData'])->name('products.session.store');
@@ -2182,9 +2192,7 @@ Route::prefix('service-provider')->name('service-provider.')->middleware(['auth'
     Route::get('/license/restriction', [\App\Http\Controllers\ServiceProvider\LicenseRestrictionController::class, 'show'])->name('license.restriction');
 });
 
-Route::prefix('products-manager')->name('products-manager.')->middleware(['auth'])->group(function () {
-    Route::get('/license/restriction', [\App\Http\Controllers\ProductsManager\LicenseRestrictionController::class, 'show'])->name('license.restriction');
-});
+// Products Manager license restriction routes removed - no license validation required
 
 // Service Provider Routes
 Route::middleware(['auth', \App\Http\Middleware\ServiceProviderMiddleware::class])->prefix('service-provider')->name('service-provider.')->group(function () {

@@ -10,6 +10,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Storage;
 
 class BranchController extends Controller
 {
@@ -290,6 +291,216 @@ class BranchController extends Controller
     }
 
     /**
+     * Update branch information only (excluding license fields).
+     */
+    public function updateBranchInfo(Request $request, $id)
+    {
+        $branch = Branch::join('companies', 'branches.company_id', '=', 'companies.id')
+            ->where('companies.user_id', Auth::id())
+            ->where('branches.id', $id)
+            ->select('branches.*')
+            ->firstOrFail();
+
+        $validated = $request->validate([
+            'name' => 'required|string|max:255',
+            'company_id' => 'required|exists:companies,id',
+            'business_type' => 'required|string|exists:business_types,business_name',
+            'phone' => 'nullable|string|max:255',
+            'email' => 'nullable|email|max:255',
+            'address' => 'required|string|max:255',
+            'lat' => 'required|numeric|between:-90,90',
+            'lng' => 'required|numeric|between:-180,180',
+            'emirate' => 'nullable|string|in:Dubai,Abu Dhabi,Sharjah,Ajman,Umm Al Quwain,Ras Al Khaimah,Fujairah',
+            'description' => 'nullable|string',
+            'status' => 'required|string|in:active,inactive',
+            'days_open' => 'nullable|array',
+            'opening_hours' => 'nullable|array',
+            'branch_image' => 'nullable|image|mimes:jpeg,png,jpg,webp|max:2048',
+            'use_company_image' => 'sometimes|boolean',
+        ], [
+            'business_type.required' => 'Please select a business type.',
+            'business_type.exists' => 'The selected business type is invalid.',
+        ]);
+
+        // Verify that the company belongs to the authenticated user
+        $company = Company::where('id', $validated['company_id'])
+            ->where('user_id', Auth::id())
+            ->firstOrFail();
+
+        // Keep the existing lat/lng values if not provided
+        $validated['lat'] = $validated['lat'] ?? $branch->lat;
+        $validated['lng'] = $validated['lng'] ?? $branch->lng;
+
+        // Set use_company_image to true if not provided
+        $validated['use_company_image'] = $request->has('use_company_image');
+
+        // Handle branch image upload
+        if ($request->hasFile('branch_image') && !$validated['use_company_image']) {
+            try {
+                // Delete old image if exists
+                if ($branch->branch_image && Storage::disk('public')->exists($branch->branch_image)) {
+                    Storage::disk('public')->delete($branch->branch_image);
+                    Log::info('Deleted old branch image', [
+                        'branch_id' => $branch->id,
+                        'image_path' => $branch->branch_image
+                    ]);
+                }
+
+                // Store the image in the public disk
+                $imagePath = $request->file('branch_image')->store('branches', 'public');
+                $validated['branch_image'] = $imagePath;
+
+                Log::info('Branch image uploaded successfully', [
+                    'branch_id' => $branch->id,
+                    'image_path' => $imagePath
+                ]);
+            } catch (\Exception $e) {
+                Log::error('Error uploading branch image', [
+                    'branch_id' => $branch->id,
+                    'error' => $e->getMessage(),
+                    'trace' => $e->getTraceAsString()
+                ]);
+            }
+        } elseif ($validated['use_company_image'] && $branch->branch_image) {
+            // If switching to use company image, remove the branch image
+            if (Storage::disk('public')->exists($branch->branch_image)) {
+                Storage::disk('public')->delete($branch->branch_image);
+                Log::info('Deleted branch image when switching to company image', [
+                    'branch_id' => $branch->id,
+                    'image_path' => $branch->branch_image
+                ]);
+            }
+            $validated['branch_image'] = null;
+        }
+
+        // Process business hours
+        $businessHours = [];
+        $days = ['monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday', 'sunday'];
+
+        foreach ($days as $day) {
+            // Check if the day is marked as open
+            if (isset($request->days_open[$day]) && $request->days_open[$day] == 1) {
+                // Get opening and closing hours for the day
+                $openTime = $request->opening_hours[$day]['open'] ?? '09:00';
+                $closeTime = $request->opening_hours[$day]['close'] ?? '17:00';
+
+                $businessHours[$day] = [
+                    'is_open' => true,
+                    'open' => $openTime,
+                    'close' => $closeTime
+                ];
+            } else {
+                $businessHours[$day] = [
+                    'is_open' => false,
+                    'open' => null,
+                    'close' => null
+                ];
+            }
+        }
+
+        // Add business hours to validated data
+        $validated['opening_hours'] = $businessHours;
+
+        // Remove the days_open field as it's not in the model
+        unset($validated['days_open']);
+
+        $branch->update($validated);
+
+        return response()->json([
+            'success' => true,
+            'message' => 'Branch information updated successfully.'
+        ]);
+    }
+
+    /**
+     * Update branch license information with conditional status logic.
+     */
+    public function updateLicense(Request $request, $id)
+    {
+        $branch = Branch::join('companies', 'branches.company_id', '=', 'companies.id')
+            ->where('companies.user_id', Auth::id())
+            ->where('branches.id', $id)
+            ->select('branches.*')
+            ->firstOrFail();
+
+        $validated = $request->validate([
+            'license_file' => 'nullable|file|mimes:pdf|max:10240',
+            'license_start_date' => 'required|date',
+            'license_end_date' => 'required|date|after:license_start_date',
+        ], [
+            'license_file.file' => 'The license document must be a valid file.',
+            'license_file.mimes' => 'The license document must be a PDF file only.',
+            'license_file.max' => 'The license document must not exceed 10MB in size.',
+            'license_start_date.required' => 'Please provide the license start date.',
+            'license_start_date.date' => 'Please provide a valid license start date.',
+            'license_end_date.required' => 'Please provide the license end date.',
+            'license_end_date.date' => 'Please provide a valid license end date.',
+            'license_end_date.after' => 'The license end date must be after the start date.',
+        ]);
+
+        // Get current license
+        $currentLicense = $branch->licenses()->latest()->first();
+
+        if (!$currentLicense) {
+            return response()->json([
+                'success' => false,
+                'message' => 'No license found for this branch.'
+            ], 404);
+        }
+
+        // Determine if license status should change to pending
+        $shouldChangeToPending = false;
+
+        // Check if license file is being uploaded
+        if ($request->hasFile('license_file')) {
+            $shouldChangeToPending = true;
+        }
+
+        // Check if license dates are being changed
+        if ($currentLicense->start_date->format('Y-m-d') !== $validated['license_start_date'] ||
+            $currentLicense->end_date->format('Y-m-d') !== $validated['license_end_date']) {
+            $shouldChangeToPending = true;
+        }
+
+        // Prepare license update data
+        $licenseUpdateData = [
+            'start_date' => $validated['license_start_date'],
+            'end_date' => $validated['license_end_date'],
+        ];
+
+        // Only change status to pending if license documents or dates are modified
+        if ($shouldChangeToPending) {
+            $licenseUpdateData['status'] = 'pending';
+            $licenseUpdateData['verified_at'] = null;
+        }
+
+        // Handle license file upload if provided
+        if ($request->hasFile('license_file')) {
+            // Delete old license file if exists
+            if ($currentLicense->license_file_path && Storage::disk('public')->exists($currentLicense->license_file_path)) {
+                Storage::disk('public')->delete($currentLicense->license_file_path);
+            }
+
+            // Upload new license file
+            $licenseFilePath = $request->file('license_file')->store('branch_licenses', 'public');
+            $licenseUpdateData['license_file_path'] = $licenseFilePath;
+            $licenseUpdateData['uploaded_at'] = now();
+        }
+
+        $currentLicense->update($licenseUpdateData);
+
+        $message = $shouldChangeToPending
+            ? 'License updated successfully. License is pending approval.'
+            : 'License updated successfully.';
+
+        return response()->json([
+            'success' => true,
+            'message' => $message,
+            'requires_approval' => $shouldChangeToPending
+        ]);
+    }
+
+    /**
      * Remove the specified resource from storage.
      */
     public function destroy($id)
@@ -299,9 +510,9 @@ class BranchController extends Controller
             ->where('branches.id', $id)
             ->select('branches.*')
             ->firstOrFail();
-        
+
         $branch->delete();
-        
+
         return redirect()->route('vendor.branches.index')->with('success', 'Branch deleted successfully');
     }
 

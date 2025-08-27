@@ -1407,4 +1407,12 @@ return [
     'license_update_notice' => 'Updating license information will reset the status to pending and require admin re-approval.',
     'please_select_pdf_file' => 'Please select a PDF file only.',
 
+    // Branch Edit Form Translations
+    'branch_information' => 'Branch Information',
+    'update_basic_branch_details' => 'Update basic branch details',
+    'update_branch_information' => 'Update Branch Information',
+    'license_management' => 'License Management',
+    'update_license_documents_dates' => 'Update license documents and dates',
+    'update_license' => 'Update License',
+
 ];

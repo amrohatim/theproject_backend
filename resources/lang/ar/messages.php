@@ -2186,4 +2186,12 @@ return [
 'license_update_notice' => 'تحديث معلومات الترخيص سيعيد تعيين الحالة إلى في الانتظار ويتطلب إعادة موافقة المدير.',
 'please_select_pdf_file' => 'يرجى تحديد ملف PDF فقط.',
 
+// Branch Edit Form Translations
+'branch_information' => 'معلومات الفرع',
+'update_basic_branch_details' => 'تحديث تفاصيل الفرع الأساسية',
+'update_branch_information' => 'تحديث معلومات الفرع',
+'license_management' => 'إدارة الترخيص',
+'update_license_documents_dates' => 'تحديث مستندات وتواريخ الترخيص',
+'update_license' => 'تحديث الترخيص',
+
 ];
