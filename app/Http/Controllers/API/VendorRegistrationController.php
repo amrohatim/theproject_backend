@@ -206,13 +206,7 @@ class VendorRegistrationController extends Controller
 
             $result = $this->registrationService->completeVendorRegistrationSession($request->all());
 
-            // Store user_id in session for license upload step
-            if ($result['success'] && isset($result['user_id'])) {
-                session(['vendor_license_upload' => [
-                    'user_id' => $result['user_id'],
-                    'created_at' => now()->timestamp,
-                ]]);
-            }
+
 
             return response()->json($result);
         } catch (Exception $e) {
@@ -224,109 +218,7 @@ class VendorRegistrationController extends Controller
         }
     }
 
-    /**
-     * Step 3: Upload vendor license.
-     * Supports both traditional flow (with user_id) and session-based flow.
-     */
-    public function uploadLicense(Request $request)
-    {
-        try {
-            // Check if we have user_id from request or need to get it from session
-            $userId = $request->user_id;
 
-            // If no user_id provided, check for session-based registration data
-            if (!$userId) {
-                $sessionData = session('vendor_license_upload');
-
-                if ($sessionData && isset($sessionData['user_id'])) {
-                    $userId = $sessionData['user_id'];
-                } else {
-                    // Try to find user by email from session data
-                    $tempRegistrationData = session('vendor_temp_registration');
-                    if ($tempRegistrationData && isset($tempRegistrationData['email'])) {
-                        $user = User::where('email', $tempRegistrationData['email'])
-                                   ->where('role', 'vendor')
-                                   ->first();
-                        if ($user) {
-                            $userId = $user->id;
-                        }
-                    }
-
-                    // If still no user found, return helpful error
-                    if (!$userId) {
-                        return response()->json([
-                            'success' => false,
-                            'message' => 'Unable to identify user for license upload. Please restart the registration process.',
-                            'errors' => ['session' => ['Registration session expired or invalid']],
-                        ], 422);
-                    }
-                }
-            }
-
-            // Validate the user exists and is a vendor
-            $user = User::where('id', $userId)->where('role', 'vendor')->first();
-            if (!$user) {
-                return response()->json([
-                    'success' => false,
-                    'message' => 'Invalid vendor user. Please complete the registration process first.',
-                    'errors' => ['user' => ['Vendor user not found or invalid']],
-                ], 422);
-            }
-
-            $validator = Validator::make($request->all(), [
-                'license_file' => 'required|file|mimes:pdf|max:10240', // 10MB max, PDF only
-                'start_date' => 'required|date|after_or_equal:today', // Changed from license_start_date
-                'end_date' => 'required|date|after:start_date', // Changed from license_expiry_date
-                'notes' => 'nullable|string|max:500',
-            ], [
-                'license_file.required' => 'Please upload your business license document.',
-                'license_file.file' => 'The license document must be a valid file.',
-                'license_file.mimes' => 'The license document must be a PDF file only.',
-                'license_file.max' => 'The license document must not exceed 10MB in size.',
-                'start_date.required' => 'Please provide the license start date.',
-                'start_date.date' => 'Please provide a valid license start date.',
-                'start_date.after_or_equal' => 'The license start date cannot be in the past.',
-                'end_date.required' => 'Please provide the license expiration date.',
-                'end_date.date' => 'Please provide a valid license expiration date.',
-                'end_date.after' => 'The license expiration date must be after the start date.',
-                'notes.string' => 'Notes must be text.',
-                'notes.max' => 'Notes cannot exceed 500 characters.',
-            ]);
-
-            if ($validator->fails()) {
-                return response()->json([
-                    'success' => false,
-                    'message' => 'Please correct the following errors and try again.',
-                    'errors' => $validator->errors(),
-                ], 422);
-            }
-
-            $result = $this->registrationService->completeVendorLicense(
-                $userId,
-                $request->file('license_file'),
-                $request->only(['start_date', 'end_date', 'notes'])
-            );
-
-            // Clear the session data after successful license upload
-            if (session()->has('vendor_license_upload')) {
-                session()->forget('vendor_license_upload');
-            }
-
-            return response()->json($result);
-        } catch (Exception $e) {
-            Log::error('License upload error: ' . $e->getMessage(), [
-                'user_id' => $userId ?? null,
-                'request_data' => $request->except(['license_file']),
-                'trace' => $e->getTraceAsString()
-            ]);
-
-            return response()->json([
-                'success' => false,
-                'message' => 'License upload failed due to a server error. Please try again or contact support if the problem persists.',
-                'error_code' => 'LICENSE_UPLOAD_ERROR'
-            ], 500);
-        }
-    }
 
     /**
      * Send OTP for phone verification (session-based).

@@ -334,10 +334,6 @@
                     <i class="fas fa-calendar-alt"></i>
                     {{ __('messages.bookings') }}
                 </a>
-                <a href="{{ route('vendor.license.index') }}" class="{{ request()->routeIs('vendor.license.*') ? 'active' : '' }}">
-                    <i class="fas fa-certificate"></i>
-                    {{ __('messages.license_management') }}
-                </a>
                 <a href="{{ route('vendor.settings') }}" class="{{ request()->routeIs('vendor.settings*') ? 'active' : '' }}">
                     <i class="fas fa-cog"></i>
                     {{ __('messages.settings') }}

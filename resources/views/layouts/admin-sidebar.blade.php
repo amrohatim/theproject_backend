@@ -13,7 +13,12 @@
         <i class="fas fa-tags mr-3"></i>
         Categories
     </a>
-    
+
+    <a href="{{ route('admin.business-types.index') }}" class="sidebar-item flex items-center px-4 py-2 text-sm font-medium rounded-md {{ request()->routeIs('admin.business-types.*') ? 'sidebar-active' : 'text-gray-700 dark:text-gray-300' }}">
+        <i class="fas fa-industry mr-3"></i>
+        Business Types
+    </a>
+
     <a href="{{ route('admin.avatars.index') }}" class="sidebar-item flex items-center px-4 py-2 text-sm font-medium rounded-md {{ request()->routeIs('admin.avatars.*') ? 'sidebar-active' : 'text-gray-700 dark:text-gray-300' }}">
         <i class="fas fa-user-circle mr-3"></i>
         Avatar Management
@@ -49,15 +54,17 @@
         Merchant Licenses
     </a>
 
+    <a href="{{ route('admin.branch-licenses.index') }}" class="sidebar-item flex items-center px-4 py-2 text-sm font-medium rounded-md {{ request()->routeIs('admin.branch-licenses.*') ? 'sidebar-active' : 'text-gray-700 dark:text-gray-300' }}">
+        <i class="fas fa-store-alt mr-3"></i>
+        Branch Licenses
+    </a>
+
     <a href="{{ route('admin.provider-licenses.index') }}" class="sidebar-item flex items-center px-4 py-2 text-sm font-medium rounded-md {{ request()->routeIs('admin.provider-licenses.*') ? 'sidebar-active' : 'text-gray-700 dark:text-gray-300' }}">
         <i class="fas fa-id-card mr-3"></i>
         Provider Licenses
     </a>
 
-    <a href="{{ route('admin.vendor-licenses.index') }}" class="sidebar-item flex items-center px-4 py-2 text-sm font-medium rounded-md {{ request()->routeIs('admin.vendor-licenses.*') ? 'sidebar-active' : 'text-gray-700 dark:text-gray-300' }}">
-        <i class="fas fa-store mr-3"></i>
-        Vendor Licenses
-    </a>
+
 
     <a href="{{ route('admin.settings') }}" class="sidebar-item flex items-center px-4 py-2 text-sm font-medium rounded-md {{ request()->routeIs('admin.settings') ? 'sidebar-active' : 'text-gray-700 dark:text-gray-300' }}">
         <i class="fas fa-cog mr-3"></i>

@@ -219,14 +219,16 @@
                       </label>
                       <div class="relative">
                         <i class="fas fa-dollar-sign absolute left-3 top-1/2 transform -translate-y-1/2 w-4 h-4" style="color: var(--gray-400);"></i>
-                        <input type="number" 
-                               id="price" 
-                               v-model.number="productData.price"
-                               min="0" 
-                               step="0.01"
+                        <input type="text"
+                               id="price"
+                               v-model="productData.price"
                                class="vue-form-control pl-10"
                                :class="{ 'border-red-500': errors.price }"
-                               required>
+                               required
+                               @input="e => productData.price = e.target.value.replace(/[^0-9.]/g, '')"
+                               @blur="e => productData.price = parseFloat(e.target.value) || 0"
+                               pattern="[0-9]*\.?[0-9]*"
+                               inputmode="decimal">
                       </div>
                       <div v-if="errors.price" class="text-red-500 text-xs mt-1">{{ errors.price }}</div>
                     </div>
@@ -237,13 +239,15 @@
                       </label>
                       <div class="relative">
                         <i class="fas fa-dollar-sign absolute left-3 top-1/2 transform -translate-y-1/2 w-4 h-4" style="color: var(--gray-400);"></i>
-                        <input type="number" 
-                               id="original_price" 
-                               v-model.number="productData.original_price"
-                               min="0" 
-                               step="0.01"
+                        <input type="text"
+                               id="original_price"
+                               v-model="productData.original_price"
                                class="vue-form-control pl-10"
-                               :class="{ 'border-red-500': errors.original_price }">
+                               :class="{ 'border-red-500': errors.original_price }"
+                               @input="e => productData.original_price = e.target.value.replace(/[^0-9.]/g, '')"
+                               @blur="e => productData.original_price = parseFloat(e.target.value) || 0"
+                               pattern="[0-9]*\.?[0-9]*"
+                               inputmode="decimal">
                       </div>
                       <div v-if="errors.original_price" class="text-red-500 text-xs mt-1">{{ errors.original_price }}</div>
                     </div>
@@ -256,19 +260,23 @@
                       </label>
                       <div class="relative">
                         <i class="fas fa-warehouse absolute left-3 top-1/2 transform -translate-y-1/2 w-4 h-4" style="color: var(--gray-400);"></i>
-                        <input type="number"
+                        <input type="text"
                                id="stock"
-                               v-model.number="productData.stock"
-                               min="0"
+                               v-model="productData.stock"
                                class="vue-form-control pl-10"
                                :class="{ 'border-red-500': errors.stock }"
+                               @input="e => productData.stock = e.target.value.replace(/[^0-9]/g, '')"
+                               @blur="e => productData.stock = parseInt(e.target.value) || 0"
+                               pattern="[0-9]*"
+                               inputmode="numeric"
+                               min="0"
                                required>
                       </div>
                       <p class="text-xs" style="color: var(--gray-500);">{{ $t('vendor.total_inventory_allocation_note') }}</p>
                       <div v-if="errors.stock" class="text-red-500 text-xs mt-1">{{ errors.stock }}</div>
                     </div>
 
-                    <div class="space-y-2">
+                    <!-- <div class="space-y-2">
                       <label for="display_order" class="block vue-text-sm">
                         {{ $t('vendor.display_order') }}
                       </label>
@@ -283,7 +291,7 @@
                       </div>
                       <p class="text-xs" style="color: var(--gray-500);">{{ $t('vendor.display_order_note') }}</p>
                       <div v-if="errors.display_order" class="text-red-500 text-xs mt-1">{{ errors.display_order }}</div>
-                    </div>
+                    </div> -->
                   </div>
 
                   <div class="flex items-center space-x-2">

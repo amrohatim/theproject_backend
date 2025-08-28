@@ -5,7 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
-use Illuminate\Database\Eloquent\Relations\HasMany;
+// HasMany import removed - not used after license validation removal
 
 class ProductsManager extends Model
 {
@@ -197,42 +197,9 @@ class ProductsManager extends Model
     }
 
     /**
-     * Check if the vendor's license is active.
-     *
-     * @return bool
+     * Products Manager users have unrestricted access to product management.
+     * License validation is not required for this role.
      */
-    public function hasActiveVendorLicense(): bool
-    {
-        $vendor = $this->getVendorUser();
-
-        if (!$vendor) {
-            return false;
-        }
-
-        // Check if vendor has a license
-        if (!$vendor->hasLicense()) {
-            return false;
-        }
-
-        // Check if the license status is active
-        return $vendor->getLicenseStatus() === 'active';
-    }
-
-    /**
-     * Get the vendor's license status.
-     *
-     * @return string|null
-     */
-    public function getVendorLicenseStatus(): ?string
-    {
-        $vendor = $this->getVendorUser();
-
-        if (!$vendor) {
-            return null;
-        }
-
-        return $vendor->getLicenseStatus();
-    }
 
     /**
      * Get statistics for this products manager.

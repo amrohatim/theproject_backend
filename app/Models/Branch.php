@@ -43,6 +43,7 @@ class Branch extends Model
         'branch_image',
         'use_company_image',
         'description',
+        'business_type',
         'rating',
         'phone',
         'email',
@@ -168,5 +169,82 @@ class Branch extends Model
     public function ratings()
     {
         return $this->hasMany(BranchRating::class);
+    }
+
+    /**
+     * Get the licenses for this branch.
+     */
+    public function licenses()
+    {
+        return $this->hasMany(BranchLicense::class);
+    }
+
+    /**
+     * Get the current active license for this branch.
+     */
+    public function currentLicense()
+    {
+        return $this->hasOne(BranchLicense::class)
+                    ->where('status', 'active')
+                    ->where('end_date', '>=', now()->toDateString())
+                    ->latest('created_at');
+    }
+
+    /**
+     * Get the latest license for this branch (regardless of status).
+     */
+    public function latestLicense()
+    {
+        return $this->hasOne(BranchLicense::class)->latest('created_at');
+    }
+
+    /**
+     * Check if the branch has an active license.
+     *
+     * @return bool
+     */
+    public function hasActiveLicense(): bool
+    {
+        return $this->currentLicense()->exists();
+    }
+
+    /**
+     * Get the license status for this branch.
+     *
+     * @return string|null
+     */
+    public function getLicenseStatus(): ?string
+    {
+        $license = $this->latestLicense;
+
+        if (!$license) {
+            return null;
+        }
+
+        // Check if license is expired by date
+        if ($license->end_date < now()->toDateString()) {
+            return 'expired';
+        }
+
+        return $license->status;
+    }
+
+    /**
+     * Check if the branch can have products/services created.
+     * Only branches with active licenses can have products/services.
+     *
+     * @return bool
+     */
+    public function canCreateProductsServices(): bool
+    {
+        return $this->hasActiveLicense();
+    }
+
+    /**
+     * Scope to get only branches with active licenses.
+     */
+    public function scopeWithActiveLicense($query)
+    {
+        return $query->whereHas('currentLicense');
     }
 }

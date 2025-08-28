@@ -81,7 +81,7 @@
           @resend="resendPhoneVerification"
         />
 
-        <CompanyInfoStep 
+        <CompanyInfoStep
           v-if="currentStep === 4"
           :data="formData.companyInfo"
           :user-id="userId"
@@ -90,17 +90,10 @@
           @update="updateCompanyInfo"
         />
 
-        <LicenseUploadStep 
-          v-if="currentStep === 5"
-          :user-id="userId"
-          :loading="loading"
-          @submit="handleLicenseUpload"
-        />
-
         <!-- Navigation -->
         <div class="flex justify-between mt-8 pt-6 border-t border-gray-200">
-          <button 
-            v-if="currentStep > 1 && currentStep < 6"
+          <button
+            v-if="currentStep > 1 && currentStep < 5"
             @click="goBack"
             class="px-6 py-2 border border-gray-300 rounded-lg text-gray-700 hover:bg-gray-50 transition-colors"
             :disabled="loading"
@@ -135,7 +128,6 @@ import PersonalInfoStep from './registration/PersonalInfoStep.vue';
 import EmailVerificationStep from './registration/EmailVerificationStep.vue';
 import PhoneVerificationStep from './registration/PhoneVerificationStep.vue';
 import CompanyInfoStep from './registration/CompanyInfoStep.vue';
-import LicenseUploadStep from './registration/LicenseUploadStep.vue';
 import { registrationApi } from '../services/registrationApi.js';
 
 export default {
@@ -145,7 +137,6 @@ export default {
     EmailVerificationStep,
     PhoneVerificationStep,
     CompanyInfoStep,
-    LicenseUploadStep,
   },
   data() {
     return {
@@ -159,7 +150,6 @@ export default {
         { name: 'email_verification' },
         { name: 'phone_verification' },
         { name: 'company_info' },
-        { name: 'license_upload' },
       ],
       formData: {
         personalInfo: {
@@ -275,10 +265,13 @@ export default {
         const response = await registrationApi.submitCompanyInfo(this.formData.companyInfo, logoFile);
 
         if (response.success) {
-          this.success = response.message;
-          this.currentStep = 5;
-          // Store user_id for license upload step
-          this.userId = response.user_id;
+          // Registration is now complete - redirect to login or dashboard
+          this.success = this.$t('vendor.registration_completed_successfully');
+
+          // Show success message and redirect after a short delay
+          setTimeout(() => {
+            window.location.href = '/login?message=' + encodeURIComponent(this.$t('vendor.registration_completed_login_to_continue'));
+          }, 2000);
         } else {
           this.error = response.message || this.$t('vendor.company_info_submission_failed_try_again');
         }
@@ -289,33 +282,7 @@ export default {
       }
     },
 
-    async handleLicenseUpload(licenseData) {
-      this.clearMessages();
-      this.loading = true;
 
-      try {
-        const response = await registrationApi.uploadLicense(this.userId, licenseData);
-        
-        if (response.success) {
-          this.success = response.message;
-          this.currentStep = 6;
-        } else {
-          // Handle specific error cases
-          if (response.error_code === 'LICENSE_UPLOAD_ERROR') {
-            this.error = this.$t('vendor.server_error_license_upload_contact_support');
-          } else if (response.errors && response.errors.session) {
-            this.error = this.$t('vendor.registration_session_expired_restart');
-          } else {
-            this.error = response.message || this.$t('vendor.license_upload_failed_check_file');
-          }
-        }
-      } catch (error) {
-        console.error('License upload error:', error);
-        this.error = this.$t('vendor.network_error_check_connection');
-      } finally {
-        this.loading = false;
-      }
-    },
 
     async resendEmailVerification() {
       this.clearMessages();

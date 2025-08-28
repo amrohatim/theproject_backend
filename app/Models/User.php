@@ -215,22 +215,34 @@ class User extends Authenticatable
 
     /**
      * Get the user's license status.
+     * Vendors are excluded from license requirements.
      *
      * @return string|null
      */
     public function getLicenseStatus(): ?string
     {
+        // Vendors don't require licenses
+        if ($this->role === 'vendor') {
+            return null;
+        }
+
         $license = $this->latestLicense;
         return $license ? $license->status : null;
     }
 
     /**
      * Check if the user has any license record.
+     * Vendors are excluded from license requirements.
      *
      * @return bool
      */
     public function hasLicense(): bool
     {
+        // Vendors don't require licenses
+        if ($this->role === 'vendor') {
+            return true; // Return true to bypass license checks
+        }
+
         return $this->licenses()->exists();
     }
 

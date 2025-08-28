@@ -15,6 +15,8 @@ require __DIR__.'/payment.php';
 
 Route::get('/', [LandingController::class, 'index']);
 
+// Test route for Vendor login - removed after successful testing
+
 // Language switching routes
 Route::get('/language/{locale}', [LanguageController::class, 'switchLanguageWeb'])->name('language.switch');
 Route::post('/language/switch', [LanguageController::class, 'switchLanguage'])->name('language.switch.post');
@@ -885,6 +887,9 @@ Route::prefix('admin')->name('admin.')->middleware(['auth', \App\Http\Middleware
         }
     })->name('categories.destroy');
 
+    // Business Types
+    Route::resource('business-types', \App\Http\Controllers\Admin\BusinessTypeController::class);
+
     // Companies
     Route::get('/companies', function () {
         $companies = \App\Models\Company::with('user')->orderBy('created_at', 'desc')->paginate(10);
@@ -1292,6 +1297,15 @@ Route::prefix('admin')->name('admin.')->middleware(['auth', \App\Http\Middleware
     Route::get('/merchant-licenses/{id}/download', [App\Http\Controllers\Admin\MerchantLicenseController::class, 'downloadLicense'])->name('merchant-licenses.download');
     Route::get('/merchant-licenses/{id}/view', [App\Http\Controllers\Admin\MerchantLicenseController::class, 'viewLicense'])->name('merchant-licenses.view');
     Route::post('/merchant-licenses/bulk-approve', [App\Http\Controllers\Admin\MerchantLicenseController::class, 'bulkApprove'])->name('merchant-licenses.bulk-approve');
+
+    // Branch License Management
+    Route::get('/branch-licenses', [App\Http\Controllers\Admin\BranchLicenseController::class, 'index'])->name('branch-licenses.index');
+    Route::get('/branch-licenses/{id}', [App\Http\Controllers\Admin\BranchLicenseController::class, 'show'])->name('branch-licenses.show');
+    Route::post('/branch-licenses/{id}/approve', [App\Http\Controllers\Admin\BranchLicenseController::class, 'approve'])->name('branch-licenses.approve');
+    Route::post('/branch-licenses/{id}/reject', [App\Http\Controllers\Admin\BranchLicenseController::class, 'reject'])->name('branch-licenses.reject');
+    Route::get('/branch-licenses/{id}/download', [App\Http\Controllers\Admin\BranchLicenseController::class, 'downloadLicense'])->name('branch-licenses.download');
+    Route::get('/branch-licenses/{id}/view', [App\Http\Controllers\Admin\BranchLicenseController::class, 'viewLicense'])->name('branch-licenses.view');
+    Route::post('/branch-licenses/bulk-approve', [App\Http\Controllers\Admin\BranchLicenseController::class, 'bulkApprove'])->name('branch-licenses.bulk-approve');
     Route::get('/merchant-licenses/{merchant}/{user}/post-rejection-choice', [App\Http\Controllers\Admin\MerchantLicenseController::class, 'postRejectionChoice'])->name('merchant-licenses.post-rejection-choice');
     Route::post('/merchant-licenses/handle-post-rejection-choice', [App\Http\Controllers\Admin\MerchantLicenseController::class, 'handlePostRejectionChoice'])->name('merchant-licenses.handle-post-rejection-choice');
 
@@ -1304,16 +1318,7 @@ Route::prefix('admin')->name('admin.')->middleware(['auth', \App\Http\Middleware
     Route::get('/provider-licenses/{license}/{user}/post-rejection-choice', [App\Http\Controllers\Admin\ProviderLicenseController::class, 'postRejectionChoice'])->name('provider-licenses.post-rejection-choice');
     Route::post('/provider-licenses/handle-post-rejection-choice', [App\Http\Controllers\Admin\ProviderLicenseController::class, 'handlePostRejectionChoice'])->name('provider-licenses.handle-post-rejection-choice');
 
-    // Vendor License Management
-    Route::get('/vendor-licenses', [App\Http\Controllers\Admin\VendorLicenseController::class, 'index'])->name('vendor-licenses.index');
-    Route::get('/vendor-licenses/{id}', [App\Http\Controllers\Admin\VendorLicenseController::class, 'show'])->name('vendor-licenses.show');
-    Route::get('/vendor-licenses/{id}/image', [App\Http\Controllers\Admin\VendorLicenseController::class, 'viewImage'])->name('vendor-licenses.image');
-    Route::post('/vendor-licenses/{id}/approve', [App\Http\Controllers\Admin\VendorLicenseController::class, 'approve'])->name('vendor-licenses.approve');
-    Route::post('/vendor-licenses/{id}/reject', [App\Http\Controllers\Admin\VendorLicenseController::class, 'reject'])->name('vendor-licenses.reject');
-    Route::get('/vendor-licenses/{id}/download', [App\Http\Controllers\Admin\VendorLicenseController::class, 'downloadLicense'])->name('vendor-licenses.download');
-    Route::get('/vendor-licenses/{id}/view', [App\Http\Controllers\Admin\VendorLicenseController::class, 'viewLicense'])->name('vendor-licenses.view');
-    Route::post('/vendor-licenses/bulk-approve', [App\Http\Controllers\Admin\VendorLicenseController::class, 'bulkApprove'])->name('vendor-licenses.bulk-approve');
-    Route::get('/vendor-licenses/{license}/{user}/post-rejection-choice', [App\Http\Controllers\Admin\VendorLicenseController::class, 'postRejectionChoice'])->name('vendor-licenses.post-rejection-choice');
+
     Route::post('/vendor-licenses/handle-post-rejection-choice', [App\Http\Controllers\Admin\VendorLicenseController::class, 'handlePostRejectionChoice'])->name('vendor-licenses.handle-post-rejection-choice');
 
     // Settings
@@ -1371,7 +1376,49 @@ Route::prefix('admin')->name('admin.')->middleware(['auth', \App\Http\Middleware
         }
         return 'User not found';
     })->name('test.vendor.service');
+
+    // Test route for admin login and business types
+    Route::get('/test-admin-login', function() {
+        $user = \App\Models\User::where('email', 'admin@example.com')->first();
+        if ($user) {
+            Auth::login($user);
+            return redirect('/admin/business-types');
+        }
+        return 'Admin user not found';
+    })->name('test.admin.login');
+
+    // Test route for Products Manager login - removed after successful testing
+
+    // Test route for Vendor login - moved to top of file
+
+    // Test route for branch license management
+    Route::get('/test-branch-licenses', function() {
+        $licenses = \App\Models\BranchLicense::with(['branch.user', 'branch.company'])->get();
+        return response()->json([
+            'total_licenses' => $licenses->count(),
+            'pending_licenses' => $licenses->where('status', 'pending')->count(),
+            'active_licenses' => $licenses->where('status', 'active')->count(),
+            'rejected_licenses' => $licenses->where('status', 'rejected')->count(),
+            'licenses' => $licenses->map(function($license) {
+                return [
+                    'id' => $license->id,
+                    'status' => $license->status,
+                    'branch_name' => $license->branch->name,
+                    'vendor_name' => $license->branch->user->name,
+                    'vendor_email' => $license->branch->user->email,
+                    'business_type' => $license->branch->business_type,
+                    'start_date' => $license->start_date->format('Y-m-d'),
+                    'end_date' => $license->end_date->format('Y-m-d'),
+                    'uploaded_at' => $license->uploaded_at->format('Y-m-d H:i:s'),
+                ];
+            })
+        ]);
+    })->name('test.branch.licenses');
+
+
 });
+
+
 
 // Vendor routes
 Route::prefix('vendor')->name('vendor.')->middleware(['auth', \App\Http\Middleware\VendorMiddleware::class])->group(function () {
@@ -1649,6 +1696,7 @@ Route::prefix('vendor')->name('vendor.')->middleware(['auth', \App\Http\Middlewa
         $validated = $request->validate([
             'name' => 'required|string|max:255',
             'company_id' => 'required|exists:companies,id',
+            'business_type' => 'required|string|exists:business_types,business_name',
             'phone' => 'nullable|string|max:255',
             'email' => 'nullable|email|max:255',
             'address' => 'required|string|max:255',
@@ -1661,6 +1709,13 @@ Route::prefix('vendor')->name('vendor.')->middleware(['auth', \App\Http\Middlewa
             'opening_hours' => 'nullable|array',
             'branch_image' => 'nullable|image|mimes:jpeg,png,jpg,webp|max:2048',
             'use_company_image' => 'sometimes|boolean',
+            // License fields
+            'license_file' => 'required|file|mimes:pdf|max:10240',
+            'license_start_date' => 'required|date',
+            'license_end_date' => 'required|date|after:license_start_date',
+        ], [
+            'business_type.required' => 'Please select a business type.',
+            'business_type.exists' => 'The selected business type is invalid.',
         ]);
 
         // Verify that the company belongs to the authenticated user
@@ -1728,9 +1783,33 @@ Route::prefix('vendor')->name('vendor.')->middleware(['auth', \App\Http\Middlewa
         // Remove the days_open field as it's not in the model
         unset($validated['days_open']);
 
+        // Extract license data before creating branch
+        $licenseData = [
+            'license_file' => $request->file('license_file'),
+            'start_date' => $validated['license_start_date'],
+            'end_date' => $validated['license_end_date'],
+        ];
+
+        // Remove license fields from branch data
+        unset($validated['license_file'], $validated['license_start_date'], $validated['license_end_date']);
+
+        // Create the branch
         $branch = \App\Models\Branch::create($validated);
 
-        return redirect()->route('vendor.branches.index')->with('success', 'Branch created successfully');
+        // Handle license file upload and create license record
+        $licenseFilePath = $licenseData['license_file']->store('branch_licenses', 'public');
+
+        // Create the branch license record with pending status
+        $branch->licenses()->create([
+            'license_file_path' => $licenseFilePath,
+            'start_date' => $licenseData['start_date'],
+            'end_date' => $licenseData['end_date'],
+            'status' => 'pending', // Set to pending for vendor-created licenses
+            'uploaded_at' => now(),
+            'verified_at' => null, // Will be set when admin approves
+        ]);
+
+        return redirect()->route('vendor.branches.index')->with('success', 'Branch created successfully. License is pending approval.');
     })->name('branches.store');
 
     Route::get('/branches/{id}', function ($id) {
@@ -1750,7 +1829,8 @@ Route::prefix('vendor')->name('vendor.')->middleware(['auth', \App\Http\Middlewa
             ->select('branches.*')
             ->firstOrFail();
         $companies = \App\Models\Company::where('user_id', \Illuminate\Support\Facades\Auth::id())->orderBy('name')->get();
-        return view('vendor.branches.edit', compact('branch', 'companies'));
+        $businessTypes = \App\Models\BusinessType::orderBy('business_name')->get();
+        return view('vendor.branches.edit', compact('branch', 'companies', 'businessTypes'));
     })->name('branches.edit');
 
     Route::get('/branches/{id}/image', function ($id) {
@@ -1773,6 +1853,7 @@ Route::prefix('vendor')->name('vendor.')->middleware(['auth', \App\Http\Middlewa
         $validated = $request->validate([
             'name' => 'required|string|max:255',
             'company_id' => 'required|exists:companies,id',
+            'business_type' => 'required|string|exists:business_types,business_name',
             'phone' => 'nullable|string|max:255',
             'email' => 'nullable|email|max:255',
             'address' => 'required|string|max:255',
@@ -1785,6 +1866,13 @@ Route::prefix('vendor')->name('vendor.')->middleware(['auth', \App\Http\Middlewa
             'opening_hours' => 'nullable|array',
             'branch_image' => 'nullable|image|mimes:jpeg,png,jpg,webp|max:2048',
             'use_company_image' => 'sometimes|boolean',
+            // License fields
+            'license_file' => 'nullable|file|mimes:pdf|max:10240',
+            'license_start_date' => 'required|date',
+            'license_end_date' => 'required|date|after:license_start_date',
+        ], [
+            'business_type.required' => 'Please select a business type.',
+            'business_type.exists' => 'The selected business type is invalid.',
         ]);
 
         // Verify that the company belongs to the authenticated user
@@ -1869,9 +1957,64 @@ Route::prefix('vendor')->name('vendor.')->middleware(['auth', \App\Http\Middlewa
         // Remove the days_open field as it's not in the model
         unset($validated['days_open']);
 
+        // Extract license data before updating branch
+        $licenseData = [
+            'start_date' => $validated['license_start_date'],
+            'end_date' => $validated['license_end_date'],
+        ];
+
+        // Remove license fields from branch data
+        unset($validated['license_file'], $validated['license_start_date'], $validated['license_end_date']);
+
         $branch->update($validated);
 
-        return redirect()->route('vendor.branches.show', $branch->id)->with('success', 'Branch updated successfully');
+        // Handle license update
+        $currentLicense = $branch->licenses()->latest()->first();
+
+        if ($currentLicense) {
+            // Update existing license
+            $licenseUpdateData = [
+                'start_date' => $licenseData['start_date'],
+                'end_date' => $licenseData['end_date'],
+                'status' => 'pending', // Reset to pending for re-approval
+                'verified_at' => null, // Clear verification timestamp
+            ];
+
+            // Handle license file upload if provided
+            if ($request->hasFile('license_file')) {
+                // Delete old license file if exists
+                if ($currentLicense->license_file_path && \Illuminate\Support\Facades\Storage::disk('public')->exists($currentLicense->license_file_path)) {
+                    \Illuminate\Support\Facades\Storage::disk('public')->delete($currentLicense->license_file_path);
+                }
+
+                // Upload new license file
+                $licenseFilePath = $request->file('license_file')->store('branch_licenses', 'public');
+                $licenseUpdateData['license_file_path'] = $licenseFilePath;
+                $licenseUpdateData['uploaded_at'] = now();
+            }
+
+            $currentLicense->update($licenseUpdateData);
+            $successMessage = 'Branch and license updated successfully. License is pending approval.';
+        } else {
+            // Create new license if none exists (shouldn't happen in normal flow, but safety check)
+            if ($request->hasFile('license_file')) {
+                $licenseFilePath = $request->file('license_file')->store('branch_licenses', 'public');
+
+                $branch->licenses()->create([
+                    'license_file_path' => $licenseFilePath,
+                    'start_date' => $licenseData['start_date'],
+                    'end_date' => $licenseData['end_date'],
+                    'status' => 'pending',
+                    'uploaded_at' => now(),
+                    'verified_at' => null,
+                ]);
+                $successMessage = 'Branch updated and license created successfully. License is pending approval.';
+            } else {
+                $successMessage = 'Branch updated successfully. Please upload a license file.';
+            }
+        }
+
+        return redirect()->route('vendor.branches.show', $branch->id)->with('success', $successMessage);
     })->name('branches.update');
 
     Route::delete('/branches/{id}', function ($id) {
@@ -1883,6 +2026,10 @@ Route::prefix('vendor')->name('vendor.')->middleware(['auth', \App\Http\Middlewa
         $branch->delete();
         return redirect()->route('vendor.branches.index')->with('success', 'Branch deleted successfully');
     })->name('branches.destroy');
+
+    // Separate branch and license update routes
+    Route::put('/branches/{id}/info', [\App\Http\Controllers\Vendor\BranchController::class, 'updateBranchInfo'])->name('branches.update-info');
+    Route::put('/branches/{id}/license', [\App\Http\Controllers\Vendor\BranchController::class, 'updateLicense'])->name('branches.update-license');
 
     // Additional routes for Vue.js product creation interface (must be before resource routes)
     Route::get('/products/create-data', [\App\Http\Controllers\Vendor\ProductController::class, 'getCreateData'])->name('products.create.data');
@@ -1999,12 +2146,7 @@ Route::prefix('vendor')->name('vendor.')->middleware(['auth', \App\Http\Middlewa
         return redirect()->route('login')->with('success', 'Account deleted successfully');
     })->name('settings.delete');
 
-    // License Management
-    Route::get('/dashboard/license', [\App\Http\Controllers\Vendor\LicenseController::class, 'index'])->name('license.index');
-    Route::get('/dashboard/license/renewal', [\App\Http\Controllers\Vendor\LicenseController::class, 'showRenewal'])->name('license.renewal');
-    Route::post('/dashboard/license/renewal', [\App\Http\Controllers\Vendor\LicenseController::class, 'storeRenewal'])->name('license.renewal.store');
-    Route::get('/dashboard/license/{id}/view', [\App\Http\Controllers\Vendor\LicenseController::class, 'viewDocument'])->name('license.view');
-    Route::get('/dashboard/license/{id}/preview', [\App\Http\Controllers\Vendor\LicenseController::class, 'preview'])->name('license.preview');
+
 
     // Service Provider Management
     Route::prefix('settings/service-providers')->name('settings.service-providers.')->group(function () {
@@ -2045,14 +2187,12 @@ Route::prefix('vendor')->name('vendor.')->middleware(['auth', \App\Http\Middlewa
     Route::delete('/api/colors/{id}', [\App\Http\Controllers\Vendor\ProductColorController::class, 'destroy'])->name('api.colors.destroy');
 });
 
-// License restriction routes (accessible without active license)
-Route::prefix('service-provider')->name('service-provider.')->middleware(['auth'])->group(function () {
-    Route::get('/license/restriction', [\App\Http\Controllers\ServiceProvider\LicenseRestrictionController::class, 'show'])->name('license.restriction');
-});
+// License restriction routes (accessible without active license) - DISABLED: Service Providers don't require license approval
+// Route::prefix('service-provider')->name('service-provider.')->middleware(['auth'])->group(function () {
+//     Route::get('/license/restriction', [\App\Http\Controllers\ServiceProvider\LicenseRestrictionController::class, 'show'])->name('license.restriction');
+// });
 
-Route::prefix('products-manager')->name('products-manager.')->middleware(['auth'])->group(function () {
-    Route::get('/license/restriction', [\App\Http\Controllers\ProductsManager\LicenseRestrictionController::class, 'show'])->name('license.restriction');
-});
+// Products Manager license restriction routes removed - no license validation required
 
 // Service Provider Routes
 Route::middleware(['auth', \App\Http\Middleware\ServiceProviderMiddleware::class])->prefix('service-provider')->name('service-provider.')->group(function () {
@@ -2138,15 +2278,7 @@ Route::middleware(['auth', \App\Http\Middleware\ProductsManagerMiddleware::class
     Route::delete('/products/session/clear', [\App\Http\Controllers\Vendor\ProductController::class, 'clearSession'])->name('products.session.clear');
 });
 
-// Vendor license status routes (accessible without active license)
-Route::prefix('vendor')->name('vendor.')->middleware(['auth'])->group(function () {
-    // License status pages - accessible even with inactive license
-    Route::get('/license/status/{status?}', [App\Http\Controllers\Vendor\LicenseStatusController::class, 'show'])->name('license.status');
 
-    // License upload routes - accessible for vendors who completed company registration but need to upload license
-    Route::get('/license/upload', [App\Http\Controllers\Vendor\LicenseUploadController::class, 'show'])->name('license.upload');
-    Route::post('/license/upload', [App\Http\Controllers\Vendor\LicenseUploadController::class, 'upload'])->name('license.upload.submit');
-});
 
 // Provider routes
 Route::prefix('provider')->name('provider.')->middleware(['auth', \App\Http\Middleware\ProviderMiddleware::class])->group(function () {
@@ -2194,11 +2326,8 @@ Route::prefix('provider')->name('provider.')->middleware(['auth', \App\Http\Midd
     Route::delete('/provider-products/{id}', [App\Http\Controllers\Provider\ProviderProductController::class, 'destroy'])->name('provider-products.destroy');
 });
 
-// Merchant license status routes (accessible without active license)
+// Merchant license upload routes (accessible without active license)
 Route::prefix('merchant')->name('merchant.')->middleware(['auth'])->group(function () {
-    // License status pages - accessible even with inactive license
-    Route::get('/license/status/{status?}', [App\Http\Controllers\Merchant\LicenseStatusController::class, 'show'])->name('license.status');
-
     // License upload routes - accessible for merchants who completed phone verification but need to upload license
     Route::get('/license/upload', [App\Http\Controllers\Merchant\LicenseUploadController::class, 'show'])->name('license.upload');
     Route::post('/license/upload', [App\Http\Controllers\Merchant\LicenseUploadController::class, 'upload'])->name('license.upload.submit');
@@ -2361,6 +2490,8 @@ Route::get('/storage/product-colors/{filename}', [App\Http\Controllers\ImageCont
 Route::get('/storage/provider_products/{filename}', [App\Http\Controllers\ImageController::class, 'serveProviderProductImage'])->name('storage.provider_products');
 Route::get('/storage/deals/{filename}', [App\Http\Controllers\ImageController::class, 'serveDealImage'])->name('storage.deals');
 Route::get('/storage/categories/{filename}', [App\Http\Controllers\ImageController::class, 'serveCategoryImage'])->name('storage.categories');
+Route::get('/storage/business-types/{filename}', [App\Http\Controllers\ImageController::class, 'serveBusinessTypeImage'])->name('storage.business-types');
+Route::get('/images/avatars/{filename}', [App\Http\Controllers\ImageController::class, 'serveAvatarImage'])->name('images.avatars');
 
 // Generic storage route (fallback for other types)
 Route::get('/images/{folder}/{filename}', [App\Http\Controllers\ImageController::class, 'serveStorageImage'])->name('images.storage');

@@ -736,6 +736,28 @@ return [
     'using_default_image' => 'Using default image',
     'no_image_available' => 'No image available',
     'no_description_available' => 'No description available',
+
+    // Branch License
+    'license_status' => 'License Status',
+    'branch_license_information' => 'Branch License Information',
+    'branch_license_requirement_description' => 'Each branch requires a valid license to operate and create products/services.',
+    'license_start_date' => 'License Start Date',
+    'license_end_date' => 'License End Date',
+    'branch_license_document' => 'Branch License Document',
+    'click_to_upload' => 'Click to Upload',
+    'or_drag_and_drop' => 'or drag and drop',
+    'pdf_files_only_max_10mb' => 'PDF files only (Max: 10MB)',
+    'pdf_files_only_message' => 'Please select a PDF file only.',
+    'file_too_large_10mb' => 'File size must not exceed 10MB.',
+    'license_end_date_must_be_after_start_date' => 'License end date must be after start date.',
+    'branch_license_requirements_notice' => 'This license will be automatically activated for vendors. Ensure all information is accurate.',
+    'remove' => 'Remove',
+    'important' => 'Important',
+    'pending' => 'Pending',
+    'expired' => 'Expired',
+    'rejected' => 'Rejected',
+    'no_license' => 'No License',
+
     'add_product' => 'Add Product',
     'add_service' => 'Add Service',
     'no_products_found_branch' => 'No products found for this branch',
@@ -948,6 +970,7 @@ return [
     'promotional_message' => 'Promotional Message',
     'promotional_message_placeholder' => 'Enter promotional message (optional)',
     'promotional_message_help' => 'This message will be displayed to customers alongside the deal',
+    'promotional_message_both_or_none' => 'If you provide a promotional message in one language, you must provide it in both languages.',
     'optional' => 'Optional',
     'start_date' => 'Start Date',
     'select_start_date' => 'Select start date',
@@ -957,6 +980,10 @@ return [
     'current_image' => 'Current Image',
     'upload_new_image' => 'Upload New Image',
     'deal_image_requirements' => 'Recommended size: 800x400 pixels. Max file size: 20MB. Supported formats: JPG, PNG, WebP',
+    'deal_image_requirements_new' => 'Required. Max file size: 20MB. Supported formats: JPEG, PNG, JPG, GIF, SVG. Images will be automatically converted to WebP format.',
+    'deal_image_required' => 'Deal image is required.',
+    'deal_image_too_large' => 'The image file is too large. Maximum allowed size is 20MB.',
+    'deal_image_invalid_type' => 'Invalid image type. Please upload JPEG, PNG, JPG, GIF, or SVG files only.',
     'status' => 'Status',
     'active' => 'Active',
     'inactive' => 'Inactive',
@@ -1346,6 +1373,7 @@ return [
     'yes_we_can_handle_our_own_deliveries' => 'Yes, we can handle our own deliveries',
     'no_we_need_a_third_party_delivery_service' => 'No, we need a third-party delivery service',
     'select_services_for_deal' => 'Select the services you want to apply this deal to',
+    'has_active_deal' => 'Has Active Deal',
 
     // Merchant Registration Validation Messages
     'business_name_is_required' => 'Business name is required',
@@ -1363,6 +1391,7 @@ return [
     'uae_id_back_side_is_required' => 'UAE ID back side is required',
     'please_fix_the_following_errors_before_submitting' => 'Please fix the following errors before submitting:',
     'correct_the_errors' => 'Correct the errors',
+    'registration_success_message' => 'Your registration has been completed for review. go to login',
 
 
     //Prodcut manger 
@@ -1378,4 +1407,25 @@ return [
     'store_inactive_desc' => 'The store is currently inactive. Please contact the store owner for more information',
     'store_access_restricted' => 'Store access restricted',
 
+    // Branch License Edit Form
+    'update_branch_license_info' => 'Update your branch license information. Changes will require admin approval.',
+    'current_license_file' => 'Current License File',
+    'license_update_notice' => 'Updating license information will reset the status to pending and require admin re-approval.',
+    'please_select_pdf_file' => 'Please select a PDF file only.',
+
+    // Branch Edit Form Translations
+    'branch_information' => 'Branch Information',
+    'update_basic_branch_details' => 'Update basic branch details',
+    'update_branch_information' => 'Update Branch Information',
+    'license_management' => 'License Management',
+    'update_license_documents_dates' => 'Update license documents and dates',
+    'update_license' => 'Update License',
+
+
+    // Deal Conflict Validation
+    'products_already_have_active_deals' => 'The following products already have active deals: :products',
+    'services_already_have_active_deals' => 'The following services already have active deals: :services',
+    'deal_already_applied' => 'Deal Already Applied',
+    'item_has_active_deal' => 'This item already has an active deal',
+    'cannot_select_items_with_deals' => 'Cannot select items that already have active deals',
 ];

@@ -394,6 +394,7 @@ return [
     'product_name_required' => 'اسم المنتج مطلوب',
     'description_required_when_english_provided' => 'الوصف بالعربية مطلوب عند إدخال الوصف بالإنجليزية',
     'description_required_when_arabic_provided' => 'الوصف بالإنجليزية مطلوب عند إدخال الوصف بالعربية',
+    'creating' => 'جاري الإنشاء',
 
     // Products Edit Page
     'edit_product' => 'تعديل المنتج',

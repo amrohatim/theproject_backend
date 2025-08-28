@@ -7,6 +7,7 @@ use App\Models\Branch;
 use App\Models\Category;
 use App\Models\Service;
 use App\Services\WebPImageService;
+use App\Rules\ActiveBranchLicense;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Log;
@@ -51,7 +52,7 @@ class ServiceController extends Controller
             ->orderBy('name')
             ->get();
 
-        // Get branches that belong to the vendor's company for the filter dropdown
+        // Get branches that belong to the vendor's company for the filter dropdown (include all for filtering)
         $branches = Branch::whereHas('company', function ($query) {
             $query->where('user_id', Auth::id());
         })->orderBy('name')->get();
@@ -73,10 +74,10 @@ class ServiceController extends Controller
             ->orderBy('name')
             ->get();
 
-        // Get branches that belong to the vendor's company
+        // Get branches that belong to the vendor's company and have active licenses
         $branches = Branch::whereHas('company', function ($query) {
             $query->where('user_id', Auth::id());
-        })->orderBy('name')->get();
+        })->withActiveLicense()->orderBy('name')->get();
 
         // Check if the vendor has any branches
         if ($branches->isEmpty()) {
@@ -103,7 +104,7 @@ class ServiceController extends Controller
             'name' => 'required|string|max:255',
             'service_name_arabic' => 'required|string|max:255',
             'category_id' => 'required|exists:categories,id',
-            'branch_id' => 'required|exists:branches,id',
+            'branch_id' => ['required', 'exists:branches,id', new ActiveBranchLicense()],
             'price' => 'required|numeric|min:0',
             'duration' => 'required|integer|min:1',
             'description' => 'nullable|string',
@@ -174,10 +175,10 @@ class ServiceController extends Controller
         // Get categories
         $categories = Category::orderBy('name')->get();
 
-        // Get branches that belong to the vendor's company
+        // Get branches that belong to the vendor's company and have active licenses
         $branches = Branch::whereHas('company', function ($query) {
             $query->where('user_id', Auth::id());
-        })->orderBy('name')->get();
+        })->withActiveLicense()->orderBy('name')->get();
 
         return view('vendor.services.edit', compact('service', 'categories', 'branches'));
     }
@@ -202,7 +203,7 @@ class ServiceController extends Controller
             'name' => 'required|string|max:255',
             'service_name_arabic' => 'required|string|max:255',
             'category_id' => 'required|exists:categories,id',
-            'branch_id' => 'required|exists:branches,id',
+            'branch_id' => ['required', 'exists:branches,id', new ActiveBranchLicense()],
             'price' => 'required|numeric|min:0',
             'duration' => 'required|integer|min:1',
             'description' => 'nullable|string',

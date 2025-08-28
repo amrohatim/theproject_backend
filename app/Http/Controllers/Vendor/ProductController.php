@@ -7,6 +7,7 @@ use App\Models\Branch;
 use App\Models\Category;
 use App\Models\Product;
 use App\Services\WebPImageService;
+use App\Rules\ActiveBranchLicense;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
@@ -76,7 +77,7 @@ class ProductController extends Controller
     public function index(Request $request)
     {
         $query = Product::query()
-            ->with(['branch', 'category', 'colors'])
+            ->with(['branch', 'branch.latestLicense', 'category', 'colors'])
             ->whereHas('branch', function ($query) {
                 $query->whereHas('company', function ($query) {
                     $query->where('user_id', $this->getActingVendorUserId());
@@ -107,7 +108,7 @@ class ProductController extends Controller
             ->orderBy('name')
             ->get();
 
-        // Get branches that belong to the vendor's company for filter dropdown
+        // Get branches that belong to the vendor's company for filter dropdown (include all for filtering)
         $branches = Branch::whereHas('company', function ($query) {
             $query->where('user_id', $this->getActingVendorUserId());
         })->orderBy('name')->get();
@@ -140,10 +141,18 @@ class ProductController extends Controller
             ->orderBy('name')
             ->get();
 
-        // Get branches that belong to the vendor's company
+        // Add hierarchy information to categories
+        $parentCategories->each(function ($parent) {
+            $parent->is_selectable = false; // Parent categories are not selectable
+            $parent->children->each(function ($child) {
+                $child->is_selectable = $child->canBeSelectedForProducts();
+            });
+        });
+
+        // Get branches that belong to the vendor's company and have active licenses
         $branches = Branch::whereHas('company', function ($query) {
             $query->where('user_id', $this->getActingVendorUserId());
-        })->orderBy('name')->get();
+        })->withActiveLicense()->orderBy('name')->get();
 
         // Check if the vendor has any branches
         if ($branches->isEmpty()) {
@@ -368,10 +377,18 @@ class ProductController extends Controller
                 ->orderBy('name')
                 ->get();
 
-            // Get branches that belong to the vendor's company
+            // Add hierarchy information to categories
+            $parentCategories->each(function ($parent) {
+                $parent->is_selectable = false; // Parent categories are not selectable
+                $parent->children->each(function ($child) {
+                    $child->is_selectable = $child->canBeSelectedForProducts();
+                });
+            });
+
+            // Get branches that belong to the vendor's company and have active licenses
             $branches = Branch::whereHas('company', function ($query) {
                 $query->where('user_id', $this->getActingVendorUserId());
-            })->orderBy('name')->get();
+            })->withActiveLicense()->orderBy('name')->get();
 
             // Check if the vendor has any branches
             if ($branches->isEmpty()) {
@@ -481,7 +498,7 @@ class ProductController extends Controller
             'name' => 'required|string|max:255',
             'product_name_arabic' => 'required|string|max:255',
             'category_id' => 'required|exists:categories,id',
-            'branch_id' => 'required|exists:branches,id',
+            'branch_id' => ['required', 'exists:branches,id', new ActiveBranchLicense()],
             'price' => 'required|numeric|min:0',
             'original_price' => 'nullable|numeric|min:0',
             'stock' => 'required|integer|min:0',
@@ -526,7 +543,7 @@ class ProductController extends Controller
             // Multi-branch validation
             'is_multi_branch' => 'nullable|boolean',
             'branches' => 'nullable|array',
-            'branches.*.branch_id' => 'required_with:branches|exists:branches,id',
+            'branches.*.branch_id' => ['required_with:branches', 'exists:branches,id', new ActiveBranchLicense()],
             'branches.*.stock' => 'nullable|integer|min:0',
             'branches.*.price' => 'nullable|numeric|min:0',
             'branches.*.is_available' => 'nullable|boolean',
@@ -773,6 +790,18 @@ class ProductController extends Controller
     }
 
     /**
+     * Check if a product can be edited based on its branch license status.
+     *
+     * @param Product $product
+     * @return bool
+     */
+    private function canEditProduct(Product $product): bool
+    {
+        // Check if the product's branch has an active license
+        return $product->branch && $product->branch->hasActiveLicense();
+    }
+
+    /**
      * Show the form for editing the specified resource.
      */
     public function edit(Product $product, Request $request)
@@ -792,6 +821,25 @@ class ProductController extends Controller
                 ->with('error', 'You do not have permission to edit this product.');
         }
 
+        // Check if the product can be edited based on branch license status
+        if (!$this->canEditProduct($product)) {
+            $licenseStatus = $product->branch->getLicenseStatus();
+            $message = match($licenseStatus) {
+                'pending' => 'Cannot edit this product. The branch license is pending approval.',
+                'expired' => 'Cannot edit this product. The branch license has expired.',
+                'rejected' => 'Cannot edit this product. The branch license has been rejected.',
+                default => 'Cannot edit this product. The branch requires an active license.'
+            };
+
+            if ($this->isProductsManagerRequest($request)) {
+                return view('products-manager.products.edit-content', [
+                    'error' => $message
+                ]);
+            }
+            return redirect()->route('vendor.products.index')
+                ->with('error', $message);
+        }
+
         // Get product categories with their children - same structure as create
         $parentCategories = Category::where('type', 'product')
             ->whereNull('parent_id')
@@ -801,10 +849,18 @@ class ProductController extends Controller
             ->orderBy('name')
             ->get();
 
-        // Get branches that belong to the vendor's company
+        // Add hierarchy information to categories
+        $parentCategories->each(function ($parent) {
+            $parent->is_selectable = false; // Parent categories are not selectable
+            $parent->children->each(function ($child) {
+                $child->is_selectable = $child->canBeSelectedForProducts();
+            });
+        });
+
+        // Get branches that belong to the vendor's company and have active licenses
         $branches = Branch::whereHas('company', function ($query) {
             $query->where('user_id', $this->getActingVendorUserId());
-        })->orderBy('name')->get();
+        })->withActiveLicense()->orderBy('name')->get();
 
         // Load product with all related data
         $product->load(['specifications', 'colors', 'sizes', 'branches']);
@@ -849,10 +905,18 @@ class ProductController extends Controller
             ->orderBy('name')
             ->get();
 
-        // Get branches that belong to the vendor's company
+        // Add hierarchy information to categories
+        $parentCategories->each(function ($parent) {
+            $parent->is_selectable = false; // Parent categories are not selectable
+            $parent->children->each(function ($child) {
+                $child->is_selectable = $child->canBeSelectedForProducts();
+            });
+        });
+
+        // Get branches that belong to the vendor's company and have active licenses
         $branches = Branch::whereHas('company', function ($query) {
             $query->where('user_id', $this->getActingVendorUserId());
-        })->orderBy('name')->get();
+        })->withActiveLicense()->orderBy('name')->get();
 
         // Load product with all related data including colors with their sizes
         $product->load([
@@ -943,12 +1007,26 @@ class ProductController extends Controller
                 ->with('error', 'You do not have permission to update this product.');
         }
 
+        // Check if the product can be edited based on branch license status
+        if (!$this->canEditProduct($product)) {
+            $licenseStatus = $product->branch->getLicenseStatus();
+            $message = match($licenseStatus) {
+                'pending' => 'Cannot update this product. The branch license is pending approval.',
+                'expired' => 'Cannot update this product. The branch license has expired.',
+                'rejected' => 'Cannot update this product. The branch license has been rejected.',
+                default => 'Cannot update this product. The branch requires an active license.'
+            };
+
+            return redirect()->route('vendor.products.index')
+                ->with('error', $message);
+        }
+
         // Enhanced validation - colors are now optional for updates
         $request->validate([
             'name' => 'required|string|max:255',
             'product_name_arabic' => 'required|string|max:255',
             'category_id' => 'required|exists:categories,id',
-            'branch_id' => 'required|exists:branches,id',
+            'branch_id' => ['required', 'exists:branches,id', new ActiveBranchLicense()],
             'price' => 'required|numeric|min:0',
             'original_price' => 'nullable|numeric|min:0',
             'stock' => 'required|integer|min:0',
@@ -993,7 +1071,7 @@ class ProductController extends Controller
             // Multi-branch validation
             'is_multi_branch' => 'nullable|boolean',
             'branches' => 'nullable|array',
-            'branches.*.branch_id' => 'required_with:branches|exists:branches,id',
+            'branches.*.branch_id' => ['required_with:branches', 'exists:branches,id', new ActiveBranchLicense()],
             'branches.*.stock' => 'nullable|integer|min:0',
             'branches.*.price' => 'nullable|numeric|min:0',
             'branches.*.is_available' => 'nullable|boolean',

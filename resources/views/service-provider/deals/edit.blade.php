@@ -36,6 +36,14 @@
         background-color: #53D2DC10;
         border-color: #53D2DC;
     }
+    .service-item.has-active-deal {
+        background-color: #f9f9f9;
+        border-color: #e5e5e5;
+    }
+    .service-item.has-active-deal input[type="checkbox"]:disabled {
+        opacity: 0.5;
+        cursor: not-allowed;
+    }
 </style>
 @endsection
 
@@ -75,7 +83,7 @@
                         <!-- English Title -->
                         <div data-language-field="title" data-language="en" class="mb-3 active-language-field">
                             <input type="text" name="title" id="title" value="{{ old('title', $deal->title) }}"
-                                   class="mt-1 focus:ring-[#53D2DC] focus:border-[#53D2DC] px-2 block w-full shadow-sm sm:text-sm border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-white rounded-md"
+                                   class="mt-1 border-gray-300 border-[1px]  px-2 py-2 block w-full shadow-sm sm:text-sm border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-white rounded-md"
                                    placeholder="{{ __('service_provider.enter_deal_title') }}" required>
                             @error('title')
                                 <p class="text-red-500 text-sm mt-1">{{ $message }}</p>
@@ -85,7 +93,7 @@
                         <!-- Arabic Title -->
                         <div data-language-field="title" data-language="ar" style="display: none;">
                             <input type="text" name="title_arabic" id="title_arabic" value="{{ old('title_arabic', $deal->title_arabic) }}"
-                                   class="mt-1 focus:ring-[#53D2DC] focus:border-[#53D2DC] px-2 block w-full shadow-sm sm:text-sm border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-white rounded-md"
+                                   class="mt-1 border-gray-300 border-[1px]  px-2 py-2 block w-full shadow-sm sm:text-sm border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-white rounded-md"
                                    placeholder="{{ __('service_provider.enter_deal_title_arabic') }}" dir="rtl" required>
                             @error('title_arabic')
                                 <p class="text-red-500 text-sm mt-1">{{ $message }}</p>
@@ -98,8 +106,10 @@
                         <label for="discount_percentage" class="block text-sm font-medium text-gray-700 dark:text-gray-300">{{ __('service_provider.discount_percentage') }} <span class="text-red-500">*</span></label>
                         <div class="mt-1 relative rounded-md shadow-sm">
                             <input type="number" name="discount_percentage" id="discount_percentage" min="1" max="100" step="0.01" value="{{ old('discount_percentage', $deal->discount_percentage) }}" 
-                                   class="focus:ring-[#53D2DC] focus:border-[#53D2DC] block w-full pr-12 sm:text-sm border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-white rounded-md" 
-                                   placeholder="15" required>
+                                   class="border-gray-300 border-[1px]  px-2 py-2 block w-full pr-12 sm:text-sm border-2 border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-white rounded-md" 
+                                   placeholder="15" required
+                                   onkeypress="return (event.charCode >= 48 && event.charCode <= 57) || event.charCode === 46"
+                                   oninput="this.value = this.value.replace(/[^0-9.]/g, ''); if(this.value > 100) this.value = 100;">
                             <div class="absolute inset-y-0 right-0 pr-3 flex items-center pointer-events-none">
                                 <span class="text-gray-500 sm:text-sm">%</span>
                             </div>
@@ -121,7 +131,7 @@
                     <!-- English Description -->
                     <div data-language-field="description" data-language="en" class="mb-3 active-language-field">
                         <textarea id="description" name="description" rows="3"
-                                  class="mt-1 focus:ring-[#53D2DC] focus:border-[#53D2DC] px-4 py-2 block w-full shadow-sm sm:text-sm border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-white rounded-md"
+                                  class="mt-1 border-gray-300 border-[1px]  px-4 py-2 block w-full shadow-sm sm:text-sm border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-white rounded-md"
                                   placeholder="{{ __('service_provider.enter_deal_description') }}">{{ old('description', $deal->description) }}</textarea>
                         @error('description')
                             <p class="text-red-500 text-sm mt-1">{{ $message }}</p>
@@ -131,7 +141,7 @@
                     <!-- Arabic Description -->
                     <div data-language-field="description" data-language="ar" style="display: none;">
                         <textarea id="description_arabic" name="description_arabic" rows="3"
-                                  class="mt-1 focus:ring-[#53D2DC] focus:border-[#53D2DC] px-4 py-2 block w-full shadow-sm sm:text-sm border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-white rounded-md"
+                                  class="mt-1 border-gray-300 border-[1px]  px-4 py-2 block w-full shadow-sm sm:text-sm border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-white rounded-md"
                                   placeholder="{{ __('service_provider.enter_deal_description_arabic') }}" dir="rtl">{{ old('description_arabic', $deal->description_arabic) }}</textarea>
                         @error('description_arabic')
                             <p class="text-red-500 text-sm mt-1">{{ $message }}</p>
@@ -151,7 +161,7 @@
                     <div data-language-field="promotional_message" data-language="en" class="mb-3 active-language-field">
                         <div class="relative">
                             <input type="text" name="promotional_message" id="promotional_message" maxlength="50" value="{{ old('promotional_message', $deal->promotional_message) }}"
-                                   class="mt-1 focus:ring-[#53D2DC] focus:border-[#53D2DC] px-2 block w-full shadow-sm sm:text-sm border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-white rounded-md"
+                                   class="mt-1 border-gray-300 border-[1px]  px-2 py-2 block w-full shadow-sm sm:text-sm border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-white rounded-md"
                                    placeholder="{{ __('service_provider.enter_promotional_message') }}">
                             <div class="absolute inset-y-0 right-0 pr-3 flex items-center pointer-events-none">
                                 <span class="text-gray-400 text-xs" id="promo_count_en">0/50</span>
@@ -166,7 +176,7 @@
                     <div data-language-field="promotional_message" data-language="ar" style="display: none;">
                         <div class="relative">
                             <input type="text" name="promotional_message_arabic" id="promotional_message_arabic" maxlength="50" value="{{ old('promotional_message_arabic', $deal->promotional_message_arabic) }}"
-                                   class="mt-1 focus:ring-[#53D2DC] focus:border-[#53D2DC] px-2 block w-full shadow-sm sm:text-sm border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-white rounded-md"
+                                   class="mt-1 border-gray-300 border-[1px]  px-2 py-2 block w-full shadow-sm sm:text-sm border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-white rounded-md"
                                    placeholder="{{ __('service_provider.enter_promotional_message_arabic') }}" dir="rtl">
                             <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
                                 <span class="text-gray-400 text-xs" id="promo_count_ar">0/50</span>
@@ -183,7 +193,7 @@
                     <div>
                         <label for="start_date" class="block text-sm font-medium text-gray-700 dark:text-gray-300">{{ __('service_provider.start_date') }} <span class="text-red-500">*</span></label>
                         <input type="date" name="start_date" id="start_date" value="{{ old('start_date', $deal->start_date ? $deal->start_date->format('Y-m-d') : '') }}" 
-                               class="mt-1 focus:ring-[#53D2DC] focus:border-[#53D2DC] block w-full shadow-sm sm:text-sm border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-white rounded-md" required>
+                               class="mt-1 border-gray-300 border-[1px]  px-2 py-2 block w-full shadow-sm sm:text-sm border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-white rounded-md" required>
                         @error('start_date')
                             <p class="text-red-500 text-sm mt-1">{{ $message }}</p>
                         @enderror
@@ -192,7 +202,7 @@
                     <div>
                         <label for="end_date" class="block text-sm font-medium text-gray-700 dark:text-gray-300">{{ __('service_provider.end_date') }} <span class="text-red-500">*</span></label>
                         <input type="date" name="end_date" id="end_date" value="{{ old('end_date', $deal->end_date ? $deal->end_date->format('Y-m-d') : '') }}" 
-                               class="mt-1 focus:ring-[#53D2DC] focus:border-[#53D2DC] block w-full shadow-sm sm:text-sm border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-white rounded-md" required>
+                               class="mt-1 border-gray-300 border-[1px]  px-2 py-2 block w-full shadow-sm sm:text-sm border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-white rounded-md" required>
                         @error('end_date')
                             <p class="text-red-500 text-sm mt-1">{{ $message }}</p>
                         @enderror
@@ -282,15 +292,25 @@
                 @if($services->count())
                     <div class="selection-container">
                         @foreach($services as $service)
-                            <div class="service-item">
+                            @php
+                                $hasActiveDeal = in_array($service->id, $servicesWithActiveDeals ?? []);
+                                $isCurrentlySelected = in_array($service->id, old('service_ids', $deal->service_ids ?? []));
+                            @endphp
+                            <div class="service-item {{ $hasActiveDeal ? 'has-active-deal' : '' }}">
                                 <div class="flex items-center">
-                                    <input id="service_{{ $service->id }}" name="service_ids[]" type="checkbox" value="{{ $service->id }}" 
+                                    <input id="service_{{ $service->id }}" name="service_ids[]" type="checkbox" value="{{ $service->id }}"
                                            class="focus:ring-[#53D2DC] h-4 w-4 text-[#53D2DC] border-gray-300 dark:border-gray-600 rounded"
-                                           {{ in_array($service->id, old('service_ids', $deal->service_ids ?? [])) ? 'checked' : '' }}>
-                                    <label for="service_{{ $service->id }}" class="ml-3 flex-1 cursor-pointer">
+                                           {{ ($hasActiveDeal && !$isCurrentlySelected) ? 'disabled' : '' }}
+                                           {{ $isCurrentlySelected ? 'checked' : '' }}>
+                                    <label for="service_{{ $service->id }}" class="ml-3 flex-1 {{ ($hasActiveDeal && !$isCurrentlySelected) ? 'cursor-not-allowed opacity-50' : 'cursor-pointer' }}">
                                         <div class="flex items-center justify-between">
                                             <div>
-                                                <div class="text-sm font-medium text-gray-900 dark:text-white">{{ $service->name }}</div>
+                                                <div class="text-sm font-medium text-gray-900 dark:text-white">
+                                                    {{ $service->name }}
+                                                    @if($hasActiveDeal && !$isCurrentlySelected)
+                                                        <span class="text-red-500 text-xs ml-2">({{ __('service_provider.has_active_deal') }})</span>
+                                                    @endif
+                                                </div>
                                                 @if($service->service_name_arabic)
                                                     <div class="text-xs text-gray-500 dark:text-gray-400" dir="rtl">{{ $service->service_name_arabic }}</div>
                                                 @endif
@@ -417,6 +437,37 @@ document.addEventListener('DOMContentLoaded', function() {
             errors.push('{{ __('service_provider.promotional_message_both_or_none') }}');
         }
 
+        // Validate discount percentage
+        const discountPercentage = document.getElementById('discount_percentage').value;
+        if (!discountPercentage || discountPercentage < 1 || discountPercentage > 100) {
+            hasErrors = true;
+            errors.push('{{ __('service_provider.discount_percentage_required') }}');
+        }
+
+        // Validate dates
+        const startDateValue = document.getElementById('start_date').value;
+        const endDateValue = document.getElementById('end_date').value;
+
+        if (!startDateValue) {
+            hasErrors = true;
+            errors.push('{{ __('service_provider.start_date_required') }}');
+        }
+
+        if (!endDateValue) {
+            hasErrors = true;
+            errors.push('{{ __('service_provider.end_date_required') }}');
+        }
+
+        // Validate date range
+        if (startDateValue && endDateValue) {
+            const startDate = new Date(startDateValue);
+            const endDate = new Date(endDateValue);
+            if (endDate <= startDate) {
+                hasErrors = true;
+                errors.push('{{ __('service_provider.end_date_must_be_after_start_date') }}');
+            }
+        }
+
         // Validate service selection
         const selectedServices = document.querySelectorAll('input[name="service_ids[]"]:checked');
         if (selectedServices.length === 0) {
@@ -424,12 +475,11 @@ document.addEventListener('DOMContentLoaded', function() {
             errors.push('{{ __('service_provider.select_at_least_one_service') }}');
         }
 
-        // Validate date range
-        const startDate = new Date(document.getElementById('start_date').value);
-        const endDate = new Date(document.getElementById('end_date').value);
-        if (endDate <= startDate) {
+        // Check for services with active deals
+        const disabledServices = document.querySelectorAll('input[name="service_ids[]"]:disabled:checked');
+        if (disabledServices.length > 0) {
             hasErrors = true;
-            errors.push('{{ __('service_provider.end_date_must_be_after_start_date') }}');
+            errors.push('{{ __('service_provider.cannot_select_services_with_active_deals') }}');
         }
 
         if (hasErrors) {

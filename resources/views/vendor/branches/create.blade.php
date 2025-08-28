@@ -36,6 +36,27 @@
                 </div>
 
                 <div>
+                    <label for="business_type" class="block text-sm font-medium text-gray-700 dark:text-gray-300">Business Type <span class="text-red-500">*</span></label>
+                    <select id="business_type" name="business_type" class="mt-1 block w-full pl-3 pr-10 py-2 text-base border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-white focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm rounded-md" required onchange="updateBusinessTypeHidden(this.value)">
+                        <option value="">Select Business Type</option>
+                        @php
+                            // Ensure business types are available
+                            if (!isset($businessTypes) || (isset($businessTypes) && $businessTypes->isEmpty())) {
+                                $businessTypes = \App\Models\BusinessType::orderBy('business_name')->get();
+                            }
+                        @endphp
+                        @foreach($businessTypes ?? [] as $businessType)
+                            <option value="{{ $businessType->business_name }}" {{ old('business_type') == $businessType->business_name ? 'selected' : '' }}>{{ $businessType->business_name }}</option>
+                        @endforeach
+                    </select>
+                    <!-- Hidden backup field to ensure business type is always submitted -->
+                    <input type="hidden" id="business_type_hidden" name="business_type_backup" value="{{ old('business_type') }}">
+                    @error('business_type')
+                        <p class="mt-1 text-sm text-red-600 dark:text-red-400">{{ $message }}</p>
+                    @enderror
+                </div>
+
+                <div>
                     <label for="phone" class="block text-sm font-medium text-gray-700 dark:text-gray-300">{{ __('messages.phone_number') }}</label>
                     <input type="text" name="phone" id="phone" value="{{ old('phone') }}" class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-white rounded-md">
                     @error('phone')
@@ -164,6 +185,78 @@
                                 </div>
                             </div>
                         @endforeach
+                    </div>
+                </div>
+            </div>
+
+            <!-- License Upload Section -->
+            <div class="mt-8 border-t border-gray-200 dark:border-gray-600 pt-6">
+                <h3 class="text-lg font-medium text-gray-900 dark:text-white mb-4">{{ __('messages.branch_license_information') }}</h3>
+                <p class="text-sm text-gray-600 dark:text-gray-400 mb-6">{{ __('messages.branch_license_requirement_description') }}</p>
+
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <!-- License Start Date -->
+                    <div>
+                        <label for="license_start_date" class="block text-sm font-medium text-gray-700 dark:text-gray-300">{{ __('messages.license_start_date') }} <span class="text-red-500">*</span></label>
+                        <input type="date" name="license_start_date" id="license_start_date" value="{{ old('license_start_date') }}" class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-white rounded-md" required>
+                        @error('license_start_date')
+                            <p class="mt-1 text-sm text-red-600 dark:text-red-400">{{ $message }}</p>
+                        @enderror
+                    </div>
+
+                    <!-- License End Date -->
+                    <div>
+                        <label for="license_end_date" class="block text-sm font-medium text-gray-700 dark:text-gray-300">{{ __('messages.license_end_date') }} <span class="text-red-500">*</span></label>
+                        <input type="date" name="license_end_date" id="license_end_date" value="{{ old('license_end_date') }}" class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-white rounded-md" required>
+                        @error('license_end_date')
+                            <p class="mt-1 text-sm text-red-600 dark:text-red-400">{{ $message }}</p>
+                        @enderror
+                    </div>
+                </div>
+
+                <!-- License File Upload -->
+                <div class="mt-6">
+                    <label for="license_file" class="block text-sm font-medium text-gray-700 dark:text-gray-300">{{ __('messages.branch_license_document') }} <span class="text-red-500">*</span></label>
+                    <div class="mt-1">
+                        <div class="license-upload-area border-2 border-dashed border-gray-300 dark:border-gray-600 rounded-lg p-6 text-center cursor-pointer hover:border-gray-400 dark:hover:border-gray-500 transition-colors" onclick="document.getElementById('license_file').click()">
+                            <div id="license-upload-content">
+                                <svg class="w-8 h-8 text-gray-400 mx-auto mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12"></path>
+                                </svg>
+                                <p class="text-gray-600 dark:text-gray-400 mb-2">
+                                    <span class="font-medium text-indigo-600 dark:text-indigo-400 cursor-pointer">{{ __('messages.click_to_upload') }}</span> {{ __('messages.or_drag_and_drop') }}
+                                </p>
+                                <p class="text-sm text-gray-500 dark:text-gray-400">{{ __('messages.pdf_files_only_max_10mb') }}</p>
+                            </div>
+                            <div id="license-preview" class="hidden">
+                                <svg class="w-8 h-8 text-green-500 mx-auto mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                                </svg>
+                                <p id="license-file-name" class="text-sm text-gray-600 dark:text-gray-300 font-medium mb-2"></p>
+                                <p id="license-file-size" class="text-xs text-gray-500 dark:text-gray-400 mb-2"></p>
+                                <button type="button" onclick="removeLicenseFile(event)" class="text-sm text-red-600 hover:text-red-800 dark:text-red-400 dark:hover:text-red-300">{{ __('messages.remove') }}</button>
+                            </div>
+                            <input type="file" class="hidden" accept=".pdf" id="license_file" name="license_file" required>
+                        </div>
+                    </div>
+                    @error('license_file')
+                        <p class="mt-1 text-sm text-red-600 dark:text-red-400">{{ $message }}</p>
+                    @enderror
+                </div>
+
+                <!-- License Requirements Notice -->
+                <div class="mt-4 bg-yellow-50 dark:bg-yellow-900/20 border border-yellow-200 dark:border-yellow-800 rounded-lg p-4">
+                    <div class="flex">
+                        <div class="flex-shrink-0">
+                            <svg class="w-5 h-5 text-yellow-400" fill="currentColor" viewBox="0 0 20 20">
+                                <path fill-rule="evenodd" d="M8.257 3.099c.765-1.36 2.722-1.36 3.486 0l5.58 9.92c.75 1.334-.213 2.98-1.742 2.98H4.42c-1.53 0-2.493-1.646-1.743-2.98l5.58-9.92zM11 13a1 1 0 11-2 0 1 1 0 012 0zm-1-8a1 1 0 00-1 1v3a1 1 0 002 0V6a1 1 0 00-1-1z" clip-rule="evenodd"></path>
+                            </svg>
+                        </div>
+                        <div class="ml-3">
+                            <p class="text-sm text-yellow-800 dark:text-yellow-200">
+                                <strong>{{ __('messages.important') }}:</strong> {{ __('messages.branch_license_requirements_notice') }}
+                            </p>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -453,7 +546,39 @@
         });
     }
 
+    // Business type backup function
+    function updateBusinessTypeHidden(value) {
+        const hiddenField = document.getElementById('business_type_hidden');
+        if (hiddenField) {
+            hiddenField.value = value;
+        }
+        console.log('Business type updated:', value);
+    }
+
     document.addEventListener('DOMContentLoaded', function() {
+        // Initialize business type backup on page load
+        const businessTypeSelect = document.getElementById('business_type');
+        if (businessTypeSelect && businessTypeSelect.value) {
+            updateBusinessTypeHidden(businessTypeSelect.value);
+        }
+
+        // Add form submission debugging
+        const form = document.querySelector('form');
+        if (form) {
+            form.addEventListener('submit', function(e) {
+                const businessType = document.getElementById('business_type').value;
+                const businessTypeHidden = document.getElementById('business_type_hidden').value;
+                console.log('Form submission - Business Type Select:', businessType);
+                console.log('Form submission - Business Type Hidden:', businessTypeHidden);
+
+                // Ensure business type is set before submission
+                if (!businessType && businessTypeHidden) {
+                    document.getElementById('business_type').value = businessTypeHidden;
+                    console.log('Restored business type from hidden field:', businessTypeHidden);
+                }
+            });
+        }
+
         // Initialize business hours functionality
         const days = ['monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday', 'sunday'];
 
@@ -496,6 +621,93 @@
                 branchImageContainer.classList.remove('hidden');
             }
         });
+
+        // License date validation
+        const startDateInput = document.getElementById('license_start_date');
+        const endDateInput = document.getElementById('license_end_date');
+
+        function validateLicenseDates() {
+            const startDate = new Date(startDateInput.value);
+            const endDate = new Date(endDateInput.value);
+
+            if (startDate && endDate && endDate <= startDate) {
+                endDateInput.setCustomValidity('{{ __("messages.license_end_date_must_be_after_start_date") }}');
+            } else {
+                endDateInput.setCustomValidity('');
+            }
+        }
+
+        startDateInput.addEventListener('change', validateLicenseDates);
+        endDateInput.addEventListener('change', validateLicenseDates);
+
+        // License file upload functionality
+        document.getElementById('license_file').addEventListener('change', function(e) {
+            if (e.target.files.length > 0) {
+                const file = e.target.files[0];
+                const fileName = file.name;
+                const fileExtension = fileName.split('.').pop().toLowerCase();
+
+                // Check if file is PDF
+                if (fileExtension !== 'pdf') {
+                    alert('{{ __("messages.pdf_files_only_message") }}');
+                    e.target.value = ''; // Clear the file input
+                    return;
+                }
+
+                // Check file size (10MB limit)
+                const maxSize = 10 * 1024 * 1024; // 10MB
+                if (file.size > maxSize) {
+                    alert('{{ __("messages.file_too_large_10mb") }}');
+                    e.target.value = ''; // Clear the file input
+                    return;
+                }
+
+                // Show preview
+                document.getElementById('license-upload-content').classList.add('hidden');
+                document.getElementById('license-preview').classList.remove('hidden');
+                document.getElementById('license-file-name').textContent = fileName;
+                document.getElementById('license-file-size').textContent = formatFileSize(file.size);
+            }
+        });
+
+        // License drag and drop functionality
+        const licenseUploadArea = document.querySelector('.license-upload-area');
+
+        licenseUploadArea.addEventListener('dragover', function(e) {
+            e.preventDefault();
+            this.classList.add('border-indigo-400', 'bg-indigo-50', 'dark:bg-indigo-900/20');
+        });
+
+        licenseUploadArea.addEventListener('dragleave', function(e) {
+            e.preventDefault();
+            this.classList.remove('border-indigo-400', 'bg-indigo-50', 'dark:bg-indigo-900/20');
+        });
+
+        licenseUploadArea.addEventListener('drop', function(e) {
+            e.preventDefault();
+            this.classList.remove('border-indigo-400', 'bg-indigo-50', 'dark:bg-indigo-900/20');
+
+            const files = e.dataTransfer.files;
+            if (files.length > 0) {
+                document.getElementById('license_file').files = files;
+                document.getElementById('license_file').dispatchEvent(new Event('change'));
+            }
+        });
     });
+
+    function removeLicenseFile(event) {
+        event.stopPropagation();
+        document.getElementById('license_file').value = '';
+        document.getElementById('license-upload-content').classList.remove('hidden');
+        document.getElementById('license-preview').classList.add('hidden');
+    }
+
+    function formatFileSize(bytes) {
+        if (bytes === 0) return '0 Bytes';
+        const k = 1024;
+        const sizes = ['Bytes', 'KB', 'MB', 'GB'];
+        const i = Math.floor(Math.log(bytes) / Math.log(k));
+        return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + ' ' + sizes[i];
+    }
 </script>
 @endsection

@@ -409,6 +409,7 @@ return [
     'product_name_required' => 'Product name is required',
     'description_required_when_english_provided' => 'Arabic description is required when English description is provided',
     'description_required_when_arabic_provided' => 'English description is required when Arabic description is provided',
+    'creating'=> 'Creating...',
 
     // Products Edit Page
     'edit_product' => 'Edit Product',

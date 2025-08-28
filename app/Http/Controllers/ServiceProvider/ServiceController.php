@@ -143,8 +143,15 @@ class ServiceController extends Controller
             ->orderBy('name')
             ->get();
 
-        // Get branches this service provider can access
-        $branches = Branch::whereIn('id', $serviceProvider->branch_ids ?? [])->get();
+        // Get branches this service provider can access with active licenses only
+        $branches = Branch::whereIn('id', $serviceProvider->branch_ids ?? [])
+            ->withActiveLicense()
+            ->get();
+
+        // Get all branches for license status information (for frontend display)
+        $allBranches = Branch::whereIn('id', $serviceProvider->branch_ids ?? [])
+            ->with('latestLicense')
+            ->get();
 
         // Check if the service provider has any branches
         if ($branches->isEmpty()) {
@@ -152,7 +159,7 @@ class ServiceController extends Controller
                 ->with('warning', 'You need access to branches before adding services. Please contact your vendor.');
         }
 
-        return view('service-provider.services.create', compact('parentCategories', 'branches', 'serviceProvider'));
+        return view('service-provider.services.create', compact('parentCategories', 'branches', 'allBranches', 'serviceProvider'));
     }
 
     /**
@@ -172,7 +179,7 @@ class ServiceController extends Controller
             'name' => 'required|string|max:255',
             'service_name_arabic' => 'required|string|max:255',
             'category_id' => 'required|exists:categories,id',
-            'branch_id' => 'required|exists:branches,id',
+            'branch_id' => ['required', 'exists:branches,id', new \App\Rules\ActiveBranchLicense()],
             'price' => 'required|numeric|min:0',
             'duration' => 'required|integer|min:1',
             'description' => 'nullable|string',
@@ -289,10 +296,17 @@ class ServiceController extends Controller
         // Get categories
         $categories = \App\Models\Category::orderBy('name')->get();
 
-        // Get branches this service provider can access
-        $branches = Branch::whereIn('id', $serviceProvider->branch_ids ?? [])->get();
+        // Get branches this service provider can access with active licenses only
+        $branches = Branch::whereIn('id', $serviceProvider->branch_ids ?? [])
+            ->withActiveLicense()
+            ->get();
 
-        return view('service-provider.services.edit', compact('service', 'categories', 'branches', 'serviceProvider'));
+        // Get all branches for license status information (for frontend display)
+        $allBranches = Branch::whereIn('id', $serviceProvider->branch_ids ?? [])
+            ->with('latestLicense')
+            ->get();
+
+        return view('service-provider.services.edit', compact('service', 'categories', 'branches', 'allBranches', 'serviceProvider'));
     }
 
     /**
@@ -317,7 +331,7 @@ class ServiceController extends Controller
             'name' => 'required|string|max:255',
             'service_name_arabic' => 'required|string|max:255',
             'category_id' => 'required|exists:categories,id',
-            'branch_id' => 'required|exists:branches,id',
+            'branch_id' => ['required', 'exists:branches,id', new \App\Rules\ActiveBranchLicense()],
             'price' => 'required|numeric|min:0',
             'duration' => 'required|integer|min:1',
             'description' => 'nullable|string',

@@ -560,6 +560,55 @@ class ImageController extends Controller
     }
 
     /**
+     * Serve business type images
+     *
+     * @param string $filename
+     * @return \Symfony\Component\HttpFoundation\BinaryFileResponse|\Illuminate\Http\Response
+     */
+    public function serveBusinessTypeImage($filename)
+    {
+        try {
+            // Validate filename to prevent directory traversal
+            if (!$this->isValidFilename($filename)) {
+                Log::warning("Invalid business type image filename requested: {$filename}");
+                return $this->returnPlaceholderImage();
+            }
+
+            // Check if file exists in storage
+            $path = "business-types/{$filename}";
+            if (!Storage::disk('public')->exists($path)) {
+                Log::info("Business type image not found: {$path}");
+                return $this->returnPlaceholderImage();
+            }
+
+            // Get the full file path
+            $fullPath = Storage::disk('public')->path($path);
+
+            // Verify file exists on filesystem
+            if (!file_exists($fullPath)) {
+                Log::warning("Business type image file missing from filesystem: {$fullPath}");
+                return $this->returnPlaceholderImage();
+            }
+
+            // Get file info
+            $mimeType = $this->getMimeType($fullPath);
+            $fileSize = filesize($fullPath);
+
+            // Return the file with appropriate headers
+            return Response::file($fullPath, [
+                'Content-Type' => $mimeType,
+                'Content-Length' => $fileSize,
+                'Cache-Control' => 'public, max-age=31536000', // Cache for 1 year
+                'Expires' => gmdate('D, d M Y H:i:s', time() + 31536000) . ' GMT',
+            ]);
+
+        } catch (\Exception $e) {
+            Log::error("Error serving business type image {$filename}: " . $e->getMessage());
+            return $this->returnPlaceholderImage();
+        }
+    }
+
+    /**
      * Serve general storage images (for backward compatibility)
      *
      * @param string $folder
@@ -637,7 +686,7 @@ class ImageController extends Controller
      */
     private function isValidFolder($folder)
     {
-        $allowedFolders = ['products', 'services', 'categories', 'users', 'merchants', 'branches', 'companies', 'merchant-logos', 'images/uae_ids', 'avatars'];
+        $allowedFolders = ['products', 'services', 'categories', 'users', 'merchants', 'branches', 'companies', 'merchant-logos', 'images/uae_ids', 'avatars', 'business-types'];
         return in_array($folder, $allowedFolders);
     }
 
@@ -686,5 +735,42 @@ class ImageController extends Controller
             'Content-Type' => 'image/png',
             'Cache-Control' => 'public, max-age=86400',
         ]);
+    }
+
+    /**
+     * Serve avatar images
+     *
+     * @param string $filename
+     * @return \Symfony\Component\HttpFoundation\BinaryFileResponse|\Illuminate\Http\Response
+     */
+    public function serveAvatarImage($filename)
+    {
+        try {
+            // Validate filename to prevent directory traversal
+            if (!$this->isValidFilename($filename)) {
+                Log::warning("Invalid avatar image filename requested: {$filename}");
+                return $this->returnPlaceholderImage();
+            }
+
+            // Check if file exists in storage
+            $path = "avatars/{$filename}";
+            if (!Storage::disk('public')->exists($path)) {
+                Log::info("Avatar image not found in storage: {$path}");
+                return $this->returnPlaceholderImage();
+            }
+
+            // Get the full path to the file
+            $fullPath = Storage::disk('public')->path($path);
+
+            // Return the file response with appropriate headers
+            return response()->file($fullPath, [
+                'Cache-Control' => 'public, max-age=31536000', // Cache for 1 year
+                'Expires' => gmdate('D, d M Y H:i:s', time() + 31536000) . ' GMT',
+            ]);
+
+        } catch (\Exception $e) {
+            Log::error("Error serving avatar image {$filename}: " . $e->getMessage());
+            return $this->returnPlaceholderImage();
+        }
     }
 }

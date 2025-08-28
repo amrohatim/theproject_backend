@@ -109,8 +109,10 @@ class ValidLicenseMiddleware
         }
 
         // If license status is the issue, redirect to license management
-        if (in_array($licenseStatus, ['checking', 'expired', 'rejected'])) {
-            return route('merchant.license.status', ['status' => $licenseStatus]);
+        if (in_array($licenseStatus, ['expired', 'rejected'])) {
+            return route('merchant.license.upload');
+        } elseif ($licenseStatus === 'checking') {
+            return route('merchant.dashboard');
         }
 
         // Default fallback

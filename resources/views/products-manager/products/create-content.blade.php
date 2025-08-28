@@ -334,6 +334,15 @@
             'vendor.continue' => __('vendor.continue'),
             'vendor.exceeds_available' => __('vendor.exceeds_available'),
             'vendor.stock_allocation_exceeds_limit' => __('vendor.stock_allocation_exceeds_limit'),
+            'vendor.error_creating_product' => __('vendor.error_creating_product'),
+            'vendor.branch_selection_required' => __('vendor.branch_selection_required'),
+            'vendor.price_must_be_greater_than_zero' => __('vendor.price_must_be_greater_than_zero'),
+            'vendor.try_again' => __('vendor.try_again'),
+            'vendor.product_name_english_required' => __('vendor.product_name_english_required'),
+            'vendor.product_name_arabic_required' => __('vendor.product_name_arabic_required'),
+            'vendor.stock_must_be_zero_or_greater' => __('vendor.stock_must_be_zero_or_greater'),
+            'vendor.color_image_required' => __('vendor.color_image_required'),
+            'vendor.color_variants_required' => __('vendor.color_variants_required'),
             
 
 
@@ -392,6 +401,9 @@
         'vendor.continue'=>__('vendor.continue'),
         'vendor.view_products'=>__('vendor.view_products'),
         'vendor.product_created_available_inventory'=>__('vendor.product_created_available_inventory'),
+        'vendor.need_create_branch_first'=>__('vendor.need_create_branch_first'),
+        'vendor.no_branches_available'=>__('vendor.no_branches_available'),
+
 
 
             // Legacy keys for backward compatibility

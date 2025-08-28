@@ -10,8 +10,14 @@
         <p class="mt-1 text-gray-600 dark:text-gray-400">{{ __('messages.update_branch_information') }}</p>
     </div>
 
-    <div class="bg-white dark:bg-gray-800 rounded-lg shadow p-6 border border-gray-200 dark:border-gray-700">
-        <form action="{{ route('vendor.branches.update', $branch->id) }}" method="POST" enctype="multipart/form-data">
+    <!-- Branch Information Form -->
+    <div class="bg-white dark:bg-gray-800 rounded-lg shadow p-6 border border-gray-200 dark:border-gray-700 mb-6">
+        <div class="mb-4">
+            <h3 class="text-lg font-medium text-gray-900 dark:text-white">{{ __('messages.branch_information') }}</h3>
+            <p class="mt-1 text-sm text-gray-600 dark:text-gray-400">{{ __('messages.update_basic_branch_details') }}</p>
+        </div>
+
+        <form id="branch-info-form" action="{{ route('vendor.branches.update-info', $branch->id) }}" method="POST" enctype="multipart/form-data">
             @csrf
             @method('PUT')
             <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
@@ -30,8 +36,21 @@
                         @foreach($companies ?? [] as $company)
                             <option value="{{ $company->id }}" {{ old('company_id', $branch->company_id) == $company->id ? 'selected' : '' }}>{{ $company->name }}</option>
                         @endforeach
-                    </select>
+                    </select> 
                     @error('company_id')
+                        <p class="mt-1 text-sm text-red-600 dark:text-red-400">{{ $message }}</p>
+                    @enderror
+                </div>
+
+                <div>
+                    <label for="business_type" class="block text-sm font-medium text-gray-700 dark:text-gray-300">Business Type <span class="text-red-500">*</span></label>
+                    <select id="business_type" name="business_type" class="mt-1 block w-full pl-3 pr-10 py-2 text-base border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-white focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm rounded-md" required>
+                        <option value="">Select Business Type</option>
+                        @foreach($businessTypes ?? [] as $businessType)
+                            <option value="{{ $businessType->business_name }}" {{ old('business_type', $branch->business_type) == $businessType->business_name ? 'selected' : '' }}>{{ $businessType->business_name }}</option>
+                        @endforeach
+                    </select>
+                    @error('business_type')
                         <p class="mt-1 text-sm text-red-600 dark:text-red-400">{{ $message }}</p>
                     @enderror
                 </div>
@@ -190,12 +209,141 @@
                 </div>
             </div>
 
+            <!-- Submit Button for Branch Information -->
             <div class="mt-6 flex items-center justify-end">
                 <a href="{{ route('vendor.branches.show', $branch->id) }}" class="inline-flex items-center px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm text-sm font-medium text-gray-700 dark:text-gray-300 bg-white dark:bg-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 mr-4">
                     {{ __('messages.cancel') }}
                 </a>
                 <button type="submit" class="inline-flex items-center px-4 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
-                    {{ __('messages.update_branch') }}
+                    {{ __('messages.update_branch_information') }}
+                </button>
+            </div>
+        </form>
+    </div>
+
+    <!-- License Management Form -->
+    <div class="bg-white dark:bg-gray-800 rounded-lg shadow p-6 border border-gray-200 dark:border-gray-700">
+        <div class="mb-4">
+            <h3 class="text-lg font-medium text-gray-900 dark:text-white">{{ __('messages.license_management') }}</h3>
+            <p class="text-sm text-gray-600 dark:text-gray-400">{{ __('messages.update_license_documents_dates') }}</p>
+        </div>
+
+        <form id="license-form" action="{{ route('vendor.branches.update-license', $branch->id) }}" method="POST" enctype="multipart/form-data">
+            @csrf
+            @method('PUT')
+
+            @php
+                $currentLicense = $branch->licenses()->latest()->first();
+            @endphp
+
+                @php
+                    $currentLicense = $branch->licenses()->latest()->first();
+                @endphp
+
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <div>
+                        <label for="license_start_date" class="block text-sm font-medium text-gray-700 dark:text-gray-300">
+                            {{ __('messages.license_start_date') }} <span class="text-red-500">*</span>
+                        </label>
+                        <input type="date" name="license_start_date" id="license_start_date"
+                               value="{{ old('license_start_date', $currentLicense ? $currentLicense->start_date->format('Y-m-d') : '') }}"
+                               class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-white rounded-md"
+                               required>
+                        @error('license_start_date')
+                            <p class="mt-1 text-sm text-red-600 dark:text-red-400">{{ $message }}</p>
+                        @enderror
+                    </div>
+
+                    <div>
+                        <label for="license_end_date" class="block text-sm font-medium text-gray-700 dark:text-gray-300">
+                            {{ __('messages.license_end_date') }} <span class="text-red-500">*</span>
+                        </label>
+                        <input type="date" name="license_end_date" id="license_end_date"
+                               value="{{ old('license_end_date', $currentLicense ? $currentLicense->end_date->format('Y-m-d') : '') }}"
+                               class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-white rounded-md"
+                               required>
+                        @error('license_end_date')
+                            <p class="mt-1 text-sm text-red-600 dark:text-red-400">{{ $message }}</p>
+                        @enderror
+                    </div>
+                </div>
+
+                <div class="mt-6">
+                    <label for="license_file" class="block text-sm font-medium text-gray-700 dark:text-gray-300">
+                        {{ __('messages.branch_license_document') }} <span class="text-red-500">*</span>
+                    </label>
+
+                    @if($currentLicense && $currentLicense->license_file_path)
+                        <div class="mt-2 mb-4 p-4 bg-blue-50 dark:bg-blue-900/20 border border-blue-200 dark:border-blue-800 rounded-md">
+                            <div class="flex items-center">
+                                <svg class="h-5 w-5 text-blue-400" fill="currentColor" viewBox="0 0 20 20">
+                                    <path fill-rule="evenodd" d="M4 4a2 2 0 012-2h4.586A2 2 0 0112 2.586L15.414 6A2 2 0 0116 7.414V16a2 2 0 01-2 2H6a2 2 0 01-2-2V4zm2 6a1 1 0 011-1h6a1 1 0 110 2H7a1 1 0 01-1-1zm1 3a1 1 0 100 2h6a1 1 0 100-2H7z" clip-rule="evenodd"></path>
+                                </svg>
+                                <span class="ml-2 text-sm text-blue-700 dark:text-blue-300">
+                                    {{ __('messages.current_license_file') }}: {{ basename($currentLicense->license_file_path) }}
+                                </span>
+                                <span class="ml-2 text-xs text-blue-600 dark:text-blue-400">
+                                    ({{ __('messages.status') }}: {{ ucfirst($currentLicense->status) }})
+                                </span>
+                            </div>
+                        </div>
+                    @endif
+
+                    <div class="mt-2">
+                        <div class="flex justify-center px-6 pt-5 pb-6 border-2 border-gray-300 dark:border-gray-600 border-dashed rounded-md hover:border-gray-400 dark:hover:border-gray-500 transition-colors duration-200" id="license-upload-area">
+                            <div class="space-y-1 text-center">
+                                <svg class="mx-auto h-12 w-12 text-gray-400" stroke="currentColor" fill="none" viewBox="0 0 48 48">
+                                    <path d="M28 8H12a4 4 0 00-4 4v20m32-12v8m0 0v8a4 4 0 01-4 4H12a4 4 0 01-4-4v-4m32-4l-3.172-3.172a4 4 0 00-5.656 0L28 28M8 32l9.172-9.172a4 4 0 015.656 0L28 28m0 0l4 4m4-24h8m-4-4v8m-12 4h.02" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
+                                </svg>
+                                <div class="flex text-sm text-gray-600 dark:text-gray-400">
+                                    <label for="license_file" class="relative cursor-pointer bg-white dark:bg-gray-800 rounded-md font-medium text-indigo-600 dark:text-indigo-400 hover:text-indigo-500 focus-within:outline-none focus-within:ring-2 focus-within:ring-offset-2 focus-within:ring-indigo-500">
+                                        <span>{{ __('messages.click_to_upload') }}</span>
+                                        <input id="license_file" name="license_file" type="file" class="sr-only" accept=".pdf">
+                                    </label>
+                                    <p class="pl-1">{{ __('messages.or_drag_and_drop') }}</p>
+                                </div>
+                                <p class="text-xs text-gray-500 dark:text-gray-400">{{ __('messages.pdf_files_only_max_10mb') }}</p>
+                            </div>
+                        </div>
+                        <div id="license-file-preview" class="mt-2 hidden">
+                            <div class="flex items-center p-2 bg-green-50 dark:bg-green-900/20 border border-green-200 dark:border-green-800 rounded-md">
+                                <svg class="h-5 w-5 text-green-400" fill="currentColor" viewBox="0 0 20 20">
+                                    <path fill-rule="evenodd" d="M4 4a2 2 0 012-2h4.586A2 2 0 0112 2.586L15.414 6A2 2 0 0116 7.414V16a2 2 0 01-2 2H6a2 2 0 01-2-2V4zm2 6a1 1 0 011-1h6a1 1 0 110 2H7a1 1 0 01-1-1zm1 3a1 1 0 100 2h6a1 1 0 100-2H7z" clip-rule="evenodd"></path>
+                                </svg>
+                                <span id="license-file-name" class="ml-2 text-sm text-green-700 dark:text-green-300"></span>
+                                <span id="license-file-size" class="ml-2 text-xs text-green-600 dark:text-green-400"></span>
+                                <button type="button" id="remove-license-file" class="ml-auto text-green-600 dark:text-green-400 hover:text-green-800 dark:hover:text-green-200">
+                                    {{ __('messages.remove') }}
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                    @error('license_file')
+                        <p class="mt-1 text-sm text-red-600 dark:text-red-400">{{ $message }}</p>
+                    @enderror
+                </div>
+
+                <div class="mt-4 p-4 bg-yellow-50 dark:bg-yellow-900/20 border border-yellow-200 dark:border-yellow-800 rounded-md">
+                    <div class="flex">
+                        <svg class="h-5 w-5 text-yellow-400" fill="currentColor" viewBox="0 0 20 20">
+                            <path fill-rule="evenodd" d="M8.257 3.099c.765-1.36 2.722-1.36 3.486 0l5.58 9.92c.75 1.334-.213 2.98-1.742 2.98H4.42c-1.53 0-2.493-1.646-1.743-2.98l5.58-9.92zM11 13a1 1 0 11-2 0 1 1 0 012 0zm-1-8a1 1 0 00-1 1v3a1 1 0 002 0V6a1 1 0 00-1-1z" clip-rule="evenodd"></path>
+                        </svg>
+                        <div class="ml-3">
+                            <p class="text-sm text-yellow-700 dark:text-yellow-300">
+                                <strong>{{ __('messages.important') }}:</strong> {{ __('messages.license_update_notice') }}
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Submit Button for License -->
+            <div class="mt-6 flex items-center justify-end">
+                <a href="{{ route('vendor.branches.show', $branch->id) }}" class="inline-flex items-center px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm text-sm font-medium text-gray-700 dark:text-gray-300 bg-white dark:bg-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 mr-4">
+                    {{ __('messages.cancel') }}
+                </a>
+                <button type="submit" class="inline-flex items-center px-4 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-green-600 hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500">
+                    {{ __('messages.update_license') }}
                 </button>
             </div>
         </form>
@@ -517,6 +665,185 @@
                 branchImageContainer.classList.remove('hidden');
             }
         });
+
+        // License file upload functionality
+        const licenseFileInput = document.getElementById('license_file');
+        const licenseUploadArea = document.getElementById('license-upload-area');
+        const licenseFilePreview = document.getElementById('license-file-preview');
+        const licenseFileName = document.getElementById('license-file-name');
+        const licenseFileSize = document.getElementById('license-file-size');
+        const removeLicenseFileBtn = document.getElementById('remove-license-file');
+
+        // Handle file input change
+        licenseFileInput.addEventListener('change', function(e) {
+            const file = e.target.files[0];
+            if (file) {
+                displayLicenseFile(file);
+            }
+        });
+
+        // Handle drag and drop
+        licenseUploadArea.addEventListener('dragover', function(e) {
+            e.preventDefault();
+            licenseUploadArea.classList.add('border-indigo-500', 'bg-indigo-50', 'dark:bg-indigo-900/20');
+        });
+
+        licenseUploadArea.addEventListener('dragleave', function(e) {
+            e.preventDefault();
+            licenseUploadArea.classList.remove('border-indigo-500', 'bg-indigo-50', 'dark:bg-indigo-900/20');
+        });
+
+        licenseUploadArea.addEventListener('drop', function(e) {
+            e.preventDefault();
+            licenseUploadArea.classList.remove('border-indigo-500', 'bg-indigo-50', 'dark:bg-indigo-900/20');
+
+            const files = e.dataTransfer.files;
+            if (files.length > 0) {
+                const file = files[0];
+                if (file.type === 'application/pdf') {
+                    licenseFileInput.files = files;
+                    displayLicenseFile(file);
+                } else {
+                    alert('{{ __('messages.please_select_pdf_file') }}');
+                }
+            }
+        });
+
+        // Remove file functionality
+        removeLicenseFileBtn.addEventListener('click', function() {
+            licenseFileInput.value = '';
+            licenseFilePreview.classList.add('hidden');
+        });
+
+        function displayLicenseFile(file) {
+            licenseFileName.textContent = file.name;
+            licenseFileSize.textContent = formatFileSize(file.size);
+            licenseFilePreview.classList.remove('hidden');
+        }
+
+        function formatFileSize(bytes) {
+            if (bytes === 0) return '0 Bytes';
+            const k = 1024;
+            const sizes = ['Bytes', 'KB', 'MB', 'GB'];
+            const i = Math.floor(Math.log(bytes) / Math.log(k));
+            return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + ' ' + sizes[i];
+        }
+
+        // AJAX Form Handling
+        function handleFormSubmission(formId, successMessage) {
+            const form = document.getElementById(formId);
+            if (!form) return;
+
+            form.addEventListener('submit', function(e) {
+                e.preventDefault();
+
+                const formData = new FormData(form);
+                const submitButton = form.querySelector('button[type="submit"]');
+                const originalText = submitButton ? submitButton.textContent : 'Submit';
+
+                // Show loading state
+                if (submitButton) {
+                    submitButton.disabled = true;
+                    submitButton.textContent = 'Updating...';
+                }
+
+                const csrfToken = document.querySelector('meta[name="csrf-token"]');
+                const headers = {
+                    'X-Requested-With': 'XMLHttpRequest'
+                };
+
+                if (csrfToken) {
+                    headers['X-CSRF-TOKEN'] = csrfToken.getAttribute('content');
+                }
+
+                fetch(form.action, {
+                    method: 'POST',
+                    body: formData,
+                    headers: headers
+                })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success) {
+                        showSuccessModal(data.message);
+                        // Optionally reload the page after a delay
+                        setTimeout(() => {
+                            window.location.reload();
+                        }, 2000);
+                    } else {
+                        showErrorModal(data.message || 'An error occurred while updating.');
+                    }
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                    showErrorModal('An unexpected error occurred. Please try again.');
+                })
+                .finally(() => {
+                    // Reset button state
+                    if (submitButton) {
+                        submitButton.disabled = false;
+                        submitButton.textContent = originalText;
+                    }
+                });
+            });
+        }
+
+        // Initialize form handlers
+        handleFormSubmission('branch-info-form', 'Branch information updated successfully.');
+        handleFormSubmission('license-form', 'License updated successfully.');
+
+        // Modal functions
+        function showSuccessModal(message) {
+            const modal = createModal('Success', message, 'success');
+            document.body.appendChild(modal);
+            modal.style.display = 'flex';
+        }
+
+        function showErrorModal(message) {
+            const modal = createModal('Error', message, 'error');
+            document.body.appendChild(modal);
+            modal.style.display = 'flex';
+        }
+
+        function createModal(title, message, type) {
+            const modal = document.createElement('div');
+            modal.className = 'fixed inset-0 bg-gray-600 bg-opacity-50 overflow-y-auto h-full w-full z-50';
+            modal.style.display = 'none';
+
+            const iconColor = type === 'success' ? 'text-green-400' : 'text-red-400';
+            const icon = type === 'success'
+                ? '<path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"></path>'
+                : '<path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clip-rule="evenodd"></path>';
+
+            modal.innerHTML = `
+                <div class="relative top-20 mx-auto p-5 border h-64 w-96 shadow-lg rounded-md bg-white dark:bg-gray-800">
+                    <div class="mt-3 text-center">
+                        <div class="mx-auto flex items-center justify-center h-12 w-12 rounded-full bg-${type === 'success' ? 'green' : 'red'}-100 dark:bg-${type === 'success' ? 'green' : 'red'}-900">
+                            <svg class="h-6 w-6 ${iconColor}" fill="currentColor" viewBox="0 0 20 20">
+                                ${icon}
+                            </svg>
+                        </div>
+                        <h3 class="text-lg leading-6 font-medium text-gray-900 dark:text-white mt-2">${title}</h3>
+                        <div class="mt-2 px-7 py-3">
+                            <p class="text-sm text-gray-500 dark:text-gray-400">${message}</p>
+                        </div>
+                        <div class="items-center px-4 py-3">
+                            <button onclick="this.closest('.fixed').remove()" class="px-4 py-2 bg-${type === 'success' ? 'green' : 'red'}-500 text-white text-base font-medium rounded-md w-full shadow-sm hover:bg-${type === 'success' ? 'green' : 'red'}-600 focus:outline-none focus:ring-2 focus:ring-${type === 'success' ? 'green' : 'red'}-300">
+                                OK
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            `;
+
+            // Close modal when clicking outside
+            modal.addEventListener('click', function(e) {
+                if (e.target === modal) {
+                    modal.remove();
+                }
+            });
+
+            return modal;
+        }
     });
 </script>
 @endsection

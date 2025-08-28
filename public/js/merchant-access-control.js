@@ -212,8 +212,8 @@ class MerchantAccessControl {
             buttonText = 'Upload License';
             buttonUrl = '/merchant/license/upload';
         } else if (licenseStatus === 'checking') {
-            buttonText = 'View Status';
-            buttonUrl = `/merchant/license/status/${licenseStatus}`;
+            buttonText = 'Go to Dashboard';
+            buttonUrl = '/merchant/dashboard';
         }
         
         // Use provided redirect URL if available

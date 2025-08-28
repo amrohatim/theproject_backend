@@ -65,7 +65,7 @@
                     <div>
                         <label for="discount_percentage" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1 {{ app()->getLocale() == 'ar' ? 'text-right' : 'text-left' }}">{{ __('messages.discount_percentage') }} <span class="text-red-500">*</span></label>
                         <div class="relative">
-                            <input type="number" name="discount_percentage" id="discount_percentage" value="{{ old('discount_percentage') }}" min="1" max="100" class="modern-input px-4 py-2.5 pr-14 w-full {{ app()->getLocale() == 'ar' ? 'text-right' : 'text-left' }}" placeholder="{{ __('messages.enter_discount_percentage') }}" required>
+                            <input type="number" name="discount_percentage" id="discount_percentage" value="{{ old('discount_percentage') }}" min="1" max="100" class="modern-input px-4 py-2.5 pr-14 w-full {{ app()->getLocale() == 'ar' ? 'text-right' : 'text-left' }}" placeholder="{{ __('messages.enter_discount_percentage') }}" required onkeypress="return event.charCode >= 48 && event.charCode <= 57" oninput="this.value = Math.min(100, Math.max(0, this.value.replace(/[^0-9]/g, '')))">
                             <div class="absolute inset-y-0 {{ app()->getLocale() == 'ar' ? 'left-0 pl-3' : 'right-0 pr-3' }} flex items-center pointer-events-none">
                                 <span class="text-gray-500 pr-6">%</span>
                             </div>
@@ -163,9 +163,19 @@
 
                 <!-- Image -->
                 <div class="mt-4">
-                    <label for="image" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1 {{ app()->getLocale() == 'ar' ? 'text-right' : 'text-left' }}">{{ __('messages.deal_image') }}</label>
-                    <input type="file" name="image" id="image" class="modern-input px-4 py-2.5 w-full">
-                    <p class="text-gray-500 text-sm mt-1 {{ app()->getLocale() == 'ar' ? 'text-right' : 'text-left' }}">{{ __('messages.deal_image_requirements') }}</p>
+                    <label for="image" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1 {{ app()->getLocale() == 'ar' ? 'text-right' : 'text-left' }}">
+                        {{ __('messages.deal_image') }}
+                        <span class="text-red-500">*</span>
+                    </label>
+                    <input type="file"
+                           name="image"
+                           id="image"
+                           class="modern-input px-4 py-2.5 w-full"
+                           accept="image/jpeg,image/png,image/jpg,image/gif,image/svg+xml"
+                           required
+                           onchange="validateImageFile(this)">
+                    <p class="text-gray-500 text-sm mt-1 {{ app()->getLocale() == 'ar' ? 'text-right' : 'text-left' }}">{{ __('messages.deal_image_requirements_new') }}</p>
+                    <div id="image-error" class="text-red-500 text-sm mt-1 {{ app()->getLocale() == 'ar' ? 'text-right' : 'text-left' }}" style="display: none;"></div>
                     @error('image')
                         <p class="text-red-500 text-sm mt-1 {{ app()->getLocale() == 'ar' ? 'text-right' : 'text-left' }}">{{ $message }}</p>
                     @enderror
@@ -218,13 +228,40 @@
                 <!-- Product Selection -->
                 <div id="products-container" class="mt-4" style="display: none;">
                     <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1 {{ app()->getLocale() == 'ar' ? 'text-right' : 'text-left' }}">{{ __('messages.select_products') }}</label>
+
+                    @if(count($productsWithActiveDeals) > 0)
+                        <div class="mb-3 p-3 bg-amber-50 border border-amber-200 rounded-lg">
+                            <div class="flex items-center">
+                                <i class="fas fa-info-circle text-amber-600 {{ app()->getLocale() == 'ar' ? 'ml-2' : 'mr-2' }}"></i>
+                                <p class="text-sm text-amber-800">
+                                    {{ __('messages.cannot_select_items_with_deals') }}
+                                </p>
+                            </div>
+                        </div>
+                    @endif
+
                     <div class="selection-container">
                         @foreach($products as $product)
-                            <div class="p-2 hover:bg-gray-100 dark:hover:bg-gray-700 rounded">
-                                <label class="inline-flex items-center w-full {{ app()->getLocale() == 'ar' ? 'flex-row-reverse' : '' }}">
-                                    <input type="checkbox" name="product_ids[]" value="{{ $product->id }}" class="form-checkbox" {{ in_array($product->id, old('product_ids', [])) ? 'checked' : '' }}>
-                                    <span class="{{ app()->getLocale() == 'ar' ? 'mr-2' : 'ml-2' }}">{{ $product->name }} - ${{ number_format($product->price, 2) }}</span>
-                                    {{-- <span class="{{ app()->getLocale() == 'ar' ? 'mr-auto' : 'ml-auto' }} text-sm text-gray-500">{{ $product->branch->name }}</span> --}}
+                            @php
+                                $hasActiveDeal = in_array($product->id, $productsWithActiveDeals);
+                            @endphp
+                            <div class="p-2 rounded {{ $hasActiveDeal ? 'bg-gray-50 dark:bg-gray-800 opacity-60' : 'hover:bg-gray-100 dark:hover:bg-gray-700' }}">
+                                <label class="inline-flex items-center w-full {{ app()->getLocale() == 'ar' ? 'flex-row-reverse' : '' }} {{ $hasActiveDeal ? 'cursor-not-allowed' : 'cursor-pointer' }}">
+                                    <input type="checkbox"
+                                           name="product_ids[]"
+                                           value="{{ $product->id }}"
+                                           class="form-checkbox {{ $hasActiveDeal ? 'cursor-not-allowed' : '' }}"
+                                           {{ $hasActiveDeal ? 'disabled' : '' }}
+                                           {{ !$hasActiveDeal && in_array($product->id, old('product_ids', [])) ? 'checked' : '' }}>
+                                    <span class="{{ app()->getLocale() == 'ar' ? 'mr-2' : 'ml-2' }} flex-1">
+                                        {{ $product->name }} - ${{ number_format($product->price, 2) }}
+                                    </span>
+                                    @if($hasActiveDeal)
+                                        <span class="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium bg-red-100 text-red-800 {{ app()->getLocale() == 'ar' ? 'mr-2' : 'ml-2' }}">
+                                            <i class="fas fa-tag {{ app()->getLocale() == 'ar' ? 'ml-1' : 'mr-1' }}"></i>
+                                            {{ __('messages.deal_already_applied') }}
+                                        </span>
+                                    @endif
                                 </label>
                             </div>
                         @endforeach
@@ -237,13 +274,40 @@
                 <!-- Service Selection -->
                 <div id="services-container" class="mt-4" style="display: none;">
                     <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1 {{ app()->getLocale() == 'ar' ? 'text-right' : 'text-left' }}">{{ __('messages.select_services') }}</label>
+
+                    @if(count($servicesWithActiveDeals) > 0)
+                        <div class="mb-3 p-3 bg-amber-50 border border-amber-200 rounded-lg">
+                            <div class="flex items-center">
+                                <i class="fas fa-info-circle text-amber-600 {{ app()->getLocale() == 'ar' ? 'ml-2' : 'mr-2' }}"></i>
+                                <p class="text-sm text-amber-800">
+                                    {{ __('messages.cannot_select_items_with_deals') }}
+                                </p>
+                            </div>
+                        </div>
+                    @endif
+
                     <div class="selection-container">
                         @foreach($services as $service)
-                            <div class="p-2 hover:bg-gray-100 dark:hover:bg-gray-700 rounded">
-                                <label class="inline-flex items-center w-full {{ app()->getLocale() == 'ar' ? 'flex-row-reverse' : '' }}">
-                                    <input type="checkbox" name="service_ids[]" value="{{ $service->id }}" class="form-checkbox" {{ in_array($service->id, old('service_ids', [])) ? 'checked' : '' }}>
-                                    <span class="{{ app()->getLocale() == 'ar' ? 'mr-2' : 'ml-2' }}">{{ $service->name }} - ${{ number_format($service->price, 2) }} ({{ $service->duration }}{{ __('messages.min') }})</span>
-                                    {{-- <span class="{{ app()->getLocale() == 'ar' ? 'mr-auto' : 'ml-auto' }} text-sm text-gray-500">{{ $service->branch ? $service->branch->name : __('messages.direct_merchant_service') }}</span> --}}
+                            @php
+                                $hasActiveDeal = in_array($service->id, $servicesWithActiveDeals);
+                            @endphp
+                            <div class="p-2 rounded {{ $hasActiveDeal ? 'bg-gray-50 dark:bg-gray-800 opacity-60' : 'hover:bg-gray-100 dark:hover:bg-gray-700' }}">
+                                <label class="inline-flex items-center w-full {{ app()->getLocale() == 'ar' ? 'flex-row-reverse' : '' }} {{ $hasActiveDeal ? 'cursor-not-allowed' : 'cursor-pointer' }}">
+                                    <input type="checkbox"
+                                           name="service_ids[]"
+                                           value="{{ $service->id }}"
+                                           class="form-checkbox {{ $hasActiveDeal ? 'cursor-not-allowed' : '' }}"
+                                           {{ $hasActiveDeal ? 'disabled' : '' }}
+                                           {{ !$hasActiveDeal && in_array($service->id, old('service_ids', [])) ? 'checked' : '' }}>
+                                    <span class="{{ app()->getLocale() == 'ar' ? 'mr-2' : 'ml-2' }} flex-1">
+                                        {{ $service->name }} - ${{ number_format($service->price, 2) }} ({{ $service->duration }}{{ __('messages.min') }})
+                                    </span>
+                                    @if($hasActiveDeal)
+                                        <span class="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium bg-red-100 text-red-800 {{ app()->getLocale() == 'ar' ? 'mr-2' : 'ml-2' }}">
+                                            <i class="fas fa-tag {{ app()->getLocale() == 'ar' ? 'ml-1' : 'mr-1' }}"></i>
+                                            {{ __('messages.deal_already_applied') }}
+                                        </span>
+                                    @endif
                                 </label>
                             </div>
                         @endforeach
@@ -432,5 +496,58 @@
             document.getElementById('validation-modal').remove();
         });
     }
+
+    // Image file validation function
+    function validateImageFile(input) {
+        const file = input.files[0];
+        const errorDiv = document.getElementById('image-error');
+        const maxSize = 20 * 1024 * 1024; // 20MB in bytes
+        const allowedTypes = ['image/jpeg', 'image/png', 'image/jpg', 'image/gif', 'image/svg+xml'];
+
+        // Clear previous errors
+        errorDiv.style.display = 'none';
+        errorDiv.textContent = '';
+        input.setCustomValidity('');
+
+        if (!file) {
+            input.setCustomValidity('{{ __("messages.deal_image_required") }}');
+            return false;
+        }
+
+        // Check file type
+        if (!allowedTypes.includes(file.type)) {
+            const errorMsg = '{{ __("messages.deal_image_invalid_type") }}';
+            errorDiv.textContent = errorMsg;
+            errorDiv.style.display = 'block';
+            input.setCustomValidity(errorMsg);
+            input.value = '';
+            return false;
+        }
+
+        // Check file size
+        if (file.size > maxSize) {
+            const errorMsg = '{{ __("messages.deal_image_too_large") }}';
+            errorDiv.textContent = errorMsg;
+            errorDiv.style.display = 'block';
+            input.setCustomValidity(errorMsg);
+            input.value = '';
+            return false;
+        }
+
+        return true;
+    }
+
+    // Form submission validation
+    document.addEventListener('DOMContentLoaded', function() {
+        const form = document.querySelector('form');
+        const imageInput = document.getElementById('image');
+
+        form.addEventListener('submit', function(e) {
+            if (!validateImageFile(imageInput)) {
+                e.preventDefault();
+                return false;
+            }
+        });
+    });
 </script>
 @endsection

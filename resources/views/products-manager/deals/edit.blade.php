@@ -103,7 +103,9 @@
                         <div class="relative">
                             <input type="number" name="discount_percentage" id="discount_percentage" value="{{ old('discount_percentage', $deal->discount_percentage) }}" 
                                    class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-[#F46C3F] focus:border-[#F46C3F] dark:bg-gray-700 dark:border-gray-600 dark:text-white {{ app()->getLocale() == 'ar' ? 'text-right pr-8' : 'text-left pr-8' }}" 
-                                   min="1" max="100" step="0.01" required>
+                                   min="1" max="100" step="0.01" required
+                                   onkeypress="return (event.charCode >= 48 && event.charCode <= 57) || event.charCode === 46"
+                                   oninput="this.value = this.value.replace(/[^0-9.]/g, ''); if(this.value > 100) this.value = 100;">
                             <div class="absolute inset-y-0 {{ app()->getLocale() == 'ar' ? 'left-0 pl-3' : 'right-0 pr-3' }} flex items-center pointer-events-none">
                                 <span class="text-gray-500">%</span>
                             </div>
@@ -145,6 +147,57 @@
                                   class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-[#F46C3F] focus:border-[#F46C3F] dark:bg-gray-700 dark:border-gray-600 dark:text-white text-right"
                                   placeholder="{{ __('products_manager.enter_deal_description_arabic') }}" dir="rtl">{{ old('description_arabic', $deal->description_arabic) }}</textarea>
                         @error('description_arabic')
+                            <p class="text-red-500 text-sm mt-1 text-right">{{ $message }}</p>
+                        @enderror
+                    </div>
+                </div>
+
+                <!-- Promotional Message (Bilingual) -->
+                <div class="mt-4">
+                    <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2 {{ app()->getLocale() == 'ar' ? 'text-right' : 'text-left' }}">
+                        {{ __('messages.promotional_message') }}
+                        <span class="{{ app()->getLocale() == 'ar' ? 'mr-1' : 'ml-1' }} text-gray-500 text-xs" title="{{ __('messages.promotional_message_help') }}">
+                            ({{ __('messages.optional') }})
+                        </span>
+                    </label>
+                    <p class="text-xs text-gray-500 dark:text-gray-400 mb-2 {{ app()->getLocale() == 'ar' ? 'text-right' : 'text-left' }}">{{ __('messages.promotional_message_both_or_none') }}</p>
+
+                    <!-- Language Switcher for Promotional Message -->
+                    <div class="flex mb-2">
+                        <button type="button" class="language-tab active rounded-l-md" data-language="en" data-field="promotional_message">
+                            🇺🇸 English
+                        </button>
+                        <button type="button" class="language-tab rounded-r-md" data-language="ar" data-field="promotional_message">
+                            🇸🇦 العربية
+                        </button>
+                    </div>
+
+                    <!-- English Promotional Message -->
+                    <div data-language-field="promotional_message" data-language="en" class="mb-3">
+                        <div class="relative">
+                            <input type="text" name="promotional_message" id="promotional_message" value="{{ old('promotional_message', $deal->promotional_message) }}"
+                                   class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-[#F46C3F] focus:border-[#F46C3F] dark:bg-gray-700 dark:border-gray-600 dark:text-white"
+                                   maxlength="50" placeholder="{{ __('messages.promotional_message_placeholder') }}">
+                            <div class="absolute right-2 bottom-2 text-xs text-gray-500">
+                                <span id="char-count-en">0</span>/50
+                            </div>
+                        </div>
+                        @error('promotional_message')
+                            <p class="text-red-500 text-sm mt-1">{{ $message }}</p>
+                        @enderror
+                    </div>
+
+                    <!-- Arabic Promotional Message -->
+                    <div data-language-field="promotional_message" data-language="ar" class="mb-3" style="display: none;">
+                        <div class="relative">
+                            <input type="text" name="promotional_message_arabic" id="promotional_message_arabic" value="{{ old('promotional_message_arabic', $deal->promotional_message_arabic) }}"
+                                   class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-[#F46C3F] focus:border-[#F46C3F] dark:bg-gray-700 dark:border-gray-600 dark:text-white text-right"
+                                   maxlength="50" placeholder="أدخل الرسالة الترويجية" dir="rtl">
+                            <div class="absolute left-2 bottom-2 text-xs text-gray-500">
+                                <span id="char-count-ar">0</span>/50
+                            </div>
+                        </div>
+                        @error('promotional_message_arabic')
                             <p class="text-red-500 text-sm mt-1 text-right">{{ $message }}</p>
                         @enderror
                     </div>
@@ -207,9 +260,10 @@
                 
                 <div>
                     <label for="image" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1 {{ app()->getLocale() == 'ar' ? 'text-right' : 'text-left' }}">{{ __('products_manager.upload_new_image') }}</label>
-                    <input type="file" name="image" id="image" accept="image/*"
+                    <input type="file" name="image" id="image" accept="image/jpeg,image/png,image/jpg,image/gif,image/svg+xml"
                            class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-[#F46C3F] focus:border-[#F46C3F] dark:bg-gray-700 dark:border-gray-600 dark:text-white">
-                    <p class="text-xs text-gray-500 dark:text-gray-400 mt-1 {{ app()->getLocale() == 'ar' ? 'text-right' : 'text-left' }}">{{ __('products_manager.image_requirements') }}</p>
+                    <p class="text-xs text-gray-500 dark:text-gray-400 mt-1 {{ app()->getLocale() == 'ar' ? 'text-right' : 'text-left' }}">{{ __('products_manager.image_requirements_new') }}</p>
+                    <div id="image-error" class="text-red-500 text-sm mt-1 hidden {{ app()->getLocale() == 'ar' ? 'text-right' : 'text-left' }}"></div>
                     @error('image')
                         <p class="text-red-500 text-sm mt-1 {{ app()->getLocale() == 'ar' ? 'text-right' : 'text-left' }}">{{ $message }}</p>
                     @enderror
@@ -224,16 +278,8 @@
                     <div>
                         <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2 {{ app()->getLocale() == 'ar' ? 'text-right' : 'text-left' }}">{{ __('products_manager.applies_to') }} <span class="text-red-500">*</span></label>
                         <div class="space-y-2">
-                            <label class="flex items-center">
-                                <input type="radio" name="applies_to" value="all" {{ old('applies_to', $deal->applies_to) === 'all' ? 'checked' : '' }}
-                                       class="mr-2 text-[#F46C3F] focus:ring-[#F46C3F]" onchange="toggleSelectionContainers()">
-                                <span class="text-gray-700 dark:text-gray-300">{{ __('products_manager.all_products') }}</span>
-                            </label>
-                            <label class="flex items-center">
-                                <input type="radio" name="applies_to" value="products" {{ old('applies_to', $deal->applies_to) === 'products' ? 'checked' : '' }}
-                                       class="mr-2 text-[#F46C3F] focus:ring-[#F46C3F]" onchange="toggleSelectionContainers()">
-                                <span class="text-gray-700 dark:text-gray-300">{{ __('products_manager.specific_products') }}</span>
-                            </label>
+                            <input type="hidden" name="applies_to" value="products">
+                            <span class="text-gray-700 dark:text-gray-300">{{ __('products_manager.specific_products') }}</span>
                         </div>
                         @error('applies_to')
                             <p class="text-red-500 text-sm mt-1 {{ app()->getLocale() == 'ar' ? 'text-right' : 'text-left' }}">{{ $message }}</p>
@@ -241,15 +287,28 @@
                     </div>
 
                     <!-- Products Selection Container -->
-                    <div id="products-container" style="display: {{ old('applies_to', $deal->applies_to) === 'products' ? 'block' : 'none' }};">
+                    <div id="products-container">
                         <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2 {{ app()->getLocale() == 'ar' ? 'text-right' : 'text-left' }}">{{ __('products_manager.select_products') }}</label>
                         <div class="selection-container bg-gray-50 dark:bg-gray-700">
                             @foreach($products as $product)
-                                <label class="flex items-center p-2 hover:bg-gray-100 dark:hover:bg-gray-600 rounded">
-                                    <input type="checkbox" name="product_ids[]" value="{{ $product->id }}" 
-                                           class="mr-2 text-[#F46C3F] focus:ring-[#F46C3F]" 
-                                           {{ in_array($product->id, old('product_ids', $deal->product_ids ?? [])) ? 'checked' : '' }}>
-                                    <span class="text-gray-700 dark:text-gray-300">{{ $product->name }}</span>
+                                @php
+                                    $hasActiveDeal = in_array($product->id, $productsWithActiveDeals ?? []);
+                                    $isCurrentDealProduct = in_array($product->id, old('product_ids', $deal->product_ids ?? []));
+                                    $isDisabled = $hasActiveDeal && !$isCurrentDealProduct;
+                                @endphp
+                                <label class="flex items-center p-2 hover:bg-gray-100 dark:hover:bg-gray-600 rounded {{ $isDisabled ? 'opacity-50' : '' }} {{ $isDisabled ? 'cursor-not-allowed' : 'cursor-pointer' }}">
+                                    <input type="checkbox"
+                                           name="product_ids[]"
+                                           value="{{ $product->id }}"
+                                           class="mr-2 text-[#F46C3F] focus:ring-[#F46C3F] {{ $isDisabled ? 'cursor-not-allowed' : '' }}"
+                                           {{ in_array($product->id, old('product_ids', $deal->product_ids ?? [])) ? 'checked' : '' }}
+                                           {{ $isDisabled ? 'disabled' : '' }}>
+                                    <span class="text-gray-700 dark:text-gray-300 {{ $isDisabled ? 'text-gray-400' : '' }}">
+                                        {{ $product->name }}
+                                        @if($isDisabled)
+                                            <span class="text-xs text-red-500 ml-1">({{ __('messages.has_active_deal') }})</span>
+                                        @endif
+                                    </span>
                                 </label>
                             @endforeach
                         </div>
@@ -294,20 +353,18 @@
 
         // Initialize bilingual validation
         setupBilingualValidation();
+
+        // Initialize image validation
+        setupImageValidation();
+
+        // Initialize character counting
+        setupCharacterCounting();
     });
 
     function toggleSelectionContainers() {
-        const checkedRadio = document.querySelector('input[name="applies_to"]:checked');
-        if (!checkedRadio) return;
-
-        const appliesTo = checkedRadio.value;
+        // Since we only support products now, always show the products container
         const productsContainer = document.getElementById('products-container');
-
-        // Hide products container first
-        if (productsContainer) productsContainer.style.display = 'none';
-
-        // Show products container if specific products is selected
-        if (appliesTo === 'products' && productsContainer) {
+        if (productsContainer) {
             productsContainer.style.display = 'block';
         }
     }
@@ -365,12 +422,60 @@
                 errors.push('{{ __('products_manager.description_both_or_none') }}');
             }
 
+            // Validate promotional message (optional, but if one is filled, both must be filled)
+            if (!validateBilingualField('promotional_message', false)) {
+                hasErrors = true;
+                errors.push('{{ __('messages.promotional_message_both_or_none') }}');
+            }
+
             if (hasErrors) {
                 e.preventDefault();
                 showValidationModal(errors);
                 return false;
             }
         });
+    }
+
+    function setupImageValidation() {
+        const imageInput = document.getElementById('image');
+        const imageError = document.getElementById('image-error');
+
+        if (imageInput && imageError) {
+            imageInput.addEventListener('change', function() {
+                validateImageInput(this, imageError);
+            });
+        }
+    }
+
+    function validateImageInput(input, errorElement) {
+        errorElement.classList.add('hidden');
+        errorElement.textContent = '';
+
+        if (!input.files || input.files.length === 0) {
+            return; // No file selected, which is okay for edit
+        }
+
+        const file = input.files[0];
+        const maxSize = 20971520; // 20MB in bytes
+        const allowedTypes = ['image/jpeg', 'image/png', 'image/jpg', 'image/gif', 'image/svg+xml'];
+
+        // Check file size
+        if (file.size > maxSize) {
+            errorElement.textContent = '{{ __('products_manager.deal_image_too_large') }}';
+            errorElement.classList.remove('hidden');
+            input.value = ''; // Clear the input
+            return false;
+        }
+
+        // Check file type
+        if (!allowedTypes.includes(file.type)) {
+            errorElement.textContent = '{{ __('products_manager.deal_image_invalid_type') }}';
+            errorElement.classList.remove('hidden');
+            input.value = ''; // Clear the input
+            return false;
+        }
+
+        return true;
     }
 
     function showValidationModal(errors) {
@@ -403,6 +508,32 @@
         document.getElementById('close-modal').addEventListener('click', function() {
             document.getElementById('validation-modal').remove();
         });
+    }
+
+    function setupCharacterCounting() {
+        // Setup character counting for promotional message fields
+        const promotionalMessageEn = document.getElementById('promotional_message');
+        const promotionalMessageAr = document.getElementById('promotional_message_arabic');
+        const charCountEn = document.getElementById('char-count-en');
+        const charCountAr = document.getElementById('char-count-ar');
+
+        if (promotionalMessageEn && charCountEn) {
+            // Update character count on input
+            promotionalMessageEn.addEventListener('input', function() {
+                charCountEn.textContent = this.value.length;
+            });
+            // Initialize count
+            charCountEn.textContent = promotionalMessageEn.value.length;
+        }
+
+        if (promotionalMessageAr && charCountAr) {
+            // Update character count on input
+            promotionalMessageAr.addEventListener('input', function() {
+                charCountAr.textContent = this.value.length;
+            });
+            // Initialize count
+            charCountAr.textContent = promotionalMessageAr.value.length;
+        }
     }
 </script>
 @endsection

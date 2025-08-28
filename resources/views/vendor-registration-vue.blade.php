@@ -450,27 +450,13 @@
                             </div>
                             <div class="progress-line flex-1 h-1 mx-4 bg-gray-300 rounded-full"></div>
                         </div>
-                        <div class="flex items-center">
-                            <div class="flex flex-col items-center group">
-                                <div class="step-circle w-12 h-12 rounded-full flex items-center justify-center text-sm font-semibold border-2 bg-gray-100 border-gray-300 text-gray-400"
-                                     data-step="5"
-                                     tabindex="0"
-                                     role="button"
-                                     aria-label="{{ __('messages.step_5_tooltip') }}"
-                                     title="{{ __('messages.step_5_tooltip') }}">
-                                    5
-                                </div>
-                                <div class="mt-3 text-center">
-                                    <div class="text-xs font-semibold text-gray-400">{{ __('messages.license_upload') }}</div>
-                                </div>
-                            </div>
-                        </div>
+
                     </div>
 
                     <!-- Mobile Progress Indicator -->
                     <div class="md:hidden">
                         <div class="flex items-center justify-between mb-4">
-                            <span class="text-sm font-semibold text-blue-600" id="mobile-step">Step 1 of 5</span>
+                            <span class="text-sm font-semibold text-blue-600" id="mobile-step">Step 1 of 4</span>
                             <span class="text-xs text-gray-500" id="mobile-progress">20% Complete</span>
                         </div>
                         <div class="w-full bg-gray-200 rounded-full h-3 mb-4 shadow-inner">
@@ -487,7 +473,7 @@
                             <div class="w-2 h-2 rounded-full bg-gray-300 transition-all duration-300" data-mobile-step="2"></div>
                             <div class="w-2 h-2 rounded-full bg-gray-300 transition-all duration-300" data-mobile-step="3"></div>
                             <div class="w-2 h-2 rounded-full bg-gray-300 transition-all duration-300" data-mobile-step="4"></div>
-                            <div class="w-2 h-2 rounded-full bg-gray-300 transition-all duration-300" data-mobile-step="5"></div>
+
                         </div>
                     </div>
                 </div>
@@ -686,66 +672,7 @@
                         </div>
                     </div>
 
-                    <!-- Step 5: License Upload -->
-                    <div class="step-content" id="step-5">
-                        <div class="space-y-4">
-                            <div class="text-center mb-6">
-                                <svg class="w-12 h-12 text-blue-600 mx-auto mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12"></path>
-                                </svg>
-                                <h3 class="text-lg font-semibold text-gray-900 mb-2">{{ __('messages.upload_business_license') }}</h3>
-                                <p class="text-gray-600">{{ __('messages.upload_license_description') }}</p>
-                            </div>
 
-                            <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
-                                <div class="space-y-2">
-                                    <label for="licenseStartDate" class="text-sm font-medium text-gray-700">{{ __('messages.license_start_date') }}</label>
-                                    <input id="licenseStartDate" name="license_start_date" type="date" class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent">
-                                </div>
-
-                                <div class="space-y-2">
-                                    <label for="licenseEndDate" class="text-sm font-medium text-gray-700">{{ __('messages.license_end_date') }}</label>
-                                    <input id="licenseEndDate" name="license_end_date" type="date" class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent">
-                                </div>
-                            </div>
-
-                            <div class="license-upload-area border-2 border-dashed border-gray-300 rounded-lg p-8 text-center cursor-pointer hover:border-gray-400 transition-colors" onclick="document.getElementById('license-upload').click()">
-                                <div id="license-upload-content">
-                                    <svg class="w-8 h-8 text-gray-400 mx-auto mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12"></path>
-                                    </svg>
-                                    <p class="text-gray-600 mb-2">
-                                        <span class="font-medium text-blue-600 cursor-pointer">{{ __('messages.click_to_upload') }}</span> {{ __('messages.or_drag_and_drop') }}
-                                    </p>
-                                    <p class="text-sm text-gray-500">{{ __('messages.pdf_files_only') }}</p>
-                                </div>
-                                <div id="license-preview" class="hidden">
-                                    <svg class="w-8 h-8 text-green-500 mx-auto mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
-                                    </svg>
-                                    <p id="license-file-name" class="text-sm text-gray-600 font-medium mb-2"></p>
-                                    <p id="license-file-size" class="text-xs text-gray-500 mb-2"></p>
-                                    <button type="button" onclick="removeLicense(event)" class="text-sm text-red-600 hover:text-red-800">{{ __('messages.remove') }}</button>
-                                </div>
-                                <input type="file" class="hidden" accept=".pdf" id="license-upload" name="license_file">
-                            </div>
-
-                            <div class="bg-yellow-50 border border-yellow-200 rounded-lg p-4">
-                                <div class="flex">
-                                    <div class="flex-shrink-0">
-                                        <svg class="h-5 w-5 text-yellow-400" viewBox="0 0 20 20" fill="currentColor">
-                                            <path fill-rule="evenodd" d="M8.257 3.099c.765-1.36 2.722-1.36 3.486 0l5.58 9.92c.75 1.334-.213 2.98-1.742 2.98H4.42c-1.53 0-2.493-1.646-1.743-2.98l5.58-9.92zM11 13a1 1 0 11-2 0 1 1 0 012 0zm-1-8a1 1 0 00-1 1v3a1 1 0 002 0V6a1 1 0 00-1-1z" clip-rule="evenodd"></path>
-                                        </svg>
-                                    </div>
-                                    <div class="ml-3">
-                                        <p class="text-sm text-yellow-800">
-                                            <strong>{{ __('messages.important') }}:</strong> {{ __('messages.license_requirements') }}
-                                        </p>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
 
                     <div class="flex justify-between pt-4">
                         <button type="button" id="prev-btn" class="px-4 py-2 border border-gray-300 rounded-md text-gray-700 bg-white hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed" disabled>
@@ -816,15 +743,14 @@
 
     <script>
         let currentStep = 1;
-        const totalSteps = 5;
+        const totalSteps = 4;
         let sessionData = {};
 
         const steps = [
             { name: window.appTranslations.personal_info || "Personal Info", description: window.appTranslations.basic_information || "Basic information" },
             { name: window.appTranslations.email_verification || "Email Verification", description: window.appTranslations.verify_your_email || "Verify your email" },
             { name: window.appTranslations.phone_verification || "Phone Verification", description: window.appTranslations.verify_your_phone || "Verify your phone" },
-            { name: window.appTranslations.company_info || "Company Info", description: window.appTranslations.business_details || "Business details" },
-            { name: window.appTranslations.license_upload || "License Upload", description: window.appTranslations.upload_documents || "Upload documents" }
+            { name: window.appTranslations.company_info || "Company Info", description: window.appTranslations.business_details || "Business details" }
         ];
 
         // CSRF Token
@@ -1002,56 +928,7 @@
             return true;
         }
 
-        function validateStep5() {
-            const startDate = document.getElementById('licenseStartDate').value;
-            const endDate = document.getElementById('licenseEndDate').value;
-            const licenseFile = document.getElementById('license-upload').files[0];
 
-            if (!startDate) {
-                showErrorModal('License start date is required.');
-                return false;
-            }
-
-            if (!endDate) {
-                showErrorModal('License end date is required.');
-                return false;
-            }
-
-            const today = new Date();
-            const start = new Date(startDate);
-            const end = new Date(endDate);
-
-            if (start < today.setHours(0, 0, 0, 0)) {
-                showErrorModal('License start date cannot be in the past.');
-                return false;
-            }
-
-            if (end <= start) {
-                showErrorModal('License end date must be after the start date.');
-                return false;
-            }
-
-            if (!licenseFile) {
-                showErrorModal('Please upload your business license.');
-                return false;
-            }
-
-            const maxSize = 10 * 1024 * 1024; // 10MB
-            if (licenseFile.size > maxSize) {
-                showErrorModal('License file must be less than 10MB.');
-                return false;
-            }
-
-            // Only allow PDF files
-            const fileName = licenseFile.name.toLowerCase();
-            const fileExtension = fileName.split('.').pop();
-            if (fileExtension !== 'pdf' && licenseFile.type !== 'application/pdf') {
-                showErrorModal('License file must be in PDF format only. Other file formats are not allowed.');
-                return false;
-            }
-
-            return true;
-        }
 
         function updateProgressIndicator() {
             // Update desktop progress indicator
@@ -1381,45 +1258,7 @@
             }
         }
 
-        async function submitLicense() {
-            const formData = new FormData();
-            const licenseFile = document.getElementById('license-upload').files[0];
-            const startDate = document.getElementById('licenseStartDate').value;
-            const endDate = document.getElementById('licenseEndDate').value;
 
-            formData.append('license_file', licenseFile);
-            formData.append('start_date', startDate); // This will be saved to licenses.start_date
-            formData.append('end_date', endDate);
-
-            if (sessionData.userId) {
-                formData.append('user_id', sessionData.userId);
-            }
-
-            try {
-                const response = await fetch('/api/vendor-registration/license', {
-                    method: 'POST',
-                    headers: {
-                        'X-CSRF-TOKEN': csrfToken,
-                        'Accept': 'application/json'
-                    },
-                    body: formData
-                });
-
-                const data = await response.json();
-
-                if (data.success) {
-                    showModal('success-modal');
-                    return true;
-                } else {
-                    showErrorModal(data.message || 'License upload failed. Please try again.');
-                    return false;
-                }
-            } catch (error) {
-                console.error('Error:', error);
-                showErrorModal('Network error. Please check your connection and try again.');
-                return false;
-            }
-        }
 
         // Main Navigation Functions
         async function nextStep() {
@@ -1443,12 +1282,11 @@
                     case 4:
                         if (validateStep4()) {
                             success = await submitCompanyInfo();
-                        }
-                        break;
-                    case 5:
-                        if (validateStep5()) {
-                            success = await submitLicense();
-                            return; // Don't proceed to next step, show success modal instead
+                            if (success) {
+                                // Registration is complete, show success modal
+                                showModal('success-modal');
+                                return;
+                            }
                         }
                         break;
                 }
@@ -1655,59 +1493,7 @@
 
 
 
-        // License upload functionality with PDF validation
-        document.getElementById('license-upload').addEventListener('change', function(e) {
-            if (e.target.files.length > 0) {
-                const file = e.target.files[0];
-                const fileName = file.name;
-                const fileExtension = fileName.split('.').pop().toLowerCase();
 
-                // Check if file is PDF
-                if (fileExtension !== 'pdf') {
-                    showErrorModal(window.appTranslations.pdf_files_only_message || 'Please select a PDF file only. Other file formats are not allowed for license upload.');
-                    e.target.value = ''; // Clear the file input
-                    return;
-                }
-
-                // Check file size (10MB limit)
-                const maxSize = 10 * 1024 * 1024; // 10MB
-                if (file.size > maxSize) {
-                    showErrorModal(window.appTranslations.file_too_large || 'File size must be less than 10MB.');
-                    e.target.value = ''; // Clear the file input
-                    return;
-                }
-
-                // Show preview
-                document.getElementById('license-upload-content').classList.add('hidden');
-                document.getElementById('license-preview').classList.remove('hidden');
-                document.getElementById('license-file-name').textContent = fileName;
-                document.getElementById('license-file-size').textContent = formatFileSize(file.size);
-            }
-        });
-
-        // License drag and drop functionality
-        const licenseUploadArea = document.querySelector('.license-upload-area');
-
-        licenseUploadArea.addEventListener('dragover', function(e) {
-            e.preventDefault();
-            this.classList.add('border-blue-400', 'bg-blue-50');
-        });
-
-        licenseUploadArea.addEventListener('dragleave', function(e) {
-            e.preventDefault();
-            this.classList.remove('border-blue-400', 'bg-blue-50');
-        });
-
-        licenseUploadArea.addEventListener('drop', function(e) {
-            e.preventDefault();
-            this.classList.remove('border-blue-400', 'bg-blue-50');
-
-            const files = e.dataTransfer.files;
-            if (files.length > 0) {
-                document.getElementById('license-upload').files = files;
-                document.getElementById('license-upload').dispatchEvent(new Event('change'));
-            }
-        });
 
 
 
@@ -1728,12 +1514,7 @@
             document.getElementById('logo-preview').classList.add('hidden');
         };
 
-        window.removeLicense = function(event) {
-            event.stopPropagation();
-            document.getElementById('license-upload').value = '';
-            document.getElementById('license-upload-content').classList.remove('hidden');
-            document.getElementById('license-preview').classList.add('hidden');
-        };
+
 
         // Initialize translations
         function initializeTranslations() {

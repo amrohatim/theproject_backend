@@ -243,7 +243,7 @@ class CustomerRegistrationController extends Controller
                     return [
                         'id' => $avatar->id,
                         'name' => $avatar->name,
-                        'url' => $avatar->avatar_image ? asset('storage/' . $avatar->avatar_image) : null,
+                        'url' => $avatar->image_url, // Use the model's accessor which generates correct URL
                     ];
                 });
 

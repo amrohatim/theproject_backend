@@ -5,6 +5,7 @@ namespace App\Console\Commands;
 use Illuminate\Console\Command;
 use App\Models\License;
 use App\Models\Merchant;
+use App\Models\BranchLicense;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Log;
 
@@ -22,7 +23,7 @@ class CheckLicenseExpiration extends Command
      *
      * @var string
      */
-    protected $description = 'Check for expired licenses and update verification status for all users (vendors, providers, merchants)';
+    protected $description = 'Check for expired licenses and update verification status for all users (vendors, providers, merchants) and branch licenses';
 
     /**
      * Execute the console command.
@@ -43,6 +44,9 @@ class CheckLicenseExpiration extends Command
 
         // Check merchants table
         $this->checkMerchantsTable($today, $dryRun);
+
+        // Check branch licenses table
+        $this->checkBranchLicensesTable($today, $dryRun);
 
         // Also check for licenses expiring soon (within 30 days)
         $this->checkUpcomingExpirations($dryRun);
@@ -175,6 +179,70 @@ class CheckLicenseExpiration extends Command
     }
 
     /**
+     * Check and update expired licenses in the branch licenses table.
+     */
+    private function checkBranchLicensesTable(Carbon $today, bool $dryRun)
+    {
+        $this->info('Checking branch licenses table...');
+
+        // Find active branch licenses that have expired
+        $expiredBranchLicenses = BranchLicense::where('status', 'active')
+            ->where('end_date', '<', $today)
+            ->with(['branch', 'branch.company', 'branch.user'])
+            ->get();
+
+        if ($expiredBranchLicenses->isEmpty()) {
+            $this->info('No expired branch licenses found.');
+            return;
+        }
+
+        $this->info("Found {$expiredBranchLicenses->count()} expired branch licenses:");
+
+        $updatedCount = 0;
+
+        foreach ($expiredBranchLicenses as $branchLicense) {
+            $branch = $branchLicense->branch;
+            $branchName = $branch ? $branch->name : 'Unknown Branch';
+            $companyName = $branch && $branch->company ? $branch->company->name : 'No Company';
+            $userName = $branch && $branch->user ? $branch->user->name : 'Unknown User';
+            $daysExpired = $today->diffInDays($branchLicense->end_date);
+
+            $this->line("- Branch License ID: {$branchLicense->id}");
+            $this->line("  Branch: {$branchName}");
+            $this->line("  Company: {$companyName}");
+            $this->line("  User: {$userName}");
+            $this->line("  Expired: {$branchLicense->end_date->format('Y-m-d')} ({$daysExpired} days ago)");
+
+            if (!$dryRun) {
+                $branchLicense->update(['status' => 'expired']);
+                $this->info("  ✓ Updated to expired status");
+                $updatedCount++;
+
+                // Log the change
+                Log::info('Branch license expired automatically', [
+                    'branch_license_id' => $branchLicense->id,
+                    'branch_id' => $branchLicense->branch_id,
+                    'branch_name' => $branchName,
+                    'company_name' => $companyName,
+                    'user_name' => $userName,
+                    'expired_date' => $branchLicense->end_date->format('Y-m-d'),
+                    'days_overdue' => $daysExpired
+                ]);
+            } else {
+                $this->comment("  → Would update to expired status");
+            }
+
+            $this->line('');
+        }
+
+        if ($dryRun) {
+            $this->warn("DRY RUN: {$expiredBranchLicenses->count()} branch license(s) would be updated.");
+        } else {
+            $this->info("Successfully updated {$updatedCount} branch license(s) with expired licenses.");
+        }
+    }
+
+    /**
      * Check for licenses expiring soon and log warnings.
      */
     private function checkUpcomingExpirations($dryRun = false)
@@ -196,7 +264,13 @@ class CheckLicenseExpiration extends Command
             ->whereBetween('license_expiry_date', [$today, $thirtyDaysFromNow])
             ->get();
 
-        $totalExpiring = $expiringLicenses->count() + $expiringMerchants->count();
+        // Check branch licenses table
+        $expiringBranchLicenses = BranchLicense::where('status', 'active')
+            ->whereBetween('end_date', [$today, $thirtyDaysFromNow])
+            ->with(['branch', 'branch.company', 'branch.user'])
+            ->get();
+
+        $totalExpiring = $expiringLicenses->count() + $expiringMerchants->count() + $expiringBranchLicenses->count();
 
         if ($totalExpiring === 0) {
             $this->info('No licenses expiring within 30 days.');
@@ -224,6 +298,18 @@ class CheckLicenseExpiration extends Command
             $this->line("  - {$merchant->business_name} (merchant): expires {$merchant->license_expiry_date->format('Y-m-d')} ({$daysUntilExpiry} days)");
 
             // TODO: Send reminder notification to merchant
+        }
+
+        // Show expiring branch licenses
+        foreach ($expiringBranchLicenses as $branchLicense) {
+            $branch = $branchLicense->branch;
+            $branchName = $branch ? $branch->name : 'Unknown Branch';
+            $companyName = $branch && $branch->company ? $branch->company->name : 'No Company';
+            $daysUntilExpiry = $today->diffInDays($branchLicense->end_date);
+
+            $this->line("  - {$branchName} - {$companyName} (branch): expires {$branchLicense->end_date->format('Y-m-d')} ({$daysUntilExpiry} days)");
+
+            // TODO: Send reminder notification to branch owner
         }
     }
 }

@@ -80,6 +80,7 @@
                         <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">{{ __('messages.product') }}</th>
                         <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">{{ __('messages.category') }}</th>
                         <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">{{ __('messages.branch') }}</th>
+                        <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">License Status</th>
                         <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">{{ __('messages.price') }}</th>
                         <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">{{ __('messages.stock') }}</th>
                         <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">{{ __('messages.status') }}</th>
@@ -120,6 +121,30 @@
                             <div class="text-sm text-gray-500 dark:text-gray-400">{{ $product->branch->name ?? 'N/A' }}</div>
                         </td>
                         <td class="px-6 py-4 whitespace-nowrap">
+                            @php
+                                $licenseStatus = $product->branch ? $product->branch->getLicenseStatus() : null;
+                                $canEdit = $product->branch && $product->branch->hasActiveLicense();
+                            @endphp
+                            <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full
+                                @if($licenseStatus == 'active') bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-200
+                                @elseif($licenseStatus == 'pending') bg-yellow-100 text-yellow-800 dark:bg-yellow-900 dark:text-yellow-200
+                                @elseif($licenseStatus == 'expired') bg-red-100 text-red-800 dark:bg-red-900 dark:text-red-200
+                                @elseif($licenseStatus == 'rejected') bg-red-100 text-red-800 dark:bg-red-900 dark:text-red-200
+                                @else bg-gray-100 text-gray-800 dark:bg-gray-900 dark:text-gray-200 @endif">
+                                @if($licenseStatus == 'active')
+                                    <i class="fas fa-check-circle mr-1 self-center"></i> Active
+                                @elseif($licenseStatus == 'pending')
+                                    <i class="fas fa-clock mr-1 self-center"></i> Pending
+                                @elseif($licenseStatus == 'expired')
+                                    <i class="fas fa-exclamation-triangle mr-1 self-center"></i> Expired
+                                @elseif($licenseStatus == 'rejected')
+                                    <i class="fas fa-times-circle mr-1 self-center"></i> Rejected
+                                @else
+                                    <i class="fas fa-question-circle mr-1 self-center"></i> No License
+                                @endif
+                            </span>
+                        </td>
+                        <td class="px-6 py-4 whitespace-nowrap">
                             <div class="text-sm font-medium text-gray-900 dark:text-white">${{ number_format($product->price, 2) }}</div>
                             @if($product->original_price)
                                 <div class="text-xs text-gray-500 dark:text-gray-400 line-through">${{ number_format($product->original_price, 2) }}</div>
@@ -136,13 +161,19 @@
                             </span>
                         </td>
                         <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
-                            <a href="{{ route('vendor.products.edit', $product->id) }}" class="text-indigo-600 dark:text-indigo-400 hover:text-indigo-900 dark:hover:text-indigo-300 mr-3">
-                                <i class="fas fa-edit"></i>
-                            </a>
+                            @if($canEdit)
+                                <a href="{{ route('vendor.products.edit', $product->id) }}" class="text-indigo-600 dark:text-indigo-400 hover:text-indigo-900 dark:hover:text-indigo-300 mr-3" title="Edit Product">
+                                    <i class="fas fa-edit"></i>
+                                </a>
+                            @else
+                                <span class="text-gray-400 dark:text-gray-600 mr-3 cursor-not-allowed" title="Cannot edit - Branch license is {{ $licenseStatus ?? 'inactive' }}">
+                                    <i class="fas fa-edit"></i>
+                                </span>
+                            @endif
                             <form action="{{ route('vendor.products.destroy', $product->id) }}" method="POST" class="inline">
                                 @csrf
                                 @method('DELETE')
-                                <button type="submit" class="text-red-600 dark:text-red-400 hover:text-red-900 dark:hover:text-red-300" onclick="return confirm('{{ __('messages.delete_product_confirmation') }}')">
+                                <button type="submit" class="text-red-600 dark:text-red-400 hover:text-red-900 dark:hover:text-red-300" onclick="return confirm('{{ __('messages.delete_product_confirmation') }}')" title="Delete Product">
                                     <i class="fas fa-trash"></i>
                                 </button>
                             </form>
@@ -150,7 +181,7 @@
                     </tr>
                     @empty
                     <tr>
-                        <td colspan="7" class="px-6 py-4 text-center text-sm text-gray-500 dark:text-gray-400">
+                        <td colspan="8" class="px-6 py-4 text-center text-sm text-gray-500 dark:text-gray-400">
                             <div class="flex flex-col items-center justify-center py-4">
                                 <i class="fas fa-shopping-bag text-gray-300 dark:text-gray-600 text-5xl mb-4"></i>
                                 <p>{{ __('messages.no_products_found') }}</p>
