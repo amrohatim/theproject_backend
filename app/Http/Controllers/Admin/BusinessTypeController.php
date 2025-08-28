@@ -4,7 +4,7 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use App\Models\BusinessType;
-use App\Helpers\ImageHelper;
+use App\Services\WebPImageService;
 use Illuminate\Http\Request;
 use Illuminate\Validation\Rule;
 use Illuminate\Support\Facades\Storage;
@@ -52,11 +52,8 @@ class BusinessTypeController extends Controller
 
         // Handle image upload
         if ($request->hasFile('image')) {
-            $imagePath = ImageHelper::compressToWebP(
-                $request->file('image'),
-                'business-types',
-                75
-            );
+            $webpService = new WebPImageService();
+            $imagePath =  $webpService->convertAndStoreWithUrl($request->file('image'), 'business-types');
 
             if ($imagePath) {
                 $validated['image'] = $imagePath;
@@ -102,16 +99,13 @@ class BusinessTypeController extends Controller
 
         // Handle image upload
         if ($request->hasFile('image')) {
+                     $webpService = new WebPImageService();
             // Delete old image if exists
             if ($businessType->image && Storage::disk('public')->exists($businessType->image)) {
                 Storage::disk('public')->delete($businessType->image);
             }
 
-            $imagePath = ImageHelper::compressToWebP(
-                $request->file('image'),
-                'business-types',
-                75
-            );
+            $imagePath = $webpService->convertAndStoreWithUrl($request->file('image'), 'business-types');
 
             if ($imagePath) {
                 $validated['image'] = $imagePath;
