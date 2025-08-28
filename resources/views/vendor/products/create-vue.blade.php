@@ -359,6 +359,7 @@
         'vendor.error_creating_product' => __('vendor.error_creating_product'),
         'vendor.error_saving_draft' => __('vendor.error_saving_draft'),
         'vendor.network_error' => __('vendor.network_error'),
+        'vendor.continue' => __('vendor.continue'),
 
         // Section titles
         'vendor.basic_information' => __('vendor.basic_information'),
@@ -374,6 +375,8 @@
         'vendor.product_available_sale' => __('vendor.product_available_sale'),
         'vendor.uncheck_if_not_available' => __('vendor.uncheck_if_not_available'),
         'vendor.loading_product_creation_form' => __('vendor.loading_product_creation_form'),
+        'vendor.need_create_branch_first' => __('vendor.need_create_branch_first'),
+        'vendor.no_branches_available' => __('vendor.no_branches_available'),
 
         // Common words
         'vendor.yes' => __('vendor.yes'),

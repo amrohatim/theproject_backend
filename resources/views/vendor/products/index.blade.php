@@ -132,15 +132,15 @@
                                 @elseif($licenseStatus == 'rejected') bg-red-100 text-red-800 dark:bg-red-900 dark:text-red-200
                                 @else bg-gray-100 text-gray-800 dark:bg-gray-900 dark:text-gray-200 @endif">
                                 @if($licenseStatus == 'active')
-                                    <i class="fas fa-check-circle mr-1"></i> Active
+                                    <i class="fas fa-check-circle mr-1 self-center"></i> Active
                                 @elseif($licenseStatus == 'pending')
-                                    <i class="fas fa-clock mr-1"></i> Pending
+                                    <i class="fas fa-clock mr-1 self-center"></i> Pending
                                 @elseif($licenseStatus == 'expired')
-                                    <i class="fas fa-exclamation-triangle mr-1"></i> Expired
+                                    <i class="fas fa-exclamation-triangle mr-1 self-center"></i> Expired
                                 @elseif($licenseStatus == 'rejected')
-                                    <i class="fas fa-times-circle mr-1"></i> Rejected
+                                    <i class="fas fa-times-circle mr-1 self-center"></i> Rejected
                                 @else
-                                    <i class="fas fa-question-circle mr-1"></i> No License
+                                    <i class="fas fa-question-circle mr-1 self-center"></i> No License
                                 @endif
                             </span>
                         </td>

@@ -219,41 +219,42 @@ class ServiceProvider extends Model
         return $this->company ? $this->company->user : null;
     }
 
-    /**
-     * Check if the vendor's license is active.
-     *
-     * @return bool
-     */
-    public function hasActiveVendorLicense(): bool
-    {
-        $vendor = $this->getVendorUser();
+    // DISABLED: Service Providers don't require license approval - they are vendor-managed roles
+    // /**
+    //  * Check if the vendor's license is active.
+    //  *
+    //  * @return bool
+    //  */
+    // public function hasActiveVendorLicense(): bool
+    // {
+    //     $vendor = $this->getVendorUser();
 
-        if (!$vendor) {
-            return false;
-        }
+    //     if (!$vendor) {
+    //         return false;
+    //     }
 
-        // Check if vendor has a license
-        if (!$vendor->hasLicense()) {
-            return false;
-        }
+    //     // Check if vendor has a license
+    //     if (!$vendor->hasLicense()) {
+    //         return false;
+    //     }
 
-        // Check if the license status is active
-        return $vendor->getLicenseStatus() === 'active';
-    }
+    //     // Check if the license status is active
+    //     return $vendor->getLicenseStatus() === 'active';
+    // }
 
-    /**
-     * Get the vendor's license status.
-     *
-     * @return string|null
-     */
-    public function getVendorLicenseStatus(): ?string
-    {
-        $vendor = $this->getVendorUser();
+    // /**
+    //  * Get the vendor's license status.
+    //  *
+    //  * @return string|null
+    //  */
+    // public function getVendorLicenseStatus(): ?string
+    // {
+    //     $vendor = $this->getVendorUser();
 
-        if (!$vendor) {
-            return null;
-        }
+    //     if (!$vendor) {
+    //         return null;
+    //     }
 
-        return $vendor->getLicenseStatus();
-    }
+    //     return $vendor->getLicenseStatus();
+    // }
 }

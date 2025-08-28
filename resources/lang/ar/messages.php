@@ -1819,6 +1819,7 @@ return [
     'promotional_message' => 'الرسالة الترويجية',
     'promotional_message_placeholder' => 'أدخل الرسالة الترويجية (اختياري)',
     'promotional_message_help' => 'ستظهر هذه الرسالة للعملاء مع العرض',
+    'promotional_message_both_or_none' => 'إذا قدمت رسالة ترويجية بلغة واحدة، يجب تقديمها بكلا اللغتين.',
     'start_date' => 'تاريخ البداية',
     'select_start_date' => 'اختر تاريخ البداية',
     'end_date' => 'تاريخ النهاية',
@@ -1827,6 +1828,10 @@ return [
     'current_image' => 'الصورة الحالية',
     'upload_new_image' => 'رفع صورة جديدة',
     'deal_image_requirements' => 'الحجم المُوصى به: 800x400 بكسل. الحد الأقصى لحجم الملف: 2 ميجابايت. الصيغ المدعومة: JPG، PNG، WebP',
+    'deal_image_requirements_new' => 'مطلوب. الحد الأقصى لحجم الملف: 20 ميجابايت. الصيغ المدعومة: JPEG، PNG، JPG، GIF، SVG. سيتم تحويل الصور تلقائياً إلى صيغة WebP.',
+    'deal_image_required' => 'صورة العرض مطلوبة.',
+    'deal_image_too_large' => 'حجم ملف الصورة كبير جداً. الحد الأقصى المسموح به هو 20 ميجابايت.',
+    'deal_image_invalid_type' => 'نوع الصورة غير صحيح. يرجى رفع ملفات JPEG أو PNG أو JPG أو GIF أو SVG فقط.',
     'status' => 'الحالة',
     'active' => 'نشط',
     'inactive' => 'غير نشط',
@@ -2161,6 +2166,7 @@ return [
     'yes_we_can_handle_our_own_deliveries' => 'نعم، يمكننا التعامل مع توصيلاتنا الخاصة',
     'no_we_need_a_third_party_delivery_service' => 'لا، نحتاج إلى خدمة توصيل طرف ثالث',
     'select_services_for_deal' => 'حدد الخدمات التي ترغب في تطبيقها على هذه الصفقة',
+    'has_active_deal' => 'لديه عرض نشط',
     'please_fix_the_following_errors_before_submitting' => 'يرجى إصلاح الأخطاء التالية قبل الإرسال',
     'correct_the_errors' => 'تصحيح الأخطاء',
     
@@ -2194,4 +2200,11 @@ return [
 'update_license_documents_dates' => 'تحديث مستندات وتواريخ الترخيص',
 'update_license' => 'تحديث الترخيص',
 
+
+    // Deal Conflict Validation
+    'products_already_have_active_deals' => 'المنتجات التالية لديها عروض نشطة بالفعل: :products',
+    'services_already_have_active_deals' => 'الخدمات التالية لديها عروض نشطة بالفعل: :services',
+    'deal_already_applied' => 'تم تطبيق العرض بالفعل',
+    'item_has_active_deal' => 'هذا العنصر لديه عرض نشط بالفعل',
+    'cannot_select_items_with_deals' => 'لا يمكن اختيار العناصر التي لديها عروض نشطة بالفعل',
 ];

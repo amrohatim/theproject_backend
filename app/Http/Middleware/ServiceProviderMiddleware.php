@@ -44,21 +44,7 @@ class ServiceProviderMiddleware
             return redirect('/')->with('error', 'Company profile not found. Please contact your administrator.');
         }
 
-        // Check vendor license status for service creation routes
-        $serviceCreationRoutes = [
-            'service-provider.services.create',
-            'service-provider.services.store'
-        ];
-
-        if (in_array($request->route()->getName(), $serviceCreationRoutes)) {
-            if (!$serviceProvider->hasActiveVendorLicense()) {
-                $licenseStatus = $serviceProvider->getVendorLicenseStatus();
-
-                return redirect()->route('service-provider.license.restriction')
-                    ->with('license_status', $licenseStatus)
-                    ->with('license_message', 'Store status is not active. Service creation is restricted until the vendor license is active.');
-            }
-        }
+        // Service Providers don't require license approval - they are vendor-managed roles
 
         return $next($request);
     }

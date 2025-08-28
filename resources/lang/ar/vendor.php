@@ -563,6 +563,8 @@ return [
     'no_branches_assigned' => 'لا توجد فروع مخصصة',
     'save_service_provider' => 'حفظ مقدم الخدمة',
     'update_service_provider' => 'تحديث مقدم الخدمة',
+    'need_create_branch_first' => 'يجب عليك إنشاء فرع قبل إضافة  . يرجى إنشاء فرع أولاً.',
+
 
     // Form specific translations
     'back_to_service_providers' => 'العودة إلى مقدمي الخدمات',

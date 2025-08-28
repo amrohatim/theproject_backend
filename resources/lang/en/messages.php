@@ -970,6 +970,7 @@ return [
     'promotional_message' => 'Promotional Message',
     'promotional_message_placeholder' => 'Enter promotional message (optional)',
     'promotional_message_help' => 'This message will be displayed to customers alongside the deal',
+    'promotional_message_both_or_none' => 'If you provide a promotional message in one language, you must provide it in both languages.',
     'optional' => 'Optional',
     'start_date' => 'Start Date',
     'select_start_date' => 'Select start date',
@@ -979,6 +980,10 @@ return [
     'current_image' => 'Current Image',
     'upload_new_image' => 'Upload New Image',
     'deal_image_requirements' => 'Recommended size: 800x400 pixels. Max file size: 20MB. Supported formats: JPG, PNG, WebP',
+    'deal_image_requirements_new' => 'Required. Max file size: 20MB. Supported formats: JPEG, PNG, JPG, GIF, SVG. Images will be automatically converted to WebP format.',
+    'deal_image_required' => 'Deal image is required.',
+    'deal_image_too_large' => 'The image file is too large. Maximum allowed size is 20MB.',
+    'deal_image_invalid_type' => 'Invalid image type. Please upload JPEG, PNG, JPG, GIF, or SVG files only.',
     'status' => 'Status',
     'active' => 'Active',
     'inactive' => 'Inactive',
@@ -1368,6 +1373,7 @@ return [
     'yes_we_can_handle_our_own_deliveries' => 'Yes, we can handle our own deliveries',
     'no_we_need_a_third_party_delivery_service' => 'No, we need a third-party delivery service',
     'select_services_for_deal' => 'Select the services you want to apply this deal to',
+    'has_active_deal' => 'Has Active Deal',
 
     // Merchant Registration Validation Messages
     'business_name_is_required' => 'Business name is required',
@@ -1415,4 +1421,11 @@ return [
     'update_license_documents_dates' => 'Update license documents and dates',
     'update_license' => 'Update License',
 
+
+    // Deal Conflict Validation
+    'products_already_have_active_deals' => 'The following products already have active deals: :products',
+    'services_already_have_active_deals' => 'The following services already have active deals: :services',
+    'deal_already_applied' => 'Deal Already Applied',
+    'item_has_active_deal' => 'This item already has an active deal',
+    'cannot_select_items_with_deals' => 'Cannot select items that already have active deals',
 ];

@@ -229,6 +229,7 @@
         'vendor.enter_display_order': '{{ __('vendor.enter_display_order') }}',
         'vendor.is_available': '{{ __('vendor.is_available') }}',
         'vendor.product_available': '{{ __('vendor.product_available') }}',
+        'vendor.continue': '{{ __('vendor.continue') }}',
 
         // Color and variant information
         'vendor.color_variant': '{{ __('vendor.color_variant') }}',

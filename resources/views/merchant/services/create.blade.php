@@ -128,14 +128,15 @@
                             <label for="price" class="form-label" style="color: var(--discord-lightest); font-weight: 600;">
                                 {{ __('merchant.price_aed_required') }}
                             </label>
-                            <input type="number" 
+                            <input type="text" 
                                    class="form-control @error('price') is-invalid @enderror" 
                                    id="price" 
                                    name="price" 
                                    value="{{ old('price') }}" 
-                                   step="0.01" 
-                                   min="0" 
                                    required
+                                   pattern="[0-9]*"
+                                   inputmode="numeric"
+                                   onkeypress="return /[0-9]/i.test(event.key)"
                                    style="background-color: var(--discord-darkest); border: 1px solid var(--discord-darkest); color: var(--discord-lightest);">
                             @error('price')
                                 <div style="color: var(--discord-red); font-size: 12px; margin-top: 4px;">{{ $message }}</div>

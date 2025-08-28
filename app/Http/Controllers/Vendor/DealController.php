@@ -7,8 +7,10 @@ use App\Models\Deal;
 use App\Models\Product;
 use App\Models\Service;
 use App\Models\Category;
+use App\Services\WebPImageService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Storage;
 
 class DealController extends Controller
@@ -48,7 +50,11 @@ class DealController extends Controller
             ->select('services.*')
             ->get();
 
-        return view('vendor.deals.create', compact('products', 'services'));
+        // Get product and service IDs that already have active deals
+        $productsWithActiveDeals = Deal::getProductIdsWithActiveDeals(null, Auth::id());
+        $servicesWithActiveDeals = Deal::getServiceIdsWithActiveDeals(null, Auth::id());
+
+        return view('vendor.deals.create', compact('products', 'services', 'productsWithActiveDeals', 'servicesWithActiveDeals'));
     }
 
     /**
@@ -82,7 +88,7 @@ class DealController extends Controller
             'discount_percentage' => 'required|numeric|min:1|max:100',
             'start_date' => 'required|date',
             'end_date' => 'required|date|after_or_equal:start_date',
-            'image' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
+            'image' => 'required|image|mimes:jpeg,png,jpg,gif,svg|max:20480', // 20MB = 20480KB
             'status' => 'required|in:active,inactive',
             'applies_to' => 'required|in:products,services,products_and_services',
             'product_ids' => 'required_if:applies_to,products|required_if:applies_to,products_and_services|array',
@@ -92,10 +98,45 @@ class DealController extends Controller
         $data = $request->all();
         $data['user_id'] = Auth::id();
 
-        // Handle image upload
+        // Handle image upload with WebP conversion
         if ($request->hasFile('image')) {
-            $imagePath = $request->file('image')->store('deals', 'public');
-            $data['image'] = $imagePath;
+            $file = $request->file('image');
+
+            try {
+                // Convert to WebP and store
+                $webpService = new WebPImageService();
+                $imagePath = $webpService->convertAndStoreWithUrl($file, 'deals');
+
+                if (!$imagePath) {
+                    // Fallback to original upload method if WebP conversion fails
+                    $imageName = time() . '_' . uniqid() . '.' . $file->getClientOriginalExtension();
+                    $fallbackPath = $file->storeAs('deals', $imageName, 'public');
+                    $imagePath = $fallbackPath ? '/storage/' . $fallbackPath : null;
+
+                    Log::warning('WebP conversion failed for vendor deal, using fallback method', [
+                        'original_name' => $file->getClientOriginalName(),
+                        'fallback_path' => $imagePath
+                    ]);
+                }
+
+                if (!$imagePath) {
+                    return redirect()->back()
+                        ->withInput()
+                        ->withErrors(['image' => 'Failed to upload image. Please try again.']);
+                }
+
+                $data['image'] = $imagePath;
+
+            } catch (\Exception $e) {
+                Log::error('Error processing deal image upload', [
+                    'error' => $e->getMessage(),
+                    'file' => $file->getClientOriginalName()
+                ]);
+
+                return redirect()->back()
+                    ->withInput()
+                    ->withErrors(['image' => 'Failed to process image. Please try again with a different image.']);
+            }
         }
 
         // Ensure only the relevant IDs are set based on applies_to value
@@ -107,6 +148,27 @@ class DealController extends Controller
             $data['product_ids'] = null;
         }
         // For 'products_and_services', keep both arrays as they are
+
+        // Validate that selected products/services don't have active deals
+        if (isset($data['product_ids']) && is_array($data['product_ids'])) {
+            $conflictingProducts = Deal::getConflictingProductIds($data['product_ids'], null, Auth::id());
+            if (!empty($conflictingProducts)) {
+                $productNames = Product::whereIn('id', $conflictingProducts)->pluck('name')->toArray();
+                return back()->withErrors([
+                    'product_ids' => 'The following products already have active deals: ' . implode(', ', $productNames)
+                ])->withInput();
+            }
+        }
+
+        if (isset($data['service_ids']) && is_array($data['service_ids'])) {
+            $conflictingServices = Deal::getConflictingServiceIds($data['service_ids'], null, Auth::id());
+            if (!empty($conflictingServices)) {
+                $serviceNames = Service::whereIn('id', $conflictingServices)->pluck('name')->toArray();
+                return back()->withErrors([
+                    'service_ids' => 'The following services already have active deals: ' . implode(', ', $serviceNames)
+                ])->withInput();
+            }
+        }
 
         // Create the deal
         $deal = Deal::create($data);
@@ -154,7 +216,11 @@ class DealController extends Controller
             ->select('services.*')
             ->get();
 
-        return view('vendor.deals.edit', compact('deal', 'products', 'services'));
+        // Get product and service IDs that already have active deals (excluding current deal)
+        $productsWithActiveDeals = Deal::getProductIdsWithActiveDeals($deal->id, Auth::id());
+        $servicesWithActiveDeals = Deal::getServiceIdsWithActiveDeals($deal->id, Auth::id());
+
+        return view('vendor.deals.edit', compact('deal', 'products', 'services', 'productsWithActiveDeals', 'servicesWithActiveDeals'));
     }
 
     /**
@@ -192,7 +258,7 @@ class DealController extends Controller
             'discount_percentage' => 'required|numeric|min:1|max:100',
             'start_date' => 'required|date',
             'end_date' => 'required|date|after_or_equal:start_date',
-            'image' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
+            'image' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:20480', // 20MB = 20480KB
             'status' => 'required|in:active,inactive',
             'applies_to' => 'required|in:products,services,products_and_services',
             'product_ids' => 'required_if:applies_to,products|required_if:applies_to,products_and_services|array',
@@ -201,27 +267,82 @@ class DealController extends Controller
 
         $data = $request->all();
 
-        // Handle image upload
+        // Validate that selected products/services don't have active deals (excluding current deal)
+        if (isset($data['product_ids']) && is_array($data['product_ids'])) {
+            $conflictingProducts = Deal::getConflictingProductIds($data['product_ids'], $deal->id, Auth::id());
+            if (!empty($conflictingProducts)) {
+                $productNames = Product::whereIn('id', $conflictingProducts)->pluck('name')->toArray();
+                return back()->withErrors([
+                    'product_ids' => 'The following products already have active deals: ' . implode(', ', $productNames)
+                ])->withInput();
+            }
+        }
+
+        if (isset($data['service_ids']) && is_array($data['service_ids'])) {
+            $conflictingServices = Deal::getConflictingServiceIds($data['service_ids'], $deal->id, Auth::id());
+            if (!empty($conflictingServices)) {
+                $serviceNames = Service::whereIn('id', $conflictingServices)->pluck('name')->toArray();
+                return back()->withErrors([
+                    'service_ids' => 'The following services already have active deals: ' . implode(', ', $serviceNames)
+                ])->withInput();
+            }
+        }
+
+        // Handle image upload with WebP conversion
         if ($request->hasFile('image')) {
-            // Delete old image if exists
-            $oldImagePath = $deal->getRawOriginalImage();
-            if ($oldImagePath && !empty(trim($oldImagePath))) {
-                try {
-                    // Check if file exists before attempting to delete
-                    if (Storage::disk('public')->exists($oldImagePath)) {
-                        Storage::disk('public')->delete($oldImagePath);
+            $file = $request->file('image');
+
+            try {
+                // Delete old image if exists
+                $oldImagePath = $deal->getRawOriginalImage();
+                if ($oldImagePath && !empty(trim($oldImagePath))) {
+                    try {
+                        $webpService = new WebPImageService();
+                        $webpService->deleteImage($oldImagePath);
+                    } catch (\Exception $e) {
+                        // Log the error but don't stop the update process
+                        Log::warning('Failed to delete old deal image: ' . $e->getMessage(), [
+                            'deal_id' => $deal->id,
+                            'image_path' => $oldImagePath
+                        ]);
                     }
-                } catch (\Exception $e) {
-                    // Log the error but don't stop the update process
-                    \Log::warning('Failed to delete old deal image: ' . $e->getMessage(), [
-                        'deal_id' => $deal->id,
-                        'image_path' => $oldImagePath
+                }
+
+                // Convert to WebP and store
+                $webpService = new WebPImageService();
+                $imagePath = $webpService->convertAndStoreWithUrl($file, 'deals');
+
+                if (!$imagePath) {
+                    // Fallback to original upload method if WebP conversion fails
+                    $imageName = time() . '_' . uniqid() . '.' . $file->getClientOriginalExtension();
+                    $fallbackPath = $file->storeAs('deals', $imageName, 'public');
+                    $imagePath = $fallbackPath ? '/storage/' . $fallbackPath : null;
+
+                    Log::warning('WebP conversion failed for vendor deal update, using fallback method', [
+                        'original_name' => $file->getClientOriginalName(),
+                        'fallback_path' => $imagePath
                     ]);
                 }
-            }
 
-            $imagePath = $request->file('image')->store('deals', 'public');
-            $data['image'] = $imagePath;
+                if (!$imagePath) {
+                    return redirect()->back()
+                        ->withInput()
+                        ->withErrors(['image' => 'Failed to upload image. Please try again.']);
+                }
+
+                $data['image'] = $imagePath;
+
+            } catch (\Exception $e) {
+                Log::error('Error processing deal image update', [
+                    'error' => $e->getMessage(),
+                    'file' => $file->getClientOriginalName(),
+                    'deal_id' => $deal->id
+                ]);
+
+                return redirect()->back()
+                    ->withInput()
+                    ->withErrors(['image' => 'Failed to process image. Please try again with a different image.']);
+            }
         }
 
         // Ensure only the relevant IDs are set based on applies_to value
@@ -262,7 +383,7 @@ class DealController extends Controller
                 }
             } catch (\Exception $e) {
                 // Log the error but don't stop the deletion process
-                \Log::warning('Failed to delete deal image: ' . $e->getMessage(), [
+                Log::warning('Failed to delete deal image: ' . $e->getMessage(), [
                     'deal_id' => $deal->id,
                     'image_path' => $imagePath
                 ]);

@@ -177,24 +177,29 @@
                     <label for="price" class="block vue-text-sm">
                       {{ $t('price') }} <span class="text-red-500">*</span>
                     </label>
-                    <input type="number" 
+                    <input type="text" 
                            id="price" 
-                           v-model.number="productData.price"
+                           v-model="productData.price"
                            class="vue-form-control"
                            :class="{ 'border-red-500': errors.price }"
-                           step="0.01"
-                           min="0"
+                           @input="e => productData.price = e.target.value.replace(/[^0-9.]/g, '')"
+                           @blur="e => productData.price = parseFloat(e.target.value) || 0"
+                           pattern="[0-9]*\.?[0-9]*"
+                           inputmode="decimal"
                            required>
                     <p v-if="errors.price" class="text-red-500 text-sm">{{ errors.price }}</p>
                   </div>
 
                   <div class="space-y-2">
                     <label for="original_price" class="block vue-text-sm">{{ $t('original_price') }}</label>
-                    <input type="number" 
+                    <input type="text" 
                            id="original_price" 
-                           v-model.number="productData.original_price"
+                           v-model="productData.original_price"
                            class="vue-form-control"
-                           step="0.01"
+                           @input="e => productData.original_price = e.target.value.replace(/[^0-9.]/g, '')"
+                           @blur="e => productData.original_price = parseFloat(e.target.value) || 0"
+                           pattern="[0-9]*\.?[0-9]*"
+                           inputmode="decimal"
                            min="0">
                   </div>
                 </div>
@@ -203,11 +208,15 @@
                   <label for="stock" class="block vue-text-sm">
                     {{ $t('total_stock') }} <span class="text-red-500">*</span>
                   </label>
-                  <input type="number" 
+                  <input type="text" 
                          id="stock" 
-                         v-model.number="productData.stock"
+                         v-model="productData.stock"
                          class="vue-form-control"
                          :class="{ 'border-red-500': errors.stock }"
+                         @input="e => productData.stock = e.target.value.replace(/[^0-9]/g, '')"
+                         @blur="e => productData.stock = parseInt(e.target.value) || 0"
+                         pattern="[0-9]*"
+                         inputmode="numeric"
                          min="0"
                          required>
                   <p v-if="errors.stock" class="text-red-500 text-sm">{{ errors.stock }}</p>

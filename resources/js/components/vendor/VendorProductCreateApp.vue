@@ -158,13 +158,15 @@
                     <span class="text-gray-500 sm:text-sm">$</span>
                   </div>
                   <input
-                    v-model.number="productData.price"
-                    type="number"
-                    min="0"
-                    step="0.01"
+                    type="text"
+                    v-model="productData.price"
                     class="vue-form-control pl-7"
                     placeholder="0.00"
                     required
+                    @input="e => productData.price = e.target.value.replace(/[^0-9.]/g, '')"
+                    @blur="e => productData.price = parseFloat(e.target.value) || 0"
+                    pattern="[0-9]*\.?[0-9]*"
+                    inputmode="decimal"
                   />
                 </div>
                 <div v-if="errors.price" class="text-red-500 text-sm mt-1">{{ errors.price }}</div>
@@ -178,12 +180,14 @@
                     <span class="text-gray-500 sm:text-sm">$</span>
                   </div>
                   <input
-                    v-model.number="productData.original_price"
-                    type="number"
-                    min="0"
-                    step="0.01"
+                    type="text"
+                    v-model="productData.original_price"
                     class="vue-form-control pl-7"
                     placeholder="0.00"
+                    @input="e => productData.original_price = e.target.value.replace(/[^0-9.]/g, '')"
+                    @blur="e => productData.original_price = parseFloat(e.target.value) || null"
+                    pattern="[0-9]*\.?[0-9]*"
+                    inputmode="decimal"
                   />
                 </div>
                 <div v-if="errors.original_price" class="text-red-500 text-sm mt-1">{{ errors.original_price }}</div>
@@ -195,12 +199,15 @@
                   {{ $t('vendor.total_stock') }} <span class="text-red-500">*</span>
                 </label>
                 <input
-                  v-model.number="productData.stock"
-                  type="number"
-                  min="0"
+                  type="text" 
+                  v-model="productData.stock"
                   class="vue-form-control"
                   placeholder="0"
                   required
+                  @input="e => productData.stock = e.target.value.replace(/[^0-9]/g, '')"
+                  @blur="e => productData.stock = parseInt(e.target.value) || 0"
+                  pattern="[0-9]*"
+                  inputmode="numeric"
                 />
                 <p class="mt-1 text-xs text-gray-500">{{ $t('vendor.total_stock_quantity_available') }}</p>
                 <div v-if="errors.stock" class="text-red-500 text-sm mt-1">{{ errors.stock }}</div>

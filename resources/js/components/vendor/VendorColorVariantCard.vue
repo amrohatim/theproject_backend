@@ -134,6 +134,8 @@
                      step="0.01"
                      :value="color.price_adjustment"
                      @input="updateColor('price_adjustment', parseFloat($event.target.value) || 0)"
+                     @keypress="$event.key.match(/[0-9.]/) === null && $event.preventDefault()"
+                     @paste="e => { e.preventDefault(); const text = e.clipboardData.getData('text'); if(text.match(/^[0-9.]*$/)) e.target.value = text; }"
                      placeholder="0.00"
                      class="vue-form-control">
             </div>
@@ -150,7 +152,8 @@
                        min="0"
                        :max="availableStock"
                        :value="color.stock"
-                       @input="handleStockInput($event)"
+                       @input="e => updateColor('stock', parseInt(e.target.value) || 0)"
+                       @keypress="$event.key.match(/[0-9]/) === null && $event.preventDefault()"
                        @blur="handleStockBlur($event)"
                        @paste="handleStockPaste($event)"
                        @keydown="handleStockKeydown($event)"
@@ -190,6 +193,8 @@
             <input type="number"
                    :value="color.display_order"
                    @input="updateColor('display_order', parseInt($event.target.value) || 0)"
+                   @keypress="$event.key.match(/[0-9]/) === null && $event.preventDefault()"
+                   min="0"
                    placeholder="0"
                    class="vue-form-control">
           </div>

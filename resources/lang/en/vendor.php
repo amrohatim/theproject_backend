@@ -55,6 +55,7 @@ return [
     'stock_auto_corrected' => 'Stock automatically corrected',
     'select_valid_image_file' => 'Please select a valid image file',
     'file_size_exceeds_limit' => 'File size (:size MB) exceeds the 20MB limit',
+    'need_create_branch_first' => 'You need to create a branch before adding products. Please create a branch first.',
 
     // Product Management
     'create_new_product' => 'Create New Product',

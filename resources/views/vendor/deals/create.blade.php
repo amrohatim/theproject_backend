@@ -65,7 +65,7 @@
                     <div>
                         <label for="discount_percentage" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1 {{ app()->getLocale() == 'ar' ? 'text-right' : 'text-left' }}">{{ __('messages.discount_percentage') }} <span class="text-red-500">*</span></label>
                         <div class="relative">
-                            <input type="number" name="discount_percentage" id="discount_percentage" value="{{ old('discount_percentage') }}" min="1" max="100" class="form-input pl-2 pr-14 w-full {{ app()->getLocale() == 'ar' ? 'text-right' : 'text-left' }}" placeholder="{{ __('messages.enter_discount_percentage') }}" required>
+                            <input type="number" name="discount_percentage" id="discount_percentage" value="{{ old('discount_percentage') }}" min="1" max="100" class="form-input pl-2 pr-14 w-full {{ app()->getLocale() == 'ar' ? 'text-right' : 'text-left' }}" placeholder="{{ __('messages.enter_discount_percentage') }}" required onkeypress="return (event.charCode >= 48 && event.charCode <= 57) || event.charCode === 46" oninput="this.value = this.value.replace(/[^0-9.]/g, ''); if(this.value > 100) this.value = 100;">
                             <div class="absolute inset-y-0 {{ app()->getLocale() == 'ar' ? 'left-0 pl-3' : 'right-0 pr-3' }} flex items-center pointer-events-none">
                                 <span class="text-gray-500 pr-6">%</span>
                             </div>
@@ -163,9 +163,10 @@
 
                 <!-- Image -->
                 <div class="mt-4">
-                    <label for="image" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1 {{ app()->getLocale() == 'ar' ? 'text-right' : 'text-left' }}">{{ __('messages.deal_image') }}</label>
-                    <input type="file" name="image" id="image" class="form-input w-full">
-                    <p class="text-gray-500 text-sm mt-1 {{ app()->getLocale() == 'ar' ? 'text-right' : 'text-left' }}">{{ __('messages.deal_image_requirements') }}</p>
+                    <label for="image" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1 {{ app()->getLocale() == 'ar' ? 'text-right' : 'text-left' }}">{{ __('messages.deal_image') }} <span class="text-red-500">*</span></label>
+                    <input type="file" name="image" id="image" class="form-input w-full" accept="image/jpeg,image/png,image/jpg,image/gif,image/svg+xml" required>
+                    <p class="text-gray-500 text-sm mt-1 {{ app()->getLocale() == 'ar' ? 'text-right' : 'text-left' }}">{{ __('messages.deal_image_requirements_new') }}</p>
+                    <div id="image-error" class="text-red-500 text-sm mt-1 hidden {{ app()->getLocale() == 'ar' ? 'text-right' : 'text-left' }}"></div>
                     @error('image')
                         <p class="text-red-500 text-sm mt-1 {{ app()->getLocale() == 'ar' ? 'text-right' : 'text-left' }}">{{ $message }}</p>
                     @enderror
@@ -220,11 +221,24 @@
                     <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1 {{ app()->getLocale() == 'ar' ? 'text-right' : 'text-left' }}">{{ __('messages.select_products') }}</label>
                     <div class="selection-container">
                         @foreach($products as $product)
-                            <div class="p-2 hover:bg-gray-100 dark:hover:bg-gray-700 rounded">
-                                <label class="inline-flex items-center w-full {{ app()->getLocale() == 'ar' ? 'flex-row-reverse' : '' }}">
-                                    <input type="checkbox" name="product_ids[]" value="{{ $product->id }}" class="form-checkbox" {{ in_array($product->id, old('product_ids', [])) ? 'checked' : '' }}>
-                                    <span class="{{ app()->getLocale() == 'ar' ? 'mr-2' : 'ml-2' }}">{{ $product->name }} - ${{ number_format($product->price, 2) }}</span>
-                                    <span class="{{ app()->getLocale() == 'ar' ? 'mr-auto' : 'ml-auto' }} text-sm text-gray-500">{{ $product->branch->name }}</span>
+                            @php
+                                $hasActiveDeal = in_array($product->id, $productsWithActiveDeals ?? []);
+                            @endphp
+                            <div class="p-2 hover:bg-gray-100 dark:hover:bg-gray-700 rounded {{ $hasActiveDeal ? 'opacity-50' : '' }}">
+                                <label class="inline-flex items-center w-full {{ app()->getLocale() == 'ar' ? 'flex-row-reverse' : '' }} {{ $hasActiveDeal ? 'cursor-not-allowed' : 'cursor-pointer' }}">
+                                    <input type="checkbox"
+                                           name="product_ids[]"
+                                           value="{{ $product->id }}"
+                                           class="form-checkbox {{ $hasActiveDeal ? 'cursor-not-allowed' : '' }}"
+                                           {{ in_array($product->id, old('product_ids', [])) ? 'checked' : '' }}
+                                           {{ $hasActiveDeal ? 'disabled' : '' }}>
+                                    <span class="{{ app()->getLocale() == 'ar' ? 'mr-2' : 'ml-2' }} {{ $hasActiveDeal ? 'text-gray-400' : '' }}">
+                                        {{ $product->name }} - ${{ number_format($product->price, 2) }}
+                                        @if($hasActiveDeal)
+                                            <span class="text-xs text-red-500 {{ app()->getLocale() == 'ar' ? 'mr-1' : 'ml-1' }}">({{ __('messages.has_active_deal') }})</span>
+                                        @endif
+                                    </span>
+                                    <span class="{{ app()->getLocale() == 'ar' ? 'mr-auto' : 'ml-auto' }} text-sm {{ $hasActiveDeal ? 'text-gray-400' : 'text-gray-500' }}">{{ $product->branch->name }}</span>
                                 </label>
                             </div>
                         @endforeach
@@ -239,11 +253,24 @@
                     <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1 {{ app()->getLocale() == 'ar' ? 'text-right' : 'text-left' }}">{{ __('messages.select_services') }}</label>
                     <div class="selection-container">
                         @foreach($services as $service)
-                            <div class="p-2 hover:bg-gray-100 dark:hover:bg-gray-700 rounded">
-                                <label class="inline-flex items-center w-full {{ app()->getLocale() == 'ar' ? 'flex-row-reverse' : '' }}">
-                                    <input type="checkbox" name="service_ids[]" value="{{ $service->id }}" class="form-checkbox" {{ in_array($service->id, old('service_ids', [])) ? 'checked' : '' }}>
-                                    <span class="{{ app()->getLocale() == 'ar' ? 'mr-2' : 'ml-2' }}">{{ $service->name }} - ${{ number_format($service->price, 2) }} ({{ $service->duration }}{{ __('messages.min') }})</span>
-                                    <span class="{{ app()->getLocale() == 'ar' ? 'mr-auto' : 'ml-auto' }} text-sm text-gray-500">{{ $service->branch->name }}</span>
+                            @php
+                                $hasActiveDeal = in_array($service->id, $servicesWithActiveDeals ?? []);
+                            @endphp
+                            <div class="p-2 hover:bg-gray-100 dark:hover:bg-gray-700 rounded {{ $hasActiveDeal ? 'opacity-50' : '' }}">
+                                <label class="inline-flex items-center w-full {{ app()->getLocale() == 'ar' ? 'flex-row-reverse' : '' }} {{ $hasActiveDeal ? 'cursor-not-allowed' : 'cursor-pointer' }}">
+                                    <input type="checkbox"
+                                           name="service_ids[]"
+                                           value="{{ $service->id }}"
+                                           class="form-checkbox {{ $hasActiveDeal ? 'cursor-not-allowed' : '' }}"
+                                           {{ in_array($service->id, old('service_ids', [])) ? 'checked' : '' }}
+                                           {{ $hasActiveDeal ? 'disabled' : '' }}>
+                                    <span class="{{ app()->getLocale() == 'ar' ? 'mr-2' : 'ml-2' }} {{ $hasActiveDeal ? 'text-gray-400' : '' }}">
+                                        {{ $service->name }} - ${{ number_format($service->price, 2) }} ({{ $service->duration }}{{ __('messages.min') }})
+                                        @if($hasActiveDeal)
+                                            <span class="text-xs text-red-500 {{ app()->getLocale() == 'ar' ? 'mr-1' : 'ml-1' }}">({{ __('messages.has_active_deal') }})</span>
+                                        @endif
+                                    </span>
+                                    <span class="{{ app()->getLocale() == 'ar' ? 'mr-auto' : 'ml-auto' }} text-sm {{ $hasActiveDeal ? 'text-gray-400' : 'text-gray-500' }}">{{ $service->branch->name }}</span>
                                 </label>
                             </div>
                         @endforeach
@@ -332,6 +359,16 @@
                 updateCharacterCount(this, charCountAr);
             });
         }
+
+        // Image validation
+        const imageInput = document.getElementById('image');
+        const imageError = document.getElementById('image-error');
+
+        if (imageInput && imageError) {
+            imageInput.addEventListener('change', function() {
+                validateImageInput(this, imageError);
+            });
+        }
     }
 
     function updateCharacterCount(input, counter) {
@@ -352,6 +389,37 @@
         }
     }
 
+    function validateImageInput(input, errorElement) {
+        errorElement.classList.add('hidden');
+        errorElement.textContent = '';
+
+        if (!input.files || input.files.length === 0) {
+            return; // No file selected, will be caught by form validation
+        }
+
+        const file = input.files[0];
+        const maxSize = 20971520; // 20MB in bytes
+        const allowedTypes = ['image/jpeg', 'image/png', 'image/jpg', 'image/gif', 'image/svg+xml'];
+
+        // Check file size
+        if (file.size > maxSize) {
+            errorElement.textContent = '{{ __('messages.deal_image_too_large') }}';
+            errorElement.classList.remove('hidden');
+            input.value = ''; // Clear the input
+            return false;
+        }
+
+        // Check file type
+        if (!allowedTypes.includes(file.type)) {
+            errorElement.textContent = '{{ __('messages.deal_image_invalid_type') }}';
+            errorElement.classList.remove('hidden');
+            input.value = ''; // Clear the input
+            return false;
+        }
+
+        return true;
+    }
+
     function setupBilingualValidation() {
         const form = document.querySelector('form');
         if (!form) return;
@@ -370,6 +438,29 @@
             if (!validateBilingualField('description', false)) {
                 hasErrors = true;
                 errors.push('{{ __('messages.description_both_or_none') }}');
+            }
+
+            // Validate image (required)
+            const imageInput = document.getElementById('image');
+            if (!imageInput || !imageInput.files || imageInput.files.length === 0) {
+                hasErrors = true;
+                errors.push('{{ __('messages.deal_image_required') }}');
+            } else {
+                // Validate file size (20MB = 20971520 bytes)
+                const file = imageInput.files[0];
+                const maxSize = 20971520; // 20MB in bytes
+
+                if (file.size > maxSize) {
+                    hasErrors = true;
+                    errors.push('{{ __('messages.deal_image_too_large') }}');
+                }
+
+                // Validate file type
+                const allowedTypes = ['image/jpeg', 'image/png', 'image/jpg', 'image/gif', 'image/svg+xml'];
+                if (!allowedTypes.includes(file.type)) {
+                    hasErrors = true;
+                    errors.push('{{ __('messages.deal_image_invalid_type') }}');
+                }
             }
 
             if (hasErrors) {

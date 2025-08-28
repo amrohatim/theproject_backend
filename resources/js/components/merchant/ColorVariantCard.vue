@@ -147,7 +147,8 @@
                 <input type="number"
                        step="1"
                        :value="color.price_adjustment"
-                       @input="updateColor('price_adjustment', parseFloat($event.target.value) || 0)"
+                       @input="updateColor('price_adjustment', Math.abs(parseInt($event.target.value)) || 0)"
+                       @keypress="$event.key.match(/[0-9]/) === null && $event.preventDefault()"
                        class="vue-form-control-enhanced-blue pl-8 text-right font-medium"
                        placeholder="0.00">
               </div>
@@ -166,6 +167,7 @@
                 <input type="number"
                        :value="color.stock"
                        @input="updateColor('stock', parseInt($event.target.value) || 0)"
+                       @keypress="$event.key.match(/[0-9]/) === null && $event.preventDefault()"
                        min="0"
                        class="vue-form-control-enhanced-blue pr-16 text-center font-semibold"
                        placeholder="0">
@@ -210,6 +212,7 @@
                 <input type="number"
                        :value="color.display_order || 0"
                        @input="updateColor('display_order', parseInt($event.target.value) || 0)"
+                       @keypress="$event.key.match(/[0-9]/) === null && $event.preventDefault()"
                        min="0"
                        class="vue-form-control-enhanced-blue text-center font-semibold text-md"
                        title="Order in which this color variant appears"

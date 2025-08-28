@@ -7,8 +7,10 @@ use App\Models\Deal;
 use App\Models\Product;
 use App\Models\Category;
 use App\Models\Branch;
+use App\Services\WebPImageService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Storage;
 
 class DealController extends Controller
@@ -80,12 +82,13 @@ class DealController extends Controller
             ->select('products.*')
             ->get();
 
-
+        // Get product IDs that already have active deals
+        $productsWithActiveDeals = Deal::getProductIdsWithActiveDeals(null, Auth::id());
 
         $categories = Category::all();
         $branches = Branch::where('company_id', $company->id)->get();
 
-        return view('products-manager.deals.create', compact('products', 'categories', 'branches'));
+        return view('products-manager.deals.create', compact('products', 'categories', 'branches', 'productsWithActiveDeals'));
     }
 
     /**
@@ -101,39 +104,90 @@ class DealController extends Controller
             'title_arabic' => 'required|string|max:255',
             'description' => 'nullable|string',
             'description_arabic' => 'nullable|string',
-            'promotional_message' => 'nullable|string|max:500',
-            'promotional_message_arabic' => 'nullable|string|max:500',
+            'promotional_message' => 'nullable|string|max:50',
+            'promotional_message_arabic' => 'nullable|string|max:50',
             'discount_percentage' => 'required|numeric|min:1|max:100',
             'start_date' => 'required|date|after_or_equal:today',
             'end_date' => 'required|date|after:start_date',
-            'image' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
+            'image' => 'required|image|mimes:jpeg,png,jpg,gif,svg|max:20480', // 20MB = 20480KB
             'status' => 'required|in:active,inactive',
-            'applies_to' => 'required|in:all,products',
-            'product_ids' => 'required_if:applies_to,products|nullable|array',
+            'applies_to' => 'required|in:products',
+            'product_ids' => 'required|array',
             'product_ids.*' => 'exists:products,id',
 
         ]);
 
+        // Validate bilingual promotional message (if one is provided, both must be provided)
+        $promotionalMessage = $request->input('promotional_message');
+        $promotionalMessageArabic = $request->input('promotional_message_arabic');
+
+        if ((!empty($promotionalMessage) && empty($promotionalMessageArabic)) ||
+            (empty($promotionalMessage) && !empty($promotionalMessageArabic))) {
+            return back()->withErrors([
+                'promotional_message' => __('messages.promotional_message_both_or_none')
+            ])->withInput();
+        }
+
         $data = $request->all();
         $data['user_id'] = Auth::id();
 
-        // Handle image upload
-        if ($request->hasFile('image')) {
-            $imagePath = $request->file('image')->store('deals', 'public');
-            $data['image'] = $imagePath;
+        // Validate that selected products don't have active deals
+        if (isset($data['product_ids']) && is_array($data['product_ids'])) {
+            $conflictingProducts = Deal::getConflictingProductIds($data['product_ids'], null, Auth::id());
+            if (!empty($conflictingProducts)) {
+                $productNames = Product::whereIn('id', $conflictingProducts)->pluck('name')->toArray();
+                return back()->withErrors([
+                    'product_ids' => 'The following products already have active deals: ' . implode(', ', $productNames)
+                ])->withInput();
+            }
         }
 
-        // Handle product IDs based on applies_to value
-        if ($data['applies_to'] === 'products') {
-            // Keep product_ids as is - they will be stored as JSON
-            if (isset($data['product_ids']) && is_array($data['product_ids'])) {
-                // Ensure product_ids is properly formatted for JSON storage
-                $data['product_ids'] = array_values($data['product_ids']);
-            } else {
-                $data['product_ids'] = null;
+        // Handle image upload with WebP compression
+        if ($request->hasFile('image')) {
+            $file = $request->file('image');
+
+            try {
+                // Convert to WebP and store
+                $webpService = new WebPImageService();
+                $imagePath = $webpService->convertAndStoreWithUrl($file, 'deals');
+
+                if (!$imagePath) {
+                    // Fallback to original upload method if WebP conversion fails
+                    $imageName = time() . '_' . uniqid() . '.' . $file->getClientOriginalExtension();
+                    $fallbackPath = $file->storeAs('deals', $imageName, 'public');
+                    $imagePath = $fallbackPath ? '/storage/' . $fallbackPath : null;
+
+                    Log::warning('WebP conversion failed for products manager deal, using fallback method', [
+                        'original_name' => $file->getClientOriginalName(),
+                        'fallback_path' => $imagePath
+                    ]);
+                }
+
+                if (!$imagePath) {
+                    return redirect()->back()
+                        ->withInput()
+                        ->withErrors(['image' => 'Failed to upload image. Please try again.']);
+                }
+
+                $data['image'] = $imagePath;
+
+            } catch (\Exception $e) {
+                Log::error('Error processing products manager deal image upload', [
+                    'error' => $e->getMessage(),
+                    'file' => $file->getClientOriginalName()
+                ]);
+
+                return redirect()->back()
+                    ->withInput()
+                    ->withErrors(['image' => 'Failed to process image. Please try again with a different image.']);
             }
+        }
+
+        // Handle product IDs - since we only support 'products' now
+        if (isset($data['product_ids']) && is_array($data['product_ids'])) {
+            // Ensure product_ids is properly formatted for JSON storage
+            $data['product_ids'] = array_values($data['product_ids']);
         } else {
-            // For 'all', clear product_ids
             $data['product_ids'] = null;
         }
 
@@ -195,12 +249,13 @@ class DealController extends Controller
             ->select('products.*')
             ->get();
 
-
+        // Get product IDs that already have active deals (excluding current deal)
+        $productsWithActiveDeals = Deal::getProductIdsWithActiveDeals($deal->id, Auth::id());
 
         $categories = Category::all();
         $branches = Branch::where('company_id', $company->id)->get();
 
-        return view('products-manager.deals.edit', compact('deal', 'products', 'categories', 'branches'));
+        return view('products-manager.deals.edit', compact('deal', 'products', 'categories', 'branches', 'productsWithActiveDeals'));
     }
 
     /**
@@ -248,43 +303,105 @@ class DealController extends Controller
             'title_arabic' => 'required|string|max:255',
             'description' => 'nullable|string',
             'description_arabic' => 'nullable|string',
-            'promotional_message' => 'nullable|string|max:500',
-            'promotional_message_arabic' => 'nullable|string|max:500',
+            'promotional_message' => 'nullable|string|max:50',
+            'promotional_message_arabic' => 'nullable|string|max:50',
             'discount_percentage' => 'required|numeric|min:1|max:100',
             'start_date' => 'required|date',
             'end_date' => 'required|date|after:start_date',
-            'image' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
+            'image' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:20480', // 20MB = 20480KB
             'status' => 'required|in:active,inactive',
-            'applies_to' => 'required|in:all,products',
-            'product_ids' => 'required_if:applies_to,products|nullable|array',
+            'applies_to' => 'required|in:products',
+            'product_ids' => 'required|array',
             'product_ids.*' => 'exists:products,id',
 
         ]);
 
-        $data = $request->all();
+        // Validate bilingual promotional message (if one is provided, both must be provided)
+        $promotionalMessage = $request->input('promotional_message');
+        $promotionalMessageArabic = $request->input('promotional_message_arabic');
 
-        // Handle image upload
-        if ($request->hasFile('image')) {
-            // Delete old image if exists
-            if ($deal->getRawOriginalImage()) {
-                Storage::disk('public')->delete($deal->getRawOriginalImage());
-            }
-            
-            $imagePath = $request->file('image')->store('deals', 'public');
-            $data['image'] = $imagePath;
+        if ((!empty($promotionalMessage) && empty($promotionalMessageArabic)) ||
+            (empty($promotionalMessage) && !empty($promotionalMessageArabic))) {
+            return back()->withErrors([
+                'promotional_message' => __('messages.promotional_message_both_or_none')
+            ])->withInput();
         }
 
-        // Handle product IDs based on applies_to value
-        if ($data['applies_to'] === 'products') {
-            // Keep product_ids as is - they will be stored as JSON
-            if (isset($data['product_ids']) && is_array($data['product_ids'])) {
-                // Ensure product_ids is properly formatted for JSON storage
-                $data['product_ids'] = array_values($data['product_ids']);
-            } else {
-                $data['product_ids'] = null;
+        $data = $request->all();
+
+        // Validate that selected products don't have active deals (excluding current deal)
+        if (isset($data['product_ids']) && is_array($data['product_ids'])) {
+            $conflictingProducts = Deal::getConflictingProductIds($data['product_ids'], $deal->id, Auth::id());
+            if (!empty($conflictingProducts)) {
+                $productNames = Product::whereIn('id', $conflictingProducts)->pluck('name')->toArray();
+                return back()->withErrors([
+                    'product_ids' => 'The following products already have active deals: ' . implode(', ', $productNames)
+                ])->withInput();
             }
+        }
+
+        // Handle image upload with WebP compression
+        if ($request->hasFile('image')) {
+            $file = $request->file('image');
+
+            try {
+                // Delete old image if exists
+                $oldImagePath = $deal->getRawOriginalImage();
+                if ($oldImagePath && !empty(trim($oldImagePath))) {
+                    try {
+                        $webpService = new WebPImageService();
+                        $webpService->deleteImage($oldImagePath);
+                    } catch (\Exception $e) {
+                        // Log the error but don't stop the update process
+                        Log::warning('Failed to delete old products manager deal image: ' . $e->getMessage(), [
+                            'deal_id' => $deal->id,
+                            'image_path' => $oldImagePath
+                        ]);
+                    }
+                }
+
+                // Convert to WebP and store
+                $webpService = new WebPImageService();
+                $imagePath = $webpService->convertAndStoreWithUrl($file, 'deals');
+
+                if (!$imagePath) {
+                    // Fallback to original upload method if WebP conversion fails
+                    $imageName = time() . '_' . uniqid() . '.' . $file->getClientOriginalExtension();
+                    $fallbackPath = $file->storeAs('deals', $imageName, 'public');
+                    $imagePath = $fallbackPath ? '/storage/' . $fallbackPath : null;
+
+                    Log::warning('WebP conversion failed for products manager deal update, using fallback method', [
+                        'original_name' => $file->getClientOriginalName(),
+                        'fallback_path' => $imagePath
+                    ]);
+                }
+
+                if (!$imagePath) {
+                    return redirect()->back()
+                        ->withInput()
+                        ->withErrors(['image' => 'Failed to upload image. Please try again.']);
+                }
+
+                $data['image'] = $imagePath;
+
+            } catch (\Exception $e) {
+                Log::error('Error processing products manager deal image update', [
+                    'error' => $e->getMessage(),
+                    'file' => $file->getClientOriginalName(),
+                    'deal_id' => $deal->id
+                ]);
+
+                return redirect()->back()
+                    ->withInput()
+                    ->withErrors(['image' => 'Failed to process image. Please try again with a different image.']);
+            }
+        }
+
+        // Handle product IDs - since we only support 'products' now
+        if (isset($data['product_ids']) && is_array($data['product_ids'])) {
+            // Ensure product_ids is properly formatted for JSON storage
+            $data['product_ids'] = array_values($data['product_ids']);
         } else {
-            // For 'all', clear product_ids
             $data['product_ids'] = null;
         }
 
@@ -338,8 +455,18 @@ class DealController extends Controller
         }
 
         // Delete image if exists
-        if ($deal->getRawOriginalImage()) {
-            Storage::disk('public')->delete($deal->getRawOriginalImage());
+        $imagePath = $deal->getRawOriginalImage();
+        if ($imagePath && !empty(trim($imagePath))) {
+            try {
+                $webpService = new WebPImageService();
+                $webpService->deleteImage($imagePath);
+            } catch (\Exception $e) {
+                // Log the error but don't stop the deletion process
+                Log::warning('Failed to delete products manager deal image: ' . $e->getMessage(), [
+                    'deal_id' => $deal->id,
+                    'image_path' => $imagePath
+                ]);
+            }
         }
 
         $deal->delete();

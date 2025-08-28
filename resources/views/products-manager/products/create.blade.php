@@ -356,6 +356,8 @@
         'vendor.continue'=>__('vendor.continue'),
         'vendor.view_products'=>__('vendor.view_products'),
         'vendor.product_created_available_inventory'=>__('vendor.product_created_available_inventory'),
+        'vendor.need_create_branch_first'=>__('vendor.need_create_branch_first'),
+        'vendor.no_branches_available'=>__('vendor.no_branches_available'),
 
 
             // Legacy keys for backward compatibility

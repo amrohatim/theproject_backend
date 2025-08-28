@@ -2187,10 +2187,10 @@ Route::prefix('vendor')->name('vendor.')->middleware(['auth', \App\Http\Middlewa
     Route::delete('/api/colors/{id}', [\App\Http\Controllers\Vendor\ProductColorController::class, 'destroy'])->name('api.colors.destroy');
 });
 
-// License restriction routes (accessible without active license)
-Route::prefix('service-provider')->name('service-provider.')->middleware(['auth'])->group(function () {
-    Route::get('/license/restriction', [\App\Http\Controllers\ServiceProvider\LicenseRestrictionController::class, 'show'])->name('license.restriction');
-});
+// License restriction routes (accessible without active license) - DISABLED: Service Providers don't require license approval
+// Route::prefix('service-provider')->name('service-provider.')->middleware(['auth'])->group(function () {
+//     Route::get('/license/restriction', [\App\Http\Controllers\ServiceProvider\LicenseRestrictionController::class, 'show'])->name('license.restriction');
+// });
 
 // Products Manager license restriction routes removed - no license validation required
 
@@ -2326,11 +2326,8 @@ Route::prefix('provider')->name('provider.')->middleware(['auth', \App\Http\Midd
     Route::delete('/provider-products/{id}', [App\Http\Controllers\Provider\ProviderProductController::class, 'destroy'])->name('provider-products.destroy');
 });
 
-// Merchant license status routes (accessible without active license)
+// Merchant license upload routes (accessible without active license)
 Route::prefix('merchant')->name('merchant.')->middleware(['auth'])->group(function () {
-    // License status pages - accessible even with inactive license
-    Route::get('/license/status/{status?}', [App\Http\Controllers\Merchant\LicenseStatusController::class, 'show'])->name('license.status');
-
     // License upload routes - accessible for merchants who completed phone verification but need to upload license
     Route::get('/license/upload', [App\Http\Controllers\Merchant\LicenseUploadController::class, 'show'])->name('license.upload');
     Route::post('/license/upload', [App\Http\Controllers\Merchant\LicenseUploadController::class, 'upload'])->name('license.upload.submit');

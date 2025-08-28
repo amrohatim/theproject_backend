@@ -130,11 +130,11 @@
 
                     <!-- Action Buttons -->
                     <div class="flex justify-center space-x-4 pt-4">
-                        <a href="{{ route('merchant.license.status', ['status' => 'checking']) }}" 
+                        <a href="{{ route('merchant.dashboard') }}"
                            class="px-6 py-2 bg-blue-600 text-white font-medium rounded-lg hover:bg-blue-700 transition-colors duration-200">
-                            View License Status
+                            Go to Dashboard
                         </a>
-                        <button onclick="window.location.reload()" 
+                        <button onclick="window.location.reload()"
                                 class="px-6 py-2 bg-gray-600 text-white font-medium rounded-lg hover:bg-gray-700 transition-colors duration-200">
                             Refresh Status
                         </button>

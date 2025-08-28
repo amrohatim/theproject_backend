@@ -220,6 +220,8 @@
         'vendor.view_products'=>__('vendor.view_products'),
         'vendor.product_created_available_inventory'=>__('vendor.product_created_available_inventory'),
         'vendor.product_updated_successfully'=>__('vendor.product_updated_successfully'),
+        'vendor.need_create_branch_first'=>__('vendor.need_create_branch_first'),
+        'vendor.no_branches_available'=>__('vendor.no_branches_available'),
 
 
             // Legacy keys for backward compatibility
