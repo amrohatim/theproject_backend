@@ -16,6 +16,7 @@ class BusinessType extends Model
      */
     protected $fillable = [
         'business_name',
+        'image',
     ];
 
     /**

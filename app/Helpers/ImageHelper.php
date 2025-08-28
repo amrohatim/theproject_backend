@@ -892,4 +892,70 @@ class ImageHelper
 
         return self::syncFile($relativePath);
     }
+
+    /**
+     * Compress and convert image to WebP format
+     *
+     * @param \Illuminate\Http\UploadedFile $file
+     * @param string $directory
+     * @param int $quality
+     * @return string|null
+     */
+    public static function compressToWebP($file, $directory, $quality = 75)
+    {
+        try {
+            // Create directory if it doesn't exist
+            $fullDirectory = storage_path("app/public/{$directory}");
+            if (!file_exists($fullDirectory)) {
+                mkdir($fullDirectory, 0755, true);
+            }
+
+            // Generate unique filename with WebP extension
+            $filename = uniqid() . '_' . time() . '.webp';
+            $filePath = "{$directory}/{$filename}";
+            $fullPath = storage_path("app/public/{$filePath}");
+
+            // Get image info and create image resource
+            $imageInfo = getimagesize($file->getPathname());
+            $mimeType = $imageInfo['mime'];
+
+            switch ($mimeType) {
+                case 'image/jpeg':
+                    $image = imagecreatefromjpeg($file->getPathname());
+                    break;
+                case 'image/png':
+                    $image = imagecreatefrompng($file->getPathname());
+                    break;
+                case 'image/gif':
+                    $image = imagecreatefromgif($file->getPathname());
+                    break;
+                case 'image/webp':
+                    $image = imagecreatefromwebp($file->getPathname());
+                    break;
+                default:
+                    // For unsupported formats, just store the original file
+                    $filename = uniqid() . '_' . time() . '.' . $file->getClientOriginalExtension();
+                    $filePath = "{$directory}/{$filename}";
+                    $file->storeAs($directory, $filename, 'public');
+                    return $filePath;
+            }
+
+            if (!$image) {
+                return null;
+            }
+
+            // Convert to WebP with specified quality
+            $success = imagewebp($image, $fullPath, $quality);
+            imagedestroy($image);
+
+            if ($success) {
+                return $filePath;
+            }
+
+            return null;
+        } catch (\Exception $e) {
+            Log::error("Image compression failed: " . $e->getMessage());
+            return null;
+        }
+    }
 }

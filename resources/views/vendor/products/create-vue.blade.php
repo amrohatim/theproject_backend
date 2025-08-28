@@ -377,6 +377,9 @@
         'vendor.loading_product_creation_form' => __('vendor.loading_product_creation_form'),
         'vendor.need_create_branch_first' => __('vendor.need_create_branch_first'),
         'vendor.no_branches_available' => __('vendor.no_branches_available'),
+        'vendor.branch_selection_required' => __('vendor.branch_selection_required'),
+        'vendor.price_must_be_greater_than_zero' => __('vendor.price_must_be_greater_than_zero'),
+        'vendor.color_variants_required' => __('vendor.color_variants_required'),
 
         // Common words
         'vendor.yes' => __('vendor.yes'),

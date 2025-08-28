@@ -141,6 +141,14 @@ class ProductController extends Controller
             ->orderBy('name')
             ->get();
 
+        // Add hierarchy information to categories
+        $parentCategories->each(function ($parent) {
+            $parent->is_selectable = false; // Parent categories are not selectable
+            $parent->children->each(function ($child) {
+                $child->is_selectable = $child->canBeSelectedForProducts();
+            });
+        });
+
         // Get branches that belong to the vendor's company and have active licenses
         $branches = Branch::whereHas('company', function ($query) {
             $query->where('user_id', $this->getActingVendorUserId());
@@ -368,6 +376,14 @@ class ProductController extends Controller
                 }])
                 ->orderBy('name')
                 ->get();
+
+            // Add hierarchy information to categories
+            $parentCategories->each(function ($parent) {
+                $parent->is_selectable = false; // Parent categories are not selectable
+                $parent->children->each(function ($child) {
+                    $child->is_selectable = $child->canBeSelectedForProducts();
+                });
+            });
 
             // Get branches that belong to the vendor's company and have active licenses
             $branches = Branch::whereHas('company', function ($query) {
@@ -833,6 +849,14 @@ class ProductController extends Controller
             ->orderBy('name')
             ->get();
 
+        // Add hierarchy information to categories
+        $parentCategories->each(function ($parent) {
+            $parent->is_selectable = false; // Parent categories are not selectable
+            $parent->children->each(function ($child) {
+                $child->is_selectable = $child->canBeSelectedForProducts();
+            });
+        });
+
         // Get branches that belong to the vendor's company and have active licenses
         $branches = Branch::whereHas('company', function ($query) {
             $query->where('user_id', $this->getActingVendorUserId());
@@ -880,6 +904,14 @@ class ProductController extends Controller
             }])
             ->orderBy('name')
             ->get();
+
+        // Add hierarchy information to categories
+        $parentCategories->each(function ($parent) {
+            $parent->is_selectable = false; // Parent categories are not selectable
+            $parent->children->each(function ($child) {
+                $child->is_selectable = $child->canBeSelectedForProducts();
+            });
+        });
 
         // Get branches that belong to the vendor's company and have active licenses
         $branches = Branch::whereHas('company', function ($query) {

@@ -230,6 +230,9 @@
         'vendor.is_available': '{{ __('vendor.is_available') }}',
         'vendor.product_available': '{{ __('vendor.product_available') }}',
         'vendor.continue': '{{ __('vendor.continue') }}',
+        'vendor.branch_selection_required ': '{{ __('vendor.branch_selection_required') }}',
+        'vendor.price_must_be_greater_than_zero ': '{{ __('vendor.price_must_be_greater_than_zero') }}',
+        'vendor.color_variants_required': '{{ __('vendor.color_variants_required') }}',
 
         // Color and variant information
         'vendor.color_variant': '{{ __('vendor.color_variant') }}',

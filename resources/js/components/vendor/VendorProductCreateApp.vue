@@ -440,7 +440,9 @@
             <i class="fas fa-exclamation-triangle text-red-600 text-xl"></i>
           </div>
           <h3 class="text-lg font-medium text-gray-900 mt-4">{{ $t('vendor.error_creating_product') }}</h3>
-          <p class="text-sm text-gray-500 mt-2">{{ errorMessage || $t('vendor.unexpected_error_try_again') }}</p>
+          <div class="text-sm text-gray-500 mt-2 whitespace-pre-line">
+            {{ errorMessage || $t('vendor.unexpected_error_try_again') }}
+          </div>
           <div class="flex justify-center mt-6">
             <button @click="closeErrorModal" class="vue-btn vue-btn-primary">
               {{ $t('vendor.try_again') }}

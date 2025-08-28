@@ -4,8 +4,10 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use App\Models\BusinessType;
+use App\Helpers\ImageHelper;
 use Illuminate\Http\Request;
 use Illuminate\Validation\Rule;
+use Illuminate\Support\Facades\Storage;
 
 class BusinessTypeController extends Controller
 {
@@ -45,7 +47,21 @@ class BusinessTypeController extends Controller
     {
         $validated = $request->validate([
             'business_name' => 'required|string|max:255|unique:business_types,business_name',
+            'image' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:20480', // 20MB max
         ]);
+
+        // Handle image upload
+        if ($request->hasFile('image')) {
+            $imagePath = ImageHelper::compressToWebP(
+                $request->file('image'),
+                'business-types',
+                75
+            );
+
+            if ($imagePath) {
+                $validated['image'] = $imagePath;
+            }
+        }
 
         BusinessType::create($validated);
 
@@ -81,7 +97,26 @@ class BusinessTypeController extends Controller
                 'max:255',
                 Rule::unique('business_types', 'business_name')->ignore($businessType->id),
             ],
+            'image' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:20480', // 20MB max
         ]);
+
+        // Handle image upload
+        if ($request->hasFile('image')) {
+            // Delete old image if exists
+            if ($businessType->image && Storage::disk('public')->exists($businessType->image)) {
+                Storage::disk('public')->delete($businessType->image);
+            }
+
+            $imagePath = ImageHelper::compressToWebP(
+                $request->file('image'),
+                'business-types',
+                75
+            );
+
+            if ($imagePath) {
+                $validated['image'] = $imagePath;
+            }
+        }
 
         $businessType->update($validated);
 
@@ -95,6 +130,11 @@ class BusinessTypeController extends Controller
     public function destroy(BusinessType $businessType)
     {
         try {
+            // Delete associated image if exists
+            if ($businessType->image && Storage::disk('public')->exists($businessType->image)) {
+                Storage::disk('public')->delete($businessType->image);
+            }
+
             $businessType->delete();
             return redirect()->route('admin.business-types.index')
                 ->with('success', 'Business type deleted successfully.');
