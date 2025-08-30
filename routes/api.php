@@ -29,6 +29,7 @@ use App\Http\Controllers\API\MerchantRegistrationController;
 use App\Http\Controllers\API\MerchantController;
 use App\Http\Controllers\API\EmailVerificationController;
 use App\Http\Controllers\API\ProductSpecificationController;
+use App\Http\Controllers\API\BusinessTypeController;
 use App\Http\Controllers\LanguageController;
 
 /*
@@ -106,6 +107,14 @@ Route::get('/deals/{id}/services', [DealController::class, 'getServices']);
 Route::get('/top-vendors', [CompanyController::class, 'topVendors']);
 Route::get('/popular-branches', [BranchController::class, 'popular']);
 Route::get('/trending-categories', [CategoryController::class, 'trending']);
+
+// Public business type routes (no authentication required)
+Route::get('/business-types', [BusinessTypeController::class, 'index']);
+Route::get('/business-types/from-branches', [BusinessTypeController::class, 'getFromBranches']);
+Route::get('/business-types/branches', [BusinessTypeController::class, 'getBranches']);
+Route::get('/business-types/products', [BusinessTypeController::class, 'getProducts']);
+Route::get('/business-types/services', [BusinessTypeController::class, 'getServices']);
+Route::get('/emirates', [BusinessTypeController::class, 'getEmirates']);
 
 // Public filter routes (no authentication required)
 Route::get('/product-colors', [\App\Http\Controllers\API\ProductSpecificationController::class, 'getAllProductColors']);
