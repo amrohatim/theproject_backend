@@ -8,7 +8,6 @@ use App\Models\Branch;
 use App\Models\Product;
 use App\Models\Service;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\DB;
 
 class BusinessTypeController extends Controller
 {
@@ -20,7 +19,29 @@ class BusinessTypeController extends Controller
     public function index()
     {
         try {
-            $businessTypes = BusinessType::orderBy('business_name')->get();
+            $businessTypes = BusinessType::orderBy('business_name')->get()->map(function ($businessType) {
+                $data = $businessType->toArray();
+
+                // Fix image URL construction
+                if ($businessType->image) {
+                    $imageUrl = $businessType->image;
+
+                    if (!str_starts_with($imageUrl, 'http')) {
+                        // Check if the path already starts with 'storage/'
+                        if (str_starts_with($imageUrl, 'storage/')) {
+                            // Path already includes storage/, just prepend base URL
+                            $imageUrl = url($imageUrl);
+                        } else {
+                            // Path doesn't include storage/, add it
+                            $imageUrl = url('storage/' . $imageUrl);
+                        }
+                    }
+
+                    $data['image'] = $imageUrl;
+                }
+
+                return $data;
+            });
 
             return response()->json([
                 'success' => true,
@@ -63,10 +84,18 @@ class BusinessTypeController extends Controller
                     if ($dbBusinessType && $dbBusinessType->image) {
                         // Construct full URL for the image
                         $imageUrl = $dbBusinessType->image;
+
                         if (!str_starts_with($imageUrl, 'http')) {
-                            // If it's a relative path, construct full URL
-                            $imageUrl = url('storage/' . $dbBusinessType->image);
+                            // Check if the path already starts with 'storage/'
+                            if (str_starts_with($imageUrl, 'storage/')) {
+                                // Path already includes storage/, just prepend base URL
+                                $imageUrl = url($imageUrl);
+                            } else {
+                                // Path doesn't include storage/, add it
+                                $imageUrl = url('storage/' . $imageUrl);
+                            }
                         }
+
                         $businessTypeData['image'] = $imageUrl;
                         $businessTypeData['id'] = $dbBusinessType->id;
                     }
