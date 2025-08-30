@@ -53,19 +53,26 @@ class BusinessTypeController extends Controller
                 ->orderBy('business_type')
                 ->get()
                 ->map(function ($branch) {
-                    return [
+                    $businessTypeData = [
                         'business_name' => $branch->business_type,
                         'image' => null, // Will be populated from business_types table if exists
                     ];
-                });
 
-            // Try to get images from business_types table
-            foreach ($businessTypes as $businessType) {
-                $dbBusinessType = BusinessType::where('business_name', $businessType['business_name'])->first();
-                if ($dbBusinessType && $dbBusinessType->image) {
-                    $businessType['image'] = $dbBusinessType->image;
-                }
-            }
+                    // Try to get image from business_types table
+                    $dbBusinessType = BusinessType::where('business_name', $branch->business_type)->first();
+                    if ($dbBusinessType && $dbBusinessType->image) {
+                        // Construct full URL for the image
+                        $imageUrl = $dbBusinessType->image;
+                        if (!str_starts_with($imageUrl, 'http')) {
+                            // If it's a relative path, construct full URL
+                            $imageUrl = url('storage/' . $dbBusinessType->image);
+                        }
+                        $businessTypeData['image'] = $imageUrl;
+                        $businessTypeData['id'] = $dbBusinessType->id;
+                    }
+
+                    return $businessTypeData;
+                });
 
             return response()->json([
                 'success' => true,
