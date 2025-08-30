@@ -22,18 +22,21 @@ class BusinessTypeController extends Controller
             $businessTypes = BusinessType::orderBy('business_name')->get()->map(function ($businessType) {
                 $data = $businessType->toArray();
 
-                // Fix image URL construction
+                // Fix image URL construction with robust path handling
                 if ($businessType->image) {
                     $imageUrl = $businessType->image;
 
                     if (!str_starts_with($imageUrl, 'http')) {
-                        // Check if the path already starts with 'storage/'
-                        if (str_starts_with($imageUrl, 'storage/')) {
+                        // Clean up the path to avoid duplication
+                        $cleanPath = ltrim($imageUrl, '/'); // Remove leading slash if present
+
+                        // Check if the path already contains 'storage/'
+                        if (str_starts_with($cleanPath, 'storage/')) {
                             // Path already includes storage/, just prepend base URL
-                            $imageUrl = url($imageUrl);
+                            $imageUrl = url($cleanPath);
                         } else {
                             // Path doesn't include storage/, add it
-                            $imageUrl = url('storage/' . $imageUrl);
+                            $imageUrl = url('storage/' . $cleanPath);
                         }
                     }
 
@@ -87,17 +90,20 @@ class BusinessTypeController extends Controller
                     $businessTypeData['id'] = $dbBusinessType->id;
 
                     if ($dbBusinessType->image) {
-                        // Construct full URL for the image
+                        // Construct full URL for the image with robust path handling
                         $imageUrl = $dbBusinessType->image;
 
                         if (!str_starts_with($imageUrl, 'http')) {
-                            // Check if the path already starts with 'storage/'
-                            if (str_starts_with($imageUrl, 'storage/')) {
+                            // Clean up the path to avoid duplication
+                            $cleanPath = ltrim($imageUrl, '/'); // Remove leading slash if present
+
+                            // Check if the path already contains 'storage/'
+                            if (str_starts_with($cleanPath, 'storage/')) {
                                 // Path already includes storage/, just prepend base URL
-                                $imageUrl = url($imageUrl);
+                                $imageUrl = url($cleanPath);
                             } else {
                                 // Path doesn't include storage/, add it
-                                $imageUrl = url('storage/' . $imageUrl);
+                                $imageUrl = url('storage/' . $cleanPath);
                             }
                         }
 
