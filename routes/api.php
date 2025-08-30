@@ -116,6 +116,19 @@ Route::get('/business-types/products', [BusinessTypeController::class, 'getProdu
 Route::get('/business-types/services', [BusinessTypeController::class, 'getServices']);
 Route::get('/emirates', [BusinessTypeController::class, 'getEmirates']);
 
+// Debug route to test business types
+Route::get('/debug/business-types', function() {
+    $businessTypes = \App\Models\BusinessType::all();
+    $branches = \App\Models\Branch::select('business_type')->whereNotNull('business_type')->groupBy('business_type')->get();
+
+    return response()->json([
+        'business_types_table' => $businessTypes,
+        'unique_branch_types' => $branches,
+        'storage_url' => url('storage/'),
+        'app_url' => url('/'),
+    ]);
+});
+
 // Public filter routes (no authentication required)
 Route::get('/product-colors', [\App\Http\Controllers\API\ProductSpecificationController::class, 'getAllProductColors']);
 Route::get('/standardized-sizes', [\App\Http\Controllers\API\ProductSpecificationController::class, 'getStandardizedSizes']);

@@ -66,22 +66,27 @@ class BusinessTypeController extends Controller
     {
         try {
             // Get unique business types from branches table where business_type is not null
-            $businessTypes = Branch::select('business_type')
+            $uniqueBusinessTypes = Branch::select('business_type')
                 ->whereNotNull('business_type')
                 ->where('business_type', '!=', '')
                 ->where('status', 'active')
                 ->groupBy('business_type')
                 ->orderBy('business_type')
-                ->get()
-                ->map(function ($branch) {
-                    $businessTypeData = [
-                        'business_name' => $branch->business_type,
-                        'image' => null, // Will be populated from business_types table if exists
-                    ];
+                ->pluck('business_type');
 
-                    // Try to get image from business_types table
-                    $dbBusinessType = BusinessType::where('business_name', $branch->business_type)->first();
-                    if ($dbBusinessType && $dbBusinessType->image) {
+            $businessTypes = $uniqueBusinessTypes->map(function ($businessTypeName) {
+                $businessTypeData = [
+                    'business_name' => $businessTypeName,
+                    'image' => null,
+                    'id' => null,
+                ];
+
+                // Try to get image from business_types table
+                $dbBusinessType = BusinessType::where('business_name', $businessTypeName)->first();
+                if ($dbBusinessType) {
+                    $businessTypeData['id'] = $dbBusinessType->id;
+
+                    if ($dbBusinessType->image) {
                         // Construct full URL for the image
                         $imageUrl = $dbBusinessType->image;
 
@@ -97,11 +102,12 @@ class BusinessTypeController extends Controller
                         }
 
                         $businessTypeData['image'] = $imageUrl;
-                        $businessTypeData['id'] = $dbBusinessType->id;
+                        $businessTypeData['original_image_path'] = $dbBusinessType->image; // For debugging
                     }
+                }
 
-                    return $businessTypeData;
-                });
+                return $businessTypeData;
+            });
 
             return response()->json([
                 'success' => true,
