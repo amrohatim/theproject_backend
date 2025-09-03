@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use App\Models\BusinessType;
+use App\Models\Category;
 use App\Services\WebPImageService;
 use Illuminate\Http\Request;
 use Illuminate\Validation\Rule;
@@ -37,7 +38,21 @@ class BusinessTypeController extends Controller
      */
     public function create()
     {
-        return view('admin.business-types.create');
+        // Get child categories that have products
+        $productCategories = Category::whereNotNull('parent_id')
+            ->whereHas('products')
+            ->with('parent')
+            ->orderBy('name')
+            ->get();
+
+        // Get child categories that have services
+        $serviceCategories = Category::whereNotNull('parent_id')
+            ->whereHas('services')
+            ->with('parent')
+            ->orderBy('name')
+            ->get();
+
+        return view('admin.business-types.create', compact('productCategories', 'serviceCategories'));
     }
 
     /**
@@ -48,6 +63,10 @@ class BusinessTypeController extends Controller
         $validated = $request->validate([
             'business_name' => 'required|string|max:255|unique:business_types,business_name',
             'image' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:20480', // 20MB max
+            'product_categories' => 'nullable|array',
+            'product_categories.*' => 'exists:categories,id',
+            'service_categories' => 'nullable|array',
+            'service_categories.*' => 'exists:categories,id',
         ]);
 
         // Handle image upload
@@ -79,7 +98,21 @@ class BusinessTypeController extends Controller
      */
     public function edit(BusinessType $businessType)
     {
-        return view('admin.business-types.edit', compact('businessType'));
+        // Get child categories that have products
+        $productCategories = Category::whereNotNull('parent_id')
+            ->whereHas('products')
+            ->with('parent')
+            ->orderBy('name')
+            ->get();
+
+        // Get child categories that have services
+        $serviceCategories = Category::whereNotNull('parent_id')
+            ->whereHas('services')
+            ->with('parent')
+            ->orderBy('name')
+            ->get();
+
+        return view('admin.business-types.edit', compact('businessType', 'productCategories', 'serviceCategories'));
     }
 
     /**
@@ -95,6 +128,10 @@ class BusinessTypeController extends Controller
                 Rule::unique('business_types', 'business_name')->ignore($businessType->id),
             ],
             'image' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:20480', // 20MB max
+            'product_categories' => 'nullable|array',
+            'product_categories.*' => 'exists:categories,id',
+            'service_categories' => 'nullable|array',
+            'service_categories.*' => 'exists:categories,id',
         ]);
 
         // Handle image upload

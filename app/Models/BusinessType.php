@@ -17,6 +17,8 @@ class BusinessType extends Model
     protected $fillable = [
         'business_name',
         'image',
+        'product_categories',
+        'service_categories',
     ];
 
     /**
@@ -27,5 +29,7 @@ class BusinessType extends Model
     protected $casts = [
         'created_at' => 'datetime',
         'updated_at' => 'datetime',
+        'product_categories' => 'array',
+        'service_categories' => 'array',
     ];
 }

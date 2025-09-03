@@ -122,6 +122,68 @@
                     </p>
                 </div>
 
+                <!-- Product Categories Section -->
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-3">
+                        Product Categories
+                    </label>
+                    <p class="text-sm text-gray-500 dark:text-gray-400 mb-4">
+                        Select categories that are relevant for products in this business type
+                    </p>
+
+                    @if($productCategories->count() > 0)
+                        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3 max-h-60 overflow-y-auto border border-gray-200 dark:border-gray-600 rounded-lg p-4">
+                            @foreach($productCategories as $category)
+                                <label class="flex items-center space-x-3 p-2 rounded-md hover:bg-gray-50 dark:hover:bg-gray-700 cursor-pointer">
+                                    <input type="checkbox"
+                                           name="product_categories[]"
+                                           value="{{ $category->id }}"
+                                           {{ in_array($category->id, old('product_categories', $businessType->product_categories ?? [])) ? 'checked' : '' }}
+                                           class="h-4 w-4 text-indigo-600 focus:ring-indigo-500 border-gray-300 dark:border-gray-600 rounded">
+                                    <span class="text-sm text-gray-700 dark:text-gray-300">
+                                        {{ $category->name }}
+                                    </span>
+                                </label>
+                            @endforeach
+                        </div>
+                    @else
+                        <div class="text-sm text-gray-500 dark:text-gray-400 p-4 border border-gray-200 dark:border-gray-600 rounded-lg">
+                            No product categories available. Categories must have associated products to appear here.
+                        </div>
+                    @endif
+                </div>
+
+                <!-- Service Categories Section -->
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-3">
+                        Service Categories
+                    </label>
+                    <p class="text-sm text-gray-500 dark:text-gray-400 mb-4">
+                        Select categories that are relevant for services in this business type
+                    </p>
+
+                    @if($serviceCategories->count() > 0)
+                        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3 max-h-60 overflow-y-auto border border-gray-200 dark:border-gray-600 rounded-lg p-4">
+                            @foreach($serviceCategories as $category)
+                                <label class="flex items-center space-x-3 p-2 rounded-md hover:bg-gray-50 dark:hover:bg-gray-700 cursor-pointer">
+                                    <input type="checkbox"
+                                           name="service_categories[]"
+                                           value="{{ $category->id }}"
+                                           {{ in_array($category->id, old('service_categories', $businessType->service_categories ?? [])) ? 'checked' : '' }}
+                                           class="h-4 w-4 text-indigo-600 focus:ring-indigo-500 border-gray-300 dark:border-gray-600 rounded">
+                                    <span class="text-sm text-gray-700 dark:text-gray-300">
+                                        {{ $category->name }}
+                                    </span>
+                                </label>
+                            @endforeach
+                        </div>
+                    @else
+                        <div class="text-sm text-gray-500 dark:text-gray-400 p-4 border border-gray-200 dark:border-gray-600 rounded-lg">
+                            No service categories available. Categories must have associated services to appear here.
+                        </div>
+                    @endif
+                </div>
+
                 <!-- Display creation and update information -->
                 <div class="bg-gray-50 dark:bg-gray-700 rounded-lg p-4">
                     <h4 class="text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Record Information</h4>
