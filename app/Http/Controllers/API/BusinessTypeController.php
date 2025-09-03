@@ -7,6 +7,7 @@ use App\Models\BusinessType;
 use App\Models\Branch;
 use App\Models\Product;
 use App\Models\Service;
+use App\Models\Category;
 use Illuminate\Http\Request;
 
 class BusinessTypeController extends Controller
@@ -195,6 +196,7 @@ class BusinessTypeController extends Controller
         try {
             $businessType = $request->input('business_type');
             $emirate = $request->input('emirate');
+            $categoryId = $request->input('category_id');
             $sortBy = $request->input('sort_by', 'latest'); // latest, price_low, price_high, rating
             $limit = $request->input('limit', 20);
             $page = $request->input('page', 1);
@@ -216,6 +218,11 @@ class BusinessTypeController extends Controller
                 $query->whereHas('branch', function ($q) use ($emirate) {
                     $q->where('emirate', $emirate);
                 });
+            }
+
+            // Filter by category if provided
+            if ($categoryId) {
+                $query->where('category_id', $categoryId);
             }
 
             // Apply sorting
@@ -269,6 +276,7 @@ class BusinessTypeController extends Controller
         try {
             $businessType = $request->input('business_type');
             $emirate = $request->input('emirate');
+            $categoryId = $request->input('category_id');
             $sortBy = $request->input('sort_by', 'latest'); // latest, price_low, price_high, rating
             $limit = $request->input('limit', 20);
             $page = $request->input('page', 1);
@@ -290,6 +298,11 @@ class BusinessTypeController extends Controller
                 $query->whereHas('branch', function ($q) use ($emirate) {
                     $q->where('emirate', $emirate);
                 });
+            }
+
+            // Filter by category if provided
+            if ($categoryId) {
+                $query->where('category_id', $categoryId);
             }
 
             // Apply sorting
@@ -357,6 +370,126 @@ class BusinessTypeController extends Controller
             return response()->json([
                 'success' => false,
                 'message' => 'Failed to retrieve emirates',
+                'error' => $e->getMessage(),
+            ], 500);
+        }
+    }
+
+    /**
+     * Get categories for a specific business type.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @return \Illuminate\Http\Response
+     */
+    public function getCategories(Request $request)
+    {
+        try {
+            $businessTypeName = $request->input('business_type');
+            $type = $request->input('type', 'both'); // 'product', 'service', or 'both'
+
+            if (!$businessTypeName) {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'Business type is required',
+                ], 400);
+            }
+
+            // Find the business type
+            $businessType = BusinessType::where('business_name', $businessTypeName)->first();
+
+            if (!$businessType) {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'Business type not found',
+                ], 404);
+            }
+
+            $categories = collect();
+
+            // Get product categories if requested
+            if (($type === 'product' || $type === 'both') && $businessType->product_categories) {
+                $productCategories = Category::whereIn('id', $businessType->product_categories)
+                    ->where('type', 'product')
+                    ->where('is_active', true)
+                    ->whereHas('products', function ($query) {
+                        $query->where('is_available', true);
+                    })
+                    ->withCount(['products' => function ($query) {
+                        $query->where('is_available', true);
+                    }])
+                    ->get()
+                    ->map(function ($category) {
+                        $data = $category->toArray();
+
+                        // Fix image URL construction
+                        if ($category->image) {
+                            $imageUrl = $category->image;
+                            if (!str_starts_with($imageUrl, 'http')) {
+                                $cleanPath = ltrim($imageUrl, '/');
+                                if (str_starts_with($cleanPath, 'storage/')) {
+                                    $imageUrl = url($cleanPath);
+                                } else {
+                                    $imageUrl = url('storage/' . $cleanPath);
+                                }
+                            }
+                            $data['image'] = $imageUrl;
+                        }
+
+                        return $data;
+                    });
+
+                $categories = $categories->merge($productCategories);
+            }
+
+            // Get service categories if requested
+            if (($type === 'service' || $type === 'both') && $businessType->service_categories) {
+                $serviceCategories = Category::whereIn('id', $businessType->service_categories)
+                    ->where('type', 'service')
+                    ->where('is_active', true)
+                    ->whereHas('services', function ($query) {
+                        $query->where('is_available', true);
+                    })
+                    ->withCount(['services' => function ($query) {
+                        $query->where('is_available', true);
+                    }])
+                    ->get()
+                    ->map(function ($category) {
+                        $data = $category->toArray();
+
+                        // Fix image URL construction
+                        if ($category->image) {
+                            $imageUrl = $category->image;
+                            if (!str_starts_with($imageUrl, 'http')) {
+                                $cleanPath = ltrim($imageUrl, '/');
+                                if (str_starts_with($cleanPath, 'storage/')) {
+                                    $imageUrl = url($cleanPath);
+                                } else {
+                                    $imageUrl = url('storage/' . $cleanPath);
+                                }
+                            }
+                            $data['image'] = $imageUrl;
+                        }
+
+                        return $data;
+                    });
+
+                $categories = $categories->merge($serviceCategories);
+            }
+
+            // Remove duplicates and sort by name
+            $categories = $categories->unique('id')->sortBy('name')->values();
+
+            return response()->json([
+                'success' => true,
+                'categories' => $categories,
+                'business_type' => $businessTypeName,
+                'type' => $type,
+                'message' => 'Categories retrieved successfully',
+            ]);
+        } catch (\Exception $e) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Failed to retrieve categories',
                 'error' => $e->getMessage(),
             ], 500);
         }

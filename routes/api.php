@@ -114,6 +114,7 @@ Route::get('/business-types/from-branches', [BusinessTypeController::class, 'get
 Route::get('/business-types/branches', [BusinessTypeController::class, 'getBranches']);
 Route::get('/business-types/products', [BusinessTypeController::class, 'getProducts']);
 Route::get('/business-types/services', [BusinessTypeController::class, 'getServices']);
+Route::get('/business-types/categories', [BusinessTypeController::class, 'getCategories']);
 Route::get('/emirates', [BusinessTypeController::class, 'getEmirates']);
 
 // Debug route to test business types
