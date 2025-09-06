@@ -84,6 +84,11 @@
                                     <div class="text-sm font-medium text-gray-900 dark:text-white">
                                         {{ $businessType->business_name }}
                                     </div>
+                                    @if($businessType->name_arabic)
+                                        <div class="text-sm text-gray-500 dark:text-gray-400" dir="rtl">
+                                            {{ $businessType->name_arabic }}
+                                        </div>
+                                    @endif
                                 </div>
                             </div>
                         </td>

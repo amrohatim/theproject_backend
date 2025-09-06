@@ -58,6 +58,27 @@
                 </div>
 
                 <div>
+                    <label for="name_arabic" class="block text-sm font-medium text-gray-700 dark:text-gray-300">
+                        Business Name (Arabic)
+                    </label>
+                    <div class="mt-1">
+                        <input type="text"
+                               name="name_arabic"
+                               id="name_arabic"
+                               value="{{ old('name_arabic', $businessType->name_arabic) }}"
+                               class="focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-white rounded-md @error('name_arabic') border-red-500 @enderror"
+                               placeholder="أدخل اسم نوع العمل بالعربية"
+                               dir="rtl">
+                    </div>
+                    @error('name_arabic')
+                        <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
+                    @enderror
+                    <p class="mt-1 text-sm text-gray-500 dark:text-gray-400">
+                        Enter the Arabic translation of the business type name (optional)
+                    </p>
+                </div>
+
+                <div>
                     <label class="block text-sm font-medium text-gray-700 dark:text-gray-300">Business Type Image</label>
 
                     <!-- Current Image Display -->

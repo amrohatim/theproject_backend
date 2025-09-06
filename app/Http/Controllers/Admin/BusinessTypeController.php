@@ -62,6 +62,7 @@ class BusinessTypeController extends Controller
     {
         $validated = $request->validate([
             'business_name' => 'required|string|max:255|unique:business_types,business_name',
+            'name_arabic' => 'nullable|string|max:255',
             'image' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:20480', // 20MB max
             'product_categories' => 'nullable|array',
             'product_categories.*' => 'exists:categories,id',
@@ -127,6 +128,7 @@ class BusinessTypeController extends Controller
                 'max:255',
                 Rule::unique('business_types', 'business_name')->ignore($businessType->id),
             ],
+            'name_arabic' => 'nullable|string|max:255',
             'image' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:20480', // 20MB max
             'product_categories' => 'nullable|array',
             'product_categories.*' => 'exists:categories,id',
