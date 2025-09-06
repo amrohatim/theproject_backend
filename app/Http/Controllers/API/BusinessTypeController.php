@@ -81,14 +81,16 @@ class BusinessTypeController extends Controller
             $businessTypes = $uniqueBusinessTypes->map(function ($businessTypeName) {
                 $businessTypeData = [
                     'business_name' => $businessTypeName,
+                    'name_arabic' => null,
                     'image' => null,
                     'id' => null,
                 ];
 
-                // Try to get image from business_types table
+                // Try to get image and Arabic name from business_types table
                 $dbBusinessType = BusinessType::where('business_name', $businessTypeName)->first();
                 if ($dbBusinessType) {
                     $businessTypeData['id'] = $dbBusinessType->id;
+                    $businessTypeData['name_arabic'] = $dbBusinessType->name_arabic;
 
                     if ($dbBusinessType->image) {
                         // Construct full URL for the image with robust path handling
