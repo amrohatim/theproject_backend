@@ -4,8 +4,9 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use App\Models\Category;
+use App\Services\WebPImageService;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Facades\Log;
 
 class CategoryController extends Controller
 {
@@ -64,6 +65,7 @@ class CategoryController extends Controller
      */
     public function store(Request $request)
     {
+        Log::info('CategoryController STORE method called');
         $validated = $request->validate([
             'name' => 'required|string|max:255',
             'category_name_arabic' => 'required|string|max:255',
@@ -71,7 +73,7 @@ class CategoryController extends Controller
             'parent_id' => 'nullable|exists:categories,id',
             'icon' => 'nullable|string|max:255',
             'description' => 'nullable|string',
-            'image' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
+            'image' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:20480', // 20MB max
         ]);
 
         // If parent_id is empty string, set it to null
@@ -79,10 +81,18 @@ class CategoryController extends Controller
             $validated['parent_id'] = null;
         }
 
-        // Handle image upload
+        // Handle image upload with WebP compression
         if ($request->hasFile('image')) {
-            $imagePath = $request->file('image')->store('categories', 'public');
-            $validated['image'] = $imagePath;
+            Log::info('CategoryController: Image file detected, starting WebP conversion');
+            $webpService = new WebPImageService();
+            $imagePath = $webpService->convertAndStoreWithUrl($request->file('image'), 'categories');
+
+            if ($imagePath) {
+                Log::info('CategoryController: WebP conversion successful', ['path' => $imagePath]);
+                $validated['image'] = $imagePath;
+            } else {
+                Log::error('CategoryController: WebP conversion failed');
+            }
         }
 
         Category::create($validated);
@@ -135,7 +145,7 @@ class CategoryController extends Controller
             'parent_id' => 'nullable|exists:categories,id',
             'icon' => 'nullable|string|max:255',
             'description' => 'nullable|string',
-            'image' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
+            'image' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:20480', // 20MB max
         ]);
 
         // If parent_id is empty string, set it to null
@@ -143,14 +153,24 @@ class CategoryController extends Controller
             $validated['parent_id'] = null;
         }
 
-        // Handle image upload
+        // Handle image upload with WebP compression
         if ($request->hasFile('image')) {
-            // Delete old image if exists
+            Log::info('CategoryController UPDATE: Image file detected, starting WebP conversion');
+            // Delete old image if exists using WebPImageService
             if ($category->image) {
-                Storage::disk('public')->delete($category->image);
+                $webpService = new WebPImageService();
+                $webpService->deleteImage($category->image);
             }
-            $imagePath = $request->file('image')->store('categories', 'public');
-            $validated['image'] = $imagePath;
+
+            $webpService = new WebPImageService();
+            $imagePath = $webpService->convertAndStoreWithUrl($request->file('image'), 'categories');
+
+            if ($imagePath) {
+                Log::info('CategoryController UPDATE: WebP conversion successful', ['path' => $imagePath]);
+                $validated['image'] = $imagePath;
+            } else {
+                Log::error('CategoryController UPDATE: WebP conversion failed');
+            }
         }
 
         $category->update($validated);
@@ -167,20 +187,21 @@ class CategoryController extends Controller
     public function destroy($id)
     {
         $category = Category::findOrFail($id);
-        
+
         // Check if category has children
         if ($category->children()->count() > 0) {
             return redirect()->route('admin.categories.index')
                 ->with('error', 'Cannot delete category with subcategories. Please delete subcategories first.');
         }
-        
-        // Delete image if exists
+
+        // Delete image if exists using WebPImageService
         if ($category->image) {
-            Storage::disk('public')->delete($category->image);
+            $webpService = new WebPImageService();
+            $webpService->deleteImage($category->image);
         }
-        
+
         $category->delete();
-        
+
         return redirect()->route('admin.categories.index')->with('success', 'Category deleted successfully');
     }
 }

@@ -700,7 +700,7 @@ Route::prefix('admin')->name('admin.')->middleware(['auth', \App\Http\Middleware
             'icon' => 'nullable|string|max:255',
             'description' => 'nullable|string',
             'category_description_arabic' => 'nullable|string',
-            'image' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
+            'image' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:20480', // 20MB max
         ]);
 
         // If parent_id is empty string, set it to null
@@ -708,31 +708,20 @@ Route::prefix('admin')->name('admin.')->middleware(['auth', \App\Http\Middleware
             $validated['parent_id'] = null;
         }
 
-        // Handle image upload
+        // Handle image upload with WebP compression
         if ($request->hasFile('image')) {
             try {
-                // Store the image using Laravel's storage system for consistency
-                $imagePath = $request->file('image')->store('categories', 'public');
+                \Illuminate\Support\Facades\Log::info('Category route: Image file detected, starting WebP conversion');
+                $webpService = new \App\Services\WebPImageService();
+                $imagePath = $webpService->convertAndStoreWithUrl($request->file('image'), 'categories');
 
-                // Log the stored image path
-                \Illuminate\Support\Facades\Log::info("Category image stored at: {$imagePath}");
-
-                // Create the storage directory if it doesn't exist
-                $storageDir = public_path('storage/categories');
-                if (!file_exists($storageDir)) {
-                    mkdir($storageDir, 0755, true);
-                    \Illuminate\Support\Facades\Log::info("Created directory: {$storageDir}");
+                if ($imagePath) {
+                    \Illuminate\Support\Facades\Log::info('Category route: WebP conversion successful', ['path' => $imagePath]);
+                    $validated['image'] = $imagePath;
+                } else {
+                    \Illuminate\Support\Facades\Log::error('Category route: WebP conversion failed');
+                    return redirect()->route('admin.categories.index')->with('error', 'Error processing image. Please try again.');
                 }
-
-                // Create symbolic link if it doesn't exist
-                $linkPath = public_path('storage');
-                $targetPath = storage_path('app/public');
-                if (!file_exists($linkPath)) {
-                    symlink($targetPath, $linkPath);
-                    \Illuminate\Support\Facades\Log::info("Created storage symlink");
-                }
-
-                $validated['image'] = $imagePath;
             } catch (\Exception $e) {
                 \Illuminate\Support\Facades\Log::error("Error uploading category image: " . $e->getMessage());
                 return redirect()->route('admin.categories.index')->with('error', 'Error uploading image: ' . $e->getMessage());
@@ -763,7 +752,7 @@ Route::prefix('admin')->name('admin.')->middleware(['auth', \App\Http\Middleware
             'icon' => 'nullable|string|max:255',
             'description' => 'nullable|string',
             'category_description_arabic' => 'nullable|string',
-            'image' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
+            'image' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:20480', // 20MB max
         ]);
 
         // If parent_id is empty string, set it to null
@@ -779,53 +768,30 @@ Route::prefix('admin')->name('admin.')->middleware(['auth', \App\Http\Middleware
             ], 400);
         }
 
-        // Handle image upload
+        // Handle image upload with WebP compression
         if ($request->hasFile('image')) {
             try {
-                // Delete old image if it exists
+                \Illuminate\Support\Facades\Log::info('Category UPDATE route: Image file detected, starting WebP conversion');
+
+                // Delete old image if it exists using WebPImageService
                 if ($category->image) {
-                    // Handle both old path format and new storage path format
-                    $oldImagePath = $category->image;
-
-                    // Check if it's a storage path (starts with 'categories/')
-                    if (strpos($oldImagePath, 'categories/') === 0) {
-                        $fullPath = public_path('storage/' . $oldImagePath);
-                    } elseif (strpos($oldImagePath, '/storage/') === 0) {
-                        // Already has /storage/ prefix
-                        $fullPath = public_path($oldImagePath);
-                    } else {
-                        // Old format - direct path
-                        $fullPath = public_path($oldImagePath);
-                    }
-
-                    if (file_exists($fullPath)) {
-                        unlink($fullPath);
-                        \Illuminate\Support\Facades\Log::info("Deleted old category image: {$fullPath}");
-                    }
+                    $webpService = new \App\Services\WebPImageService();
+                    $webpService->deleteImage($category->image);
                 }
 
-                // Store the image using Laravel's storage system for consistency
-                $imagePath = $request->file('image')->store('categories', 'public');
+                $webpService = new \App\Services\WebPImageService();
+                $imagePath = $webpService->convertAndStoreWithUrl($request->file('image'), 'categories');
 
-                // Log the stored image path
-                \Illuminate\Support\Facades\Log::info("Category image stored at: {$imagePath}");
-
-                // Create the storage directory if it doesn't exist
-                $storageDir = public_path('storage/categories');
-                if (!file_exists($storageDir)) {
-                    mkdir($storageDir, 0755, true);
-                    \Illuminate\Support\Facades\Log::info("Created directory: {$storageDir}");
+                if ($imagePath) {
+                    \Illuminate\Support\Facades\Log::info('Category UPDATE route: WebP conversion successful', ['path' => $imagePath]);
+                    $validated['image'] = $imagePath;
+                } else {
+                    \Illuminate\Support\Facades\Log::error('Category UPDATE route: WebP conversion failed');
+                    return response()->json([
+                        'success' => false,
+                        'message' => 'Error processing image. Please try again.',
+                    ], 500);
                 }
-
-                // Create symbolic link if it doesn't exist
-                $linkPath = public_path('storage');
-                $targetPath = storage_path('app/public');
-                if (!file_exists($linkPath)) {
-                    symlink($targetPath, $linkPath);
-                    \Illuminate\Support\Facades\Log::info("Created storage symlink");
-                }
-
-                $validated['image'] = $imagePath;
             } catch (\Exception $e) {
                 \Illuminate\Support\Facades\Log::error("Error uploading category image: " . $e->getMessage());
                 return response()->json([
@@ -876,6 +842,12 @@ Route::prefix('admin')->name('admin.')->middleware(['auth', \App\Http\Middleware
 
                 // Delete all child categories
                 \App\Models\Category::where('parent_id', $category->id)->delete();
+            }
+
+            // Delete image if exists using WebPImageService
+            if ($category->image) {
+                $webpService = new \App\Services\WebPImageService();
+                $webpService->deleteImage($category->image);
             }
 
             // Now delete the category itself
