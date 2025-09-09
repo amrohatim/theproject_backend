@@ -5,9 +5,9 @@ namespace App\Http\Controllers\API;
 use App\Http\Controllers\Controller;
 use App\Models\Provider;
 use App\Models\ProviderRating;
-use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Validator;
 
 class ProviderRatingController extends Controller
@@ -15,7 +15,7 @@ class ProviderRatingController extends Controller
     /**
      * Get ratings for a specific provider.
      */
-    public function index(Request $request, $providerId)
+    public function index($providerId)
     {
         try {
             // Find the provider record in the providers table
@@ -39,11 +39,18 @@ class ProviderRatingController extends Controller
                     'ratings' => $ratings,
                 ],
             ]);
+        } catch (\Illuminate\Database\Eloquent\ModelNotFoundException $e) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Provider not found',
+                'error' => "Provider with ID {$providerId} does not exist",
+            ], 404);
         } catch (\Exception $e) {
+            Log::error('Provider ratings fetch error: ' . $e->getMessage());
             return response()->json([
                 'success' => false,
                 'message' => 'Failed to fetch provider ratings',
-                'error' => $e->getMessage(),
+                'error' => 'An unexpected error occurred',
             ], 500);
         }
     }
@@ -67,21 +74,28 @@ class ProviderRatingController extends Controller
                 ], 422);
             }
 
-            $vendor = Auth::user();
+            $user = Auth::user();
 
-            // Check if vendor role
-            if ($vendor->role !== 'vendor') {
+            // Check if vendor or merchant role
+            if (!in_array($user->role, ['vendor', 'merchant'])) {
                 return response()->json([
                     'success' => false,
-                    'message' => 'Only vendors can rate providers',
+                    'message' => 'Only vendors and merchants can rate providers',
                 ], 403);
             }
 
             // Check if provider exists in the providers table
-            $provider = Provider::findOrFail($providerId);
+            $provider = Provider::find($providerId);
+            if (!$provider) {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'Provider not found',
+                    'error' => "Provider with ID {$providerId} does not exist",
+                ], 404);
+            }
 
-            // Check if vendor already rated this provider
-            $existingRating = ProviderRating::where('vendor_id', $vendor->id)
+            // Check if user already rated this provider
+            $existingRating = ProviderRating::where('vendor_id', $user->id)
                 ->where('provider_id', $providerId)
                 ->first();
 
@@ -95,7 +109,7 @@ class ProviderRatingController extends Controller
             } else {
                 // Create new rating
                 $rating = ProviderRating::create([
-                    'vendor_id' => $vendor->id,
+                    'vendor_id' => $user->id,
                     'provider_id' => $providerId,
                     'rating' => $request->rating,
                     'review_text' => $request->review_text,
@@ -110,11 +124,32 @@ class ProviderRatingController extends Controller
                 'message' => 'Rating submitted successfully',
                 'data' => $rating->load('vendor:id,name,profile_image'),
             ]);
+        } catch (\Illuminate\Database\Eloquent\ModelNotFoundException $e) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Provider not found',
+                'error' => "Provider with ID {$providerId} does not exist",
+            ], 404);
+        } catch (\Illuminate\Database\QueryException $e) {
+            // Handle database constraint violations
+            if (str_contains($e->getMessage(), 'foreign key constraint')) {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'Invalid data provided',
+                    'error' => 'Referenced provider or user does not exist',
+                ], 422);
+            }
+            return response()->json([
+                'success' => false,
+                'message' => 'Database error occurred',
+                'error' => 'Please try again later',
+            ], 500);
         } catch (\Exception $e) {
+            Log::error('Provider rating submission error: ' . $e->getMessage());
             return response()->json([
                 'success' => false,
                 'message' => 'Failed to submit rating',
-                'error' => $e->getMessage(),
+                'error' => 'An unexpected error occurred',
             ], 500);
         }
     }
@@ -122,12 +157,12 @@ class ProviderRatingController extends Controller
     /**
      * Get the current user's rating for a provider.
      */
-    public function show(Request $request, $providerId)
+    public function show($providerId)
     {
         try {
-            $vendor = Auth::user();
+            $user = Auth::user();
 
-            $rating = ProviderRating::where('vendor_id', $vendor->id)
+            $rating = ProviderRating::where('vendor_id', $user->id)
                 ->where('provider_id', $providerId)
                 ->first();
 
@@ -147,12 +182,12 @@ class ProviderRatingController extends Controller
     /**
      * Delete a provider rating.
      */
-    public function destroy(Request $request, $providerId)
+    public function destroy($providerId)
     {
         try {
-            $vendor = Auth::user();
+            $user = Auth::user();
 
-            $rating = ProviderRating::where('vendor_id', $vendor->id)
+            $rating = ProviderRating::where('vendor_id', $user->id)
                 ->where('provider_id', $providerId)
                 ->first();
 
@@ -199,7 +234,7 @@ class ProviderRatingController extends Controller
             ]);
         } catch (\Exception $e) {
             // Log error but don't fail the rating submission
-            \Log::error('Failed to update provider rating stats: ' . $e->getMessage());
+            Log::error('Failed to update provider rating stats: ' . $e->getMessage());
         }
     }
 }

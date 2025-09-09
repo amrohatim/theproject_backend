@@ -2468,4 +2468,9 @@ Route::get('/images/avatars/{filename}', [App\Http\Controllers\ImageController::
 // Generic storage route (fallback for other types)
 Route::get('/images/{folder}/{filename}', [App\Http\Controllers\ImageController::class, 'serveStorageImage'])->name('images.storage');
 
+//Checker resoures views
+Route::get('/checker', function () {
+    return view('checker');
+})->name('checker');
+
 require __DIR__.'/test.php';
