@@ -95,7 +95,7 @@ class ProviderRatingController extends Controller
             }
 
             // Check if user already rated this provider
-            $existingRating = ProviderRating::where('vendor_id', $user->id)
+            $existingRating = ProviderRating::where('user_id', $user->id)
                 ->where('provider_id', $providerId)
                 ->first();
 
@@ -109,7 +109,7 @@ class ProviderRatingController extends Controller
             } else {
                 // Create new rating
                 $rating = ProviderRating::create([
-                    'vendor_id' => $user->id,
+                    'user_id' => $user->id,
                     'provider_id' => $providerId,
                     'rating' => $request->rating,
                     'review_text' => $request->review_text,
@@ -162,7 +162,7 @@ class ProviderRatingController extends Controller
         try {
             $user = Auth::user();
 
-            $rating = ProviderRating::where('vendor_id', $user->id)
+            $rating = ProviderRating::where('user_id', $user->id)
                 ->where('provider_id', $providerId)
                 ->first();
 
@@ -187,7 +187,7 @@ class ProviderRatingController extends Controller
         try {
             $user = Auth::user();
 
-            $rating = ProviderRating::where('vendor_id', $user->id)
+            $rating = ProviderRating::where('user_id', $user->id)
                 ->where('provider_id', $providerId)
                 ->first();
 

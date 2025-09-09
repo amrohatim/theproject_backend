@@ -16,7 +16,7 @@ class ProviderRating extends Model
      * @var array<int, string>
      */
     protected $fillable = [
-        'vendor_id',
+        'user_id',
         'provider_id',
         'rating',
         'review_text',
@@ -34,11 +34,20 @@ class ProviderRating extends Model
     ];
 
     /**
+     * Get the user who made the rating (vendor or merchant).
+     */
+    public function user(): BelongsTo
+    {
+        return $this->belongsTo(User::class, 'user_id');
+    }
+
+    /**
      * Get the vendor who made the rating.
+     * @deprecated Use user() relationship instead
      */
     public function vendor(): BelongsTo
     {
-        return $this->belongsTo(User::class, 'vendor_id');
+        return $this->user();
     }
 
     /**
