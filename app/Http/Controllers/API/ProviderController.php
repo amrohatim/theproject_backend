@@ -492,16 +492,16 @@ class ProviderController extends Controller
 
     /**
      * Get categories that have provider products.
+     * Returns parent categories with their filtered children that have products.
      *
      * @return \Illuminate\Http\Response
      */
     public function getCategoriesWithProducts()
     {
         try {
-            Log::info('Getting subcategories with provider products...');
+            Log::info('Getting categories with provider products...');
 
-            // Get subcategories (child categories) that have provider products
-            // This includes products linked via category_id or through the related product's category
+            // First, get all subcategories that have provider products
             $subcategoriesWithProducts = DB::select("
                 SELECT DISTINCT
                     child_cats.id,
@@ -535,28 +535,55 @@ class ProviderController extends Controller
                 ORDER BY parent_cats.name, child_cats.name
             ");
 
-            $categories = collect($subcategoriesWithProducts);
+            // Group subcategories by parent_id
+            $subcategoriesByParent = collect($subcategoriesWithProducts)->groupBy('parent_id');
 
-            // Transform to include the product count and parent category name
-            $categoriesWithProducts = $categories->map(function ($category) {
+            // Get unique parent IDs that have children with products
+            $parentIds = $subcategoriesByParent->keys();
+
+            // Get parent categories
+            $parentCategories = \App\Models\Category::whereIn('id', $parentIds)
+                ->where('is_active', true)
+                ->orderBy('name')
+                ->get();
+
+            // Build hierarchical structure
+            $categoriesWithProducts = $parentCategories->map(function ($parent) use ($subcategoriesByParent) {
+                $children = $subcategoriesByParent->get($parent->id, collect())->map(function ($child) {
+                    return [
+                        'id' => $child->id,
+                        'name' => $child->name,
+                        'description' => $child->description,
+                        'image' => $child->image,
+                        'parent_id' => $child->parent_id,
+                        'is_active' => (bool) $child->is_active, // Ensure boolean type
+                        'type' => $child->type,
+                        'icon' => $child->icon,
+                        'view_count' => $child->view_count ?? 0,
+                        'purchase_count' => $child->purchase_count ?? 0,
+                        'trending_score' => $child->trending_score ?? 0,
+                        'product_count' => $child->product_count,
+                        'parent_name' => $child->parent_name, // Include parent name for backward compatibility
+                    ];
+                })->toArray();
+
                 return [
-                    'id' => $category->id,
-                    'name' => $category->name,
-                    'description' => $category->description,
-                    'image' => $category->image,
-                    'parent_id' => $category->parent_id,
-                    'is_active' => $category->is_active,
-                    'type' => $category->type,
-                    'icon' => $category->icon,
-                    'view_count' => $category->view_count ?? 0,
-                    'purchase_count' => $category->purchase_count ?? 0,
-                    'trending_score' => $category->trending_score ?? 0,
-                    'product_count' => $category->product_count,
-                    'parent_name' => $category->parent_name, // Include parent category name for display
+                    'id' => $parent->id,
+                    'name' => $parent->name,
+                    'description' => $parent->description,
+                    'image' => $parent->image,
+                    'parent_id' => $parent->parent_id,
+                    'is_active' => $parent->is_active,
+                    'type' => $parent->type,
+                    'icon' => $parent->icon,
+                    'view_count' => $parent->view_count ?? 0,
+                    'purchase_count' => $parent->purchase_count ?? 0,
+                    'trending_score' => $parent->trending_score ?? 0,
+                    'children' => $children,
                 ];
             });
 
-            Log::info("Found {$categoriesWithProducts->count()} subcategories with provider products");
+            Log::info("Found {$categoriesWithProducts->count()} parent categories with filtered children");
 
             return response()->json([
                 'success' => true,

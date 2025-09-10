@@ -20,9 +20,14 @@ try {
     $data = json_decode($response->getContent(), true);
     
     if ($data['success']) {
-        echo "✅ Success! Found " . count($data['categories']) . " subcategories with products:\n";
-        foreach ($data['categories'] as $category) {
-            echo "  - {$category['name']} (ID: {$category['id']}) - Parent: {$category['parent_name']} - Products: {$category['product_count']}\n";
+        echo "✅ Success! Found " . count($data['categories']) . " parent categories with filtered children:\n";
+        foreach ($data['categories'] as $parentCategory) {
+            echo "  📂 Parent: {$parentCategory['name']} (ID: {$parentCategory['id']})\n";
+            if (isset($parentCategory['children']) && !empty($parentCategory['children'])) {
+                foreach ($parentCategory['children'] as $child) {
+                    echo "    📁 Child: {$child['name']} (ID: {$child['id']}) - Products: {$child['product_count']}\n";
+                }
+            }
         }
     } else {
         echo "❌ Failed: " . $data['message'] . "\n";
@@ -32,12 +37,18 @@ try {
 
     // Test 2: Get products by category for the first subcategory
     if (!empty($data['categories'])) {
-        $firstCategory = $data['categories'][0];
-        echo "=== Test 2: Get Products for Subcategory '{$firstCategory['name']}' (ID: {$firstCategory['id']}) ===\n";
-        
-        $request = new Request(['include_subcategories' => false]);
-        $response = $controller->getProductsByCategory($firstCategory['id'], $request);
-        $productData = json_decode($response->getContent(), true);
+        $firstParent = $data['categories'][0];
+        if (!empty($firstParent['children'])) {
+            $firstChild = $firstParent['children'][0];
+            echo "=== Test 2: Get Products for Subcategory '{$firstChild['name']}' (ID: {$firstChild['id']}) ===\n";
+
+            $request = new Request(['include_subcategories' => false]);
+            $response = $controller->getProductsByCategory($firstChild['id'], $request);
+            $productData = json_decode($response->getContent(), true);
+        } else {
+            echo "=== Test 2: No children found in first parent category ===\n";
+            $productData = ['success' => false, 'message' => 'No children found'];
+        }
         
         if ($productData['success']) {
             $products = $productData['products']['data'] ?? $productData['products'];
