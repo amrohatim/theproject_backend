@@ -230,12 +230,12 @@
         </div>
 
         <!-- Image Upload -->
-        <div class="space-y-4">
+        <div class="space-y-4 bg">
           <label class="block vue-text-sm">
             {{ t.product_image }} <span class="text-red-500">*</span>
           </label>
           <div class="relative">
-            <div class="aspect-[3/4] bg-slate-50 border-2 border-dashed border-slate-300 rounded-lg overflow-hidden hover:border-primary-400 transition-colors image-preview-container"
+            <div class="aspect-[3/4] w-1/3 h-3/4 bg-slate-400 border-2 border-dashed border-slate-300 rounded-lg overflow-hidden hover:border-primary-400 transition-colors image-preview-container"
                  :class="{ 'has-image': hasImage }"
                  @click="triggerFileInput"
                  @dragover.prevent
@@ -269,7 +269,7 @@
               </div>
               
               <!-- Upload Placeholder -->
-              <div v-else class="w-full h-full flex flex-col items-center justify-center cursor-pointer hover:bg-slate-100 transition-colors image-placeholder">
+              <div v-else class="w-full h-full flex flex-col border-2 border-dashed border-slate-300 rounded-lg items-center justify-center cursor-pointer hover:bg-slate-100 transition-colors image-placeholder">
                 <i class="fas fa-image w-12 h-12 text-slate-400 mb-3"></i>
                 <p class="text-sm font-medium text-slate-600 mb-1">{{ t.upload_image }}</p>
                 <p class="text-xs text-slate-500">{{ t.png_jpg_up_to_20mb }}</p>
