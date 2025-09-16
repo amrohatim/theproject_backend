@@ -1,0 +1,52 @@
+* {
+  box-sizing: border-box;
+}
+
+.component1 {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  background: #ffffff;
+  width: 814px;
+  height: 580px;
+
+  .a01 {
+    line-height: 36px;
+    letter-spacing: 0;
+    color: #ffffff;
+    font-family: Itim, "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", SimHei, Arial, Helvetica, sans-serif;
+    font-size: 30px;
+  }
+
+  .rectangle3 {
+    display: flex;
+    align-items: center;
+    align-self: stretch;
+    background: #f59e0b;
+    padding: 40px 755px 40px 26px;
+  }
+
+  .rectangle4 {
+    display: flex;
+    align-items: center;
+    align-self: stretch;
+    background: #c07901;
+    padding: 40px 753px 40px 26px;
+  }
+
+  .rectangle5 {
+    display: flex;
+    align-items: center;
+    align-self: stretch;
+    background: #f59e0b;
+    padding: 40px 753px 40px 26px;
+  }
+
+  .rectangle32 {
+    display: flex;
+    align-items: center;
+    align-self: stretch;
+    background: #c07901;
+    padding: 40px 751px 40px 26px;
+  }
+}
