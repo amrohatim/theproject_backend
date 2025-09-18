@@ -18,20 +18,35 @@ class ServiceDealService
         // Get current date
         $today = now()->format('Y-m-d');
 
-        // Get the vendor (company) user ID for this service
-        // Check if service has branch and branch has company
-        if (!$service->branch || !$service->branch->company) {
-            return collect(); // Return empty collection if no valid vendor
+        $deals = collect();
+
+        // Handle individual merchant services (no branch/company)
+        if (!$service->branch_id && $service->merchant_id) {
+            // Individual merchant service - look for deals by the service owner
+            $deals = Deal::where('user_id', $service->merchant_id)
+                ->where('status', 'active')
+                ->where('start_date', '<=', $today)
+                ->where('end_date', '>=', $today)
+                ->get();
         }
+        // Handle company-based services
+        elseif ($service->branch && $service->branch->company) {
+            $companyOwnerId = $service->branch->company->user_id;
 
-        $vendorId = $service->branch->company->user_id;
+            // Get all user IDs in the same company (includes company owner, service providers, etc.)
+            $companyUserIds = Deal::getCompanyUserIds($companyOwnerId);
 
-        // Find active deals from this vendor
-        $deals = Deal::where('user_id', $vendorId)
-            ->where('status', 'active')
-            ->where('start_date', '<=', $today)
-            ->where('end_date', '>=', $today)
-            ->get();
+            // Find active deals from any user in this company
+            $deals = Deal::whereIn('user_id', $companyUserIds)
+                ->where('status', 'active')
+                ->where('start_date', '<=', $today)
+                ->where('end_date', '>=', $today)
+                ->get();
+        }
+        // No valid owner found
+        else {
+            return collect(); // Return empty collection if no valid owner
+        }
 
         // Filter deals based on application scope
         $applicableDeals = $deals->filter(function ($deal) use ($service) {

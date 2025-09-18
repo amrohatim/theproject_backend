@@ -228,7 +228,7 @@ class Deal extends Model
      * @param int $userId
      * @return array
      */
-    private static function getCompanyUserIds($userId)
+    public static function getCompanyUserIds($userId)
     {
         $user = \App\Models\User::find($userId);
         if (!$user) {

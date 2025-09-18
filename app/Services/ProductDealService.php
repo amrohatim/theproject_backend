@@ -4,8 +4,6 @@ namespace App\Services;
 
 use App\Models\Deal;
 use App\Models\Product;
-use App\Models\Category;
-use Illuminate\Support\Collection;
 
 class ProductDealService
 {
@@ -20,23 +18,43 @@ class ProductDealService
         // Get current date
         $today = now()->format('Y-m-d');
 
-        // Get the vendor (company) user ID for this product
-        // Check if product has branch and branch has company
-        if (!$product->branch || !$product->branch->company) {
-            return collect(); // Return empty collection if no valid vendor
+        $deals = collect();
+
+        // Handle individual merchant products (no branch/company)
+        if (!$product->branch_id && $product->user_id) {
+            // Individual merchant product - look for deals by the product owner
+            $deals = Deal::where('user_id', $product->user_id)
+                ->where('status', 'active')
+                ->where('start_date', '<=', $today)
+                ->where('end_date', '>=', $today)
+                ->get();
         }
+        // Handle company-based products
+        elseif ($product->branch && $product->branch->company) {
+            $companyOwnerId = $product->branch->company->user_id;
 
-        $vendorId = $product->branch->company->user_id;
+            // Get all user IDs in the same company (includes company owner, products managers, etc.)
+            $companyUserIds = Deal::getCompanyUserIds($companyOwnerId);
 
-        // Find active deals from this vendor
-        $deals = Deal::where('user_id', $vendorId)
-            ->where('status', 'active')
-            ->where('start_date', '<=', $today)
-            ->where('end_date', '>=', $today)
-            ->get();
+            // Find active deals from any user in this company
+            $deals = Deal::whereIn('user_id', $companyUserIds)
+                ->where('status', 'active')
+                ->where('start_date', '<=', $today)
+                ->where('end_date', '>=', $today)
+                ->get();
+        }
+        // No valid owner found
+        else {
+            return collect(); // Return empty collection if no valid owner
+        }
 
         // Filter deals based on application scope
         $applicableDeals = $deals->filter(function ($deal) use ($product) {
+            // Deal applies to all products
+            if ($deal->applies_to === 'all') {
+                return true;
+            }
+
             // Deal applies to specific products
             if ($deal->applies_to === 'products') {
                 $productIds = is_string($deal->product_ids)
@@ -44,6 +62,24 @@ class ProductDealService
                     : $deal->product_ids;
 
                 return in_array($product->id, $productIds ?: []);
+            }
+
+            // Deal applies to both products and services
+            if ($deal->applies_to === 'products_and_services') {
+                $productIds = is_string($deal->product_ids)
+                    ? json_decode($deal->product_ids, true)
+                    : $deal->product_ids;
+
+                return in_array($product->id, $productIds ?: []);
+            }
+
+            // Deal applies to specific categories (check if product category matches)
+            if ($deal->applies_to === 'categories') {
+                $categoryIds = is_string($deal->category_ids)
+                    ? json_decode($deal->category_ids, true)
+                    : $deal->category_ids;
+
+                return in_array($product->category_id, $categoryIds ?: []);
             }
 
             return false;
