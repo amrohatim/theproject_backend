@@ -135,6 +135,16 @@ Route::get('/product-colors', [\App\Http\Controllers\API\ProductSpecificationCon
 Route::get('/standardized-sizes', [\App\Http\Controllers\API\ProductSpecificationController::class, 'getStandardizedSizes']);
 Route::get('/available-sizes', [\App\Http\Controllers\API\ProductSpecificationController::class, 'getAvailableSizes']);
 
+// Public content routes (no authentication required) - for guest browsing
+Route::get('/products', [ProductController::class, 'index']);
+Route::get('/products/{id}', [ProductController::class, 'show']);
+Route::get('/services', [ServiceController::class, 'index']);
+Route::get('/services/{id}', [ServiceController::class, 'show']);
+Route::get('/categories', [CategoryController::class, 'index']);
+Route::get('/categories/{id}', [CategoryController::class, 'show']);
+Route::get('/featured/products', [ProductController::class, 'getFeatured']);
+Route::get('/featured/services', [ServiceController::class, 'featured']);
+
 // Authentication routes
 Route::post('/register', [AuthController::class, 'register']);
 Route::post('/login', [AuthController::class, 'login']);
@@ -254,25 +264,20 @@ Route::middleware('auth:sanctum')->group(function () {
 
     Route::get('/all-branches', [BranchController::class, 'getAll']);
 
-    // Service routes
-    Route::get('/services', [ServiceController::class, 'index']);
-    Route::get('/services/{id}', [ServiceController::class, 'show']);
+    // Service routes (authenticated - for management)
     Route::put('/services/{id}/featured', [ServiceController::class, 'updateFeatured']);
 
-    // Product routes
-    Route::get('/products', [ProductController::class, 'index']);
-    Route::get('/products/{id}', [ProductController::class, 'show']);
+    // Product routes (authenticated - for management and detailed operations)
     Route::get('/products/{id}/options', [ProductController::class, 'getOptions']);
     Route::post('/products/{id}/validate-options', [ProductController::class, 'validateOptions']);
     Route::put('/products/{id}/featured', [ProductController::class, 'updateFeatured']);
-    
+
     // Stock management routes
     Route::get('/products/{id}/stock-availability', [ProductController::class, 'checkStockAvailability']);
     Route::get('/products/{id}/available-stock', [ProductController::class, 'getAvailableStock']);
     Route::get('/products/{id}/stock-info', [ProductController::class, 'getStockInfo']);
 
-    // Featured content routes
-    Route::get('/featured/products', [ProductController::class, 'getFeatured']);
+    // Featured content routes (authenticated - for management)
     Route::get('/featured/services-deals', [ServiceController::class, 'getServicesWithDeals']);
 
     // Provider routes - specific routes first to avoid conflicts
@@ -345,10 +350,7 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::post('/companies/{id}/track-order', [CompanyController::class, 'trackOrder']);
     Route::post('/companies/{id}/add-rating', [CompanyController::class, 'addRating']);
 
-    // Category routes
-    Route::get('/categories', [CategoryController::class, 'index']);
-    Route::get('/categories/{id}', [CategoryController::class, 'show']);
-
+    // Category routes (authenticated - for management and tracking)
     Route::get('/categories-with-deals', [CategoryController::class, 'getCategoriesWithDeals']);
     Route::post('/categories/{id}/track-view', [CategoryController::class, 'trackView']);
     Route::post('/categories/{id}/track-purchase', [CategoryController::class, 'trackPurchase']);
