@@ -145,6 +145,9 @@ Route::get('/categories/{id}', [CategoryController::class, 'show']);
 Route::get('/featured/products', [ProductController::class, 'getFeatured']);
 Route::get('/featured/services', [ServiceController::class, 'featured']);
 
+// Public filter routes (no authentication required) - for guest filtering
+Route::post('/search/filter', [\App\Http\Controllers\API\SearchController::class, 'filter']);
+
 // Authentication routes
 Route::post('/register', [AuthController::class, 'register']);
 Route::post('/login', [AuthController::class, 'login']);
@@ -366,9 +369,6 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::delete('/deals/{id}', [DealController::class, 'destroy']);
     Route::get('/deals/{id}/analytics', [DealController::class, 'getAnalytics']);
     Route::get('/deals/analytics', [DealController::class, 'getAllAnalytics']);
-
-    // Filter routes
-    Route::post('/search/filter', [\App\Http\Controllers\API\SearchController::class, 'filter']);
 
     // Image serving routes
     Route::get('/product-image/{filename}', [ProductController::class, 'getImage']);
