@@ -55,8 +55,8 @@ class ServiceDealService
                 return true;
             }
 
-            // Deal applies to specific services
-            if ($deal->applies_to === 'services') {
+            // Deal applies to specific services or both products and services
+            if ($deal->applies_to === 'services' || $deal->applies_to === 'products_and_services') {
                 $serviceIds = is_string($deal->service_ids)
                     ? json_decode($deal->service_ids, true)
                     : $deal->service_ids;
@@ -165,7 +165,7 @@ class ServiceDealService
         $activeDeals = Deal::where('status', 'active')
             ->where('start_date', '<=', $today)
             ->where('end_date', '>=', $today)
-            ->where('applies_to', 'services')
+            ->whereIn('applies_to', ['services', 'products_and_services'])
             ->get();
 
         // Get services with deals
@@ -182,8 +182,8 @@ class ServiceDealService
                 })->get();
             }
 
-            // Deal applies to specific services
-            elseif ($deal->applies_to === 'services') {
+            // Deal applies to specific services or both products and services
+            elseif ($deal->applies_to === 'services' || $deal->applies_to === 'products_and_services') {
                 $serviceIds = is_string($deal->service_ids)
                     ? json_decode($deal->service_ids, true)
                     : $deal->service_ids;

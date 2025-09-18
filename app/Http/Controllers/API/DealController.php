@@ -147,9 +147,9 @@ class DealController extends Controller
             'end_date' => 'required|date|after_or_equal:start_date',
             'image' => 'nullable|string',
             'status' => 'required|in:active,inactive',
-            'applies_to' => 'required|in:products,services',
-            'product_ids' => 'required_if:applies_to,products|array',
-            'service_ids' => 'required_if:applies_to,services|array',
+            'applies_to' => 'required|in:products,services,products_and_services',
+            'product_ids' => 'required_if:applies_to,products|required_if:applies_to,products_and_services|array',
+            'service_ids' => 'required_if:applies_to,services|required_if:applies_to,products_and_services|array',
         ]);
 
         $data = $request->all();
@@ -157,12 +157,13 @@ class DealController extends Controller
 
         // Ensure only the relevant IDs are set based on applies_to value
         if ($data['applies_to'] === 'products') {
-            // Clear service_ids for product deals
+            // Clear service_ids for product-only deals
             $data['service_ids'] = null;
         } elseif ($data['applies_to'] === 'services') {
-            // Clear product_ids for service deals
+            // Clear product_ids for service-only deals
             $data['product_ids'] = null;
         }
+        // For 'products_and_services', keep both arrays as provided
 
         // Create the deal
         $deal = Deal::create($data);
@@ -211,21 +212,22 @@ class DealController extends Controller
             'end_date' => 'required|date|after_or_equal:start_date',
             'image' => 'nullable|string',
             'status' => 'required|in:active,inactive',
-            'applies_to' => 'required|in:products,services',
-            'product_ids' => 'required_if:applies_to,products|array',
-            'service_ids' => 'required_if:applies_to,services|array',
+            'applies_to' => 'required|in:products,services,products_and_services',
+            'product_ids' => 'required_if:applies_to,products|required_if:applies_to,products_and_services|array',
+            'service_ids' => 'required_if:applies_to,services|required_if:applies_to,products_and_services|array',
         ]);
 
         $data = $request->all();
 
         // Ensure only the relevant IDs are set based on applies_to value
         if ($data['applies_to'] === 'products') {
-            // Clear service_ids for product deals
+            // Clear service_ids for product-only deals
             $data['service_ids'] = null;
         } elseif ($data['applies_to'] === 'services') {
-            // Clear product_ids for service deals
+            // Clear product_ids for service-only deals
             $data['product_ids'] = null;
         }
+        // For 'products_and_services', keep both arrays as provided
 
         // Update the deal
         $deal->update($data);

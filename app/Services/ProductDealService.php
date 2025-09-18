@@ -55,8 +55,8 @@ class ProductDealService
                 return true;
             }
 
-            // Deal applies to specific products
-            if ($deal->applies_to === 'products') {
+            // Deal applies to specific products or both products and services
+            if ($deal->applies_to === 'products' || $deal->applies_to === 'products_and_services') {
                 $productIds = is_string($deal->product_ids)
                     ? json_decode($deal->product_ids, true)
                     : $deal->product_ids;
@@ -193,8 +193,8 @@ class ProductDealService
         foreach ($activeDeals as $deal) {
             $products = collect();
 
-            // Deal applies to specific products
-            if ($deal->applies_to === 'products') {
+            // Deal applies to specific products or both products and services
+            if ($deal->applies_to === 'products' || $deal->applies_to === 'products_and_services') {
                 $productIds = is_string($deal->product_ids)
                     ? json_decode($deal->product_ids, true)
                     : $deal->product_ids;
