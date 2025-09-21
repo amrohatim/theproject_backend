@@ -804,8 +804,10 @@
             grid-template-columns: repeat(2, 1fr);
             grid-template-rows: repeat(2, 1fr);
             gap: 30px;
-            margin: 60px 0 0 0;
+            margin: 60px auto 0 auto;
             max-width: 1460px;
+            padding: 0 20px;
+            transform: translateX(-40px);
         }
 
         .service-card {
@@ -924,6 +926,8 @@
               .services-grid {
                   max-width: 1200px;
                   gap: 25px;
+                  transform: translateX(-30px);
+                  padding: 0 15px;
               }
               
               .service-card {
@@ -935,6 +939,8 @@
               .services-grid {
                   max-width: 800px;
                   gap: 20px;
+                  transform: translateX(-20px);
+                  padding: 0 10px;
               }
               
               .service-card {
@@ -1009,6 +1015,8 @@
                 grid-template-columns: 1fr;
                 grid-template-rows: auto;
                 max-width: 100%;
+                transform: translateX(-10px);
+                padding: 0 15px;
             }
             
             .service-card {
@@ -1081,6 +1089,8 @@
              .services-grid {
                  grid-template-columns: 1fr;
                  gap: 20px;
+                 transform: translateX(-5px);
+                 padding: 0 10px;
              }
 
              .service-card {
