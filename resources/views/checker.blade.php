@@ -1309,7 +1309,7 @@
                             <p class="service-description">
                                 Our Merchant dashboard is offering off-the-shelf features customized for individual Merchant. <br>Easy manage your stock, add products, add services update order status, print invoices, and more.
                             </p>
-                            <a href="#" class="read-more">Read More</a>
+                            <a href="#dashboard-section" class="read-more">Read More</a>
                         </div>
                     </div>
                     <div class="service-card">
@@ -1335,7 +1335,7 @@
                             <p class="service-description">
                                 Add and manage your offers easily and quickly with the merchant dashboard to grow you customers satisfaction. <br>Set deal's percentage, timespan, specific products and services.
                             </p>
-                            <a href="#" class="read-more">Read More</a>
+                            <a href="#deals-section" class="read-more">Read More</a>
                         </div>
                     </div>
                     <div class="service-card">
@@ -1355,7 +1355,7 @@
 
                 <!-- Deals Section -->
                 <!-- Cross Grid Layout Container -->
-                <div class="cross-grid-container" style="position: relative; width: 100%; max-width: 2000px; margin: 60px auto; height: 800px;">
+                <div id="deals-section" class="cross-grid-container" style="position: relative; width: 100%; max-width: 2000px; margin: 60px auto; height: 800px;">
                     <!-- Top-Left Deals Section -->
                     <div class="deals-section" style="position: absolute; top: 0; left: 0; width: 60%; height: 60%; padding: 60px; background: linear-gradient(135deg, #000000 0%, #000000 100%); border-radius: 15px; color: white; display: flex; flex-direction: column; justify-content: center; align-items: flex-start; z-index: 2;">
                         <div class="deals-content" style="text-align: left;">
@@ -1386,7 +1386,7 @@
         </section>
 
         <!-- Dashboard Usage Section -->
-        <section class="dashboard-section">
+        <section class="dashboard-section" id="dashboard-section">
             <div class="container">
                 <div class="dashboard-content">
                     <h2 style="text-align: center; font-size: clamp(22px, 6vw, 36px); margin-bottom: clamp(20px, 6vw, 40px);">Dashboard Usage</h2>
