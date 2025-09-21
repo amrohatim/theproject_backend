@@ -820,7 +820,7 @@
             flex-direction: row;
             align-items: stretch;
             min-height: 200px;
-            width: 700px;
+            width: 600px;
             max-width: 100%;
         }
 
