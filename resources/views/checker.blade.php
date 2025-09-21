@@ -1228,8 +1228,12 @@
                             <p class="merchant-description">
                                 Join our Merchant community and start your journey with us, access a wide range of customers across the <strong style="color:#feb538; font-weight:300">United Arab Emirates. </strong> <br> Harness the power of marketing with our ready to go Dashboard and App.
                             </p>
-                            <button class="cta-button" style="border-radius: 90px; padding: 10px 20px;" >
-                                Start Now <p style="font-size: 1.5em;">&rarr;</p>
+                            <button class="cta-button" style="border-radius: 90px; padding: 10px 20px; display: flex; align-items: center; gap: 8px;">
+                                Start Now
+                                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                    <line x1="5" y1="12" x2="19" y2="12"></line>
+                                    <polyline points="12 5 19 12 12 19"></polyline>
+                                </svg>
                             </button>
                         </div>
                      </div>
