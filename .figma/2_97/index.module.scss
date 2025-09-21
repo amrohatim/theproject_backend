@@ -1,0 +1,57 @@
+* {
+  box-sizing: border-box;
+}
+
+.rectangle1 {
+  display: flex;
+  align-items: flex-start;
+  background: #f59e0b;
+  padding: 40px 122px 29px 123px;
+  width: 973px;
+  height: 664px;
+
+  .ellipse1 {
+    display: flex;
+    flex-direction: column;
+    flex-grow: 1;
+    align-items: center;
+    border-radius: 50%;
+    background: #000000;
+    padding: 186px 243px 99px 242px;
+
+    .dala3ChicMerchant {
+      line-height: 29px;
+      letter-spacing: 0;
+      color: #ffffff;
+      font-family: Inter, "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", SimHei, Arial, Helvetica, sans-serif;
+      font-size: 24px;
+      font-weight: 800;
+    }
+
+    .rectangle2 {
+      display: flex;
+      align-items: flex-start;
+      align-self: stretch;
+      justify-content: space-between;
+      margin: 241px 37px 0px;
+      border-radius: 30px;
+      background: #f59e0b;
+      padding: 7px 28px 11px 19px;
+      min-width: 170px;
+
+      .startNow {
+        line-height: 22px;
+        letter-spacing: 0;
+        color: #ffffff;
+        font-family: "Hermeneus One", "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", SimHei, Arial, Helvetica, sans-serif;
+        font-size: 18px;
+      }
+
+      .arrow1 {
+        margin-top: 13px;
+        width: 40px;
+        height: 2px;
+      }
+    }
+  }
+}

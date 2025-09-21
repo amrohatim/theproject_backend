@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>About | Bootcamp - Dala3Chic Merchant</title>
+    <link href="https://fonts.googleapis.com/css2?family=Jersey+15&display=swap" rel="stylesheet">
     <link rel="icon" sizes="192x192" href="https://www.wix.com/favicon.ico" type="image/x-icon">
     <style>
         * {
@@ -208,17 +209,72 @@
 
         /* Top Right - Dala3Chic Description */
         .hero-top-right {
-            background: linear-gradient(135deg, #1a1a1a 0%, #2d2d2d 100%);
-            text-align: left;
-            color: white;
+            background: #f59e0b;
+            display: flex;
+            align-items: center;
+            justify-content: center;
             padding: 40px;
+        }
+
+        .black-circle {
+            background: #000000;
+            border-radius: 50%;
+            width: 100%;
+            max-width: 728px; /* Adjust as needed */
+            aspect-ratio: 1.3 / 1;
             display: flex;
             flex-direction: column;
+            align-items: center;
             justify-content: center;
+            padding: 40px;
+            text-align: center;
+        }
+
+        .circle-content {
+            color: #ffffff;
         }
 
         .merchant-title {
-            font-size: 48px;
+            font-size: 24px;
+            font-weight: 800;
+            margin-bottom: 241px; /* Pushes the button down */
+        }
+
+        .cta-button {
+            background: #f59e0b;
+            color: #ffffff;
+            border: none;
+            
+            padding: 7px 28px 11px 19px;
+            font-size: 18px;
+            font-family: 'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            animation: slideLeftRight 2s ease-in-out infinite;
+            position: relative;
+        }
+
+        @keyframes slideLeftRight {
+            0% {
+                transform: translateX(0px);
+            }
+            50% {
+                transform: translateX(30px);
+            }
+            100% {
+                transform: translateX(0px);
+            }
+        }
+
+        .arrow-icon {
+            width: 40px;
+            height: 2px;
+        }
+
+        .merchant-title {
+            font-size: 28px;
             font-weight: 700;
             margin-bottom: 24px;
             letter-spacing: -1px;
@@ -227,7 +283,8 @@
         }
 
         .merchant-description {
-            font-size: 18px;
+            font-family: "Jersey 15", sans-serif;
+            font-size: 20px;
             line-height: 1.7;
             margin-bottom: 32px;
             color: rgba(255,255,255,0.9);
@@ -1160,22 +1217,21 @@
                      <!-- Top Left: Woman Image -->
                      <div class="hero-grid-item hero-top-left">
                          
-                            <img src="{{ asset('assets/medium-shot-smiley-woman-sewing-with-machine.jpg') }}" height="800" width="1280" alt="Woman Image">
+                            <img src="{{ asset('assets/medium-shot-smiley-woman-sewing-with-machine.jpg') }}" height="100%" width="1280" alt="Woman Image">
                          
                      </div>
 
                      <!-- Top Right: Dala3Chic Merchant Description -->
                      <div class="hero-grid-item hero-top-right">
-                         <h1 class="merchant-title">Dala3Chic Merchant</h1>
-                         <p class="merchant-description">
-                             Join our Merchant community and start your journey with us, access a wide range of customers across the United Arab Emirates harness the power of marketing with our ready to go dashboard and app
-                         </p>
-                         <button class="cta-button">
-                             Start Now
-                             <svg class="arrow-icon" viewBox="9 70.9 181 59" fill="currentColor">
-                                 <path d="M159 70.9l-2.2 2.4L183.6 99H9v3h174.6l-26.2 25.3 2.1 2.6 30.5-29.3-31-29.7z"/>
-                             </svg>
-                         </button>
+                        <div class="black-circle">
+                            <h1 class="merchant-title">Dala3Chic Merchant</h1>
+                            <p class="merchant-description">
+                                Join our Merchant community and start your journey with us, access a wide range of customers across the <strong style="color:#feb538; font-weight:300">United Arab Emirates. </strong> <br> Harness the power of marketing with our ready to go Dashboard and App.
+                            </p>
+                            <button class="cta-button" style="border-radius: 90px; padding: 10px 20px;" >
+                                Start Now <p style="font-size: 1.5em;">&rarr;</p>
+                            </button>
+                        </div>
                      </div>
 
                      <!-- Bottom Left: Vision Section -->
@@ -1302,7 +1358,7 @@
                             <h3 style="font-size: 28px; margin-bottom: 15px; margin-top: 0;">Reach customers with your discounts</h3>
                             <h4 style="font-size: 24px; margin-bottom: 15px; margin-top: 0;">Deals and Discounts</h4>
                             <p style="margin-bottom: 20px;">Easily manage and add deals and discounts for the selected products or services within your customised timespan</p>
-                            <button class="cta-button" style="background: #d97706; color: #fff; padding: 12px 24px; border: none; border-radius: 2px; font-weight: bold; cursor: pointer;">𝖼̶𝗋̶𝖾̶𝖺̶𝗍̶𝖾̶ ̶𝗈̶𝗇̶𝖾̶ ̶𝗇̶𝗈̶𝗐̶</button>
+                            <button class="cta-button" style="background: #d97706; color: #fff; padding: 12px 24px; border: none; border-radius: 2px; font-weight: bold; cursor: pointer;">Create one now</button>
                         </div>
                     </div>
                     
