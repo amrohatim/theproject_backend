@@ -268,6 +268,85 @@
             }
         }
 
+        /* Mobile responsive styles */
+        @media (max-width: 768px) {
+            .cta-button {
+                padding: 8px 16px 10px 14px;
+                font-size: 16px;
+                gap: 8px;
+                border-radius: 60px !important;
+                animation: slideLeftRightMobile 2s ease-in-out infinite;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .cta-button {
+                padding: 6px 12px 8px 10px;
+                font-size: 14px;
+                gap: 6px;
+                border-radius: 50px !important;
+                animation: slideLeftRightMobile 2s ease-in-out infinite;
+            }
+        }
+
+        @keyframes slideLeftRightMobile {
+            0% {
+                transform: translateX(0px);
+            }
+            50% {
+                transform: translateX(15px);
+            }
+            100% {
+                transform: translateX(0px);
+            }
+        }
+
+        /* Additional mobile responsive styles for hero section */
+        @media (max-width: 768px) {
+            .hero-top-right {
+                padding: 20px;
+            }
+            
+            .black-circle {
+                padding: 20px;
+                max-width: 90%;
+                aspect-ratio: 1.2 / 1;
+            }
+            
+            .merchant-title {
+                font-size: 20px;
+                margin-bottom: 120px;
+            }
+            
+            .merchant-description {
+                font-size: 16px;
+                margin-bottom: 20px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .hero-top-right {
+                padding: 15px;
+            }
+            
+            .black-circle {
+                padding: 15px;
+                max-width: 95%;
+                aspect-ratio: 1.1 / 1;
+            }
+            
+            .merchant-title {
+                font-size: 18px;
+                margin-bottom: 80px;
+            }
+            
+            .merchant-description {
+                font-size: 14px;
+                margin-bottom: 15px;
+                line-height: 1.5;
+            }
+        }
+
         .arrow-icon {
             width: 40px;
             height: 2px;
