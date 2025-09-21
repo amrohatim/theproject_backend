@@ -63,8 +63,16 @@
                         <label for="category_id" class="block text-sm font-medium text-gray-700 dark:text-gray-300">{{ __('messages.category') }} <span class="text-red-500">*</span></label>
                         <select id="category_id" name="category_id" class="mt-1 block w-full py-2 px-3 border border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-white bg-white rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm" required>
                             <option value="">{{ __('messages.select_category') }}</option>
-                            @foreach($categories ?? [] as $category)
-                                <option value="{{ $category->id }}" {{ old('category_id', $service->category_id) == $category->id ? 'selected' : '' }}>{{ $category->name }}</option>
+                            @foreach($parentCategories ?? [] as $parentCategory)
+                                <optgroup label="{{ $parentCategory->name }}">
+                                    <!-- Parent category as disabled option -->
+                                    {{-- <option value="{{ $parentCategory->id }}" disabled style="color: #9ca3af; font-weight: bold;">{{ $parentCategory->name }}</option> --}}
+
+                                    <!-- Child categories -->
+                                    @foreach($parentCategory->children as $childCategory)
+                                        <option value="{{ $childCategory->id }}" {{ old('category_id', $service->category_id) == $childCategory->id ? 'selected' : '' }}>&nbsp;&nbsp;{{ $childCategory->name }}</option>
+                                    @endforeach
+                                </optgroup>
                             @endforeach
                         </select>
                         @error('category_id')

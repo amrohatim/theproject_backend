@@ -172,15 +172,21 @@ class ServiceController extends Controller
                 ->with('error', 'You do not have permission to edit this service.');
         }
 
-        // Get categories
-        $categories = Category::orderBy('name')->get();
+        // Get service categories with their children - same as create method
+        $parentCategories = Category::where('type', 'service')
+            ->whereNull('parent_id')
+            ->with(['children' => function($query) {
+                $query->orderBy('name');
+            }])
+            ->orderBy('name')
+            ->get();
 
         // Get branches that belong to the vendor's company and have active licenses
         $branches = Branch::whereHas('company', function ($query) {
             $query->where('user_id', Auth::id());
         })->withActiveLicense()->orderBy('name')->get();
 
-        return view('vendor.services.edit', compact('service', 'categories', 'branches'));
+        return view('vendor.services.edit', compact('service', 'parentCategories', 'branches'));
     }
 
     /**
