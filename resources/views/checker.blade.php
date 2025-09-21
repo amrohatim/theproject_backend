@@ -1329,11 +1329,11 @@
         <section class="dashboard-section">
             <div class="container">
                 <div class="dashboard-content">
-                    <h2 style="text-align: center; font-size: 36px; margin-bottom: 40px;">Dashboard Usage</h2>
+                    <h2 style="text-align: center; font-size: clamp(22px, 6vw, 36px); margin-bottom: clamp(20px, 6vw, 40px);">Dashboard Usage</h2>
                     
-                    <div class="usage-step" style="display: flex; align-items: flex-start; gap: 40px; margin-bottom: 60px;">
+                    <div class="usage-step" style="display: flex; align-items: flex-start; flex-wrap: wrap; gap: clamp(12px, 4vw, 40px); margin-bottom: clamp(24px, 8vw, 60px);">
                         <!-- Video Box -->
-                        <div class="video-container" style="flex: 0 0 600px; position: relative;  border-radius: 10px; overflow: hidden;">
+                        <div class="video-container" style="flex: 1 1 600px; min-width: 280px; max-width: 100%; position: relative;  border-radius: 10px; overflow: hidden;">
                             <div style="aspect-ratio: 16/9; position: relative;">
                                 <video 
                                     style="width: 100%; height: 100%; object-fit: cover; border-radius: 10px;" 
@@ -1386,9 +1386,9 @@
                         </div>
                     </div>
 
-                    <div class="usage-step" style="display: flex; align-items: flex-start; gap: 40px; margin-bottom: 60px;">
+                    <div class="usage-step" style="display: flex; align-items: flex-start; flex-wrap: wrap; gap: clamp(12px, 4vw, 40px); margin-bottom: clamp(24px, 8vw, 60px);">
                         <!-- Video Box -->
-                        <div class="video-container" style="flex: 0 0 600px; position: relative;">
+                        <div class="video-container" style="flex: 1 1 600px; min-width: 280px; max-width: 100%; position: relative;">
                             <div style="aspect-ratio: 16/9; position: relative;">
                                 <video 
                                     style="width: 100%; height: 100%; object-fit: cover; border-radius: 10px;" 
@@ -1435,9 +1435,9 @@
                         </div>
                     </div>
 
-                    <div class="usage-step" style="display: flex; align-items: flex-start; gap: 40px; margin-bottom: 60px;">
+                    <div class="usage-step" style="display: flex; align-items: flex-start; flex-wrap: wrap; gap: clamp(12px, 4vw, 40px); margin-bottom: clamp(24px, 8vw, 60px);">
                         <!-- Video Box -->
-                        <div class="video-container" style="flex: 0 0 600px; position: relative;">
+                        <div class="video-container" style="flex: 1 1 600px; min-width: 280px; max-width: 100%; position: relative;">
                             <div style="aspect-ratio: 16/9; position: relative;">
                                 <video 
                                     style="width: 100%; height: 100%; object-fit: cover; border-radius: 10px;" 
