@@ -1311,7 +1311,7 @@
                             <p class="service-description">
                                 Make it possible to reach all customers all over the United Arab Emirates. <br>Our thirty-party services allow to ship your products faster and expand your business geographically.
                             </p>
-                            <a href="#" class="read-more">Read More</a>
+                            <a href="#ministore-usage-section" class="read-more">Read More</a>
                         </div>
                     </div>
                     <div class="service-card">
@@ -1337,7 +1337,7 @@
                             <p class="service-description">
                                 Expose your mini-store for serving and pickups perfect for merchants who want both reach and relationship. <br>Our mini store feature gives you the power to grow your local reputation.
                             </p>
-                            <a href="#" class="read-more">Read More</a>
+                            <a href="#ministore-usage-section" class="read-more">Read More</a>
                         </div>
                     </div>
                 </div>
@@ -1536,6 +1536,121 @@
                 </div>
             </div>
         </section>
+
+        <!-- Mini Store Usage Section -->
+        <section id="ministore-usage-section" class="ministore-section" style="background: black; padding: clamp(120px, 20vw, 240px) 0; position: relative; overflow: hidden;">
+            <!-- Background Pattern -->
+            <div style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; background-image: radial-gradient(circle at 25% 25%, rgba(255,255,255,0.1) 0%, transparent 50%), radial-gradient(circle at 75% 75%, rgba(255,255,255,0.05) 0%, transparent 50%); pointer-events: none;"></div>
+            
+            <div class="container" style="position: relative; z-index: 2;">
+                <div class="ministore-content">
+                    <!-- Section Header -->
+                    <div style="text-align: center; margin-bottom: clamp(80px, 16vw, 120px);">
+                        <h2 style="color: white; font-size: clamp(28px, 6vw, 48px); font-weight: 700; margin-bottom: 16px; text-shadow: 2px 2px 4px rgba(0,0,0,0.3);">Mini Store Usage</h2>
+                        <p style="color: rgba(255,255,255,0.9); font-size: clamp(16px, 3vw, 20px); max-width: 600px; margin: 0 auto; line-height: 1.6;">Discover how to set your mini store location with our comprehensive usage guide</p>
+                    </div>
+
+                    <!-- Main Content -->
+                    <div style="display: flex; align-items: center; flex-wrap: wrap; gap: clamp(60px, 12vw, 120px);">
+                        <!-- Image Container -->
+                        <div style="flex: 1 1 1200px; min-width: 800px; position: relative;">
+                            <div style="position: relative; border-radius: 20px; overflow: hidden; box-shadow: 0 20px 40px rgba(0,0,0,0.3); transform: perspective(1000px) rotateY(-5deg); transition: transform 0.3s ease;">
+                                <img 
+                                    src="{{ asset('assets/ministoreusage.webp') }}" 
+                                    alt="Mini Store Usage Guide" 
+                                    style="width: 100%; height: auto; display: block; border-radius: 20px;"
+                                    onmouseover="this.parentElement.style.transform='perspective(1000px) rotateY(0deg) scale(1.02)'"
+                                    onmouseout="this.parentElement.style.transform='perspective(1000px) rotateY(-5deg) scale(1)'"
+                                >
+                                <!-- Overlay Gradient -->
+                                <div style="position: absolute; bottom: 0; left: 0; right: 0; height: 100px; background: linear-gradient(transparent, rgba(0,0,0,0.7)); border-radius: 0 0 20px 20px;"></div>
+                                <!-- Image Label -->
+                                <div style="position: absolute; bottom: 20px; left: 20px; color: white; font-weight: 600; font-size: clamp(16px, 3vw, 20px); text-shadow: 2px 2px 4px rgba(0,0,0,0.8);">Mini Store Interface</div>
+                            </div>
+                            <!-- Floating Elements -->
+                            <div style="position: absolute; top: -10px; right: -10px; width: 60px; height: 60px; background: rgba(255,255,255,0.2); border-radius: 50%; backdrop-filter: blur(10px); display: flex; align-items: center; justify-content: center;">
+                                <svg width="24" height="24" viewBox="0 0 24 24" fill="white">
+                                    <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/>
+                                </svg>
+                            </div>
+                        </div>
+
+                        <!-- Content Container -->
+                        <div style="flex: 1 1 1000px; min-width: 800px;">
+                            <div style="background: rgba(255, 255, 255, 0); backdrop-filter: blur(10px); border-radius: 20px; padding: clamp(60px, 10vw, 80px); border: 1px solid rgba(255,255,255,0.2);">
+                                <h3 style="color: white; font-size: clamp(22px, 4vw, 28px); font-weight: 600; margin-bottom: 20px; display: flex; align-items: center; gap: 12px;">
+                                    <span style="width: 40px; height: 40px; background: rgba(255,255,255,0.2); border-radius: 10px; display: flex; align-items: center; justify-content: center;">
+                                        <svg width="20" height="20" viewBox="0 0 24 24" fill="white">
+                                            <path d="M19 7h-3V6a4 4 0 0 0-8 0v1H5a1 1 0 0 0-1 1v11a3 3 0 0 0 3 3h10a3 3 0 0 0 3-3V8a1 1 0 0 0-1-1zM10 6a2 2 0 0 1 4 0v1h-4V6zm8 13a1 1 0 0 1-1 1H7a1 1 0 0 1-1-1V9h2v1a1 1 0 0 0 2 0V9h4v1a1 1 0 0 0 2 0V9h2v10z"/>
+                                        </svg>
+                                    </span>
+                                    Manage Your Place
+                                </h3>
+                                
+                                <div style="space-y: 16px;">
+                                    <div style="margin-bottom: 16px;">
+                                        <h4 style="color: rgba(255,255,255,0.95); font-size: clamp(16px, 3vw, 18px); font-weight: 600; margin-bottom: 8px; display: flex; align-items: center; gap: 8px;">
+                                            <span style="width: 6px; height: 6px; background: #fbbf24; border-radius: 50%;"></span>
+                                            On-store services
+                                        </h4>
+                                        <p style="color: rgba(255,255,255,0.8); font-size: clamp(14px, 2.5vw, 16px); line-height: 1.6; margin-left: 14px;">Serve your customers on your specifc location , identify your customers and provide them with a better experience</p>
+                                    </div>
+                                    
+                                    <div style="margin-bottom: 16px;">
+                                        <h4 style="color: rgba(255,255,255,0.95); font-size: clamp(16px, 3vw, 18px); font-weight: 600; margin-bottom: 8px; display: flex; align-items: center; gap: 8px;">
+                                            <span style="width: 6px; height: 6px; background: #10b981; border-radius: 50%;"></span>
+                                            Products Pickup waypoint
+                                        </h4>
+                                        <p style="color: rgba(255,255,255,0.8); font-size: clamp(14px, 2.5vw, 16px); line-height: 1.6; margin-left: 14px;">Easily hand your products to our courier through  your store location</p>
+                                    </div>
+                                    
+                                    <div style="margin-bottom: 16px;">
+                                        <h4 style="color: rgba(255,255,255,0.95); font-size: clamp(16px, 3vw, 18px); font-weight: 600; margin-bottom: 8px; display: flex; align-items: center; gap: 8px;">
+                                            <span style="width: 6px; height: 6px; background: #8b5cf6; border-radius: 50%;"></span>
+                                            Change per your need
+                                        </h4>
+                                        <p style="color: rgba(255,255,255,0.8); font-size: clamp(14px, 2.5vw, 16px); line-height: 1.6; margin-left: 14px;">Don't hesitate to change your store's location whenever you want</p>
+                                    </div>
+                                </div>
+
+                                <!-- CTA Button -->
+                                <div style="margin-top: 30px;">
+                                    <button style="background: linear-gradient(135deg, #fbbf24 0%, #f59e0b 100%); color: white; border: none; padding: 14px 28px; border-radius: 12px; font-weight: 600; font-size: clamp(14px, 2.5vw, 16px); cursor: pointer; transition: all 0.3s ease; box-shadow: 0 4px 15px rgba(251, 191, 36, 0.4); width: 100%;" 
+                            onmouseover="this.style.transform='translateY(-2px)'; this.style.boxShadow='0 6px 20px rgba(251, 191, 36, 0.6)'"
+                            onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow='0 4px 15px rgba(251, 191, 36, 0.4)'">
+                                        Get Started with Mini Store
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Responsive Styles -->
+            <style>
+                @media (max-width: 768px) {
+                    .ministore-section .container > div > div:first-child {
+                        flex-direction: column-reverse;
+                    }
+                    .ministore-section img {
+                        transform: none !important;
+                    }
+                    .ministore-section img:hover {
+                        transform: scale(1.02) !important;
+                    }
+                }
+                
+                @media (max-width: 480px) {
+                    .ministore-section {
+                        padding: 80px 0 !important;
+                    }
+                    .ministore-section .container > div > div:last-child > div {
+                        padding: 40px !important;
+                    }
+                }
+            </style>
+        </section>
     </main>
 
     <!-- Footer -->
@@ -1546,16 +1661,38 @@
     </footer>
 
     <script>
-        // Add smooth scrolling for anchor links
+        // Add smooth scrolling for anchor links with enhanced animation
         document.querySelectorAll('a[href^="#"]').forEach(anchor => {
             anchor.addEventListener('click', function (e) {
                 e.preventDefault();
-                const target = document.querySelector(this.getAttribute('href'));
+                const targetId = this.getAttribute('href');
+                const target = document.querySelector(targetId);
+                
                 if (target) {
-                    target.scrollIntoView({
-                        behavior: 'smooth',
-                        block: 'start'
-                    });
+                    // Enhanced smooth scrolling with custom duration
+                    const targetPosition = target.offsetTop - 80; // Offset for header
+                    const startPosition = window.pageYOffset;
+                    const distance = targetPosition - startPosition;
+                    const duration = 500; // 500ms duration
+                    let start = null;
+
+                    function animation(currentTime) {
+                        if (start === null) start = currentTime;
+                        const timeElapsed = currentTime - start;
+                        const run = ease(timeElapsed, startPosition, distance, duration);
+                        window.scrollTo(0, run);
+                        if (timeElapsed < duration) requestAnimationFrame(animation);
+                    }
+
+                    // Easing function for smooth animation
+                    function ease(t, b, c, d) {
+                        t /= d / 2;
+                        if (t < 1) return c / 2 * t * t + b;
+                        t--;
+                        return -c / 2 * (t * (t - 2) - 1) + b;
+                    }
+
+                    requestAnimationFrame(animation);
                 }
             });
         });
