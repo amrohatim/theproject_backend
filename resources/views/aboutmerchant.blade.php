@@ -1206,7 +1206,7 @@
                      <!-- Top Left: Woman Image -->
                      <div class="hero-grid-item hero-top-left">
                          
-                            <img src="{{ asset('assets/medium-shot-smiley-woman-sewing-with-machine.jpg') }}" height="100%" width="1280" alt="Woman Image">
+                            <img src="{{ asset('assets/medium-shot-smiley-woman-sewing-with-machine.jpg') }}" height="100%" width="100%" alt="Woman Image">
                          
                      </div>
 

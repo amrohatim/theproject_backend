@@ -18,7 +18,7 @@
 @section('content')
 <div class="container mx-auto">
     <!-- Welcome message -->
-    <div class="mb-8">
+    {{-- <div class="mb-8">
         <div class="flex justify-between items-center">
             <div>
                 <h2 class="text-2xl font-bold text-gray-800 dark:text-white">{{ __('messages.welcome_vendor', ['name' => auth()->user()->name ?? 'Vendor']) }}</h2>
@@ -33,7 +33,7 @@
                 </a>
             </div>
         </div>
-    </div>
+    </div> --}}
 
     @if(!isset($hasCompany) || !$hasCompany)
     <!-- Company Registration Alert -->

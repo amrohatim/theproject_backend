@@ -199,7 +199,7 @@
         .woman-image {
             width: 100%;
             height: 100%;
-            background: url('/app images/medium-shot-smiley-woman-sewing-with-machine.jpg');
+            background: url('/app images/vendorimg.jpeg');
             background-size: cover;
             background-position: center;
             border: none;
@@ -1182,16 +1182,16 @@
                      <!-- Top Left: Woman Image -->
                      <div class="hero-grid-item hero-top-left">
                          
-                            <img src="{{ asset('assets/medium-shot-smiley-woman-sewing-with-machine.jpg') }}" height="100%" width="1280" alt="Woman Image">
+                            <img  src="{{ asset('assets/vendorimg.jpeg') }}" height="100%" width="100%" alt="Woman Image">
                          
                      </div>
 
                      <!-- Top Right: Dala3Chic Merchant Description -->
                      <div class="hero-grid-item hero-top-right">
                         <div class="black-circle">
-                            <h1 class="merchant-title">Dala3Chic Merchant</h1>
+                            <h1 class="merchant-title">Dala3Chic Vendor</h1>
                             <p class="merchant-description">
-                                Join our Merchant community and start your journey with us, access a wide range of customers across the <strong style="color:#feb538; font-weight:300">United Arab Emirates. </strong> <br> Harness the power of marketing with our ready to go Dashboard and App.
+                            Optimize your business with Dala3Chic Vendor, a platform that empowers you to sell and manage your inventory with ease <br> Control your branches , track your revenue and reach customrs all over <strong style="color:#2563eb; font-weight:300">United Arab Emirates. </strong>
                             </p>
                             <button class="cta-button" style="border-radius: 90px; padding: 10px 20px; display: flex; align-items: center; gap: 8px;">
                                 Start Now
@@ -1214,7 +1214,7 @@
                      <!-- Bottom Right: Dashboard Image -->
                      <div class="hero-grid-item hero-bottom-right">
                          <div class="dashboard-image">
-                             <img src="{{ asset('assets/MerchantDashboard.png') }}" alt="Dashboard Image">
+                             <img src="{{ asset('assets/vendordashdemo2.jpeg') }}" alt="Dashboard Image">
                          </div>
                      </div>
               </div>
@@ -1302,11 +1302,37 @@
                     </div>
                     <div class="service-card">
                         <div class="service-image">
-                            <img src="{{ asset('assets/ministorefeature.jpg') }}" alt="Dashboard Feature" style="width: 100%; height: 100%; object-fit: cover; ">
+                            <img src="{{ asset('assets/branchm.jpg') }}" alt="Dashboard Feature" style="width: 100%; height: 100%; object-fit: cover; ">
                         </div>
                         <div class="service-content">
-                            <h4 class="service-title">Mini Store</h4>
+                            <h4 class="service-title">Branch Management</h4>
                             <img src="{{ asset('assets/shopicon.png') }}" alt="Shop Icon" style="width: 30px; text-align: left; display: block; margin-bottom: 10px;">
+                            <p class="service-description">
+                                Expose your mini-store for serving and pickups perfect for merchants who want both reach and relationship. <br>Our mini store feature gives you the power to grow your local reputation.
+                            </p>
+                            <a href="#ministore-usage-section" class="read-more">Read More</a>
+                        </div>
+                    </div>
+                        <div class="service-card">
+                        <div class="service-image">
+                            <img src="{{ asset('assets/serviceprovider.webp') }}" alt="Dashboard Feature" style="width: 100%; height: 100%; object-fit: cover; ">
+                        </div>
+                        <div class="service-content">
+                            <h4 class="service-title">Service Provider</h4>
+                            <img src="{{ asset('assets/employee.png') }}" alt="Discount Icon" style="width: 30px; text-align: left; display: block; margin-bottom: 10px;">
+                            <p class="service-description">
+                                Add and manage your offers easily and quickly with the merchant dashboard to grow you customers satisfaction. <br>Set deal's percentage, timespan, specific products and services.
+                            </p>
+                            <a href="#deals-section" class="read-more">Read More</a>
+                        </div>
+                    </div>
+                    <div class="service-card">
+                        <div class="service-image">
+                            <img src="{{ asset('assets/productmanager.png') }}" alt="Dashboard Feature" style="width: 100%; height: 100%; object-fit: cover; ">
+                        </div>
+                        <div class="service-content">
+                            <h4 class="service-title">Product Manager</h4>
+                            <img src="{{ asset('assets/productstock.png') }}" alt="Shop Icon" style="width: 30px; text-align: left; display: block; margin-bottom: 10px;">
                             <p class="service-description">
                                 Expose your mini-store for serving and pickups perfect for merchants who want both reach and relationship. <br>Our mini store feature gives you the power to grow your local reputation.
                             </p>
@@ -1330,7 +1356,7 @@
                     
                     <!-- Bottom-Right Image Section -->
                     <div class="deals-image-section" style="position: absolute; bottom: 0; right: 0; width: 60%; height: 60%;  background: rgba(0, 0, 0, 0.95); border-radius: 15px; display: flex; justify-content: center; align-items: center; z-index: 2; box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);">
-                        <img src="/assets/Untitled – Figma.jpeg" alt="Deals illustration" style="width: 100%; height: 100%;  object-fit: cover; border-radius: 8px;">
+                        <img src="/assets/vendordeal.jpeg" alt="Deals illustration" style="width: 100%; height: 100%;  object-fit: cover; border-radius: 8px;">
                     </div>
                     
                    
