@@ -1553,7 +1553,7 @@
                     <!-- Main Content -->
                     <div style="display: flex; align-items: center; flex-wrap: wrap; gap: clamp(60px, 12vw, 120px);">
                         <!-- Image Container -->
-                        <div style="flex: 1 1 1200px; min-width: 800px; position: relative;">
+                        <div style="flex: 1 1 1200px; min-width: 300px; position: relative;">
                             <div style="position: relative; border-radius: 20px; overflow: hidden; box-shadow: 0 20px 40px rgba(0,0,0,0.3); transform: perspective(1000px) rotateY(-5deg); transition: transform 0.3s ease;">
                                 <img 
                                     src="{{ asset('assets/ministoreusage.webp') }}" 
@@ -1576,7 +1576,7 @@
                         </div>
 
                         <!-- Content Container -->
-                        <div style="flex: 1 1 1000px; min-width: 800px;">
+                        <div style="flex: 1 1 1000px; min-width: 300px;">
                             <div style="background: rgba(255, 255, 255, 0); backdrop-filter: blur(10px); border-radius: 20px; padding: clamp(60px, 10vw, 80px); border: 1px solid rgba(255,255,255,0.2);">
                                 <h3 style="color: white; font-size: clamp(22px, 4vw, 28px); font-weight: 600; margin-bottom: 20px; display: flex; align-items: center; gap: 12px;">
                                     <span style="width: 40px; height: 40px; background: rgba(255,255,255,0.2); border-radius: 10px; display: flex; align-items: center; justify-content: center;">
@@ -1629,9 +1629,45 @@
 
             <!-- Responsive Styles -->
             <style>
+                /* Tablet Styles */
+                @media (max-width: 1024px) {
+                    .ministore-section {
+                        padding: clamp(60px, 12vw, 100px) 0 !important;
+                    }
+                    .ministore-section .container > div > div:nth-child(2) > div:first-child {
+                        flex: 1 1 600px !important;
+                        min-width: 400px !important;
+                    }
+                    .ministore-section .container > div > div:nth-child(2) > div:last-child {
+                        flex: 1 1 500px !important;
+                        min-width: 400px !important;
+                    }
+                }
+
+                /* Mobile Landscape */
                 @media (max-width: 768px) {
+                    .ministore-section {
+                        padding: clamp(40px, 8vw, 60px) 0 !important;
+                    }
                     .ministore-section .container > div > div:first-child {
-                        flex-direction: column-reverse;
+                        margin-bottom: clamp(40px, 8vw, 60px) !important;
+                    }
+                    .ministore-section .container > div > div:nth-child(2) {
+                        flex-direction: column !important;
+                        gap: clamp(30px, 6vw, 40px) !important;
+                    }
+                    .ministore-section .container > div > div:nth-child(2) > div:first-child {
+                        flex: 1 1 auto !important;
+                        min-width: 100% !important;
+                        order: 2;
+                    }
+                    .ministore-section .container > div > div:nth-child(2) > div:last-child {
+                        flex: 1 1 auto !important;
+                        min-width: 100% !important;
+                        order: 1;
+                    }
+                    .ministore-section .container > div > div:nth-child(2) > div:last-child > div {
+                        padding: clamp(30px, 6vw, 40px) !important;
                     }
                     .ministore-section img {
                         transform: none !important;
@@ -1641,12 +1677,75 @@
                     }
                 }
                 
+                /* Mobile Portrait */
                 @media (max-width: 480px) {
                     .ministore-section {
-                        padding: 80px 0 !important;
+                        padding: clamp(30px, 6vw, 40px) 0 !important;
                     }
-                    .ministore-section .container > div > div:last-child > div {
-                        padding: 40px !important;
+                    .ministore-section .container {
+                        padding: 0 15px !important;
+                    }
+                    .ministore-section .container > div > div:first-child {
+                        margin-bottom: clamp(30px, 6vw, 40px) !important;
+                    }
+                    .ministore-section .container > div > div:nth-child(2) {
+                        gap: clamp(20px, 4vw, 30px) !important;
+                    }
+                    .ministore-section .container > div > div:nth-child(2) > div:last-child > div {
+                        padding: clamp(20px, 4vw, 30px) !important;
+                        border-radius: 15px !important;
+                    }
+                    .ministore-section h2 {
+                        font-size: clamp(24px, 5vw, 32px) !important;
+                    }
+                    .ministore-section h3 {
+                        font-size: clamp(18px, 4vw, 22px) !important;
+                    }
+                    .ministore-section h4 {
+                        font-size: clamp(14px, 3vw, 16px) !important;
+                    }
+                    .ministore-section p {
+                        font-size: clamp(12px, 2.5vw, 14px) !important;
+                    }
+                    /* Hide floating elements on mobile */
+                    .ministore-section .container > div > div:nth-child(2) > div:first-child > div > div:last-child {
+                        display: none !important;
+                    }
+                    /* Simplify image container */
+                    .ministore-section .container > div > div:nth-child(2) > div:first-child > div {
+                        border-radius: 15px !important;
+                        box-shadow: 0 10px 20px rgba(0,0,0,0.3) !important;
+                    }
+                }
+
+                /* Extra Small Mobile */
+                @media (max-width: 360px) {
+                    .ministore-section {
+                        padding: 20px 0 !important;
+                    }
+                    .ministore-section .container {
+                        padding: 0 10px !important;
+                    }
+                    .ministore-section .container > div > div:first-child {
+                        margin-bottom: 20px !important;
+                    }
+                    .ministore-section .container > div > div:nth-child(2) {
+                        gap: 15px !important;
+                    }
+                    .ministore-section .container > div > div:nth-child(2) > div:last-child > div {
+                        padding: 15px !important;
+                    }
+                    .ministore-section h2 {
+                        font-size: 20px !important;
+                    }
+                    .ministore-section h3 {
+                        font-size: 16px !important;
+                    }
+                    .ministore-section h4 {
+                        font-size: 13px !important;
+                    }
+                    .ministore-section p {
+                        font-size: 11px !important;
                     }
                 }
             </style>
