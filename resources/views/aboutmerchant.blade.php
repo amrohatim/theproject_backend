@@ -3,9 +3,9 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>About | Bootcamp - Dala3Chic Merchant</title>
+    <title>About | Merchant - Dala3Chic Merchant</title>
     <link href="https://fonts.googleapis.com/css2?family=Jersey+15&display=swap" rel="stylesheet">
-    <link rel="icon" sizes="192x192" href="https://www.wix.com/favicon.ico" type="image/x-icon">
+   
     <style>
         * {
             margin: 0;
@@ -1356,7 +1356,7 @@
                     </div>
                     
                     <!-- Bottom-Right Image Section -->
-                    <div class="deals-image-section" style="position: absolute; bottom: 0; right: 0; width: 60%; height: 60%;  background: rgba(0, 0, 0, 0.95); border-radius: 15px; display: flex; justify-content: center; align-items: center; z-index: 2; box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);">
+                    <div class="deals-image-section" style="position: absolute; bottom: 0; right: 0; width: 60%; height: 65%;  background: rgba(0, 0, 0, 0.95); border-radius: 15px; display: flex; justify-content: center; align-items: center; z-index: 2; box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);">
                         <img src="/assets/Untitled – Figma.jpeg" alt="Deals illustration" style="width: 100%; height: 100%;  object-fit: cover; border-radius: 8px;">
                     </div>
                     
