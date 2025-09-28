@@ -163,12 +163,224 @@
 
         .hero-content {
             position: relative;
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            grid-template-rows: 1fr 1fr;
-            gap: 0;
+            display: flex;
+            flex-direction: column;
             min-height: 100vh;
             width: 100%;
+        }
+
+        /* Full-width image at the top */
+        .hero-top-image {
+            width: 100%;
+            height: 100%;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .hero-top-image img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            object-position: center;
+        }
+
+        /* Hero overlay content */
+        .hero-overlay {
+            position: absolute;
+            bottom: 40px;
+            left: 40px;
+            text-align: left;
+            color: #333;
+            z-index: 10;
+            max-width: 700px;
+            padding: 50px;
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border-radius: 25px;
+            box-shadow: 0 25px 50px rgba(0, 0, 0, 0.15);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+
+        .hero-overlay .merchant-title {
+            font-size: 4.5rem;
+            font-weight: 700;
+            margin-bottom: 2rem;
+            color: #1f2937;
+        }
+
+        .hero-overlay .hero-description {
+            font-size: 1.4rem;
+            line-height: 1.6;
+            margin-bottom: 2.5rem;
+            color: #4b5563;
+        }
+
+        .hero-overlay .cta-button {
+            background: linear-gradient(135deg, #2563eb, #1d4ed8);
+            color: white;
+            border: none;
+            font-size: 1.3rem;
+            font-weight: 600;
+            padding: 16px 32px;
+            border-radius: 12px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            margin: 0 auto;
+        }
+
+        .hero-overlay .cta-button:hover {
+            background: linear-gradient(135deg, #1d4ed8, #1e40af);
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(37, 99, 235, 0.3);
+        }
+
+        /* Responsive adjustments for hero section and background image */
+        @media (max-width: 1200px) {
+            .hero-section {
+                min-height: 90vh;
+            }
+            
+            .hero-content {
+                min-height: 90vh;
+            }
+            
+            .hero-top-image img {
+                object-position: center top;
+            }
+
+            .hero-overlay .merchant-title {
+                font-size: 3rem;
+            }
+
+            .hero-overlay .hero-description {
+                font-size: 1.1rem;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .hero-section {
+                min-height: 80vh;
+            }
+            
+            .hero-content {
+                min-height: 80vh;
+            }
+            
+            .hero-top-image {
+                height: 60vh;
+            }
+            
+            .hero-top-image img {
+                object-position: center center;
+                object-fit: cover;
+            }
+
+            .hero-overlay {
+                max-width: 550px;
+                padding: 40px;
+                bottom: 30px;
+                left: 30px;
+            }
+
+            .hero-overlay .merchant-title {
+                font-size: 3.5rem;
+            }
+
+            .hero-overlay .hero-description {
+                font-size: 1.2rem;
+            }
+
+            .hero-overlay .cta-button {
+                font-size: 1.1rem;
+                padding: 12px 24px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .hero-section {
+                min-height: 70vh;
+            }
+            
+            .hero-content {
+                min-height: 70vh;
+            }
+            
+            .hero-top-image {
+                height: 50vh;
+            }
+            
+            .hero-top-image img {
+                object-position: center center;
+                object-fit: cover;
+            }
+
+            .hero-overlay {
+                max-width: 420px;
+                padding: 35px;
+                bottom: 20px;
+                left: 20px;
+            }
+
+            .hero-overlay .merchant-title {
+                font-size: 2.5rem;
+                margin-bottom: 1.2rem;
+            }
+
+            .hero-overlay .hero-description {
+                font-size: 1.1rem;
+                margin-bottom: 1.8rem;
+            }
+
+            .hero-overlay .cta-button {
+                font-size: 1rem;
+                padding: 10px 20px;
+            }
+        }
+
+        @media (max-width: 360px) {
+            .hero-section {
+                min-height: 60vh;
+            }
+            
+            .hero-content {
+                min-height: 60vh;
+            }
+            
+            .hero-top-image {
+                height: 40vh;
+            }
+
+            .hero-overlay {
+                max-width: 360px;
+                padding: 30px;
+                bottom: 15px;
+                left: 15px;
+            }
+
+            .hero-overlay .merchant-title {
+                font-size: 2.2rem;
+                margin-bottom: 1rem;
+            }
+
+            .hero-overlay .hero-description {
+                font-size: 1rem;
+                margin-bottom: 1.5rem;
+            }
+
+            .hero-overlay .cta-button {
+                font-size: 0.9rem;
+                padding: 8px 16px;
+            }
+        }
+
+        /* Two-column layout at the bottom */
+        .hero-bottom-content {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 0;
+            min-height: 50vh;
+            flex: 1;
         }
 
         .hero-grid-item {
@@ -188,19 +400,11 @@
             z-index: 10;
         }
 
-        /* Top Left - Woman Image */
-        .hero-top-left {
-            background: rgba(25, 25, 25, 0.9);
-            text-align: center;
-            padding: 0;
-            overflow: hidden;
-        }
-
         .woman-image {
             width: 100%;
             height: 100%;
-            background: url('/app images/vendorimg.jpeg');
-            background-size: cover;
+            background: url('/app images/vendoreps.png');
+            background-size: fill;
             background-position: center;
             border: none;
             border-radius: 0;
@@ -403,6 +607,109 @@
         .arrow-icon {
             width: 20px;
             height: 20px;
+        }
+
+        /* Hero Bottom Content Responsive Styles */
+        @media (max-width: 1200px) {
+            .hero-bottom-content {
+                grid-template-columns: 1fr;
+                gap: 20px;
+                min-height: auto;
+            }
+            
+            .hero-grid-item {
+                min-height: 300px;
+            }
+            
+            .merchant-title {
+                font-size: 24px;
+            }
+            
+            .vision-title {
+                font-size: 28px;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .hero-bottom-content {
+                gap: 15px;
+                padding: 0 10px;
+            }
+            
+            .hero-grid-item {
+                min-height: 250px;
+                padding: 30px;
+            }
+            
+            .merchant-title {
+                font-size: 22px;
+                margin-bottom: 20px;
+            }
+            
+            .merchant-description {
+                font-size: 18px;
+                margin-bottom: 28px;
+            }
+            
+            .vision-title {
+                font-size: 24px;
+                margin-bottom: 16px;
+            }
+            
+            .vision-description {
+                font-size: 15px;
+            }
+            
+            .cta-button {
+                padding: 15px 30px;
+                font-size: 15px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .hero-grid-item {
+                min-height: 200px;
+                padding: 25px;
+            }
+            
+            .merchant-title {
+                font-size: 20px;
+                margin-bottom: 16px;
+            }
+            
+            .merchant-description {
+                font-size: 16px;
+                margin-bottom: 24px;
+            }
+            
+            .vision-title {
+                font-size: 22px;
+                margin-bottom: 14px;
+            }
+            
+            .vision-description {
+                font-size: 14px;
+            }
+            
+            .cta-button {
+                padding: 12px 24px;
+                font-size: 14px;
+            }
+            
+            .dashboard-overlay {
+                bottom: 15px;
+                left: 15px;
+                right: 15px;
+                padding: 12px;
+            }
+            
+            .dashboard-title {
+                font-size: 16px;
+            }
+            
+            .dashboard-subtitle {
+                font-size: 13px;
+            }
         }
 
         /* Vision Section */
@@ -1007,26 +1314,32 @@
 
          @media (max-width: 768px) {
              .hero-content {
-                 grid-template-columns: 1fr;
-                 grid-template-rows: auto auto auto auto;
-                 gap: 20px;
                  min-height: auto;
-                 padding: 20px 0;
+             }
+
+             .hero-top-image {
+                 height: 40vh;
+                 min-height: 300px;
+             }
+
+             .hero-bottom-content {
+                 grid-template-columns: 1fr;
+                 min-height: auto;
+                 gap: 0;
              }
 
              .hero-grid-item {
-                 padding: 20px;
+                 padding: 30px 20px;
                  min-height: 250px;
              }
 
-             .woman-image,
              .dashboard-image {
                  min-height: 200px;
              }
 
              .dashboard-image img {
                  width: 100%;
-                 height: auto;
+                 height: 100%;
                  min-height: 200px;
                  object-fit: cover;
              }
@@ -1090,8 +1403,13 @@
          }
 
          @media (max-width: 480px) {
+             .hero-top-image {
+                 height: 35vh;
+                 min-height: 250px;
+             }
+
              .hero-grid-item {
-                 padding: 15px;
+                 padding: 20px 15px;
                  min-height: 200px;
              }
 
@@ -1179,44 +1497,42 @@
         <!-- Hero Section -->
          <section class="hero-section">
              <div class="hero-content">
-                     <!-- Top Left: Woman Image -->
-                     <div class="hero-grid-item hero-top-left">
-                         
-                            <img  src="{{ asset('assets/vendorimg.jpeg') }}" height="100%" width="100%" alt="Woman Image">
-                         
+                 <!-- Full-width image at the top -->
+                 <div class="hero-top-image">
+                     <img src="{{ asset('assets/vendoreps.png') }}" alt="Dala3Chic Vendor Hero Image">
+                     <!-- Overlay content -->
+                     <div class="hero-overlay">
+                         <h1 class="merchant-title">Dala3Chic Vendor</h1>
+                         <p class="hero-description">
+                             Optimize your business with Dala3Chic Vendor, a platform that empowers you to sell and manage your inventory with ease <br> Control your branches, track your revenue and reach customers all over <strong style="color:#2563eb; font-weight:300">United Arab Emirates.</strong>
+                         </p>
+                         <button class="cta-button" style="border-radius: 90px; padding: 10px 20px; display: flex; align-items: center; gap: 8px;">
+                             Start Now
+                             <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                 <path d="M5 12h14"></path>
+                                 <path d="m12 5 7 7-7 7"></path>
+                             </svg>
+                         </button>
                      </div>
+                 </div>
 
-                     <!-- Top Right: Dala3Chic Merchant Description -->
-                     <div class="hero-grid-item hero-top-right">
-                        <div class="black-circle">
-                            <h1 class="merchant-title">Dala3Chic Vendor</h1>
-                            <p class="merchant-description">
-                            Optimize your business with Dala3Chic Vendor, a platform that empowers you to sell and manage your inventory with ease <br> Control your branches , track your revenue and reach customrs all over <strong style="color:#2563eb; font-weight:300">United Arab Emirates. </strong>
-                            </p>
-                            <button class="cta-button" style="border-radius: 90px; padding: 10px 20px; display: flex; align-items: center; gap: 8px;">
-                                Start Now
-                                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                                    <line x1="5" y1="12" x2="19" y2="12"></line>
-                                    <polyline points="12 5 19 12 12 19"></polyline>
-                                </svg>
-                            </button>
-                        </div>
-                     </div>
-
-                     <!-- Bottom Left: Vision Section -->
+                 <!-- Two-column layout at the bottom -->
+                 <div class="hero-bottom-content">
+                     <!-- Left Column: Vision Section -->
                      <div class="hero-grid-item hero-bottom-left">
                          <h2 class="vision-title">Vision</h2>
                          <p class="vision-description">
-                             This is a Paragraph. Click on "Edit Text" or double click on the text box to start editing the content and make sure to add any relevant details or information that you want to share with your visitors.
+                             Optimize your business with Dala3Chic Vendor, a platform that empowers you to sell and manage your inventory with ease. Control your branches, track your revenue and reach customers all over the United Arab Emirates with our comprehensive vendor management system.
                          </p>
                      </div>
 
-                     <!-- Bottom Right: Dashboard Image -->
+                     <!-- Right Column: Dashboard Image -->
                      <div class="hero-grid-item hero-bottom-right">
                          <div class="dashboard-image">
                              <img src="{{ asset('assets/vendordashdemo2.jpeg') }}" alt="Dashboard Image">
                          </div>
                      </div>
+                 </div>
               </div>
           </section>
             <!-- Features Section -->
@@ -1227,7 +1543,7 @@
                         <div class="features-header">
                             <h2 class="features-title">Features</h2>
                             <p class="features-description">
-                                Our Merchant package offer multiple features to facilitate the process of selling and managing your inventory, it also provide you with door-to-door free delivery to allow you access customers all over the United Arab Emirates. You may also want to serve customer at your place and for this purpose we offer you a mini store location to allow customers to reach you and benefit from your services.
+                                Our Vendor Package includes a company-branch management system that makes it easy to administer all your branches. We handle product transportation on your behalf, and the package also provides internal user management so you can assign and control who manages products and who provides services
                             </p>
                         </div>
                     </div>
@@ -1251,9 +1567,18 @@
                         <p class="feature-number">04</p>
                         <p class="feature-text">Easy inventory & order management — add, update, and track products and bookings in real time from a clean, intuitive dashboard so you always know what's in stock and what's selling.</p>
                     </div>
-                    <div class="feature-item">
+                   
+                      <div class="feature-item">
                         <p class="feature-number">05</p>
-                        <p class="feature-text">Mini-store location option — prefer to welcome customers in person? Reserve a compact, branded mini-store space where people can see your products, book services, or pick up orders — a perfect bridge between online reach and face-to-face service.</p>
+                        <p class="feature-text">A branch management system designed to give you centralized control over all your locations. From a single dashboard you can add, configure, and organize branches, monitor real-time stock levels and inventory movements for each branch independently.</p>
+                     </div>
+                     <div class="feature-item">
+                        <p class="feature-number">06</p>
+                        <p class="feature-text">Branch level user control | assign service providers to specific branches to deliver services. Service provider can add, update, or remove services , and you can control whether each provider has access to a single branch or multiple branches.</p>
+                     </div>
+                     <div class="feature-item">
+                        <p class="feature-number">07</p>
+                        <p class="feature-text">Company level user control | the Product Manager is responsible for the end-to-end management of your company’s product catalog and inventory. This role includes creating and maintaining accurate product records (descriptions, images, variants, pricing), monitoring and reconciling stock levels across branches, and coordinating status changes such for customers orders.</p>
                      </div>
                          </div>
                      </div>
@@ -1284,7 +1609,7 @@
                             <p class="service-description">
                                 Make it possible to reach all customers all over the United Arab Emirates. <br>Our thirty-party services allow to ship your products faster and expand your business geographically.
                             </p>
-                            <a href="#ministore-usage-section" class="read-more">Read More</a>
+                            <a href="#" class="read-more">Read More</a>
                         </div>
                     </div>
                     <div class="service-card">
@@ -1308,9 +1633,9 @@
                             <h4 class="service-title">Branch Management</h4>
                             <img src="{{ asset('assets/shopicon.png') }}" alt="Shop Icon" style="width: 30px; text-align: left; display: block; margin-bottom: 10px;">
                             <p class="service-description">
-                                Expose your mini-store for serving and pickups perfect for merchants who want both reach and relationship. <br>Our mini store feature gives you the power to grow your local reputation.
+                                Easily manage your branches with the Dala3Chic Vendor Dashboard. <br>monitor branch-level stock, services, orders, and bookings from a single, intuitive interface.
                             </p>
-                            <a href="#ministore-usage-section" class="read-more">Read More</a>
+                            <a href="#dashboard-section" class="read-more">Read More</a>
                         </div>
                     </div>
                         <div class="service-card">
@@ -1321,9 +1646,9 @@
                             <h4 class="service-title">Service Provider</h4>
                             <img src="{{ asset('assets/employee.png') }}" alt="Discount Icon" style="width: 30px; text-align: left; display: block; margin-bottom: 10px;">
                             <p class="service-description">
-                                Add and manage your offers easily and quickly with the merchant dashboard to grow you customers satisfaction. <br>Set deal's percentage, timespan, specific products and services.
+                                Easily designate an individual to serve customers at a given branch , update, or remove provider profiles. <br>control whether they have access to a single branch or multiple locations.
                             </p>
-                            <a href="#deals-section" class="read-more">Read More</a>
+                            <a href="#service-provider-section" class="read-more">Read More</a>
                         </div>
                     </div>
                     <div class="service-card">
@@ -1334,9 +1659,9 @@
                             <h4 class="service-title">Product Manager</h4>
                             <img src="{{ asset('assets/productstock.png') }}" alt="Shop Icon" style="width: 30px; text-align: left; display: block; margin-bottom: 10px;">
                             <p class="service-description">
-                                Expose your mini-store for serving and pickups perfect for merchants who want both reach and relationship. <br>Our mini store feature gives you the power to grow your local reputation.
+                                The Product Manager has full product control across all branches  they can create, modify, and delete product listings.<br>This role also includes updating order statuses throughout the fulfillment lifecycle.
                             </p>
-                            <a href="#ministore-usage-section" class="read-more">Read More</a>
+                            <a href="#products-manager-section" class="read-more">Read More</a>
                         </div>
                     </div>
                 </div>
@@ -1378,6 +1703,63 @@
             <div class="container">
                 <div class="dashboard-content">
                     <h2 style="text-align: center; font-size: clamp(22px, 6vw, 36px); margin-bottom: clamp(20px, 6vw, 40px);">Dashboard Usage</h2>
+                              <div class="usage-step" style="display: flex; align-items: flex-start; flex-wrap: wrap; gap: clamp(12px, 4vw, 40px); margin-bottom: clamp(24px, 8vw, 60px);">
+                        <!-- Video Box -->
+                        <div class="video-container" style="flex: 1 1 600px; min-width: 280px; max-width: 100%; position: relative;  border-radius: 10px; overflow: hidden;">
+                            <div style="aspect-ratio: 16/9; position: relative;">
+                                <video 
+                                    style="width: 100%; height: 100%; object-fit: cover; border-radius: 10px;" 
+                                    controls 
+                                    muted 
+                                    loop
+                                    preload="metadata"
+                                    {{-- poster="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 400 225'%3E%3Crect width='400' height='225' fill='%23667eea'/%3E%3Ctext x='200' y='112' text-anchor='middle' fill='white' font-size='16' font-family='Arial'%3EProduct Tutorial Video%3C/text%3E%3C/svg%3E" --}}
+                                >
+                                    {{-- <source src="https://firebasestorage.googleapis.com/v0/b/dala3chic-e2b81.firebasestorage.app/o/product%20merchant%20usage.mov?alt=media&token=d174b7d9-f59c-4987-86f3-806d77cc2882" type="video/quicktime"> --}}
+                                    <source src="https://firebasestorage.googleapis.com/v0/b/dala3chic-e2b81.firebasestorage.app/o/Branch%20Demo.mov?alt=media&token=02db0f94-78c7-44a3-9a44-687b44b17321" type="video/mp4">
+                                    <div style="display: flex; align-items: center; justify-content: center; height: 100%; background: rgba(255, 255, 255, 0.1); color: white; text-align: center; padding: 20px;">
+                                        <div>
+                                            <div style="width: 80px; height: 80px; background: rgba(255, 255, 255, 0.2); border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto 15px; backdrop-filter: blur(1px);">
+                                                <svg width="32" height="32" viewBox="0 0 24 24" fill="white">
+                                                    <path d="M8 5v14l11-7z"/>
+                                                </svg>
+                                            </div>
+                                            <p style="margin: 0; font-weight: 600;">Branch Creation Tutorial</p>
+                                            <p style="margin: 5px 0 0; font-size: 14px; opacity: 0.8;">Video loading...</p>
+                                        </div>
+                                    </div>
+                                </video>
+                                <div style="position: absolute; bottom: 20px; left: 20px; color: white; font-weight: 600; font-size: 18px; text-shadow: 2px 2px 4px rgba(0,0,0,0.7); z-index: 10;">Branch Creation Tutorial</div>
+                            </div>
+                        </div>
+                        <!-- Content -->
+                        <div style="flex: 1;">
+                            <h3 class="step-title">1 / Branch creation</h3>
+                            <div class="step-content">
+                                <p>From dashboard's sidebar click on Branches tap then click on "Add Branch" button.</p>
+                                <p>You should enter these  information in order to create branch:</p>
+                                <ul class="step-list">
+                                    <li>Branch Name</li>
+                                    <li>Select Company</li>
+                                    <li>Business type (e.g., Saloon, CLothes store, etc.)</li>
+                                    <li>Phone Number</li>
+                                    <li>Email Address</li>
+                                    <li>Description (optional)</li>
+                                    <li>Select the Emirate and pick address from the Map</li>
+                                    <li>Status is Active by default</li>
+                                    <li>Pick an image or leave it as the default company's image</li>
+                                    <li>Set the working hours and days</li>
+                                </ul>
+                                <p>On the Branch Licence section do the following:</p>
+                                <ul class="step-list">
+                                    <li>Set the start date of the license</li>
+                                    <li>Set the end date of the license</li>
+                                    <li>Upload an associated PDF doucment for the license</li>
+            
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
                     
                     <div class="usage-step" style="display: flex; align-items: flex-start; flex-wrap: wrap; gap: clamp(12px, 4vw, 40px); margin-bottom: clamp(24px, 8vw, 60px);">
                         <!-- Video Box -->
@@ -1392,7 +1774,8 @@
                                     {{-- poster="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 400 225'%3E%3Crect width='400' height='225' fill='%23667eea'/%3E%3Ctext x='200' y='112' text-anchor='middle' fill='white' font-size='16' font-family='Arial'%3EProduct Tutorial Video%3C/text%3E%3C/svg%3E" --}}
                                 >
                                     {{-- <source src="https://firebasestorage.googleapis.com/v0/b/dala3chic-e2b81.firebasestorage.app/o/product%20merchant%20usage.mov?alt=media&token=d174b7d9-f59c-4987-86f3-806d77cc2882" type="video/quicktime"> --}}
-                                    <source src="https://firebasestorage.googleapis.com/v0/b/dala3chic-e2b81.firebasestorage.app/o/product%20merchant%20usage.mov?alt=media&token=d174b7d9-f59c-4987-86f3-806d77cc2882" type="video/mp4">
+                                    <source src="https://firebasestorage.googleapis.com/v0/b/dala3chic-e2b81.firebasestorage.app/o/Product%20Demo.mov?alt=media&token=6d3128ba-f0c4-4900-ae15-2696fb93450a
+" type="video/mp4">
                                     <div style="display: flex; align-items: center; justify-content: center; height: 100%; background: rgba(255, 255, 255, 0.1); color: white; text-align: center; padding: 20px;">
                                         <div>
                                             <div style="width: 80px; height: 80px; background: rgba(255, 255, 255, 0.2); border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto 15px; backdrop-filter: blur(1px);">
@@ -1410,13 +1793,14 @@
                         </div>
                         <!-- Content -->
                         <div style="flex: 1;">
-                            <h3 class="step-title">1 / Product creation</h3>
+                            <h3 class="step-title">2 / Product creation</h3>
                             <div class="step-content">
                                 <p>From dashboard's sidebar click on products tap then click on "Add new product" button.</p>
                                 <p>You should enter these required information in order to create product:</p>
                                 <ul class="step-list">
                                     <li>Name (English & Arabic)</li>
                                     <li>Category</li>
+                                    <li>Branch</li>
                                     <li>Price (the real price that will appear to customers)</li>
                                     <li>Original Price (the price that will be shown with strikethrough style, normally bigger than the price)</li>
                                     <li>Stock (the product will be out-stock if the stock value equal to zero)</li>
@@ -1447,7 +1831,8 @@
                                     {{-- poster="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 400 225'%3E%3Crect width='400' height='225' fill='%23f093fb'/%3E%3Ctext x='200' y='112' text-anchor='middle' fill='white' font-size='16' font-family='Arial'%3EService Tutorial Video%3C/text%3E%3C/svg%3E" --}}
                                 >
                                     {{-- <source src="https://firebasestorage.googleapis.com/v0/b/dala3chic-e2b81.firebasestorage.app/o/service%20merchant%20tutor.mov?alt=media&token=d174b7d9-f59c-4987-86f3-806d77cc2882" type="video/quicktime"> --}}
-                                    <source src="https://firebasestorage.googleapis.com/v0/b/dala3chic-e2b81.firebasestorage.app/o/service%20merchant%20tutor.mov?alt=media&token=d174b7d9-f59c-4987-86f3-806d77cc2882" type="video/mp4">
+                                    <source src="https://firebasestorage.googleapis.com/v0/b/dala3chic-e2b81.firebasestorage.app/o/Sevice%20Demo.mov?alt=media&token=e001f22f-73a5-449a-9b50-ae3e6b20e7bc
+" type="video/mp4">
                                     <div style="display: flex; align-items: center; justify-content: center; height: 100%; background: rgba(255, 255, 255, 0.1); color: white; text-align: center; padding: 20px;">
                                         <div>
                                             <div style="width: 80px; height: 80px; background: rgba(255, 255, 255, 0.2); border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto 15px; backdrop-filter: blur(10px);">
@@ -1465,13 +1850,14 @@
                         </div>
                         <!-- Content -->
                         <div style="flex: 1;">
-                            <h3 class="step-title">2 / Service creation</h3>
+                            <h3 class="step-title">3 / Service creation</h3>
                             <div class="step-content">
                                 <p>From dashboard's sidebar click on services tap then click on "Add new service" button.</p>
                                 <p>Then enter the following service information:</p>
                                 <ul class="step-list">
                                     <li>Name (English & Arabic)</li>
                                     <li>Category</li>
+                                    <li>Branch</li>
                                     <li>Price</li>
                                     <li>Duration (should be in minutes)</li>
                                     <li>Image select a clear one that follow our rules and recommendations</li>
@@ -1496,7 +1882,8 @@
                                     {{-- poster="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 400 225'%3E%3Crect width='400' height='225' fill='%23667eea'/%3E%3Ctext x='200' y='112' text-anchor='middle' fill='white' font-size='16' font-family='Arial'%3EDeal Tutorial Video%3C/text%3E%3C/svg%3E" --}}
                                 >
                                     {{-- <source src="https://firebasestorage.googleapis.com/v0/b/dala3chic-e2b81.firebasestorage.app/o/deal%20merchant%20tutor.mov?alt=media&token=d174b7d9-f59c-4987-86f3-806d77cc2882" type="video/quicktime"> --}}
-                                    <source src="https://firebasestorage.googleapis.com/v0/b/dala3chic-e2b81.firebasestorage.app/o/deal%20merchant%20tutor.mov?alt=media&token=d174b7d9-f59c-4987-86f3-806d77cc2882" type="video/mp4">
+                                    <source src="https://firebasestorage.googleapis.com/v0/b/dala3chic-e2b81.firebasestorage.app/o/Deal%20Demo.mp4?alt=media&token=https://firebasestorage.googleapis.com/v0/b/dala3chic-e2b81.firebasestorage.app/o/Deal%20Demo.mp4?alt=media&token=087f44f8-3a3c-4139-9c2b-9033656838fc
+" type="video/mp4">
                                     <div style="display: flex; align-items: center; justify-content: center; height: 100%; background: rgba(255, 255, 255, 0.1); color: white; text-align: center; padding: 20px;">
                                         <div>
                                             <div style="width: 80px; height: 80px; background: rgba(255, 255, 255, 0.2); border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto 15px; backdrop-filter: blur(10px);">
@@ -1514,7 +1901,7 @@
                         </div>
                         <!-- Content -->
                         <div style="flex: 1;">
-                            <h3 class="step-title">3 / Deals creation</h3>
+                            <h3 class="step-title">4 / Deals creation</h3>
                             <div class="step-content">
                                 <p>From dashboard's sidebar click on services tap then click on "create deal" or the plus button.</p>
                                 <p>After deal creation page opens enter the related deal information:</p>
@@ -1532,9 +1919,957 @@
                             </div>
                         </div>
                     </div>
+
+                    <!-- Service Provider Section -->
+                    <div id="service-provider-section" class="service-provider-grid" style="position: relative; width: 100%; max-width: 1400px; margin: 60px auto; min-height: 1200px; background: transparent; padding: 20px;">
+                        
+                        <!-- Section Title -->
+                        <div style="position: relative; width: 100%; text-align: center; margin-bottom: 40px;">
+                            <h3 style="color: #f0f0f0; font-size: clamp(24px, 4vw, 32px); font-weight: 700; margin: 0; text-align: center;">Service Provider Management</h3>
+                        </div>
+
+                        <!-- Top Information Sections -->
+                        <div style="display: flex;  3px; margin-bottom: 50px; width: 100%;">
+                            <!-- Required Information Section -->
+                            <div class="usage-info-section" style="flex: 1; background: transparent;  display: flex; flex-direction: column; padding: 30px;">
+                                <h4 style="color: #ffffff; font-size: clamp(18px, 3vw, 22px); font-weight: 600; margin-bottom: 15px; margin-top: 0;">Service Provider Creation</h4>
+                                <p style="margin-bottom: 5px; color: #b8b8b8;">In order to create service provider you should go to the settings tab then click on service providers.<br>then from the service proivder management page click on "Add Service Provider" Button and enter the following information:</p>
+                                <ul style="list-style: none; padding: 0; margin: 0; font-size: clamp(16px, 2vw, 16px); color: #859dc4; width: 100%; flex: 1; display: flex; flex-direction: column;">
+                                    <li style="padding: 15px 0; border-bottom: 1px solid rgba(255, 255, 255, 0.1); display: flex; align-items: center;">
+                                        <span style="width: 8px; height: 8px; background: #3b82f6; border-radius: 50%; margin-right: 15px; flex-shrink: 0;"></span>
+                                        Service Provider Name
+                                    </li>
+                                    <li style="padding: 15px 0; border-bottom: 1px solid rgba(255, 255, 255, 0.1); display: flex; align-items: center;">
+                                        <span style="width: 8px; height: 8px; background: #3b82f6; border-radius: 50%; margin-right: 15px; flex-shrink: 0;"></span>
+                                        Email Address
+                                    </li>
+                                    <li style="padding: 15px 0; border-bottom: 1px solid rgba(255, 255, 255, 0.1); display: flex; align-items: center;">
+                                        <span style="width: 8px; height: 8px; background: #3b82f6; border-radius: 50%; margin-right: 15px; flex-shrink: 0;"></span>
+                                        Phone Number
+                                    </li>
+                                    <li style="padding: 15px 0; border-bottom: 1px solid rgba(255, 255, 255, 0.1); display: flex; align-items: center;">
+                                        <span style="width: 8px; height: 8px; background: #3b82f6; border-radius: 50%; margin-right: 15px; flex-shrink: 0;"></span>
+                                        Password
+                                    </li>
+                                     <li style="padding: 15px 0; border-bottom: 1px solid rgba(255, 255, 255, 0.1); display: flex; align-items: center;">
+                                        <span style="width: 8px; height: 8px; background: #3b82f6; border-radius: 50%; margin-right: 15px; flex-shrink: 0;"></span>
+                                        Select the Branch for the service provider
+                                    </li>
+                                       <li style="padding: 15px 0; border-bottom: 1px solid rgba(255, 255, 255, 0.1); display: flex; align-items: center;">
+                                        <span style="width: 8px; height: 8px; background: #3b82f6; border-radius: 50%; margin-right: 15px; flex-shrink: 0;"></span>
+                                        Select  existant services to allow provider manage it (optional)
+                                    </li>
+                                </ul>
+                            </div>
+
+                            <!-- Service Provider Privileges Section -->
+                            <div class="privileges-section" style="flex: 1; display: flex; flex-direction: column;">
+                                <h4 style="color: #f8fffd; font-size: clamp(18px, 3vw, 22px); font-weight: 600; margin-bottom: 30px; margin-top: 25px; text-align: center;">Privileges</h4>
+                                
+                                <!-- Privileges Cards Grid -->
+                                <div class="privileges-grid" style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 24px; width: 100%; max-width: 800px; margin: 0 auto;">
+                                    
+                                    <!-- Service Management Card -->
+                                    <div class="privilege-card" style="
+                                        position: relative;
+                                        aspect-ratio: 5/4;
+                                        border-radius: 20px;
+                                        overflow: hidden;
+                                        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+                                        cursor: pointer;
+                                        transition: transform 0.3s ease, box-shadow 0.3s ease;
+                                        box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+                                    " onmouseover="this.style.transform='translateY(-5px)'; this.style.boxShadow='0 15px 35px rgba(0, 0, 0, 0.25)'" onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow='0 8px 25px rgba(0, 0, 0, 0.15)'">
+                                        
+                                        <!-- Background Image -->
+                                        <div style="
+                                            position: absolute;
+                                            top: 0;
+                                            left: 0;
+                                            width: 100%;
+                                            height: 100%;
+                                            background: url('assets/serviceprev.avif') center/cover;
+                                            opacity: 0.8;
+                                        ">
+                                  
+                                    </div>
+                                        
+                                        <!-- Gradient Overlay -->
+                                        <div style="
+                                            position: absolute;
+                                            top: 0;
+                                            left: 0;
+                                            width: 100%;
+                                            height: 150%;
+                                            background: linear-gradient(180deg, rgba(0,0,0,0) 0%, rgba(0,0,0,0.1) 40%, rgba(0,0,0,0.8) 100%);
+                                        "></div>
+                                        
+                                        <!-- Label Badge -->
+                                        <div style="
+                                            position: absolute;
+                                            top: 16px;
+                                            right: 16px;
+                                            background: rgba(16, 95, 185, 0.9);
+                                            color: white;
+                                            padding: 6px 12px;
+                                            border-radius: 20px;
+                                            font-size: 12px;
+                                            font-weight: 600;
+                                            backdrop-filter: blur(10px);
+                                        ">Management</div>
+                                        
+                                        <!-- Content -->
+                                        <div style="
+                                            position: absolute;
+                                            bottom: 20px;
+                                            left: 20px;
+                                            right: 20px;
+                                            color: white;
+                                        ">
+                                            <div style="
+                                                font-size: 14px;
+                                                opacity: 0.9;
+                                                margin-bottom: 8px;
+                                                font-weight: 500;
+                                            ">Service control</div>
+                                            <div style="
+                                                font-size: 18px;
+                                                font-weight: 700;
+                                                line-height: 1.3;
+                                            ">Create and manage your services with full control</div>
+                                        </div>
+                                    </div>
+                                    
+                                    <!-- Booking Management Card -->
+                                    <div class="privilege-card" style="
+                                        position: relative;
+                                        aspect-ratio: 5/4;
+                                        border-radius: 20px;
+                                        overflow: hidden;
+                
+                                        cursor: pointer;
+                                        transition: transform 0.3s ease, box-shadow 0.3s ease;
+                                        box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+                                    " onmouseover="this.style.transform='translateY(-5px)'; this.style.boxShadow='0 15px 35px rgba(0, 0, 0, 0.25)'" onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow='0 8px 25px rgba(0, 0, 0, 0.15)'">
+                                        
+                                        <!-- Background Image -->
+                                        <div style="
+                                            position: absolute;
+                                            top: 0;
+                                            left: 0;
+                                            width: 100%;
+                                            height: 100%;
+                                             background: url('assets/bookingsprev.avif') center/cover;
+                                            opacity: 0.8;
+                                        "></div>
+                                        
+                                        <!-- Gradient Overlay -->
+                                        <div style="
+                                            position: absolute;
+                                            top: 0;
+                                            left: 0;
+                                            width: 100%;
+                                            height: 150%;
+                                            background: linear-gradient(180deg, rgba(0,0,0,0) 0%, rgba(0,0,0,0.1) 40%, rgba(0,0,0,0.8) 100%);
+                                        "></div>
+                                        
+                                        <!-- Label Badge -->
+                                        <div style="
+                                            position: absolute;
+                                            top: 16px;
+                                            right: 16px;
+                                            background: rgba(87, 245, 161, 0.9);
+                                            color: white;
+                                            padding: 6px 12px;
+                                            border-radius: 20px;
+                                            font-size: 12px;
+                                            font-weight: 600;
+                                            backdrop-filter: blur(10px);
+                                        ">Bookings</div>
+                                        
+                                        <!-- Content -->
+                                        <div style="
+                                            position: absolute;
+                                            bottom: 20px;
+                                            left: 20px;
+                                            right: 20px;
+                                            color: white;
+                                        ">
+                                            <div style="
+                                                font-size: 14px;
+                                                opacity: 0.9;
+                                                margin-bottom: 8px;
+                                                font-weight: 500;
+                                            ">Customer interaction</div>
+                                            <div style="
+                                                font-size: 18px;
+                                                font-weight: 700;
+                                                line-height: 1.3;
+                                            ">View and respond to customer bookings</div>
+                                        </div>
+                                    </div>
+                                    
+                                    <!-- Pricing Management Card -->
+                                    <div class="privilege-card" style="
+                                        position: relative;
+                                        aspect-ratio: 5/4;
+                                        border-radius: 20px;
+                                        overflow: hidden;
+                                        background: linear-gradient(135deg, #fee74f87 0%, #f1fe0063 100%);
+                                        cursor: pointer;
+                                        transition: transform 0.3s ease, box-shadow 0.3s ease;
+                                        box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+                                    " onmouseover="this.style.transform='translateY(-5px)'; this.style.boxShadow='0 15px 35px rgba(0, 0, 0, 0.25)'" onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow='0 8px 25px rgba(0, 0, 0, 0.15)'">
+                                        
+                                        <!-- Background Image -->
+                                        <div style="
+                                            position: absolute;
+                                            top: 0;
+                                            left: 0;
+                                            width: 100%;
+                                            height: 100%;
+                                            background: url('assets/pricingprev.avif') center/cover;
+                                            opacity: 0.8;
+                                        "></div>
+                                        
+                                        <!-- Gradient Overlay -->
+                                        <div style="
+                                            position: absolute;
+                                            top: 0;
+                                            left: 0;
+                                            width: 100%;
+                                            height: 150%;
+                                            background: linear-gradient(180deg, rgba(0,0,0,0) 0%, rgba(0,0,0,0.1) 40%, rgba(0,0,0,0.8) 100%);
+                                        "></div>
+                                        
+                                        <!-- Label Badge -->
+                                        <div style="
+                                            position: absolute;
+                                            top: 16px;
+                                            right: 16px;
+                                            background: rgba(245, 226, 12, 0.9);
+                                            color: white;
+                                            padding: 6px 12px;
+                                            border-radius: 20px;
+                                            font-size: 12px;
+                                            font-weight: 600;
+                                            backdrop-filter: blur(10px);
+                                        ">Pricing</div>
+                                        
+                                        <!-- Content -->
+                                        <div style="
+                                            position: absolute;
+                                            bottom: 20px;
+                                            left: 20px;
+                                            right: 20px;
+                                            color: white;
+                                        ">
+                                            <div style="
+                                                font-size: 14px;
+                                                opacity: 0.9;
+                                                margin-bottom: 8px;
+                                                font-weight: 500;
+                                            ">Financial control</div>
+                                            <div style="
+                                                font-size: 18px;
+                                                font-weight: 700;
+                                                line-height: 1.3;
+                                            ">Manage availability and pricing strategies</div>
+                                        </div>
+                                    </div>
+                                    
+                                    <!-- Analytics Card -->
+                                    <div class="privilege-card" style="
+                                        position: relative;
+                                        aspect-ratio: 5/4;
+                                        border-radius: 20px;
+                                        overflow: hidden;
+                                        background: linear-gradient(135deg, #fa709a 0%, #fee140 100%);
+                                        cursor: pointer;
+                                        transition: transform 0.3s ease, box-shadow 0.3s ease;
+                                        box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+                                    " onmouseover="this.style.transform='translateY(-5px)'; this.style.boxShadow='0 15px 35px rgba(0, 0, 0, 0.25)'" onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow='0 8px 25px rgba(0, 0, 0, 0.15)'">
+                                        
+                                        <!-- Background Image -->
+                                        <div style="
+                                            position: absolute;
+                                            top: 0;
+                                            left: 0;
+                                            width: 100%;
+                                            height: 100%;
+                                            background: url('assets/anaprev.avif') center/cover;
+                                            opacity: 0.8;
+                                        "></div>
+                                        
+                                        <!-- Gradient Overlay -->
+                                        <div style="
+                                            position: absolute;
+                                            top: 0;
+                                            left: 0;
+                                            width: 100%;
+                                            height: 150%;
+                                            background: linear-gradient(180deg, rgba(0,0,0,0) 0%, rgba(0,0,0,0.1) 40%, rgba(0,0,0,0.8) 100%);
+                                        "></div>
+                                        
+                                        <!-- Label Badge -->
+                                        <div style="
+                                            position: absolute;
+                                            top: 16px;
+                                            right: 16px;
+                                            background: rgba(250, 112, 154, 0.9);
+                                            color: white;
+                                            padding: 6px 12px;
+                                            border-radius: 20px;
+                                            font-size: 12px;
+                                            font-weight: 600;
+                                            backdrop-filter: blur(10px);
+                                        ">Analytics</div>
+                                        
+                                        <!-- Content -->
+                                        <div style="
+                                            position: absolute;
+                                            bottom: 20px;
+                                            left: 20px;
+                                            right: 20px;
+                                            color: white;
+                                        ">
+                                            <div style="
+                                                font-size: 14px;
+                                                opacity: 0.9;
+                                                margin-bottom: 8px;
+                                                font-weight: 500;
+                                            ">Business insights</div>
+                                            <div style="
+                                                font-size: 18px;
+                                                font-weight: 700;
+                                                line-height: 1.3;
+                                            ">Access comprehensive analytics and reports</div>
+                                        </div>
+                                    </div>
+                                    
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Cross-Style Media Layout -->
+                        <div style="display: flex; flex-direction: column; gap: 40px; width: 100%; align-items: center;">
+                            <!-- Video Section (Top of Cross) -->
+                            <div class="video-container" style="flex: 1 1 600px; min-width: 280px; max-width: 100%; position: relative;">
+                                <div style="aspect-ratio: 16/9; position: relative;">
+                                    <video 
+                                        style="width: 100%; height: 100%; object-fit: cover; border-radius: 10px;" 
+                                        controls 
+                                        muted 
+                                        loop
+                                        preload="metadata"
+                                    >
+                                        <source src="https://firebasestorage.googleapis.com/v0/b/dala3chic-e2b81.firebasestorage.app/o/Service%20Provider%20Demo.mov?alt=media&token=56e6cd73-7dda-458e-9d3a-511c1c1a8821" type="video/mp4">
+                                        <div style="display: flex; align-items: center; justify-content: center; height: 100%; background: rgba(255, 255, 255, 0.1); color: white; text-align: center; padding: 20px;">
+                                            <div>
+                                                <div style="width: 80px; height: 80px; background: rgba(255, 255, 255, 0.2); border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto 15px; backdrop-filter: blur(10px);">
+                                                    <svg width="32" height="32" viewBox="0 0 24 24" fill="white">
+                                                        <path d="M8 5v14l11-7z"/>
+                                                    </svg>
+                                                </div>
+                                                <p style="margin: 0; font-weight: 600;">Service Provider Tutorial</p>
+                                                <p style="margin: 5px 0 0; font-size: 14px; opacity: 0.8;">Video loading...</p>
+                                            </div>
+                                        </div>
+                                    </video>
+                                </div>
+                            </div>
+                            
+                            <!-- Image Section (Bottom of Cross) -->
+                            <div class="image-section" style="width: 100%; max-width: 1200px; height: 600px; min-height: 600px; border-radius: 15px; position: relative; overflow: hidden; box-shadow: 0 8px 25px rgba(255, 255, 255, 0.1);">
+                                <!-- Full Size Image -->
+                                <div style="position: relative; width: 100%; height: 100%; overflow: hidden;">
+                                    <img 
+                                        src="/assets/Service provider screenshot.avif" 
+                                        alt="Service Provider Dashboard Screenshot" 
+                                        style="width: 100%; height: 100%; object-fit: cover; display: block; transition: transform 0.3s ease-out;"
+                                        onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';"
+                                        onmousemove="this.style.transform = 'scale(1.05) translateY(-' + (event.offsetY * 0.02) + 'px)'"
+                                        onmouseleave="this.style.transform = 'scale(1) translateY(0px)'"
+                                    >
+                                    <div style="display: none; align-items: center; justify-content: center; height: 100%; background: #f9fafb; color: #6b7280; text-align: center; padding: 20px; width: 100%;">
+                                        <div>
+                                            <svg width="80" height="80" viewBox="0 0 24 24" fill="#d1d5db" style="margin: 0 auto 20px;">
+                                                <path d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 002 2z"/>
+                                            </svg>
+                                            <p style="margin: 0; font-size: 18px; font-weight: 600;">Service Provider Dashboard</p>
+                                            <p style="margin: 10px 0 0; font-size: 14px; opacity: 0.7;">Screenshot Preview</p>
+                                        </div>
+                                    </div>
+                                </div>
+                                
+                                <!-- Parallax Title Overlay at Bottom -->
+                                <div style="position: absolute; bottom: 0; left: 0; right: 0; background: linear-gradient(transparent, rgba(0, 0, 0, 0.341)); padding: 40px 20px 20px; transform: translateY(0px); transition: transform 0.3s ease-out;" 
+                                     onmousemove="this.style.transform = 'translateY(' + (event.offsetY * -0.05) + 'px)'"
+                                     onmouseleave="this.style.transform = 'translateY(0px)'">
+                                    <h4 style="color: white; font-size: clamp(18px, 3vw, 24px); font-weight: 700; margin: 0; text-align: center; text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5); letter-spacing: 1px;">Dashboard Preview</h4>
+                     
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                         <!-- Products Manager Section -->
+                    <div id="service-provider-section" class="service-provider-grid" style="position: relative; width: 100%; max-width: 1400px; margin: 60px auto; min-height: 1200px; background: transparent; padding: 20px;">
+                        
+                        <!-- Section Title -->
+                        <div id="products-manager-section" style="position: relative; width: 100%; text-align: center; margin-bottom: 40px;">
+                            <h3 style="color: #f0f0f0; font-size: clamp(24px, 4vw, 32px); font-weight: 700; margin: 0; text-align: center;">Products Manager Management</h3>
+                        </div>
+
+                        <!-- Top Information Sections -->
+                        <div style="display: flex;  3px; margin-bottom: 50px; width: 100%;">
+                            <!-- Required Information Section -->
+                            <div class="usage-info-section" style="flex: 1; background: transparent;  display: flex; flex-direction: column; padding: 30px;">
+                                <h4 style="color: #ffffff; font-size: clamp(18px, 3vw, 22px); font-weight: 600; margin-bottom: 15px; margin-top: 0;">Products Manager Creation</h4>
+                                <p style="margin-bottom: 5px; color: #b8b8b8;">In order to create products manager you should go to the settings tab then click on products managers.<br>then from the products managers management page click on "Add Products Manager" Button and enter the following information:</p>
+                                <ul style="list-style: none; padding: 0; margin: 0; font-size: clamp(16px, 2vw, 16px); color: #859dc4; width: 100%; flex: 1; display: flex; flex-direction: column;">
+                                    <li style="padding: 15px 0; border-bottom: 1px solid rgba(255, 255, 255, 0.1); display: flex; align-items: center;">
+                                        <span style="width: 8px; height: 8px; background: #3b82f6; border-radius: 50%; margin-right: 15px; flex-shrink: 0;"></span>
+                                       Products Manager Name
+                                    </li>
+                                    <li style="padding: 15px 0; border-bottom: 1px solid rgba(255, 255, 255, 0.1); display: flex; align-items: center;">
+                                        <span style="width: 8px; height: 8px; background: #3b82f6; border-radius: 50%; margin-right: 15px; flex-shrink: 0;"></span>
+                                        Email Address
+                                    </li>
+                                    <li style="padding: 15px 0; border-bottom: 1px solid rgba(255, 255, 255, 0.1); display: flex; align-items: center;">
+                                        <span style="width: 8px; height: 8px; background: #3b82f6; border-radius: 50%; margin-right: 15px; flex-shrink: 0;"></span>
+                                        Phone Number
+                                    </li>
+                                    <li style="padding: 15px 0;  display: flex; align-items: center;">
+                                        <span style="width: 8px; height: 8px; background: #3b82f6; border-radius: 50%; margin-right: 15px; flex-shrink: 0;"></span>
+                                        Password
+                                    </li>
+                                     <li style="padding: 8px 0; background:rgba(39, 113, 251, 0.553); color:rgb(202, 202, 202); padding-left:10px; border: 1px solid rgba(255, 255, 255, 0.1); border-radius:4px; border-color:f69f3b; display: flex; flex-direction:column; align-items: top; gap:4px;">
+                                        <svg style="width: 20px; height: 20px; margin-right: 15px;  flex-shrink: 0;" fill="#f69f3b" viewBox="0 0 24 24">
+                                            <path d="M12 2L1 21h22L12 2zm0 3.5L19.5 20h-15L12 5.5zM11 10v4h2v-4h-2zm0 6v2h2v-2h-2z"/>
+                                        </svg>
+                                        Important Note <br>The products manager will have access to all products within your company.
+                                    </li>
+                                      
+                                </ul>
+                            </div>
+
+                            <!-- Service Provider Privileges Section -->
+                            <div class="privileges-section" style="flex: 1; display: flex; flex-direction: column;">
+                                <h4 style="color: #f8fffd; font-size: clamp(18px, 3vw, 22px); font-weight: 600; margin-bottom: 35px; margin-top: 25px; text-align: center;">Privileges</h4>
+                                
+                                <!-- Privileges Cards Grid -->
+                                <div class="privileges-grid" style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 24px; width: 100%; max-width: 800px; margin: 0 auto;">
+                                    
+                                    <!-- Service Management Card -->
+                                    <div class="privilege-card" style="
+                                        position: relative;
+                                        aspect-ratio: 5/4;
+                                        border-radius: 20px;
+                                        overflow: hidden;
+                                        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+                                        cursor: pointer;
+                                        transition: transform 0.3s ease, box-shadow 0.3s ease;
+                                        box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+                                    " onmouseover="this.style.transform='translateY(-5px)'; this.style.boxShadow='0 15px 35px rgba(0, 0, 0, 0.25)'" onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow='0 8px 25px rgba(0, 0, 0, 0.15)'">
+                                        
+                                        <!-- Background Image -->
+                                        <div style="
+                                            position: absolute;
+                                            top: 0;
+                                            left: 0;
+                                            width: 100%;
+                                            height: 100%;
+                                            background: url('assets/managepr.avif') center/cover;
+                                            opacity: 0.8;
+                                        ">
+                                  
+                                    </div>
+                                        
+                                        <!-- Gradient Overlay -->
+                                        <div style="
+                                            position: absolute;
+                                            top: 0;
+                                            left: 0;
+                                            width: 100%;
+                                            height: 150%;
+                                            background: linear-gradient(180deg, rgba(0,0,0,0) 0%, rgba(0,0,0,0.1) 40%, rgba(0,0,0,0.8) 100%);
+                                        "></div>
+                                        
+                                        <!-- Label Badge -->
+                                        <div style="
+                                            position: absolute;
+                                            top: 16px;
+                                            right: 16px;
+                                            background: rgba(16, 95, 185, 0.9);
+                                            color: white;
+                                            padding: 6px 12px;
+                                            border-radius: 20px;
+                                            font-size: 12px;
+                                            font-weight: 600;
+                                            backdrop-filter: blur(10px);
+                                        ">Management</div>
+                                        
+                                        <!-- Content -->
+                                        <div style="
+                                            position: absolute;
+                                            bottom: 20px;
+                                            left: 20px;
+                                            right: 20px;
+                                            color: white;
+                                        ">
+                                            <div style="
+                                                font-size: 14px;
+                                                opacity: 0.9;
+                                                margin-bottom: 8px;
+                                                font-weight: 500;
+                                            ">Produts control</div>
+                                            <div style="
+                                                font-size: 18px;
+                                                font-weight: 700;
+                                                line-height: 1.3;
+                                            ">Manage and update product information</div>
+                                        </div>
+                                    </div>
+                                    
+                                    <!-- Orders Management Card -->
+                                    <div class="privilege-card" style="
+                                        position: relative;
+                                        aspect-ratio: 5/4;
+                                        border-radius: 20px;
+                                        overflow: hidden;
+                
+                                        cursor: pointer;
+                                        transition: transform 0.3s ease, box-shadow 0.3s ease;
+                                        box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+                                    " onmouseover="this.style.transform='translateY(-5px)'; this.style.boxShadow='0 15px 35px rgba(0, 0, 0, 0.25)'" onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow='0 8px 25px rgba(0, 0, 0, 0.15)'">
+                                        
+                                        <!-- Background Image -->
+                                        <div style="
+                                            position: absolute;
+                                            top: 0;
+                                            left: 0;
+                                            width: 100%;
+                                            height: 100%;
+                                             background: url('assets/ordermanage.avif') center/cover;
+                                            opacity: 0.8;
+                                        "></div>
+                                        
+                                        <!-- Gradient Overlay -->
+                                        <div style="
+                                            position: absolute;
+                                            top: 0;
+                                            left: 0;
+                                            width: 100%;
+                                            height: 150%;
+                                            background: linear-gradient(180deg, rgba(0,0,0,0) 0%, rgba(0,0,0,0.1) 40%, rgba(0,0,0,0.8) 100%);
+                                        "></div>
+                                        
+                                        <!-- Label Badge -->
+                                        <div style="
+                                            position: absolute;
+                                            top: 16px;
+                                            right: 16px;
+                                            background: rgba(87, 245, 161, 0.9);
+                                            color: white;
+                                            padding: 6px 12px;
+                                            border-radius: 20px;
+                                            font-size: 12px;
+                                            font-weight: 600;
+                                            backdrop-filter: blur(10px);
+                                        ">Orders</div>
+                                        
+                                        <!-- Content -->
+                                        <div style="
+                                            position: absolute;
+                                            bottom: 20px;
+                                            left: 20px;
+                                            right: 20px;
+                                            color: white;
+                                        ">
+                                            <div style="
+                                                font-size: 14px;
+                                                opacity: 0.9;
+                                                margin-bottom: 8px;
+                                                font-weight: 500;
+                                            ">Orders Manage</div>
+                                            <div style="
+                                                font-size: 18px;
+                                                font-weight: 700;
+                                                line-height: 1.3;
+                                            ">Hand-off order and update order status</div>
+                                        </div>
+                                    </div>
+                                    
+                                    <!-- Pricing Management Card -->
+                                    <div class="privilege-card" style="
+                                        position: relative;
+                                        aspect-ratio: 5/4;
+                                        border-radius: 20px;
+                                        overflow: hidden;
+                                        background: linear-gradient(135deg, #fee74f87 0%, #f1fe0063 100%);
+                                        cursor: pointer;
+                                        transition: transform 0.3s ease, box-shadow 0.3s ease;
+                                        box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+                                    " onmouseover="this.style.transform='translateY(-5px)'; this.style.boxShadow='0 15px 35px rgba(0, 0, 0, 0.25)'" onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow='0 8px 25px rgba(0, 0, 0, 0.15)'">
+                                        
+                                        <!-- Background Image -->
+                                        <div style="
+                                            position: absolute;
+                                            top: 0;
+                                            left: 0;
+                                            width: 100%;
+                                            height: 100%;
+                                            background: url('assets/pricingprev.avif') center/cover;
+                                            opacity: 0.8;
+                                        "></div>
+                                        
+                                        <!-- Gradient Overlay -->
+                                        <div style="
+                                            position: absolute;
+                                            top: 0;
+                                            left: 0;
+                                            width: 100%;
+                                            height: 150%;
+                                            background: linear-gradient(180deg, rgba(0,0,0,0) 0%, rgba(0,0,0,0.1) 40%, rgba(0,0,0,0.8) 100%);
+                                        "></div>
+                                        
+                                        <!-- Label Badge -->
+                                        <div style="
+                                            position: absolute;
+                                            top: 16px;
+                                            right: 16px;
+                                            background: rgba(245, 226, 12, 0.9);
+                                            color: white;
+                                            padding: 6px 12px;
+                                            border-radius: 20px;
+                                            font-size: 12px;
+                                            font-weight: 600;
+                                            backdrop-filter: blur(10px);
+                                        ">Pricing</div>
+                                        
+                                        <!-- Content -->
+                                        <div style="
+                                            position: absolute;
+                                            bottom: 20px;
+                                            left: 20px;
+                                            right: 20px;
+                                            color: white;
+                                        ">
+                                            <div style="
+                                                font-size: 14px;
+                                                opacity: 0.9;
+                                                margin-bottom: 8px;
+                                                font-weight: 500;
+                                            ">Financial control</div>
+                                            <div style="
+                                                font-size: 18px;
+                                                font-weight: 700;
+                                                line-height: 1.3;
+                                            ">Manage availability and pricing strategies</div>
+                                        </div>
+                                    </div>
+                                    
+                                    <!-- Analytics Card -->
+                                    <div class="privilege-card" style="
+                                        position: relative;
+                                        aspect-ratio: 5/4;
+                                        border-radius: 20px;
+                                        overflow: hidden;
+                                        background: linear-gradient(135deg, #fa709a 0%, #fee140 100%);
+                                        cursor: pointer;
+                                        transition: transform 0.3s ease, box-shadow 0.3s ease;
+                                        box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+                                    " onmouseover="this.style.transform='translateY(-5px)'; this.style.boxShadow='0 15px 35px rgba(0, 0, 0, 0.25)'" onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow='0 8px 25px rgba(0, 0, 0, 0.15)'">
+                                        
+                                        <!-- Background Image -->
+                                        <div style="
+                                            position: absolute;
+                                            top: 0;
+                                            left: 0;
+                                            width: 100%;
+                                            height: 100%;
+                                            background: url('assets/anaprev.avif') center/cover;
+                                            opacity: 0.8;
+                                        "></div>
+                                        
+                                        <!-- Gradient Overlay -->
+                                        <div style="
+                                            position: absolute;
+                                            top: 0;
+                                            left: 0;
+                                            width: 100%;
+                                            height: 150%;
+                                            background: linear-gradient(180deg, rgba(0,0,0,0) 0%, rgba(0,0,0,0.1) 40%, rgba(0,0,0,0.8) 100%);
+                                        "></div>
+                                        
+                                        <!-- Label Badge -->
+                                        <div style="
+                                            position: absolute;
+                                            top: 16px;
+                                            right: 16px;
+                                            background: rgba(250, 112, 154, 0.9);
+                                            color: white;
+                                            padding: 6px 12px;
+                                            border-radius: 20px;
+                                            font-size: 12px;
+                                            font-weight: 600;
+                                            backdrop-filter: blur(10px);
+                                        ">Analytics</div>
+                                        
+                                        <!-- Content -->
+                                        <div style="
+                                            position: absolute;
+                                            bottom: 20px;
+                                            left: 20px;
+                                            right: 20px;
+                                            color: white;
+                                        ">
+                                            <div style="
+                                                font-size: 14px;
+                                                opacity: 0.9;
+                                                margin-bottom: 8px;
+                                                font-weight: 500;
+                                            ">Business insights</div>
+                                            <div style="
+                                                font-size: 18px;
+                                                font-weight: 700;
+                                                line-height: 1.3;
+                                            ">Access comprehensive analytics and reports</div>
+                                        </div>
+                                    </div>
+                                    
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Cross-Style Media Layout -->
+                        <div style="display: flex; flex-direction: column; gap: 40px; width: 100%; align-items: center;">
+                            <!-- Video Section (Top of Cross) -->
+                            <div class="video-container" style="flex: 1 1 600px; min-width: 280px; max-width: 100%; position: relative;">
+                                <div style="aspect-ratio: 16/9; position: relative;">
+                                    <video 
+                                        style="width: 100%; height: 100%; object-fit: cover; border-radius: 10px;" 
+                                        controls 
+                                        muted 
+                                        loop
+                                        preload="metadata"
+                                    >
+                                        <source src="https://firebasestorage.googleapis.com/v0/b/dala3chic-e2b81.firebasestorage.app/o/Product%20Manager%20Demo.mov?alt=media&token=bd2f5a06-d04a-4959-ba74-0f51159519f3" type="video/mp4">
+                                        <div style="display: flex; align-items: center; justify-content: center; height: 100%; background: rgba(255, 255, 255, 0.1); color: white; text-align: center; padding: 20px;">
+                                            <div>
+                                                <div style="width: 80px; height: 80px; background: rgba(255, 255, 255, 0.2); border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto 15px; backdrop-filter: blur(10px);">
+                                                    <svg width="32" height="32" viewBox="0 0 24 24" fill="white">
+                                                        <path d="M8 5v14l11-7z"/>
+                                                    </svg>
+                                                </div>
+                                                <p style="margin: 0; font-weight: 600;">Products Manager Tutorial</p>
+                                                <p style="margin: 5px 0 0; font-size: 14px; opacity: 0.8;">Video loading...</p>
+                                            </div>
+                                        </div>
+                                    </video>
+                                </div>
+                            </div>
+                            
+                            <!-- Image Section (Bottom of Cross) -->
+                            <div class="image-section" style="width: 100%; max-width: 1200px; height: 600px; min-height: 600px; border-radius: 15px; position: relative; overflow: hidden; box-shadow: 0 8px 25px rgba(255, 255, 255, 0.1);">
+                                <!-- Full Size Image -->
+                                <div style="position: relative; width: 100%; height: 100%; overflow: hidden;">
+                                    <img 
+                                        src="/assets/products manager screenshot.avif" 
+                                        alt="Service Provider Dashboard Screenshot" 
+                                        style="width: 100%; height: 100%; object-fit: cover; display: block; transition: transform 0.3s ease-out;"
+                                        onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';"
+                                        onmousemove="this.style.transform = 'scale(1.05) translateY(-' + (event.offsetY * 0.02) + 'px)'"
+                                        onmouseleave="this.style.transform = 'scale(1) translateY(0px)'"
+                                    >
+                                    <div style="display: none; align-items: center; justify-content: center; height: 100%; background: #f9fafb; color: #6b7280; text-align: center; padding: 20px; width: 100%;">
+                                        <div>
+                                            <svg width="80" height="80" viewBox="0 0 24 24" fill="#d1d5db" style="margin: 0 auto 20px;">
+                                                <path d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 002 2z"/>
+                                            </svg>
+                                            <p style="margin: 0; font-size: 18px; font-weight: 600;">Service Provider Dashboard</p>
+                                            <p style="margin: 10px 0 0; font-size: 14px; opacity: 0.7;">Screenshot Preview</p>
+                                        </div>
+                                    </div>
+                                </div>
+                                
+                                <!-- Parallax Title Overlay at Bottom -->
+                                <div style="position: absolute; bottom: 0; left: 0; right: 0; background: linear-gradient(transparent, rgba(0, 0, 0, 0.341)); padding: 40px 20px 20px; transform: translateY(0px); transition: transform 0.3s ease-out;" 
+                                     onmousemove="this.style.transform = 'translateY(' + (event.offsetY * -0.05) + 'px)'"
+                                     onmouseleave="this.style.transform = 'translateY(0px)'">
+                                    <h4 style="color: white; font-size: clamp(18px, 3vw, 24px); font-weight: 700; margin: 0; text-align: center; text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5); letter-spacing: 1px;">Dashboard Preview</h4>
+                     
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Responsive Media Queries -->
+                    <style>
+                        @media (max-width: 768px) {
+                            #service-provider-section {
+                                height: auto !important;
+                                min-height: 1400px !important;
+                                padding: 10px !important;
+                            }
+                            
+                            /* Top information sections stack vertically on mobile */
+                            #service-provider-section > div:nth-child(2) {
+                                flex-direction: column !important;
+                                gap: 20px !important;
+                            }
+                            
+                            /* Video container responsive adjustments */
+                            #service-provider-section .video-container {
+                                flex: 1 1 400px !important;
+                                min-width: 250px !important;
+                            }
+                            
+                            /* Image section responsive adjustments */
+                            #service-provider-section .image-section {
+                                width: 90% !important;
+                                max-width: 900px !important;
+                                height: 450px !important;
+                                min-height: 450px !important;
+                            }
+                            
+                            /* Parallax title adjustments for tablets */
+                            #service-provider-section .image-section div[style*="position: absolute"] h4 {
+                                font-size: clamp(16px, 4vw, 20px) !important;
+                            }
+                            
+                            #service-provider-section .image-section div[style*="position: absolute"] p {
+                                font-size: clamp(11px, 2.5vw, 13px) !important;
+                            }
+                            
+                            /* Reduce gap between cross elements on mobile */
+                            #service-provider-section > div:nth-child(3) {
+                                gap: 25px !important;
+                            }
+                            
+                            /* Privilege cards responsive adjustments for tablets */
+                            .privileges-grid {
+                                grid-template-columns: repeat(2, 1fr) !important;
+                                gap: 20px !important;
+                            }
+                            
+                            .privilege-card {
+                                aspect-ratio: 5/4 !important;
+                            }
+                            
+                            .privilege-card div[style*="bottom: 20px"] div:first-child {
+                                font-size: 13px !important;
+                            }
+                            
+                            .privilege-card div[style*="bottom: 20px"] div:last-child {
+                                font-size: 18px !important;
+                            }
+                        }
+                        
+                        @media (max-width: 480px) {
+                            #service-provider-section {
+                                margin: 30px auto !important;
+                                padding: 5px !important;
+                                min-height: 1200px !important;
+                            }
+                            
+                            /* Video container for small screens */
+                            #service-provider-section .video-container {
+                                flex: 1 1 300px !important;
+                                min-width: 200px !important;
+                            }
+                            
+                            /* Image section for small screens */
+                            #service-provider-section .image-section {
+                                width: 95% !important;
+                                height: 350px !important;
+                                min-height: 350px !important;
+                            }
+                            
+                            /* Parallax title adjustments for mobile */
+                            #service-provider-section .image-section div[style*="position: absolute"] {
+                                padding: 30px 15px 15px !important;
+                            }
+                            
+                            #service-provider-section .image-section div[style*="position: absolute"] h4 {
+                                font-size: clamp(14px, 5vw, 18px) !important;
+                                letter-spacing: 0.5px !important;
+                            }
+                            
+                            #service-provider-section .image-section div[style*="position: absolute"] p {
+                                font-size: clamp(10px, 3vw, 12px) !important;
+                                margin: 5px 0 0 !important;
+                            }
+                            
+                            /* Information sections adjustments */
+                            #service-provider-section .usage-info-section,
+                            #service-provider-section .privileges-section {
+                                padding: 20px !important;
+                                min-height: 180px !important;
+                            }
+                            
+                            #service-provider-section > div:nth-child(3) {
+                                gap: 20px !important;
+                            }
+                            
+                            /* Privilege cards responsive adjustments */
+                            .privileges-grid {
+                                grid-template-columns: 1fr !important;
+                                gap: 15px !important;
+                            }
+                            
+                            .privilege-card {
+                                aspect-ratio: 5/4 !important;
+                            }
+                            
+                            .privilege-card div[style*="bottom: 20px"] {
+                                bottom: 15px !important;
+                                left: 15px !important;
+                                right: 15px !important;
+                            }
+                            
+                            .privilege-card div[style*="bottom: 20px"] div:first-child {
+                                font-size: 12px !important;
+                            }
+                            
+                            .privilege-card div[style*="bottom: 20px"] div:last-child {
+                                font-size: 16px !important;
+                            }
+                            
+                            .privilege-card div[style*="top: 16px"] {
+                                top: 12px !important;
+                                right: 12px !important;
+                                padding: 4px 8px !important;
+                                font-size: 11px !important;
+                            }
+                        }
+                    </style>
                 </div>
             </div>
         </section>
           </main>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    // Add smooth scrolling to all anchor links that start with #
+    const anchorLinks = document.querySelectorAll('a[href^="#"]');
+    
+    anchorLinks.forEach(link => {
+        link.addEventListener('click', function(e) {
+            e.preventDefault();
+            
+            const targetId = this.getAttribute('href').substring(1);
+            const targetElement = document.getElementById(targetId);
+            
+            if (targetElement) {
+                targetElement.scrollIntoView({
+                    behavior: 'smooth',
+                    block: 'start'
+                });
+            }
+        });
+    });
+});
+</script>
 </body>
 </html>
