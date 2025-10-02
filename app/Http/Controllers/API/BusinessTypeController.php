@@ -363,23 +363,34 @@ class BusinessTypeController extends Controller
 
     /**
      * Get available emirates from branches.
+     * Optionally filter by business type.
      *
+     * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function getEmirates()
+    public function getEmirates(Request $request)
     {
         try {
-            $emirates = Branch::select('emirate')
+            $businessType = $request->input('business_type');
+
+            $query = Branch::select('emirate')
                 ->whereNotNull('emirate')
                 ->where('emirate', '!=', '')
-                ->where('status', 'active')
-                ->groupBy('emirate')
+                ->where('status', 'active');
+
+            // Filter by business type if provided
+            if ($businessType && $businessType !== 'all') {
+                $query->where('business_type', $businessType);
+            }
+
+            $emirates = $query->groupBy('emirate')
                 ->orderBy('emirate')
                 ->pluck('emirate');
 
             return response()->json([
                 'success' => true,
                 'emirates' => $emirates,
+                'business_type' => $businessType,
                 'message' => 'Emirates retrieved successfully',
             ]);
         } catch (\Exception $e) {
