@@ -721,7 +721,7 @@
                 <!-- Right Content - Demo Image -->
                 <div class="relative">
                     <div class="bg-white rounded-2xl shadow-2xl overflow-hidden border border-gray-200">
-                        <img src="{{ asset('assets/vendordash.wepb') }}" alt="Dala3Chic Vendor Dashboard" class="w-full h-auto" />
+                        <img src="{{ asset('assets/vendordash.webp') }}" alt="Dala3Chic Vendor Dashboard" class="w-full h-auto" />
                     </div>
 
                     <!-- Floating Status Cards -->
