@@ -63,6 +63,7 @@ class BusinessTypeController extends Controller
 
     /**
      * Get unique business types from branches table.
+     * Only returns business types that have at least one active branch.
      *
      * @return \Illuminate\Http\Response
      */
@@ -70,53 +71,66 @@ class BusinessTypeController extends Controller
     {
         try {
             // Get unique business types from branches table where business_type is not null
-            $uniqueBusinessTypes = Branch::select('business_type')
+            // Also count the number of branches for each business type
+            $businessTypesWithCounts = Branch::select('business_type')
+                ->selectRaw('COUNT(*) as branch_count')
                 ->whereNotNull('business_type')
                 ->where('business_type', '!=', '')
                 ->where('status', 'active')
                 ->groupBy('business_type')
                 ->orderBy('business_type')
-                ->pluck('business_type');
+                ->get();
 
-            $businessTypes = $uniqueBusinessTypes->map(function ($businessTypeName) {
-                $businessTypeData = [
-                    'business_name' => $businessTypeName,
-                    'name_arabic' => null,
-                    'image' => null,
-                    'id' => null,
-                ];
+            // Filter out business types with zero branches and map to the expected format
+            $businessTypes = $businessTypesWithCounts
+                ->filter(function ($item) {
+                    // Only include business types with at least one branch
+                    return $item->branch_count > 0;
+                })
+                ->map(function ($item) {
+                    $businessTypeName = $item->business_type;
+                    $branchCount = $item->branch_count;
 
-                // Try to get image and Arabic name from business_types table
-                $dbBusinessType = BusinessType::where('business_name', $businessTypeName)->first();
-                if ($dbBusinessType) {
-                    $businessTypeData['id'] = $dbBusinessType->id;
-                    $businessTypeData['name_arabic'] = $dbBusinessType->name_arabic;
+                    $businessTypeData = [
+                        'business_name' => $businessTypeName,
+                        'name_arabic' => null,
+                        'image' => null,
+                        'id' => null,
+                        'branch_count' => $branchCount,
+                    ];
 
-                    if ($dbBusinessType->image) {
-                        // Construct full URL for the image with robust path handling
-                        $imageUrl = $dbBusinessType->image;
+                    // Try to get image and Arabic name from business_types table
+                    $dbBusinessType = BusinessType::where('business_name', $businessTypeName)->first();
+                    if ($dbBusinessType) {
+                        $businessTypeData['id'] = $dbBusinessType->id;
+                        $businessTypeData['name_arabic'] = $dbBusinessType->name_arabic;
 
-                        if (!str_starts_with($imageUrl, 'http')) {
-                            // Clean up the path to avoid duplication
-                            $cleanPath = ltrim($imageUrl, '/'); // Remove leading slash if present
+                        if ($dbBusinessType->image) {
+                            // Construct full URL for the image with robust path handling
+                            $imageUrl = $dbBusinessType->image;
 
-                            // Check if the path already contains 'storage/'
-                            if (str_starts_with($cleanPath, 'storage/')) {
-                                // Path already includes storage/, just prepend base URL
-                                $imageUrl = url($cleanPath);
-                            } else {
-                                // Path doesn't include storage/, add it
-                                $imageUrl = url('storage/' . $cleanPath);
+                            if (!str_starts_with($imageUrl, 'http')) {
+                                // Clean up the path to avoid duplication
+                                $cleanPath = ltrim($imageUrl, '/'); // Remove leading slash if present
+
+                                // Check if the path already contains 'storage/'
+                                if (str_starts_with($cleanPath, 'storage/')) {
+                                    // Path already includes storage/, just prepend base URL
+                                    $imageUrl = url($cleanPath);
+                                } else {
+                                    // Path doesn't include storage/, add it
+                                    $imageUrl = url('storage/' . $cleanPath);
+                                }
                             }
+
+                            $businessTypeData['image'] = $imageUrl;
+                            $businessTypeData['original_image_path'] = $dbBusinessType->image; // For debugging
                         }
-
-                        $businessTypeData['image'] = $imageUrl;
-                        $businessTypeData['original_image_path'] = $dbBusinessType->image; // For debugging
                     }
-                }
 
-                return $businessTypeData;
-            });
+                    return $businessTypeData;
+                })
+                ->values(); // Reset array keys
 
             return response()->json([
                 'success' => true,
