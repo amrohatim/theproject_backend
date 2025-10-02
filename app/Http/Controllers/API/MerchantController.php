@@ -41,9 +41,25 @@ class MerchantController extends Controller
             //     $q->where('is_available', true);
             // });
 
-            // Order by merchant score and rating
-            $query->orderBy('merchant_score', 'desc')
-                  ->orderBy('average_rating', 'desc');
+            // Sort by specified field
+            $sortBy = $request->get('sort_by', 'merchant_score');
+            switch ($sortBy) {
+                case 'view_count':
+                    $query->orderBy('view_count', 'desc');
+                    break;
+                case 'order_count':
+                    $query->orderBy('order_count', 'desc');
+                    break;
+                case 'rating':
+                    $query->orderBy('average_rating', 'desc')
+                          ->orderBy('total_ratings', 'desc');
+                    break;
+                case 'merchant_score':
+                default:
+                    $query->orderBy('merchant_score', 'desc')
+                          ->orderBy('average_rating', 'desc');
+                    break;
+            }
 
             $perPage = min($request->get('per_page', 20), 50);
             $merchants = $query->paginate($perPage);
