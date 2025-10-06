@@ -8,6 +8,7 @@ use App\Models\Branch;
 use App\Models\Product;
 use App\Models\Service;
 use App\Models\Category;
+use App\Models\Merchant;
 use Illuminate\Http\Request;
 
 class BusinessTypeController extends Controller
@@ -216,27 +217,45 @@ class BusinessTypeController extends Controller
             $sortBy = $request->input('sort_by', 'latest'); // latest, price_low, price_high, rating
             $limit = $request->input('limit', 20);
             $page = $request->input('page', 1);
+            $merchantOnly = $request->boolean('merchant_only', false); // New parameter for merchant products
 
-            $query = Product::with(['branch', 'branch.company', 'category'])
-                ->whereHas('branch', function ($q) {
-                    $q->where('status', 'active');
-                });
+            // Base query - if merchant_only is true, filter for merchant products
+            if ($merchantOnly) {
+                // Filter for products with merchant_id NOT NULL and branch_id IS NULL
+                $query = Product::with(['category'])
+                    ->whereNotNull('merchant_id')
+                    ->whereNull('branch_id')
+                    ->where('is_available', true);
 
-            // Filter by business type if provided
-            if ($businessType && $businessType !== 'all') {
-                $query->whereHas('branch', function ($q) use ($businessType) {
-                    $q->where('business_type', $businessType);
-                });
+                // Filter by emirate for merchant products (using merchant's emirate)
+                if ($emirate && $emirate !== 'all') {
+                    $query->whereHas('merchant', function ($q) use ($emirate) {
+                        $q->where('emirate', $emirate);
+                    });
+                }
+            } else {
+                // Original logic for branch products
+                $query = Product::with(['branch', 'branch.company', 'category'])
+                    ->whereHas('branch', function ($q) {
+                        $q->where('status', 'active');
+                    });
+
+                // Filter by business type if provided
+                if ($businessType && $businessType !== 'all') {
+                    $query->whereHas('branch', function ($q) use ($businessType) {
+                        $q->where('business_type', $businessType);
+                    });
+                }
+
+                // Filter by emirate if provided
+                if ($emirate && $emirate !== 'all') {
+                    $query->whereHas('branch', function ($q) use ($emirate) {
+                        $q->where('emirate', $emirate);
+                    });
+                }
             }
 
-            // Filter by emirate if provided
-            if ($emirate && $emirate !== 'all') {
-                $query->whereHas('branch', function ($q) use ($emirate) {
-                    $q->where('emirate', $emirate);
-                });
-            }
-
-            // Filter by category if provided
+            // Filter by category if provided (applies to both merchant and branch products)
             if ($categoryId) {
                 $query->where('category_id', $categoryId);
             }
@@ -296,27 +315,46 @@ class BusinessTypeController extends Controller
             $sortBy = $request->input('sort_by', 'latest'); // latest, price_low, price_high, rating
             $limit = $request->input('limit', 20);
             $page = $request->input('page', 1);
+            $merchantOnly = $request->boolean('merchant_only', false); // New parameter for merchant services
 
-            $query = Service::with(['branch', 'branch.company', 'category'])
-                ->whereHas('branch', function ($q) {
-                    $q->where('status', 'active');
-                });
+            // Base query - if merchant_only is true, filter for merchant services
+            if ($merchantOnly) {
+                // Filter for services with merchant_id NOT NULL and branch_id IS NULL
+                $query = Service::with(['category'])
+                    ->whereNotNull('merchant_id')
+                    ->whereNull('branch_id')
+                    ->where('is_available', true);
 
-            // Filter by business type if provided
-            if ($businessType && $businessType !== 'all') {
-                $query->whereHas('branch', function ($q) use ($businessType) {
-                    $q->where('business_type', $businessType);
-                });
+                // Filter by emirate for merchant services
+                // merchant_id in services table is actually user_id, so we need to join through merchants table
+                if ($emirate && $emirate !== 'all') {
+                    $query->whereHas('merchant.merchantRecord', function ($q) use ($emirate) {
+                        $q->where('emirate', $emirate);
+                    });
+                }
+            } else {
+                // Original logic for branch services
+                $query = Service::with(['branch', 'branch.company', 'category'])
+                    ->whereHas('branch', function ($q) {
+                        $q->where('status', 'active');
+                    });
+
+                // Filter by business type if provided
+                if ($businessType && $businessType !== 'all') {
+                    $query->whereHas('branch', function ($q) use ($businessType) {
+                        $q->where('business_type', $businessType);
+                    });
+                }
+
+                // Filter by emirate if provided
+                if ($emirate && $emirate !== 'all') {
+                    $query->whereHas('branch', function ($q) use ($emirate) {
+                        $q->where('emirate', $emirate);
+                    });
+                }
             }
 
-            // Filter by emirate if provided
-            if ($emirate && $emirate !== 'all') {
-                $query->whereHas('branch', function ($q) use ($emirate) {
-                    $q->where('emirate', $emirate);
-                });
-            }
-
-            // Filter by category if provided
+            // Filter by category if provided (applies to both merchant and branch services)
             if ($categoryId) {
                 $query->where('category_id', $categoryId);
             }
@@ -362,8 +400,9 @@ class BusinessTypeController extends Controller
     }
 
     /**
-     * Get available emirates from branches.
+     * Get available emirates from branches or merchants.
      * Optionally filter by business type.
+     * Use 'source=merchants' to get emirates from merchants instead of branches.
      *
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
@@ -372,24 +411,44 @@ class BusinessTypeController extends Controller
     {
         try {
             $businessType = $request->input('business_type');
+            $source = $request->input('source', 'branches'); // 'branches' or 'merchants'
 
-            $query = Branch::select('emirate')
-                ->whereNotNull('emirate')
-                ->where('emirate', '!=', '')
-                ->where('status', 'active');
+            if ($source === 'merchants') {
+                // Get emirates from merchants table
+                $query = Merchant::select('emirate')
+                    ->whereNotNull('emirate')
+                    ->where('emirate', '!=', '')
+                    ->where('status', 'active');
 
-            // Filter by business type if provided
-            if ($businessType && $businessType !== 'all') {
-                $query->where('business_type', $businessType);
+                // Filter by business type if provided
+                if ($businessType && $businessType !== 'all') {
+                    $query->where('business_type', $businessType);
+                }
+
+                $emirates = $query->groupBy('emirate')
+                    ->orderBy('emirate')
+                    ->pluck('emirate');
+            } else {
+                // Get emirates from branches table (original logic)
+                $query = Branch::select('emirate')
+                    ->whereNotNull('emirate')
+                    ->where('emirate', '!=', '')
+                    ->where('status', 'active');
+
+                // Filter by business type if provided
+                if ($businessType && $businessType !== 'all') {
+                    $query->where('business_type', $businessType);
+                }
+
+                $emirates = $query->groupBy('emirate')
+                    ->orderBy('emirate')
+                    ->pluck('emirate');
             }
-
-            $emirates = $query->groupBy('emirate')
-                ->orderBy('emirate')
-                ->pluck('emirate');
 
             return response()->json([
                 'success' => true,
                 'emirates' => $emirates,
+                'source' => $source,
                 'business_type' => $businessType,
                 'message' => 'Emirates retrieved successfully',
             ]);
