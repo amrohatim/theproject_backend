@@ -28,6 +28,8 @@ class ProviderProduct extends Model
         'category_id',
         'is_active',
         'image',
+        'rating',
+        'total_ratings',
         'branch_id',
         'product_name_arabic',
         'product_description_arabic',
@@ -43,6 +45,8 @@ class ProviderProduct extends Model
         'original_price' => 'float',
         'stock' => 'integer',
         'is_active' => 'boolean',
+        'rating' => 'float',
+        'total_ratings' => 'integer',
     ];
 
     /**

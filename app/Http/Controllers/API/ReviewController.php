@@ -402,7 +402,28 @@ class ReviewController extends Controller
             ->where('reviewable_id', $reviewable->id)
             ->avg('rating');
 
-        $reviewable->update(['rating' => $averageRating]);
+        $totalRatings = Review::where('reviewable_type', get_class($reviewable))
+            ->where('reviewable_id', $reviewable->id)
+            ->count();
+
+        // Determine which column to update based on the model type
+        $updateData = [];
+
+        if ($reviewable instanceof \App\Models\Merchant) {
+            // Merchant model uses 'average_rating' and 'total_ratings'
+            $updateData['average_rating'] = $averageRating;
+            $updateData['total_ratings'] = $totalRatings;
+        } else {
+            // Product, Service, and ProviderProduct models use 'rating'
+            $updateData['rating'] = $averageRating;
+
+            // Check if the model has a total_ratings column
+            if (in_array('total_ratings', $reviewable->getFillable())) {
+                $updateData['total_ratings'] = $totalRatings;
+            }
+        }
+
+        $reviewable->update($updateData);
     }
 
     /**
