@@ -1,0 +1,54 @@
+* {
+  box-sizing: border-box;
+}
+
+.top {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  width: 375px;
+  height: 100px;
+  row-gap: 8px;
+
+  .label {
+    flex-shrink: 0;
+    align-self: stretch;
+    line-height: 17px;
+    letter-spacing: 0;
+    color: var(--Danger, #f57e77);
+    font-family: Inter, "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", SimHei, Arial, Helvetica, sans-serif;
+    font-size: 14px;
+  }
+
+  .inputContent {
+    display: flex;
+    flex-direction: column;
+    flex-shrink: 0;
+    align-items: flex-start;
+    align-self: stretch;
+    justify-content: space-between;
+    border: 1px solid var(--Danger, #f57e77);
+    border-radius: 8px;
+    padding: 7px 15px;
+    height: 52px;
+
+    .error {
+      flex-shrink: 0;
+      align-self: stretch;
+      letter-spacing: 0;
+      color: var(--Black-4, #5e6366);
+      font-family: Inter, "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", SimHei, Arial, Helvetica, sans-serif;
+      font-size: 16px;
+    }
+  }
+
+  .somethingWentWrong {
+    flex-shrink: 0;
+    align-self: stretch;
+    line-height: 15px;
+    letter-spacing: 0;
+    color: var(--Danger, #f57e77);
+    font-family: Inter, "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", SimHei, Arial, Helvetica, sans-serif;
+    font-size: 12px;
+  }
+}

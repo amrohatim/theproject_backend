@@ -1,0 +1,67 @@
+* {
+  box-sizing: border-box;
+}
+
+.input {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  width: 375px;
+  height: 75px;
+  row-gap: 8px;
+
+  .label {
+    flex-shrink: 0;
+    align-self: stretch;
+    line-height: 15px;
+    letter-spacing: 0;
+    color: var(--Green, #32936f);
+    font-family: Inter, "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", SimHei, Arial, Helvetica, sans-serif;
+    font-size: 12px;
+  }
+
+  .content {
+    display: flex;
+    flex-shrink: 0;
+    align-items: center;
+    align-self: stretch;
+    column-gap: 10px;
+    border: 1px solid var(--Green, #32936f);
+    border-radius: 8px;
+    padding: 7px 15px;
+
+    .left {
+      display: flex;
+      flex-direction: column;
+      flex-grow: 1;
+      align-items: flex-start;
+      align-self: stretch;
+      justify-content: space-between;
+
+      .valid {
+        flex-shrink: 0;
+        align-self: stretch;
+        letter-spacing: 0;
+        color: var(--Black-4, #5e6366);
+        font-family: Inter, "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", SimHei, Arial, Helvetica, sans-serif;
+        font-size: 16px;
+      }
+    }
+
+    .check {
+      display: flex;
+      flex-shrink: 0;
+      align-items: center;
+      border-radius: 500px;
+      background: #32936f3d;
+      padding: 2px;
+      overflow: hidden;
+
+      .uCheck {
+        width: 16px;
+        height: 16px;
+        overflow: hidden;
+      }
+    }
+  }
+}

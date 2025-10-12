@@ -3,6 +3,238 @@
 @section('title', 'Create Branch')
 @section('page-title', 'Create Branch')
 
+@section('styles')
+<style>
+/* Custom Form Styles - Pixel Perfect Figma Implementation */
+.form-input-container {
+    position: relative;
+    margin-bottom: 1rem;
+}
+
+.form-label {
+    display: block;
+    font-size: 0.875rem;
+    font-weight: 500;
+    color: #374151;
+    margin-bottom: 0.5rem;
+    transition: color 0.2s ease;
+}
+
+.dark .form-label {
+    color: #D1D5DB;
+}
+
+.form-input, .form-textarea, .form-select {
+    width: 100%;
+    padding: 0.75rem 1rem;
+    border: 1px solid #D1D5DB;
+    border-radius: 0.5rem;
+    font-size: 0.875rem;
+    line-height: 1.25rem;
+    background-color: #FFFFFF;
+    color: #111827;
+    transition: all 0.2s ease;
+    outline: none;
+    position: relative;
+}
+
+.dark .form-input, .dark .form-textarea, .dark .form-select {
+    background-color: #1F2937;
+    border-color: #374151;
+    color: #F9FAFB;
+}
+
+/* Normal State */
+.form-input:not(.active):not(.filled):not(.valid):not(.error),
+.form-textarea:not(.active):not(.filled):not(.valid):not(.error),
+.form-select:not(.active):not(.filled):not(.valid):not(.error) {
+    border-color: #D1D5DB;
+    background-color: #FFFFFF;
+}
+
+.dark .form-input:not(.active):not(.filled):not(.valid):not(.error),
+.dark .form-textarea:not(.active):not(.filled):not(.valid):not(.error),
+.dark .form-select:not(.active):not(.filled):not(.valid):not(.error) {
+    border-color: #374151;
+    background-color: #1F2937;
+}
+
+/* Active State (Focus) */
+.form-input.active, .form-textarea.active, .form-select.active,
+.form-input:focus, .form-textarea:focus, .form-select:focus {
+    border-color: #3B82F6;
+    border-width: 2px;
+    background-color: #FFFFFF;
+    outline: none;
+}
+
+.dark .form-input.active, .dark .form-textarea.active, .dark .form-select.active,
+.dark .form-input:focus, .dark .form-textarea:focus, .dark .form-select:focus {
+    border-color: #60A5FA;
+    border-width: 2px;
+    background-color: #1F2937;
+    outline: none;
+}
+
+/* Filled State */
+.form-input.filled, .form-textarea.filled, .form-select.filled {
+    border-color: #6B7280;
+    background-color: #F9FAFB;
+}
+
+.dark .form-input.filled, .dark .form-textarea.filled, .dark .form-select.filled {
+    border-color: #4B5563;
+    background-color: #111827;
+}
+
+/* Valid State */
+.form-input.valid, .form-textarea.valid, .form-select.valid {
+    border-color: #10B981;
+    background-color: #F0FDF4;
+}
+
+.dark .form-input.valid, .dark .form-textarea.valid, .dark .form-select.valid {
+    border-color: #34D399;
+    background-color: #064E3B;
+}
+
+/* Error State */
+.form-input.error, .form-textarea.error, .form-select.error {
+    border-color: #EF4444;
+    background-color: #FEF2F2;
+}
+
+.dark .form-input.error, .dark .form-textarea.error, .dark .form-select.error {
+    border-color: #F87171;
+    background-color: #7F1D1D;
+}
+
+/* Validation Icons */
+.form-input-container .validation-icon {
+    position: absolute;
+    right: 0.75rem;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 1rem;
+    height: 1rem;
+    pointer-events: none;
+    opacity: 0;
+    transition: opacity 0.2s ease;
+}
+
+.form-input-container.has-label .validation-icon {
+    top: calc(50% + 0.75rem);
+}
+
+.form-input.valid ~ .validation-icon.valid-icon,
+.form-textarea.valid ~ .validation-icon.valid-icon,
+.form-select.valid ~ .validation-icon.valid-icon {
+    opacity: 1;
+    color: #10B981;
+}
+
+.dark .form-input.valid ~ .validation-icon.valid-icon,
+.dark .form-textarea.valid ~ .validation-icon.valid-icon,
+.dark .form-select.valid ~ .validation-icon.valid-icon {
+    color: #34D399;
+}
+
+.form-input.error ~ .validation-icon.error-icon,
+.form-textarea.error ~ .validation-icon.error-icon,
+.form-select.error ~ .validation-icon.error-icon {
+    opacity: 1;
+    color: #EF4444;
+}
+
+.dark .form-input.error ~ .validation-icon.error-icon,
+.dark .form-textarea.error ~ .validation-icon.error-icon,
+.dark .form-select.error ~ .validation-icon.error-icon {
+    color: #F87171;
+}
+
+/* Error Messages */
+.form-error-message {
+    margin-top: 0.25rem;
+    font-size: 0.75rem;
+    color: #EF4444;
+}
+
+.dark .form-error-message {
+    color: #F87171;
+}
+
+/* Placeholder Styling */
+.form-input::placeholder, .form-textarea::placeholder {
+    color: #9CA3AF;
+}
+
+.dark .form-input::placeholder, .dark .form-textarea::placeholder {
+    color: #6B7280;
+}
+
+/* Select Arrow Styling */
+.form-select {
+    background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 20 20'%3e%3cpath stroke='%236b7280' stroke-linecap='round' stroke-linejoin='round' stroke-width='1.5' d='m6 8 4 4 4-4'/%3e%3c/svg%3e");
+    background-position: right 0.5rem center;
+    background-repeat: no-repeat;
+    background-size: 1.5em 1.5em;
+    padding-right: 2.5rem;
+    appearance: none;
+}
+
+.dark .form-select {
+    background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 20 20'%3e%3cpath stroke='%239ca3af' stroke-linecap='round' stroke-linejoin='round' stroke-width='1.5' d='m6 8 4 4 4-4'/%3e%3c/svg%3e");
+}
+
+/* File Input Styling */
+.form-file-input {
+    width: 100%;
+    padding: 0.75rem 1rem;
+    border: 1px solid #D1D5DB;
+    border-radius: 0.5rem;
+    font-size: 0.875rem;
+    background-color: #FFFFFF;
+    color: #111827;
+    transition: all 0.2s ease;
+    outline: none;
+}
+
+.dark .form-file-input {
+    background-color: #1F2937;
+    border-color: #374151;
+    color: #F9FAFB;
+}
+
+.form-file-input:focus {
+    border-color: #3B82F6;
+    box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+}
+
+.dark .form-file-input:focus {
+    border-color: #60A5FA;
+    box-shadow: 0 0 0 3px rgba(96, 165, 250, 0.1);
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    .form-input, .form-textarea, .form-select {
+        font-size: 1rem;
+        padding: 0.875rem 1rem;
+    }
+}
+
+/* Animation for state transitions */
+.form-input, .form-textarea, .form-select {
+    transition: border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out, background-color 0.15s ease-in-out;
+}
+
+/* Focus visible for accessibility - handled by our custom focus styles */
+.form-input:focus-visible, .form-textarea:focus-visible, .form-select:focus-visible {
+    outline: none;
+}
+</style>
+@endsection
+
 @section('content')
 <div class="container mx-auto">
     <div class="mb-6">
@@ -14,30 +246,42 @@
         <form action="{{ route('vendor.branches.store') }}" method="POST" enctype="multipart/form-data">
             @csrf
             <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                <div>
-                    <label for="name" class="block text-sm font-medium text-gray-700 dark:text-gray-300">{{ __('messages.branch_name') }}</label>
-                    <input type="text" name="name" id="name" value="{{ old('name') }}" class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-white rounded-md" required>
+                <div class="form-input-container has-label">
+                    <label for="name" class="form-label">{{ __('messages.branch_name') }} <span class="text-red-500">*</span></label>
+                    <input type="text" name="name" id="name" value="{{ old('name') }}" class="form-input" required>
+                    <svg class="validation-icon valid-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
+                    </svg>
+                    <svg class="validation-icon error-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+                    </svg>
                     @error('name')
-                        <p class="mt-1 text-sm text-red-600 dark:text-red-400">{{ $message }}</p>
+                        <p class="form-error-message">{{ $message }}</p>
                     @enderror
                 </div>
 
-                <div>
-                    <label for="company_id" class="block text-sm font-medium text-gray-700 dark:text-gray-300">{{ __('messages.company') }}</label>
-                    <select id="company_id" name="company_id" class="mt-1 block w-full pl-3 pr-10 py-2 text-base border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-white focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm rounded-md" required>
+                <div class="form-input-container has-label">
+                    <label for="company_id" class="form-label">{{ __('messages.company') }} <span class="text-red-500">*</span></label>
+                    <select id="company_id" name="company_id" class="form-select" required>
                         <option value="">{{ __('messages.select_company') }}</option>
                         @foreach($companies ?? [] as $company)
                             <option value="{{ $company->id }}" {{ old('company_id') == $company->id ? 'selected' : '' }}>{{ $company->name }}</option>
                         @endforeach
                     </select>
+                    <svg class="validation-icon valid-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
+                    </svg>
+                    <svg class="validation-icon error-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+                    </svg>
                     @error('company_id')
-                        <p class="mt-1 text-sm text-red-600 dark:text-red-400">{{ $message }}</p>
+                        <p class="form-error-message">{{ $message }}</p>
                     @enderror
                 </div>
 
-                <div>
-                    <label for="business_type" class="block text-sm font-medium text-gray-700 dark:text-gray-300">Business Type <span class="text-red-500">*</span></label>
-                    <select id="business_type" name="business_type" class="mt-1 block w-full pl-3 pr-10 py-2 text-base border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-white focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm rounded-md" required onchange="updateBusinessTypeHidden(this.value)">
+                <div class="form-input-container has-label">
+                    <label for="business_type" class="form-label">Business Type <span class="text-red-500">*</span></label>
+                    <select id="business_type" name="business_type" class="form-select" required onchange="updateBusinessTypeHidden(this.value)">
                         <option value="">Select Business Type</option>
                         @php
                             // Ensure business types are available
@@ -51,55 +295,85 @@
                     </select>
                     <!-- Hidden backup field to ensure business type is always submitted -->
                     <input type="hidden" id="business_type_hidden" name="business_type_backup" value="{{ old('business_type') }}">
+                    <svg class="validation-icon valid-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
+                    </svg>
+                    <svg class="validation-icon error-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+                    </svg>
                     @error('business_type')
-                        <p class="mt-1 text-sm text-red-600 dark:text-red-400">{{ $message }}</p>
+                        <p class="form-error-message">{{ $message }}</p>
                     @enderror
                 </div>
 
-                <div>
-                    <label for="phone" class="block text-sm font-medium text-gray-700 dark:text-gray-300">{{ __('messages.phone_number') }}</label>
-                    <input type="text" name="phone" id="phone" value="{{ old('phone') }}" class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-white rounded-md">
+                <div class="form-input-container has-label">
+                    <label for="phone" class="form-label">{{ __('messages.phone_number') }}</label>
+                    <input type="text" name="phone" id="phone" value="{{ old('phone') }}" class="form-input">
+                    <svg class="validation-icon valid-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
+                    </svg>
+                    <svg class="validation-icon error-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+                    </svg>
                     @error('phone')
-                        <p class="mt-1 text-sm text-red-600 dark:text-red-400">{{ $message }}</p>
+                        <p class="form-error-message">{{ $message }}</p>
                     @enderror
                 </div>
 
-                <div>
-                    <label for="email" class="block text-sm font-medium text-gray-700 dark:text-gray-300">{{ __('messages.email_address') }}</label>
-                    <input type="email" name="email" id="email" value="{{ old('email') }}" class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-white rounded-md">
+                <div class="form-input-container has-label">
+                    <label for="email" class="form-label">{{ __('messages.email_address') }}</label>
+                    <input type="email" name="email" id="email" value="{{ old('email') }}" class="form-input">
+                    <svg class="validation-icon valid-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
+                    </svg>
+                    <svg class="validation-icon error-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+                    </svg>
                     @error('email')
-                        <p class="mt-1 text-sm text-red-600 dark:text-red-400">{{ $message }}</p>
+                        <p class="form-error-message">{{ $message }}</p>
                     @enderror
                 </div>
 
-                <div class="col-span-1 md:col-span-2">
-                    <label for="description" class="block text-sm font-medium text-gray-700 dark:text-gray-300">{{ __('messages.description') }}</label>
-                    <textarea id="description" name="description" rows="3" class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-white rounded-md">{{ old('description') }}</textarea>
+                <div class="col-span-1 md:col-span-2 form-input-container has-label">
+                    <label for="description" class="form-label">{{ __('messages.description') }}</label>
+                    <textarea id="description" name="description" rows="3" class="form-textarea">{{ old('description') }}</textarea>
+                    <svg class="validation-icon valid-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
+                    </svg>
+                    <svg class="validation-icon error-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+                    </svg>
                     @error('description')
-                        <p class="mt-1 text-sm text-red-600 dark:text-red-400">{{ $message }}</p>
+                        <p class="form-error-message">{{ $message }}</p>
                     @enderror
                 </div>
 
-                <div class="col-span-1 md:col-span-2">
-                    <label for="address" class="block text-sm font-medium text-gray-700 dark:text-gray-300">{{ __('messages.address') }} <span class="text-red-500">*</span></label>
+                <div class="col-span-1 md:col-span-2 form-input-container has-label">
+                    <label for="address" class="form-label">{{ __('messages.address') }} <span class="text-red-500">*</span></label>
                     <div class="relative">
-                        <input type="text" name="address" id="address" value="{{ old('address') }}" class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 dark:border-gray-600 dark:bg-gray-100 dark:text-gray-600 rounded-md cursor-not-allowed" readonly required>
+                        <input type="text" name="address" id="address" value="{{ old('address') }}" class="form-input cursor-not-allowed" readonly required>
                         <div id="address-loading" class="absolute right-3 top-1/2 transform -translate-y-1/2 hidden">
                             <svg class="animate-spin h-4 w-4 text-indigo-500" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
                                 <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
                                 <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
                             </svg>
                         </div>
+                        <svg class="validation-icon valid-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
+                        </svg>
+                        <svg class="validation-icon error-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+                        </svg>
                     </div>
                     <p class="mt-1 text-xs text-gray-500 dark:text-gray-400">{{ __('messages.address_auto_fill_hint') }}</p>
                     @error('address')
-                        <p class="mt-1 text-sm text-red-600 dark:text-red-400">{{ $message }}</p>
+                        <p class="form-error-message">{{ $message }}</p>
                     @enderror
                 </div>
 
-                <div>
-                    <label for="emirate" class="block text-sm font-medium text-gray-700 dark:text-gray-300">{{ __('messages.emirate') }} <span class="text-red-500">*</span></label>
-                    <select id="emirate" name="emirate" class="mt-1 block w-full pl-3 pr-10 py-2 text-base border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-white focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm rounded-md" required>
+                <div class="form-input-container has-label">
+                    <label for="emirate" class="form-label">{{ __('messages.emirate') }} <span class="text-red-500">*</span></label>
+                    <select id="emirate" name="emirate" class="form-select" required>
                         <option value="">{{ __('messages.select_emirate') }}</option>
                         <option value="Dubai" {{ old('emirate') == 'Dubai' ? 'selected' : '' }}>{{ __('messages.dubai') }}</option>
                         <option value="Abu Dhabi" {{ old('emirate') == 'Abu Dhabi' ? 'selected' : '' }}>{{ __('messages.abu_dhabi') }}</option>
@@ -109,8 +383,14 @@
                         <option value="Ras Al Khaimah" {{ old('emirate') == 'Ras Al Khaimah' ? 'selected' : '' }}>{{ __('messages.ras_al_khaimah') }}</option>
                         <option value="Fujairah" {{ old('emirate') == 'Fujairah' ? 'selected' : '' }}>{{ __('messages.fujairah') }}</option>
                     </select>
+                    <svg class="validation-icon valid-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
+                    </svg>
+                    <svg class="validation-icon error-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+                    </svg>
                     @error('emirate')
-                        <p class="mt-1 text-sm text-red-600 dark:text-red-400">{{ $message }}</p>
+                        <p class="form-error-message">{{ $message }}</p>
                     @enderror
                 </div>
 
@@ -124,14 +404,20 @@
                     <input type="hidden" name="lng" id="lng" value="{{ old('lng', 55.2708) }}">
                 </div>
 
-                <div>
-                    <label for="status" class="block text-sm font-medium text-gray-700 dark:text-gray-300">{{ __('messages.status') }}</label>
-                    <select id="status" name="status" class="mt-1 block w-full pl-3 pr-10 py-2 text-base border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-white focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm rounded-md">
+                <div class="form-input-container has-label">
+                    <label for="status" class="form-label">{{ __('messages.status') }}</label>
+                    <select id="status" name="status" class="form-select">
                         <option value="active" {{ old('status', 'active') == 'active' ? 'selected' : '' }}>{{ __('messages.active') }}</option>
                         <option value="inactive" {{ old('status') == 'inactive' ? 'selected' : '' }}>{{ __('messages.inactive') }}</option>
                     </select>
+                    <svg class="validation-icon valid-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
+                    </svg>
+                    <svg class="validation-icon error-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+                    </svg>
                     @error('status')
-                        <p class="mt-1 text-sm text-red-600 dark:text-red-400">{{ $message }}</p>
+                        <p class="form-error-message">{{ $message }}</p>
                     @enderror
                 </div>
 
@@ -147,7 +433,7 @@
                             <div id="branch_image_container" class="{{ old('use_company_image', '1') ? 'hidden' : '' }}">
                                 <label for="branch_image" class="block text-sm font-medium text-gray-700 dark:text-gray-300">{{ __('messages.branch_image') }}</label>
                                 <div class="mt-1 flex items-center">
-                                    <input type="file" name="branch_image" id="branch_image" accept="image/jpeg,image/png,image/webp" class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-white rounded-md">
+                                    <input type="file" name="branch_image" id="branch_image" accept="image/jpeg,image/png,image/webp" class="mt-1 block w-full shadow-sm sm:text-sm border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-white rounded-md">
                                 </div>
                                 <p class="mt-1 text-sm text-gray-500 dark:text-gray-400">{{ __('messages.image_upload_requirements') }}</p>
                                 @error('branch_image')
@@ -176,11 +462,11 @@
                                 <div class="grid grid-cols-2 gap-2 mt-2" id="{{ $day }}_hours">
                                     <div>
                                         <label for="{{ $day }}_open" class="block text-xs font-medium text-gray-700 dark:text-gray-300">{{ __('messages.opening_time') }}</label>
-                                        <input type="time" name="opening_hours[{{ $day }}][open]" id="{{ $day }}_open" value="09:00" class="mt-1 block w-full py-2 px-3 border border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-white bg-white rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
+                                        <input type="time" name="opening_hours[{{ $day }}][open]" id="{{ $day }}_open" value="09:00" class="mt-1 block w-full py-2 px-3 border border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-white bg-white rounded-md shadow-sm focus:outline-none sm:text-sm">
                                     </div>
                                     <div>
                                         <label for="{{ $day }}_close" class="block text-xs font-medium text-gray-700 dark:text-gray-300">{{ __('messages.closing_time') }}</label>
-                                        <input type="time" name="opening_hours[{{ $day }}][close]" id="{{ $day }}_close" value="17:00" class="mt-1 block w-full py-2 px-3 border border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-white bg-white rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
+                                        <input type="time" name="opening_hours[{{ $day }}][close]" id="{{ $day }}_close" value="17:00" class="mt-1 block w-full py-2 px-3 border border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-white bg-white rounded-md shadow-sm focus:outline-none sm:text-sm">
                                     </div>
                                 </div>
                             </div>
@@ -196,20 +482,32 @@
 
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                     <!-- License Start Date -->
-                    <div>
-                        <label for="license_start_date" class="block text-sm font-medium text-gray-700 dark:text-gray-300">{{ __('messages.license_start_date') }} <span class="text-red-500">*</span></label>
-                        <input type="date" name="license_start_date" id="license_start_date" value="{{ old('license_start_date') }}" class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-white rounded-md" required>
+                    <div class="form-input-container has-label">
+                        <label for="license_start_date" class="form-label">{{ __('messages.license_start_date') }} <span class="text-red-500">*</span></label>
+                        <input type="date" name="license_start_date" id="license_start_date" value="{{ old('license_start_date') }}" class="form-input" required>
+                        <svg class="validation-icon valid-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
+                        </svg>
+                        <svg class="validation-icon error-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+                        </svg>
                         @error('license_start_date')
-                            <p class="mt-1 text-sm text-red-600 dark:text-red-400">{{ $message }}</p>
+                            <p class="form-error-message">{{ $message }}</p>
                         @enderror
                     </div>
 
                     <!-- License End Date -->
-                    <div>
-                        <label for="license_end_date" class="block text-sm font-medium text-gray-700 dark:text-gray-300">{{ __('messages.license_end_date') }} <span class="text-red-500">*</span></label>
-                        <input type="date" name="license_end_date" id="license_end_date" value="{{ old('license_end_date') }}" class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-white rounded-md" required>
+                    <div class="form-input-container has-label">
+                        <label for="license_end_date" class="form-label">{{ __('messages.license_end_date') }} <span class="text-red-500">*</span></label>
+                        <input type="date" name="license_end_date" id="license_end_date" value="{{ old('license_end_date') }}" class="form-input" required>
+                        <svg class="validation-icon valid-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
+                        </svg>
+                        <svg class="validation-icon error-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+                        </svg>
                         @error('license_end_date')
-                            <p class="mt-1 text-sm text-red-600 dark:text-red-400">{{ $message }}</p>
+                            <p class="form-error-message">{{ $message }}</p>
                         @enderror
                     </div>
                 </div>
@@ -709,5 +1007,93 @@
         const i = Math.floor(Math.log(bytes) / Math.log(k));
         return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + ' ' + sizes[i];
     }
+
+    // Dynamic form state management
+    document.addEventListener('DOMContentLoaded', function() {
+        // Get all form inputs, selects, and textareas
+        const formInputs = document.querySelectorAll('.form-input, .form-select, .form-textarea');
+        
+        formInputs.forEach(input => {
+            const container = input.closest('.form-input-container');
+            if (!container) return;
+
+            // Handle initial state for inputs with values
+            updateInputState(input, container);
+
+            // Add event listeners for different input types
+            if (input.type === 'text' || input.type === 'email' || input.type === 'tel' || input.type === 'date' || input.tagName === 'TEXTAREA') {
+                input.addEventListener('input', () => updateInputState(input, container));
+                input.addEventListener('focus', () => handleFocus(input, container));
+                input.addEventListener('blur', () => handleBlur(input, container));
+            } else if (input.tagName === 'SELECT') {
+                input.addEventListener('change', () => updateInputState(input, container));
+                input.addEventListener('focus', () => handleFocus(input, container));
+                input.addEventListener('blur', () => handleBlur(input, container));
+            }
+        });
+
+        function updateInputState(input, container) {
+            const hasValue = input.value.trim() !== '';
+            const isValid = input.checkValidity();
+            const hasError = container.querySelector('.form-error-message');
+
+            // Remove all state classes from input
+            input.classList.remove('filled', 'valid', 'error', 'active');
+
+            // Add appropriate state classes to input
+            if (hasValue) {
+                input.classList.add('filled');
+                
+                if (isValid && !hasError) {
+                    input.classList.add('valid');
+                }
+            }
+
+            if (hasError) {
+                input.classList.add('error');
+            }
+        }
+
+        function handleFocus(input, container) {
+            input.classList.add('active');
+        }
+
+        function handleBlur(input, container) {
+            input.classList.remove('active');
+            updateInputState(input, container);
+        }
+
+        // Handle form submission validation
+        const form = document.querySelector('form');
+        if (form) {
+            form.addEventListener('submit', function(e) {
+                let hasErrors = false;
+
+                formInputs.forEach(input => {
+                    const container = input.closest('.form-input-container');
+                    if (!container) return;
+
+                    if (input.hasAttribute('required') && !input.value.trim()) {
+                        input.classList.add('error');
+                        hasErrors = true;
+                    } else if (!input.checkValidity()) {
+                        input.classList.add('error');
+                        hasErrors = true;
+                    } else {
+                        input.classList.remove('error');
+                    }
+                });
+
+                if (hasErrors) {
+                    e.preventDefault();
+                    // Scroll to first error
+                    const firstError = document.querySelector('.form-input.error, .form-textarea.error, .form-select.error');
+                    if (firstError) {
+                        firstError.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                    }
+                }
+            });
+        }
+    });
 </script>
 @endsection

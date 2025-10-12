@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Valid State Test</title>
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            padding: 2rem;
+            background-color: #f9fafb;
+        }
+
+        .form-input-container {
+            position: relative;
+            margin-bottom: 1.5rem;
+        }
+
+        .form-label {
+            display: block;
+            font-size: 0.875rem;
+            font-weight: 500;
+            color: #374151;
+            margin-bottom: 0.5rem;
+            transition: color 0.15s ease-in-out;
+        }
+
+        .form-input {
+            width: 100%;
+            padding: 0.75rem 1rem;
+            border: 2px solid #d1d5db;
+            border-radius: 0.5rem;
+            font-size: 1rem;
+            background-color: #ffffff;
+            transition: border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
+        }
+
+        .form-input:focus {
+            outline: none;
+            border-color: #3b82f6;
+            box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+        }
+
+        /* Valid State - Only green border and label, no text or icons */
+        .form-input.valid {
+            border-color: #32936f;
+            background-color: #ffffff;
+        }
+
+        .form-input-container.valid .form-label {
+            color: #32936f;
+        }
+
+        /* Error State */
+        .form-input.error {
+            border-color: #ef4444;
+        }
+
+        .form-input-container.error .form-label {
+            color: #ef4444;
+        }
+
+        .validation-icon {
+            position: absolute;
+            right: 0.75rem;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 1rem;
+            height: 1rem;
+            pointer-events: none;
+            opacity: 0;
+            transition: opacity 0.2s ease;
+        }
+
+        .form-input-container.has-label .validation-icon {
+            top: calc(50% + 0.75rem);
+        }
+
+        .form-input.error ~ .validation-icon.error-icon {
+            opacity: 1;
+            color: #EF4444;
+        }
+
+        .validation-text {
+            font-size: 0.875rem;
+            margin-top: 0.25rem;
+            opacity: 0;
+            transition: opacity 0.2s ease;
+        }
+
+        .form-input.error ~ .validation-text {
+            opacity: 1;
+            color: #ef4444;
+        }
+
+        .demo-section {
+            background: white;
+            padding: 2rem;
+            border-radius: 0.5rem;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+            margin-bottom: 2rem;
+        }
+
+        .demo-title {
+            font-size: 1.25rem;
+            font-weight: 600;
+            margin-bottom: 1rem;
+            color: #1f2937;
+        }
+    </style>
+</head>
+<body>
+    <div class="demo-section">
+        <h2 class="demo-title">Updated Valid State - No Text or Icons</h2>
+        
+        <div class="form-input-container valid has-label">
+            <label class="form-label">Branch Name</label>
+            <input type="text" class="form-input valid" value="Test Branch Name" readonly>
+        </div>
+
+        <div class="form-input-container valid has-label">
+            <label class="form-label">Email Address</label>
+            <input type="email" class="form-input valid" value="test@example.com" readonly>
+        </div>
+
+        <div class="form-input-container valid has-label">
+            <label class="form-label">Phone Number</label>
+            <input type="tel" class="form-input valid" value="+971501234567" readonly>
+        </div>
+    </div>
+
+    <div class="demo-section">
+        <h2 class="demo-title">Error State - With Text and Icon</h2>
+        
+        <div class="form-input-container error has-label">
+            <label class="form-label">Required Field</label>
+            <input type="text" class="form-input error" value="" readonly>
+            <span class="validation-icon error-icon">✗</span>
+            <div class="validation-text" style="opacity: 1; color: #ef4444;">This field is required</div>
+        </div>
+    </div>
+
+    <div class="demo-section">
+        <h2 class="demo-title">Normal State</h2>
+        
+        <div class="form-input-container has-label">
+            <label class="form-label">Normal Field</label>
+            <input type="text" class="form-input" placeholder="Enter text here...">
+        </div>
+    </div>
+</body>
+</html>

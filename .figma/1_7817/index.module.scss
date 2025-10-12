@@ -1,0 +1,44 @@
+* {
+  box-sizing: border-box;
+}
+
+.input {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  width: 375px;
+  height: 75px;
+  row-gap: 8px;
+
+  .label {
+    flex-shrink: 0;
+    align-self: stretch;
+    line-height: 15px;
+    letter-spacing: 0;
+    color: var(--Primary, #5570f1);
+    font-family: Inter, "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", SimHei, Arial, Helvetica, sans-serif;
+    font-size: 12px;
+  }
+
+  .inputContent {
+    display: flex;
+    flex-direction: column;
+    flex-shrink: 0;
+    align-items: flex-start;
+    align-self: stretch;
+    justify-content: space-between;
+    border: 1px solid var(--Primary, #5570f1);
+    border-radius: 8px;
+    padding: 7px 15px;
+    height: 52px;
+
+    .typing {
+      flex-shrink: 0;
+      align-self: stretch;
+      letter-spacing: 0;
+      color: var(--Black-4, #5e6366);
+      font-family: Inter, "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", SimHei, Arial, Helvetica, sans-serif;
+      font-size: 16px;
+    }
+  }
+}

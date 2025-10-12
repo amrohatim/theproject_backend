@@ -3,6 +3,158 @@
 @section('title', __('messages.edit_service'))
 @section('page-title', __('messages.edit_service'))
 
+@section('styles')
+<style>
+    /* Modern Form Styling */
+    .form-input-container {
+        position: relative;
+        margin-bottom: 1.5rem;
+    }
+
+    .form-input-container.has-label {
+        margin-top: 0.5rem;
+    }
+
+    .form-label {
+        display: block;
+        font-size: 0.875rem;
+        font-weight: 500;
+        color: #374151;
+        margin-bottom: 0.5rem;
+        transition: color 0.2s ease-in-out;
+    }
+
+    .dark .form-label {
+        color: #d1d5db;
+    }
+
+    .form-input, .form-textarea, .form-select {
+        width: 100%;
+        padding: 0.75rem 1rem;
+        border: 2px solid #e5e7eb;
+        border-radius: 0.5rem;
+        background-color: #ffffff;
+        color: #111827;
+        font-size: 0.875rem;
+        transition: all 0.2s ease-in-out;
+        outline: none;
+    }
+
+    .dark .form-input, .dark .form-textarea, .dark .form-select {
+        background-color: #374151;
+        border-color: #4b5563;
+        color: #f9fafb;
+    }
+
+    /* Hover State */
+    .form-input:hover, .form-textarea:hover, .form-select:hover {
+        border-color: #d1d5db;
+    }
+
+    .dark .form-input:hover, .dark .form-textarea:hover, .dark .form-select:hover {
+        border-color: #6b7280;
+    }
+
+    /* Active/Focus State */
+    .form-input:focus, .form-textarea:focus, .form-select:focus {
+        border-color: #3b82f6;
+        box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+    }
+
+    /* Filled State */
+    .form-input.filled, .form-textarea.filled, .form-select.filled {
+        border-color: #d1d5db;
+        background-color: #f9fafb;
+    }
+
+    .dark .form-input.filled, .dark .form-textarea.filled, .dark .form-select.filled {
+        border-color: #6b7280;
+        background-color: #4b5563;
+    }
+
+    /* Valid State */
+    .form-input.valid, .form-textarea.valid, .form-select.valid {
+        border-color: #10b981;
+    }
+
+    .form-input.valid:focus, .form-textarea.valid:focus, .form-select.valid:focus {
+        border-color: #10b981;
+        box-shadow: 0 0 0 3px rgba(16, 185, 129, 0.1);
+    }
+
+    /* Error State */
+    .form-input.error, .form-textarea.error, .form-select.error {
+        border-color: #ef4444;
+    }
+
+    .form-input.error:focus, .form-textarea.error:focus, .form-select.error:focus {
+        border-color: #ef4444;
+        box-shadow: 0 0 0 3px rgba(239, 68, 68, 0.1);
+    }
+
+    /* Validation Icons */
+    .form-input-container .validation-icon {
+        position: absolute;
+        right: 0.75rem;
+        top: 50%;
+        transform: translateY(-50%);
+        pointer-events: none;
+        opacity: 0;
+        transition: opacity 0.2s ease-in-out;
+    }
+
+    .form-input-container.has-label .validation-icon {
+        top: calc(50% + 0.875rem);
+    }
+
+    .form-input.valid + .validation-icon.valid,
+    .form-textarea.valid + .validation-icon.valid,
+    .form-select.valid + .validation-icon.valid {
+        opacity: 1;
+        color: #10b981;
+    }
+
+    .form-input.error + .validation-icon.error,
+    .form-textarea.error + .validation-icon.error,
+    .form-select.error + .validation-icon.error {
+        opacity: 1;
+        color: #ef4444;
+    }
+
+    /* Error Messages */
+    .field-error-message {
+        color: #ef4444;
+        font-size: 0.75rem;
+        margin-top: 0.25rem;
+        display: block;
+    }
+
+    .dark .field-error-message {
+        color: #fca5a5;
+    }
+
+    /* Textarea specific styling */
+    .form-textarea {
+        resize: vertical;
+        min-height: 100px;
+    }
+
+    /* Select specific styling */
+    .form-select {
+        background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 20 20'%3e%3cpath stroke='%236b7280' stroke-linecap='round' stroke-linejoin='round' stroke-width='1.5' d='m6 8 4 4 4-4'/%3e%3c/svg%3e");
+        background-position: right 0.5rem center;
+        background-repeat: no-repeat;
+        background-size: 1.5em 1.5em;
+        padding-right: 2.5rem;
+        appearance: none;
+    }
+
+    .dark .form-select {
+        background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 20 20'%3e%3cpath stroke='%239ca3af' stroke-linecap='round' stroke-linejoin='round' stroke-width='1.5' d='m6 8 4 4 4-4'/%3e%3c/svg%3e");
+    }
+</style>
+@endsection
+
 @section('content')
 <div class="container mx-auto">
     <div class="mb-6">
@@ -31,8 +183,8 @@
                     <h3 class="text-lg font-medium text-gray-900 dark:text-white">{{ __('messages.basic_information') }}</h3>
 
                     <!-- Service Name (Bilingual) -->
-                    <div>
-                        <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">{{ __('messages.service_name') }} <span class="text-red-500">*</span></label>
+                    <div class="form-input-container has-label">
+                        <label class="form-label">{{ __('messages.service_name') }} <span class="text-red-500">*</span></label>
 
                         <!-- Language Switcher for Service Name -->
                         <x-form-language-switcher field-name="service_name" />
@@ -40,28 +192,28 @@
                         <!-- English Service Name -->
                         <div data-language-field="service_name" data-language="en" class="active-language-field">
                             <input type="text" name="name" id="name" value="{{ old('name', $service->name) }}"
-                                   class="mt-1 focus:ring-indigo-500 px-2 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-white rounded-md"
+                                   class="form-input"
                                    placeholder="{{ __('messages.service_name_english') }}" required>
                             @error('name')
-                                <p class="mt-1 text-sm text-red-600 dark:text-red-400">{{ $message }}</p>
+                                <span class="field-error-message">{{ $message }}</span>
                             @enderror
                         </div>
 
                         <!-- Arabic Service Name -->
                         <div data-language-field="service_name" data-language="ar" style="display: none;">
                             <input type="text" name="service_name_arabic" id="service_name_arabic" value="{{ old('service_name_arabic', $service->service_name_arabic) }}"
-                                   class="mt-1 focus:ring-indigo-500 pr-10 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-white rounded-md"
+                                   class="form-input"
                                    placeholder="{{ __('messages.service_name_arabic') }}" dir="rtl" required>
                             @error('service_name_arabic')
-                                <p class="mt-1 text-sm text-red-600 dark:text-red-400">{{ $message }}</p>
+                                <span class="field-error-message">{{ $message }}</span>
                             @enderror
                         </div>
                     </div>
 
                     <!-- Category -->
-                    <div>
-                        <label for="category_id" class="block text-sm font-medium text-gray-700 dark:text-gray-300">{{ __('messages.category') }} <span class="text-red-500">*</span></label>
-                        <select id="category_id" name="category_id" class="mt-1 block w-full py-2 px-3 border border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-white bg-white rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm" required>
+                    <div class="form-input-container has-label">
+                        <label for="category_id" class="form-label">{{ __('messages.category') }} <span class="text-red-500">*</span></label>
+                        <select id="category_id" name="category_id" class="form-select" required>
                             <option value="">{{ __('messages.select_category') }}</option>
                             @foreach($parentCategories ?? [] as $parentCategory)
                                 <optgroup label="{{ $parentCategory->name }}">
@@ -76,27 +228,27 @@
                             @endforeach
                         </select>
                         @error('category_id')
-                            <p class="mt-1 text-sm text-red-600 dark:text-red-400">{{ $message }}</p>
+                            <span class="field-error-message">{{ $message }}</span>
                         @enderror
                     </div>
 
                     <!-- Branch -->
-                    <div>
-                        <label for="branch_id" class="block text-sm font-medium text-gray-700 dark:text-gray-300">{{ __('messages.branch') }} <span class="text-red-500">*</span></label>
-                        <select id="branch_id" name="branch_id" class="mt-1 block w-full py-2 px-3 border border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-white bg-white rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm" required>
+                    <div class="form-input-container has-label">
+                        <label for="branch_id" class="form-label">{{ __('messages.branch') }} <span class="text-red-500">*</span></label>
+                        <select id="branch_id" name="branch_id" class="form-select" required>
                             <option value="">{{ __('messages.select_branch') }}</option>
                             @foreach($branches ?? [] as $branch)
                                 <option value="{{ $branch->id }}" {{ old('branch_id', $service->branch_id) == $branch->id ? 'selected' : '' }}>{{ $branch->name }}</option>
                             @endforeach
                         </select>
                         @error('branch_id')
-                            <p class="mt-1 text-sm text-red-600 dark:text-red-400">{{ $message }}</p>
+                            <span class="field-error-message">{{ $message }}</span>
                         @enderror
                     </div>
 
                     <!-- Service Description (Bilingual) -->
-                    <div>
-                        <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">{{ __('messages.description') }}</label>
+                    <div class="form-input-container has-label">
+                        <label class="form-label">{{ __('messages.description') }}</label>
                         <p class="text-xs text-gray-500 dark:text-gray-400 mb-2">{{ __('messages.description_optional_both_or_none') }}</p>
 
                         <!-- Language Switcher for Description -->
@@ -105,20 +257,20 @@
                         <!-- English Description -->
                         <div data-language-field="service_description" data-language="en" class="active-language-field">
                             <textarea id="description" name="description" rows="4"
-                                      class="mt-1 focus:ring-indigo-500 px-4 py-2 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-white rounded-md"
+                                      class="form-textarea"
                                       >{{ old('description', $service->description) }}</textarea>
                             @error('description')
-                                <p class="mt-1 text-sm text-red-600 dark:text-red-400">{{ $message }}</p>
+                                <span class="field-error-message">{{ $message }}</span>
                             @enderror
                         </div>
 
                         <!-- Arabic Description -->
                         <div data-language-field="service_description" data-language="ar" style="display: none;">
                             <textarea id="service_description_arabic" name="service_description_arabic" rows="4"
-                                      class="mt-1 focus:ring-indigo-500 px-4 py-2 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-white rounded-md"
+                                      class="form-textarea"
                                        dir="rtl">{{ old('service_description_arabic', $service->service_description_arabic) }}</textarea>
                             @error('service_description_arabic')
-                                <p class="mt-1 text-sm text-red-600 dark:text-red-400">{{ $message }}</p>
+                                <span class="field-error-message">{{ $message }}</span>
                             @enderror
                         </div>
                     </div>
@@ -129,23 +281,23 @@
                     <h3 class="text-lg font-medium text-gray-900 dark:text-white">{{ __('messages.pricing_details') }}</h3>
 
                     <!-- Price -->
-                    <div>
-                        <label for="price" class="block text-sm font-medium text-gray-700 dark:text-gray-300">{{ __('messages.price') }} <span class="text-red-500">*</span></label>
-                        <div class="mt-1 relative rounded-md shadow-sm">
+                    <div class="form-input-container has-label">
+                        <label for="price" class="form-label">{{ __('messages.price') }} <span class="text-red-500">*</span></label>
+                        <div class="relative">
                             <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
                                 <span class="text-gray-500 sm:text-sm">$</span>
                             </div>
-                            <input type="number" name="price" id="price" min="0" step="0.01" value="{{ old('price', $service->price) }}" class="focus:ring-indigo-500 focus:border-indigo-500 block w-full pl-7 pr-12 sm:text-sm border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-white rounded-md" placeholder="0.00" required>
+                            <input type="number" name="price" id="price" min="0" step="0.01" value="{{ old('price', $service->price) }}" class="form-input pl-7" placeholder="0.00" required>
                         </div>
                         @error('price')
-                            <p class="mt-1 text-sm text-red-600 dark:text-red-400">{{ $message }}</p>
+                            <span class="field-error-message">{{ $message }}</span>
                         @enderror
                     </div>
 
                     <!-- Duration -->
-                    <div>
-                        <label for="duration" class="block text-sm font-medium text-gray-700 dark:text-gray-300">{{ __('messages.duration_minutes') }} <span class="text-red-500">*</span></label>
-                        <input type="number" name="duration" id="duration" min="1" value="{{ old('duration', $service->duration) }}" class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-white rounded-md" required>
+                    <div class="form-input-container has-label">
+                        <label for="duration" class="form-label">{{ __('messages.duration_minutes') }} <span class="text-red-500">*</span></label>
+                        <input type="number" name="duration" id="duration" min="1" value="{{ old('duration', $service->duration) }}" class="form-input" required>
                         @error('duration')
                             <p class="mt-1 text-sm text-red-600 dark:text-red-400">{{ $message }}</p>
                         @enderror
@@ -249,6 +401,126 @@
 @endsection
 
 @section('scripts')
+<script>
+    // Modern Form Validation Functions
+    function initializeFormValidation() {
+        const inputs = document.querySelectorAll('.form-input, .form-textarea, .form-select');
+        
+        inputs.forEach(input => {
+            // Add event listeners for real-time validation
+            input.addEventListener('input', function() {
+                validateField(this);
+            });
+            
+            input.addEventListener('blur', function() {
+                validateField(this);
+            });
+            
+            input.addEventListener('focus', function() {
+                clearFieldError(this);
+            });
+        });
+    }
+
+    function validateField(field) {
+        const value = field.value.trim();
+        const isRequired = field.hasAttribute('required');
+        const fieldType = field.type;
+        
+        // Clear previous validation states
+        field.classList.remove('valid', 'error', 'filled');
+        
+        // Check if field has content
+        if (value) {
+            field.classList.add('filled');
+        }
+        
+        // Validate required fields
+        if (isRequired && !value) {
+            showFieldError(field, '{{ __('messages.field_required') }}');
+            return false;
+        }
+        
+        // Type-specific validation
+        if (value) {
+            switch (fieldType) {
+                case 'email':
+                    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+                    if (!emailRegex.test(value)) {
+                        showFieldError(field, '{{ __('messages.invalid_email') }}');
+                        return false;
+                    }
+                    break;
+                    
+                case 'tel':
+                    const phoneRegex = /^[\+]?[1-9][\d]{0,15}$/;
+                    if (!phoneRegex.test(value.replace(/\s/g, ''))) {
+                        showFieldError(field, '{{ __('messages.invalid_phone') }}');
+                        return false;
+                    }
+                    break;
+                    
+                case 'url':
+                    try {
+                        new URL(value);
+                    } catch {
+                        showFieldError(field, '{{ __('messages.invalid_url') }}');
+                        return false;
+                    }
+                    break;
+                    
+                case 'number':
+                    if (isNaN(value) || value < 0) {
+                        showFieldError(field, '{{ __('messages.invalid_number') }}');
+                        return false;
+                    }
+                    break;
+            }
+        }
+        
+        // If we get here, field is valid
+        if (value || !isRequired) {
+            field.classList.add('valid');
+            clearFieldError(field);
+            return true;
+        }
+        
+        return false;
+    }
+
+    function clearFieldError(field) {
+        field.classList.remove('error');
+        const container = field.closest('.form-input-container');
+        if (container) {
+            const errorMsg = container.querySelector('.field-error-message');
+            if (errorMsg && !errorMsg.textContent.includes('{{ __('messages.field_required') }}')) {
+                errorMsg.style.display = 'none';
+            }
+        }
+    }
+
+    function showFieldError(field, message) {
+        field.classList.add('error');
+        field.classList.remove('valid');
+        
+        const container = field.closest('.form-input-container');
+        if (container) {
+            let errorMsg = container.querySelector('.field-error-message');
+            if (!errorMsg) {
+                errorMsg = document.createElement('span');
+                errorMsg.className = 'field-error-message';
+                container.appendChild(errorMsg);
+            }
+            errorMsg.textContent = message;
+            errorMsg.style.display = 'block';
+        }
+    }
+
+    // Initialize validation when DOM is loaded
+    document.addEventListener('DOMContentLoaded', function() {
+        initializeFormValidation();
+    });
+</script>
 <script>
     function previewImage(input) {
         const preview = document.getElementById('image-preview');

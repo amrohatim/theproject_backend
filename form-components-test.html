@@ -1,0 +1,402 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Form Components Test - Figma Design Implementation</title>
+    <style>
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: Inter, "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", SimHei, Arial, Helvetica, sans-serif;
+            background-color: #f8fafc;
+            padding: 2rem;
+            margin: 0;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: white;
+            padding: 2rem;
+            border-radius: 8px;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+        }
+
+        .demo-section {
+            margin-bottom: 3rem;
+        }
+
+        .demo-title {
+            font-size: 1.5rem;
+            font-weight: bold;
+            margin-bottom: 1rem;
+            color: #1f2937;
+        }
+
+        .demo-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(375px, 1fr));
+            gap: 2rem;
+            margin-bottom: 2rem;
+        }
+
+        /* Form Component Styles - Based on Figma Designs */
+        .form-input-container {
+            display: flex;
+            flex-direction: column;
+            align-items: flex-start;
+            width: 100%;
+            row-gap: 8px;
+            margin-bottom: 1rem;
+        }
+
+        .form-label {
+            flex-shrink: 0;
+            align-self: stretch;
+            padding: 0px 4px;
+            line-height: 15px;
+            letter-spacing: 0;
+            font-family: Inter, "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", SimHei, Arial, Helvetica, sans-serif;
+            font-size: 12px;
+            transition: color 0.2s ease;
+        }
+
+        .form-input-wrapper {
+            display: flex;
+            flex-direction: column;
+            flex-shrink: 0;
+            align-items: flex-start;
+            align-self: stretch;
+            justify-content: space-between;
+            border-radius: 8px;
+            padding: 7px 15px;
+            height: 52px;
+            transition: border-color 0.2s ease;
+            position: relative;
+        }
+
+        .form-input-field {
+            flex-shrink: 0;
+            align-self: stretch;
+            letter-spacing: 0;
+            font-family: Inter, "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", SimHei, Arial, Helvetica, sans-serif;
+            font-size: 16px;
+            border: none;
+            outline: none;
+            background: transparent;
+            width: 100%;
+            height: 100%;
+            padding: 0;
+        }
+
+        .form-textarea-field {
+            flex-shrink: 0;
+            align-self: stretch;
+            letter-spacing: 0;
+            font-family: Inter, "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", SimHei, Arial, Helvetica, sans-serif;
+            font-size: 16px;
+            border: none;
+            outline: none;
+            background: transparent;
+            width: 100%;
+            resize: vertical;
+            min-height: 38px;
+            padding: 0;
+        }
+
+        /* Normal/Placeholder State */
+        .form-input-container.state-normal .form-label {
+            color: #5e6366;
+        }
+
+        .form-input-container.state-normal .form-input-wrapper {
+            border: 1px solid #cfd2d4;
+        }
+
+        .form-input-container.state-normal .form-input-field::placeholder,
+        .form-input-container.state-normal .form-textarea-field::placeholder {
+            color: #abafb1;
+        }
+
+        .form-input-container.state-normal .form-input-field,
+        .form-input-container.state-normal .form-textarea-field {
+            color: #5e6366;
+        }
+
+        /* Active/Focus State */
+        .form-input-container.state-active .form-label {
+            color: #5570f1;
+        }
+
+        .form-input-container.state-active .form-input-wrapper {
+            border: 1px solid #5570f1;
+        }
+
+        .form-input-container.state-active .form-input-field,
+        .form-input-container.state-active .form-textarea-field {
+            color: #5e6366;
+        }
+
+        /* Filled State */
+        .form-input-container.state-filled .form-label {
+            color: #5e6366;
+        }
+
+        .form-input-container.state-filled .form-input-wrapper {
+            border: 1px solid #5e6366;
+        }
+
+        .form-input-container.state-filled .form-input-field,
+        .form-input-container.state-filled .form-textarea-field {
+            color: #5e6366;
+        }
+
+        /* Valid State */
+        .form-input-container.state-valid .form-label {
+            color: #32936f;
+        }
+
+        .form-input-container.state-valid .form-input-wrapper {
+            border: 1px solid #32936f;
+        }
+
+        .form-input-container.state-valid .form-input-field,
+        .form-input-container.state-valid .form-textarea-field {
+            color: #5e6366;
+        }
+
+ 
+     
+
+        /* Error State */
+        .form-input-container.state-error .form-label {
+            color: #f57e77;
+        }
+
+        .form-input-container.state-error .form-input-wrapper {
+            border: 1px solid #f57e77;
+        }
+
+        .form-input-container.state-error .form-input-field,
+        .form-input-container.state-error .form-textarea-field {
+            color: #5e6366;
+        }
+
+        .form-error-message {
+            flex-shrink: 0;
+            align-self: stretch;
+            line-height: 15px;
+            letter-spacing: 0;
+            color: #f57e77;
+            font-family: Inter, "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", SimHei, Arial, Helvetica, sans-serif;
+            font-size: 12px;
+            margin-top: 4px;
+        }
+
+        .state-label {
+            background: #f3f4f6;
+            padding: 0.5rem;
+            border-radius: 4px;
+            font-size: 0.875rem;
+            font-weight: 600;
+            text-align: center;
+            margin-bottom: 1rem;
+        }
+
+        .interactive-demo {
+            border: 2px dashed #e5e7eb;
+            padding: 2rem;
+            border-radius: 8px;
+            background: #fafafa;
+        }
+
+        .interactive-title {
+            font-size: 1.25rem;
+            font-weight: 600;
+            margin-bottom: 1rem;
+            color: #374151;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1 style="text-align: center; margin-bottom: 2rem; color: #1f2937;">Form Components - Figma Design Implementation</h1>
+        
+        <!-- Static States Demo -->
+        <div class="demo-section">
+            <h2 class="demo-title">Form States (Static Demo)</h2>
+            <div class="demo-grid">
+                <!-- Normal/Placeholder State -->
+                <div>
+                    <div class="state-label">Normal/Placeholder State</div>
+                    <div class="form-input-container state-normal">
+                        <label class="form-label">Label</label>
+                        <div class="form-input-wrapper">
+                            <input type="text" class="form-input-field" placeholder="Placeholder" readonly>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Active/Typing State -->
+                <div>
+                    <div class="state-label">Active/Typing State</div>
+                    <div class="form-input-container state-active">
+                        <label class="form-label">Label</label>
+                        <div class="form-input-wrapper">
+                            <input type="text" class="form-input-field" value="Typing |" readonly>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Filled State -->
+                <div>
+                    <div class="state-label">Filled State</div>
+                    <div class="form-input-container state-filled">
+                        <label class="form-label">Label</label>
+                        <div class="form-input-wrapper">
+                            <input type="text" class="form-input-field" value="Filled" readonly>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Valid State -->
+                <div>
+                    <div class="state-label">Valid State</div>
+                    <div class="form-input-container state-valid">
+                        <label class="form-label">Label</label>
+                        <div class="form-input-wrapper">
+                            <input type="text" class="form-input-field" value="Valid" readonly>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Error State -->
+                <div>
+                    <div class="state-label">Error State</div>
+                    <div class="form-input-container state-error">
+                        <label class="form-label">Label</label>
+                        <div class="form-input-wrapper">
+                            <input type="text" class="form-input-field" value="Error" readonly>
+                        </div>
+                        <div class="form-error-message">Something went wrong...</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Interactive Demo -->
+        <div class="demo-section">
+            <h2 class="demo-title">Interactive Demo</h2>
+            <div class="interactive-demo">
+                <h3 class="interactive-title">Try interacting with these fields to see state changes:</h3>
+                
+                <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 2rem;">
+                    <!-- Interactive Text Input -->
+                    <div class="form-input-container state-normal" id="demo-input-1">
+                        <label for="demo-field-1" class="form-label">Deal Title</label>
+                        <div class="form-input-wrapper">
+                            <input type="text" id="demo-field-1" class="form-input-field" placeholder="Enter deal title">
+                        </div>
+                    </div>
+
+                    <!-- Interactive Email Input -->
+                    <div class="form-input-container state-normal" id="demo-input-2">
+                        <label for="demo-field-2" class="form-label">Email Address</label>
+                        <div class="form-input-wrapper">
+                            <input type="email" id="demo-field-2" class="form-input-field" placeholder="Enter email address">
+                        </div>
+                    </div>
+
+                    <!-- Interactive Number Input -->
+                    <div class="form-input-container state-normal" id="demo-input-3">
+                        <label for="demo-field-3" class="form-label">Discount Percentage</label>
+                        <div class="form-input-wrapper">
+                            <input type="number" id="demo-field-3" class="form-input-field" placeholder="Enter percentage" min="1" max="100">
+                        </div>
+                    </div>
+
+                    <!-- Interactive Textarea -->
+                    <div class="form-input-container state-normal" id="demo-input-4">
+                        <label for="demo-field-4" class="form-label">Description</label>
+                        <div class="form-input-wrapper" style="height: auto; min-height: 80px;">
+                            <textarea id="demo-field-4" class="form-textarea-field" placeholder="Enter description" rows="3"></textarea>
+                        </div>
+                    </div>
+                </div>
+
+                <div style="margin-top: 2rem; padding: 1rem; background: #f0f9ff; border-radius: 6px; border-left: 4px solid #0ea5e9;">
+                    <p style="margin: 0; color: #0c4a6e; font-size: 0.875rem;">
+                        <strong>Instructions:</strong> Click on any field to see the active state, type to see filled state, 
+                        and try entering valid data to see the valid state. Invalid email will show error state.
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Interactive demo functionality
+        function initializeFormStateManagement() {
+            const formContainers = document.querySelectorAll('.form-input-container');
+
+            formContainers.forEach(container => {
+                const input = container.querySelector('.form-input-field, .form-textarea-field');
+                if (!input || input.hasAttribute('readonly')) return;
+
+                // Set initial state
+                updateFormState(container, input);
+
+                // Handle focus events
+                input.addEventListener('focus', function() {
+                    setFormState(container, 'active');
+                });
+
+                // Handle blur events
+                input.addEventListener('blur', function() {
+                    updateFormState(container, input);
+                });
+
+                // Handle input events
+                input.addEventListener('input', function() {
+                    updateFormState(container, input);
+                });
+            });
+        }
+
+        function updateFormState(container, input) {
+            const hasValue = input.value.trim() !== '';
+            const isValid = input.checkValidity();
+
+            if (hasValue && !isValid) {
+                setFormState(container, 'error');
+            } else if (hasValue && isValid) {
+                if (shouldShowValidState(input)) {
+                    setFormState(container, 'valid');
+                } else {
+                    setFormState(container, 'filled');
+                }
+            } else if (hasValue) {
+                setFormState(container, 'filled');
+            } else {
+                setFormState(container, 'normal');
+            }
+        }
+
+        function setFormState(container, state) {
+            container.classList.remove('state-normal', 'state-active', 'state-filled', 'state-valid', 'state-error');
+            container.classList.add(`state-${state}`);
+        }
+
+        function shouldShowValidState(input) {
+            // Show valid state for required fields that are properly filled
+            return input.hasAttribute('required') || input.type === 'email' || input.type === 'number';
+        }
+
+        // Initialize when page loads
+        document.addEventListener('DOMContentLoaded', initializeFormStateManagement);
+    </script>
+</body>
+</html>

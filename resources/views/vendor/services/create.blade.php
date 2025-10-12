@@ -3,6 +3,216 @@
 @section('title', __('messages.add_service'))
 @section('page-title', __('messages.add_service'))
 
+@section('styles')
+<style>
+    /* Modern Form Styling */
+    .form-input-container {
+        position: relative;
+        margin-bottom: 1.5rem;
+    }
+
+    .form-label {
+        display: block;
+        font-size: 0.875rem;
+        font-weight: 500;
+        color: #374151;
+        margin-bottom: 0.5rem;
+        transition: color 0.2s ease-in-out;
+    }
+
+    .dark .form-label {
+        color: #d1d5db;
+    }
+
+    .form-input,
+    .form-textarea,
+    .form-select {
+        width: 100%;
+        padding: 0.75rem 1rem;
+        border: 2px solid #d1d5db;
+        border-radius: 0.5rem;
+        font-size: 1rem;
+        line-height: 1.5;
+        color: #111827;
+        background-color: #ffffff;
+        transition: all 0.2s ease-in-out;
+        outline: none;
+        position: relative;
+    }
+
+    .dark .form-input,
+    .dark .form-textarea,
+    .dark .form-select {
+        background-color: #374151;
+        border-color: #4b5563;
+        color: #f9fafb;
+    }
+
+    /* Normal State */
+    .form-input:hover,
+    .form-textarea:hover,
+    .form-select:hover {
+        border-color: #9ca3af;
+    }
+
+    .dark .form-input:hover,
+    .dark .form-textarea:hover,
+    .dark .form-select:hover {
+        border-color: #6b7280;
+    }
+
+    /* Active State (Focus) */
+    .form-input.active,
+    .form-textarea.active,
+    .form-select.active,
+    .form-input:focus,
+    .form-textarea:focus,
+    .form-select:focus {
+        border-color: #3b82f6;
+        box-shadow: none;
+        outline: none;
+    }
+
+    .dark .form-input.active,
+    .dark .form-textarea.active,
+    .dark .form-select.active,
+    .dark .form-input:focus,
+    .dark .form-textarea:focus,
+    .dark .form-select:focus {
+        border-color: #3b82f6;
+    }
+
+    /* Filled State */
+    .form-input.filled,
+    .form-textarea.filled,
+    .form-select.filled {
+        border-color: #10b981;
+    }
+
+    .dark .form-input.filled,
+    .dark .form-textarea.filled,
+    .dark .form-select.filled {
+        border-color: #10b981;
+    }
+
+    /* Valid State */
+    .form-input.valid, .form-textarea.valid, .form-select.valid {
+        border-color: #32936f;
+        background-color: #F0FDF4;
+    }
+
+    .dark .form-input.valid, .dark .form-textarea.valid, .dark .form-select.valid {
+        border-color: #32936f;
+        background-color: #064E3B;
+    }
+
+    /* Valid State Label */
+    .form-input-container.valid .form-label,
+    .form-textarea-container.valid .form-label,
+    .form-select-container.valid .form-label {
+        color: #32936f;
+    }
+
+    .dark .form-input-container.valid .form-label,
+    .dark .form-textarea-container.valid .form-label,
+    .dark .form-select-container.valid .form-label {
+        color: #32936f;
+    }
+
+    /* Validation Icons */
+    .form-input-container .validation-icon {
+        position: absolute;
+        right: 0.75rem;
+        top: 50%;
+        transform: translateY(-50%);
+        width: 1rem;
+        height: 1rem;
+        pointer-events: none;
+        opacity: 0;
+        transition: opacity 0.2s ease;
+    }
+
+    .form-input-container.has-label .validation-icon {
+        top: calc(50% + 0.75rem);
+    }
+
+    .form-input.error ~ .validation-icon.error-icon,
+    .form-textarea.error ~ .validation-icon.error-icon,
+    .form-select.error ~ .validation-icon.error-icon {
+        opacity: 1;
+        color: #EF4444;
+    }
+
+    .dark .form-input.error ~ .validation-icon.error-icon,
+    .dark .form-textarea.error ~ .validation-icon.error-icon,
+    .dark .form-select.error ~ .validation-icon.error-icon {
+        color: #F87171;
+    }
+
+    /* Error State */
+    .form-input.error,
+    .form-textarea.error,
+    .form-select.error {
+        border-color: #ef4444;
+        background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 20 20' fill='%23ef4444'%3e%3cpath fill-rule='evenodd' d='M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7 4a1 1 0 11-2 0 1 1 0 012 0zm-1-9a1 1 0 00-1 1v4a1 1 0 102 0V6a1 1 0 00-1-1z' clip-rule='evenodd'/%3e%3c/svg%3e");
+        background-position: right 0.75rem center;
+        background-repeat: no-repeat;
+        background-size: 1.25rem 1.25rem;
+        padding-right: 3rem;
+    }
+
+    /* Error Message */
+    .form-error-message {
+        color: #ef4444;
+        font-size: 0.875rem;
+        margin-top: 0.25rem;
+        display: flex;
+        align-items: center;
+    }
+
+    .form-error-message::before {
+        content: "⚠";
+        margin-right: 0.25rem;
+    }
+
+    /* Placeholder styling */
+    .form-input::placeholder,
+    .form-textarea::placeholder {
+        color: #9ca3af;
+        opacity: 1;
+    }
+
+    .dark .form-input::placeholder,
+    .dark .form-textarea::placeholder {
+        color: #6b7280;
+    }
+
+    /* Select arrow styling */
+    .form-select {
+        background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 20 20'%3e%3cpath stroke='%236b7280' stroke-linecap='round' stroke-linejoin='round' stroke-width='1.5' d='M6 8l4 4 4-4'/%3e%3c/svg%3e");
+        background-position: right 0.75rem center;
+        background-repeat: no-repeat;
+        background-size: 1.25rem 1.25rem;
+        padding-right: 3rem;
+        appearance: none;
+    }
+
+    /* Responsive Design */
+    @media (max-width: 640px) {
+        .form-input-container {
+            margin-bottom: 1rem;
+        }
+        
+        .form-input,
+        .form-textarea,
+        .form-select {
+            padding: 0.625rem 0.875rem;
+            font-size: 0.875rem;
+        }
+    }
+</style>
+@endsection
+
 @section('content')
 <div class="container mx-auto">
     <div class="mb-6">
@@ -30,8 +240,8 @@
                     <h3 class="text-lg font-medium text-gray-900 dark:text-white">{{ __('messages.basic_information') }}</h3>
 
                     <!-- Service Name (Bilingual) -->
-                    <div>
-                        <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">{{ __('messages.service_name') }} <span class="text-red-500">*</span></label>
+                    <div class="form-input-container has-label">
+                        <label class="form-label">{{ __('messages.service_name') }} <span class="text-red-500">*</span></label>
 
                         <!-- Language Switcher for Service Name -->
                         <x-form-language-switcher field-name="service_name" />
@@ -39,7 +249,7 @@
                         <!-- English Service Name -->
                         <div data-language-field="service_name" data-language="en" class="active-language-field">
                             <input type="text" name="name" id="name" value="{{ old('name') }}"
-                                   class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 px-2 ltr text-left block w-full shadow-sm sm:text-sm border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-white rounded-md"
+                                   class="form-input ltr text-left"
                                    placeholder="{{ __('messages.service_name_english') }}" required>
                             @error('name')
                                 <p class="mt-1 text-sm text-red-600 dark:text-red-400">{{ $message }}</p>
@@ -49,7 +259,7 @@
                         <!-- Arabic Service Name -->
                         <div data-language-field="service_name" data-language="ar" style="display: none;">
                             <input type="text" name="service_name_arabic" id="service_name_arabic" value="{{ old('service_name_arabic') }}"
-                                   class="mt-1 focus:ring-indigo-500 pr-10 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-white rounded-md"
+                                   class="form-input"
                                    placeholder="{{ __('messages.service_name_arabic') }}" dir="rtl" required>
                             @error('service_name_arabic')
                                 <p class="mt-1 text-sm text-red-600 dark:text-red-400">{{ $message }}</p>
@@ -58,9 +268,9 @@
                     </div>
 
                     <!-- Category -->
-                    <div>
-                        <label for="category_id" class="block text-sm font-medium text-gray-700 dark:text-gray-300">{{ __('messages.category') }} <span class="text-red-500">*</span></label>
-                        <select id="category_id" name="category_id" class="mt-1 block w-full py-2 px-3 border border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-white bg-white rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm" required>
+                    <div class="form-input-container has-label">
+                        <label for="category_id" class="form-label">{{ __('messages.category') }} <span class="text-red-500">*</span></label>
+                        <select id="category_id" name="category_id" class="form-select" required>
                             <option value="">{{ __('messages.select_category') }}</option>
                             @foreach($parentCategories ?? [] as $parentCategory)
                                 <optgroup label="{{ $parentCategory->name }}">
@@ -80,9 +290,9 @@
                     </div>
 
                     <!-- Branch -->
-                    <div>
-                        <label for="branch_id" class="block text-sm font-medium text-gray-700 dark:text-gray-300">{{ __('messages.branch') }} <span class="text-red-500">*</span></label>
-                        <select id="branch_id" name="branch_id" class="mt-1 block w-full py-2 px-3 border border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-white bg-white rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm" required>
+                    <div class="form-input-container has-label">
+                        <label for="branch_id" class="form-label">{{ __('messages.branch') }} <span class="text-red-500">*</span></label>
+                        <select id="branch_id" name="branch_id" class="form-select" required>
                             <option value="">{{ __('messages.select_branch') }}</option>
                             @foreach($branches ?? [] as $branch)
                                 <option value="{{ $branch->id }}" {{ old('branch_id') == $branch->id ? 'selected' : '' }}>{{ $branch->name }}</option>
@@ -94,8 +304,8 @@
                     </div>
 
                     <!-- Service Description (Bilingual) -->
-                    <div>
-                        <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">{{ __('messages.description') }}</label>
+                    <div class="form-input-container has-label">
+                        <label class="form-label">{{ __('messages.description') }}</label>
                         <p class="text-xs text-gray-500 dark:text-gray-400 mb-2">{{ __('messages.description_optional_both_or_none') }}</p>
 
                         <!-- Language Switcher for Description -->
@@ -104,7 +314,7 @@
                         <!-- English Description -->
                         <div data-language-field="service_description" data-language="en" class="active-language-field">
                             <textarea id="description" name="description" rows="4"
-                                      class="mt-1 focus:ring-indigo-500 p-4 py-2  focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-white rounded-md"
+                                      class="form-textarea"
                                       >{{ old('description') }}</textarea>
                             @error('description')
                                 <p class="mt-1 text-sm text-red-600 dark:text-red-400">{{ $message }}</p>
@@ -114,8 +324,8 @@
                         <!-- Arabic Description -->
                         <div data-language-field="service_description" data-language="ar" style="display: none;">
                             <textarea id="service_description_arabic" name="service_description_arabic" rows="4"
-                                      class="mt-1 focus:ring-indigo-500 p-4 py-2 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-white rounded-md"
-                                      " dir="rtl">{{ old('service_description_arabic') }}</textarea>
+                                      class="form-textarea"
+                                      dir="rtl">{{ old('service_description_arabic') }}</textarea>
                             @error('service_description_arabic')
                                 <p class="mt-1 text-sm text-red-600 dark:text-red-400">{{ $message }}</p>
                             @enderror
@@ -128,13 +338,13 @@
                     <h3 class="text-lg font-medium text-gray-900 dark:text-white">{{ __('messages.pricing_details') }}</h3>
 
                     <!-- Price -->
-                    <div>
-                        <label for="price" class="block text-sm font-medium text-gray-700 dark:text-gray-300">{{ __('messages.price') }} <span class="text-red-500">*</span></label>
-                        <div class="mt-1 relative rounded-md shadow-sm">
+                    <div class="form-input-container has-label">
+                        <label for="price" class="form-label">{{ __('messages.price') }} <span class="text-red-500">*</span></label>
+                        <div class="relative">
                             <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
                                 <span class="text-gray-500 sm:text-sm">$</span>
                             </div>
-                            <input type="number" name="price" id="price" min="0" step="0.01" value="{{ old('price') }}" class="focus:ring-indigo-500 focus:border-indigo-500 block w-full pl-7 pr-12 sm:text-sm border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-white rounded-md" placeholder="0.00" required onkeypress="return (event.charCode !=8 && event.charCode ==0 || (event.charCode >= 48 && event.charCode <= 57))" oninput="this.value = this.value.replace(/[^0-9.]/g, '').replace(/(\..*?)\..*/g, '$1');">
+                            <input type="number" name="price" id="price" min="0" step="0.01" value="{{ old('price') }}" class="form-input pl-7" placeholder="0.00" required onkeypress="return (event.charCode !=8 && event.charCode ==0 || (event.charCode >= 48 && event.charCode <= 57))" oninput="this.value = this.value.replace(/[^0-9.]/g, '').replace(/(\..*?)\..*/g, '$1');">
                         </div>
                         @error('price')
                             <p class="mt-1 text-sm text-red-600 dark:text-red-400">{{ $message }}</p>
@@ -142,14 +352,14 @@
                     </div>
 
                     <!-- Duration -->
-                    <div>
-                        <label for="duration" class="block text-sm font-medium text-gray-700 dark:text-gray-300">{{ __('messages.duration_minutes') }} <span class="text-red-500">*</span></label>
+                    <div class="form-input-container has-label">
+                        <label for="duration" class="form-label">{{ __('messages.duration_minutes') }} <span class="text-red-500">*</span></label>
                         <input type="number" 
                                name="duration" 
                                id="duration" 
                                min="1" 
                                value="{{ old('duration', 30) }}" 
-                               class="mt-1 px-3 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-white rounded-md" 
+                               class="form-input" 
                                required
                                onkeypress="return (event.charCode !=8 && event.charCode ==0 || (event.charCode >= 48 && event.charCode <= 57))"
                                oninput="this.value = this.value.replace(/[^0-9]/g, '');">
@@ -247,6 +457,115 @@
 
 @section('scripts')
 <script>
+    // Modern form validation functionality
+    document.addEventListener('DOMContentLoaded', function() {
+        initializeFormValidation();
+        setupCategoryValidation();
+        setupBilingualValidation();
+    });
+
+    function initializeFormValidation() {
+        const formInputs = document.querySelectorAll('.form-input, .form-textarea, .form-select');
+        
+        formInputs.forEach(input => {
+            // Add event listeners for validation
+            input.addEventListener('blur', function() {
+                validateField(this);
+            });
+            
+            input.addEventListener('input', function() {
+                // Clear error state on input
+                clearFieldError(this);
+                
+                // Add filled class if input has value
+                if (this.value.trim() !== '') {
+                    this.classList.add('filled');
+                } else {
+                    this.classList.remove('filled');
+                }
+            });
+            
+            // Set initial filled state
+            if (input.value.trim() !== '') {
+                input.classList.add('filled');
+            }
+        });
+    }
+
+    function validateField(field) {
+        const value = field.value.trim();
+        const isRequired = field.hasAttribute('required');
+        const fieldType = field.type;
+        let isValid = true;
+        let errorMessage = '';
+
+        // Clear previous error state
+        clearFieldError(field);
+
+        // Required field validation
+        if (isRequired && value === '') {
+            isValid = false;
+            errorMessage = 'This field is required';
+        }
+        // Email validation
+        else if (fieldType === 'email' && value !== '') {
+            const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+            if (!emailRegex.test(value)) {
+                isValid = false;
+                errorMessage = 'Please enter a valid email address';
+            }
+        }
+        // Phone validation
+        else if (fieldType === 'tel' && value !== '') {
+            const phoneRegex = /^[\+]?[1-9][\d]{0,15}$/;
+            if (!phoneRegex.test(value.replace(/\s/g, ''))) {
+                isValid = false;
+                errorMessage = 'Please enter a valid phone number';
+            }
+        }
+        // URL validation
+        else if (fieldType === 'url' && value !== '') {
+            try {
+                new URL(value);
+            } catch {
+                isValid = false;
+                errorMessage = 'Please enter a valid URL';
+            }
+        }
+
+        if (isValid) {
+            field.classList.add('valid');
+            field.classList.remove('error');
+        } else {
+            field.classList.add('error');
+            field.classList.remove('valid');
+            showFieldError(field, errorMessage);
+        }
+
+        return isValid;
+    }
+
+    function clearFieldError(field) {
+        field.classList.remove('error', 'valid');
+        const container = field.closest('.form-input-container');
+        if (container) {
+            const existingError = container.querySelector('.field-error-message');
+            if (existingError) {
+                existingError.remove();
+            }
+        }
+    }
+
+    function showFieldError(field, message) {
+        const container = field.closest('.form-input-container');
+        if (container) {
+            const errorDiv = document.createElement('div');
+            errorDiv.className = 'field-error-message text-red-600 text-sm mt-1';
+            errorDiv.textContent = message;
+            container.appendChild(errorDiv);
+        }
+    }
+
     function previewImage(input) {
         const preview = document.getElementById('image-preview');
         const placeholder = document.getElementById('image-placeholder');

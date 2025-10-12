@@ -3,6 +3,234 @@
 @section('title', 'Edit Branch')
 @section('page-title', 'Edit Branch')
 
+@section('styles')
+<style>
+    /* Modern Form Styling */
+    .form-input-container {
+        position: relative;
+        margin-bottom: 1.5rem;
+    }
+
+    .form-label {
+        display: block;
+        font-size: 0.875rem;
+        font-weight: 500;
+        color: #374151;
+        margin-bottom: 0.5rem;
+        transition: color 0.2s ease-in-out;
+    }
+
+    .dark .form-label {
+        color: #d1d5db;
+    }
+
+    .form-input,
+    .form-textarea,
+    .form-select {
+        width: 100%;
+        padding: 0.75rem 1rem;
+        border: 2px solid #d1d5db;
+        border-radius: 0.5rem;
+        font-size: 1rem;
+        line-height: 1.5;
+        color: #111827;
+        background-color: #ffffff;
+        transition: all 0.2s ease-in-out;
+        outline: none;
+        position: relative;
+    }
+
+    .dark .form-input,
+    .dark .form-textarea,
+    .dark .form-select {
+        background-color: #374151;
+        border-color: #4b5563;
+        color: #f9fafb;
+    }
+
+    /* Normal State */
+    .form-input:hover,
+    .form-textarea:hover,
+    .form-select:hover {
+        border-color: #9ca3af;
+    }
+
+    .dark .form-input:hover,
+    .dark .form-textarea:hover,
+    .dark .form-select:hover {
+        border-color: #6b7280;
+    }
+
+    /* Active State (Focus) */
+    .form-input.active,
+    .form-textarea.active,
+    .form-select.active,
+    .form-input:focus,
+    .form-textarea:focus,
+    .form-select:focus {
+        border-color: #3b82f6;
+        box-shadow: none;
+        outline: none;
+    }
+
+    .dark .form-input.active,
+    .dark .form-textarea.active,
+    .dark .form-select.active,
+    .dark .form-input:focus,
+    .dark .form-textarea:focus,
+    .dark .form-select:focus {
+        border-color: #3b82f6;
+    }
+
+    /* Filled State */
+    .form-input.filled,
+    .form-textarea.filled,
+    .form-select.filled {
+        border-color: #10b981;
+    }
+
+    .dark .form-input.filled,
+    .dark .form-textarea.filled,
+    .dark .form-select.filled {
+        border-color: #10b981;
+    }
+
+    /* Valid State */
+    .form-input.valid, .form-textarea.valid, .form-select.valid {
+        border-color: #32936f;
+        background-color: #F0FDF4;
+    }
+
+    .dark .form-input.valid, .dark .form-textarea.valid, .dark .form-select.valid {
+        border-color: #32936f;
+        background-color: #064E3B;
+    }
+
+    /* Valid State Label */
+    .form-input-container.valid .form-label,
+    .form-textarea-container.valid .form-label,
+    .form-select-container.valid .form-label {
+        color: #32936f;
+    }
+
+    .dark .form-input-container.valid .form-label,
+    .dark .form-textarea-container.valid .form-label,
+    .dark .form-select-container.valid .form-label {
+        color: #32936f;
+    }
+
+    /* Validation Icons */
+    .form-input-container .validation-icon {
+        position: absolute;
+        right: 0.75rem;
+        top: 50%;
+        transform: translateY(-50%);
+        width: 1rem;
+        height: 1rem;
+        pointer-events: none;
+        opacity: 0;
+        transition: opacity 0.2s ease;
+    }
+
+    .form-input-container.has-label .validation-icon {
+        top: calc(50% + 0.75rem);
+    }
+
+
+
+    .form-input.error ~ .validation-icon.error-icon,
+    .form-textarea.error ~ .validation-icon.error-icon,
+    .form-select.error ~ .validation-icon.error-icon {
+        opacity: 1;
+        color: #EF4444;
+    }
+
+    .dark .form-input.error ~ .validation-icon.error-icon,
+    .dark .form-textarea.error ~ .validation-icon.error-icon,
+    .dark .form-select.error ~ .validation-icon.error-icon {
+        color: #F87171;
+    }
+
+    /* Error State */
+    .form-input.error,
+    .form-textarea.error,
+    .form-select.error {
+        border-color: #ef4444;
+        background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 20 20' fill='%23ef4444'%3e%3cpath fill-rule='evenodd' d='M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7 4a1 1 0 11-2 0 1 1 0 012 0zm-1-9a1 1 0 00-1 1v4a1 1 0 102 0V6a1 1 0 00-1-1z' clip-rule='evenodd'/%3e%3c/svg%3e");
+        background-position: right 0.75rem center;
+        background-repeat: no-repeat;
+        background-size: 1.25rem 1.25rem;
+        padding-right: 3rem;
+    }
+
+    /* Error Message */
+    .form-error-message {
+        color: #ef4444;
+        font-size: 0.875rem;
+        margin-top: 0.25rem;
+        display: flex;
+        align-items: center;
+    }
+
+    .form-error-message::before {
+        content: "⚠";
+        margin-right: 0.25rem;
+    }
+
+    /* Placeholder styling */
+    .form-input::placeholder,
+    .form-textarea::placeholder {
+        color: #9ca3af;
+        opacity: 1;
+    }
+
+    .dark .form-input::placeholder,
+    .dark .form-textarea::placeholder {
+        color: #6b7280;
+    }
+
+    /* Select arrow styling */
+    .form-select {
+        background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 20 20'%3e%3cpath stroke='%236b7280' stroke-linecap='round' stroke-linejoin='round' stroke-width='1.5' d='M6 8l4 4 4-4'/%3e%3c/svg%3e");
+        background-position: right 0.75rem center;
+        background-repeat: no-repeat;
+        background-size: 1.25rem 1.25rem;
+        padding-right: 3rem;
+        appearance: none;
+    }
+
+    .dark .form-select {
+        background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 20 20'%3e%3cpath stroke='%239ca3af' stroke-linecap='round' stroke-linejoin='round' stroke-width='1.5' d='M6 8l4 4 4-4'/%3e%3c/svg%3e");
+    }
+
+    /* Responsive design */
+    @media (max-width: 640px) {
+        .form-input,
+        .form-textarea,
+        .form-select {
+            font-size: 0.875rem;
+            padding: 0.625rem 0.875rem;
+        }
+    }
+
+    /* Animation for state transitions */
+    .form-input,
+    .form-textarea,
+    .form-select {
+        transition: border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out, background-image 0.15s ease-in-out;
+    }
+
+    /* Modern input styling for better UX */
+    .modern-input {
+        position: relative;
+    }
+
+    .modern-input:focus-visible {
+        outline: none;
+    }
+</style>
+@endsection
+
 @section('content')
 <div class="container mx-auto">
     <div class="mb-6">
@@ -21,68 +249,68 @@
             @csrf
             @method('PUT')
             <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                <div>
-                    <label for="name" class="block text-sm font-medium text-gray-700 dark:text-gray-300">{{ __('messages.branch_name') }}</label>
-                    <input type="text" name="name" id="name" value="{{ old('name', $branch->name) }}" class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-white rounded-md" required>
+                <div class="form-input-container">
+                    <label for="name" class="form-label">{{ __('messages.branch_name') }} <span class="text-red-500">*</span></label>
+                    <input type="text" name="name" id="name" value="{{ old('name', $branch->name) }}" class="form-input modern-input" required>
                     @error('name')
-                        <p class="mt-1 text-sm text-red-600 dark:text-red-400">{{ $message }}</p>
+                        <p class="form-error-message">{{ $message }}</p>
                     @enderror
                 </div>
 
-                <div>
-                    <label for="company_id" class="block text-sm font-medium text-gray-700 dark:text-gray-300">{{ __('messages.company') }}</label>
-                    <select id="company_id" name="company_id" class="mt-1 block w-full pl-3 pr-10 py-2 text-base border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-white focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm rounded-md" required>
+                <div class="form-input-container">
+                    <label for="company_id" class="form-label">{{ __('messages.company') }} <span class="text-red-500">*</span></label>
+                    <select id="company_id" name="company_id" class="form-select modern-input" required>
                         <option value="">{{ __('messages.select_company') }}</option>
                         @foreach($companies ?? [] as $company)
                             <option value="{{ $company->id }}" {{ old('company_id', $branch->company_id) == $company->id ? 'selected' : '' }}>{{ $company->name }}</option>
                         @endforeach
                     </select> 
                     @error('company_id')
-                        <p class="mt-1 text-sm text-red-600 dark:text-red-400">{{ $message }}</p>
+                        <p class="form-error-message">{{ $message }}</p>
                     @enderror
                 </div>
 
-                <div>
-                    <label for="business_type" class="block text-sm font-medium text-gray-700 dark:text-gray-300">Business Type <span class="text-red-500">*</span></label>
-                    <select id="business_type" name="business_type" class="mt-1 block w-full pl-3 pr-10 py-2 text-base border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-white focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm rounded-md" required>
+                <div class="form-input-container">
+                    <label for="business_type" class="form-label">Business Type <span class="text-red-500">*</span></label>
+                    <select id="business_type" name="business_type" class="form-select modern-input" required>
                         <option value="">Select Business Type</option>
                         @foreach($businessTypes ?? [] as $businessType)
                             <option value="{{ $businessType->business_name }}" {{ old('business_type', $branch->business_type) == $businessType->business_name ? 'selected' : '' }}>{{ $businessType->business_name }}</option>
                         @endforeach
                     </select>
                     @error('business_type')
-                        <p class="mt-1 text-sm text-red-600 dark:text-red-400">{{ $message }}</p>
+                        <p class="form-error-message">{{ $message }}</p>
                     @enderror
                 </div>
 
-                <div>
-                    <label for="phone" class="block text-sm font-medium text-gray-700 dark:text-gray-300">{{ __('messages.phone_number') }}</label>
-                    <input type="text" name="phone" id="phone" value="{{ old('phone', $branch->phone) }}" class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-white rounded-md">
+                <div class="form-input-container">
+                    <label for="phone" class="form-label">{{ __('messages.phone_number') }}</label>
+                    <input type="tel" name="phone" id="phone" value="{{ old('phone', $branch->phone) }}" class="form-input modern-input">
                     @error('phone')
-                        <p class="mt-1 text-sm text-red-600 dark:text-red-400">{{ $message }}</p>
+                        <p class="form-error-message">{{ $message }}</p>
                     @enderror
                 </div>
 
-                <div>
-                    <label for="email" class="block text-sm font-medium text-gray-700 dark:text-gray-300">{{ __('messages.email_address') }}</label>
-                    <input type="email" name="email" id="email" value="{{ old('email', $branch->email) }}" class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-white rounded-md">
+                <div class="form-input-container">
+                    <label for="email" class="form-label">{{ __('messages.email_address') }}</label>
+                    <input type="email" name="email" id="email" value="{{ old('email', $branch->email) }}" class="form-input modern-input">
                     @error('email')
-                        <p class="mt-1 text-sm text-red-600 dark:text-red-400">{{ $message }}</p>
+                        <p class="form-error-message">{{ $message }}</p>
                     @enderror
                 </div>
 
-                <div class="col-span-1 md:col-span-2">
-                    <label for="description" class="block text-sm font-medium text-gray-700 dark:text-gray-300">{{ __('messages.description') }}</label>
-                    <textarea id="description" name="description" rows="3" class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-white rounded-md">{{ old('description', $branch->description) }}</textarea>
+                <div class="col-span-1 md:col-span-2 form-input-container">
+                    <label for="description" class="form-label">{{ __('messages.description') }}</label>
+                    <textarea id="description" name="description" rows="3" class="form-textarea modern-input">{{ old('description', $branch->description) }}</textarea>
                     @error('description')
-                        <p class="mt-1 text-sm text-red-600 dark:text-red-400">{{ $message }}</p>
+                        <p class="form-error-message">{{ $message }}</p>
                     @enderror
                 </div>
 
-                <div class="col-span-1 md:col-span-2">
-                    <label for="address" class="block text-sm font-medium text-gray-700 dark:text-gray-300">{{ __('messages.address') }} <span class="text-red-500">*</span></label>
+                <div class="col-span-1 md:col-span-2 form-input-container">
+                    <label for="address" class="form-label">{{ __('messages.address') }} <span class="text-red-500">*</span></label>
                     <div class="relative">
-                        <input type="text" name="address" id="address" value="{{ old('address', $branch->address) }}" class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 dark:border-gray-600 dark:bg-gray-100 dark:text-gray-600 rounded-md cursor-not-allowed" readonly required>
+                        <input type="text" name="address" id="address" value="{{ old('address', $branch->address) }}" class="form-input modern-input bg-gray-100 dark:bg-gray-600 cursor-not-allowed" readonly required>
                         <div id="address-loading" class="absolute right-3 top-1/2 transform -translate-y-1/2 hidden">
                             <svg class="animate-spin h-4 w-4 text-indigo-500" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
                                 <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
@@ -92,13 +320,13 @@
                     </div>
                     <p class="mt-1 text-xs text-gray-500 dark:text-gray-400">{{ __('messages.address_auto_fill_hint') }}</p>
                     @error('address')
-                        <p class="mt-1 text-sm text-red-600 dark:text-red-400">{{ $message }}</p>
+                        <p class="form-error-message">{{ $message }}</p>
                     @enderror
                 </div>
 
-                <div>
-                    <label for="emirate" class="block text-sm font-medium text-gray-700 dark:text-gray-300">{{ __('messages.emirate') }} <span class="text-red-500">*</span></label>
-                    <select id="emirate" name="emirate" class="mt-1 block w-full pl-3 pr-10 py-2 text-base border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-white focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm rounded-md" required>
+                <div class="form-input-container">
+                    <label for="emirate" class="form-label">{{ __('messages.emirate') }} <span class="text-red-500">*</span></label>
+                    <select id="emirate" name="emirate" class="form-select modern-input" required>
                         <option value="">{{ __('messages.select_emirate') }}</option>
                         <option value="Dubai" {{ old('emirate', $branch->emirate) == 'Dubai' ? 'selected' : '' }}>{{ __('messages.dubai') }}</option>
                         <option value="Abu Dhabi" {{ old('emirate', $branch->emirate) == 'Abu Dhabi' ? 'selected' : '' }}>{{ __('messages.abu_dhabi') }}</option>
@@ -109,7 +337,7 @@
                         <option value="Fujairah" {{ old('emirate', $branch->emirate) == 'Fujairah' ? 'selected' : '' }}>{{ __('messages.fujairah') }}</option>
                     </select>
                     @error('emirate')
-                        <p class="mt-1 text-sm text-red-600 dark:text-red-400">{{ $message }}</p>
+                        <p class="form-error-message">{{ $message }}</p>
                     @enderror
                 </div>
 
@@ -123,14 +351,14 @@
                     <input type="hidden" name="lng" id="lng" value="{{ old('lng', $branch->lng) }}">
                 </div>
 
-                <div>
-                    <label for="status" class="block text-sm font-medium text-gray-700 dark:text-gray-300">{{ __('messages.status') }}</label>
-                    <select id="status" name="status" class="mt-1 block w-full pl-3 pr-10 py-2 text-base border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-white focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm rounded-md">
+                <div class="form-input-container">
+                    <label for="status" class="form-label">{{ __('messages.status') }}</label>
+                    <select id="status" name="status" class="form-select modern-input">
                         <option value="active" {{ old('status', $branch->status) == 'active' ? 'selected' : '' }}>{{ __('messages.active') }}</option>
                         <option value="inactive" {{ old('status', $branch->status) == 'inactive' ? 'selected' : '' }}>{{ __('messages.inactive') }}</option>
                     </select>
                     @error('status')
-                        <p class="mt-1 text-sm text-red-600 dark:text-red-400">{{ $message }}</p>
+                        <p class="form-error-message">{{ $message }}</p>
                     @enderror
                 </div>
 
@@ -241,29 +469,29 @@
                 @endphp
 
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                    <div>
-                        <label for="license_start_date" class="block text-sm font-medium text-gray-700 dark:text-gray-300">
+                    <div class="form-input-container">
+                        <label for="license_start_date" class="form-label">
                             {{ __('messages.license_start_date') }} <span class="text-red-500">*</span>
                         </label>
                         <input type="date" name="license_start_date" id="license_start_date"
                                value="{{ old('license_start_date', $currentLicense ? $currentLicense->start_date->format('Y-m-d') : '') }}"
-                               class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-white rounded-md"
+                               class="form-input modern-input"
                                required>
                         @error('license_start_date')
-                            <p class="mt-1 text-sm text-red-600 dark:text-red-400">{{ $message }}</p>
+                            <p class="form-error-message">{{ $message }}</p>
                         @enderror
                     </div>
 
-                    <div>
-                        <label for="license_end_date" class="block text-sm font-medium text-gray-700 dark:text-gray-300">
+                    <div class="form-input-container">
+                        <label for="license_end_date" class="form-label">
                             {{ __('messages.license_end_date') }} <span class="text-red-500">*</span>
                         </label>
                         <input type="date" name="license_end_date" id="license_end_date"
                                value="{{ old('license_end_date', $currentLicense ? $currentLicense->end_date->format('Y-m-d') : '') }}"
-                               class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-white rounded-md"
+                               class="form-input modern-input"
                                required>
                         @error('license_end_date')
-                            <p class="mt-1 text-sm text-red-600 dark:text-red-400">{{ $message }}</p>
+                            <p class="form-error-message">{{ $message }}</p>
                         @enderror
                     </div>
                 </div>
@@ -353,6 +581,91 @@
 
 @section('scripts')
 <script>
+    // Modern Form State Management
+    document.addEventListener('DOMContentLoaded', function() {
+        // Initialize all form inputs
+        const inputs = document.querySelectorAll('.modern-input');
+        
+        inputs.forEach(input => {
+            // Set initial state
+            updateInputState(input);
+            
+            // Add event listeners
+            input.addEventListener('focus', () => handleFocus(input));
+            input.addEventListener('blur', () => handleBlur(input));
+            input.addEventListener('input', () => updateInputState(input));
+            input.addEventListener('change', () => updateInputState(input));
+        });
+
+        function updateInputState(input) {
+            const container = input.closest('.form-input-container');
+            if (!container) return;
+
+            // Remove all state classes
+            container.classList.remove('filled', 'valid', 'error', 'active');
+
+            // Check if input has value (filled state)
+            if (input.value && input.value.trim() !== '') {
+                container.classList.add('filled');
+            }
+
+            // Check validity
+            if (input.checkValidity && input.value) {
+                if (input.checkValidity()) {
+                    container.classList.add('valid');
+                } else {
+                    container.classList.add('error');
+                }
+            }
+
+            // Check for existing Laravel validation errors
+            const errorMessage = container.querySelector('.form-error-message');
+            if (errorMessage && errorMessage.textContent.trim() !== '') {
+                container.classList.add('error');
+            }
+        }
+
+        function handleFocus(input) {
+            const container = input.closest('.form-input-container');
+            if (container) {
+                container.classList.add('active');
+            }
+        }
+
+        function handleBlur(input) {
+            const container = input.closest('.form-input-container');
+            if (container) {
+                container.classList.remove('active');
+                updateInputState(input);
+            }
+        }
+
+        // Handle form submission validation
+        const forms = document.querySelectorAll('form');
+        forms.forEach(form => {
+            form.addEventListener('submit', function(e) {
+                let hasErrors = false;
+                const formInputs = form.querySelectorAll('.modern-input');
+                
+                formInputs.forEach(input => {
+                    updateInputState(input);
+                    const container = input.closest('.form-input-container');
+                    if (container && container.classList.contains('error')) {
+                        hasErrors = true;
+                    }
+                });
+
+                if (hasErrors) {
+                    // Scroll to first error
+                    const firstError = form.querySelector('.form-input-container.error');
+                    if (firstError) {
+                        firstError.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                    }
+                }
+            });
+        });
+    });
+
     // Global error handler for Google Maps authentication
     window.gm_authFailure = function() {
         console.error('Google Maps authentication failed. Please check your API key.');
@@ -790,6 +1103,113 @@
         // Initialize form handlers
         handleFormSubmission('branch-info-form', 'Branch information updated successfully.');
         handleFormSubmission('license-form', 'License updated successfully.');
+
+        // Form validation functionality
+        function initializeFormValidation() {
+            const formInputs = document.querySelectorAll('.form-input, .form-textarea, .form-select');
+            
+            formInputs.forEach(input => {
+                const container = input.closest('.form-input-container');
+                if (!container) return;
+
+                // Add validation icons if they don't exist (only for error state)
+                if (!container.querySelector('.validation-icon')) {
+                    const errorIcon = document.createElement('span');
+                    errorIcon.className = 'validation-icon error-icon';
+                    errorIcon.innerHTML = '✗';
+                    
+                    container.appendChild(errorIcon);
+                }
+
+                // Add validation text container if it doesn't exist (only for error messages)
+                if (!container.querySelector('.validation-text')) {
+                    const validationText = document.createElement('div');
+                    validationText.className = 'validation-text text-sm mt-1 opacity-0 transition-opacity duration-200';
+                    container.appendChild(validationText);
+                }
+
+                // Add event listeners
+                input.addEventListener('input', () => validateField(input));
+                input.addEventListener('blur', () => validateField(input));
+            });
+        }
+
+        function validateField(input) {
+            const container = input.closest('.form-input-container');
+            const validationText = container.querySelector('.validation-text');
+            const value = input.value.trim();
+            const isRequired = input.hasAttribute('required');
+            
+            // Remove existing validation classes
+            input.classList.remove('valid', 'error');
+            container.classList.remove('valid', 'error');
+            
+            if (validationText) {
+                validationText.classList.add('opacity-0');
+                validationText.textContent = '';
+            }
+
+            // Check if field is valid
+            let isValid = true;
+            let errorMessage = '';
+
+            if (isRequired && !value) {
+                isValid = false;
+                errorMessage = 'This field is required';
+            } else if (value) {
+                // Additional validation based on input type
+                const inputType = input.type || input.tagName.toLowerCase();
+                
+                switch (inputType) {
+                    case 'email':
+                        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+                        if (!emailRegex.test(value)) {
+                            isValid = false;
+                            errorMessage = 'Please enter a valid email address';
+                        }
+                        break;
+                    case 'tel':
+                        const phoneRegex = /^[\+]?[1-9][\d]{0,15}$/;
+                        if (!phoneRegex.test(value.replace(/\s/g, ''))) {
+                            isValid = false;
+                            errorMessage = 'Please enter a valid phone number';
+                        }
+                        break;
+                    case 'url':
+                        try {
+                            new URL(value);
+                        } catch {
+                            isValid = false;
+                            errorMessage = 'Please enter a valid URL';
+                        }
+                        break;
+                }
+
+                // Check minimum length
+                const minLength = input.getAttribute('minlength');
+                if (minLength && value.length < parseInt(minLength)) {
+                    isValid = false;
+                    errorMessage = `Minimum ${minLength} characters required`;
+                }
+            }
+
+            // Apply validation state
+            if (value && isValid) {
+                input.classList.add('valid');
+                container.classList.add('valid');
+                // No text or icon for valid state - just the green border styling
+            } else if (!isValid) {
+                input.classList.add('error');
+                container.classList.add('error');
+                if (validationText) {
+                    validationText.textContent = errorMessage;
+                    validationText.className = 'validation-text text-sm mt-1 opacity-100 transition-opacity duration-200 text-red-600 dark:text-red-400';
+                }
+            }
+        }
+
+        // Initialize form validation
+        initializeFormValidation();
 
         // Modal functions
         function showSuccessModal(message) {
