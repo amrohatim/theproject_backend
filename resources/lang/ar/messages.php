@@ -1573,8 +1573,11 @@ return [
     'business_type' => 'نوع العمل',
     'registration_number' => 'رقم التسجيل',
     'website' => 'الموقع الإلكتروني',
+    'website_url' => 'e.g. https://www.example.com',
     'delivery_capability' => 'قدرة التوصيل',
     'street_address' => 'عنوان الشارع',
+    'street_address_placeholder' => 'الشارع 123',
+    
     'city' => 'المدينة',
     'state_province' => 'الولاية/المحافظة',
     'zip_postal_code' => 'الرمز البريدي',

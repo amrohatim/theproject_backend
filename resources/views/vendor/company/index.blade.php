@@ -362,7 +362,7 @@ document.addEventListener('DOMContentLoaded', function() {
                         <div class="col-span-6 sm:col-span-3">
                             <div class="form-input-container">
                                 <label for="website" class="form-label">{{ __('messages.website') }}</label>
-                                <input type="url" name="website" id="website" value="{{ $company->website ?? old('website') }}" class="form-input @error('website') error @enderror" placeholder="Enter website URL">
+                                <input type="url" name="website" id="website" value="{{ $company->website ?? old('website') }}" class="form-input @error('website') error @enderror" placeholder="{{ __('messages.website_url') }}">
                                 <div class="validation-icon"></div>
                                 @error('website')
                                     <div class="error-message">{{ $message }}</div>
@@ -479,7 +479,7 @@ document.addEventListener('DOMContentLoaded', function() {
                         <div class="col-span-6">
                             <div class="form-input-container">
                                 <label for="address" class="form-label">{{ __('messages.street_address') }}</label>
-                                <input type="text" name="address" id="address" value="{{ $company->address ?? old('address') }}" class="form-input @error('address') error @enderror" placeholder="Enter street address">
+                                <input type="text" name="address" id="address" value="{{ $company->address ?? old('address') }}" class="form-input @error('address') error @enderror" placeholder="{{ __('messages.street_address_placeholder') }}">
                                 <div class="validation-icon"></div>
                                 @error('address')
                                     <div class="error-message">{{ $message }}</div>
@@ -490,7 +490,7 @@ document.addEventListener('DOMContentLoaded', function() {
                         <div class="col-span-6 sm:col-span-6 lg:col-span-2">
                             <div class="form-input-container">
                                 <label for="city" class="form-label">{{ __('messages.city') }}</label>
-                                <input type="text" name="city" id="city" value="{{ $company->city ?? old('city') }}" class="form-input @error('city') error @enderror" placeholder="Enter city">
+                                <input type="text" name="city" id="city" value="{{ $company->city ?? old('city') }}" class="form-input @error('city') error @enderror" placeholder="{{ __('messages.city') }}">
                                 <div class="validation-icon"></div>
                                 @error('city')
                                     <div class="error-message">{{ $message }}</div>
@@ -501,7 +501,7 @@ document.addEventListener('DOMContentLoaded', function() {
                         <div class="col-span-6 sm:col-span-3 lg:col-span-2">
                             <div class="form-input-container">
                                 <label for="state" class="form-label">{{ __('messages.state_province') }}</label>
-                                <input type="text" name="state" id="state" value="{{ $company->state ?? old('state') }}" class="form-input @error('state') error @enderror" placeholder="Enter state/province">
+                                <input type="text" name="state" id="state" value="{{ $company->state ?? old('state') }}" class="form-input @error('state') error @enderror" placeholder="{{ __('messages.state_province') }}">
                                 <div class="validation-icon"></div>
                                 @error('state')
                                     <div class="error-message">{{ $message }}</div>

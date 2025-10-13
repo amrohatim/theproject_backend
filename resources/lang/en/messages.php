@@ -4,7 +4,8 @@ return [
     // Language Demo Page
     'current_language_info' => 'Current Language Information',
     'company_name' => 'Company Name',
-    'street_address' => 'Street Address',      
+    'street_address' => 'Street Address',
+    'street_address_placeholder' => 'e.g. 123 Main Street',      
     'state_province' => 'State',
     'locale' => 'Locale',
     'save_address_info' => 'Save Address Information',
@@ -1288,6 +1289,7 @@ return [
     'company_logo' => 'Company Logo',
     'delivery_capability' => 'Delivery Capability',
     'website' => 'Website',
+    'website_url' => 'e.g. https://www.example.com',
     'save_company_info' => 'Save Company Information',
     'company_information' => 'Company Information',
     'renewal_pending' => 'Renewal Pending',
@@ -1319,7 +1321,7 @@ return [
     'enter_description' => 'Enter description',
 
     // Merchant Deals Messages
-    'browse_vendor_deals' => 'Browse and discover amazing deals from vendors',
+    'browse_vendor_deals' => 'Browse and discover amazing deals from vendors', 
     'search_deals' => 'Search deals...',
     'filters' => 'Filters',
     'discount_range' => 'Discount Range',
