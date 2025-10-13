@@ -71,8 +71,19 @@ function initVendorProductCreateApp(forceCleanup = false) {
 
   console.log('🚀 Initializing vendor product create Vue app');
 
-  // Create Vue app
-  const app = createApp(VendorProductCreateApp);
+  // Get props from data attributes
+  const userRole = container.dataset.userRole || 'vendor';
+
+  // Create Vue app with props
+  const app = createApp(VendorProductCreateApp, {
+    backUrl: container.dataset.backUrl,
+    createDataUrl: container.dataset.createDataUrl,
+    storeUrl: container.dataset.storeUrl,
+    sessionStoreUrl: container.dataset.sessionStoreUrl,
+    sessionGetUrl: container.dataset.sessionGetUrl,
+    sessionClearUrl: container.dataset.sessionClearUrl,
+    userRole: userRole
+  });
 
   // Add global translation method
   app.config.globalProperties.$t = function(key, replacements = {}) {

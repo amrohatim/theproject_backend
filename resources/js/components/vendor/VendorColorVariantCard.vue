@@ -1,6 +1,6 @@
 <template>
-  <div class="vue-card color-item transition-all duration-200"
-       :class="{ 'ring-2 border-primary-200': isDefault, 'rtl': isRTL }"
+  <div class="vue-card  transition-all duration-200"
+       :class= "{ 'ring-2 border-primary-200': isDefault, 'rtl': isRTL } "
        :style="isDefault ? { '--tw-ring-color': 'var(--primary-blue)' } : {}">
     <div class="p-6 border-b" style="border-color: var(--gray-200);">
       <div class="flex items-center justify-between">
@@ -47,9 +47,11 @@
 
               <!-- Color Selection Dropdown -->
               <div class="color-selection-container">
-                <div class="selected-color-display"
-                     @click="toggleColorDropdown"
-                     :class="{ 'active': showColorDropdown }">
+                <div @click="toggleColorDropdown"
+                     :class="[
+                       { 'active': showColorDropdown },
+                       userRole === 'vendor' ? 'selected-color-display-vendor' : 'selected-color-display-pm'
+                     ]">
                   <div class="selected-color-preview">
                     <div class="color-swatch"
                          :style="{ backgroundColor: getColorCode(color.name) || '#e5e7eb' }"></div>
@@ -69,16 +71,18 @@
                     <input type="text"
                            v-model="colorSearchQuery"
                            :placeholder="$t('vendor.search_colors')"
-                           class="color-search-input"
+                           :class="userRole === 'vendor' ? 'color-search-input-vendor' : 'color-search-input-pm'"
                            @click.stop>
                   </div>
 
                   <!-- Color Grid -->
-                  <div class="color-grid">
+                  <div :class="userRole === 'vendor' ? 'color-grid-vendor' : 'color-grid-pm'">
                     <div v-for="colorOption in filteredColorOptions"
                          :key="colorOption.name"
-                         class="color-option"
-                         :class="{ 'selected': color.name === colorOption.name }"
+                         :class="[
+                           userRole === 'vendor' ? 'color-option-vendor' : 'color-option-pm',
+                           { 'selected': color.name === colorOption.name }
+                         ]"
                          @click="selectColor(colorOption.name)">
                       <div class="color-swatch"
                            :style="{ backgroundColor: colorOption.code }"></div>
@@ -225,7 +229,7 @@
 
             <input type="file"
                    @change="handleImageUpload"
-                   class="color-image-input block w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-indigo-50 file:text-indigo-700 hover:file:bg-indigo-100"
+                   class="modern-file-input block w-full text-sm text-gray-600 file:mr-4 file:py-3 file:px-6 file:rounded-xl file:border-0 file:text-sm file:font-semibold file:bg-gradient-to-r file:from-amber-50 file:to-orange-50 file:text-amber-700 hover:file:from-amber-100 hover:file:to-orange-100 file:transition-all file:duration-200 file:shadow-sm hover:file:shadow-md file:cursor-pointer"
                    accept="image/*"
                    style="max-width: 300px;">
 
@@ -359,6 +363,10 @@ export default {
     errors: {
       type: Object,
       default: () => ({})
+    },
+    userRole: {
+      type: String,
+      default: 'vendor'
     }
   },
   emits: ['update', 'remove', 'set-default', 'image-upload', 'sizes-updated', 'stock-corrected'],
@@ -705,6 +713,7 @@ export default {
 </script>
 
 <style scoped>
+/* Modern Color Selection Container */
 .color-selection-container {
   position: relative;
 }
@@ -713,141 +722,337 @@ export default {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: 0.5rem 0.75rem;
-  border: 1px solid #d1d5db;
-  border-radius: 0.375rem;
+  padding: 0.875rem 1rem;
+  border: 2px solid #e5e7eb;
+  border-radius: 0.75rem;
   background-color: #ffffff;
   cursor: pointer;
-  transition: border-color 0.15s ease-in-out;
+  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+  box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
 }
 
 .selected-color-display:hover {
-  border-color: #9ca3af;
+  border-color: #f59e0b;
+  box-shadow: 0 2px 4px 0 rgba(0, 0, 0, 0.06);
+  transform: translateY(-1px);
 }
 
-.selected-color-display.active {
-  border-color: #6366f1;
-  box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.1);
+/* Vendor Color Display (Blue Theme) */
+.selected-color-display-vendor {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0.875rem 1rem;
+  border: 2px solid #e5e7eb;
+  border-radius: 0.75rem;
+  background-color: #ffffff;
+  cursor: pointer;
+  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+  box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+}
+
+.selected-color-display-vendor:hover {
+  border-color: #3b82f6;
+  box-shadow: 0 2px 4px 0 rgba(0, 0, 0, 0.06);
+  transform: translateY(-1px);
+}
+
+.selected-color-display-vendor.active {
+  border-color: #3b82f6;
+  box-shadow: 0 0 0 4px rgba(59, 130, 246, 0.1), 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+  transform: translateY(-1px);
+}
+
+/* Products Manager Color Display (Orange Theme) */
+.selected-color-display-pm {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0.875rem 1rem;
+  border: 2px solid #e5e7eb;
+  border-radius: 0.75rem;
+  background-color: #ffffff;
+  cursor: pointer;
+  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+  box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+}
+
+.selected-color-display-pm:hover {
+  border-color: #f59e0b;
+  box-shadow: 0 2px 4px 0 rgba(0, 0, 0, 0.06);
+  transform: translateY(-1px);
+}
+
+.selected-color-display-pm.active {
+  border-color: #f59e0b;
+  box-shadow: 0 0 0 4px rgba(245, 158, 11, 0.1), 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+  transform: translateY(-1px);
 }
 
 .selected-color-preview {
   display: flex;
   align-items: center;
-  gap: 0.5rem;
+  gap: 0.75rem;
 }
 
 .color-swatch {
-  width: 2rem;
-  height: 2rem;
+  width: 2.5rem;
+  height: 2.5rem;
   border-radius: 50%;
-  border: 2px solid #e5e7eb;
+  border: 3px solid #ffffff;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15), inset 0 1px 2px rgba(0, 0, 0, 0.1);
   flex-shrink: 0;
   margin-bottom: 0.25rem;
+  transition: all 0.2s ease;
+}
+
+.color-option:hover .color-swatch {
+  transform: scale(1.1);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2), inset 0 1px 2px rgba(0, 0, 0, 0.1);
 }
 
 .color-option .color-name {
-  font-size: 0.75rem;
-  font-weight: 500;
+  font-size: 0.8125rem;
+  font-weight: 600;
   color: #374151;
   line-height: 1.2;
 }
 
 .color-option .color-code {
-  font-size: 0.625rem;
+  font-size: 0.6875rem;
   color: #6b7280;
-  font-family: monospace;
+  font-family: 'SF Mono', 'Monaco', 'Inconsolata', 'Fira Code', monospace;
+  font-weight: 500;
 }
 
 .color-info {
   display: flex;
   flex-direction: column;
+  gap: 0.125rem;
 }
 
 .color-name {
-  font-size: 0.875rem;
-  font-weight: 500;
+  font-size: 0.9375rem;
+  font-weight: 600;
   color: #1f2937;
+  letter-spacing: -0.01em;
 }
 
 .color-code {
-  font-size: 0.75rem;
+  font-size: 0.8125rem;
   color: #6b7280;
+  font-family: 'SF Mono', 'Monaco', 'Inconsolata', 'Fira Code', monospace;
+  font-weight: 500;
 }
 
 .dropdown-arrow {
-  transition: transform 0.2s ease;
+  transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  color: #9ca3af;
 }
 
-.dropdown-arrow.rotated {
+.selected-color-display-vendor .dropdown-arrow.rotated {
   transform: rotate(180deg);
+  color: #3b82f6;
 }
 
+.selected-color-display-pm .dropdown-arrow.rotated {
+  transform: rotate(180deg);
+  color: #f59e0b;
+}
+
+/* Enhanced Color Dropdown */
 .color-dropdown {
   position: absolute;
-  top: 100%;
+  top: calc(100% + 0.5rem);
   left: 0;
   right: 0;
   z-index: 50;
   background-color: #ffffff;
-  border: 1px solid #d1d5db;
-  border-radius: 0.375rem;
-  box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
-  max-height: 400px;
-  overflow-y: auto;
-  min-width: 480px;
+  border: 2px solid #e5e7eb;
+  border-radius: 1rem;
+  box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+  max-height: 450px;
+  overflow: hidden;
+  min-width: 520px;
   width: max-content;
+  animation: dropdownSlideIn 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+@keyframes dropdownSlideIn {
+  from {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
 
 .color-search {
-  padding: 0.75rem;
-  border-bottom: 1px solid #e5e7eb;
+  padding: 1rem;
+  border-bottom: 2px solid #f3f4f6;
+  background: linear-gradient(to bottom, #ffffff, #f9fafb);
 }
 
-.color-search-input {
+/* Vendor Color Search Input (Blue Theme) */
+.color-search-input-vendor {
   width: 100%;
-  padding: 0.5rem;
-  border: 1px solid #d1d5db;
-  border-radius: 0.25rem;
-  font-size: 0.875rem;
+  padding: 0.75rem 1rem;
+  border: 2px solid #e5e7eb;
+  border-radius: 0.75rem;
+  font-size: 0.9375rem;
+  font-weight: 500;
+  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+  box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
 }
 
-.color-search-input:focus {
+.color-search-input-vendor:focus {
   outline: none;
-  border-color: #6366f1;
-  box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.1);
+  border-color: #3b82f6;
+  box-shadow: 0 0 0 4px rgba(59, 130, 246, 0.1), 0 2px 4px 0 rgba(0, 0, 0, 0.06);
 }
 
-.color-grid {
-  padding: 0.5rem;
+.color-search-input-vendor::placeholder {
+  color: #9ca3af;
+  font-weight: 400;
+}
+
+/* Products Manager Color Search Input (Orange Theme) */
+.color-search-input-pm {
+  width: 100%;
+  padding: 0.75rem 1rem;
+  border: 2px solid #e5e7eb;
+  border-radius: 0.75rem;
+  font-size: 0.9375rem;
+  font-weight: 500;
+  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+  box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+}
+
+.color-search-input-pm:focus {
+  outline: none;
+  border-color: #f59e0b;
+  box-shadow: 0 0 0 4px rgba(245, 158, 11, 0.1), 0 2px 4px 0 rgba(0, 0, 0, 0.06);
+}
+
+.color-search-input-pm::placeholder {
+  color: #9ca3af;
+  font-weight: 400;
+}
+
+/* Vendor Color Grid (Blue Theme) */
+.color-grid-vendor {
+  padding: 1rem;
   display: grid;
   grid-template-columns: repeat(4, 1fr);
-  gap: 0.5rem;
+  gap: 0.75rem;
+  max-height: 350px;
+  overflow-y: auto;
+  background-color: #fafafa;
 }
 
-.color-option {
+.color-grid-vendor::-webkit-scrollbar {
+  width: 8px;
+}
+
+.color-grid-vendor::-webkit-scrollbar-track {
+  background: #f3f4f6;
+  border-radius: 4px;
+}
+
+.color-grid-vendor::-webkit-scrollbar-thumb {
+  background: #d1d5db;
+  border-radius: 4px;
+}
+
+.color-grid-vendor::-webkit-scrollbar-thumb:hover {
+  background: #9ca3af;
+}
+
+.color-option-vendor {
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 0.5rem;
-  padding: 0.75rem 0.5rem;
-  border-radius: 0.375rem;
+  gap: 0.625rem;
+  padding: 1rem 0.75rem;
+  border-radius: 0.75rem;
   cursor: pointer;
-  transition: all 0.15s ease;
-  border: 1px solid transparent;
+  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+  border: 2px solid transparent;
   text-align: center;
+  background-color: #ffffff;
 }
 
-.color-option:hover {
-  background-color: #f3f4f6;
-  border-color: #d1d5db;
-  transform: translateY(-1px);
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-}
-
-.color-option.selected {
+.color-option-vendor:hover {
   background-color: #dbeafe;
+  border-color: #60a5fa;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(96, 165, 250, 0.3);
+}
+
+.color-option-vendor.selected {
+  background: linear-gradient(135deg, #dbeafe 0%, #bfdbfe 100%);
   border-color: #3b82f6;
-  box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.2);
+  box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.2), 0 4px 12px rgba(59, 130, 246, 0.3);
+  transform: translateY(-2px);
+}
+
+/* Products Manager Color Grid (Orange Theme) */
+.color-grid-pm {
+  padding: 1rem;
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 0.75rem;
+  max-height: 350px;
+  overflow-y: auto;
+  background-color: #fafafa;
+}
+
+.color-grid-pm::-webkit-scrollbar {
+  width: 8px;
+}
+
+.color-grid-pm::-webkit-scrollbar-track {
+  background: #f3f4f6;
+  border-radius: 4px;
+}
+
+.color-grid-pm::-webkit-scrollbar-thumb {
+  background: #d1d5db;
+  border-radius: 4px;
+}
+
+.color-grid-pm::-webkit-scrollbar-thumb:hover {
+  background: #9ca3af;
+}
+
+.color-option-pm {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.625rem;
+  padding: 1rem 0.75rem;
+  border-radius: 0.75rem;
+  cursor: pointer;
+  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+  border: 2px solid transparent;
+  text-align: center;
+  background-color: #ffffff;
+}
+
+.color-option-pm:hover {
+  background-color: #fef3c7;
+  border-color: #fbbf24;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(251, 191, 36, 0.3);
+}
+
+.color-option-pm.selected {
+  background: linear-gradient(135deg, #fef3c7 0%, #fde68a 100%);
+  border-color: #f59e0b;
+  box-shadow: 0 0 0 3px rgba(245, 158, 11, 0.2), 0 4px 12px rgba(245, 158, 11, 0.3);
+  transform: translateY(-2px);
 }
 
 .color-details {
@@ -855,36 +1060,83 @@ export default {
   flex-direction: column;
 }
 
+/* Enhanced Image Upload Container */
 .image-preview-container {
-  transition: all 0.3s ease;
-  box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px 0 rgba(0, 0, 0, 0.06);
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  box-shadow: 0 2px 4px 0 rgba(0, 0, 0, 0.06);
+  position: relative;
+  overflow: hidden;
+}
+
+.image-preview-container::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: linear-gradient(135deg, rgba(245, 158, 11, 0.05) 0%, rgba(249, 115, 22, 0.05) 100%);
+  opacity: 0;
+  transition: opacity 0.3s ease;
+  pointer-events: none;
+}
+
+.image-preview-container:hover::before {
+  opacity: 1;
 }
 
 .image-preview-container:hover {
-  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
-  transform: translateY(-1px);
+  box-shadow: 0 8px 16px -2px rgba(0, 0, 0, 0.1), 0 4px 8px -2px rgba(0, 0, 0, 0.06);
+  transform: translateY(-2px);
+  border-color: #f59e0b !important;
 }
 
 .image-preview-container.has-image {
   border-color: #10b981 !important;
-  background-color: #f0fdf4 !important;
-  box-shadow: 0 4px 6px -1px rgba(16, 185, 129, 0.1), 0 2px 4px -1px rgba(16, 185, 129, 0.06);
+  background: linear-gradient(135deg, #f0fdf4 0%, #dcfce7 100%);
+  box-shadow: 0 4px 12px -1px rgba(16, 185, 129, 0.2), 0 2px 6px -1px rgba(16, 185, 129, 0.1);
 }
 
+.image-preview-container.has-image::before {
+  background: linear-gradient(135deg, rgba(16, 185, 129, 0.05) 0%, rgba(5, 150, 105, 0.05) 100%);
+}
+
+.image-placeholder {
+  animation: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+}
+
+@keyframes pulse {
+  0%, 100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.7;
+  }
+}
+
+/* Modern Button Styles - Orange Theme for Products Manager */
 .vue-btn-blue-solid {
-  background-color: #3b82f6;
+  background: linear-gradient(135deg, #f59e0b 0%, #f97316 100%);
   color: #ffffff;
-  border: 1px solid #3b82f6;
-  padding: 0.5rem 1rem;
-  border-radius: 0.375rem;
-  font-size: 0.875rem;
-  font-weight: 500;
-  transition: all 0.15s ease;
+  border: 2px solid transparent;
+  padding: 0.75rem 1.25rem;
+  border-radius: 0.75rem;
+  font-size: 0.9375rem;
+  font-weight: 600;
+  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+  box-shadow: 0 2px 4px 0 rgba(245, 158, 11, 0.2);
+  letter-spacing: -0.01em;
 }
 
 .vue-btn-blue-solid:hover {
-  background-color: #2563eb;
-  border-color: #2563eb;
+  background: linear-gradient(135deg, #f97316 0%, #ea580c 100%);
+  box-shadow: 0 6px 16px 0 rgba(245, 158, 11, 0.4);
+  transform: translateY(-2px);
+}
+
+.vue-btn-blue-solid:active {
+  transform: translateY(0);
+  box-shadow: 0 2px 4px 0 rgba(245, 158, 11, 0.2);
 }
 
 
@@ -969,7 +1221,8 @@ export default {
     border-color: #374151;
   }
 
-  .color-search-input {
+  .color-search-input-vendor,
+  .color-search-input-pm {
     background-color: #374151;
     border-color: #4b5563;
     color: #f9fafb;
@@ -990,6 +1243,28 @@ export default {
   }
 }
 
+/* Modern File Input Styling */
+.modern-file-input {
+  cursor: pointer;
+  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.modern-file-input:hover {
+  transform: translateY(-1px);
+}
+
+/* Enhanced Card Styling */
+.vue-card.color-item {
+  background: linear-gradient(to bottom, #ffffff, #fafafa);
+  border: 2px solid #e5e7eb;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.vue-card.color-item:hover {
+  border-color: #f59e0b;
+  box-shadow: 0 12px 24px -4px rgba(245, 158, 11, 0.15), 0 8px 16px -4px rgba(0, 0, 0, 0.1);
+}
+
 /* Stock validation animations */
 @keyframes fade-in {
   from {
@@ -1004,5 +1279,38 @@ export default {
 
 .animate-fade-in {
   animation: fade-in 0.3s ease-out;
+}
+
+/* Loading and Success States */
+@keyframes shimmer {
+  0% {
+    background-position: -1000px 0;
+  }
+  100% {
+    background-position: 1000px 0;
+  }
+}
+
+.loading-shimmer {
+  animation: shimmer 2s infinite linear;
+  background: linear-gradient(to right, #f3f4f6 0%, #e5e7eb 20%, #f3f4f6 40%, #f3f4f6 100%);
+  background-size: 1000px 100%;
+}
+
+/* Success Checkmark Animation */
+@keyframes checkmark {
+  0% {
+    transform: scale(0) rotate(45deg);
+  }
+  50% {
+    transform: scale(1.2) rotate(45deg);
+  }
+  100% {
+    transform: scale(1) rotate(45deg);
+  }
+}
+
+.success-checkmark {
+  animation: checkmark 0.4s cubic-bezier(0.4, 0, 0.2, 1);
 }
 </style>

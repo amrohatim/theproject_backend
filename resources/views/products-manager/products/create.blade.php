@@ -401,7 +401,8 @@
          data-store-url="{{ route('products-manager.products.store') }}"
          data-session-store-url="{{ route('vendor.products.session.store') }}"
          data-session-get-url="{{ route('vendor.products.session.get') }}"
-         data-session-clear-url="{{ route('vendor.products.session.clear') }}">
+         data-session-clear-url="{{ route('vendor.products.session.clear') }}"
+         data-user-role="products_manager">
     </div>
 </div>
 @endsection

@@ -1,9 +1,17 @@
 <template>
-  <div class="vendor-product-create-app" :class="{ 'rtl': isRTL }">
+  <div class="vendor-product-create-app" :class="{ 'rtl': isRTL }" :style="{
+    '--theme-primary': themeColors.primary,
+    '--theme-primary-hover': themeColors.primaryHover,
+    '--theme-primary-light': themeColors.primaryLight,
+    '--theme-primary-dark': themeColors.primaryDark,
+    '--theme-gradient': themeColors.gradient,
+    '--theme-shadow': themeColors.shadow,
+    '--theme-ring': themeColors.ring
+  }">
     <!-- Loading State -->
     <div v-if="loading" class="fixed inset-0 bg-white bg-opacity-75 flex items-center justify-center z-50">
       <div class="text-center">
-        <div class="inline-block animate-spin rounded-full h-16 w-16 border-b-2 border-blue-600"></div>
+        <div class="inline-block animate-spin rounded-full h-16 w-16 border-b-2" :style="{ borderColor: themeColors.primary }"></div>
         <p class="mt-4 text-gray-600 text-lg">{{ $t('vendor.loading_product_creation_form') }}</p>
       </div>
     </div>
@@ -271,7 +279,9 @@
                 <h3 class="vue-text-lg">{{ $t('vendor.colors_and_images') }}</h3>
             <p class="text-sm text-gray-600">{{ $t('vendor.add_color_variants_images') }}</p>
               </div>
-              <button type="button" @click="addNewColor" class="vue-btn vue-btn-primary">
+              <button type="button" @click="addNewColor" style="color: #ffffff;
+  border-color: transparent;
+  box-shadow: 0 2px 4px 0 var(--theme-shadow);" class="vue-btn" :class="userRole === 'vendor' ? 'bg-blue-400 hover:bg-blue-500' : 'bg-orange-400 hover:bg-orange-500'">
                 <i class="fas fa-plus w-4 h-4"></i>
                 {{ $t('vendor.add_color') }}
               </button>
@@ -289,6 +299,7 @@
                 :general-stock="productData.stock"
                 :all-colors="productData.colors"
                 :errors="errors"
+                :user-role="userRole"
                 @update="updateColor"
                 @remove="removeColor"
                 @set-default="setDefaultColor"
@@ -303,7 +314,9 @@
               <i class="fas fa-palette text-gray-400 text-4xl mb-4"></i>
               <h3 class="text-lg font-medium text-gray-900 mb-2">{{ $t('vendor.no_colors_added_yet') }}</h3>
               <p class="text-gray-500 mb-4">{{ $t('vendor.add_color_variants_appealing') }}</p>
-              <button type="button" @click="addNewColor" class="vue-btn vue-btn-primary">
+              <button type="button" @click="addNewColor" style="color: #ffffff;
+  border-color: transparent;
+  box-shadow: 0 2px 4px 0 var(--theme-shadow);" class="vue-btn" :class="userRole === 'vendor' ? 'bg-blue-400 hover:bg-blue-500' : 'bg-orange-400 hover:bg-orange-500'">
                 <i class="fas fa-plus mr-2"></i>
                 {{ $t('vendor.add_first_color') }}
               </button>
@@ -339,7 +352,9 @@
                 <h3 class="vue-text-lg">{{ $t('vendor.product_specifications') }}</h3>
             <p class="text-sm text-gray-600">{{ $t('vendor.add_detailed_specifications') }}</p>
               </div>
-              <button type="button" @click="addNewSpecification" class="vue-btn vue-btn-primary">
+              <button type="button" @click="addNewSpecification" style="color: #ffffff;
+  border-color: transparent;
+  box-shadow: 0 2px 4px 0 var(--theme-shadow);" class="vue-btn" :class="userRole === 'vendor' ? 'bg-blue-400 hover:bg-blue-500' : 'bg-orange-400 hover:bg-orange-500'">
                 <i class="fas fa-plus w-4 h-4"></i>
                 {{ $t('vendor.add_specification') }}
               </button>
@@ -362,7 +377,9 @@
               <i class="fas fa-file-text text-gray-400 text-4xl mb-4"></i>
               <h3 class="text-lg font-medium text-gray-900 mb-2">{{ $t('vendor.no_specifications_added_yet') }}</h3>
               <p class="text-gray-500 mb-4">{{ $t('vendor.add_specifications_detailed_info') }}</p>
-              <button type="button" @click="addNewSpecification" class="vue-btn vue-btn-primary">
+              <button type="button" @click="addNewSpecification" class="vue-btn" style="color: #ffffff;
+  border-color: transparent;
+  box-shadow: 0 2px 4px 0 var(--theme-shadow);" :class="userRole === 'vendor' ? 'bg-blue-400 hover:bg-blue-500' : 'bg-orange-400 hover:bg-orange-500'">
                 <i class="fas fa-plus mr-2"></i>
                 {{ $t('vendor.add_first_specification') }}
               </button>
@@ -389,7 +406,9 @@
                 v-if="activeTab !== 'specifications'"
                 type="button"
                 @click="nextTab"
-                class="vue-btn vue-btn-primary"
+                class="vue-btn" style="color: #ffffff;
+  border-color: transparent;
+  box-shadow: 0 2px 4px 0 var(--theme-shadow);" :class="userRole === 'vendor' ? 'bg-blue-400 hover:bg-blue-500' : 'bg-orange-400 hover:bg-orange-500'"
               >
                 {{ $t('vendor.next') }}
                 <i class="fas fa-arrow-right" :class="isRTL ? 'mr-2' : 'ml-2'"></i>
@@ -491,6 +510,10 @@ export default {
     sessionClearUrl: {
       type: String,
       default: '/vendor/products/session/clear'
+    },
+    userRole: {
+      type: String,
+      default: 'vendor' // 'vendor' or 'products_manager'
     }
   },
   setup(props) {
@@ -575,6 +598,31 @@ export default {
       return totalAllocatedStock.value > productData.stock
     })
 
+    // Theme colors based on user role
+    const themeColors = computed(() => {
+      if (props.userRole === 'products_manager') {
+        return {
+          primary: '#f59e0b', // Orange
+          primaryHover: '#f97316',
+          primaryLight: '#fef3c7',
+          primaryDark: '#ea580c',
+          gradient: 'linear-gradient(135deg, #f59e0b 0%, #f97316 100%)',
+          shadow: 'rgba(245, 158, 11, 0.4)',
+          ring: 'rgba(245, 158, 11, 0.1)'
+        }
+      } else {
+        return {
+          primary: '#3b82f6', // Blue
+          primaryHover: '#2563eb',
+          primaryLight: '#dbeafe',
+          primaryDark: '#1d4ed8',
+          gradient: 'linear-gradient(135deg, #3b82f6 0%, #2563eb 100%)',
+          shadow: 'rgba(59, 130, 246, 0.4)',
+          ring: 'rgba(59, 130, 246, 0.1)'
+        }
+      }
+    })
+
     const showSaleBadge = computed(() => {
       return productData.original_price && productData.original_price > productData.price
     })
@@ -586,9 +634,9 @@ export default {
 
     // Methods
     const getTabClasses = (tabId) => {
-      const baseClasses = 'whitespace-nowrap py-4 px-1 border-b-2 font-medium text-sm transition-colors duration-200'
+      const baseClasses = 'whitespace-nowrap py-4 px-1 border-b-2 font-medium text-sm transition-colors duration-200 themed-tab'
       if (activeTab.value === tabId) {
-        return `${baseClasses} border-indigo-500 text-indigo-600`
+        return `${baseClasses} active-tab`
       }
       return `${baseClasses} border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300`
     }
@@ -1027,6 +1075,7 @@ export default {
       isStockOverAllocated,
       showSaleBadge,
       salePercentage,
+      themeColors,
 
       // Methods
       getTabClasses,
@@ -1094,8 +1143,8 @@ export default {
 
 .vue-form-control:focus {
   outline: none;
-  border-color: #6366f1;
-  box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.1);
+  border-color: var(--theme-primary);
+  box-shadow: 0 0 0 3px var(--theme-ring);
 }
 
 .vue-btn {
@@ -1117,14 +1166,16 @@ export default {
 }
 
 .vue-btn-primary {
-  background-color: #6366f1;
+ 
+  /* Blue for vendor, Orange for products_manager - controlled by themeColors computed property */
   color: #ffffff;
-  border-color: #6366f1;
+  border-color: transparent;
+  box-shadow: 0 2px 4px 0 var(--theme-shadow);
 }
 
 .vue-btn-primary:hover:not(:disabled) {
-  background-color: #5b21b6;
-  border-color: #5b21b6;
+  transform: translateY(-2px);
+  box-shadow: 0 6px 16px 0 var(--theme-shadow);
 }
 
 .vue-btn-secondary {
@@ -1267,6 +1318,17 @@ export default {
 /* Button groups RTL */
 .vendor-product-create-app.rtl .flex {
   direction: rtl;
+}
+
+/* Dynamic Theme Styles */
+.themed-tab.active-tab {
+  border-color: var(--theme-primary) !important;
+  color: var(--theme-primary) !important;
+}
+
+.themed-tab.active-tab:hover {
+  border-color: var(--theme-primary-hover) !important;
+  color: var(--theme-primary-hover) !important;
 }
 
 .vendor-product-create-app.rtl .justify-between {

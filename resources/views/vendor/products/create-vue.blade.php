@@ -5,12 +5,14 @@
 
 @section('styles')
 <style>
-    /* Vue.js specific styles */
+    /* Vue.js specific styles with modern UI improvements */
     .vue-app-container {
         min-height: 100vh;
+        background: linear-gradient(135deg, #f5f7fa 0%, #f0f2f5 100%);
+        padding: 2rem 0;
     }
 
-    /* Loading spinner styles */
+    /* Loading spinner styles - Enhanced */
     .spinner-border {
         width: 3rem;
         height: 3rem;
@@ -26,154 +28,188 @@
         }
     }
 
-    /* Vue component base styles */
+    /* Modern Typography */
     .vue-text-lg {
-        font-size: 1.125rem;
-        font-weight: 600;
+        font-size: 1.25rem;
+        font-weight: 700;
         color: #1f2937;
+        letter-spacing: -0.025em;
     }
 
     .vue-text-sm {
         font-size: 0.875rem;
-        font-weight: 500;
+        font-weight: 600;
         color: #374151;
+        letter-spacing: -0.01em;
     }
 
+    /* Enhanced Form Controls with Modern Design */
     .vue-form-control {
         width: 100%;
-        padding: 0.5rem 0.75rem;
-        border: 1px solid #d1d5db;
-        border-radius: 0.375rem;
+        padding: 0.75rem 1rem;
+        border: 2px solid #e5e7eb;
+        border-radius: 0.75rem;
         background-color: #ffffff;
         color: #1f2937;
-        font-size: 0.875rem;
-        transition: border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
+        font-size: 0.9375rem;
+        font-weight: 500;
+        transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+        box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+    }
+
+    .vue-form-control:hover {
+        border-color: #d1d5db;
+        box-shadow: 0 2px 4px 0 rgba(0, 0, 0, 0.06);
     }
 
     .vue-form-control:focus {
         outline: none;
-        border-color: #6366f1;
-        box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.1);
+        border-color: #f59e0b;
+        box-shadow: 0 0 0 4px rgba(245, 158, 11, 0.1), 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+        transform: translateY(-1px);
     }
 
+    .vue-form-control::placeholder {
+        color: #9ca3af;
+        font-weight: 400;
+    }
+
+    /* Modern Button Styles */
     .vue-btn {
         display: inline-flex;
         align-items: center;
-        padding: 0.5rem 1rem;
-        border-radius: 0.375rem;
-        font-size: 0.875rem;
-        font-weight: 500;
+        justify-content: center;
+        padding: 0.75rem 1.5rem;
+        border-radius: 0.75rem;
+        font-size: 0.9375rem;
+        font-weight: 600;
         text-decoration: none;
-        transition: all 0.15s ease-in-out;
+        transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
         cursor: pointer;
-        border: 1px solid transparent;
+        border: 2px solid transparent;
+        box-shadow: 0 2px 4px 0 rgba(0, 0, 0, 0.06);
+        letter-spacing: -0.01em;
+    }
+
+    .vue-btn:hover:not(:disabled) {
+        transform: translateY(-2px);
+        box-shadow: 0 4px 12px 0 rgba(0, 0, 0, 0.15);
+    }
+
+    .vue-btn:active:not(:disabled) {
+        transform: translateY(0);
+        box-shadow: 0 2px 4px 0 rgba(0, 0, 0, 0.06);
     }
 
     .vue-btn:disabled {
-        opacity: 0.5;
+        opacity: 0.6;
         cursor: not-allowed;
+        transform: none !important;
     }
 
     .vue-btn-primary {
-        background-color: #6366f1;
+        background: linear-gradient(135deg, #f59e0b 0%, #f97316 100%);
         color: #ffffff;
-        border-color: #6366f1;
+        border-color: transparent;
     }
 
     .vue-btn-primary:hover:not(:disabled) {
-        background-color: #5b21b6;
-        border-color: #5b21b6;
+        background: linear-gradient(135deg, #f97316 0%, #ea580c 100%);
+        box-shadow: 0 6px 16px 0 rgba(245, 158, 11, 0.4);
     }
 
     .vue-btn-secondary {
-        background-color: #6b7280;
-        color: #ffffff;
-        border-color: #6b7280;
+        background-color: #ffffff;
+        color: #374151;
+        border-color: #e5e7eb;
     }
 
     .vue-btn-secondary:hover:not(:disabled) {
-        background-color: #4b5563;
-        border-color: #4b5563;
+        background-color: #f9fafb;
+        border-color: #d1d5db;
     }
 
     .vue-btn-success {
-        background-color: #10b981;
+        background: linear-gradient(135deg, #10b981 0%, #059669 100%);
         color: #ffffff;
-        border-color: #10b981;
+        border-color: transparent;
     }
 
     .vue-btn-success:hover:not(:disabled) {
-        background-color: #059669;
-        border-color: #059669;
+        background: linear-gradient(135deg, #059669 0%, #047857 100%);
+        box-shadow: 0 6px 16px 0 rgba(16, 185, 129, 0.4);
     }
 
+    /* Enhanced Card Design */
     .vue-card {
         background-color: #ffffff;
         border: 1px solid #e5e7eb;
-        border-radius: 0.5rem;
-        box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px 0 rgba(0, 0, 0, 0.06);
+        border-radius: 1rem;
+        box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+        transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        overflow: hidden;
     }
 
-    /* Tab styles */
+    .vue-card:hover {
+        box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+        transform: translateY(-2px);
+    }
+
+    /* Tab styles - Modern Design */
     .vue-tab-content {
         min-height: 400px;
+        animation: fadeInUp 0.4s ease-out;
     }
 
-    /* Dark mode support */
-    @media (prefers-color-scheme: dark) {
-        .vue-text-lg {
-            color: #f9fafb;
+    @keyframes fadeInUp {
+        from {
+            opacity: 0;
+            transform: translateY(10px);
         }
-
-        .vue-text-sm {
-            color: #d1d5db;
-        }
-
-        .vue-form-control {
-            background-color: #374151;
-            border-color: #4b5563;
-            color: #f9fafb;
-        }
-
-        .vue-form-control:focus {
-            border-color: #6366f1;
-            box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.1);
-        }
-
-        .vue-card {
-            background-color: #1f2937;
-            border-color: #374151;
+        to {
+            opacity: 1;
+            transform: translateY(0);
         }
     }
 
-    /* Animation classes */
+    /* Enhanced Animation classes */
     .fade-enter-active, .fade-leave-active {
-        transition: opacity 0.3s;
+        transition: opacity 0.3s cubic-bezier(0.4, 0, 0.2, 1);
     }
 
     .fade-enter-from, .fade-leave-to {
         opacity: 0;
     }
 
-    /* Tab transition */
+    /* Smooth Tab transition */
     .tab-transition-enter-active, .tab-transition-leave-active {
-        transition: all 0.3s ease;
+        transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
     }
 
     .tab-transition-enter-from {
         opacity: 0;
-        transform: translateX(10px);
+        transform: translateX(20px);
     }
 
     .tab-transition-leave-to {
         opacity: 0;
-        transform: translateX(-10px);
+        transform: translateX(-20px);
     }
 
     /* Responsive adjustments */
     @media (max-width: 768px) {
         .vue-app-container {
             padding: 1rem;
+        }
+
+        .vue-btn {
+            padding: 0.625rem 1.25rem;
+            font-size: 0.875rem;
+        }
+
+        .vue-form-control {
+            padding: 0.625rem 0.875rem;
+            font-size: 0.875rem;
         }
     }
 </style>
@@ -412,14 +448,15 @@
     window.appTranslations = window.Laravel.translations;
 </script>
 
-<div id="vendor-product-create-app" 
+<div id="vendor-product-create-app"
      class="vue-app-container"
      data-back-url="{{ route('vendor.products.index') }}"
      data-create-data-url="{{ route('vendor.products.create.data') }}"
      data-store-url="{{ route('vendor.products.store') }}"
      data-session-store-url="{{ route('vendor.products.session.store') }}"
      data-session-get-url="{{ route('vendor.products.session.get') }}"
-     data-session-clear-url="{{ route('vendor.products.session.clear') }}">
+     data-session-clear-url="{{ route('vendor.products.session.clear') }}"
+     data-user-role="{{ auth()->user()->role ?? 'vendor' }}">
 </div>
 @endsection
 
