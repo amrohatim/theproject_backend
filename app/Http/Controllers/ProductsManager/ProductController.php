@@ -100,17 +100,55 @@ class ProductController extends Controller
 
         $request->validate([
             'name' => 'required|string|max:255',
-            'description' => 'nullable|string',
+            'product_name_arabic' => 'required|string|max:255',
+            'description' => 'nullable|string|required_with:product_description_arabic',
+            'product_description_arabic' => 'nullable|string|required_with:description',
             'price' => 'required|numeric|min:0',
-            'sale_price' => 'nullable|numeric|min:0',
+            'original_price' => 'nullable|numeric|min:0',
             'stock' => 'required|integer|min:0',
             'branch_id' => 'required|exists:branches,id',
-            'category_id' => 'nullable|exists:categories,id',
+            'category_id' => 'required|exists:categories,id',
             'sku' => 'nullable|string|max:255|unique:products',
             'weight' => 'nullable|numeric|min:0',
             'dimensions' => 'nullable|string|max:255',
-            'image' => 'nullable|image|mimes:jpeg,png,jpg,gif,webp|max:20480',
+            // Colors validation - now required
+            'colors' => 'required|array|min:1',
+            'colors.*.name' => 'required|string|max:255',
+            'colors.*.color_code' => 'nullable|string|max:10',
+            'colors.*.price_adjustment' => 'nullable|numeric',
+            'colors.*.stock' => 'nullable|integer|min:0',
+            'colors.*.display_order' => 'nullable|integer',
+            'colors.*.is_default' => 'nullable|boolean',
+            'color_images.*' => 'nullable|image|mimes:jpeg,png,jpg,gif,webp|max:20480',
+            // Specifications validation - made optional
+            'specifications' => 'nullable|array',
+            'specifications.*.key' => 'nullable|string|max:255',
+            'specifications.*.value' => 'nullable|string',
+            'specifications.*.display_order' => 'nullable|integer',
         ]);
+
+        // Custom validation: Ensure each color has an image
+        $colorImageErrors = [];
+        if ($request->has('colors') && is_array($request->colors)) {
+            foreach ($request->colors as $index => $colorData) {
+                if (!$request->hasFile("color_images.$index")) {
+                    $colorImageErrors["color_images.$index"] = "Image is required for color: " . ($colorData['name'] ?? "Color " . ($index + 1));
+                }
+            }
+        }
+
+        if (!empty($colorImageErrors)) {
+            if ($request->expectsJson() || $request->ajax()) {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'Validation failed.',
+                    'errors' => $colorImageErrors
+                ], 422);
+            }
+            return redirect()->back()
+                ->withInput()
+                ->withErrors($colorImageErrors);
+        }
 
         // Verify the branch belongs to the company
         $branch = Branch::where('id', $request->branch_id)
@@ -123,8 +161,9 @@ class ProductController extends Controller
                 ->withInput();
         }
 
-        $productData = $request->except('image');
+        $productData = $request->except(['specifications', 'colors', 'color_images', 'image']);
         $productData['status'] = 'available';
+        $productData['user_id'] = $user->id; // Assign the user ID
 
         // Handle is_available checkbox properly - convert boolean to integer
         // Check the actual value, not just presence, and convert to integer (1 or 0)
@@ -135,47 +174,118 @@ class ProductController extends Controller
             $productData['is_available'] = 0;
         }
 
-        // Handle image upload with WebP conversion
-        if ($request->hasFile('image')) {
-            $file = $request->file('image');
+        // We'll set the image later from the default color image
 
-            try {
+        // Create the product
+        $product = Product::create($productData);
+
+        // Add colors with their images (required)
+        $defaultColorImage = null;
+        $hasDefaultColor = false;
+
+        foreach ($request->colors as $index => $colorData) {
+            $isDefault = isset($colorData['is_default']) ? true : false;
+
+            // If this is marked as default or no default has been set yet
+            if ($isDefault) {
+                $hasDefaultColor = true;
+            }
+
+            // Process the color image (required)
+            $image = null;
+            if ($request->hasFile("color_images.$index")) {
+                $file = $request->file("color_images.$index");
+
                 // Convert to WebP and store
                 $webpService = new WebPImageService();
-                $imagePath = $webpService->convertAndStoreWithUrl($file, 'products');
+                $image = $webpService->convertAndStoreWithUrl($file, 'product-colors');
 
-                if ($imagePath) {
-                    $productData['image'] = $imagePath;
-                    Log::info('ProductsManager: WebP conversion successful for product image', [
-                        'original_name' => $file->getClientOriginalName(),
-                        'converted_path' => $imagePath
-                    ]);
-                } else {
+                if (!$image) {
                     // Fallback to original upload method if WebP conversion fails
-                    $imageName = time() . '_' . $file->getClientOriginalName();
-                    $file->move(public_path('images/products'), $imageName);
-                    $productData['image'] = 'images/products/' . $imageName;
+                    $path = $file->store('product-colors', 'public');
+                    $image = '/storage/' . $path;
 
-                    Log::warning('ProductsManager: WebP conversion failed, using fallback method', [
-                        'original_name' => $file->getClientOriginalName(),
-                        'fallback_path' => $productData['image']
-                    ]);
+                    // Ensure the file is accessible by copying it if needed
+                    $sourceFile = storage_path('app/public/' . $path);
+                    $publicFile = public_path('storage/' . $path);
+
+                    // Make sure the directory exists
+                    if (!file_exists(dirname($publicFile))) {
+                        mkdir(dirname($publicFile), 0755, true);
+                    }
+
+                    // If the file doesn't exist in the public directory, copy it there
+                    if (!file_exists($publicFile) && file_exists($sourceFile)) {
+                        copy($sourceFile, $publicFile);
+                        Log::debug("Copied image from {$sourceFile} to {$publicFile}");
+                    }
                 }
-            } catch (\Exception $e) {
-                // Fallback to original upload method on exception
-                $imageName = time() . '_' . $file->getClientOriginalName();
-                $file->move(public_path('images/products'), $imageName);
-                $productData['image'] = 'images/products/' . $imageName;
 
-                Log::error('ProductsManager: WebP conversion exception, using fallback method', [
-                    'error' => $e->getMessage(),
-                    'original_name' => $file->getClientOriginalName(),
-                    'fallback_path' => $productData['image']
-                ]);
+                // Log the image path for debugging
+                Log::debug("ProductsManager: Stored color image at URL: {$image}");
+
+                // If this is the default color, save its image to use as the product's main image
+                if ($isDefault) {
+                    $defaultColorImage = $image;
+                }
+            }
+
+            $color = $product->colors()->create([
+                'name' => $colorData['name'],
+                'color_code' => $colorData['color_code'] ?? null,
+                'image' => $image,
+                'price_adjustment' => $colorData['price_adjustment'] ?? 0,
+                'stock' => $colorData['stock'] ?? 0,
+                'display_order' => $colorData['display_order'] ?? $index,
+                'is_default' => $isDefault,
+            ]);
+        }
+
+        // If no color is marked as default, make the first one default
+        if (!$hasDefaultColor) {
+            $firstColor = $product->colors()->first();
+            if ($firstColor) {
+                $firstColor->update(['is_default' => true]);
+
+                // Use the first color's image as the default
+                $defaultColorImage = $firstColor->getRawOriginal('image');
             }
         }
 
-        $product = Product::create($productData);
+        // Set the product's main image to the default color image
+        if ($defaultColorImage) {
+            Log::debug("ProductsManager: Setting main product image to: {$defaultColorImage}");
+            $product->updateMainImageFromColorImage($defaultColorImage);
+
+            // Double-check that the image was set correctly
+            $product->refresh();
+            Log::debug("ProductsManager: Product image after update: {$product->getRawOriginal('image')}");
+        } else {
+            // This shouldn't happen with our validation, but just in case
+            if ($request->ajax() || $request->wantsJson() || $request->header('X-Requested-With') === 'XMLHttpRequest') {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'Please select a default color with an image.'
+                ], 422);
+            }
+            return redirect()->back()
+                ->withInput()
+                ->with('error', 'Please select a default color with an image.');
+        }
+
+        // Add specifications if provided (filter out empty ones)
+        if ($request->has('specifications') && is_array($request->specifications)) {
+            foreach ($request->specifications as $index => $spec) {
+                // Only create specification if both key and value are provided and not empty
+                if (!empty($spec['key']) && !empty($spec['value'])) {
+                    $product->specifications()->create([
+                        'key' => trim($spec['key']),
+                        'value' => trim($spec['value']),
+                        'display_order' => $spec['display_order'] ?? $index,
+                    ]);
+                }
+            }
+        }
 
         // Check if this is an AJAX request (from Vue component)
         if ($request->ajax() || $request->wantsJson() || $request->header('X-Requested-With') === 'XMLHttpRequest') {
