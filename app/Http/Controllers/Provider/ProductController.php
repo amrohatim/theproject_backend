@@ -131,7 +131,10 @@ class ProductController extends Controller
 
         $data = $request->except(['image', 'colors', 'color_images']);
         $data['user_id'] = Auth::id();
-        $data['is_available'] = $request->has('is_available') ? true : false;
+
+        // Handle is_available checkbox properly - convert boolean to integer (1 or 0)
+        $isAvailable = $request->input('is_available');
+        $data['is_available'] = ($isAvailable === 'true' || $isAvailable === true || $isAvailable === '1' || $isAvailable === 1) ? 1 : 0;
 
         // Ensure Arabic fields are included
         $data['product_name_arabic'] = $request->input('product_name_arabic');

@@ -439,8 +439,11 @@ class ProductController extends Controller
 
             // Prepare data for product creation
             $data = $request->except(['specifications', 'colors', 'sizes', 'branches', 'color_images']);
-            // Handle is_available checkbox properly - check the actual value, not just presence
-            $data['is_available'] = $request->input('is_available') == '1' || $request->input('is_available') === true;
+
+            // Handle is_available checkbox properly - convert boolean to integer (1 or 0)
+            $isAvailable = $request->input('is_available');
+            $data['is_available'] = ($isAvailable === 'true' || $isAvailable === true || $isAvailable === '1' || $isAvailable === 1) ? 1 : 0;
+
             $data['user_id'] = Auth::id(); // Keep user_id for tracking who created the product
 
             // Set merchant tracking fields
@@ -859,8 +862,10 @@ class ProductController extends Controller
 
         // Prepare data for product update
         $data = $request->except(['specifications', 'colors', 'sizes', 'branches', 'color_images', 'color_sizes', 'color_size_allocations']);
-        // Handle is_available checkbox properly - check the actual value, not just presence
-        $data['is_available'] = $request->input('is_available') == '1' || $request->input('is_available') === true;
+
+        // Handle is_available checkbox properly - convert boolean to integer (1 or 0)
+        $isAvailable = $request->input('is_available');
+        $data['is_available'] = ($isAvailable === 'true' || $isAvailable === true || $isAvailable === '1' || $isAvailable === 1) ? 1 : 0;
 
         // Update basic product information
         $product->update($data);

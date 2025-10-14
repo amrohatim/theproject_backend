@@ -74,44 +74,123 @@
         color: #374151;
     }
 
-    .vue-form-control {
+    /* Enhanced Form Controls with Modern Design - Vendor (Blue Theme) */
+    .vue-form-control-vendor {
         width: 100%;
-        padding: 0.5rem 0.75rem;
-        border: 1px solid #d1d5db;
-        border-radius: 0.375rem;
+        padding: 0.75rem 1rem;
+        border: 2px solid #e5e7eb;
+        border-radius: 0.75rem;
         background-color: #ffffff;
         color: #1f2937;
-        font-size: 0.875rem;
-        transition: border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
+        font-size: 0.9375rem;
+        font-weight: 500;
+        transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+        box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
     }
 
+    .vue-form-control-vendor:hover {
+        border-color: #d1d5db;
+        box-shadow: 0 2px 4px 0 rgba(0, 0, 0, 0.06);
+    }
+
+    .vue-form-control-vendor:focus {
+        outline: none;
+        border-color: #3b82f6;
+        box-shadow: 0 0 0 4px rgba(59, 130, 246, 0.1), 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+        transform: translateY(-1px);
+    }
+
+    .vue-form-control-vendor::placeholder {
+        color: #9ca3af;
+        font-weight: 400;
+    }
+
+    /* Enhanced Form Controls with Modern Design - Products Manager (Orange Theme) */
+    .vue-form-control-pm {
+        width: 100%;
+        padding: 0.75rem 1rem;
+        border: 2px solid #e5e7eb;
+        border-radius: 0.75rem;
+        background-color: #ffffff;
+        color: #1f2937;
+        font-size: 0.9375rem;
+        font-weight: 500;
+        transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+        box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+    }
+
+    .vue-form-control-pm:hover {
+        border-color: #d1d5db;
+        box-shadow: 0 2px 4px 0 rgba(0, 0, 0, 0.06);
+    }
+
+    .vue-form-control-pm:focus {
+        outline: none;
+        border-color: #f59e0b;
+        box-shadow: 0 0 0 4px rgba(245, 158, 11, 0.1), 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+        transform: translateY(-1px);
+    }
+
+    .vue-form-control-pm::placeholder {
+        color: #9ca3af;
+        font-weight: 400;
+    }
+
+    /* Modern Button Styles */
     .vue-btn {
         display: inline-flex;
         align-items: center;
-        padding: 0.5rem 1rem;
-        border-radius: 0.375rem;
-        font-size: 0.875rem;
-        font-weight: 500;
+        justify-content: center;
+        padding: 0.75rem 1.5rem;
+        border-radius: 0.75rem;
+        font-size: 0.9375rem;
+        font-weight: 600;
         text-decoration: none;
-        transition: all 0.15s ease-in-out;
+        transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
         cursor: pointer;
-        border: 1px solid transparent;
+        border: 2px solid transparent;
+        box-shadow: 0 2px 4px 0 rgba(0, 0, 0, 0.06);
+        letter-spacing: -0.01em;
+    }
+
+    .vue-btn:hover:not(:disabled) {
+        transform: translateY(-2px);
+        box-shadow: 0 4px 12px 0 rgba(0, 0, 0, 0.15);
+    }
+
+    .vue-btn:active:not(:disabled) {
+        transform: translateY(0);
+        box-shadow: 0 2px 4px 0 rgba(0, 0, 0, 0.06);
     }
 
     .vue-btn:disabled {
-        opacity: 0.5;
+        opacity: 0.6;
         cursor: not-allowed;
+        transform: none !important;
     }
 
-    .vue-btn-primary {
-        background-color: var(--pm-orange);
+    /* Vendor Primary Button (Blue Theme) */
+    .vue-btn-primary-vendor {
+        background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%);
         color: #ffffff;
-        border-color: var(--pm-orange);
+        border-color: transparent;
     }
 
-    .vue-btn-primary:hover {
-        background-color: var(--pm-orange-hover);
-        border-color: var(--pm-orange-hover);
+    .vue-btn-primary-vendor:hover:not(:disabled) {
+        background: linear-gradient(135deg, #2563eb 0%, #1d4ed8 100%);
+        box-shadow: 0 6px 16px 0 rgba(59, 130, 246, 0.4);
+    }
+
+    /* Products Manager Primary Button (Orange Theme) */
+    .vue-btn-primary-pm {
+        background: linear-gradient(135deg, #f59e0b 0%, #f97316 100%);
+        color: #ffffff;
+        border-color: transparent;
+    }
+
+    .vue-btn-primary-pm:hover:not(:disabled) {
+        background: linear-gradient(135deg, #f97316 0%, #ea580c 100%);
+        box-shadow: 0 6px 16px 0 rgba(245, 158, 11, 0.4);
     }
 
     /* Tab styles with orange theme */

@@ -126,6 +126,15 @@ class ProductController extends Controller
         $productData = $request->except('image');
         $productData['status'] = 'available';
 
+        // Handle is_available checkbox properly - convert boolean to integer
+        // Check the actual value, not just presence, and convert to integer (1 or 0)
+        $isAvailable = $request->input('is_available');
+        if ($isAvailable === 'true' || $isAvailable === true || $isAvailable === '1' || $isAvailable === 1) {
+            $productData['is_available'] = 1;
+        } else {
+            $productData['is_available'] = 0;
+        }
+
         // Handle image upload with WebP conversion
         if ($request->hasFile('image')) {
             $file = $request->file('image');
@@ -166,7 +175,16 @@ class ProductController extends Controller
             }
         }
 
-        Product::create($productData);
+        $product = Product::create($productData);
+
+        // Check if this is an AJAX request (from Vue component)
+        if ($request->ajax() || $request->wantsJson() || $request->header('X-Requested-With') === 'XMLHttpRequest') {
+            return response()->json([
+                'success' => true,
+                'message' => 'Product created successfully.',
+                'product' => $product
+            ], 201);
+        }
 
         return redirect()->route('products-manager.products.index')
             ->with('success', 'Product created successfully.');
@@ -272,6 +290,15 @@ class ProductController extends Controller
 
         $productData = $request->except('image');
 
+        // Handle is_available checkbox properly - convert boolean to integer
+        // Check the actual value, not just presence, and convert to integer (1 or 0)
+        $isAvailable = $request->input('is_available');
+        if ($isAvailable === 'true' || $isAvailable === true || $isAvailable === '1' || $isAvailable === 1) {
+            $productData['is_available'] = 1;
+        } else {
+            $productData['is_available'] = 0;
+        }
+
         // Handle image upload with WebP conversion
         if ($request->hasFile('image')) {
             $file = $request->file('image');
@@ -331,6 +358,15 @@ class ProductController extends Controller
         }
 
         $product->update($productData);
+
+        // Check if this is an AJAX request (from Vue component)
+        if ($request->ajax() || $request->wantsJson() || $request->header('X-Requested-With') === 'XMLHttpRequest') {
+            return response()->json([
+                'success' => true,
+                'message' => 'Product updated successfully.',
+                'product' => $product->fresh()
+            ], 200);
+        }
 
         return redirect()->route('products-manager.products.index')
             ->with('success', 'Product updated successfully.');

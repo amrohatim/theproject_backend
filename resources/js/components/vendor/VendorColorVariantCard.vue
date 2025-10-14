@@ -119,13 +119,11 @@
                          :value="color.color_code"
                          @input="updateColor('color_code', $event.target.value)"
                          placeholder="#FF0000"
-                         class="vue-form-control text-sm font-mono tracking-wider"
+                         class="vue-form-control  text-sm font-mono tracking-wider"
+                         :class="userRole === 'vendor' ? 'vue-form-control-vendor' : 'vue-form-control-pm'"
                          pattern="^#[0-9A-Fa-f]{6}$"
                          title="Enter a valid hex color code (e.g., #FF0000)">
-                  <div class="absolute right-3 top-1/2 transform -translate-y-1/2">
-                    <div class="w-6 h-6 rounded border border-gray-300 shadow-sm"
-                         :style="{ backgroundColor: color.color_code || '#ffffff' }"></div>
-                  </div>
+                  
                 </div>
               </div>
             </div>
@@ -141,7 +139,7 @@
                      @keypress="$event.key.match(/[0-9.]/) === null && $event.preventDefault()"
                      @paste="e => { e.preventDefault(); const text = e.clipboardData.getData('text'); if(text.match(/^[0-9.]*$/)) e.target.value = text; }"
                      placeholder="0.00"
-                     class="vue-form-control">
+                     :class="userRole === 'vendor' ? 'vue-form-control-vendor' : 'vue-form-control-pm'">
             </div>
 
             <div class="space-y-2">
@@ -163,10 +161,11 @@
                        @keydown="handleStockKeydown($event)"
                        placeholder="0"
                        class="vue-form-control transition-all duration-200"
-                       :class="{
-                         'border-red-500 bg-red-50': isStockExceeded,
-                         'border-green-500 bg-green-50': stockCorrectionApplied
-                       }"
+                       :class="[
+                         userRole === 'vendor' ? 'vue-form-control-vendor' : 'vue-form-control-pm',
+                         isStockExceeded ? 'border-red-500 bg-red-50' : '',
+                         stockCorrectionApplied ? 'border-green-500 bg-green-50' : ''
+                       ]"
                        ref="stockInput">
                 <div v-if="showStockCorrection" class="absolute top-full left-0 right-0 mt-1 p-2 bg-amber-50 border border-amber-200 rounded text-xs text-amber-700 animate-fade-in">
                   {{ stockCorrectionMessage }}
@@ -200,7 +199,7 @@
                    @keypress="$event.key.match(/[0-9]/) === null && $event.preventDefault()"
                    min="0"
                    placeholder="0"
-                   class="vue-form-control">
+                   :class="userRole === 'vendor' ? 'vue-form-control-vendor' : 'vue-form-control-pm'">
           </div>
         </div>
 
@@ -319,7 +318,8 @@ const colorOptions = [
   { name: 'Gold', value: '#FFD700' },
   { name: 'Crimson', value: '#DC143C' },
   { name: 'Chocolate', value: '#D2691E' },
-  { name: 'Beige', value: '#F5F5DC' }
+  { name: 'Beige', value: '#F5F5DC' },
+  
 ]
 
 export default {
@@ -446,7 +446,8 @@ export default {
       { name: 'Black', code: '#000000' },
       { name: 'Gray', code: '#808080' },
       { name: 'Silver', code: '#C0C0C0' },
-      { name: 'White', code: '#FFFFFF' }
+      { name: 'White', code: '#FFFFFF' },
+      
     ]
 
     const filteredColorOptions = computed(() => {

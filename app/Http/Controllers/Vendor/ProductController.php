@@ -583,8 +583,15 @@ class ProductController extends Controller
         }
 
         $data = $request->except(['specifications', 'colors', 'sizes', 'branches', 'color_images']);
-        $data['is_available'] = $request->has('is_available') ? true : false;
-        $data['is_multi_branch'] = $request->has('is_multi_branch') ? true : false;
+
+        // Handle is_available checkbox properly - convert boolean to integer (1 or 0)
+        $isAvailable = $request->input('is_available');
+        $data['is_available'] = ($isAvailable === 'true' || $isAvailable === true || $isAvailable === '1' || $isAvailable === 1) ? 1 : 0;
+
+        // Handle is_multi_branch checkbox properly - convert boolean to integer (1 or 0)
+        $isMultiBranch = $request->input('is_multi_branch');
+        $data['is_multi_branch'] = ($isMultiBranch === 'true' || $isMultiBranch === true || $isMultiBranch === '1' || $isMultiBranch === 1) ? 1 : 0;
+
         $data['user_id'] = $this->getActingVendorUserId(); // Assign the acting vendor's user ID
 
         // Set merchant tracking fields (vendor dashboard = not merchant)
@@ -1088,8 +1095,14 @@ class ProductController extends Controller
         }
 
         $data = $request->except(['specifications', 'colors', 'sizes', 'branches', 'color_images']);
-        $data['is_available'] = $request->has('is_available') ? true : false;
-        $data['is_multi_branch'] = $request->has('is_multi_branch') ? true : false;
+
+        // Handle is_available checkbox properly - convert boolean to integer (1 or 0)
+        $isAvailable = $request->input('is_available');
+        $data['is_available'] = ($isAvailable === 'true' || $isAvailable === true || $isAvailable === '1' || $isAvailable === 1) ? 1 : 0;
+
+        // Handle is_multi_branch checkbox properly - convert boolean to integer (1 or 0)
+        $isMultiBranch = $request->input('is_multi_branch');
+        $data['is_multi_branch'] = ($isMultiBranch === 'true' || $isMultiBranch === true || $isMultiBranch === '1' || $isMultiBranch === 1) ? 1 : 0;
 
         // Update basic product information
         $product->update($data);

@@ -443,7 +443,7 @@
             <button @click="closeSuccessModal" class="vue-btn vue-btn-secondary">
               {{ $t('vendor.view_products') }}
             </button>
-            <button @click="createAnother" class="vue-btn vue-btn-primary">
+            <button @click="createAnother" class="vue-btn vue-btn-primary" :style="userRole === 'vendor' ? 'background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%);' : 'background: linear-gradient(135deg, #f59e0b 0%, #f97316 100%);'">
               {{ $t('vendor.create_another') }}
             </button>
           </div>
@@ -463,7 +463,7 @@
             {{ errorMessage || $t('vendor.unexpected_error_try_again') }}
           </div>
           <div class="flex justify-center mt-6">
-            <button @click="closeErrorModal" class="vue-btn vue-btn-primary">
+            <button @click="closeErrorModal" class="vue-btn" :style="userRole === 'vendor' ? 'background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%);' : 'background: linear-gradient(135deg, #f59e0b 0%, #f97316 100%);'">
               {{ $t('vendor.try_again') }}
             </button>
           </div>
@@ -782,6 +782,14 @@ export default {
             // Ensure branch_id is sent as a number
             if (key === 'branch_id' && value) {
               value = parseInt(value)
+            }
+            // Convert boolean is_available to string '1' or '0'
+            if (key === 'is_available') {
+              value = value ? '1' : '0'
+            }
+            // Convert boolean is_multi_branch to string '1' or '0'
+            if (key === 'is_multi_branch') {
+              value = value ? '1' : '0'
             }
             // Only append original_price if it has a value
             if (key === 'original_price' && (value === null || value === '')) {
