@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Vendor;
 use App\Http\Controllers\Controller;
 use App\Models\Branch;
 use App\Models\Product;
+use App\Models\ProductColorSize;
 use App\Models\ProductSize;
 use App\Models\ProductsManager;
 use Illuminate\Http\Request;
@@ -143,12 +144,35 @@ class ProductSizeController extends Controller
         try {
             DB::beginTransaction();
 
-            $size->update([
+            // Debug logging
+            Log::info('Size update attempt', [
+                'size_id' => $size->id,
+                'current_stock' => $size->stock,
+                'new_stock' => $request->stock,
+                'request_data' => $request->all()
+            ]);
+
+            // Update the base size information
+            $updateResult = $size->update([
                 'name' => $request->name,
                 'value' => $request->value,
                 'stock' => $request->stock,
                 'price_adjustment' => $request->price_adjustment ?? 0,
                 'display_order' => $request->display_order ?? $size->display_order,
+            ]);
+
+            // CRITICAL FIX: Also update the corresponding ProductColorSize records
+            // This ensures data consistency between product_sizes and product_color_sizes tables
+            $colorSizeUpdates = \App\Models\ProductColorSize::where('product_size_id', $size->id)->update([
+                'stock' => $request->stock,
+                'price_adjustment' => $request->price_adjustment ?? 0,
+            ]);
+
+            Log::info('Size update result', [
+                'size_id' => $size->id,
+                'update_result' => $updateResult,
+                'color_size_updates' => $colorSizeUpdates,
+                'stock_after_update' => $size->fresh()->stock
             ]);
 
             DB::commit();
