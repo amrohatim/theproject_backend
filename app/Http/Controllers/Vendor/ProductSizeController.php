@@ -3,8 +3,10 @@
 namespace App\Http\Controllers\Vendor;
 
 use App\Http\Controllers\Controller;
+use App\Models\Branch;
 use App\Models\Product;
 use App\Models\ProductSize;
+use App\Models\ProductsManager;
 use Illuminate\Http\Request;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Facades\Auth;
@@ -104,9 +106,39 @@ class ProductSizeController extends Controller
         ]);
 
         $size = ProductSize::findOrFail($request->size_id);
-        
+
         // Verify the size belongs to a product owned by the authenticated vendor or managed by products manager
-        $product = Product::where('user_id', $this->getActingVendorUserId())->findOrFail($size->product_id);
+        $product = Product::findOrFail($size->product_id);
+
+        // Get the company ID based on user role
+        $user = Auth::user();
+        if ($user->role === 'products_manager') {
+            // For products manager, get company ID from products_managers table
+            $productsManager = ProductsManager::where('user_id', $user->id)->first();
+            if (!$productsManager) {
+                Log::warning('ProductsManager record not found for user', ['user_id' => $user->id]);
+                return response()->json([
+                    'success' => false,
+                    'message' => 'Access denied - ProductsManager record not found'
+                ], 403);
+            }
+            $companyId = $productsManager->company_id;
+        } else {
+            // For vendor, get company ID from user record
+            $companyId = $user->company_id;
+        }
+
+        // Verify the product belongs to a branch owned by the vendor's company
+        $branch = Branch::where('id', $product->branch_id)
+                       ->where('company_id', $companyId)
+                       ->first();
+
+        if (!$branch) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Product not found or access denied'
+            ], 404);
+        }
 
         try {
             DB::beginTransaction();

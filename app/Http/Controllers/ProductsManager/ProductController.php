@@ -273,6 +273,44 @@ class ProductController extends Controller
                 ->with('error', 'Please select a default color with an image.');
         }
 
+        // Process sizes for each color
+        foreach ($request->colors as $index => $colorData) {
+            $color = $product->colors()->skip($index)->first(); // Get the color we just created
+
+            // Process sizes for this color
+            if (isset($colorData['sizes']) && is_array($colorData['sizes'])) {
+                foreach ($colorData['sizes'] as $sizeIndex => $sizeData) {
+                    if (!empty($sizeData['name'])) {
+                        // Determine size category ID from size data
+                        $sizeCategoryId = $this->getSizeCategoryId($sizeData);
+
+                        $size = $product->sizes()->create([
+                            'name' => $sizeData['name'],
+                            'value' => $sizeData['value'] ?? null,
+                            'additional_info' => $sizeData['additional_info'] ?? null,
+                            'price_adjustment' => $sizeData['price_adjustment'] ?? 0,
+                            'stock' => $sizeData['stock'] ?? 0,
+                            'display_order' => $sizeData['display_order'] ?? $sizeIndex,
+                            'is_default' => isset($sizeData['is_default']) ? true : false,
+                            'size_category_id' => $sizeCategoryId,
+                        ]);
+
+                        // Create the color-size combination
+                        if ($sizeData['stock'] > 0) {
+                            \App\Models\ProductColorSize::create([
+                                'product_id' => $product->id,
+                                'product_color_id' => $color->id,
+                                'product_size_id' => $size->id,
+                                'stock' => $sizeData['stock'],
+                                'price_adjustment' => $sizeData['price_adjustment'] ?? 0,
+                                'is_available' => true,
+                            ]);
+                        }
+                    }
+                }
+            }
+        }
+
         // Add specifications if provided (filter out empty ones)
         if ($request->has('specifications') && is_array($request->specifications)) {
             foreach ($request->specifications as $index => $spec) {
@@ -569,5 +607,56 @@ class ProductController extends Controller
         });
 
         return redirect()->back()->with('success', 'Product statuses updated successfully.');
+    }
+
+    /**
+     * Get size category ID from size data.
+     *
+     * @param array $sizeData
+     * @return int|null
+     */
+    private function getSizeCategoryId(array $sizeData): ?int
+    {
+        // First, check if we have explicit category information from the form
+        if (!empty($sizeData['category'])) {
+            return $this->getSizeCategoryIdByName($sizeData['category']);
+        }
+
+        // Fallback: try to determine category from size name patterns
+        if (empty($sizeData['size_name'])) {
+            return null;
+        }
+
+        $sizeName = strtolower($sizeData['size_name']);
+
+        // Check for clothing sizes (S, M, L, XL, etc.)
+        if (preg_match('/^(xxs|xs|s|m|l|xl|xxl|xxxl)$/i', $sizeName)) {
+            return $this->getSizeCategoryIdByName('clothes');
+        }
+
+        // Check for shoe sizes (numbers)
+        if (preg_match('/^\d+(\.\d+)?$/', $sizeName) || preg_match('/^(eu\s*)?\d+$/i', $sizeName)) {
+            return $this->getSizeCategoryIdByName('shoes');
+        }
+
+        // Check for hat sizes
+        if (preg_match('/^(one\s*size|os|free\s*size|adjustable)$/i', $sizeName)) {
+            return $this->getSizeCategoryIdByName('hats');
+        }
+
+        // Default to clothes if we can't determine
+        return $this->getSizeCategoryIdByName('clothes');
+    }
+
+    /**
+     * Get size category ID by name.
+     *
+     * @param string $categoryName
+     * @return int|null
+     */
+    private function getSizeCategoryIdByName(string $categoryName): ?int
+    {
+        $sizeCategory = \App\Models\SizeCategory::where('name', $categoryName)->first();
+        return $sizeCategory ? $sizeCategory->id : null;
     }
 }
