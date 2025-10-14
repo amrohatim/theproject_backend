@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Vendor;
 
 use App\Http\Controllers\Controller;
+use App\Models\Branch;
 use App\Models\Product;
 use App\Models\ProductColor;
 use App\Models\ProductSize;
@@ -43,8 +44,23 @@ class ProductColorSizeController extends Controller
 
         $color = ProductColor::findOrFail($request->color_id);
 
-        // Verify the color belongs to a product owned by the authenticated vendor or managed by products manager
-        $product = Product::where('user_id', $this->getActingVendorUserId())->findOrFail($request->product_id);
+        // Verify the color belongs to a product owned by the authenticated vendor's company (branch-based ownership)
+        $actingVendorUserId = $this->getActingVendorUserId();
+
+        // Get branches that belong to the vendor's company
+        $userBranches = Branch::whereHas('company', function ($query) use ($actingVendorUserId) {
+            $query->where('user_id', $actingVendorUserId);
+        })->pluck('id')->toArray();
+
+        // Find the product and verify it belongs to one of the vendor's branches
+        $product = Product::findOrFail($request->product_id);
+
+        if (!in_array($product->branch_id, $userBranches)) {
+            return response()->json([
+                'success' => false,
+                'message' => 'You do not have permission to access this product.',
+            ], 403);
+        }
 
         if ($color->product_id !== $product->id) {
             return response()->json([
@@ -250,8 +266,23 @@ class ProductColorSizeController extends Controller
             'is_available' => 'nullable|boolean',
         ]);
 
-        // Verify the product belongs to the authenticated vendor or managed by products manager
-        $product = Product::where('user_id', $this->getActingVendorUserId())->findOrFail($request->product_id);
+        // Verify the product belongs to the authenticated vendor's company (branch-based ownership)
+        $actingVendorUserId = $this->getActingVendorUserId();
+
+        // Get branches that belong to the vendor's company
+        $userBranches = Branch::whereHas('company', function ($query) use ($actingVendorUserId) {
+            $query->where('user_id', $actingVendorUserId);
+        })->pluck('id')->toArray();
+
+        // Find the product and verify it belongs to one of the vendor's branches
+        $product = Product::findOrFail($request->product_id);
+
+        if (!in_array($product->branch_id, $userBranches)) {
+            return response()->json([
+                'success' => false,
+                'message' => 'You do not have permission to access this product.',
+            ], 403);
+        }
 
         // Verify the color belongs to this product
         $color = ProductColor::where('product_id', $product->id)->findOrFail($request->color_id);
@@ -342,8 +373,23 @@ class ProductColorSizeController extends Controller
         $size = ProductSize::findOrFail($request->size_id);
         $color = ProductColor::findOrFail($request->color_id);
 
-        // Verify the size and color belong to a product owned by the authenticated vendor or managed by products manager
-        $product = Product::where('user_id', $this->getActingVendorUserId())->findOrFail($size->product_id);
+        // Verify the size and color belong to a product owned by the authenticated vendor's company (branch-based ownership)
+        $actingVendorUserId = $this->getActingVendorUserId();
+
+        // Get branches that belong to the vendor's company
+        $userBranches = Branch::whereHas('company', function ($query) use ($actingVendorUserId) {
+            $query->where('user_id', $actingVendorUserId);
+        })->pluck('id')->toArray();
+
+        // Find the product and verify it belongs to one of the vendor's branches
+        $product = Product::findOrFail($size->product_id);
+
+        if (!in_array($product->branch_id, $userBranches)) {
+            return response()->json([
+                'success' => false,
+                'message' => 'You do not have permission to access this product.',
+            ], 403);
+        }
 
         if ($color->product_id !== $product->id) {
             return response()->json([
@@ -430,8 +476,23 @@ class ProductColorSizeController extends Controller
         $size = ProductSize::findOrFail($request->size_id);
         $color = ProductColor::findOrFail($request->color_id);
 
-        // Verify the size and color belong to a product owned by the authenticated vendor or managed by products manager
-        $product = Product::where('user_id', $this->getActingVendorUserId())->findOrFail($size->product_id);
+        // Verify the size and color belong to a product owned by the authenticated vendor's company (branch-based ownership)
+        $actingVendorUserId = $this->getActingVendorUserId();
+
+        // Get branches that belong to the vendor's company
+        $userBranches = Branch::whereHas('company', function ($query) use ($actingVendorUserId) {
+            $query->where('user_id', $actingVendorUserId);
+        })->pluck('id')->toArray();
+
+        // Find the product and verify it belongs to one of the vendor's branches
+        $product = Product::findOrFail($size->product_id);
+
+        if (!in_array($product->branch_id, $userBranches)) {
+            return response()->json([
+                'success' => false,
+                'message' => 'You do not have permission to access this product.',
+            ], 403);
+        }
 
         if ($color->product_id !== $product->id) {
             return response()->json([

@@ -475,6 +475,10 @@ export default {
     backUrl: {
       type: String,
       default: '/vendor/products'
+    },
+    editDataUrl: {
+      type: String,
+      default: null
     }
   },
   setup(props) {
@@ -498,7 +502,7 @@ export default {
 
       return translation;
     };
-    
+
     // Reactive data
     const activeTab = ref('basic')
     const saving = ref(false)
@@ -589,7 +593,9 @@ export default {
     const fetchProductData = async () => {
       try {
         loading.value = true
-        const response = await window.axios.get(`/vendor/products/${props.productId}/edit-data`)
+        // Use editDataUrl prop if provided, otherwise fall back to vendor URL
+        const url = props.editDataUrl || `/vendor/products/${props.productId}/edit-data`
+        const response = await window.axios.get(url)
 
         // Populate product data
         Object.assign(productData, response.data.product)
@@ -1139,6 +1145,8 @@ export default {
       showErrorModal,
       errorMessage,
       currentLanguage,
+
+      colorVariantRefs,
 
       // Computed
       totalAllocatedStock,

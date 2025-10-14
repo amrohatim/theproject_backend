@@ -489,6 +489,16 @@ export default {
       validateNewSizeField('value')
     }
 
+    // Detect if we're in Products Manager context
+    const isProductsManagerContext = computed(() => {
+      return window.location.pathname.includes('/products-manager/')
+    })
+
+    // Get the appropriate API base path
+    const getApiBasePath = () => {
+      return isProductsManagerContext.value ? '/products-manager' : '/vendor'
+    }
+
     // Fetch existing sizes from API
     const fetchSizes = async () => {
       // Skip API calls during product creation mode
@@ -510,7 +520,9 @@ export default {
 
         console.log('Fetching sizes for colorId:', props.colorId, 'productId:', props.productId)
 
-        const response = await window.axios.post('/vendor/api/color-sizes/get-sizes-for-color', {
+        // Use context-aware API path
+        const apiPath = `${getApiBasePath()}/api/color-sizes/get-sizes-for-color`
+        const response = await window.axios.post(apiPath, {
           color_id: parseInt(props.colorId),
           product_id: parseInt(props.productId),
           only_allocated: true
@@ -598,7 +610,9 @@ export default {
           price_adjustment: size.price_adjustment
         })
 
-        const response = await window.axios.post('/vendor/api/sizes/update', {
+        // Use context-aware API path
+        const apiPath = `${getApiBasePath()}/api/sizes/update`
+        const response = await window.axios.post(apiPath, {
           size_id: size.id,
           color_id: props.colorId,
           name: size.name,
@@ -670,7 +684,9 @@ export default {
       try {
         saving.value = true
 
-        const response = await window.axios.post('/vendor/api/sizes/delete', {
+        // Use context-aware API path
+        const apiPath = `${getApiBasePath()}/api/sizes/delete`
+        const response = await window.axios.post(apiPath, {
           size_id: size.id,
           color_id: props.colorId
         })
@@ -719,7 +735,9 @@ export default {
         }
 
         // Call the API to create the size with the pending data
-        const response = await window.axios.post('/vendor/api/sizes/create', {
+        // Use context-aware API path
+        const apiPath = `${getApiBasePath()}/api/sizes/create`
+        const response = await window.axios.post(apiPath, {
           product_id: props.productId,
           color_id: colorId,
           name: pendingSizeData.name,
@@ -842,7 +860,9 @@ export default {
         }
 
         // Call the API to create the size
-        const response = await window.axios.post('/vendor/api/sizes/create', {
+        // Use context-aware API path
+        const apiPath = `${getApiBasePath()}/api/sizes/create`
+        const response = await window.axios.post(apiPath, {
           product_id: props.productId,
           color_id: colorId,
           name: newSize.name,

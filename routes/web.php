@@ -2229,20 +2229,20 @@ Route::middleware(['auth', \App\Http\Middleware\ProductsManagerMiddleware::class
     Route::delete('/deals/{deal}', [\App\Http\Controllers\ProductsManager\DealController::class, 'destroy'])->name('deals.destroy');
 
     // API routes for product management (reuse vendor controllers)
-    Route::post('/api/color-sizes/get-sizes-for-color', [\App\Http\Controllers\Vendor\ProductColorSizeController::class, 'getSizesForColor'])->name('api.color-sizes.get-sizes-for-color');
-    Route::post('/api/color-sizes/validate-stock-allocation', [\App\Http\Controllers\Vendor\ProductColorSizeController::class, 'validateStockAllocation'])->name('api.color-sizes.validate-stock-allocation');
-    Route::post('/api/color-sizes/get-color-stock-info', [\App\Http\Controllers\Vendor\ProductColorSizeController::class, 'getColorStockInfo'])->name('api.color-sizes.get-color-stock-info');
-    Route::post('/api/color-sizes/save-combinations', [\App\Http\Controllers\Vendor\ProductColorSizeController::class, 'saveColorSizeCombinations'])->name('api.color-sizes.save-combinations');
+    Route::post('/api/color-sizes/get-sizes-for-color', [\App\Http\Controllers\Vendor\ProductColorSizeController::class, 'getSizesForColor'])->name('products-manager.api.color-sizes.get-sizes-for-color');
+    Route::post('/api/color-sizes/validate-stock-allocation', [\App\Http\Controllers\Vendor\ProductColorSizeController::class, 'validateStockAllocation'])->name('products-manager.api.color-sizes.validate-stock-allocation');
+    Route::post('/api/color-sizes/get-color-stock-info', [\App\Http\Controllers\Vendor\ProductColorSizeController::class, 'getColorStockInfo'])->name('products-manager.api.color-sizes.get-color-stock-info');
+    Route::post('/api/color-sizes/save-combinations', [\App\Http\Controllers\Vendor\ProductColorSizeController::class, 'saveColorSizeCombinations'])->name('products-manager.api.color-sizes.save-combinations');
 
     // Size Management API routes
-    Route::post('/api/sizes/create', [\App\Http\Controllers\Vendor\ProductSizeController::class, 'store'])->name('api.sizes.create');
-    Route::post('/api/sizes/update', [\App\Http\Controllers\Vendor\ProductSizeController::class, 'update'])->name('api.sizes.update');
-    Route::delete('/api/sizes/{id}', [\App\Http\Controllers\Vendor\ProductSizeController::class, 'destroy'])->name('api.sizes.destroy');
+    Route::post('/api/sizes/create', [\App\Http\Controllers\Vendor\ProductSizeController::class, 'store'])->name('products-manager.api.sizes.create');
+    Route::post('/api/sizes/update', [\App\Http\Controllers\Vendor\ProductSizeController::class, 'update'])->name('products-manager.api.sizes.update');
+    Route::delete('/api/sizes/{id}', [\App\Http\Controllers\Vendor\ProductSizeController::class, 'destroy'])->name('products-manager.api.sizes.destroy');
 
     // Color Management API routes
-    Route::post('/api/colors/create', [\App\Http\Controllers\Vendor\ProductColorController::class, 'store'])->name('api.colors.create');
-    Route::post('/api/colors/update', [\App\Http\Controllers\Vendor\ProductColorController::class, 'update'])->name('api.colors.update');
-    Route::delete('/api/colors/{id}', [\App\Http\Controllers\Vendor\ProductColorController::class, 'destroy'])->name('api.colors.destroy');
+    Route::post('/api/colors/create', [\App\Http\Controllers\Vendor\ProductColorController::class, 'store'])->name('products-manager.api.colors.create');
+    Route::post('/api/colors/update', [\App\Http\Controllers\Vendor\ProductColorController::class, 'update'])->name('products-manager.api.colors.update');
+    Route::delete('/api/colors/{id}', [\App\Http\Controllers\Vendor\ProductColorController::class, 'destroy'])->name('products-manager.api.colors.destroy');
 
     // Product session management
     Route::post('/products/session/store', [\App\Http\Controllers\Vendor\ProductController::class, 'storeSession'])->name('products.session.store');

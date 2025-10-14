@@ -925,7 +925,7 @@ class ProductController extends Controller
             $query->where('user_id', $this->getActingVendorUserId());
         })->withActiveLicense()->orderBy('name')->get();
 
-        // Load product with all related data including colors with their sizes
+        // Load product with all related data including colors with their sizes and size categories
         $product->load([
             'specifications' => function($query) {
                 $query->orderBy('display_order');
@@ -935,7 +935,8 @@ class ProductController extends Controller
             },
             'colors.sizes' => function($query) {
                 $query->orderBy('display_order');
-            }
+            },
+            'colors.sizes.sizeCategory' // Eager load size category relationship
         ]);
 
         // Process colors to include image URLs and size data
@@ -954,13 +955,13 @@ class ProductController extends Controller
                         'id' => $size->id,
                         'name' => $size->name,
                         'value' => $size->value,
-                        'category' => $size->category,
+                        'category' => $size->sizeCategory ? $size->sizeCategory->name : 'clothes', // Access through relationship
                         'additional_info' => $size->additional_info,
                         'stock' => $size->pivot->stock ?? 0, // Get stock from pivot table
                         'price_adjustment' => $size->price_adjustment,
                         'display_order' => $size->display_order,
                         'is_default' => $size->is_default,
-                        'is_available' => $size->is_available
+                        'is_available' => $size->pivot->is_available ?? true // Get is_available from pivot table
                     ];
                 })->toArray()
             ];
