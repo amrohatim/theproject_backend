@@ -121,6 +121,14 @@ class Merchant extends Model
     }
 
     /**
+     * Get the subscriptions for the merchant.
+     */
+    public function subscriptions(): HasMany
+    {
+        return $this->hasMany(MerchantSubscription::class);
+    }
+
+    /**
      * Get the logo attribute with full URL.
      *
      * @param  string|null  $value

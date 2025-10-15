@@ -624,6 +624,10 @@ $direction = $isRtl ? 'rtl' : 'ltr';
                 <span>{{ __('provider.settings') }}</span>
             </div>
             <ul class="channel-list">
+                <li class="channel-item {{ request()->is('provider/subscription*') ? 'active' : '' }}" onclick="window.location.href='{{ route('provider.subscription.index') }}'">
+                    <i class="fas fa-credit-card channel-icon"></i>
+                    <span class="channel-name">{{ __('messages.subscription') }}</span>
+                </li>
                 <li class="channel-item {{ request()->is('provider/profile*') ? 'active' : '' }}" onclick="window.location.href='{{ route('provider.profile.index') }}'">
                     <i class="fas fa-user channel-icon"></i>
                     <span class="channel-name">{{ __('provider.profile') }}</span>

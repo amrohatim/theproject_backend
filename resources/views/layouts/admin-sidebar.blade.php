@@ -64,7 +64,10 @@
         Provider Licenses
     </a>
 
-
+    <a href="{{ route('admin.subscription-types.index') }}" class="sidebar-item flex items-center px-4 py-2 text-sm font-medium rounded-md {{ request()->routeIs('admin.subscription-types.*') ? 'sidebar-active' : 'text-gray-700 dark:text-gray-300' }}">
+        <i class="fas fa-credit-card mr-3"></i>
+        Subscriptions
+    </a>
 
     <a href="{{ route('admin.settings') }}" class="sidebar-item flex items-center px-4 py-2 text-sm font-medium rounded-md {{ request()->routeIs('admin.settings') ? 'sidebar-active' : 'text-gray-700 dark:text-gray-300' }}">
         <i class="fas fa-cog mr-3"></i>

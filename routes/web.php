@@ -862,6 +862,9 @@ Route::prefix('admin')->name('admin.')->middleware(['auth', \App\Http\Middleware
     // Business Types
     Route::resource('business-types', \App\Http\Controllers\Admin\BusinessTypeController::class);
 
+    // Subscription Types
+    Route::resource('subscription-types', \App\Http\Controllers\Admin\SubscriptionTypeController::class);
+
     // Companies
     Route::get('/companies', function () {
         $companies = \App\Models\Company::with('user')->orderBy('created_at', 'desc')->paginate(10);
@@ -1395,6 +1398,9 @@ Route::prefix('admin')->name('admin.')->middleware(['auth', \App\Http\Middleware
 // Vendor routes
 Route::prefix('vendor')->name('vendor.')->middleware(['auth', \App\Http\Middleware\VendorMiddleware::class])->group(function () {
     Route::get('/dashboard', [VendorDashboardController::class, 'index'])->name('dashboard');
+
+    // Subscription
+    Route::get('/subscription', [\App\Http\Controllers\Vendor\VendorSubscriptionController::class, 'index'])->name('subscription.index');
 
     // Deals
     Route::get('/deals', [\App\Http\Controllers\Vendor\DealController::class, 'index'])->name('deals.index');
@@ -2288,6 +2294,9 @@ Route::prefix('provider')->name('provider.')->middleware(['auth', \App\Http\Midd
     Route::post('/settings/delivery', [App\Http\Controllers\Provider\SettingsController::class, 'updateDelivery'])->name('settings.delivery');
     Route::post('/settings/license', [App\Http\Controllers\Provider\SettingsController::class, 'uploadLicense'])->name('settings.license');
 
+    // Subscription
+    Route::get('/subscription', [App\Http\Controllers\Provider\SubscriptionController::class, 'index'])->name('subscription.index');
+
     // Provider Products
     Route::get('/provider-products', [App\Http\Controllers\Provider\ProviderProductController::class, 'index'])->name('provider-products.index');
     Route::get('/provider-products/create', [App\Http\Controllers\Provider\ProviderProductController::class, 'create'])->name('provider-products.create');
@@ -2316,6 +2325,9 @@ Route::prefix('merchant')->name('merchant.')->middleware(['auth', \App\Http\Midd
     Route::get('/dashboard/search', [App\Http\Controllers\Merchant\DashboardController::class, 'globalSearch'])->name('dashboard.search');
     Route::get('/dashboard/search/suggestions', [App\Http\Controllers\Merchant\DashboardController::class, 'searchSuggestions'])->name('dashboard.search.suggestions');
     Route::post('/dashboard/search/save', [App\Http\Controllers\Merchant\DashboardController::class, 'saveSearch'])->name('dashboard.search.save');
+
+    // Subscription
+    Route::get('/subscription', [App\Http\Controllers\Merchant\SubscriptionController::class, 'index'])->name('subscription.index');
 
     // Products
     Route::get('/products', [App\Http\Controllers\Merchant\ProductController::class, 'index'])->name('products.index');
