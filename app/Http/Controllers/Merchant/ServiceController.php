@@ -154,6 +154,11 @@ class ServiceController extends Controller
             'image' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:20480',
             'duration' => 'nullable|integer|min:1',
             'is_available' => 'boolean',
+            'home_service' => 'boolean',
+            'available_days' => 'required|array|min:1',
+            'available_days.*' => 'integer|between:0,6',
+            'start_time' => 'required|date_format:H:i',
+            'end_time' => 'required|date_format:H:i|after:start_time',
         ], [
             'image.image' => 'The uploaded file must be an image.',
             'image.mimes' => 'The image must be a file of type: JPEG, PNG, JPG, GIF, SVG.',
@@ -166,6 +171,9 @@ class ServiceController extends Controller
             'category_id.required' => 'Please select a category.',
             'category_id.exists' => 'The selected category is invalid.',
             'duration.min' => 'Duration must be at least 1 minute.',
+            'available_days.required' => __('merchant.select_at_least_one_day'),
+            'available_days.min' => __('merchant.select_at_least_one_day'),
+            'end_time.after' => __('merchant.end_time_after_start_time'),
         ]);
 
         // Custom validation: if description is provided in one language, it must be provided in both
@@ -181,7 +189,7 @@ class ServiceController extends Controller
 
         $user = Auth::user();
 
-        $data = $request->all();
+        $data = $request->except(['branch_id']);
         // Set merchant_id for direct merchant ownership
         $data['merchant_id'] = $user->id;
 
@@ -191,8 +199,14 @@ class ServiceController extends Controller
             $data['merchant_name'] = $merchantProfile->business_name;
         }
 
-        // Remove branch_id as we're using direct merchant ownership
-        unset($data['branch_id']);
+        $data['is_available'] = $request->boolean('is_available');
+        $data['home_service'] = $request->boolean('home_service');
+        $data['available_days'] = collect($request->input('available_days', []))
+            ->map(fn($day) => (int) $day)
+            ->values()
+            ->all();
+        $data['start_time'] = $request->input('start_time');
+        $data['end_time'] = $request->input('end_time');
 
         // Handle image upload with enhanced validation and error handling
         if ($request->hasFile('image')) {
@@ -326,6 +340,12 @@ class ServiceController extends Controller
             'duration' => 'nullable|integer|min:1',
             'duration_unit' => 'nullable|in:minutes,hours,days',
             'status' => 'in:active,inactive',
+            'is_available' => 'boolean',
+            'home_service' => 'boolean',
+            'available_days' => 'required|array|min:1',
+            'available_days.*' => 'integer|between:0,6',
+            'start_time' => 'required|date_format:H:i',
+            'end_time' => 'required|date_format:H:i|after:start_time',
         ], [
             'image.image' => 'The uploaded file must be an image.',
             'image.mimes' => 'The image must be a file of type: JPEG, PNG, JPG, GIF, SVG.',
@@ -338,6 +358,9 @@ class ServiceController extends Controller
             'category_id.required' => 'Please select a category.',
             'category_id.exists' => 'The selected category is invalid.',
             'duration.min' => 'Duration must be at least 1 minute.',
+            'available_days.required' => __('merchant.select_at_least_one_day'),
+            'available_days.min' => __('merchant.select_at_least_one_day'),
+            'end_time.after' => __('merchant.end_time_after_start_time'),
         ]);
 
         // Custom validation: if description is provided in one language, it must be provided in both
@@ -351,11 +374,17 @@ class ServiceController extends Controller
             ]);
         }
 
-        $data = $request->all();
+        $data = $request->except(['branch_id']);
 
         // Handle checkbox fields properly - checkboxes don't send values when unchecked
         $data['is_available'] = $request->has('is_available') ? true : false;
         $data['home_service'] = $request->has('home_service') ? true : false;
+        $data['available_days'] = collect($request->input('available_days', []))
+            ->map(fn($day) => (int) $day)
+            ->values()
+            ->all();
+        $data['start_time'] = $request->input('start_time');
+        $data['end_time'] = $request->input('end_time');
 
         // Handle image upload with enhanced validation and error handling
         if ($request->hasFile('image')) {

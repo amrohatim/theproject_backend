@@ -1,7 +1,7 @@
 {
   "config": {
-    "configFile": "C:\\Users\\Admin\\Desktop\\TheProject\\Production\\theproject_backend\\playwright.config.js",
-    "rootDir": "C:/Users/Admin/Desktop/TheProject/Production/theproject_backend/tests/playwright",
+    "configFile": "/Users/amrojr/Documents/theproject/theproject_backend/playwright.config.js",
+    "rootDir": "/Users/amrojr/Documents/theproject/theproject_backend/tests/playwright",
     "forbidOnly": false,
     "fullyParallel": true,
     "globalSetup": null,
@@ -39,7 +39,7 @@
     "quiet": false,
     "projects": [
       {
-        "outputDir": "C:/Users/Admin/Desktop/TheProject/Production/theproject_backend/test-results",
+        "outputDir": "/Users/amrojr/Documents/theproject/theproject_backend/test-results",
         "repeatEach": 1,
         "retries": 0,
         "metadata": {
@@ -47,7 +47,7 @@
         },
         "id": "chromium",
         "name": "chromium",
-        "testDir": "C:/Users/Admin/Desktop/TheProject/Production/theproject_backend/tests/playwright",
+        "testDir": "/Users/amrojr/Documents/theproject/theproject_backend/tests/playwright",
         "testIgnore": [],
         "testMatch": [
           "**/*.@(spec|test).?(c|m)[jt]s?(x)"
@@ -55,7 +55,7 @@
         "timeout": 60000
       },
       {
-        "outputDir": "C:/Users/Admin/Desktop/TheProject/Production/theproject_backend/test-results",
+        "outputDir": "/Users/amrojr/Documents/theproject/theproject_backend/test-results",
         "repeatEach": 1,
         "retries": 0,
         "metadata": {
@@ -63,7 +63,7 @@
         },
         "id": "firefox",
         "name": "firefox",
-        "testDir": "C:/Users/Admin/Desktop/TheProject/Production/theproject_backend/tests/playwright",
+        "testDir": "/Users/amrojr/Documents/theproject/theproject_backend/tests/playwright",
         "testIgnore": [],
         "testMatch": [
           "**/*.@(spec|test).?(c|m)[jt]s?(x)"
@@ -71,7 +71,7 @@
         "timeout": 60000
       },
       {
-        "outputDir": "C:/Users/Admin/Desktop/TheProject/Production/theproject_backend/test-results",
+        "outputDir": "/Users/amrojr/Documents/theproject/theproject_backend/test-results",
         "repeatEach": 1,
         "retries": 0,
         "metadata": {
@@ -79,7 +79,7 @@
         },
         "id": "webkit",
         "name": "webkit",
-        "testDir": "C:/Users/Admin/Desktop/TheProject/Production/theproject_backend/tests/playwright",
+        "testDir": "/Users/amrojr/Documents/theproject/theproject_backend/tests/playwright",
         "testIgnore": [],
         "testMatch": [
           "**/*.@(spec|test).?(c|m)[jt]s?(x)"
@@ -87,7 +87,7 @@
         "timeout": 60000
       },
       {
-        "outputDir": "C:/Users/Admin/Desktop/TheProject/Production/theproject_backend/test-results",
+        "outputDir": "/Users/amrojr/Documents/theproject/theproject_backend/test-results",
         "repeatEach": 1,
         "retries": 0,
         "metadata": {
@@ -95,7 +95,7 @@
         },
         "id": "Mobile Chrome",
         "name": "Mobile Chrome",
-        "testDir": "C:/Users/Admin/Desktop/TheProject/Production/theproject_backend/tests/playwright",
+        "testDir": "/Users/amrojr/Documents/theproject/theproject_backend/tests/playwright",
         "testIgnore": [],
         "testMatch": [
           "**/*.@(spec|test).?(c|m)[jt]s?(x)"
@@ -103,7 +103,7 @@
         "timeout": 60000
       },
       {
-        "outputDir": "C:/Users/Admin/Desktop/TheProject/Production/theproject_backend/test-results",
+        "outputDir": "/Users/amrojr/Documents/theproject/theproject_backend/test-results",
         "repeatEach": 1,
         "retries": 0,
         "metadata": {
@@ -111,7 +111,7 @@
         },
         "id": "Mobile Safari",
         "name": "Mobile Safari",
-        "testDir": "C:/Users/Admin/Desktop/TheProject/Production/theproject_backend/tests/playwright",
+        "testDir": "/Users/amrojr/Documents/theproject/theproject_backend/tests/playwright",
         "testIgnore": [],
         "testMatch": [
           "**/*.@(spec|test).?(c|m)[jt]s?(x)"
@@ -119,7 +119,7 @@
         "timeout": 60000
       },
       {
-        "outputDir": "C:/Users/Admin/Desktop/TheProject/Production/theproject_backend/test-results",
+        "outputDir": "/Users/amrojr/Documents/theproject/theproject_backend/test-results",
         "repeatEach": 1,
         "retries": 0,
         "metadata": {
@@ -127,7 +127,7 @@
         },
         "id": "Microsoft Edge",
         "name": "Microsoft Edge",
-        "testDir": "C:/Users/Admin/Desktop/TheProject/Production/theproject_backend/tests/playwright",
+        "testDir": "/Users/amrojr/Documents/theproject/theproject_backend/tests/playwright",
         "testIgnore": [],
         "testMatch": [
           "**/*.@(spec|test).?(c|m)[jt]s?(x)"
@@ -135,7 +135,7 @@
         "timeout": 60000
       },
       {
-        "outputDir": "C:/Users/Admin/Desktop/TheProject/Production/theproject_backend/test-results",
+        "outputDir": "/Users/amrojr/Documents/theproject/theproject_backend/test-results",
         "repeatEach": 1,
         "retries": 0,
         "metadata": {
@@ -143,7 +143,7 @@
         },
         "id": "Google Chrome",
         "name": "Google Chrome",
-        "testDir": "C:/Users/Admin/Desktop/TheProject/Production/theproject_backend/tests/playwright",
+        "testDir": "/Users/amrojr/Documents/theproject/theproject_backend/tests/playwright",
         "testIgnore": [],
         "testMatch": [
           "**/*.@(spec|test).?(c|m)[jt]s?(x)"
@@ -165,21 +165,21 @@
   },
   "suites": [
     {
-      "title": "provider-dashboard-modern-ui.spec.js",
-      "file": "provider-dashboard-modern-ui.spec.js",
+      "title": "time-picker-test.spec.js",
+      "file": "time-picker-test.spec.js",
       "column": 0,
       "line": 0,
       "specs": [],
       "suites": [
         {
-          "title": "Provider Dashboard Modern UI",
-          "file": "provider-dashboard-modern-ui.spec.js",
-          "line": 8,
+          "title": "Merchant Service Time Picker",
+          "file": "time-picker-test.spec.js",
+          "line": 3,
           "column": 6,
           "specs": [
             {
-              "title": "should display modern dashboard layout correctly",
-              "ok": false,
+              "title": "time picker should appear when clicking time inputs",
+              "ok": true,
               "tags": [],
               "tests": [
                 {
@@ -192,289 +192,198 @@
                     {
                       "workerIndex": 0,
                       "parallelIndex": 0,
-                      "status": "failed",
-                      "duration": 65139,
-                      "error": {
-                        "message": "TimeoutError: page.waitForURL: Timeout 30000ms exceeded.\n=========================== logs ===========================\nwaiting for navigation to \"/provider/dashboard\" until \"load\"\n============================================================",
-                        "stack": "TimeoutError: page.waitForURL: Timeout 30000ms exceeded.\n=========================== logs ===========================\nwaiting for navigation to \"/provider/dashboard\" until \"load\"\n============================================================\n    at C:\\Users\\Admin\\Desktop\\TheProject\\Production\\theproject_backend\\tests\\playwright\\provider-dashboard-modern-ui.spec.js:19:20",
-                        "location": {
-                          "file": "C:\\Users\\Admin\\Desktop\\TheProject\\Production\\theproject_backend\\tests\\playwright\\provider-dashboard-modern-ui.spec.js",
-                          "column": 20,
-                          "line": 19
-                        },
-                        "snippet": "\u001b[0m \u001b[90m 17 |\u001b[39m         \n \u001b[90m 18 |\u001b[39m         \u001b[90m// Wait for dashboard to load\u001b[39m\n\u001b[31m\u001b[1m>\u001b[22m\u001b[39m\u001b[90m 19 |\u001b[39m         \u001b[36mawait\u001b[39m page\u001b[33m.\u001b[39mwaitForURL(\u001b[32m'/provider/dashboard'\u001b[39m)\u001b[33m;\u001b[39m\n \u001b[90m    |\u001b[39m                    \u001b[31m\u001b[1m^\u001b[22m\u001b[39m\n \u001b[90m 20 |\u001b[39m     })\u001b[33m;\u001b[39m\n \u001b[90m 21 |\u001b[39m\n \u001b[90m 22 |\u001b[39m     test(\u001b[32m'should display modern dashboard layout correctly'\u001b[39m\u001b[33m,\u001b[39m \u001b[36masync\u001b[39m ({ page }) \u001b[33m=>\u001b[39m {\u001b[0m"
-                      },
-                      "errors": [
+                      "status": "passed",
+                      "duration": 20225,
+                      "errors": [],
+                      "stdout": [
                         {
-                          "location": {
-                            "file": "C:\\Users\\Admin\\Desktop\\TheProject\\Production\\theproject_backend\\tests\\playwright\\provider-dashboard-modern-ui.spec.js",
-                            "column": 20,
-                            "line": 19
-                          },
-                          "message": "TimeoutError: page.waitForURL: Timeout 30000ms exceeded.\n=========================== logs ===========================\nwaiting for navigation to \"/provider/dashboard\" until \"load\"\n============================================================\n\n\u001b[0m \u001b[90m 17 |\u001b[39m         \n \u001b[90m 18 |\u001b[39m         \u001b[90m// Wait for dashboard to load\u001b[39m\n\u001b[31m\u001b[1m>\u001b[22m\u001b[39m\u001b[90m 19 |\u001b[39m         \u001b[36mawait\u001b[39m page\u001b[33m.\u001b[39mwaitForURL(\u001b[32m'/provider/dashboard'\u001b[39m)\u001b[33m;\u001b[39m\n \u001b[90m    |\u001b[39m                    \u001b[31m\u001b[1m^\u001b[22m\u001b[39m\n \u001b[90m 20 |\u001b[39m     })\u001b[33m;\u001b[39m\n \u001b[90m 21 |\u001b[39m\n \u001b[90m 22 |\u001b[39m     test(\u001b[32m'should display modern dashboard layout correctly'\u001b[39m\u001b[33m,\u001b[39m \u001b[36masync\u001b[39m ({ page }) \u001b[33m=>\u001b[39m {\u001b[0m\n\u001b[2m    at C:\\Users\\Admin\\Desktop\\TheProject\\Production\\theproject_backend\\tests\\playwright\\provider-dashboard-modern-ui.spec.js:19:20\u001b[22m"
+                          "text": "Time picker overlay is visible for start_time\n"
+                        },
+                        {
+                          "text": "Found 0 console errors\n"
                         }
                       ],
-                      "stdout": [],
                       "stderr": [],
                       "retry": 0,
-                      "startTime": "2025-07-22T23:50:45.644Z",
+                      "startTime": "2025-10-18T04:04:38.053Z",
                       "annotations": [],
-                      "attachments": [
-                        {
-                          "name": "screenshot",
-                          "contentType": "image/png",
-                          "path": "C:\\Users\\Admin\\Desktop\\TheProject\\Production\\theproject_backend\\test-results\\provider-dashboard-modern--feaa2--dashboard-layout-correctly-chromium\\test-failed-1.png"
-                        },
-                        {
-                          "name": "video",
-                          "contentType": "video/webm",
-                          "path": "C:\\Users\\Admin\\Desktop\\TheProject\\Production\\theproject_backend\\test-results\\provider-dashboard-modern--feaa2--dashboard-layout-correctly-chromium\\video.webm"
-                        },
-                        {
-                          "name": "error-context",
-                          "contentType": "text/markdown",
-                          "path": "C:\\Users\\Admin\\Desktop\\TheProject\\Production\\theproject_backend\\test-results\\provider-dashboard-modern--feaa2--dashboard-layout-correctly-chromium\\error-context.md"
-                        }
-                      ],
-                      "errorLocation": {
-                        "file": "C:\\Users\\Admin\\Desktop\\TheProject\\Production\\theproject_backend\\tests\\playwright\\provider-dashboard-modern-ui.spec.js",
-                        "column": 20,
-                        "line": 19
-                      }
+                      "attachments": []
                     }
                   ],
-                  "status": "unexpected"
+                  "status": "expected"
                 }
               ],
-              "id": "ee12eb718352fd44b516-469151c5c8c88b804d91",
-              "file": "provider-dashboard-modern-ui.spec.js",
-              "line": 22,
-              "column": 5
+              "id": "543403906254006aa3f0-0cf2a62354d8c8865bc7",
+              "file": "time-picker-test.spec.js",
+              "line": 4,
+              "column": 3
             },
             {
-              "title": "should have working navigation links",
-              "ok": false,
+              "title": "time picker should appear when clicking time inputs",
+              "ok": true,
               "tags": [],
               "tests": [
                 {
                   "timeout": 60000,
                   "annotations": [],
                   "expectedStatus": "passed",
-                  "projectId": "chromium",
-                  "projectName": "chromium",
+                  "projectId": "firefox",
+                  "projectName": "firefox",
                   "results": [
                     {
                       "workerIndex": 1,
                       "parallelIndex": 1,
-                      "status": "failed",
-                      "duration": 65335,
-                      "error": {
-                        "message": "TimeoutError: page.waitForURL: Timeout 30000ms exceeded.\n=========================== logs ===========================\nwaiting for navigation to \"/provider/dashboard\" until \"load\"\n============================================================",
-                        "stack": "TimeoutError: page.waitForURL: Timeout 30000ms exceeded.\n=========================== logs ===========================\nwaiting for navigation to \"/provider/dashboard\" until \"load\"\n============================================================\n    at C:\\Users\\Admin\\Desktop\\TheProject\\Production\\theproject_backend\\tests\\playwright\\provider-dashboard-modern-ui.spec.js:19:20",
-                        "location": {
-                          "file": "C:\\Users\\Admin\\Desktop\\TheProject\\Production\\theproject_backend\\tests\\playwright\\provider-dashboard-modern-ui.spec.js",
-                          "column": 20,
-                          "line": 19
-                        },
-                        "snippet": "\u001b[0m \u001b[90m 17 |\u001b[39m         \n \u001b[90m 18 |\u001b[39m         \u001b[90m// Wait for dashboard to load\u001b[39m\n\u001b[31m\u001b[1m>\u001b[22m\u001b[39m\u001b[90m 19 |\u001b[39m         \u001b[36mawait\u001b[39m page\u001b[33m.\u001b[39mwaitForURL(\u001b[32m'/provider/dashboard'\u001b[39m)\u001b[33m;\u001b[39m\n \u001b[90m    |\u001b[39m                    \u001b[31m\u001b[1m^\u001b[22m\u001b[39m\n \u001b[90m 20 |\u001b[39m     })\u001b[33m;\u001b[39m\n \u001b[90m 21 |\u001b[39m\n \u001b[90m 22 |\u001b[39m     test(\u001b[32m'should display modern dashboard layout correctly'\u001b[39m\u001b[33m,\u001b[39m \u001b[36masync\u001b[39m ({ page }) \u001b[33m=>\u001b[39m {\u001b[0m"
-                      },
-                      "errors": [
+                      "status": "passed",
+                      "duration": 17897,
+                      "errors": [],
+                      "stdout": [
                         {
-                          "location": {
-                            "file": "C:\\Users\\Admin\\Desktop\\TheProject\\Production\\theproject_backend\\tests\\playwright\\provider-dashboard-modern-ui.spec.js",
-                            "column": 20,
-                            "line": 19
-                          },
-                          "message": "TimeoutError: page.waitForURL: Timeout 30000ms exceeded.\n=========================== logs ===========================\nwaiting for navigation to \"/provider/dashboard\" until \"load\"\n============================================================\n\n\u001b[0m \u001b[90m 17 |\u001b[39m         \n \u001b[90m 18 |\u001b[39m         \u001b[90m// Wait for dashboard to load\u001b[39m\n\u001b[31m\u001b[1m>\u001b[22m\u001b[39m\u001b[90m 19 |\u001b[39m         \u001b[36mawait\u001b[39m page\u001b[33m.\u001b[39mwaitForURL(\u001b[32m'/provider/dashboard'\u001b[39m)\u001b[33m;\u001b[39m\n \u001b[90m    |\u001b[39m                    \u001b[31m\u001b[1m^\u001b[22m\u001b[39m\n \u001b[90m 20 |\u001b[39m     })\u001b[33m;\u001b[39m\n \u001b[90m 21 |\u001b[39m\n \u001b[90m 22 |\u001b[39m     test(\u001b[32m'should display modern dashboard layout correctly'\u001b[39m\u001b[33m,\u001b[39m \u001b[36masync\u001b[39m ({ page }) \u001b[33m=>\u001b[39m {\u001b[0m\n\u001b[2m    at C:\\Users\\Admin\\Desktop\\TheProject\\Production\\theproject_backend\\tests\\playwright\\provider-dashboard-modern-ui.spec.js:19:20\u001b[22m"
+                          "text": "Time picker overlay is visible for start_time\n"
+                        },
+                        {
+                          "text": "Found 0 console errors\n"
                         }
                       ],
-                      "stdout": [],
                       "stderr": [],
                       "retry": 0,
-                      "startTime": "2025-07-22T23:50:45.665Z",
+                      "startTime": "2025-10-18T04:04:38.115Z",
                       "annotations": [],
-                      "attachments": [
-                        {
-                          "name": "screenshot",
-                          "contentType": "image/png",
-                          "path": "C:\\Users\\Admin\\Desktop\\TheProject\\Production\\theproject_backend\\test-results\\provider-dashboard-modern--ff95c-ve-working-navigation-links-chromium\\test-failed-1.png"
-                        },
-                        {
-                          "name": "video",
-                          "contentType": "video/webm",
-                          "path": "C:\\Users\\Admin\\Desktop\\TheProject\\Production\\theproject_backend\\test-results\\provider-dashboard-modern--ff95c-ve-working-navigation-links-chromium\\video.webm"
-                        },
-                        {
-                          "name": "error-context",
-                          "contentType": "text/markdown",
-                          "path": "C:\\Users\\Admin\\Desktop\\TheProject\\Production\\theproject_backend\\test-results\\provider-dashboard-modern--ff95c-ve-working-navigation-links-chromium\\error-context.md"
-                        }
-                      ],
-                      "errorLocation": {
-                        "file": "C:\\Users\\Admin\\Desktop\\TheProject\\Production\\theproject_backend\\tests\\playwright\\provider-dashboard-modern-ui.spec.js",
-                        "column": 20,
-                        "line": 19
-                      }
+                      "attachments": []
                     }
                   ],
-                  "status": "unexpected"
+                  "status": "expected"
                 }
               ],
-              "id": "ee12eb718352fd44b516-758f1a26a18cb03b99b7",
-              "file": "provider-dashboard-modern-ui.spec.js",
-              "line": 52,
-              "column": 5
+              "id": "543403906254006aa3f0-cc64ff457845e44ff2f8",
+              "file": "time-picker-test.spec.js",
+              "line": 4,
+              "column": 3
             },
             {
-              "title": "should be responsive on different screen sizes",
-              "ok": false,
+              "title": "time picker should appear when clicking time inputs",
+              "ok": true,
               "tags": [],
               "tests": [
                 {
                   "timeout": 60000,
                   "annotations": [],
                   "expectedStatus": "passed",
-                  "projectId": "chromium",
-                  "projectName": "chromium",
+                  "projectId": "webkit",
+                  "projectName": "webkit",
                   "results": [
                     {
                       "workerIndex": 2,
                       "parallelIndex": 2,
-                      "status": "failed",
-                      "duration": 64421,
-                      "error": {
-                        "message": "TimeoutError: page.waitForURL: Timeout 30000ms exceeded.\n=========================== logs ===========================\nwaiting for navigation to \"/provider/dashboard\" until \"load\"\n============================================================",
-                        "stack": "TimeoutError: page.waitForURL: Timeout 30000ms exceeded.\n=========================== logs ===========================\nwaiting for navigation to \"/provider/dashboard\" until \"load\"\n============================================================\n    at C:\\Users\\Admin\\Desktop\\TheProject\\Production\\theproject_backend\\tests\\playwright\\provider-dashboard-modern-ui.spec.js:19:20",
-                        "location": {
-                          "file": "C:\\Users\\Admin\\Desktop\\TheProject\\Production\\theproject_backend\\tests\\playwright\\provider-dashboard-modern-ui.spec.js",
-                          "column": 20,
-                          "line": 19
-                        },
-                        "snippet": "\u001b[0m \u001b[90m 17 |\u001b[39m         \n \u001b[90m 18 |\u001b[39m         \u001b[90m// Wait for dashboard to load\u001b[39m\n\u001b[31m\u001b[1m>\u001b[22m\u001b[39m\u001b[90m 19 |\u001b[39m         \u001b[36mawait\u001b[39m page\u001b[33m.\u001b[39mwaitForURL(\u001b[32m'/provider/dashboard'\u001b[39m)\u001b[33m;\u001b[39m\n \u001b[90m    |\u001b[39m                    \u001b[31m\u001b[1m^\u001b[22m\u001b[39m\n \u001b[90m 20 |\u001b[39m     })\u001b[33m;\u001b[39m\n \u001b[90m 21 |\u001b[39m\n \u001b[90m 22 |\u001b[39m     test(\u001b[32m'should display modern dashboard layout correctly'\u001b[39m\u001b[33m,\u001b[39m \u001b[36masync\u001b[39m ({ page }) \u001b[33m=>\u001b[39m {\u001b[0m"
-                      },
-                      "errors": [
+                      "status": "passed",
+                      "duration": 37615,
+                      "errors": [],
+                      "stdout": [
                         {
-                          "location": {
-                            "file": "C:\\Users\\Admin\\Desktop\\TheProject\\Production\\theproject_backend\\tests\\playwright\\provider-dashboard-modern-ui.spec.js",
-                            "column": 20,
-                            "line": 19
-                          },
-                          "message": "TimeoutError: page.waitForURL: Timeout 30000ms exceeded.\n=========================== logs ===========================\nwaiting for navigation to \"/provider/dashboard\" until \"load\"\n============================================================\n\n\u001b[0m \u001b[90m 17 |\u001b[39m         \n \u001b[90m 18 |\u001b[39m         \u001b[90m// Wait for dashboard to load\u001b[39m\n\u001b[31m\u001b[1m>\u001b[22m\u001b[39m\u001b[90m 19 |\u001b[39m         \u001b[36mawait\u001b[39m page\u001b[33m.\u001b[39mwaitForURL(\u001b[32m'/provider/dashboard'\u001b[39m)\u001b[33m;\u001b[39m\n \u001b[90m    |\u001b[39m                    \u001b[31m\u001b[1m^\u001b[22m\u001b[39m\n \u001b[90m 20 |\u001b[39m     })\u001b[33m;\u001b[39m\n \u001b[90m 21 |\u001b[39m\n \u001b[90m 22 |\u001b[39m     test(\u001b[32m'should display modern dashboard layout correctly'\u001b[39m\u001b[33m,\u001b[39m \u001b[36masync\u001b[39m ({ page }) \u001b[33m=>\u001b[39m {\u001b[0m\n\u001b[2m    at C:\\Users\\Admin\\Desktop\\TheProject\\Production\\theproject_backend\\tests\\playwright\\provider-dashboard-modern-ui.spec.js:19:20\u001b[22m"
+                          "text": "Time picker overlay is visible for start_time\n"
+                        },
+                        {
+                          "text": "Found 0 console errors\n"
                         }
                       ],
-                      "stdout": [],
                       "stderr": [],
                       "retry": 0,
-                      "startTime": "2025-07-22T23:50:45.788Z",
+                      "startTime": "2025-10-18T04:04:38.093Z",
                       "annotations": [],
-                      "attachments": [
-                        {
-                          "name": "screenshot",
-                          "contentType": "image/png",
-                          "path": "C:\\Users\\Admin\\Desktop\\TheProject\\Production\\theproject_backend\\test-results\\provider-dashboard-modern--33d78-e-on-different-screen-sizes-chromium\\test-failed-1.png"
-                        },
-                        {
-                          "name": "video",
-                          "contentType": "video/webm",
-                          "path": "C:\\Users\\Admin\\Desktop\\TheProject\\Production\\theproject_backend\\test-results\\provider-dashboard-modern--33d78-e-on-different-screen-sizes-chromium\\video.webm"
-                        },
-                        {
-                          "name": "error-context",
-                          "contentType": "text/markdown",
-                          "path": "C:\\Users\\Admin\\Desktop\\TheProject\\Production\\theproject_backend\\test-results\\provider-dashboard-modern--33d78-e-on-different-screen-sizes-chromium\\error-context.md"
-                        }
-                      ],
-                      "errorLocation": {
-                        "file": "C:\\Users\\Admin\\Desktop\\TheProject\\Production\\theproject_backend\\tests\\playwright\\provider-dashboard-modern-ui.spec.js",
-                        "column": 20,
-                        "line": 19
-                      }
+                      "attachments": []
                     }
                   ],
-                  "status": "unexpected"
+                  "status": "expected"
                 }
               ],
-              "id": "ee12eb718352fd44b516-d0f16f5b48ef49802715",
-              "file": "provider-dashboard-modern-ui.spec.js",
-              "line": 72,
-              "column": 5
+              "id": "543403906254006aa3f0-58c176e3e671b2c7e0c5",
+              "file": "time-picker-test.spec.js",
+              "line": 4,
+              "column": 3
             },
             {
-              "title": "should display correct data values",
-              "ok": false,
+              "title": "time picker should appear when clicking time inputs",
+              "ok": true,
               "tags": [],
               "tests": [
                 {
                   "timeout": 60000,
                   "annotations": [],
                   "expectedStatus": "passed",
-                  "projectId": "chromium",
-                  "projectName": "chromium",
+                  "projectId": "Mobile Chrome",
+                  "projectName": "Mobile Chrome",
                   "results": [
                     {
                       "workerIndex": 3,
                       "parallelIndex": 3,
-                      "status": "failed",
-                      "duration": 66440,
-                      "error": {
-                        "message": "TimeoutError: page.waitForURL: Timeout 30000ms exceeded.\n=========================== logs ===========================\nwaiting for navigation to \"/provider/dashboard\" until \"load\"\n============================================================",
-                        "stack": "TimeoutError: page.waitForURL: Timeout 30000ms exceeded.\n=========================== logs ===========================\nwaiting for navigation to \"/provider/dashboard\" until \"load\"\n============================================================\n    at C:\\Users\\Admin\\Desktop\\TheProject\\Production\\theproject_backend\\tests\\playwright\\provider-dashboard-modern-ui.spec.js:19:20",
-                        "location": {
-                          "file": "C:\\Users\\Admin\\Desktop\\TheProject\\Production\\theproject_backend\\tests\\playwright\\provider-dashboard-modern-ui.spec.js",
-                          "column": 20,
-                          "line": 19
-                        },
-                        "snippet": "\u001b[0m \u001b[90m 17 |\u001b[39m         \n \u001b[90m 18 |\u001b[39m         \u001b[90m// Wait for dashboard to load\u001b[39m\n\u001b[31m\u001b[1m>\u001b[22m\u001b[39m\u001b[90m 19 |\u001b[39m         \u001b[36mawait\u001b[39m page\u001b[33m.\u001b[39mwaitForURL(\u001b[32m'/provider/dashboard'\u001b[39m)\u001b[33m;\u001b[39m\n \u001b[90m    |\u001b[39m                    \u001b[31m\u001b[1m^\u001b[22m\u001b[39m\n \u001b[90m 20 |\u001b[39m     })\u001b[33m;\u001b[39m\n \u001b[90m 21 |\u001b[39m\n \u001b[90m 22 |\u001b[39m     test(\u001b[32m'should display modern dashboard layout correctly'\u001b[39m\u001b[33m,\u001b[39m \u001b[36masync\u001b[39m ({ page }) \u001b[33m=>\u001b[39m {\u001b[0m"
-                      },
-                      "errors": [
+                      "status": "passed",
+                      "duration": 20225,
+                      "errors": [],
+                      "stdout": [
                         {
-                          "location": {
-                            "file": "C:\\Users\\Admin\\Desktop\\TheProject\\Production\\theproject_backend\\tests\\playwright\\provider-dashboard-modern-ui.spec.js",
-                            "column": 20,
-                            "line": 19
-                          },
-                          "message": "TimeoutError: page.waitForURL: Timeout 30000ms exceeded.\n=========================== logs ===========================\nwaiting for navigation to \"/provider/dashboard\" until \"load\"\n============================================================\n\n\u001b[0m \u001b[90m 17 |\u001b[39m         \n \u001b[90m 18 |\u001b[39m         \u001b[90m// Wait for dashboard to load\u001b[39m\n\u001b[31m\u001b[1m>\u001b[22m\u001b[39m\u001b[90m 19 |\u001b[39m         \u001b[36mawait\u001b[39m page\u001b[33m.\u001b[39mwaitForURL(\u001b[32m'/provider/dashboard'\u001b[39m)\u001b[33m;\u001b[39m\n \u001b[90m    |\u001b[39m                    \u001b[31m\u001b[1m^\u001b[22m\u001b[39m\n \u001b[90m 20 |\u001b[39m     })\u001b[33m;\u001b[39m\n \u001b[90m 21 |\u001b[39m\n \u001b[90m 22 |\u001b[39m     test(\u001b[32m'should display modern dashboard layout correctly'\u001b[39m\u001b[33m,\u001b[39m \u001b[36masync\u001b[39m ({ page }) \u001b[33m=>\u001b[39m {\u001b[0m\n\u001b[2m    at C:\\Users\\Admin\\Desktop\\TheProject\\Production\\theproject_backend\\tests\\playwright\\provider-dashboard-modern-ui.spec.js:19:20\u001b[22m"
+                          "text": "Time picker overlay is visible for start_time\n"
+                        },
+                        {
+                          "text": "Found 0 console errors\n"
                         }
                       ],
-                      "stdout": [],
                       "stderr": [],
                       "retry": 0,
-                      "startTime": "2025-07-22T23:50:45.711Z",
+                      "startTime": "2025-10-18T04:04:38.037Z",
                       "annotations": [],
-                      "attachments": [
-                        {
-                          "name": "screenshot",
-                          "contentType": "image/png",
-                          "path": "C:\\Users\\Admin\\Desktop\\TheProject\\Production\\theproject_backend\\test-results\\provider-dashboard-modern--9028d-display-correct-data-values-chromium\\test-failed-1.png"
-                        },
-                        {
-                          "name": "video",
-                          "contentType": "video/webm",
-                          "path": "C:\\Users\\Admin\\Desktop\\TheProject\\Production\\theproject_backend\\test-results\\provider-dashboard-modern--9028d-display-correct-data-values-chromium\\video.webm"
-                        },
-                        {
-                          "name": "error-context",
-                          "contentType": "text/markdown",
-                          "path": "C:\\Users\\Admin\\Desktop\\TheProject\\Production\\theproject_backend\\test-results\\provider-dashboard-modern--9028d-display-correct-data-values-chromium\\error-context.md"
-                        }
-                      ],
-                      "errorLocation": {
-                        "file": "C:\\Users\\Admin\\Desktop\\TheProject\\Production\\theproject_backend\\tests\\playwright\\provider-dashboard-modern-ui.spec.js",
-                        "column": 20,
-                        "line": 19
-                      }
+                      "attachments": []
                     }
                   ],
-                  "status": "unexpected"
+                  "status": "expected"
                 }
               ],
-              "id": "ee12eb718352fd44b516-8fb8d321a1b9b3990d73",
-              "file": "provider-dashboard-modern-ui.spec.js",
-              "line": 90,
-              "column": 5
+              "id": "543403906254006aa3f0-1c21f9fbc9f64e8beef1",
+              "file": "time-picker-test.spec.js",
+              "line": 4,
+              "column": 3
             },
             {
-              "title": "should maintain existing functionality",
+              "title": "time picker should appear when clicking time inputs",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 60000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "Mobile Safari",
+                  "projectName": "Mobile Safari",
+                  "results": [
+                    {
+                      "workerIndex": 4,
+                      "parallelIndex": 1,
+                      "status": "passed",
+                      "duration": 13935,
+                      "errors": [],
+                      "stdout": [
+                        {
+                          "text": "Time picker overlay is visible for start_time\n"
+                        },
+                        {
+                          "text": "Found 0 console errors\n"
+                        }
+                      ],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2025-10-18T04:05:05.168Z",
+                      "annotations": [],
+                      "attachments": []
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "543403906254006aa3f0-fc37f25328a95a3e037e",
+              "file": "time-picker-test.spec.js",
+              "line": 4,
+              "column": 3
+            },
+            {
+              "title": "time picker should appear when clicking time inputs",
               "ok": false,
               "tags": [],
               "tests": [
@@ -482,70 +391,79 @@
                   "timeout": 60000,
                   "annotations": [],
                   "expectedStatus": "passed",
-                  "projectId": "chromium",
-                  "projectName": "chromium",
+                  "projectId": "Microsoft Edge",
+                  "projectName": "Microsoft Edge",
                   "results": [
                     {
-                      "workerIndex": 4,
+                      "workerIndex": 5,
                       "parallelIndex": 2,
                       "status": "failed",
-                      "duration": 39596,
+                      "duration": 4,
                       "error": {
-                        "message": "TimeoutError: page.waitForURL: Timeout 30000ms exceeded.\n=========================== logs ===========================\nwaiting for navigation to \"/provider/dashboard\" until \"load\"\n============================================================",
-                        "stack": "TimeoutError: page.waitForURL: Timeout 30000ms exceeded.\n=========================== logs ===========================\nwaiting for navigation to \"/provider/dashboard\" until \"load\"\n============================================================\n    at C:\\Users\\Admin\\Desktop\\TheProject\\Production\\theproject_backend\\tests\\playwright\\provider-dashboard-modern-ui.spec.js:19:20",
-                        "location": {
-                          "file": "C:\\Users\\Admin\\Desktop\\TheProject\\Production\\theproject_backend\\tests\\playwright\\provider-dashboard-modern-ui.spec.js",
-                          "column": 20,
-                          "line": 19
-                        },
-                        "snippet": "\u001b[0m \u001b[90m 17 |\u001b[39m         \n \u001b[90m 18 |\u001b[39m         \u001b[90m// Wait for dashboard to load\u001b[39m\n\u001b[31m\u001b[1m>\u001b[22m\u001b[39m\u001b[90m 19 |\u001b[39m         \u001b[36mawait\u001b[39m page\u001b[33m.\u001b[39mwaitForURL(\u001b[32m'/provider/dashboard'\u001b[39m)\u001b[33m;\u001b[39m\n \u001b[90m    |\u001b[39m                    \u001b[31m\u001b[1m^\u001b[22m\u001b[39m\n \u001b[90m 20 |\u001b[39m     })\u001b[33m;\u001b[39m\n \u001b[90m 21 |\u001b[39m\n \u001b[90m 22 |\u001b[39m     test(\u001b[32m'should display modern dashboard layout correctly'\u001b[39m\u001b[33m,\u001b[39m \u001b[36masync\u001b[39m ({ page }) \u001b[33m=>\u001b[39m {\u001b[0m"
+                        "message": "Error: browserType.launch: Chromium distribution 'msedge' is not found at /Applications/Microsoft Edge.app/Contents/MacOS/Microsoft Edge\nRun \"npx playwright install msedge\"",
+                        "stack": "Error: browserType.launch: Chromium distribution 'msedge' is not found at /Applications/Microsoft Edge.app/Contents/MacOS/Microsoft Edge\nRun \"npx playwright install msedge\""
                       },
                       "errors": [
                         {
-                          "location": {
-                            "file": "C:\\Users\\Admin\\Desktop\\TheProject\\Production\\theproject_backend\\tests\\playwright\\provider-dashboard-modern-ui.spec.js",
-                            "column": 20,
-                            "line": 19
-                          },
-                          "message": "TimeoutError: page.waitForURL: Timeout 30000ms exceeded.\n=========================== logs ===========================\nwaiting for navigation to \"/provider/dashboard\" until \"load\"\n============================================================\n\n\u001b[0m \u001b[90m 17 |\u001b[39m         \n \u001b[90m 18 |\u001b[39m         \u001b[90m// Wait for dashboard to load\u001b[39m\n\u001b[31m\u001b[1m>\u001b[22m\u001b[39m\u001b[90m 19 |\u001b[39m         \u001b[36mawait\u001b[39m page\u001b[33m.\u001b[39mwaitForURL(\u001b[32m'/provider/dashboard'\u001b[39m)\u001b[33m;\u001b[39m\n \u001b[90m    |\u001b[39m                    \u001b[31m\u001b[1m^\u001b[22m\u001b[39m\n \u001b[90m 20 |\u001b[39m     })\u001b[33m;\u001b[39m\n \u001b[90m 21 |\u001b[39m\n \u001b[90m 22 |\u001b[39m     test(\u001b[32m'should display modern dashboard layout correctly'\u001b[39m\u001b[33m,\u001b[39m \u001b[36masync\u001b[39m ({ page }) \u001b[33m=>\u001b[39m {\u001b[0m\n\u001b[2m    at C:\\Users\\Admin\\Desktop\\TheProject\\Production\\theproject_backend\\tests\\playwright\\provider-dashboard-modern-ui.spec.js:19:20\u001b[22m"
+                          "message": "Error: browserType.launch: Chromium distribution 'msedge' is not found at /Applications/Microsoft Edge.app/Contents/MacOS/Microsoft Edge\nRun \"npx playwright install msedge\""
                         }
                       ],
                       "stdout": [],
                       "stderr": [],
                       "retry": 0,
-                      "startTime": "2025-07-22T23:51:58.305Z",
+                      "startTime": "2025-10-18T04:05:21.848Z",
                       "annotations": [],
-                      "attachments": [
-                        {
-                          "name": "screenshot",
-                          "contentType": "image/png",
-                          "path": "C:\\Users\\Admin\\Desktop\\TheProject\\Production\\theproject_backend\\test-results\\provider-dashboard-modern--0f9f0-tain-existing-functionality-chromium\\test-failed-1.png"
-                        },
-                        {
-                          "name": "video",
-                          "contentType": "video/webm",
-                          "path": "C:\\Users\\Admin\\Desktop\\TheProject\\Production\\theproject_backend\\test-results\\provider-dashboard-modern--0f9f0-tain-existing-functionality-chromium\\video.webm"
-                        },
-                        {
-                          "name": "error-context",
-                          "contentType": "text/markdown",
-                          "path": "C:\\Users\\Admin\\Desktop\\TheProject\\Production\\theproject_backend\\test-results\\provider-dashboard-modern--0f9f0-tain-existing-functionality-chromium\\error-context.md"
-                        }
-                      ],
-                      "errorLocation": {
-                        "file": "C:\\Users\\Admin\\Desktop\\TheProject\\Production\\theproject_backend\\tests\\playwright\\provider-dashboard-modern-ui.spec.js",
-                        "column": 20,
-                        "line": 19
-                      }
+                      "attachments": []
                     }
                   ],
                   "status": "unexpected"
                 }
               ],
-              "id": "ee12eb718352fd44b516-f4cc0017c6a6814a5ad2",
-              "file": "provider-dashboard-modern-ui.spec.js",
-              "line": 98,
-              "column": 5
+              "id": "543403906254006aa3f0-a375b25fc7b71a2ffbad",
+              "file": "time-picker-test.spec.js",
+              "line": 4,
+              "column": 3
+            },
+            {
+              "title": "time picker should appear when clicking time inputs",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 60000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "Google Chrome",
+                  "projectName": "Google Chrome",
+                  "results": [
+                    {
+                      "workerIndex": 6,
+                      "parallelIndex": 1,
+                      "status": "passed",
+                      "duration": 7253,
+                      "errors": [],
+                      "stdout": [
+                        {
+                          "text": "Time picker overlay is visible for start_time\n"
+                        },
+                        {
+                          "text": "Found 0 console errors\n"
+                        }
+                      ],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2025-10-18T04:05:21.834Z",
+                      "annotations": [],
+                      "attachments": []
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "543403906254006aa3f0-71c694b46d9741add2f7",
+              "file": "time-picker-test.spec.js",
+              "line": 4,
+              "column": 3
             }
           ]
         }
@@ -554,11 +472,11 @@
   ],
   "errors": [],
   "stats": {
-    "startTime": "2025-07-22T23:50:41.850Z",
-    "duration": 116441.761,
-    "expected": 0,
+    "startTime": "2025-10-18T04:04:35.882Z",
+    "duration": 62823.127,
+    "expected": 6,
     "skipped": 0,
-    "unexpected": 5,
+    "unexpected": 1,
     "flaky": 0
   }
 }

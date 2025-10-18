@@ -1338,6 +1338,15 @@ return [
     'validation_errors' => 'Validation Errors',
     'switching' => 'Switching...',
 
+    // Service Availability Messages
+    'service_availability' => 'Service Availability',
+    'available_days' => 'Available Days',
+    'select_available_days' => 'Select the days when this service is available',
+    'start_time' => 'Start Time',
+    'end_time' => 'End Time',
+    'availability_validation_error' => 'Please select at least one day and ensure end time is after start time.',
+    'end_time_after_start_time' => 'End time must be after start time.',
+
     // Bilingual Deal Form Messages
     'title_required_both_languages' => 'Deal title is required in both English and Arabic.',
     'enter_description' => 'Enter description',

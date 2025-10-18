@@ -152,6 +152,163 @@
     .dark .form-select {
         background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 20 20'%3e%3cpath stroke='%239ca3af' stroke-linecap='round' stroke-linejoin='round' stroke-width='1.5' d='m6 8 4 4 4-4'/%3e%3c/svg%3e");
     }
+
+    /* Day Selection Styling */
+    .day-checkbox-container .day-checkbox:checked + .day-label {
+        background-color: #3b82f6;
+        border-color: #3b82f6;
+        color: white;
+    }
+
+    .dark .day-checkbox-container .day-checkbox:checked + .day-label {
+        background-color: #3b82f6;
+        border-color: #3b82f6;
+        color: white;
+    }
+
+    .day-label:hover {
+        background-color: #f3f4f6;
+    }
+
+    .dark .day-label:hover {
+        background-color: #374151;
+    }
+
+    .day-checkbox-container .day-checkbox:checked + .day-label:hover {
+        background-color: #2563eb;
+    }
+
+    /* RTL Support for Days */
+    [dir="rtl"] .day-name-en {
+        display: none;
+    }
+
+    [dir="rtl"] .day-name-ar {
+        display: inline !important;
+    }
+
+    [dir="ltr"] .day-name-ar {
+        display: none;
+    }
+
+    [dir="ltr"] .day-name-en {
+        display: inline;
+    }
+
+    /* Time Input Styling */
+    input[type="time"] {
+        background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 20 20'%3e%3cpath stroke='%236b7280' stroke-linecap='round' stroke-linejoin='round' stroke-width='1.5' d='M10 6v4l3 3m5-3a8 8 0 11-16 0 8 8 0 0116 0z'/%3e%3c/svg%3e");
+        background-position: right 0.75rem center;
+        background-repeat: no-repeat;
+        background-size: 1.25rem 1.25rem;
+        padding-right: 3rem;
+    }
+
+    .dark input[type="time"] {
+        background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 20 20'%3e%3cpath stroke='%239ca3af' stroke-linecap='round' stroke-linejoin='round' stroke-width='1.5' d='M10 6v4l3 3m5-3a8 8 0 11-16 0 8 8 0 0116 0z'/%3e%3c/svg%3e");
+    }
+    /* Time picker overlay styles */
+    .time-picker-overlay {
+        position: fixed;
+        inset: 0;
+        background-color: rgba(15, 23, 42, 0.45);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        z-index: 50;
+    }
+
+    .time-picker-overlay.hidden {
+        display: none;
+    }
+
+    .time-picker-dialog {
+        background-color: #ffffff;
+        color: #111827;
+        border-radius: 0.75rem;
+        box-shadow: 0 20px 45px rgba(15, 23, 42, 0.18);
+        padding: 1.5rem;
+        width: 320px;
+        max-width: 90vw;
+    }
+
+    .dark .time-picker-dialog {
+        background-color: #1f2937;
+        color: #f9fafb;
+    }
+
+    .time-picker-title {
+        font-size: 1.125rem;
+        font-weight: 600;
+        margin-bottom: 1rem;
+    }
+
+    .time-picker-selectors {
+        display: flex;
+        gap: 1rem;
+        margin-bottom: 1.25rem;
+    }
+
+    .time-picker-selectors label {
+        display: flex;
+        flex-direction: column;
+        font-size: 0.875rem;
+        color: #4b5563;
+        gap: 0.5rem;
+    }
+
+    .dark .time-picker-selectors label {
+        color: #d1d5db;
+    }
+
+    .time-picker-selectors select {
+        border: 1px solid #d1d5db;
+        border-radius: 0.5rem;
+        padding: 0.5rem 0.75rem;
+        font-size: 1rem;
+        background-color: #ffffff;
+        color: #111827;
+    }
+
+    .dark .time-picker-selectors select {
+        background-color: #374151;
+        border-color: #4b5563;
+        color: #f9fafb;
+    }
+
+    .time-picker-actions {
+        display: flex;
+        justify-content: flex-end;
+        gap: 0.75rem;
+    }
+
+    .time-picker-actions button {
+        border-radius: 0.5rem;
+        padding: 0.5rem 1rem;
+        font-size: 0.875rem;
+        font-weight: 500;
+    }
+
+    .time-picker-cancel {
+        background-color: #e5e7eb;
+        color: #111827;
+    }
+
+    .time-picker-apply {
+        background-color: #3b82f6;
+        color: #ffffff;
+    }
+
+    .time-picker-cancel:focus,
+    .time-picker-apply:focus {
+        outline: none;
+        box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.35);
+    }
+
+    .dark .time-picker-cancel {
+        background-color: #4b5563;
+        color: #f9fafb;
+    }
 </style>
 @endsection
 
@@ -333,6 +490,99 @@
                         @error('home_service')
                             <p class="mt-1 text-sm text-red-600 dark:text-red-400">{{ $message }}</p>
                         @enderror
+                    </div>
+
+                    <!-- Service Availability -->
+                    <div class="space-y-4">
+                        <h4 class="text-md font-medium text-gray-900 dark:text-white">{{ __('messages.service_availability') }}</h4>
+                        
+                        <!-- Available Days -->
+                        <div class="form-input-container has-label">
+                            <label class="form-label">{{ __('messages.available_days') }} <span class="text-red-500">*</span></label>
+                            <p class="text-xs text-gray-500 dark:text-gray-400 mb-3">{{ __('messages.select_available_days') }}</p>
+                            
+                            <div class="grid grid-cols-2 md:grid-cols-4 gap-3" id="days-selection">
+                                @php
+                                    $days = [
+                                        0 => ['en' => 'Sunday', 'ar' => 'الأحد'],
+                                        1 => ['en' => 'Monday', 'ar' => 'الإثنين'],
+                                        2 => ['en' => 'Tuesday', 'ar' => 'الثلاثاء'],
+                                        3 => ['en' => 'Wednesday', 'ar' => 'الأربعاء'],
+                                        4 => ['en' => 'Thursday', 'ar' => 'الخميس'],
+                                        5 => ['en' => 'Friday', 'ar' => 'الجمعة'],
+                                        6 => ['en' => 'Saturday', 'ar' => 'السبت']
+                                    ];
+                                    $selectedDays = old('available_days', $service->available_days ?? []);
+                                @endphp
+                                
+                                @foreach($days as $dayIndex => $dayNames)
+                                    <div class="day-checkbox-container">
+                                        <input type="checkbox" 
+                                               id="day_{{ $dayIndex }}" 
+                                               name="available_days[]" 
+                                               value="{{ $dayIndex }}" 
+                                               class="day-checkbox sr-only"
+                                               {{ in_array($dayIndex, $selectedDays) ? 'checked' : '' }}>
+                                        <label for="day_{{ $dayIndex }}" 
+                                               class="day-label flex items-center justify-center p-3 border-2 border-gray-300 dark:border-gray-600 rounded-lg cursor-pointer transition-all duration-200 hover:border-blue-400 dark:hover:border-blue-500 text-sm font-medium text-gray-700 dark:text-gray-300">
+                                            <span class="day-name-en">{{ $dayNames['en'] }}</span>
+                                            <span class="day-name-ar hidden">{{ $dayNames['ar'] }}</span>
+                                        </label>
+                                    </div>
+                                @endforeach
+                            </div>
+                            
+                            @error('available_days')
+                                <p class="mt-1 text-sm text-red-600 dark:text-red-400">{{ $message }}</p>
+                            @enderror
+                        </div>
+
+                        <!-- Service Hours -->
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                            <!-- Start Time -->
+                            <div class="form-input-container has-label">
+                                <label for="start_time" class="form-label">{{ __('messages.start_time') }} <span class="text-red-500">*</span></label>
+                                @php
+                                    $startTimeValue = old('start_time');
+                                    if ($startTimeValue === null) {
+                                        $startTimeValue = $service->start_time ? substr($service->start_time, 0, 5) : '09:00';
+                                    } elseif (is_string($startTimeValue) && strlen($startTimeValue) >= 5) {
+                                        $startTimeValue = substr($startTimeValue, 0, 5);
+                                    }
+                                @endphp
+                                <input type="time" 
+                                       name="start_time" 
+                                       id="start_time" 
+                                       value="{{ $startTimeValue }}" 
+                                       class="form-input" 
+                                       required>
+                                @error('start_time')
+                                    <p class="mt-1 text-sm text-red-600 dark:text-red-400">{{ $message }}</p>
+                                @enderror
+                            </div>
+
+                            <!-- End Time -->
+                            <div class="form-input-container has-label">
+                                <label for="end_time" class="form-label">{{ __('messages.end_time') }} <span class="text-red-500">*</span></label>
+                                @php
+                                    $endTimeValue = old('end_time');
+                                    if ($endTimeValue === null) {
+                                        $endTimeValue = $service->end_time ? substr($service->end_time, 0, 5) : '17:00';
+                                    } elseif (is_string($endTimeValue) && strlen($endTimeValue) >= 5) {
+                                        $endTimeValue = substr($endTimeValue, 0, 5);
+                                    }
+                                @endphp
+                                <input type="time" 
+                                       name="end_time" 
+                                       id="end_time" 
+                                       value="{{ $endTimeValue }}" 
+                                       class="form-input" 
+                                       required>
+                                @error('end_time')
+                                    <p class="mt-1 text-sm text-red-600 dark:text-red-400">{{ $message }}</p>
+                                @enderror
+                            </div>
+                        </div>
                     </div>
 
                     <!-- Current Image -->
@@ -631,7 +881,9 @@
         // Initialize bilingual form validation
         setupBilingualValidation();
 
-        // Initialize dynamic placeholder functionality
+        // Initialize availability validation
+        setupAvailabilityValidation();
+        initializeTimePickerControls();
 
         // Add image change listener
         const imageInput = document.getElementById('image');
@@ -662,12 +914,269 @@
                 errors.push('{{ __('messages.description_both_or_none') }}');
             }
 
+            // Validate availability
+            if (!validateAvailability()) {
+                hasErrors = true;
+                errors.push('{{ __('messages.availability_validation_error') }}');
+            }
+
             if (hasErrors) {
                 e.preventDefault();
                 showValidationModal(errors);
                 return false;
             }
         });
+    }
+
+    function setupAvailabilityValidation() {
+        const startTimeInput = document.getElementById('start_time');
+        const endTimeInput = document.getElementById('end_time');
+        const dayCheckboxes = document.querySelectorAll('.day-checkbox');
+
+        // Time validation
+        function validateTimes() {
+            if (startTimeInput.value && endTimeInput.value) {
+                const startTime = new Date('2000-01-01 ' + startTimeInput.value);
+                const endTime = new Date('2000-01-01 ' + endTimeInput.value);
+                
+                if (endTime <= startTime) {
+                    endTimeInput.setCustomValidity('{{ __('messages.end_time_after_start_time') }}');
+                    return false;
+                } else {
+                    endTimeInput.setCustomValidity('');
+                    return true;
+                }
+            }
+            return true;
+        }
+
+        startTimeInput.addEventListener('change', validateTimes);
+        endTimeInput.addEventListener('change', validateTimes);
+
+        // Day selection validation
+        dayCheckboxes.forEach(checkbox => {
+            checkbox.addEventListener('change', function() {
+                const checkedDays = document.querySelectorAll('.day-checkbox:checked');
+                const daysContainer = document.getElementById('days-selection');
+                
+                if (checkedDays.length === 0) {
+                    daysContainer.classList.add('border-red-500');
+                } else {
+                    daysContainer.classList.remove('border-red-500');
+                }
+            });
+        });
+    }
+
+    function validateAvailability() {
+        const checkedDays = document.querySelectorAll('.day-checkbox:checked');
+        const startTime = document.getElementById('start_time').value;
+        const endTime = document.getElementById('end_time').value;
+
+        // Check if at least one day is selected
+        if (checkedDays.length === 0) {
+            return false;
+        }
+
+        // Check if times are provided and valid
+        if (!startTime || !endTime) {
+            return false;
+        }
+
+        const startTimeDate = new Date('2000-01-01 ' + startTime);
+        const endTimeDate = new Date('2000-01-01 ' + endTime);
+
+        if (endTimeDate <= startTimeDate) {
+            return false;
+        }
+
+        return true;
+    }
+
+    function initializeTimePickerControls() {
+        ['start_time', 'end_time'].forEach(id => {
+            const input = document.getElementById(id);
+            if (!input) {
+                return;
+            }
+            setupTimePickerInput(input);
+        });
+    }
+
+    function setupTimePickerInput(input) {
+        input.setAttribute('readonly', 'readonly');
+
+        const allowedKeys = new Set(['Tab', 'Shift', 'ArrowLeft', 'ArrowRight', 'Home', 'End', 'Escape']);
+
+        input.addEventListener('keydown', function(event) {
+            if (event.key === 'Enter' || event.key === ' ') {
+                event.preventDefault();
+                openTimePicker(input);
+                return;
+            }
+
+            if (!allowedKeys.has(event.key)) {
+                event.preventDefault();
+            }
+        });
+
+        const handlePointer = function(event) {
+            event.preventDefault();
+            input.focus();
+            if (typeof input.showPicker === 'function') {
+                try {
+                    input.showPicker();
+                    return;
+                } catch (error) {
+                    // Ignore and fall back to custom picker
+                }
+            }
+            openTimePicker(input);
+        };
+
+        input.addEventListener('pointerdown', handlePointer);
+        input.addEventListener('focus', function() {
+            if (document.activeElement === input) {
+                if (typeof input.showPicker === 'function') {
+                    try {
+                        input.showPicker();
+                        return;
+                    } catch (error) {
+                        // Fall back to custom picker
+                    }
+                }
+                openTimePicker(input);
+            }
+        });
+
+        ['paste', 'drop'].forEach(evt => {
+            input.addEventListener(evt, function(event) {
+                event.preventDefault();
+            });
+        });
+    }
+
+    function openTimePicker(input) {
+        const overlay = getOrCreateTimePickerOverlay(input);
+        const { hourSelect, minuteSelect, close } = overlay._timePicker;
+
+        const [hourValue, minuteValue] = (input.value || input.getAttribute('value') || '09:00').split(':');
+        hourSelect.value = hourValue.padStart(2, '0');
+        minuteSelect.value = minuteValue.padStart(2, '0');
+
+        overlay.classList.remove('hidden');
+        overlay.dataset.activeInput = input.id;
+
+        const dialog = overlay.querySelector('.time-picker-dialog');
+        dialog.setAttribute('tabindex', '-1');
+
+        requestAnimationFrame(() => {
+            dialog.focus();
+            hourSelect.focus();
+        });
+
+        const handleEscape = function(event) {
+            if (event.key === 'Escape') {
+                event.preventDefault();
+                close();
+                document.removeEventListener('keydown', handleEscape);
+            }
+        };
+
+        document.addEventListener('keydown', handleEscape);
+        overlay._timePicker.handleEscape = handleEscape;
+    }
+
+    function getOrCreateTimePickerOverlay(input) {
+        const overlayId = `${input.id}-time-picker-overlay`;
+        let overlay = document.getElementById(overlayId);
+
+        if (overlay) {
+            return overlay;
+        }
+
+        overlay = document.createElement('div');
+        overlay.id = overlayId;
+        overlay.className = 'time-picker-overlay hidden';
+        overlay.innerHTML = `
+            <div class="time-picker-dialog" role="dialog" aria-modal="true">
+                <h3 class="time-picker-title">Select Time</h3>
+                <div class="time-picker-selectors">
+                    <label>
+                        <span>Hour</span>
+                        <select class="time-picker-hour"></select>
+                    </label>
+                    <label>
+                        <span>Minute</span>
+                        <select class="time-picker-minute"></select>
+                    </label>
+                </div>
+                <div class="time-picker-actions">
+                    <button type="button" class="time-picker-cancel">Cancel</button>
+                    <button type="button" class="time-picker-apply">Apply</button>
+                </div>
+            </div>
+        `;
+
+        document.body.appendChild(overlay);
+
+        const hourSelect = overlay.querySelector('.time-picker-hour');
+        const minuteSelect = overlay.querySelector('.time-picker-minute');
+        const cancelButton = overlay.querySelector('.time-picker-cancel');
+        const applyButton = overlay.querySelector('.time-picker-apply');
+
+        for (let hour = 0; hour < 24; hour++) {
+            const option = document.createElement('option');
+            option.value = String(hour).padStart(2, '0');
+            option.textContent = String(hour).padStart(2, '0');
+            hourSelect.appendChild(option);
+        }
+
+        for (let minute = 0; minute < 60; minute++) {
+            const option = document.createElement('option');
+            option.value = String(minute).padStart(2, '0');
+            option.textContent = String(minute).padStart(2, '0');
+            minuteSelect.appendChild(option);
+        }
+
+        const close = function() {
+            overlay.classList.add('hidden');
+            const escapeHandler = overlay._timePicker.handleEscape;
+            if (escapeHandler) {
+                document.removeEventListener('keydown', escapeHandler);
+                delete overlay._timePicker.handleEscape;
+            }
+            delete overlay.dataset.activeInput;
+        };
+
+        cancelButton.addEventListener('click', function() {
+            close();
+        });
+
+        applyButton.addEventListener('click', function() {
+            const hour = hourSelect.value.padStart(2, '0');
+            const minute = minuteSelect.value.padStart(2, '0');
+            const formatted = `${hour}:${minute}`;
+
+            input.value = formatted;
+            input.dispatchEvent(new Event('input', { bubbles: true }));
+            input.dispatchEvent(new Event('change', { bubbles: true }));
+            close();
+        });
+
+        overlay.addEventListener('click', function(event) {
+            if (event.target === overlay) {
+                close();
+            }
+        });
+
+        overlay._timePicker = {
+            hourSelect,
+            minuteSelect,
+            close
+        };
+
+        return overlay;
     }
 
     function showValidationModal(errors) {

@@ -100,7 +100,7 @@ class ServiceController extends Controller
     public function store(Request $request)
     {
         // Custom validation for bilingual fields
-        $request->validate([
+        $validationRules = [
             'name' => 'required|string|max:255',
             'service_name_arabic' => 'required|string|max:255',
             'category_id' => 'required|exists:categories,id',
@@ -110,7 +110,25 @@ class ServiceController extends Controller
             'description' => 'nullable|string',
             'service_description_arabic' => 'nullable|string',
             'image' => 'nullable|image|mimes:jpeg,png,jpg,gif,webp|max:20480',
-        ]);
+            'available_days' => 'required|array|min:1',
+            'available_days.*' => 'integer|between:0,6',
+        ];
+
+        // Only validate time fields if they are provided or if the service doesn't have existing times
+        if ($request->filled('start_time') || $request->filled('end_time') || !$request->has('start_time') || !$request->has('end_time')) {
+            $validationRules['start_time'] = 'required|date_format:H:i';
+            $validationRules['end_time'] = 'required|date_format:H:i|after:start_time';
+        } else {
+            // If time fields are provided but empty, validate format
+            if ($request->has('start_time') && $request->start_time !== null) {
+                $validationRules['start_time'] = 'nullable|date_format:H:i';
+            }
+            if ($request->has('end_time') && $request->end_time !== null) {
+                $validationRules['end_time'] = 'nullable|date_format:H:i|after:start_time';
+            }
+        }
+
+        $request->validate($validationRules);
 
         // Validate conditional description requirement
         $hasEnglishDescription = !empty($request->description);
@@ -135,6 +153,14 @@ class ServiceController extends Controller
         $data = $request->except('image');
         $data['is_available'] = $request->has('is_available') ? true : false;
         $data['home_service'] = $request->has('home_service') ? true : false;
+
+        // Only update time fields if they are provided in the request
+        if (!$request->filled('start_time')) {
+            unset($data['start_time']);
+        }
+        if (!$request->filled('end_time')) {
+            unset($data['end_time']);
+        }
 
         // Handle image upload
         if ($request->hasFile('image')) {
@@ -205,7 +231,7 @@ class ServiceController extends Controller
         }
 
         // Custom validation for bilingual fields
-        $request->validate([
+        $validationRules = [
             'name' => 'required|string|max:255',
             'service_name_arabic' => 'required|string|max:255',
             'category_id' => 'required|exists:categories,id',
@@ -215,7 +241,33 @@ class ServiceController extends Controller
             'description' => 'nullable|string',
             'service_description_arabic' => 'nullable|string',
             'image' => 'nullable|image|mimes:jpeg,png,jpg,gif,webp|max:20480',
-        ]);
+            'available_days' => 'required|array|min:1',
+            'available_days.*' => 'integer|between:0,6',
+        ];
+
+        // Handle time validation more carefully
+        $startTimeProvided = $request->filled('start_time');
+        $endTimeProvided = $request->filled('end_time');
+        $serviceHasExistingTimes = $service->start_time && $service->end_time;
+        
+        // If both times are provided, validate them
+        if ($startTimeProvided && $endTimeProvided) {
+            $validationRules['start_time'] = 'required|date_format:H:i';
+            $validationRules['end_time'] = 'required|date_format:H:i|after:start_time';
+        }
+        // If only one time is provided, require both
+        elseif ($startTimeProvided || $endTimeProvided) {
+            $validationRules['start_time'] = 'required|date_format:H:i';
+            $validationRules['end_time'] = 'required|date_format:H:i|after:start_time';
+        }
+        // If no times are provided but service doesn't have existing times, require them
+        elseif (!$serviceHasExistingTimes) {
+            $validationRules['start_time'] = 'required|date_format:H:i';
+            $validationRules['end_time'] = 'required|date_format:H:i|after:start_time';
+        }
+        // If no times provided and service has existing times, don't validate time fields
+
+        $request->validate($validationRules);
 
         // Validate conditional description requirement
         $hasEnglishDescription = !empty($request->description);

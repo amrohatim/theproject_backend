@@ -31,6 +31,9 @@ class Service extends Model
         'rating',
         'is_available',
         'home_service',
+        'available_days',
+        'start_time',
+        'end_time',
     ];
 
     /**
@@ -45,6 +48,7 @@ class Service extends Model
         'rating' => 'float',
         'is_available' => 'boolean',
         'home_service' => 'boolean',
+        'available_days' => 'array',
     ];
 
     /**

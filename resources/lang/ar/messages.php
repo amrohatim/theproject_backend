@@ -2134,6 +2134,15 @@ return [
     'validation_errors' => 'أخطاء التحقق',
     'switching' => 'جاري التبديل...',
 
+    // Service Availability Messages
+    'service_availability' => 'توفر الخدمة',
+    'available_days' => 'الأيام المتاحة',
+    'select_available_days' => 'اختر الأيام التي تكون فيها هذه الخدمة متاحة',
+    'start_time' => 'وقت البداية',
+    'end_time' => 'وقت النهاية',
+    'availability_validation_error' => 'يرجى اختيار يوم واحد على الأقل والتأكد من أن وقت النهاية بعد وقت البداية.',
+    'end_time_after_start_time' => 'يجب أن يكون وقت النهاية بعد وقت البداية.',
+
     // Bilingual Deal Form Messages
     'title_required_both_languages' => 'عنوان الصفقة مطلوب باللغتين الإنجليزية والعربية.',
     'enter_description' => 'أدخل الوصف',
