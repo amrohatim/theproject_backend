@@ -1211,6 +1211,27 @@ return [
     'branch_name' => 'Branch Name',
     'all_branches' => 'All Branches',
 
+    // Booking Place
+    'booking_place' => 'Booking Place',
+    'home_service' => 'Home Service',
+    'store_location' => 'Store Location',
+    'service_will_be_provided_at_customer_location' => 'Service will be provided at customer location',
+    'address_not_available' => 'Address not available',
+    'booking' => 'Booking',
+    'service_will_be_provided_at_store' => 'Service will be provided at store',
+    'please_visit_our_store_for_service' => 'Please visit our store for service',
+    'service_details' => 'Service Details',
+    'customer_location' => 'Customer Location',
+    'booking_date' => 'Booking Date',
+    'booking_time' => 'Booking Time',
+    'copy_location' => 'Copy',
+    'share_location' => 'Share',
+    'open_in_maps' => 'Open in Maps',
+    'location_copied' => 'Location copied to clipboard!',
+    'copy_failed' => 'Failed to copy location',
+    'no_address_available' => 'No address available to copy',
+    'service_will_be_provided_at_customer_location' => 'Service will be provided at customer location',
+
     // Payment Information
     'payment_information' => 'Payment Information',
     'payment_status' => 'Payment Status',

@@ -23,7 +23,7 @@
         </div>
     </div>
 
-    <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-6">
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-6">
         <!-- Booking Status -->
         <div class="bg-white dark:bg-gray-800 rounded-lg shadow p-6 border border-gray-200 dark:border-gray-700">
             <h3 class="text-lg font-medium text-gray-900 dark:text-white mb-4">{{ __('messages.booking_status') }}</h3>
@@ -100,6 +100,71 @@
         </div>
     </div>
 
+    <!-- Booking Place -->
+    <div class="bg-white dark:bg-gray-800 rounded-lg shadow mb-6 border border-gray-200 dark:border-gray-700">
+        <div class="px-6 py-4 border-b border-gray-200 dark:border-gray-700">
+            <h3 class="text-lg font-medium text-gray-900 dark:text-white">{{ __('messages.booking_place') }}</h3>
+        </div>
+        <div class="p-6">
+            @if($booking->is_home_service == 1)
+                <div class="flex flex-col lg:flex-row lg:items-start lg:space-x-6">
+                    <div class="flex-1 mb-4 lg:mb-0">
+                        <div class="flex items-center mb-3">
+                            <i class="fas fa-home text-blue-500 mr-2"></i>
+                            <span class="text-sm font-medium text-gray-900 dark:text-white">
+                                {{ __('messages.home_service') }}
+                            </span>
+                        </div>
+                        <div class="space-y-2">
+                            <p class="text-sm text-gray-900 dark:text-white">{{ __('messages.service_will_be_provided_at_customer_location') }}</p>
+                            {{-- <div class="text-xs text-gray-500 dark:text-gray-400">
+                                <i class="fas fa-map-marker-alt mr-1"></i>
+                                {{ $booking->customerLocation->address ?? __('messages.address_not_available') }}
+                            </div> --}}
+                            @if($booking->customerLocation)
+                            <div class="flex items-center space-x-2 mt-2">
+                                <button onclick="copyLocation()" class="inline-flex items-center px-2 py-1 bg-blue-100 hover:bg-blue-200 dark:bg-blue-900 dark:hover:bg-blue-800 text-blue-700 dark:text-blue-300 text-xs font-medium rounded-md transition-colors duration-200">
+                                    <i class="fas fa-copy mr-1"></i>
+                                    {{ __('messages.copy_location') }}
+                                </button>
+                                <button onclick="shareLocation()" class="inline-flex items-center px-2 py-1 bg-green-100 hover:bg-green-200 dark:bg-green-900 dark:hover:bg-green-800 text-green-700 dark:text-green-300 text-xs font-medium rounded-md transition-colors duration-200">
+                                    <i class="fas fa-share-alt mr-1"></i>
+                                    {{ __('messages.share_location') }}
+                                </button>
+                                @if($booking->customerLocation->latitude && $booking->customerLocation->longitude)
+                                <button onclick="openInMaps()" class="inline-flex items-center px-2 py-1 bg-purple-100 hover:bg-purple-200 dark:bg-purple-900 dark:hover:bg-purple-800 text-purple-700 dark:text-purple-300 text-xs font-medium rounded-md transition-colors duration-200">
+                                    <i class="fas fa-external-link-alt mr-1"></i>
+                                    {{ __('messages.open_in_maps') }}
+                                </button>
+                                @endif
+                            </div>
+                            @endif
+                        </div>
+                    </div>
+                    @if($booking->customerLocation && $booking->customerLocation->latitude && $booking->customerLocation->longitude)
+                        <div class="flex-1">
+                            <div id="map-{{ $booking->id }}" class="w-full h-64 rounded-lg border border-gray-300 dark:border-gray-600"></div>
+                        </div>
+                    @endif
+                </div>
+            @else
+                <div class="flex items-center mb-3">
+                    <i class="fas fa-store text-green-500 mr-2"></i>
+                    <span class="text-sm font-medium text-gray-900 dark:text-white">
+                        {{ __('messages.store_location') }}
+                    </span>
+                </div>
+                <div class="space-y-2">
+                    <p class="text-sm text-gray-900 dark:text-white">{{ __('messages.service_will_be_provided_at_store') }}</p>
+                    <div class="text-xs text-gray-500 dark:text-gray-400">
+                        <i class="fas fa-store mr-1"></i>
+                        {{ __('messages.please_visit_our_store_for_service') }}
+                    </div>
+                </div>
+            @endif
+        </div>
+    </div>
+
     <!-- Service Details -->
     <div class="bg-white dark:bg-gray-800 rounded-lg shadow mb-6 border border-gray-200 dark:border-gray-700">
         <div class="px-6 py-4 border-b border-gray-200 dark:border-gray-700">
@@ -134,4 +199,191 @@
         </div>
     </div>
 </div>
+
+@push('scripts')
+<script>
+    // Initialize Google Maps for customer locations
+    function initMap() {
+        @if($booking->is_home_service == 1 && $booking->customerLocation && $booking->customerLocation->latitude && $booking->customerLocation->longitude)
+            const customerLocation = {
+                lat: {{ $booking->customerLocation->latitude }},
+                lng: {{ $booking->customerLocation->longitude }}
+            };
+            
+            const map = new google.maps.Map(document.getElementById("map-{{ $booking->id }}"), {
+                zoom: 15,
+                center: customerLocation,
+                mapTypeControl: false,
+                streetViewControl: false,
+                fullscreenControl: false,
+                styles: [
+                    {
+                        featureType: "poi",
+                        elementType: "labels",
+                        stylers: [{ visibility: "off" }]
+                    }
+                ]
+            });
+            
+            const marker = new google.maps.Marker({
+                position: customerLocation,
+                map: map,
+                title: "{{ __('messages.customer_location') }}",
+                icon: {
+                    url: 'data:image/svg+xml;charset=UTF-8,' + encodeURIComponent(`
+                        <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" fill="#3B82F6">
+                            <path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z"/>
+                        </svg>
+                    `),
+                    scaledSize: new google.maps.Size(32, 32),
+                    anchor: new google.maps.Point(16, 32)
+                }
+            });
+            
+            const infoWindow = new google.maps.InfoWindow({
+                content: `
+                    <div class="p-2">
+                        <h4 class="font-semibold text-gray-900">{{ __('messages.customer_location') }}</h4>
+                        <p class="text-sm text-gray-600">{{ $booking->customerLocation->address ?? 'N/A' }}</p>
+                        <p class="text-xs text-gray-500 mt-1">{{ $booking->customerLocation->latitude }}, {{ $booking->customerLocation->longitude }}</p>
+                    </div>
+                `
+            });
+            
+            marker.addListener("click", () => {
+                infoWindow.open(map, marker);
+            });
+        @endif
+    }
+    
+    // Location utility functions
+    function copyLocation() {
+        @if($booking->customerLocation)
+        const customerLocation = {!! json_encode($booking->customerLocation) !!};
+        @else
+        const customerLocation = null;
+        @endif
+        
+        if (customerLocation) {
+            let locationText = '';
+            
+            // If we have coordinates, create a Google Maps link
+            if (customerLocation.latitude && customerLocation.longitude) {
+                locationText = `https://maps.google.com/?q=${customerLocation.latitude},${customerLocation.longitude}`;
+                
+                // Add address as additional info if available
+                if (customerLocation.address) {
+                    locationText += `\n\nAddress: ${customerLocation.address}`;
+                }
+            } else if (customerLocation.address) {
+                // If no coordinates but we have address, use address for Google Maps search
+                locationText = `https://maps.google.com/?q=${encodeURIComponent(customerLocation.address)}`;
+            }
+            
+            if (locationText.trim() !== '') {
+                navigator.clipboard.writeText(locationText).then(function() {
+                    // Show success message
+                    showNotification('{{ __('messages.location_copied') }}', 'success');
+                }).catch(function(err) {
+                    console.error('Could not copy text: ', err);
+                    showNotification('{{ __('messages.copy_failed') }}', 'error');
+                });
+            } else {
+                showNotification('{{ __('messages.no_address_available') }}', 'error');
+            }
+        } else {
+            showNotification('{{ __('messages.no_address_available') }}', 'error');
+        }
+    }
+    
+    function shareLocation() {
+        @if($booking->customerLocation)
+        const customerLocation = {!! json_encode($booking->customerLocation) !!};
+        @else
+        const customerLocation = null;
+        @endif
+        
+        if (customerLocation) {
+            // Format the location data for sharing
+            let locationText = '';
+            if (customerLocation.address) {
+                locationText = customerLocation.address;
+            }
+            
+            let shareData = {
+                title: '{{ __('messages.customer_location') }}',
+                text: locationText
+            };
+            
+            // Add Google Maps URL if coordinates are available
+            if (customerLocation.latitude && customerLocation.longitude) {
+                shareData.url = `https://maps.google.com/?q=${customerLocation.latitude},${customerLocation.longitude}`;
+            }
+            
+            if (navigator.share && locationText && locationText.trim() !== '') {
+                navigator.share(shareData).catch(console.error);
+            } else if (locationText && locationText.trim() !== '') {
+                // Fallback for browsers that don't support Web Share API
+                copyLocation();
+            } else {
+                showNotification('{{ __('messages.no_address_available') }}', 'error');
+            }
+        } else {
+            showNotification('{{ __('messages.no_address_available') }}', 'error');
+        }
+    }
+    
+    function openInMaps() {
+        @if($booking->customerLocation)
+        const customerLocation = {!! json_encode($booking->customerLocation) !!};
+        @else
+        const customerLocation = null;
+        @endif
+        
+        if (customerLocation && customerLocation.latitude && customerLocation.longitude) {
+            const url = `https://maps.google.com/?q=${customerLocation.latitude},${customerLocation.longitude}`;
+            window.open(url, '_blank');
+        } else {
+            showNotification('{{ __('messages.no_address_available') }}', 'error');
+        }
+    }
+    
+    function showNotification(message, type = 'info') {
+        // Create notification element
+        const notification = document.createElement('div');
+        notification.className = `fixed top-4 right-4 px-4 py-2 rounded-md text-white z-50 ${
+            type === 'success' ? 'bg-green-500' : 
+            type === 'error' ? 'bg-red-500' : 'bg-blue-500'
+        }`;
+        notification.textContent = message;
+        
+        document.body.appendChild(notification);
+        
+        // Remove notification after 3 seconds
+        setTimeout(() => {
+            notification.remove();
+        }, 3000);
+    }
+    
+    // Load Google Maps API
+    function loadGoogleMaps() {
+        if (typeof google === 'undefined') {
+            const script = document.createElement('script');
+            script.src = 'https://maps.googleapis.com/maps/api/js?key={{ config("services.google.maps_api_key", "YOUR_GOOGLE_MAPS_API_KEY") }}&callback=initMap';
+            script.async = true;
+            script.defer = true;
+            document.head.appendChild(script);
+        } else {
+            initMap();
+        }
+    }
+    
+    // Initialize when DOM is ready
+    document.addEventListener('DOMContentLoaded', function() {
+        @if($booking->is_home_service == 1 && $booking->customerLocation && $booking->customerLocation->latitude && $booking->customerLocation->longitude)
+            loadGoogleMaps();
+        @endif
+    });
+</script>
+@endpush
 @endsection
