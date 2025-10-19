@@ -341,38 +341,80 @@ class BookingController extends Controller
             'date' => 'required|date|after_or_equal:today',
         ]);
 
-        // Get the service
         $service = Service::findOrFail($request->service_id);
-
-        // Get the branch
-        $branch = Branch::findOrFail($service->branch_id);
-
-        // Get the date
         $date = Carbon::parse($request->date);
 
-        // Get branch opening hours for the day of the week
-        $dayOfWeek = strtolower($date->format('l'));
-        $openingHours = json_decode($branch->opening_hours, true);
+        // Respect service availability days (stored as 0=Sunday, 6=Saturday)
+        $availableDays = collect($service->available_days ?? [])->map(fn ($day) => (int) $day);
+        if ($availableDays->isNotEmpty()) {
+            $dayIndex = (int) $date->format('w'); // 0 (Sun) - 6 (Sat)
+            if (!$availableDays->contains($dayIndex)) {
+                return response()->json([
+                    'success' => true,
+                    'available_times' => [],
+                    'message' => 'Service not offered on this day',
+                ]);
+            }
+        }
 
-        // Check if the branch is open on this day
-        if (!isset($openingHours[$dayOfWeek]) || !$openingHours[$dayOfWeek]['is_open']) {
+        $windowStart = null;
+        $windowEnd = null;
+
+        if (!empty($service->start_time)) {
+            try {
+                $serviceStart = Carbon::parse($service->start_time);
+                $windowStart = $serviceStart;
+            } catch (\Throwable $e) {
+                // Ignore parsing error and keep existing window start
+            }
+        }
+
+        if (!empty($service->end_time)) {
+            try {
+                $serviceEnd = Carbon::parse($service->end_time);
+                $windowEnd = $serviceEnd;
+            } catch (\Throwable $e) {
+                // Ignore parsing error and keep existing window end
+            }
+        }
+
+        if (!$windowStart || !$windowEnd) {
+            // Fallback to default working hours if none were determined
+            $windowStart = Carbon::createFromTime(9, 0);
+            $windowEnd = Carbon::createFromTime(17, 0);
+        }
+
+        if (!$windowEnd->greaterThan($windowStart)) {
             return response()->json([
                 'success' => true,
                 'available_times' => [],
-                'message' => 'The branch is closed on this day',
+                'message' => 'Service has no working window on this day',
             ]);
         }
 
-        // Get opening and closing times
-        $openTime = Carbon::parse($openingHours[$dayOfWeek]['open']);
-        $closeTime = Carbon::parse($openingHours[$dayOfWeek]['close']);
+        // Align window times with the requested date
+        $windowStart = $date->copy()->setTime(
+            (int) $windowStart->format('H'),
+            (int) $windowStart->format('i'),
+            (int) $windowStart->format('s')
+        );
+        $windowEnd = $date->copy()->setTime(
+            (int) $windowEnd->format('H'),
+            (int) $windowEnd->format('i'),
+            (int) $windowEnd->format('s')
+        );
 
         // Generate time slots based on service duration
         $timeSlots = [];
-        $currentTime = clone $openTime;
+        $currentStart = $windowStart->copy();
 
-        while ($currentTime->addMinutes($service->duration)->lte($closeTime)) {
-            $timeSlots[] = $currentTime->copy()->subMinutes($service->duration)->format('h:i A');
+        while ($currentStart->lt($windowEnd)) {
+            $slotEnd = $currentStart->copy()->addMinutes($service->duration);
+            if ($slotEnd->gt($windowEnd)) {
+                break;
+            }
+            $timeSlots[] = $currentStart->format('h:i A');
+            $currentStart = $slotEnd;
         }
 
         // Get existing bookings for this service on this date
