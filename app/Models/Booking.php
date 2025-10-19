@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use App\Models\UserLocation;
 
 class Booking extends Model
 {
@@ -27,6 +28,10 @@ class Booking extends Model
         'payment_status',
         'payment_method',
         'notes',
+        'is_home_service',
+        'service_location',
+        'customer_location',
+        'address',
     ];
 
     /**
@@ -37,6 +42,7 @@ class Booking extends Model
     protected $casts = [
         'booking_date' => 'date',
         'price' => 'decimal:2',
+        'is_home_service' => 'boolean',
     ];
 
     /**
@@ -61,5 +67,13 @@ class Booking extends Model
     public function branch()
     {
         return $this->belongsTo(Branch::class);
+    }
+
+    /**
+     * Get the saved customer location associated with the booking.
+     */
+    public function customerLocation()
+    {
+        return $this->belongsTo(UserLocation::class, 'customer_location');
     }
 }

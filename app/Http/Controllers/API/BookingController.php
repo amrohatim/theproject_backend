@@ -22,7 +22,7 @@ class BookingController extends Controller
     public function index(Request $request)
     {
         $user = Auth::user();
-        $query = Booking::with(['service', 'branch'])
+        $query = Booking::with(['service', 'branch', 'customerLocation'])
             ->where('user_id', $user->id)
             ->orderBy('booking_date', 'desc')
             ->orderBy('booking_time', 'desc');
@@ -62,6 +62,10 @@ class BookingController extends Controller
                 'duration' => $booking->duration,
                 'created_at' => $booking->created_at->toDateTimeString(),
                 'updated_at' => $booking->updated_at->toDateTimeString(),
+                'is_home_service' => (bool) $booking->is_home_service,
+                'service_location' => $booking->service_location,
+                'customer_location' => $booking->customer_location,
+                'address' => $booking->address,
             ];
         });
 
@@ -85,6 +89,10 @@ class BookingController extends Controller
             'date' => 'required|date|after_or_equal:today',
             'time' => 'required|string',
             'notes' => 'nullable|string',
+            'is_home_service' => 'nullable|boolean',
+            'service_location' => 'nullable|in:provider,customer',
+            'address' => 'nullable|string',
+            'customer_location' => 'nullable|exists:user_locations,id',
         ]);
 
         // Get the service
@@ -116,6 +124,19 @@ class BookingController extends Controller
         // Generate a unique booking number
         $bookingNumber = 'BKG-' . strtoupper(Str::random(8));
 
+        $isHomeService = $request->has('is_home_service')
+            ? $request->boolean('is_home_service')
+            : null;
+
+        if ($isHomeService === true &&
+            !$request->filled('customer_location') &&
+            !$request->filled('address')) {
+            return response()->json([
+                'success' => false,
+                'message' => 'A customer location or address is required for home service bookings.',
+            ], 422);
+        }
+
         // Create the booking
         $booking = Booking::create([
             'user_id' => Auth::id(),
@@ -129,10 +150,14 @@ class BookingController extends Controller
             'status' => 'pending',
             'payment_status' => 'pending',
             'notes' => $request->notes,
+            'is_home_service' => $isHomeService,
+            'service_location' => $request->input('service_location'),
+            'customer_location' => $request->input('customer_location'),
+            'address' => $request->input('address'),
         ]);
 
         // Load relationships
-        $booking->load(['service', 'branch']);
+        $booking->load(['service', 'branch', 'customerLocation']);
 
         // Transform the booking to match the frontend model
         $transformedBooking = [
@@ -153,6 +178,10 @@ class BookingController extends Controller
             'duration' => $booking->duration,
             'created_at' => $booking->created_at->toDateTimeString(),
             'updated_at' => $booking->updated_at->toDateTimeString(),
+            'is_home_service' => (bool) $booking->is_home_service,
+            'service_location' => $booking->service_location,
+            'customer_location' => $booking->customer_location,
+            'address' => $booking->address,
         ];
 
         return response()->json([
@@ -171,7 +200,7 @@ class BookingController extends Controller
     public function show($id)
     {
         $user = Auth::user();
-        $booking = Booking::with(['service', 'branch'])
+        $booking = Booking::with(['service', 'branch', 'customerLocation'])
             ->where('user_id', $user->id)
             ->findOrFail($id);
 
@@ -194,6 +223,10 @@ class BookingController extends Controller
             'duration' => $booking->duration,
             'created_at' => $booking->created_at->toDateTimeString(),
             'updated_at' => $booking->updated_at->toDateTimeString(),
+            'is_home_service' => (bool) $booking->is_home_service,
+            'service_location' => $booking->service_location,
+            'customer_location' => $booking->customer_location,
+            'address' => $booking->address,
         ];
 
         return response()->json([
@@ -244,7 +277,7 @@ class BookingController extends Controller
         $booking->save();
 
         // Load relationships
-        $booking->load(['service', 'branch']);
+        $booking->load(['service', 'branch', 'customerLocation']);
 
         // Transform the booking to match the frontend model
         $transformedBooking = [
@@ -265,6 +298,10 @@ class BookingController extends Controller
             'duration' => $booking->duration,
             'created_at' => $booking->created_at->toDateTimeString(),
             'updated_at' => $booking->updated_at->toDateTimeString(),
+            'is_home_service' => (bool) $booking->is_home_service,
+            'service_location' => $booking->service_location,
+            'customer_location' => $booking->customer_location,
+            'address' => $booking->address,
         ];
 
         return response()->json([
@@ -298,7 +335,7 @@ class BookingController extends Controller
         $booking->save();
 
         // Load relationships
-        $booking->load(['service', 'branch']);
+        $booking->load(['service', 'branch', 'customerLocation']);
 
         // Transform the booking to match the frontend model
         $transformedBooking = [
@@ -319,6 +356,10 @@ class BookingController extends Controller
             'duration' => $booking->duration,
             'created_at' => $booking->created_at->toDateTimeString(),
             'updated_at' => $booking->updated_at->toDateTimeString(),
+            'is_home_service' => (bool) $booking->is_home_service,
+            'service_location' => $booking->service_location,
+            'customer_location' => $booking->customer_location,
+            'address' => $booking->address,
         ];
 
         return response()->json([
