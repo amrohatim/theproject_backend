@@ -7,6 +7,7 @@ use App\Models\Service;
 use App\Services\ServiceDealService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Carbon;
 
 class ServiceController extends Controller
 {
@@ -81,20 +82,7 @@ class ServiceController extends Controller
         $services = $query->paginate($perPage);
 
         // Add branch_name and deal information to each service
-        $services->getCollection()->transform(function ($service) {
-            $service->branch_name = $service->branch ? $service->branch->name : ($service->merchant_name ?? 'Unknown Branch');
-
-            // Calculate deal information for this service
-            $dealInfo = $this->serviceDealService->calculateDiscountedPrice($service);
-
-            // Apply deal information to the service
-            $service->has_discount = $dealInfo['has_discount'];
-            $service->discounted_price = $dealInfo['discounted_price'];
-            $service->discount_percentage = $dealInfo['discount_percentage'];
-            $service->deal = $dealInfo['deal'];
-
-            return $service;
-        });
+        $services->getCollection()->transform(fn ($service) => $this->transformService($service));
 
         return response()->json([
             'success' => true,
@@ -112,17 +100,7 @@ class ServiceController extends Controller
     {
         $service = Service::with(['branch', 'category', 'reviews.user'])->findOrFail($id);
 
-        // Add branch_name to the service
-        $service->branch_name =$service->branch ? $service->branch->name : ($service->merchant_name ?? 'Unknown Branch');
-
-        // Calculate deal information for this service
-        $dealInfo = $this->serviceDealService->calculateDiscountedPrice($service);
-
-        // Apply deal information to the service
-        $service->has_discount = $dealInfo['has_discount'];
-        $service->discounted_price = $dealInfo['discounted_price'];
-        $service->discount_percentage = $dealInfo['discount_percentage'];
-        $service->deal = $dealInfo['deal'];
+        $service = $this->transformService($service);
 
         return response()->json([
             'success' => true,
@@ -227,21 +205,8 @@ class ServiceController extends Controller
             ->take($limit)
             ->get();
 
-        // Add branch_name and deal information to each service
-        $services->transform(function ($service) {
-            $service->branch_name = $service->branch ? $service->branch->name : ($service->merchant_name ?? 'Unknown Branch');
-
-            // Calculate deal information for this service
-            $dealInfo = $this->serviceDealService->calculateDiscountedPrice($service);
-
-            // Apply deal information to the service
-            $service->has_discount = $dealInfo['has_discount'];
-            $service->discounted_price = $dealInfo['discounted_price'];
-            $service->discount_percentage = $dealInfo['discount_percentage'];
-            $service->deal = $dealInfo['deal'];
-
-            return $service;
-        });
+        // Add branch_name, deal, and availability information to each service
+        $services->transform(fn ($service) => $this->transformService($service));
 
         return response()->json([
             'success' => true,
@@ -295,17 +260,99 @@ class ServiceController extends Controller
         // Get services with active deals using the ServiceDealService
         $services = $this->serviceDealService->getServicesWithActiveDeals($limit);
 
-        // Add branch_name to each service
-        $services->transform(function ($service) {
-            if ($service->branch) {
-                $service->branch_name = $service->branch->name;
-            }
-            return $service;
-        });
+        // Add branch_name, deal, and availability information to each service
+        $services->transform(fn ($service) => $this->transformService($service));
 
         return response()->json([
             'success' => true,
             'services' => $services,
         ]);
+    }
+
+    /**
+     * Normalize the service payload that is returned to API consumers.
+     *
+     * @param  \App\Models\Service  $service
+     * @return \App\Models\Service
+     */
+    protected function transformService(Service $service): Service
+    {
+        $service->loadMissing(['branch', 'category']);
+
+        $service->branch_name = $service->branch ? $service->branch->name : ($service->merchant_name ?? 'Unknown Branch');
+
+        $dealInfo = $this->serviceDealService->calculateDiscountedPrice($service);
+        $service->has_discount = $dealInfo['has_discount'];
+        $service->discounted_price = $dealInfo['discounted_price'];
+        $service->discount_percentage = $dealInfo['discount_percentage'];
+        $service->deal = $dealInfo['deal'];
+
+        $service->available_days = $this->normalizeAvailableDays($service->available_days);
+        $service->start_time = $this->formatTimeField($service->start_time);
+        $service->end_time = $this->formatTimeField($service->end_time);
+
+        return $service;
+    }
+
+    /**
+     * Ensure available days are always returned as an ordered array of integers.
+     *
+     * @param  mixed  $availableDays
+     * @return array<int, int>
+     */
+    protected function normalizeAvailableDays($availableDays): array
+    {
+        if (is_null($availableDays)) {
+            return [];
+        }
+
+        if (is_string($availableDays)) {
+            $decoded = json_decode($availableDays, true);
+            if (json_last_error() === JSON_ERROR_NONE) {
+                $availableDays = $decoded;
+            } else {
+                return [];
+            }
+        }
+
+        if ($availableDays instanceof \Illuminate\Support\Collection) {
+            $availableDays = $availableDays->all();
+        }
+
+        if (!is_array($availableDays)) {
+            return [];
+        }
+
+        return collect($availableDays)
+            ->filter(fn ($day) => $day !== null && $day !== '')
+            ->map(fn ($day) => (int) $day)
+            ->unique()
+            ->sort()
+            ->values()
+            ->all();
+    }
+
+    /**
+     * Format the start/end time values for consistent API responses.
+     *
+     * @param  mixed  $time
+     * @return string|null
+     */
+    protected function formatTimeField($time): ?string
+    {
+        if (empty($time)) {
+            return null;
+        }
+
+        if ($time instanceof Carbon) {
+            return $time->format('H:i');
+        }
+
+        try {
+            return Carbon::parse((string) $time)->format('H:i');
+        } catch (\Exception $e) {
+            // If parsing fails, return the original value to avoid hiding data.
+            return is_string($time) ? $time : null;
+        }
     }
 }

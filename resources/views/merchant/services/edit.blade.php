@@ -226,6 +226,60 @@
     #availability-validation-error ul {
         margin-bottom: 0;
     }
+
+    /* New day checkbox styles */
+    .day-checkbox {
+        display: none;
+    }
+
+    .day-label {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: 12px;
+        border: 2px solid #d1d5db;
+        border-radius: 8px;
+        cursor: pointer;
+        transition: all 0.2s ease-in-out;
+        font-size: 14px;
+        font-weight: 500;
+        color: #374151;
+        background-color: #ffffff;
+        min-height: 54px;
+    }
+
+    .day-label:hover {
+        border-color: #3b82f6;
+        background-color: #eff6ff;
+    }
+
+    .day-checkbox:checked + .day-label,
+    .day-label.selected {
+        background-color: #3b82f6 !important;
+        border-color: #3b82f6 !important;
+        color: #ffffff !important;
+    }
+
+    /* Dark mode styles */
+    @media (prefers-color-scheme: dark) {
+        .day-label {
+            border-color: #4b5563;
+            background-color: #1f2937;
+            color: #d1d5db;
+        }
+
+        .day-label:hover {
+            border-color: #3b82f6;
+            background-color: #1e3a8a;
+        }
+
+        .day-checkbox:checked + .day-label,
+        .day-label.selected {
+            background-color: #3b82f6 !important;
+            border-color: #3b82f6 !important;
+            color: #ffffff !important;
+        }
+    }
 </style>
 @endpush
 
@@ -424,31 +478,49 @@
                         6 => ['en' => 'Saturday', 'ar' => 'السبت'],
                     ];
                     $selectedDays = old('available_days', $service->available_days ?? []);
+
+                    $startTimeValue = old('start_time', $service->start_time);
+                    if ($startTimeValue === null || $startTimeValue === '') {
+                        $startTimeValue = '09:00';
+                    } else {
+                        try {
+                            $startTimeValue = \Illuminate\Support\Carbon::parse($startTimeValue)->format('H:i');
+                        } catch (\Throwable $exception) {
+                            $startTimeValue = substr($startTimeValue, 0, 5);
+                        }
+                    }
+
+                    $endTimeValue = old('end_time', $service->end_time);
+                    if ($endTimeValue === null || $endTimeValue === '') {
+                        $endTimeValue = '17:00';
+                    } else {
+                        try {
+                            $endTimeValue = \Illuminate\Support\Carbon::parse($endTimeValue)->format('H:i');
+                        } catch (\Throwable $exception) {
+                            $endTimeValue = substr($endTimeValue, 0, 5);
+                        }
+                    }
                 @endphp
 
                 <div class="row g-2" id="merchantDaysGrid">
                     @foreach($days as $dayIndex => $dayNames)
                         <div class="col-6 col-md-4 col-lg-3">
-                            <input type="checkbox"
-                                   class="merchant-day-checkbox"
-                                   id="day_{{ $dayIndex }}"
-                                   name="available_days[]"
-                                   value="{{ $dayIndex }}"
-                                   {{ in_array($dayIndex, $selectedDays ?? []) ? 'checked' : '' }}>
-                            <label for="day_{{ $dayIndex }}"
-                                   class="merchant-day-label"
-                                   role="button"
-                                   tabindex="0"
-                                   aria-pressed="{{ in_array($dayIndex, $selectedDays ?? []) ? 'true' : 'false' }}"
-                                   data-day-index="{{ $dayIndex }}">
-                                <span class="merchant-day-text">
-                                    <span class="day-name-en">{{ $dayNames['en'] }}</span>
-                                    <span class="day-name-ar">{{ $dayNames['ar'] }}</span>
-                                </span>
-                                <span class="merchant-day-check" aria-hidden="true">
-                                    <i class="fas fa-check"></i>
-                                </span>
-                            </label>
+                            <div class="day-checkbox-container">
+                                <input type="checkbox" 
+                                       id="day_{{ $dayIndex }}" 
+                                       name="available_days[]" 
+                                       value="{{ $dayIndex }}" 
+                                       class="day-checkbox sr-only"
+                                       {{ in_array($dayIndex, $selectedDays) ? 'checked' : '' }}>
+                                <label for="day_{{ $dayIndex }}" 
+                                       class="day-label flex items-center justify-center p-3 border-2 border-gray-300 dark:border-gray-600 rounded-lg cursor-pointer transition-all duration-200 hover:border-blue-400 dark:hover:border-blue-500 text-sm font-medium text-gray-700 dark:text-gray-300">
+                                    @if(app()->getLocale() === 'ar')
+                                        <span class="day-name-ar">{{ $dayNames['ar'] }}</span>
+                                    @else
+                                        <span class="day-name-en">{{ $dayNames['en'] }}</span>
+                                    @endif
+                                </label>
+                            </div>
                         </div>
                     @endforeach
                 </div>
@@ -465,7 +537,7 @@
                                class="form-control time-picker-input @error('start_time') is-invalid @enderror"
                                id="start_time"
                                name="start_time"
-                               value="{{ old('start_time', $service->start_time ?? '09:00') }}"
+                               value="{{ $startTimeValue }}"
                                required
                                style="background-color: var(--discord-darkest); border: 1px solid var(--discord-darkest); color: var(--discord-lightest);">
                         @error('start_time')
@@ -478,7 +550,7 @@
                                class="form-control time-picker-input @error('end_time') is-invalid @enderror"
                                id="end_time"
                                name="end_time"
-                               value="{{ old('end_time', $service->end_time ?? '17:00') }}"
+                               value="{{ $endTimeValue }}"
                                required
                                style="background-color: var(--discord-darkest); border: 1px solid var(--discord-darkest); color: var(--discord-lightest);">
                         @error('end_time')
@@ -593,7 +665,7 @@
     }
 
     function getDayCheckboxes() {
-        return document.querySelectorAll('.merchant-day-checkbox');
+        return document.querySelectorAll('.day-checkbox');
     }
 
     function toggleDayLabelState(checkbox) {
@@ -616,7 +688,7 @@
         if (!daysGrid) {
             return;
         }
-        const selectedDays = document.querySelectorAll('.merchant-day-checkbox:checked').length;
+        const selectedDays = document.querySelectorAll('.day-checkbox:checked').length;
         daysGrid.classList.toggle('has-error-border', selectedDays === 0);
     }
 
@@ -654,7 +726,7 @@
 
     function validateAvailability() {
         const errors = [];
-        const selectedDays = document.querySelectorAll('.merchant-day-checkbox:checked').length;
+        const selectedDays = document.querySelectorAll('.day-checkbox:checked').length;
         if (selectedDays === 0) {
             errors.push(availabilityMessages.selectDay);
         }

@@ -103,6 +103,53 @@
         display: none;
     }
 
+    /* New day checkbox styles */
+    .day-checkbox {
+        position: absolute;
+        opacity: 0;
+        pointer-events: none;
+    }
+
+    .day-label {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        border: 1px solid #d1d5db;
+        border-radius: 12px;
+        padding: 12px 16px;
+        font-size: 14px;
+        font-weight: 600;
+        color: #374151;
+        background:  #ffffff;
+        cursor: pointer;
+        transition: all 0.2s ease-in-out;
+        text-align: center;
+        position: relative;
+        min-height: 54px;
+    }
+
+    .day-label:hover {
+        border-color: rgba(59, 130, 246, 0.6);
+        transform: translateY(-2px);
+        box-shadow: 0 12px 18px rgba(59, 130, 246, 0.08);
+    }
+
+    .day-checkbox:checked + .day-label,
+    .day-label.selected {
+        background: linear-gradient(145deg, rgba(59, 130, 246, 0.9), rgba(37, 99, 235, 0.8)) !important;
+        border-color: #3b82f6 !important;
+        color: #ffffff !important;
+        box-shadow: 0 12px 18px rgba(59, 130, 246, 0.3) !important;
+    }
+
+    /* Dark mode adjustments */
+    @media (prefers-color-scheme: dark) {
+        .day-checkbox:checked + .day-label,
+        .day-label.selected {
+            background: linear-gradient(145deg, rgba(59, 130, 246, 0.85), rgba(37, 99, 235, 0.75)) !important;
+        }
+    }
+
     .time-picker-overlay {
         position: fixed !important;
         inset: 0 !important;
@@ -427,26 +474,27 @@
                 <div class="row g-2" id="merchantDaysGrid">
                     @foreach($days as $dayIndex => $dayNames)
                         <div class="col-6 col-md-4 col-lg-3">
-                            <input type="checkbox"
-                                   class="merchant-day-checkbox"
-                                   id="day_{{ $dayIndex }}"
-                                   name="available_days[]"
-                                   value="{{ $dayIndex }}"
-                                   {{ in_array($dayIndex, $selectedDays ?? []) ? 'checked' : '' }}>
-                            <label for="day_{{ $dayIndex }}"
-                                   class="merchant-day-label"
-                                   role="button"
-                                   tabindex="0"
-                                   aria-pressed="{{ in_array($dayIndex, $selectedDays ?? []) ? 'true' : 'false' }}"
-                                   data-day-index="{{ $dayIndex }}">
-                                <span class="merchant-day-text">
-                                    <span class="day-name-en">{{ $dayNames['en'] }}</span>
-                                    <span class="day-name-ar">{{ $dayNames['ar'] }}</span>
-                                </span>
-                                <span class="merchant-day-check" aria-hidden="true">
-                                    <i class="fas fa-check"></i>
-                                </span>
-                            </label>
+                            <div class="day-checkbox-container">
+                                <input type="checkbox"
+                                       class="day-checkbox sr-only"
+                                       id="day_{{ $dayIndex }}"
+                                       name="available_days[]"
+                                       value="{{ $dayIndex }}"
+                                       {{ in_array($dayIndex, $selectedDays ?? []) ? 'checked' : '' }}>
+                                <label for="day_{{ $dayIndex }}"
+                                       class="day-label day-label flex items-center justify-center p-3 border-2 border-gray-300 dark:border-gray-600 rounded-lg cursor-pointer transition-all duration-200 hover:border-blue-400 dark:hover:border-blue-500 text-sm font-medium text-gray-700 dark:text-gray-300"
+                                       role="button"
+                                       tabindex="0"
+                                       aria-pressed="{{ in_array($dayIndex, $selectedDays ?? []) ? 'true' : 'false' }}"
+                                       data-day-index="{{ $dayIndex }}"
+                                     >
+                                    @if(app()->getLocale() === 'ar')
+                                        {{ $dayNames['ar'] }}
+                                    @else
+                                        {{ $dayNames['en'] }}
+                                    @endif
+                                </label>
+                            </div>
                         </div>
                     @endforeach
                 </div>
@@ -592,7 +640,7 @@
     }
 
     function getDayCheckboxes() {
-        return document.querySelectorAll('.merchant-day-checkbox');
+        return document.querySelectorAll('.day-checkbox');
     }
 
     function toggleDayLabelState(checkbox) {
@@ -615,7 +663,7 @@
         if (!daysGrid) {
             return;
         }
-        const selectedDays = document.querySelectorAll('.merchant-day-checkbox:checked').length;
+        const selectedDays = document.querySelectorAll('.day-checkbox:checked').length;
         daysGrid.classList.toggle('has-error-border', selectedDays === 0);
     }
 
@@ -653,7 +701,7 @@
 
     function validateAvailability() {
         const errors = [];
-        const selectedDays = document.querySelectorAll('.merchant-day-checkbox:checked').length;
+        const selectedDays = document.querySelectorAll('.day-checkbox:checked').length;
         if (selectedDays === 0) {
             errors.push(availabilityMessages.selectDay);
         }

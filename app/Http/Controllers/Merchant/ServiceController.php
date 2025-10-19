@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Models\Service;
 use App\Models\Category;
 use Illuminate\Http\Request;
+use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
@@ -144,6 +145,11 @@ class ServiceController extends Controller
      */
     public function store(Request $request)
     {
+        $request->merge([
+            'start_time' => $this->normalizeTimeInput($request->input('start_time')),
+            'end_time' => $this->normalizeTimeInput($request->input('end_time')),
+        ]);
+
         $request->validate([
             'name' => 'required|string|max:255',
             'service_name_arabic' => 'required|string|max:255',
@@ -285,6 +291,30 @@ class ServiceController extends Controller
     }
 
     /**
+     * Normalize incoming time strings to H:i format for validation and storage.
+     */
+    private function normalizeTimeInput($time)
+    {
+        if ($time === null || $time === '') {
+            return $time;
+        }
+
+        foreach (['H:i', 'H:i:s'] as $format) {
+            try {
+                return Carbon::createFromFormat($format, $time)->format('H:i');
+            } catch (\Throwable $exception) {
+                // Try next format
+            }
+        }
+
+        try {
+            return Carbon::parse($time)->format('H:i');
+        } catch (\Throwable $exception) {
+            return $time;
+        }
+    }
+
+    /**
      * Display the specified service.
      */
     public function show($id)
@@ -328,6 +358,11 @@ class ServiceController extends Controller
         $user = Auth::user();
 
         $service = Service::where('merchant_id', $user->id)->findOrFail($id);
+
+        $request->merge([
+            'start_time' => $this->normalizeTimeInput($request->input('start_time')),
+            'end_time' => $this->normalizeTimeInput($request->input('end_time')),
+        ]);
 
         $request->validate([
             'name' => 'required|string|max:255',

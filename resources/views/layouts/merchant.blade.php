@@ -622,6 +622,7 @@ $direction = $isRtl ? 'rtl' : 'ltr';
     <script src="https://cdn.tailwindcss.com"></script>
 
     @yield('styles')
+    @stack('styles')
 </head>
 <body>
     <div class="dashboard-layout">
