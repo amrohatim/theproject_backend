@@ -12,10 +12,7 @@ return new class extends Migration
     public function up(): void
     {
         Schema::table('bookings', function (Blueprint $table) {
-            $table->foreignId('customer_location')
-                ->nullable()
-                ->constrained('user_locations')
-                ->nullOnDelete();
+            $table->json('customer_location')->nullable();
         });
     }
 
@@ -25,9 +22,7 @@ return new class extends Migration
     public function down(): void
     {
         Schema::table('bookings', function (Blueprint $table) {
-            $table->dropForeign(['customer_location']);
             $table->dropColumn('customer_location');
         });
     }
 };
-

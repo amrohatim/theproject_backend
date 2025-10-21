@@ -6,10 +6,13 @@ use App\Http\Controllers\Controller;
 use App\Models\Booking;
 use App\Models\Service;
 use App\Models\Branch;
+use App\Models\UserLocation;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Str;
 use Carbon\Carbon;
+use Illuminate\Validation\ValidationException;
 
 class BookingController extends Controller
 {
@@ -22,7 +25,7 @@ class BookingController extends Controller
     public function index(Request $request)
     {
         $user = Auth::user();
-        $query = Booking::with(['service', 'branch', 'customerLocation'])
+        $query = Booking::with(['service', 'branch'])
             ->where('user_id', $user->id)
             ->orderBy('booking_date', 'desc')
             ->orderBy('booking_time', 'desc');
@@ -40,38 +43,13 @@ class BookingController extends Controller
             $query->whereDate('booking_date', '<=', $request->date_to);
         }
 
-        $bookings = $query->get();
-
-        // Transform the bookings to match the frontend model
-        $transformedBookings = $bookings->map(function ($booking) {
-            return [
-                'id' => $booking->id,
-                'user_id' => $booking->user_id,
-                'branch_id' => $booking->branch_id,
-                'service_id' => $booking->service_id,
-                'date' => $booking->booking_date->format('Y-m-d'),
-                'time' => Carbon::parse($booking->booking_time)->format('h:i A'),
-                'status' => $booking->status,
-                'amount' => (float) $booking->price,
-                'notes' => $booking->notes,
-                'service_name' => $booking->service->name,
-                'branch_name' => $booking->branch->name,
-                'booking_number' => $booking->booking_number,
-                'payment_status' => $booking->payment_status,
-                'payment_method' => $booking->payment_method,
-                'duration' => $booking->duration,
-                'created_at' => $booking->created_at->toDateTimeString(),
-                'updated_at' => $booking->updated_at->toDateTimeString(),
-                'is_home_service' => (bool) $booking->is_home_service,
-                'service_location' => $booking->service_location,
-                'customer_location' => $booking->customer_location,
-                'address' => $booking->address,
-            ];
-        });
+        $bookings = $query
+            ->get()
+            ->map(fn (Booking $booking) => $this->transformBooking($booking));
 
         return response()->json([
             'success' => true,
-            'bookings' => $transformedBookings,
+            'bookings' => $bookings,
         ]);
     }
 
@@ -92,7 +70,7 @@ class BookingController extends Controller
             'is_home_service' => 'nullable|boolean',
             'service_location' => 'nullable|in:provider,customer',
             'address' => 'nullable|string',
-            'customer_location' => 'nullable|exists:user_locations,id',
+            'customer_location' => 'nullable',
         ]);
 
         // Get the service
@@ -128,8 +106,10 @@ class BookingController extends Controller
             ? $request->boolean('is_home_service')
             : null;
 
+        $customerLocation = $this->resolveCustomerLocationSnapshot($request, Auth::id());
+
         if ($isHomeService === true &&
-            !$request->filled('customer_location') &&
+            !$customerLocation &&
             !$request->filled('address')) {
             return response()->json([
                 'success' => false,
@@ -152,42 +132,16 @@ class BookingController extends Controller
             'notes' => $request->notes,
             'is_home_service' => $isHomeService,
             'service_location' => $request->input('service_location'),
-            'customer_location' => $request->input('customer_location'),
+            'customer_location' => $customerLocation,
             'address' => $request->input('address'),
         ]);
 
-        // Load relationships
-        $booking->load(['service', 'branch', 'customerLocation']);
-
-        // Transform the booking to match the frontend model
-        $transformedBooking = [
-            'id' => $booking->id,
-            'user_id' => $booking->user_id,
-            'branch_id' => $booking->branch_id,
-            'service_id' => $booking->service_id,
-            'date' => $booking->booking_date->format('Y-m-d'),
-            'time' => Carbon::parse($booking->booking_time)->format('h:i A'),
-            'status' => $booking->status,
-            'amount' => (float) $booking->price,
-            'notes' => $booking->notes,
-            'service_name' => $booking->service->name,
-            'branch_name' => $booking->branch->name,
-            'booking_number' => $booking->booking_number,
-            'payment_status' => $booking->payment_status,
-            'payment_method' => $booking->payment_method,
-            'duration' => $booking->duration,
-            'created_at' => $booking->created_at->toDateTimeString(),
-            'updated_at' => $booking->updated_at->toDateTimeString(),
-            'is_home_service' => (bool) $booking->is_home_service,
-            'service_location' => $booking->service_location,
-            'customer_location' => $booking->customer_location,
-            'address' => $booking->address,
-        ];
+        $booking->load(['service', 'branch']);
 
         return response()->json([
             'success' => true,
             'message' => 'Booking created successfully',
-            'booking' => $transformedBooking,
+            'booking' => $this->transformBooking($booking),
         ], 201);
     }
 
@@ -200,38 +154,13 @@ class BookingController extends Controller
     public function show($id)
     {
         $user = Auth::user();
-        $booking = Booking::with(['service', 'branch', 'customerLocation'])
+        $booking = Booking::with(['service', 'branch'])
             ->where('user_id', $user->id)
             ->findOrFail($id);
 
-        // Transform the booking to match the frontend model
-        $transformedBooking = [
-            'id' => $booking->id,
-            'user_id' => $booking->user_id,
-            'branch_id' => $booking->branch_id,
-            'service_id' => $booking->service_id,
-            'date' => $booking->booking_date->format('Y-m-d'),
-            'time' => Carbon::parse($booking->booking_time)->format('h:i A'),
-            'status' => $booking->status,
-            'amount' => (float) $booking->price,
-            'notes' => $booking->notes,
-            'service_name' => $booking->service->name,
-            'branch_name' => $booking->branch->name,
-            'booking_number' => $booking->booking_number,
-            'payment_status' => $booking->payment_status,
-            'payment_method' => $booking->payment_method,
-            'duration' => $booking->duration,
-            'created_at' => $booking->created_at->toDateTimeString(),
-            'updated_at' => $booking->updated_at->toDateTimeString(),
-            'is_home_service' => (bool) $booking->is_home_service,
-            'service_location' => $booking->service_location,
-            'customer_location' => $booking->customer_location,
-            'address' => $booking->address,
-        ];
-
         return response()->json([
             'success' => true,
-            'booking' => $transformedBooking,
+            'booking' => $this->transformBooking($booking),
         ]);
     }
 
@@ -276,38 +205,10 @@ class BookingController extends Controller
 
         $booking->save();
 
-        // Load relationships
-        $booking->load(['service', 'branch', 'customerLocation']);
-
-        // Transform the booking to match the frontend model
-        $transformedBooking = [
-            'id' => $booking->id,
-            'user_id' => $booking->user_id,
-            'branch_id' => $booking->branch_id,
-            'service_id' => $booking->service_id,
-            'date' => $booking->booking_date->format('Y-m-d'),
-            'time' => Carbon::parse($booking->booking_time)->format('h:i A'),
-            'status' => $booking->status,
-            'amount' => (float) $booking->price,
-            'notes' => $booking->notes,
-            'service_name' => $booking->service->name,
-            'branch_name' => $booking->branch->name,
-            'booking_number' => $booking->booking_number,
-            'payment_status' => $booking->payment_status,
-            'payment_method' => $booking->payment_method,
-            'duration' => $booking->duration,
-            'created_at' => $booking->created_at->toDateTimeString(),
-            'updated_at' => $booking->updated_at->toDateTimeString(),
-            'is_home_service' => (bool) $booking->is_home_service,
-            'service_location' => $booking->service_location,
-            'customer_location' => $booking->customer_location,
-            'address' => $booking->address,
-        ];
-
         return response()->json([
             'success' => true,
             'message' => 'Booking updated successfully',
-            'booking' => $transformedBooking,
+            'booking' => $this->transformBooking($booking->load(['service', 'branch'])),
         ]);
     }
 
@@ -334,38 +235,10 @@ class BookingController extends Controller
         $booking->status = 'cancelled';
         $booking->save();
 
-        // Load relationships
-        $booking->load(['service', 'branch', 'customerLocation']);
-
-        // Transform the booking to match the frontend model
-        $transformedBooking = [
-            'id' => $booking->id,
-            'user_id' => $booking->user_id,
-            'branch_id' => $booking->branch_id,
-            'service_id' => $booking->service_id,
-            'date' => $booking->booking_date->format('Y-m-d'),
-            'time' => Carbon::parse($booking->booking_time)->format('h:i A'),
-            'status' => $booking->status,
-            'amount' => (float) $booking->price,
-            'notes' => $booking->notes,
-            'service_name' => $booking->service->name,
-            'branch_name' => $booking->branch->name,
-            'booking_number' => $booking->booking_number,
-            'payment_status' => $booking->payment_status,
-            'payment_method' => $booking->payment_method,
-            'duration' => $booking->duration,
-            'created_at' => $booking->created_at->toDateTimeString(),
-            'updated_at' => $booking->updated_at->toDateTimeString(),
-            'is_home_service' => (bool) $booking->is_home_service,
-            'service_location' => $booking->service_location,
-            'customer_location' => $booking->customer_location,
-            'address' => $booking->address,
-        ];
-
         return response()->json([
             'success' => true,
             'message' => 'Booking cancelled successfully',
-            'booking' => $transformedBooking,
+            'booking' => $this->transformBooking($booking->load(['service', 'branch'])),
         ]);
     }
 
@@ -480,5 +353,140 @@ class BookingController extends Controller
             'success' => true,
             'available_times' => $timeSlots,
         ]);
+    }
+
+    /**
+     * Create a standard API response shape for a booking.
+     */
+    protected function transformBooking(Booking $booking): array
+    {
+        $booking->loadMissing(['service', 'branch']);
+
+        $location = $this->formatCustomerLocation($booking->customer_location);
+
+        return [
+            'id' => $booking->id,
+            'user_id' => $booking->user_id,
+            'branch_id' => $booking->branch_id,
+            'service_id' => $booking->service_id,
+            'date' => $booking->booking_date->format('Y-m-d'),
+            'time' => Carbon::parse($booking->booking_time)->format('h:i A'),
+            'status' => $booking->status,
+            'amount' => (float) $booking->price,
+            'notes' => $booking->notes,
+            'service_name' => optional($booking->service)->name,
+            'branch_name' => optional($booking->branch)->name,
+            'booking_number' => $booking->booking_number,
+            'payment_status' => $booking->payment_status,
+            'payment_method' => $booking->payment_method,
+            'duration' => $booking->duration,
+            'created_at' => optional($booking->created_at)->toDateTimeString(),
+            'updated_at' => optional($booking->updated_at)->toDateTimeString(),
+            'is_home_service' => (bool) $booking->is_home_service,
+            'service_location' => $booking->service_location,
+            'customer_location' => $location,
+            'address' => $booking->address,
+        ];
+    }
+
+    /**
+     * Format the stored customer location snapshot for API responses.
+     */
+    protected function formatCustomerLocation($location): ?array
+    {
+        if (empty($location)) {
+            return null;
+        }
+
+        if (is_object($location) && method_exists($location, 'toArray')) {
+            $location = $location->toArray();
+        }
+
+        if (!is_array($location) || empty($location)) {
+            return null;
+        }
+
+        return [
+            'latitude' => isset($location['latitude']) ? (float) $location['latitude'] : null,
+            'longitude' => isset($location['longitude']) ? (float) $location['longitude'] : null,
+            'address' => $location['address'] ?? ($location['name'] ?? null),
+            'name' => $location['name'] ?? null,
+            'emirate' => $location['emirate'] ?? null,
+            'user_location_id' => $location['user_location_id'] ?? null,
+            'snapshot_source' => $location['snapshot_source'] ?? null,
+        ];
+    }
+
+    /**
+     * Resolve customer location input into a snapshot suitable for persistence.
+     *
+     * @throws \Illuminate\Validation\ValidationException
+     */
+    protected function resolveCustomerLocationSnapshot(Request $request, ?int $userId = null): ?array
+    {
+        $locationInput = $request->input('customer_location');
+
+        if (is_null($locationInput) && $request->filled('customer_location_id')) {
+            $locationInput = $request->input('customer_location_id');
+        }
+
+        if (is_string($locationInput)) {
+            $decoded = json_decode($locationInput, true);
+            if (json_last_error() === JSON_ERROR_NONE) {
+                $locationInput = $decoded;
+            }
+        }
+
+        if (is_array($locationInput)) {
+            $validator = Validator::make($locationInput, [
+                'latitude' => 'required|numeric',
+                'longitude' => 'required|numeric',
+                'address' => 'nullable|string',
+                'name' => 'nullable|string',
+                'emirate' => 'nullable|string',
+                'user_location_id' => 'nullable|integer',
+            ]);
+
+            if ($validator->fails()) {
+                throw ValidationException::withMessages([
+                    'customer_location' => $validator->errors()->first(),
+                ]);
+            }
+
+            return [
+                'latitude' => (float) $locationInput['latitude'],
+                'longitude' => (float) $locationInput['longitude'],
+                'address' => $locationInput['address'] ?? ($locationInput['name'] ?? null),
+                'name' => $locationInput['name'] ?? null,
+                'emirate' => $locationInput['emirate'] ?? null,
+                'user_location_id' => $locationInput['user_location_id'] ?? null,
+                'snapshot_source' => $locationInput['snapshot_source'] ?? 'direct_input',
+            ];
+        }
+
+        if (filled($locationInput)) {
+            $location = UserLocation::query()
+                ->where('id', $locationInput)
+                ->when($userId, fn ($query) => $query->where('user_id', $userId))
+                ->first();
+
+            if (!$location) {
+                throw ValidationException::withMessages([
+                    'customer_location' => 'The selected customer location is invalid.',
+                ]);
+            }
+
+            return [
+                'latitude' => (float) $location->latitude,
+                'longitude' => (float) $location->longitude,
+                'address' => $location->name,
+                'name' => $location->name,
+                'emirate' => $location->emirate,
+                'user_location_id' => $location->id,
+                'snapshot_source' => 'user_location',
+            ];
+        }
+
+        return null;
     }
 }

@@ -187,7 +187,7 @@ class BookingController extends Controller
         }
 
         // Load relationships
-        $booking->load(['user', 'service', 'branch', 'customerLocation']);
+        $booking->load(['user', 'service', 'branch']);
 
         return view('vendor.bookings.show', compact('booking'));
     }

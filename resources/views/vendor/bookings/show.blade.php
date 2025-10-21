@@ -4,6 +4,20 @@
 @section('page-title', __('messages.booking_details'))
 
 @section('content')
+@php
+    $customerLocation = $booking->customer_location instanceof \Illuminate\Support\Fluent
+        ? $booking->customer_location->toArray()
+        : (is_string($booking->customer_location)
+            ? json_decode($booking->customer_location, true)
+            : (is_array($booking->customer_location) ? $booking->customer_location : null));
+
+    $customerLatitude = data_get($customerLocation, 'latitude');
+    $customerLongitude = data_get($customerLocation, 'longitude');
+    $customerAddress = data_get($customerLocation, 'address') ?? data_get($customerLocation, 'name');
+    $customerLocationJson = $customerLocation
+        ? json_encode($customerLocation, JSON_UNESCAPED_UNICODE | JSON_PRESERVE_ZERO_FRACTION)
+        : null;
+@endphp
 <div class="container mx-auto">
     <div class="mb-6 flex flex-col md:flex-row md:items-center md:justify-between">
         <div>
@@ -119,9 +133,9 @@
                             <p class="text-sm text-gray-900 dark:text-white">{{ __('messages.service_will_be_provided_at_customer_location') }}</p>
                             {{-- <div class="text-xs text-gray-500 dark:text-gray-400">
                                 <i class="fas fa-map-marker-alt mr-1"></i>
-                                {{ $booking->customerLocation->address ?? __('messages.address_not_available') }}
+                                {{ $customerAddress ?? __('messages.address_not_available') }}
                             </div> --}}
-                            @if($booking->customerLocation)
+                            @if($customerLocation)
                             <div class="flex items-center space-x-2 mt-2">
                                 <button onclick="copyLocation()" class="inline-flex items-center px-2 py-1 bg-blue-100 hover:bg-blue-200 dark:bg-blue-900 dark:hover:bg-blue-800 text-blue-700 dark:text-blue-300 text-xs font-medium rounded-md transition-colors duration-200">
                                     <i class="fas fa-copy mr-1"></i>
@@ -131,7 +145,7 @@
                                     <i class="fas fa-share-alt mr-1"></i>
                                     {{ __('messages.share_location') }}
                                 </button>
-                                @if($booking->customerLocation->latitude && $booking->customerLocation->longitude)
+                                @if($customerLatitude && $customerLongitude)
                                 <button onclick="openInMaps()" class="inline-flex items-center px-2 py-1 bg-purple-100 hover:bg-purple-200 dark:bg-purple-900 dark:hover:bg-purple-800 text-purple-700 dark:text-purple-300 text-xs font-medium rounded-md transition-colors duration-200">
                                     <i class="fas fa-external-link-alt mr-1"></i>
                                     {{ __('messages.open_in_maps') }}
@@ -141,7 +155,7 @@
                             @endif
                         </div>
                     </div>
-                    @if($booking->customerLocation && $booking->customerLocation->latitude && $booking->customerLocation->longitude)
+                    @if($customerLatitude && $customerLongitude)
                         <div class="flex-1">
                             <div id="map-{{ $booking->id }}" class="w-full h-64 rounded-lg border border-gray-300 dark:border-gray-600"></div>
                         </div>
@@ -204,10 +218,10 @@
 <script>
     // Initialize Google Maps for customer locations
     function initMap() {
-        @if($booking->is_home_service == 1 && $booking->customerLocation && $booking->customerLocation->latitude && $booking->customerLocation->longitude)
+        @if($booking->is_home_service == 1 && $customerLatitude && $customerLongitude)
             const customerLocation = {
-                lat: {{ $booking->customerLocation->latitude }},
-                lng: {{ $booking->customerLocation->longitude }}
+                lat: {{ $customerLatitude }},
+                lng: {{ $customerLongitude }}
             };
             
             const map = new google.maps.Map(document.getElementById("map-{{ $booking->id }}"), {
@@ -244,8 +258,8 @@
                 content: `
                     <div class="p-2">
                         <h4 class="font-semibold text-gray-900">{{ __('messages.customer_location') }}</h4>
-                        <p class="text-sm text-gray-600">{{ $booking->customerLocation->address ?? 'N/A' }}</p>
-                        <p class="text-xs text-gray-500 mt-1">{{ $booking->customerLocation->latitude }}, {{ $booking->customerLocation->longitude }}</p>
+                        <p class="text-sm text-gray-600">{{ $customerAddress ?? 'N/A' }}</p>
+                        <p class="text-xs text-gray-500 mt-1">{{ $customerLatitude }}, {{ $customerLongitude }}</p>
                     </div>
                 `
             });
@@ -258,11 +272,7 @@
     
     // Location utility functions
     function copyLocation() {
-        @if($booking->customerLocation)
-        const customerLocation = {!! json_encode($booking->customerLocation) !!};
-        @else
-        const customerLocation = null;
-        @endif
+        const customerLocation = {!! $customerLocationJson ?? 'null' !!};
         
         if (customerLocation) {
             let locationText = '';
@@ -270,14 +280,10 @@
             // If we have coordinates, create a Google Maps link
             if (customerLocation.latitude && customerLocation.longitude) {
                 locationText = `https://maps.google.com/?q=${customerLocation.latitude},${customerLocation.longitude}`;
-                
-                // Add address as additional info if available
-                if (customerLocation.address) {
-                    locationText += `\n\nAddress: ${customerLocation.address}`;
-                }
-            } else if (customerLocation.address) {
+            } else if (customerLocation.address || customerLocation.name) {
                 // If no coordinates but we have address, use address for Google Maps search
-                locationText = `https://maps.google.com/?q=${encodeURIComponent(customerLocation.address)}`;
+                const addressQuery = customerLocation.address || customerLocation.name;
+                locationText = `https://maps.google.com/?q=${encodeURIComponent(addressQuery)}`;
             }
             
             if (locationText.trim() !== '') {
@@ -297,34 +303,22 @@
     }
     
     function shareLocation() {
-        @if($booking->customerLocation)
-        const customerLocation = {!! json_encode($booking->customerLocation) !!};
-        @else
-        const customerLocation = null;
-        @endif
+        const customerLocation = {!! $customerLocationJson ?? 'null' !!};
         
         if (customerLocation) {
-            // Format the location data for sharing
-            let locationText = '';
-            if (customerLocation.address) {
-                locationText = customerLocation.address;
-            }
-            
-            let shareData = {
-                title: '{{ __('messages.customer_location') }}',
-                text: locationText
-            };
-            
-            // Add Google Maps URL if coordinates are available
             if (customerLocation.latitude && customerLocation.longitude) {
-                shareData.url = `https://maps.google.com/?q=${customerLocation.latitude},${customerLocation.longitude}`;
-            }
-            
-            if (navigator.share && locationText && locationText.trim() !== '') {
-                navigator.share(shareData).catch(console.error);
-            } else if (locationText && locationText.trim() !== '') {
-                // Fallback for browsers that don't support Web Share API
-                copyLocation();
+                const url = `https://maps.google.com/?q=${customerLocation.latitude},${customerLocation.longitude}`;
+
+                if (navigator.share) {
+                    navigator.share({
+                        title: '{{ __('messages.customer_location') }}',
+                        url,
+                    }).catch(console.error);
+                } else {
+                    navigator.clipboard.writeText(url)
+                        .then(() => showNotification('{{ __('messages.location_copied') }}', 'success'))
+                        .catch(() => showNotification('{{ __('messages.copy_failed') }}', 'error'));
+                }
             } else {
                 showNotification('{{ __('messages.no_address_available') }}', 'error');
             }
@@ -334,11 +328,7 @@
     }
     
     function openInMaps() {
-        @if($booking->customerLocation)
-        const customerLocation = {!! json_encode($booking->customerLocation) !!};
-        @else
-        const customerLocation = null;
-        @endif
+        const customerLocation = {!! $customerLocationJson ?? 'null' !!};
         
         if (customerLocation && customerLocation.latitude && customerLocation.longitude) {
             const url = `https://maps.google.com/?q=${customerLocation.latitude},${customerLocation.longitude}`;
@@ -380,7 +370,7 @@
     
     // Initialize when DOM is ready
     document.addEventListener('DOMContentLoaded', function() {
-        @if($booking->is_home_service == 1 && $booking->customerLocation && $booking->customerLocation->latitude && $booking->customerLocation->longitude)
+        @if($booking->is_home_service == 1 && $customerLatitude && $customerLongitude)
             loadGoogleMaps();
         @endif
     });
