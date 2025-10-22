@@ -226,7 +226,12 @@
             @if($bookingStartDateTime)
                 <p class="text-sm text-gray-700 dark:text-gray-300">
                     The service should start after
-                    <span id="booking-countdown-display" data-target="{{ $bookingStartDateTime->toIso8601String() }}" class="ml-1 font-semibold text-gray-900 dark:text-white">--:--:--</span>
+                    <span id="booking-countdown" data-target="{{ $bookingStartDateTime->toIso8601String() }}" class="ml-1 inline-flex items-center space-x-1">
+                        <span id="booking-countdown-days" class="font-semibold text-gray-900 dark:text-white">--</span>
+                        <span id="booking-countdown-days-label" class="text-gray-700 dark:text-gray-300">days</span>
+                        <span class="text-gray-700 dark:text-gray-300">and</span>
+                        <span id="booking-countdown-clock" class="font-semibold text-gray-900 dark:text-white">--:--:--</span>
+                    </span>
                 </p>
             @else
                 <p class="text-sm text-gray-700 dark:text-gray-300">The service start time is not available.</p>
@@ -387,34 +392,49 @@
     }
 
     function initCountdown() {
-        const countdownElement = document.getElementById('booking-countdown-display');
+        const countdownContainer = document.getElementById('booking-countdown');
 
-        if (!countdownElement) {
+        if (!countdownContainer) {
             return;
         }
 
-        const targetIsoString = countdownElement.getAttribute('data-target');
+        const targetIsoString = countdownContainer.getAttribute('data-target');
+        const daysElement = document.getElementById('booking-countdown-days');
+        const daysLabelElement = document.getElementById('booking-countdown-days-label');
+        const clockElement = document.getElementById('booking-countdown-clock');
 
-        if (!targetIsoString) {
-            countdownElement.textContent = '--:--:--';
+        if (!targetIsoString || !daysElement || !clockElement || !daysLabelElement) {
+            if (daysElement) {
+                daysElement.textContent = '--';
+            }
+            if (clockElement) {
+                clockElement.textContent = '--:--:--';
+            }
             return;
         }
 
         const targetDate = new Date(targetIsoString);
 
         if (Number.isNaN(targetDate.getTime())) {
-            countdownElement.textContent = '--:--:--';
+            daysElement.textContent = '--';
+            clockElement.textContent = '--:--:--';
             return;
         }
 
         let countdownIntervalId = null;
+
+        const updateView = (days, hours, minutes, seconds) => {
+            daysElement.textContent = String(days);
+            daysLabelElement.textContent = days === 1 ? 'day' : 'days';
+            clockElement.textContent = `${String(hours).padStart(2, '0')}:${String(minutes).padStart(2, '0')}:${String(seconds).padStart(2, '0')}`;
+        };
 
         const renderCountdown = () => {
             const now = new Date();
             const diffMs = targetDate.getTime() - now.getTime();
 
             if (diffMs <= 0) {
-                countdownElement.textContent = '00:00:00';
+                updateView(0, 0, 0, 0);
 
                 if (countdownIntervalId) {
                     clearInterval(countdownIntervalId);
@@ -424,16 +444,17 @@
                 return;
             }
 
-            const totalMinutes = Math.floor(diffMs / 60000);
-            const days = Math.floor(totalMinutes / (60 * 24));
-            const hours = Math.floor((totalMinutes % (60 * 24)) / 60);
-            const minutes = totalMinutes % 60;
+            const totalSeconds = Math.floor(diffMs / 1000);
+            const days = Math.floor(totalSeconds / 86400);
+            const hours = Math.floor((totalSeconds % 86400) / 3600);
+            const minutes = Math.floor((totalSeconds % 3600) / 60);
+            const seconds = totalSeconds % 60;
 
-            countdownElement.textContent = `${String(days).padStart(2, '0')}:${String(hours).padStart(2, '0')}:${String(minutes).padStart(2, '0')}`;
+            updateView(days, hours, minutes, seconds);
         };
 
         renderCountdown();
-        countdownIntervalId = setInterval(renderCountdown, 60000);
+        countdownIntervalId = setInterval(renderCountdown, 1000);
     }
 
     // Load Google Maps API
