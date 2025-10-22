@@ -2188,7 +2188,10 @@ Route::middleware(['auth', \App\Http\Middleware\ServiceProviderMiddleware::class
 
     // Bookings Management
     Route::get('/bookings', [\App\Http\Controllers\ServiceProvider\BookingController::class, 'index'])->name('bookings.index');
+    Route::get('/bookings/calendar', [\App\Http\Controllers\ServiceProvider\BookingController::class, 'calendar'])->name('bookings.calendar');
+    Route::get('/bookings/{booking}/invoice', [\App\Http\Controllers\ServiceProvider\BookingController::class, 'invoice'])->name('bookings.invoice');
     Route::get('/bookings/{booking}', [\App\Http\Controllers\ServiceProvider\BookingController::class, 'show'])->name('bookings.show');
+    Route::get('/bookings/{booking}/edit', [\App\Http\Controllers\ServiceProvider\BookingController::class, 'edit'])->name('bookings.edit');
     Route::patch('/bookings/{booking}/status', [\App\Http\Controllers\ServiceProvider\BookingController::class, 'updateStatus'])->name('bookings.update-status');
     Route::get('/bookings/stats', [\App\Http\Controllers\ServiceProvider\BookingController::class, 'getStats'])->name('bookings.stats');
     Route::get('/bookings/today', [\App\Http\Controllers\ServiceProvider\BookingController::class, 'getTodayBookings'])->name('bookings.today');
