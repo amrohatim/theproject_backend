@@ -17,6 +17,20 @@
     $customerLocationJson = $customerLocation
         ? json_encode($customerLocation, JSON_UNESCAPED_UNICODE | JSON_PRESERVE_ZERO_FRACTION)
         : null;
+
+    $bookingStartDateTime = null;
+
+    if ($booking->booking_date) {
+        $datePart = $booking->booking_date instanceof \Carbon\Carbon
+            ? $booking->booking_date->format('Y-m-d')
+            : \Carbon\Carbon::parse($booking->booking_date)->format('Y-m-d');
+
+        $timePart = $booking->booking_time
+            ? \Carbon\Carbon::parse($booking->booking_time)->format('H:i:s')
+            : '00:00:00';
+
+        $bookingStartDateTime = \Carbon\Carbon::parse("{$datePart} {$timePart}", config('app.timezone', 'UTC'));
+    }
 @endphp
 <div class="container mx-auto">
     <div class="mb-6 flex flex-col md:flex-row md:items-center md:justify-between">
@@ -203,6 +217,23 @@
         </div>
     </div>
 
+    <!-- CountDown -->
+    <div class="bg-white dark:bg-gray-800 rounded-lg shadow mb-6 border border-gray-200 dark:border-gray-700">
+        <div class="px-6 py-4 border-b border-gray-200 dark:border-gray-700">
+            <h3 class="text-lg font-medium text-gray-900 dark:text-white">CountDown</h3>
+        </div>
+        <div class="p-6">
+            @if($bookingStartDateTime)
+                <p class="text-sm text-gray-700 dark:text-gray-300">
+                    The service should start after
+                    <span id="booking-countdown-display" data-target="{{ $bookingStartDateTime->toIso8601String() }}" class="ml-1 font-semibold text-gray-900 dark:text-white">--:--:--</span>
+                </p>
+            @else
+                <p class="text-sm text-gray-700 dark:text-gray-300">The service start time is not available.</p>
+            @endif
+        </div>
+    </div>
+
     <!-- Notes -->
     <div class="bg-white dark:bg-gray-800 rounded-lg shadow mb-6 border border-gray-200 dark:border-gray-700">
         <div class="px-6 py-4 border-b border-gray-200 dark:border-gray-700">
@@ -354,7 +385,57 @@
             notification.remove();
         }, 3000);
     }
-    
+
+    function initCountdown() {
+        const countdownElement = document.getElementById('booking-countdown-display');
+
+        if (!countdownElement) {
+            return;
+        }
+
+        const targetIsoString = countdownElement.getAttribute('data-target');
+
+        if (!targetIsoString) {
+            countdownElement.textContent = '--:--:--';
+            return;
+        }
+
+        const targetDate = new Date(targetIsoString);
+
+        if (Number.isNaN(targetDate.getTime())) {
+            countdownElement.textContent = '--:--:--';
+            return;
+        }
+
+        let countdownIntervalId = null;
+
+        const renderCountdown = () => {
+            const now = new Date();
+            const diffMs = targetDate.getTime() - now.getTime();
+
+            if (diffMs <= 0) {
+                countdownElement.textContent = '00:00:00';
+
+                if (countdownIntervalId) {
+                    clearInterval(countdownIntervalId);
+                    countdownIntervalId = null;
+                }
+
+                return;
+            }
+
+            const totalMinutes = Math.floor(diffMs / 60000);
+            const days = Math.floor(totalMinutes / (60 * 24));
+            const hours = Math.floor((totalMinutes % (60 * 24)) / 60);
+            const minutes = totalMinutes % 60;
+
+            countdownElement.textContent = `${String(days).padStart(2, '0')}:${String(hours).padStart(2, '0')}:${String(minutes).padStart(2, '0')}`;
+        };
+
+        renderCountdown();
+        countdownIntervalId = setInterval(renderCountdown, 60000);
+    }
+
     // Load Google Maps API
     function loadGoogleMaps() {
         if (typeof google === 'undefined') {
@@ -367,9 +448,10 @@
             initMap();
         }
     }
-    
+
     // Initialize when DOM is ready
     document.addEventListener('DOMContentLoaded', function() {
+        initCountdown();
         @if($booking->is_home_service == 1 && $customerLatitude && $customerLongitude)
             loadGoogleMaps();
         @endif
