@@ -5,8 +5,11 @@ namespace App\Http\Controllers\Vendor;
 use App\Http\Controllers\Controller;
 use App\Models\Booking;
 use App\Models\Branch;
+use App\Models\FcmToken;
+use App\Services\FcmHttpV1;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Log;
 
 class BookingController extends Controller
 {
@@ -233,10 +236,42 @@ class BookingController extends Controller
             'notes' => 'nullable|string',
         ]);
 
-        $booking->update([
+        $booking->fill([
             'status' => $request->status,
             'notes' => $request->notes,
         ]);
+
+        $statusChanged = $booking->isDirty('status');
+        $booking->save();
+
+        if ($statusChanged && $booking->user_id) {
+            $tokens = FcmToken::where('user_id', $booking->user_id)
+                ->pluck('token')
+                ->filter()
+                ->unique();
+
+            if ($tokens->isNotEmpty()) {
+                try {
+                    $fcmService = app(FcmHttpV1::class);
+                    $title = 'Dala3Chic';
+                    $body = "Your service has been {$booking->status}";
+                    $data = [
+                        'booking_id' => (string) $booking->id,
+                        'status' => (string) $booking->status,
+                    ];
+
+                    foreach ($tokens as $token) {
+                        $fcmService->sendToToken($token, $title, $body, $data);
+                    }
+                } catch (\Throwable $exception) {
+                    Log::error('Failed to send booking status notification', [
+                        'booking_id' => $booking->id,
+                        'user_id' => $booking->user_id,
+                        'error' => $exception->getMessage(),
+                    ]);
+                }
+            }
+        }
 
         return redirect()->route('vendor.bookings.show', $booking->id)
             ->with('success', 'Booking updated successfully.');
