@@ -30,6 +30,7 @@ use App\Http\Controllers\API\MerchantController;
 use App\Http\Controllers\API\EmailVerificationController;
 use App\Http\Controllers\API\ProductSpecificationController;
 use App\Http\Controllers\API\BusinessTypeController;
+use App\Http\Controllers\API\CustomerNotificationController;
 use App\Http\Controllers\API\FcmTokenController;
 use App\Http\Controllers\LanguageController;
 
@@ -318,6 +319,9 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::post('/branches/{id}/ratings', [BranchRatingController::class, 'store']);
     Route::get('/branches/{id}/my-rating', [BranchRatingController::class, 'show']);
     Route::delete('/branches/{id}/ratings', [BranchRatingController::class, 'destroy']);
+
+    // Customer notifications
+    Route::apiResource('customer-notifications', CustomerNotificationController::class);
 
     // Review routes
     Route::get('/{type}/{id}/reviews', [ReviewController::class, 'index']);

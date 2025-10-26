@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Vendor;
 use App\Http\Controllers\Controller;
 use App\Models\Booking;
 use App\Models\Branch;
+use App\Models\CustomerNotification;
 use App\Models\FcmToken;
 use App\Services\FcmHttpV1;
 use Illuminate\Http\Request;
@@ -245,6 +246,31 @@ class BookingController extends Controller
         $booking->save();
 
         if ($statusChanged && $booking->user_id) {
+            $booking->loadMissing('branch');
+
+            $messageStatus = $booking->status === 'pending'
+                ? 'Your service is pending.'
+                : "Your service has been {$booking->status}.";
+
+            try {
+                CustomerNotification::create([
+                    'notification_type' => CustomerNotification::TYPE_BOOKING,
+                    'sender_name' => optional($booking->branch)->name ?? 'Dala3Chic',
+                    'message' => $messageStatus,
+                    'status' => $booking->status,
+                    'is_opened' => false,
+                    'order_item_id' => null,
+                    'booking_id' => $booking->id,
+                    'customer_id' => $booking->user_id,
+                ]);
+            } catch (\Throwable $exception) {
+                Log::error('Failed to record customer notification', [
+                    'booking_id' => $booking->id,
+                    'user_id' => $booking->user_id,
+                    'error' => $exception->getMessage(),
+                ]);
+            }
+
             $tokens = FcmToken::where('user_id', $booking->user_id)
                 ->pluck('token')
                 ->filter()
@@ -254,14 +280,13 @@ class BookingController extends Controller
                 try {
                     $fcmService = app(FcmHttpV1::class);
                     $title = 'Dala3Chic';
-                    $body = "Your service has been {$booking->status}";
                     $data = [
                         'booking_id' => (string) $booking->id,
                         'status' => (string) $booking->status,
                     ];
 
                     foreach ($tokens as $token) {
-                        $fcmService->sendToToken($token, $title, $body, $data);
+                        $fcmService->sendToToken($token, $title, $messageStatus, $data);
                     }
                 } catch (\Throwable $exception) {
                     Log::error('Failed to send booking status notification', [
