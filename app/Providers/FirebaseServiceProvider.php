@@ -59,12 +59,16 @@ class FirebaseServiceProvider extends ServiceProvider
                 $factory = $factory->withProjectId($projectId);
             }
 
-            // Try to use service account file first, then environment variables
-            $serviceAccountPath = base_path('dala3chic-e2b81-firebase-adminsdk-fbsvc-e5c52a715e.json');
+            // Try to use configured service account file first, then environment variables
+            $serviceAccountPath = config('services.firebase.credentials_file');
 
-            if (file_exists($serviceAccountPath)) {
-                Log::info('Firebase: Using service account file', ['path' => $serviceAccountPath]);
+            if ($serviceAccountPath && file_exists($serviceAccountPath)) {
+                Log::info('Firebase: Using configured service account file', ['path' => $serviceAccountPath]);
                 $factory = $factory->withServiceAccount($serviceAccountPath);
+            } elseif (file_exists(base_path('dala3chic-e2b81-firebase-adminsdk-fbsvc-e5c52a715e.json'))) {
+                $defaultPath = base_path('dala3chic-e2b81-firebase-adminsdk-fbsvc-e5c52a715e.json');
+                Log::info('Firebase: Using default service account file', ['path' => $defaultPath]);
+                $factory = $factory->withServiceAccount($defaultPath);
             } elseif ($this->hasEnvironmentCredentials()) {
                 Log::info('Firebase: Using service account from environment variables');
                 $serviceAccount = $this->buildServiceAccountFromEnvironment();

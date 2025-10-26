@@ -35,6 +35,36 @@ return [
         ],
     ],
 
+    'firebase' => [
+        'project_id' => env('FIREBASE_PROJECT_ID'),
+        'credentials_file' => value(function () {
+            $path = env('FIREBASE_CREDENTIALS');
+
+            if (!$path) {
+                return null;
+            }
+
+            if (str_starts_with($path, DIRECTORY_SEPARATOR) || preg_match('/^[A-Za-z]:[\\\\\\/]/', $path) === 1) {
+                return $path;
+            }
+
+            return base_path($path);
+        }),
+        'private_key_id' => env('FIREBASE_PRIVATE_KEY_ID'),
+        'private_key' => env('FIREBASE_PRIVATE_KEY'),
+        'client_email' => env('FIREBASE_CLIENT_EMAIL'),
+        'client_id' => env('FIREBASE_CLIENT_ID'),
+        'auth_uri' => env('FIREBASE_AUTH_URI', 'https://accounts.google.com/o/oauth2/auth'),
+        'token_uri' => env('FIREBASE_TOKEN_URI', 'https://oauth2.googleapis.com/token'),
+        'auth_provider_x509_cert_url' => env('FIREBASE_AUTH_PROVIDER_X509_CERT_URL', 'https://www.googleapis.com/oauth2/v1/certs'),
+        'client_x509_cert_url' => env('FIREBASE_CLIENT_X509_CERT_URL'),
+        'web_api_key' => env('FIREBASE_WEB_API_KEY'),
+        'disable_ssl_verification' => env('FIREBASE_DISABLE_SSL_VERIFICATION', false),
+        'web_push' => [
+            'vapid_public_key' => env('FIREBASE_WEB_PUSH_CERTIFICATE'),
+        ],
+    ],
+
     
 
     'cisco_duo' => [

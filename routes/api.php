@@ -30,6 +30,7 @@ use App\Http\Controllers\API\MerchantController;
 use App\Http\Controllers\API\EmailVerificationController;
 use App\Http\Controllers\API\ProductSpecificationController;
 use App\Http\Controllers\API\BusinessTypeController;
+use App\Http\Controllers\API\FcmTokenController;
 use App\Http\Controllers\LanguageController;
 
 /*
@@ -151,6 +152,7 @@ Route::post('/search/filter', [\App\Http\Controllers\API\SearchController::class
 // Authentication routes
 Route::post('/register', [AuthController::class, 'register']);
 Route::post('/login', [AuthController::class, 'login']);
+Route::post('/fcm/register', [FcmTokenController::class, 'register']);
 
 // Customer Registration routes (public)
 Route::prefix('customer-registration')->group(function () {
