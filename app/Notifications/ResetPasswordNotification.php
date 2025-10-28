@@ -29,12 +29,43 @@ class ResetPasswordNotification extends ResetPassword
      */
     protected function resetUrl($notifiable): string
     {
-        $baseUrl = rtrim((string) env('FRONTEND_PASSWORD_RESET_URL', config('app.url') . '/reset-password'), '/');
-        $query = http_build_query([
-            'token' => $this->token,
-            'email' => $notifiable->getEmailForPasswordReset(),
-        ]);
+        $token = rawurlencode($this->token);
+        $email = rawurlencode($notifiable->getEmailForPasswordReset());
 
-        return $baseUrl . '?' . $query;
+        $customUrl = env('PASSWORD_RESET_EMAIL_URL');
+        if (!empty($customUrl)) {
+            $customUrl = trim($customUrl);
+
+            // Allow placeholders for token/email in custom URL configuration
+            if (str_contains($customUrl, ':token') || str_contains($customUrl, ':email')) {
+                return str_replace(
+                    [':token', ':email'],
+                    [$token, $email],
+                    $customUrl,
+                );
+            }
+
+            $baseUrl = rtrim($customUrl, '/');
+        } else {
+            $baseUrl = rtrim(
+                (string) env(
+                    'FRONTEND_PASSWORD_RESET_URL',
+                    config('app.url') . '/reset-password',
+                ),
+                '/',
+            );
+        }
+
+        $query = http_build_query(
+            [
+                'token' => $this->token,
+                'email' => $notifiable->getEmailForPasswordReset(),
+            ],
+            '',
+            '&',
+            PHP_QUERY_RFC3986,
+        );
+
+        return $baseUrl . (str_contains($baseUrl, '?') ? '&' : '?') . $query;
     }
 }
