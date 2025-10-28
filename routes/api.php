@@ -3,6 +3,7 @@
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\API\AuthController;
+use App\Http\Controllers\API\PasswordResetController;
 use App\Http\Controllers\API\UserController;
 use App\Http\Controllers\API\BranchController;
 use App\Http\Controllers\API\BranchRatingController;
@@ -153,6 +154,8 @@ Route::post('/search/filter', [\App\Http\Controllers\API\SearchController::class
 // Authentication routes
 Route::post('/register', [AuthController::class, 'register']);
 Route::post('/login', [AuthController::class, 'login']);
+Route::post('/password/forgot', [PasswordResetController::class, 'request']);
+Route::post('/password/email', [PasswordResetController::class, 'request']);
 Route::post('/fcm/register', [FcmTokenController::class, 'register']);
 
 // Customer Registration routes (public)
