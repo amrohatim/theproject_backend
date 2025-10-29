@@ -156,6 +156,8 @@ Route::post('/register', [AuthController::class, 'register']);
 Route::post('/login', [AuthController::class, 'login']);
 Route::post('/password/forgot', [PasswordResetController::class, 'request']);
 Route::post('/password/email', [PasswordResetController::class, 'request']);
+Route::post('/password/verify-code', [PasswordResetController::class, 'verifyCode']);
+Route::post('/password/reset', [PasswordResetController::class, 'reset']);
 Route::post('/fcm/register', [FcmTokenController::class, 'register']);
 
 // Customer Registration routes (public)
