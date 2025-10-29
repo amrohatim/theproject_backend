@@ -96,8 +96,16 @@ class PasswordResetController extends Controller
         $email = (string) $request->input('email');
         $code = (string) $request->input('code');
 
+        $user = User::where('email', $email)->first();
+        if (!$user) {
+            return response()->json([
+                'success' => false,
+                'message' => __('The verification code is invalid or has expired.'),
+            ], 422);
+        }
+
         $repository = Password::getRepository();
-        $codeIsValid = $repository->exists(['email' => $email], $code);
+        $codeIsValid = $repository->exists($user, $code);
 
         if (!$codeIsValid) {
             return response()->json([
@@ -128,9 +136,18 @@ class PasswordResetController extends Controller
             ], 422);
         }
 
+        $user = User::where('email', $request->input('email'))->first();
+
+        if (!$user) {
+            return response()->json([
+                'success' => false,
+                'message' => __('The verification code is invalid or has expired.'),
+            ], 422);
+        }
+
         $status = Password::reset(
             [
-                'email' => $request->input('email'),
+                'email' => $user->email,
                 'token' => $request->input('code'),
                 'password' => $request->input('password'),
                 'password_confirmation' => $request->input('password_confirmation'),
