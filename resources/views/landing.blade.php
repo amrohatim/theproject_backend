@@ -487,12 +487,7 @@
             <div class="decorative-blob absolute bottom-20 right-10 w-40 h-40 bg-gradient-to-br from-purple-200 to-pink-200 rounded-full blur-3xl"></div>
         </div>
         
-        <!-- Character Design - Positioned Outside -->
-        <div id="character-element" class="hidden lg:block ml-20 fixed left-4 xl:left-8 top-1/2 transform -translate-y-1/2 z-20 opacity-0 transition-opacity duration-700 ease-in-out">
-            <div class="character-container relative">
-                <img src="{{ asset('assets/group1.avif') }}" alt="Dala3Chic Character" class="w-124 xl:w-124 h-auto max-h-100 xl:max-h-100 object-contain">
-            </div>
-        </div>
+     
 
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 lg:pl-24 xl:pl-32 relative z-10">
             <!-- Content Section -->
@@ -562,7 +557,7 @@
                              <div class="illustration-container relative">
                                  <div class="absolute inset-0 rounded-2xl blur-lg opacity-30" style="background: linear-gradient(135deg, #d97706 0%, #ea580c 100%);"></div>
                                  <div class="relative p-4 sm:p-6 rounded-2xl" style="background: linear-gradient(135deg, #fed7aa 0%, #fde68a 100%);">
-                                     <img src="{{ asset('images/illustrations/merchant-illustration.svg') }}" alt="Merchant Illustration" class="w-12 h-12 sm:w-16 sm:h-16 mx-auto">
+                                     <img src="{{ asset('images/illustrations/merchantil.png') }}" alt="Merchant Illustration" class="w-12 h-12 sm:w-16 sm:h-16 mx-auto">
                                  </div>
                              </div>
                          </div>

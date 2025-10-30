@@ -8,6 +8,7 @@ use App\Http\Controllers\Vendor\SettingsController as VendorSettingsController;
 use App\Http\Controllers\LandingController;
 use App\Http\Controllers\Web\RegistrationController;
 use App\Http\Controllers\LanguageController;
+use App\Http\Controllers\Web\ForgotPasswordController;
 use App\Models\Category;
 
 // Include payment routes
@@ -185,6 +186,22 @@ Route::get('/fetch-service-categories', function () {
 Route::get('/login', function () {
     return view('auth.modern-login');
 })->name('login')->middleware(['web', 'guest']);
+
+Route::get('/forgot-password', [ForgotPasswordController::class, 'showRequestForm'])
+    ->name('password.request')
+    ->middleware(['web', 'guest']);
+
+Route::post('/forgot-password', [ForgotPasswordController::class, 'sendResetCode'])
+    ->name('password.email')
+    ->middleware(['web', 'guest']);
+
+Route::get('/forgot-password/reset', [ForgotPasswordController::class, 'showResetForm'])
+    ->name('password.reset.form')
+    ->middleware(['web', 'guest']);
+
+Route::post('/forgot-password/reset', [ForgotPasswordController::class, 'reset'])
+    ->name('password.update')
+    ->middleware(['web', 'guest']);
 
 Route::post('/login', function (\Illuminate\Http\Request $request) {
     // Enhanced debugging - log all request data

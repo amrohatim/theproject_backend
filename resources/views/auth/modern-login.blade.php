@@ -184,7 +184,7 @@
                             <label for="remember" class="auth-checkbox-label">{{ __('messages.remember_me') }}</label>
                         </div>
 
-                        <a href="#" class="auth-link text-sm">{{ __('messages.forgot_password') }}</a>
+                        <a href="{{ route('password.request') }}" class="auth-link text-sm">{{ __('messages.forgot_password') }}</a>
                     </div>
                     
                     <!-- Submit Button -->
