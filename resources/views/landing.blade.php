@@ -30,6 +30,8 @@
 
     <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
+        {{-- // Rive Animation Initialization --}}
+        <script src="https://unpkg.com/@rive-app/canvas"></script>
 
     <!-- Custom Styles -->
     @vite(['resources/css/app.css', 'resources/css/animations.css', 'resources/css/modern-landing.css'])
@@ -655,6 +657,10 @@
             </div>
         </div>
     </section>
+    <!-- Rive Animation Section -->
+    <section class="flex items-center justify-center w-full">
+        <canvas id="canvas" width="1924" height="400"></canvas>
+    </section>
 
     <!-- Product Demo Section -->
     <section class="py-20 bg-black/80 from-gray-900 to-gray-800">
@@ -1265,6 +1271,26 @@
                     }, 300);
                 }, 3000);
             }
+        }
+    </script>
+
+    <script src="https://unpkg.com/@rive-app/canvas"></script>
+    <script>
+        const canvasElement = document.getElementById('canvas');
+
+        if (canvasElement && window.rive) {
+            const riveInstance = new rive.Rive({
+                src: "{{ asset('assets/rive.riv') }}",
+                canvas: canvasElement,
+                autoplay: true,
+                stateMachines: "State Machine 1",
+                artboard: "merchantArtboard",
+                onLoad: () => {
+                    riveInstance.resizeDrawingSurfaceToCanvas();
+                },
+            });
+        } else {
+            console.error('Rive canvas element or library not available.');
         }
     </script>
     

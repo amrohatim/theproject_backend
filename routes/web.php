@@ -2500,6 +2500,9 @@ Route::get('/images/avatars/{filename}', [App\Http\Controllers\ImageController::
 // Generic storage route (fallback for other types)
 Route::get('/images/{folder}/{filename}', [App\Http\Controllers\ImageController::class, 'serveStorageImage'])->name('images.storage');
 
+
+
+
 //About Merchant resoures views
 Route::get('/aboutmerchant', function () {
     return view('aboutmerchant');
