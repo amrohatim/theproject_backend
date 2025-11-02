@@ -1297,7 +1297,7 @@
             const targetArtboard = currentLocale === 'ar' ? 'merchantArtboardArabic' : 'merchantArtboard';
 
             const riveInstance = new rive.Rive({
-                src: https://firebasestorage.googleapis.com/v0/b/dala3chic-e2b81.firebasestorage.app/o/rive?alt=media&token=0f65891a-0b29-4a3a-ac5f-0af3b49ca8be,
+                src: "https://firebasestorage.googleapis.com/v0/b/dala3chic-e2b81.firebasestorage.app/o/rive?alt=media&token=0f65891a-0b29-4a3a-ac5f-0af3b49ca8be",
                 canvas: canvasElement,
                 autoplay: true,
                 stateMachines: "State Machine 1",
