@@ -31,7 +31,7 @@
     <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
         {{-- // Rive Animation Initialization --}}
-        <script src="https://unpkg.com/@rive-app/canvas"></script>
+       
 
     <!-- Custom Styles -->
     @vite(['resources/css/app.css', 'resources/css/animations.css', 'resources/css/modern-landing.css'])
@@ -658,8 +658,8 @@
         </div>
     </section>
     <!-- Rive Animation Section -->
-    <section class="flex items-center justify-center w-full">
-        <canvas id="canvas" width="1924" height="400"></canvas>
+    <section class="flex items-center justify-center w-full px-6">
+        <canvas id="canvas" class="w-full max-w-screen-2xl" style="height: 640px;"></canvas>
     </section>
 
     <!-- Product Demo Section -->
@@ -1279,15 +1279,47 @@
         const canvasElement = document.getElementById('canvas');
 
         if (canvasElement && window.rive) {
+            const resizeCanvasForPixelRatio = () => {
+                const dpr = window.devicePixelRatio || 1;
+                const { width, height } = canvasElement.getBoundingClientRect();
+
+                if (!width || !height) {
+                    return;
+                }
+
+                canvasElement.width = Math.round(width * dpr);
+                canvasElement.height = Math.round(height * dpr);
+            };
+
+            resizeCanvasForPixelRatio();
+          
+              const currentLocale = '{{ app()->getLocale() }}';
+            const targetArtboard = currentLocale === 'ar' ? 'merchantArtboardArabic' : 'merchantArtboard';
+
             const riveInstance = new rive.Rive({
-                src: "{{ asset('assets/rive.riv') }}",
+                src: https://firebasestorage.googleapis.com/v0/b/dala3chic-e2b81.firebasestorage.app/o/rive?alt=media&token=0f65891a-0b29-4a3a-ac5f-0af3b49ca8be,
                 canvas: canvasElement,
                 autoplay: true,
                 stateMachines: "State Machine 1",
-                artboard: "merchantArtboard",
+                artboard: targetArtboard,
                 onLoad: () => {
+                    const artboards = riveInstance.contents?.artboards?.map(artboard => artboard.name) || [];
+                    console.log('Artboards:', artboards);
+
+                    const stateMachines = riveInstance.contents?.artboards
+                        ?.find(artboard => artboard.name === targetArtboard)
+                        ?.stateMachines?.map(machine => machine.name) || [];
+
+                    console.log('State machines for', targetArtboard, ':', stateMachines);
+
+                    resizeCanvasForPixelRatio();
                     riveInstance.resizeDrawingSurfaceToCanvas();
                 },
+            });
+
+            window.addEventListener('resize', () => {
+                resizeCanvasForPixelRatio();
+                riveInstance.resizeDrawingSurfaceToCanvas();
             });
         } else {
             console.error('Rive canvas element or library not available.');
