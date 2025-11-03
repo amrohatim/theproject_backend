@@ -657,9 +657,17 @@
             </div>
         </div>
     </section>
-    <!-- Rive Animation Section -->
-    <section class="flex items-center justify-center w-full px-6">
+     <!-- Rive Animation Vendor Section -->
+    <section class="flex items-center justify-center w-full px-6 relative bg-blue-400 py-20 lg:py-32 overflow-hidden">
+        <canvas id="canvas2" class="w-full max-w-screen-2xl" style="height: 640px;"></canvas>
+    </section>
+    <!-- Rive Animation Merchant Section -->
+    <section class="flex items-center justify-center w-full px-6 relative bg-orange-400 py-20 lg:py-32 overflow-hidden">
         <canvas id="canvas" class="w-full max-w-screen-2xl" style="height: 640px;"></canvas>
+    </section>
+    <!-- Rive Animation Provider Section -->
+    <section class="flex items-center justify-center w-full px-6 relative bg-purple-400 py-20 lg:py-32 overflow-hidden">
+        <canvas id="canvas1" class="w-full max-w-screen-2xl" style="height: 640px;"></canvas>
     </section>
 
     <!-- Product Demo Section -->
@@ -1297,7 +1305,7 @@
             const targetArtboard = currentLocale === 'ar' ? 'merchantArtboardArabic' : 'merchantArtboard';
 
             const riveInstance = new rive.Rive({
-                src: "https://firebasestorage.googleapis.com/v0/b/dala3chic-e2b81.firebasestorage.app/o/rive?alt=media&token=0f65891a-0b29-4a3a-ac5f-0af3b49ca8be",
+                src: "{{ asset('assets/rive') }}",
                 canvas: canvasElement,
                 autoplay: true,
                 stateMachines: "State Machine 1",
@@ -1323,6 +1331,184 @@
             });
         } else {
             console.error('Rive canvas element or library not available.');
+        }
+    </script>
+      <script>
+        const canvasElement1 = document.getElementById('canvas1');
+
+
+        if (canvasElement1 && window.rive) {
+            const resizeCanvasForPixelRatio1 = () => {
+                const dpr = window.devicePixelRatio || 1;
+                const { width, height } = canvasElement1.getBoundingClientRect();
+
+                
+                if (!width || !height) {
+                    console.warn('Canvas has no dimensions, skipping resize');
+                    return;
+                }
+
+                canvasElement1.width = Math.round(width * dpr);
+                canvasElement1.height = Math.round(height * dpr);
+            };
+
+            resizeCanvasForPixelRatio1();
+          
+            const currentLocale = '{{ app()->getLocale() }}';
+            const targetArtboard = currentLocale === 'ar' ? 'providerArtboardArabic' : 'providerArtboard';
+            
+            console.log('Current locale:', currentLocale);
+            console.log('Target artboard:', targetArtboard);
+            console.log('Rive file path:', "{{ asset('assets/rive') }}");
+
+            const riveInstance1 = new rive.Rive({
+                src: "{{ asset('assets/rive') }}",
+                canvas: canvasElement1,
+                autoplay: true,
+                stateMachines: "State Machine 1",
+                artboard: targetArtboard,
+                onLoad: () => {
+                    console.log('Rive file loaded successfully');
+                    const artboards = riveInstance1.contents?.artboards?.map(artboard => artboard.name) || [];
+                    console.log('Available artboards:', artboards);
+
+                    // Check if target artboard exists
+                    const artboardExists = artboards.includes(targetArtboard);
+                    console.log('Target artboard exists:', artboardExists);
+
+                    if (!artboardExists) {
+                        console.error(`Artboard "${targetArtboard}" not found. Available artboards:`, artboards);
+                        return;
+                    }
+
+                    const stateMachines = riveInstance1.contents?.artboards
+                        ?.find(artboard => artboard.name === targetArtboard)
+                        ?.stateMachines?.map(machine => machine.name) || [];
+
+                    console.log('State machines for', targetArtboard, ':', stateMachines);
+
+                    // Check if state machine exists
+                    const stateMachineExists = stateMachines.includes("State Machine 1");
+                    console.log('State Machine 1 exists:', stateMachineExists);
+
+                    if (!stateMachineExists) {
+                        console.error('State Machine 1 not found. Available state machines:', stateMachines);
+                    }
+
+                    resizeCanvasForPixelRatio1();
+                    riveInstance1.resizeDrawingSurfaceToCanvas();
+                    console.log('Rive animation setup completed');
+                },
+                onLoadError: (error) => {
+                    console.error('Failed to load Rive file:', error);
+                },
+                onError: (error) => {
+                    console.error('Rive runtime error:', error);
+                }
+            });
+
+            window.addEventListener('resize', () => {
+                resizeCanvasForPixelRatio1();
+                if (riveInstance1) {
+                    riveInstance1.resizeDrawingSurfaceToCanvas();
+                }
+            });
+        } else {
+            if (!canvasElement1) {
+                console.error('Canvas element with id "canvas1" not found');
+            }
+            if (!window.rive) {
+                console.error('Rive library not loaded. Make sure the Rive script is included before this script.');
+            }
+        }
+    </script>
+          <script>
+        const canvasElement2 = document.getElementById('canvas2');
+
+
+        if (canvasElement2 && window.rive) {
+            const resizeCanvasForPixelRatio2 = () => {
+                const dpr = window.devicePixelRatio || 1;
+                const { width, height } = canvasElement2.getBoundingClientRect();
+
+                
+                if (!width || !height) {
+                    console.warn('Canvas has no dimensions, skipping resize');
+                    return;
+                }
+
+                canvasElement2.width = Math.round(width * dpr);
+                canvasElement2.height = Math.round(height * dpr);
+            };
+
+            resizeCanvasForPixelRatio2();
+          
+            const currentLocale = '{{ app()->getLocale() }}';
+            const targetArtboard = currentLocale === 'ar' ? 'vendorArtboardArabic' : 'vendorArtboard';
+            
+            console.log('Current locale:', currentLocale);
+            console.log('Target artboard:', targetArtboard);
+            console.log('Rive file path:', "{{ asset('assets/rive') }}");
+
+            const riveInstance2 = new rive.Rive({
+                src: "{{ asset('assets/rive') }}",
+                canvas: canvasElement2,
+                autoplay: true,
+                stateMachines: "State Machine 1",
+                artboard: targetArtboard,
+                onLoad: () => {
+                    console.log('Rive file loaded successfully');
+                    const artboards = riveInstance2.contents?.artboards?.map(artboard => artboard.name) || [];
+                    console.log('Available artboards:', artboards);
+
+                    // Check if target artboard exists
+                    const artboardExists = artboards.includes(targetArtboard);
+                    console.log('Target artboard exists:', artboardExists);
+
+                    if (!artboardExists) {
+                        console.error(`Artboard "${targetArtboard}" not found. Available artboards:`, artboards);
+                        return;
+                    }
+
+                    const stateMachines = riveInstance2.contents?.artboards
+                        ?.find(artboard => artboard.name === targetArtboard)
+                        ?.stateMachines?.map(machine => machine.name) || [];
+
+                    console.log('State machines for', targetArtboard, ':', stateMachines);
+
+                    // Check if state machine exists
+                    const stateMachineExists = stateMachines.includes("State Machine 1");
+                    console.log('State Machine 1 exists:', stateMachineExists);
+
+                    if (!stateMachineExists) {
+                        console.error('State Machine 1 not found. Available state machines:', stateMachines);
+                    }
+
+                    resizeCanvasForPixelRatio2();
+                    riveInstance2.resizeDrawingSurfaceToCanvas();
+                    console.log('Rive animation setup completed');
+                },
+                onLoadError: (error) => {
+                    console.error('Failed to load Rive file:', error);
+                },
+                onError: (error) => {
+                    console.error('Rive runtime error:', error);
+                }
+            });
+
+            window.addEventListener('resize', () => {
+                resizeCanvasForPixelRatio2();
+                if (riveInstance2) {
+                    riveInstance2.resizeDrawingSurfaceToCanvas();
+                }
+            });
+        } else {
+            if (!canvasElement2) {
+                console.error('Canvas element with id "canvas2" not found');
+            }
+            if (!window.rive) {
+                console.error('Rive library not loaded. Make sure the Rive script is included before this script.');
+            }
         }
     </script>
     
