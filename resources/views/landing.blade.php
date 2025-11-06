@@ -481,7 +481,7 @@
         </div>
     </section>
 
-    <!-- Features Section -->
+    {{-- <!-- Features Section -->
     <section id="features" class="py-24 bg-gradient-to-br from-slate-50 via-white to-blue-50 relative overflow-hidden">
         <!-- Background Decorative Elements -->
         <div class="absolute inset-0 opacity-30">
@@ -656,7 +656,7 @@
                 </div>
             </div>
         </div>
-    </section>
+    </section> --}}
      <!-- Rive Animation Vendor Section -->
     <section class="flex items-center justify-center w-full px-6 relative bg-blue-400 py-20 lg:py-32 overflow-hidden">
         <canvas id="canvas2" class="w-full max-w-screen-2xl" style="height: 640px;"></canvas>

@@ -269,7 +269,7 @@ class CustomerRegistrationController extends Controller
             'email' => 'required|email|unique:users,email',
             'phone' => 'required|string|regex:/^\+971[0-9]{9}$/|unique:users,phone',
             'password' => 'required|string|min:8|confirmed',
-            'name' => 'required|string|min:3|max:255|unique:users,name',
+            'name' => 'required|string|min:3|max:255',
             'avatar_id' => 'required|exists:avatars,id',
             'social_provider' => 'nullable|string|in:google,facebook', // Allow social provider info
             'social_id' => 'nullable|string', // Social provider user ID
