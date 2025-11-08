@@ -199,7 +199,7 @@
         .woman-image {
             width: 100%;
             height: 100%;
-            background: url('/app images/medium-shot-smiley-woman-sewing-with-machine.jpg');
+            background: url('/app images/medium-shot-smiley-woman-sewing-with-machine.avif');
             background-size: cover;
             background-position: center;
             border: none;
@@ -1206,7 +1206,7 @@
                      <!-- Top Left: Woman Image -->
                      <div class="hero-grid-item hero-top-left">
                          
-                            <img src="{{ asset('assets/medium-shot-smiley-woman-sewing-with-machine.jpg') }}" height="100%" width="100%" alt="Woman Image">
+                            <img src="{{ asset('assets/medium-shot-smiley-woman-sewing-with-machine.avif') }}" height="100%" width="100%" alt="Woman Image">
                          
                      </div>
 
@@ -1290,7 +1290,7 @@
                 <div class="services-grid">
                     <div class="service-card">
                         <div class="service-image">
-                            <img src="{{ asset('assets/dashboardfeature.jpg') }}" alt="Dashboard Feature" style="width: 100%; height: 100%; object-fit: cover; ">
+                            <img src="{{ asset('assets/dashboardfeature.avif') }}" alt="Dashboard Feature" style="width: 100%; height: 100%; object-fit: cover; ">
                         </div>
                         <div class="service-content">
                             <h4 class="service-title">Dashboard</h4>
@@ -1303,7 +1303,7 @@
                     </div>
                     <div class="service-card">
                         <div class="service-image">
-                            <img src="{{ asset('assets/deliveryfeature.jpg') }}" alt="Dashboard Feature" style="width: 100%; height: 100%; object-fit: cover; ">
+                            <img src="{{ asset('assets/deliveryfeature.avif') }}" alt="Dashboard Feature" style="width: 100%; height: 100%; object-fit: cover; ">
                         </div>
                         <div class="service-content">
                             <h4 class="service-title">Free Delivery</h4>
@@ -1316,7 +1316,7 @@
                     </div>
                     <div class="service-card">
                         <div class="service-image">
-                            <img src="{{ asset('assets/dealfeature.jpg') }}" alt="Dashboard Feature" style="width: 100%; height: 100%; object-fit: cover; ">
+                            <img src="{{ asset('assets/dealfeature.avif') }}" alt="Dashboard Feature" style="width: 100%; height: 100%; object-fit: cover; ">
                         </div>
                         <div class="service-content">
                             <h4 class="service-title">Deals</h4>
@@ -1329,7 +1329,7 @@
                     </div>
                     <div class="service-card">
                         <div class="service-image">
-                            <img src="{{ asset('assets/ministorefeature.jpg') }}" alt="Dashboard Feature" style="width: 100%; height: 100%; object-fit: cover; ">
+                            <img src="{{ asset('assets/ministorefeature.avif') }}" alt="Dashboard Feature" style="width: 100%; height: 100%; object-fit: cover; ">
                         </div>
                         <div class="service-content">
                             <h4 class="service-title">Mini Store</h4>
@@ -1755,7 +1755,7 @@
     <!-- Footer -->
     <footer class="footer">
         <div class="container">
-            <p>&copy; 2023 by Bootcamp. All rights reserved.</p>
+            <p>&copy; 2025 by Dala3Chic. All rights reserved.</p>
         </div>
     </footer>
 

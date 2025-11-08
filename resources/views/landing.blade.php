@@ -658,16 +658,16 @@
         </div>
     </section> --}}
      <!-- Rive Animation Vendor Section -->
-    <section class="flex items-center justify-center w-full px-6 relative bg-blue-400 py-20 lg:py-32 overflow-hidden">
-        <canvas id="canvas2" class="w-full max-w-screen-2xl" style="height: 640px;"></canvas>
+    <section class="flex flex-col items-center justify-start w-full relative bg-white overflow-hidden h-screen">
+        <canvas id="canvas2" class="w-full h-full block"></canvas>
     </section>
     <!-- Rive Animation Merchant Section -->
-    <section class="flex items-center justify-center w-full px-6 relative bg-orange-400 py-20 lg:py-32 overflow-hidden">
-        <canvas id="canvas" class="w-full max-w-screen-2xl" style="height: 640px;"></canvas>
+    <section class="flex flex-col items-center justify-start w-full relative bg-white overflow-hidden h-screen">
+        <canvas id="canvas" class="w-full h-full block"></canvas>
     </section>
     <!-- Rive Animation Provider Section -->
-    <section class="flex items-center justify-center w-full px-6 relative bg-purple-400 py-20 lg:py-32 overflow-hidden">
-        <canvas id="canvas1" class="w-full max-w-screen-2xl" style="height: 640px;"></canvas>
+    <section class="flex flex-col items-center justify-start w-full relative bg-white overflow-hidden h-screen">
+        <canvas id="canvas1" class="w-full h-full block"></canvas>
     </section>
 
     <!-- Product Demo Section -->
@@ -1289,12 +1289,18 @@
         if (canvasElement && window.rive) {
             const resizeCanvasForPixelRatio = () => {
                 const dpr = window.devicePixelRatio || 1;
-                const { width, height } = canvasElement.getBoundingClientRect();
+                const container = canvasElement.parentElement || canvasElement;
+                const { width, height } = container.getBoundingClientRect();
 
                 if (!width || !height) {
                     return;
                 }
 
+                // Ensure the canvas visually fills the container
+                canvasElement.style.width = `${width}px`;
+                canvasElement.style.height = `${height}px`;
+
+                // Set the drawing buffer size accounting for device pixel ratio
                 canvasElement.width = Math.round(width * dpr);
                 canvasElement.height = Math.round(height * dpr);
             };

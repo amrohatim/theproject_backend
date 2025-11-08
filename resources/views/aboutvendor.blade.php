@@ -1588,7 +1588,7 @@
                 <div class="services-grid">
                     <div class="service-card">
                         <div class="service-image">
-                            <img src="{{ asset('assets/dashboardfeature.jpg') }}" alt="Dashboard Feature" style="width: 100%; height: 100%; object-fit: cover; ">
+                            <img src="{{ asset('assets/dashboardfeature.avif') }}" alt="Dashboard Feature" style="width: 100%; height: 100%; object-fit: cover; ">
                         </div>
                         <div class="service-content">
                             <h4 class="service-title">Dashboard</h4>
@@ -1601,7 +1601,7 @@
                     </div>
                     <div class="service-card">
                         <div class="service-image">
-                            <img src="{{ asset('assets/deliveryfeature.jpg') }}" alt="Dashboard Feature" style="width: 100%; height: 100%; object-fit: cover; ">
+                            <img src="{{ asset('assets/deliveryfeature.avif') }}" alt="Dashboard Feature" style="width: 100%; height: 100%; object-fit: cover; ">
                         </div>
                         <div class="service-content">
                             <h4 class="service-title">Free Delivery</h4>
@@ -1614,7 +1614,7 @@
                     </div>
                     <div class="service-card">
                         <div class="service-image">
-                            <img src="{{ asset('assets/dealfeature.jpg') }}" alt="Dashboard Feature" style="width: 100%; height: 100%; object-fit: cover; ">
+                            <img src="{{ asset('assets/dealfeature.avif') }}" alt="Dashboard Feature" style="width: 100%; height: 100%; object-fit: cover; ">
                         </div>
                         <div class="service-content">
                             <h4 class="service-title">Deals</h4>
@@ -1653,7 +1653,7 @@
                     </div>
                     <div class="service-card">
                         <div class="service-image">
-                            <img src="{{ asset('assets/productmanager.png') }}" alt="Dashboard Feature" style="width: 100%; height: 100%; object-fit: cover; ">
+                            <img src="{{ asset('assets/productmanager.avif') }}" alt="Dashboard Feature" style="width: 100%; height: 100%; object-fit: cover; ">
                         </div>
                         <div class="service-content">
                             <h4 class="service-title">Product Manager</h4>
