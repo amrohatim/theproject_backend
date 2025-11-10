@@ -547,7 +547,7 @@ return [
 
     // Email Verification Step
     'verify_your_email_title' => 'Verify Your Email',
-    'weve_sent_verification_code_to' => 'We\'ve sent a verification code to',
+    'weve_sent_verification_code_to' => 'We have sent a verification code to',
     'please_check_email_enter_code' => 'Please check your email and enter the 6-digit code below',
     'verification_code' => 'Verification Code',
     'enter_6_digit_code_placeholder' => 'Enter 6-digit code',
@@ -556,7 +556,7 @@ return [
     'didnt_receive_code' => 'Didn not receive the code?',
     'resend_code' => 'Resend Code',
     'resend_in_seconds' => 'Resend in {seconds} seconds',
-    'check_spam_junk_folder' => 'Check your spam/junk folder if you don\'t see the email',
+    'check_spam_junk_folder' => 'Check your spam/junk folder if you dont see the email',
     'verification_code_expires_10_minutes' => 'Verification code expires in 10 minutes',
 
     // License Upload Step
@@ -635,14 +635,16 @@ return [
     'uploading_license' => 'Uploading license...',
     'license_uploaded_successfully' => 'License uploaded successfully!',
     'failed_upload_license' => 'Failed to upload license. Please try again.',
+    'registration_submitted_successfully' => 'Registration submitted successfully! We will review your application and get back to you soon.',
 
     // Missing Translation Keys
     'back_to_registration_options' => 'Back to Registration Options',
+    'file_selected_successfully' => 'File selected successfully',
     'change' => 'Change',
     'remove' => 'Remove',
     'continue_to_email_verification' => 'Continue to Email Verification',
     'resend_in_seconds' => 'Resend in {seconds} seconds',
-    'check_spam_junk_folder' => 'Check your spam/junk folder if you don\'t see the email',
+    'check_spam_junk_folder' => 'Check your spam/junk folder if you dont see the email',
     'verification_code_expires_10_minutes' => 'Verification code expires in 10 minutes',
     "grow_your_sales_desc"=>"Grow your sales by connecting with more customers and providers",
     "powerful_tools_desc"=>"Get powerful tools to manage your products and orders efficiently",
@@ -658,6 +660,7 @@ return [
     'license_end_date'=>'License End Date',
     'email_confirmation_once_approved'=>'You will receive an email confirmation once your license is approved',
      'verify_your_phone_title'=>'Verify Your Phone',
+     'verify_your_phone'=>'Verify Your Phone',
      'enter_company_email'=>'Enter your company email',
      'enter_business_address'=>'Enter your business address',
      'create_vendor_account'=>'Create Vendor Account',

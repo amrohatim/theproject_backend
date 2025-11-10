@@ -259,6 +259,8 @@
             'go_to_login': '{{ __('messages.go_to_login') }}',
             'previous': '{{ __('messages.previous') }}',
             'already_have_account': '{{ __('messages.already_have_account') }}',
+            'uploading_license' : '{{ __('messages.uploading_license') }}',
+            'registration_co'
             'log_in': '{{ __('messages.log_in') }}',
             'continue_to_verification': '{{ __('messages.continue_to_verification') }}',
             // Additional missing keys
@@ -304,6 +306,7 @@
             'documents_securely_encrypted': '{{ __('messages.documents_securely_encrypted') }}',
             'sharjah': '{{ __('messages.sharjah') }}',
             'dubai': '{{ __('messages.dubai') }}',
+            'abu_dhabi': '{{ __('messages.abu_dhabi') }}',
             'ajman': '{{ __('messages.ajman') }}',
             'fujairah': '{{ __('messages.fujairah') }}',
             'ras_al_khaimah': '{{ __('messages.ras_al_khaimah') }}',

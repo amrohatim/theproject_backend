@@ -1501,6 +1501,7 @@ return [
     'license_expiry_must_be_future' => 'تاريخ انتهاء الترخيص يجب أن يكون في المستقبل.',
     'user_session_expired_login' => 'انتهت جلسة المستخدم. يرجى تسجيل الدخول مرة أخرى.',
     'uploading_license' => 'جاري رفع الترخيص...',
+    'file_selected_successfully' => 'تم اختيار الملف بنجاح',
     'license_uploaded_successfully' => 'تم رفع الترخيص بنجاح!',
     'failed_upload_license' => 'فشل في رفع الترخيص. يرجى المحاولة مرة أخرى.',
 

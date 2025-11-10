@@ -96,6 +96,7 @@
             background: #94a3b8;
         }
 
+
         /* Hero Section Animations */
         @keyframes fadeInUp {
             from {
@@ -170,6 +171,7 @@
                 transform: scale(1.5);
             }
         }
+
 
         .animate-fade-in-up {
             animation: fadeInUp 0.8s ease-out forwards;
@@ -247,6 +249,22 @@
 
         .shadow-3xl {
             box-shadow: 0 35px 60px -12px rgba(0, 0, 0, 0.25);
+        }
+        .canvas-merchants {
+            background-image: url("{{ asset('assets/Frame2.png') }}");
+            background-size: cover;
+            background-position: center;
+        }
+        .canvas-vendors {
+            background-image: url("{{ asset('assets/Frame1.png') }}");
+            background-size: cover;
+            background-position: center;
+            
+        }
+        .canvas-providers {
+            background-image: url("{{ asset('assets/Frame3.png') }}");
+            background-size: cover;
+            background-position: center;
         }
 
         /* Responsive Optimizations */
@@ -676,7 +694,7 @@
 
     <section>
         <div class="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-3">
-            <div class="bg-blue-400  shadow-lg">
+            <div class="canvas-vendors bg-blue-400">
                <a href="/aboutvendor">
                   <canvas id="feature-one-canvas"
                             class="rive-feature-canvas"
@@ -689,7 +707,7 @@
                   
                 </div>
             
-            <div class="bg-orange-400   shadow-lg">
+            <div class="canvas-merchants bg-orange-400">
             <a href="/aboutmerchant">
                   <canvas id="feature-two-canvas"
                             class="rive-feature-canvas"
@@ -703,7 +721,7 @@
             
             </div>
 
-                     <div class="bg-[#BA6FFF]  shadow-lg">
+                     <div class="canvas-providers bg-[#BA6FFF]">
 
                     <canvas id="feature-three-canvas"
                             class="rive-feature-canvas"
