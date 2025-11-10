@@ -250,6 +250,56 @@
         .shadow-3xl {
             box-shadow: 0 35px 60px -12px rgba(0, 0, 0, 0.25);
         }
+        .interactive-canvas-grid {
+            perspective: 1600px;
+            gap: 0;
+            padding: 0;
+        }
+
+        .interactive-canvas-card {
+            position: relative;
+            border-radius: 0;
+            overflow: visible;
+            transition: transform 0.6s cubic-bezier(0.19, 1, 0.22, 1), box-shadow 0.45s ease, filter 0.45s ease, opacity 0.45s ease;
+            transform-style: preserve-3d;
+            will-change: transform, box-shadow;
+            display: block;
+        }
+
+        .interactive-canvas-card::after {
+            content: '';
+            position: absolute;
+            inset: 0;
+            border-radius: inherit;
+            background: radial-gradient(circle at 20% 20%, rgba(255, 255, 255, 0.35), transparent 55%);
+            opacity: 0;
+            transition: opacity 0.45s ease;
+            pointer-events: none;
+        }
+
+        .interactive-canvas-card:hover {
+            transform: translate3d(0, -25px, 80px) scale(1.07);
+            box-shadow: 0 35px 60px rgba(15, 23, 42, 0.35);
+            z-index: 5;
+        }
+
+        .interactive-canvas-grid .interactive-canvas-card:first-child:hover {
+            transform: translate3d(120px, -25px, 80px) scale(1.07);
+        }
+        .interactive-canvas-grid .interactive-canvas-card:last-child:hover {
+            transform: translate3d(-120px, -25px, 80px) scale(1.07);
+        }
+
+        .interactive-canvas-card:hover::after {
+            opacity: 1;
+        }
+
+        .interactive-canvas-grid:hover .interactive-canvas-card:not(:hover) {
+            transform: scale(0.94);
+            filter: saturate(0.85) brightness(0.9);
+            opacity: 0.85;
+        }
+
         .canvas-merchants {
             background-image: url("{{ asset('assets/Frame2.png') }}");
             background-size: cover;
@@ -693,8 +743,8 @@
     </section> --}}
 
     <section>
-        <div class="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-3">
-            <div class="canvas-vendors bg-blue-400">
+        <div class="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-3 interactive-canvas-grid">
+            <div class="canvas-vendors bg-blue-400 interactive-canvas-card">
                <a href="/aboutvendor">
                   <canvas id="feature-one-canvas"
                             class="rive-feature-canvas"
@@ -707,7 +757,7 @@
                   
                 </div>
             
-            <div class="canvas-merchants bg-orange-400">
+            <div class="canvas-merchants bg-orange-400 interactive-canvas-card">
             <a href="/aboutmerchant">
                   <canvas id="feature-two-canvas"
                             class="rive-feature-canvas"
@@ -721,7 +771,7 @@
             
             </div>
 
-                     <div class="canvas-providers bg-[#BA6FFF]">
+                     <div class="canvas-providers bg-[#BA6FFF] interactive-canvas-card">
 
                     <canvas id="feature-three-canvas"
                             class="rive-feature-canvas"
