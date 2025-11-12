@@ -271,7 +271,6 @@
             position: absolute;
             inset: 0;
             border-radius: inherit;
-            background: radial-gradient(circle at 20% 20%, rgba(255, 255, 255, 0.35), transparent 55%);
             opacity: 0;
             transition: opacity 0.45s ease;
             pointer-events: none;
@@ -279,7 +278,7 @@
 
         .interactive-canvas-card:hover {
             transform: translate3d(0, -25px, 80px) scale(1.07);
-            box-shadow: 0 35px 60px rgba(15, 23, 42, 0.35);
+            
             z-index: 5;
         }
 
