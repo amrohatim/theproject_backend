@@ -81,8 +81,10 @@ class AuthController extends Controller
     public function login(Request $request)
     {
         $validator = Validator::make($request->all(), [
-            'email' => 'required|string|email',
+            'identifier' => 'required_without:email|string',
+            'email' => 'required_without:identifier|string|email',
             'password' => 'required|string',
+            'phone' => 'nullable|string',
         ]);
 
         if ($validator->fails()) {
@@ -93,15 +95,35 @@ class AuthController extends Controller
             ], 422);
         }
 
-        if (!Auth::attempt($request->only('email', 'password'))) {
+        $identifier = $request->input('identifier') ?? $request->input('email');
+
+        if (!$identifier && $request->filled('phone')) {
+            $identifier = $request->input('phone');
+        }
+
+        if (!$identifier) {
             return response()->json([
                 'success' => false,
-                'message' => 'Invalid login credentials. Please check your email and password.',
+                'message' => 'Email or phone number is required.',
+                'error_code' => 'missing_identifier'
+            ], 422);
+        }
+
+        $loginField = filter_var($identifier, FILTER_VALIDATE_EMAIL) ? 'email' : 'phone';
+        $credentials = [
+            $loginField => $identifier,
+            'password' => $request->password,
+        ];
+
+        if (!Auth::attempt($credentials)) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Invalid login credentials. Please check your email/phone and password.',
                 'error_code' => 'invalid_credentials'
             ], 401);
         }
 
-        $user = User::where('email', $request->email)->firstOrFail();
+        $user = User::where($loginField, $identifier)->firstOrFail();
 
         // Check if user is active
         if ($user->status !== 'active') {
