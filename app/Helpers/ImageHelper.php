@@ -678,6 +678,44 @@ class ImageHelper
      */
     private static function createPlaceholderImage($path)
     {
+        // Some environments (e.g. default Windows PHP builds) ship without GD,
+        // so we fall back to copying an existing placeholder instead of crash.
+        if (
+            !function_exists('imagecreatetruecolor') ||
+            !function_exists('imagecolorallocate') ||
+            !function_exists('imagepng')
+        ) {
+            $fallbacks = [
+                public_path('images/placeholder.png'),
+                public_path('images/products/placeholder.png'),
+                public_path('images/placeholder.jpg'),
+            ];
+
+            foreach ($fallbacks as $fallback) {
+                if ($fallback && file_exists($fallback)) {
+                    $directory = dirname($path);
+                    if (!file_exists($directory)) {
+                        mkdir($directory, 0755, true);
+                    }
+
+                    if (@copy($fallback, $path)) {
+                        Log::warning('GD is not available; copied static placeholder image.', [
+                            'target' => $path,
+                            'source' => $fallback,
+                        ]);
+
+                        return true;
+                    }
+                }
+            }
+
+            Log::error('Failed to create placeholder image because GD is missing and no fallback asset exists.', [
+                'target' => $path,
+            ]);
+
+            return false;
+        }
+
         // Create a simple image
         $width = 400;
         $height = 300;

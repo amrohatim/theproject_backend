@@ -11,6 +11,10 @@ return new class extends Migration
      */
     public function up(): void
     {
+        if (!Schema::hasTable('provider_ratings')) {
+            return;
+        }
+
         Schema::table('provider_ratings', function (Blueprint $table) {
             // Drop the existing incorrect foreign key constraint
             $table->dropForeign(['provider_id']);
@@ -28,6 +32,10 @@ return new class extends Migration
      */
     public function down(): void
     {
+        if (!Schema::hasTable('provider_ratings')) {
+            return;
+        }
+
         Schema::table('provider_ratings', function (Blueprint $table) {
             // Drop the correct foreign key constraint
             $table->dropForeign(['provider_id']);
