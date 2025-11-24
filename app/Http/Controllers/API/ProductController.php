@@ -415,7 +415,8 @@ class ProductController extends Controller
      */
     public function featured(Request $request)
     {
-        $limit = $request->input('limit', 10);
+        // Allow caller to specify limit (per_page) otherwise return a larger default
+        $limit = $request->input('limit', $request->input('per_page', 100));
 
         $products = Product::with([
             'branch',
