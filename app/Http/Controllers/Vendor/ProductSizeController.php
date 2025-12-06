@@ -17,6 +17,20 @@ use Illuminate\Support\Facades\Log;
 class ProductSizeController extends Controller
 {
     /**
+     * Get company id for current user (vendor or products manager).
+     */
+    private function getCompanyIdForUser(): ?int
+    {
+        $user = Auth::user();
+        if ($user->role === 'products_manager') {
+            $pm = ProductsManager::where('user_id', $user->id)->first();
+            return $pm ? $pm->company_id : null;
+        }
+
+        return $user->company_id;
+    }
+
+    /**
      * Get the acting vendor user ID (supports both vendor and products_manager roles).
      */
     private function getActingVendorUserId(): int
@@ -41,25 +55,79 @@ class ProductSizeController extends Controller
             'name' => 'required|string|max:255',
             'value' => 'required|string|max:255',
             'stock' => 'required|integer|min:0',
+            'color_id' => 'nullable|exists:product_colors,id',
+            'category' => 'nullable|string|exists:size_categories,name',
+            'additional_info' => 'nullable|string|max:255',
             'price_adjustment' => 'nullable|numeric',
             'display_order' => 'nullable|integer',
         ]);
 
-        // Verify the product belongs to the authenticated vendor or managed by products manager
-        $product = Product::where('user_id', $this->getActingVendorUserId())->findOrFail($request->product_id);
+        // Verify the product belongs to the authenticated vendor/products manager company
+        $product = Product::findOrFail($request->product_id);
+
+        $user = Auth::user();
+        if ($user->role === 'products_manager') {
+            $productsManager = ProductsManager::where('user_id', $user->id)->first();
+            if (!$productsManager) {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'Access denied - products manager record not found.'
+                ], 403);
+            }
+            $companyId = $productsManager->company_id;
+        } else {
+            $companyId = $user->company_id;
+        }
+
+        $branch = Branch::where('id', $product->branch_id)
+            ->where('company_id', $companyId)
+            ->first();
+
+        if (!$branch) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Product not found or access denied.'
+            ], 404);
+        }
 
         try {
             DB::beginTransaction();
 
+            $sizeCategoryId = null;
+            if ($request->filled('category')) {
+                $sizeCategoryId = \App\Models\SizeCategory::where('name', $request->category)->value('id');
+            }
+            if (!$sizeCategoryId) {
+                $sizeCategoryId = \App\Models\SizeCategory::where('name', 'clothes')->value('id');
+            }
+
             // Create the size
             $size = ProductSize::create([
                 'product_id' => $product->id,
+                'size_category_id' => $sizeCategoryId,
                 'name' => $request->name,
                 'value' => $request->value,
+                'additional_info' => $request->additional_info,
                 'stock' => $request->stock,
                 'price_adjustment' => $request->price_adjustment ?? 0,
                 'display_order' => $request->display_order ?? 0,
             ]);
+
+            // If color_id provided, create combination
+            if ($request->filled('color_id')) {
+                ProductColorSize::updateOrCreate(
+                    [
+                        'product_id' => $product->id,
+                        'product_color_id' => $request->color_id,
+                        'product_size_id' => $size->id,
+                    ],
+                    [
+                        'stock' => $request->stock,
+                        'price_adjustment' => $request->price_adjustment ?? 0,
+                        'is_available' => true,
+                    ]
+                );
+            }
 
             DB::commit();
 
@@ -214,7 +282,19 @@ class ProductSizeController extends Controller
         $size = ProductSize::findOrFail($id);
         
         // Verify the size belongs to a product owned by the authenticated vendor or managed by products manager
-        $product = Product::where('user_id', $this->getActingVendorUserId())->findOrFail($size->product_id);
+        $product = Product::findOrFail($size->product_id);
+
+        $companyId = $this->getCompanyIdForUser();
+        $branch = Branch::where('id', $product->branch_id)
+            ->when($companyId, fn($q) => $q->where('company_id', $companyId))
+            ->first();
+
+        if (!$branch) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Product not found or access denied.'
+            ], 404);
+        }
 
         try {
             DB::beginTransaction();
@@ -250,5 +330,17 @@ class ProductSizeController extends Controller
                 'message' => 'Failed to delete size: ' . $e->getMessage()
             ], 500);
         }
+    }
+
+    /**
+     * Destroy a size using a request payload (for POST-based delete endpoints).
+     */
+    public function destroyFromRequest(Request $request): JsonResponse
+    {
+        $data = $request->validate([
+            'size_id' => 'required|exists:product_sizes,id',
+        ]);
+
+        return $this->destroy((string) $data['size_id']);
     }
 }

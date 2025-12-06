@@ -2268,6 +2268,7 @@ Route::middleware(['auth', \App\Http\Middleware\ProductsManagerMiddleware::class
     Route::post('/api/sizes/create', [\App\Http\Controllers\Vendor\ProductSizeController::class, 'store'])->name('products-manager.api.sizes.create');
     Route::post('/api/sizes/update', [\App\Http\Controllers\Vendor\ProductSizeController::class, 'update'])->name('products-manager.api.sizes.update');
     Route::delete('/api/sizes/{id}', [\App\Http\Controllers\Vendor\ProductSizeController::class, 'destroy'])->name('products-manager.api.sizes.destroy');
+    Route::post('/api/sizes/delete', [\App\Http\Controllers\Vendor\ProductSizeController::class, 'destroyFromRequest'])->name('products-manager.api.sizes.delete');
 
     // Color Management API routes
     Route::post('/api/colors/create', [\App\Http\Controllers\Vendor\ProductColorController::class, 'store'])->name('products-manager.api.colors.create');
