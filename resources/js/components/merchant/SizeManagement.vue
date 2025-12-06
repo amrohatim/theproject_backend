@@ -252,13 +252,19 @@
               <i class="fas fa-layer-group w-4 h-4 mr-2 text-blue-500"></i>
               {{ $t('size_category') }} <span class="text-red-500">*</span>
             </label>
+            <div v-if="sizeCategoriesLoading" class="text-xs text-gray-500">{{ $t('loading') }}...</div>
+            <div v-else-if="sizeCategoriesError" class="text-xs text-red-500">{{ sizeCategoriesError }}</div>
             <select v-model="newSize.category"
                     class="vue-form-control-enhanced-blue text-left"
                     style="text-align: left; direction: ltr;"
-                    @change="newSize.name = ''; newSize.value = ''">
-              <option value="clothes">{{ $t('clothing_sizes')}}</option>
-              <option value="shoes">{{ $t('shoe_sizes') }}</option>
-              <option value="hats">{{ $t('hat_sizes') }}</option>
+                    @change="newSize.name = ''; newSize.value = ''"
+                    :disabled="sizeCategoriesLoading">
+              <option value="">{{ $t('select_category') }}</option>
+              <option v-for="category in sizeCategories"
+                      :key="category.id || category.name"
+                      :value="category.name">
+                {{ isRTL ? (category.display_name_arabic || category.display_name || category.name) : (category.display_name || category.name) }}
+              </option>
             </select>
           </div>
 
@@ -374,6 +380,7 @@
 
 <script>
 import { ref, reactive, computed, watch, onMounted } from 'vue'
+import axios from 'axios'
 
 export default {
   name: 'SizeManagement',
@@ -400,13 +407,16 @@ export default {
     const sizes = ref([])
     const sizeOptions = ref({})
     const loadingSizeOptions = ref(false)
+    const sizeCategories = ref([])
+    const sizeCategoriesLoading = ref(false)
+    const sizeCategoriesError = ref(null)
     const errorMessage = ref(null)
     const colorInfo = ref(null)
 
     const newSize = reactive({
       name: '',
       value: '',
-      category: 'clothes', // Default category for backend validation
+      category: '', // Filled from size categories once loaded
       stock: 0,
       price_adjustment: 0,
       is_available: true,
@@ -418,42 +428,55 @@ export default {
       return !props.productId || props.productId === null || props.productId === undefined || props.productId === 'null' || props.productId === 'new'
     })
 
+    // RTL support
+    const isRTL = computed(() => {
+      return document.documentElement.dir === 'rtl' || document.documentElement.lang === 'ar'
+    })
+
     // Methods
     const fetchSizeOptions = async () => {
       try {
         loadingSizeOptions.value = true
-        // Use the existing size data structure from enhanced-size-selection.js
-        sizeOptions.value = {
-          clothes: {
-            'XXS': 'Extra Extra Small',
-            'XS': 'Extra Small',
-            'S': 'Small',
-            'M': 'Medium',
-            'L': 'Large',
-            'XL': 'Extra Large',
-            'XXL': 'Extra Extra Large',
-            '3XL': 'Triple Extra Large',
-            '4XL': 'Quadruple Extra Large',
-            '5XL': 'Quintuple Extra Large'
-          },
-          shoes: {
-            16: '9.7cm', 17: '10.4cm', 18: '11.0cm', 19: '11.7cm', 20: '12.3cm',
-            21: '13.0cm', 22: '13.7cm', 23: '14.3cm', 24: '15.0cm', 25: '15.7cm',
-            26: '16.3cm', 27: '17.0cm', 28: '17.7cm', 29: '18.3cm', 30: '19.0cm',
-            31: '19.7cm', 32: '20.3cm', 33: '21.0cm', 34: '21.7cm', 35: '22.5cm',
-            36: '23.0cm', 37: '23.5cm', 38: '24.0cm', 39: '24.5cm', 40: '25.0cm',
-            41: '25.5cm', 42: '26.0cm', 43: '26.5cm', 44: '27.0cm', 45: '27.5cm',
-            46: '28.0cm', 47: '28.5cm', 48: '29.0cm'
-          },
-          hats: {
-            56: 'Youth/Adult XS', 57: 'Adult S', 58: 'Adult M',
-            59: 'Adult M/L', 60: 'Adult L', 61: 'Adult XL'
-          }
+        sizeCategoriesLoading.value = true
+        sizeCategoriesError.value = null
+
+        const response = await axios.get('/api/size-categories', {
+          params: { include_inactive: true }
+        })
+
+        if (!response.data.success) {
+          sizeCategoriesError.value = response.data.message || 'Failed to load size categories'
+          return
+        }
+
+        const raw = response.data.data ?? response.data.size_categories ?? []
+        const normalized = Array.isArray(raw) ? raw.map(cat => ({
+          ...cat,
+          standardized_sizes: cat.standardized_sizes ?? cat.standardizedSizes ?? []
+        })) : []
+
+        sizeCategories.value = normalized
+
+        const map = {}
+        normalized.forEach(category => {
+          const options = {}
+          category.standardized_sizes.forEach(size => {
+            options[size.name] = size.value || size.name
+          })
+          map[category.name] = options
+        })
+        sizeOptions.value = map
+
+        // Default new size category
+        if (!newSize.category && sizeCategories.value.length > 0) {
+          newSize.category = sizeCategories.value[0].name
         }
       } catch (error) {
         console.error('Error loading size options:', error)
+        sizeCategoriesError.value = 'Failed to load size categories'
       } finally {
         loadingSizeOptions.value = false
+        sizeCategoriesLoading.value = false
       }
     }
 
@@ -476,7 +499,7 @@ export default {
 
         console.log('Fetching sizes for colorId:', props.colorId, 'productId:', props.productId)
 
-        const response = await window.axios.post('/merchant/api/color-sizes/get-sizes-for-color', {
+        const response = await axios.post('/merchant/api/color-sizes/get-sizes-for-color', {
           color_id: parseInt(props.colorId),
           product_id: parseInt(props.productId),
           only_allocated: true // Only show sizes that have actual allocations for this color
@@ -578,7 +601,7 @@ export default {
 
         console.log('Fetching sizes for colorId:', colorId, 'productId:', props.productId)
 
-        const response = await window.axios.post('/merchant/api/color-sizes/get-sizes-for-color', {
+        const response = await axios.post('/merchant/api/color-sizes/get-sizes-for-color', {
           color_id: parseInt(colorId),
           product_id: parseInt(props.productId),
           only_allocated: true // Only show sizes that have actual allocations for this color
@@ -702,17 +725,19 @@ export default {
 
     // Computed properties for dropdown options
     const sizeNameOptions = computed(() => {
-      const category = newSize.category || 'clothes'
+      const category = newSize.category
+      if (!category || !sizeOptions.value[category]) return []
       return Object.keys(sizeOptions.value[category] || {}).map(key => ({
         value: key,
-        label: (category === 'clothes') ? `${key} (${sizeOptions.value[category][key]})` : `${key} (${sizeOptions.value[category][key]})`
+        label: `${key} (${sizeOptions.value[category][key]})`
       }))
     })
 
     const getSizeNameOptionsForEdit = (category) => {
+      if (!category || !sizeOptions.value[category]) return []
       return Object.keys(sizeOptions.value[category] || {}).map(key => ({
         value: key,
-        label: (category === 'clothes') ? `${key} (${sizeOptions.value[category][key]})` : `${key} (${sizeOptions.value[category][key]})`
+        label: `${key} (${sizeOptions.value[category][key]})`
       }))
     }
 
@@ -741,10 +766,10 @@ export default {
       if (sizeData && sizeData[selectedName]) {
         if (isEdit) {
           sizes.value[editIndex].name = selectedName
-          sizes.value[editIndex].value = category === 'clothes' ? selectedName : selectedName
+          sizes.value[editIndex].value = sizeData[selectedName] || selectedName
         } else {
           newSize.name = selectedName
-          newSize.value = category === 'clothes' ? selectedName : selectedName
+          newSize.value = sizeData[selectedName] || selectedName
         }
       }
     }
@@ -883,7 +908,7 @@ export default {
           updateData.price_adjustment = size.price_adjustment
         }
 
-        const response = await window.axios.post('/merchant/api/sizes/update', updateData)
+        const response = await axios.post('/merchant/api/sizes/update', updateData)
 
         if (response.data.success) {
           size.editing = false
@@ -931,7 +956,7 @@ export default {
       // Handle existing product mode (API-based management)
       try {
         // Call the API to delete the size
-        const response = await window.axios.post('/merchant/api/sizes/delete', {
+        const response = await axios.post('/merchant/api/sizes/delete', {
           size_id: size.id,
           color_id: props.colorId
         })
@@ -956,7 +981,7 @@ export default {
     const resetNewSize = () => {
       newSize.name = ''
       newSize.value = ''
-      newSize.category = 'clothes'
+      newSize.category = sizeCategories.value.length ? sizeCategories.value[0].name : ''
       newSize.stock = 0
       newSize.price_adjustment = 0
       newSize.is_available = true
@@ -1003,7 +1028,7 @@ export default {
             id: `temp_${Date.now()}_${Math.random().toString(36).substring(2, 11)}`, // Temporary ID
             name: newSize.name,
             value: newSize.value,
-            category: newSize.category || 'clothes',
+          category: newSize.category || null,
             additional_info: newSize.additional_info,
             stock: newSize.stock || 0,
             price_adjustment: newSize.price_adjustment || 0,
@@ -1014,7 +1039,7 @@ export default {
             originalData: {
               name: newSize.name,
               value: newSize.value,
-              category: newSize.category || 'clothes',
+              category: newSize.category || null,
               additional_info: newSize.additional_info,
               stock: newSize.stock || 0,
               price_adjustment: newSize.price_adjustment || 0,
@@ -1053,7 +1078,7 @@ export default {
         }
 
         // Call the API to create the size
-        const response = await window.axios.post('/merchant/api/sizes/create', {
+        const response = await axios.post('/merchant/api/sizes/create', {
           product_id: props.productId,
           color_id: colorId,
           name: newSize.name,
@@ -1145,6 +1170,13 @@ export default {
       }
     })
 
+    // Ensure categories are loaded when the add modal opens (create flow)
+    watch(() => showAddSizeModal.value, (open) => {
+      if (open && sizeCategories.value.length === 0 && !sizeCategoriesLoading.value) {
+        fetchSizeOptions()
+      }
+    })
+
     // Additional watch for immediate updates when colorId changes from null/undefined to a value
     watch(() => props.colorId, (newColorId) => {
       // Only fetch sizes if we're not in product creation mode
@@ -1162,11 +1194,15 @@ export default {
       newSize,
       sizeOptions,
       loadingSizeOptions,
+      sizeCategories,
+      sizeCategoriesLoading,
+      sizeCategoriesError,
       errorMessage,
       sizeNameOptions,
       totalSizeStock,
       availableSizeStock,
       isProductCreationMode,
+      isRTL,
       fetchSizeOptions,
       fetchSizes,
       fetchSizesWithColorId,

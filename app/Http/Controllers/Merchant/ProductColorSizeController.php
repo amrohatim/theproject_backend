@@ -445,7 +445,7 @@ class ProductColorSizeController extends Controller
             'color_id' => 'required|exists:product_colors,id',
             'name' => 'required|string|max:255',
             'value' => 'nullable|string|max:255',
-            'category' => 'nullable|string|in:clothes,shoes,hats',
+            'category' => 'nullable|string|exists:size_categories,name',
             'additional_info' => 'nullable|string|max:255',
             'price_adjustment' => 'nullable|numeric',
             'stock' => 'nullable|integer|min:0',
@@ -480,6 +480,8 @@ class ProductColorSizeController extends Controller
                     if ($sizeCategory) {
                         $sizeCategoryId = $sizeCategory->id;
                     }
+                } else {
+                    $sizeCategoryId = \App\Models\SizeCategory::where('name', 'clothes')->value('id');
                 }
 
                 // If size doesn't exist, create it

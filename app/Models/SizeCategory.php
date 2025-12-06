@@ -16,7 +16,9 @@ class SizeCategory extends Model
      */
     protected $fillable = [
         'name',
+        'name_arabic',
         'display_name',
+        'display_name_arabic',
         'description',
         'is_active',
         'display_order',

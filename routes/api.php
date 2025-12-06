@@ -33,6 +33,7 @@ use App\Http\Controllers\API\ProductSpecificationController;
 use App\Http\Controllers\API\BusinessTypeController;
 use App\Http\Controllers\API\CustomerNotificationController;
 use App\Http\Controllers\API\FcmTokenController;
+use App\Http\Controllers\API\SizeCategoryController;
 use App\Http\Controllers\LanguageController;
 
 /*
@@ -105,6 +106,9 @@ Route::prefix('public')->group(function () {
 Route::get('/active-deals', [DealController::class, 'getActiveDeals']);
 Route::get('/deals/{id}/products', [DealController::class, 'getProducts']);
 Route::get('/deals/{id}/services', [DealController::class, 'getServices']);
+
+// Size categories (public)
+Route::get('/size-categories', [SizeCategoryController::class, 'index']);
 
 // Public trending routes (no authentication required)
 Route::get('/top-vendors', [CompanyController::class, 'topVendors']);

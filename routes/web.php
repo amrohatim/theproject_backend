@@ -3,6 +3,7 @@
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Auth;
 use App\Http\Controllers\Admin\DashboardController as AdminDashboardController;
+use App\Http\Controllers\Admin\SizeCategoryController;
 use App\Http\Controllers\Vendor\DashboardController as VendorDashboardController;
 use App\Http\Controllers\Vendor\SettingsController as VendorSettingsController;
 use App\Http\Controllers\LandingController;
@@ -875,6 +876,9 @@ Route::prefix('admin')->name('admin.')->middleware(['auth', \App\Http\Middleware
             return redirect()->route('admin.categories.index')->with('error', 'An error occurred while deleting the category: ' . $e->getMessage());
         }
     })->name('categories.destroy');
+
+    // Size Categories
+    Route::resource('size-categories', SizeCategoryController::class);
 
     // Business Types
     Route::resource('business-types', \App\Http\Controllers\Admin\BusinessTypeController::class);

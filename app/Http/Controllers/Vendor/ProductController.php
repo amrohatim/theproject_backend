@@ -515,7 +515,7 @@ class ProductController extends Controller
             'color_images.*' => 'nullable|image|mimes:jpeg,png,jpg,gif,webp|max:20480',
             // Color-specific sizes validation
             'colors.*.sizes' => 'nullable|array',
-            'colors.*.sizes.*.category' => 'required_with:colors.*.sizes|string|in:clothes,shoes,hats',
+            'colors.*.sizes.*.category' => 'required_with:colors.*.sizes|string|exists:size_categories,name',
             'colors.*.sizes.*.name' => 'required_with:colors.*.sizes|string|max:255',
             'colors.*.sizes.*.value' => 'nullable|string',
             'colors.*.sizes.*.additional_info' => 'nullable|string',
@@ -527,7 +527,7 @@ class ProductController extends Controller
             'color_size_allocations' => 'nullable|array',
             'color_size_allocations.*' => 'nullable|array',
             'color_size_allocations.*.*' => 'nullable|array',
-            'color_size_allocations.*.*.category' => 'nullable|string|in:clothes,shoes,hats',
+            'color_size_allocations.*.*.category' => 'nullable|string|exists:size_categories,name',
             'color_size_allocations.*.*.size_name' => 'nullable|string|max:255',
             'color_size_allocations.*.*.size_value' => 'nullable|string|max:255',
             'color_size_allocations.*.*.stock' => 'nullable|integer|min:0',
@@ -1051,7 +1051,7 @@ class ProductController extends Controller
             'color_images.*' => 'nullable|image|mimes:jpeg,png,jpg,gif,webp|max:20480',
             // Color-specific sizes validation
             'colors.*.sizes' => 'nullable|array',
-            'colors.*.sizes.*.category' => 'required_with:colors.*.sizes|string|in:clothes,shoes,hats',
+            'colors.*.sizes.*.category' => 'required_with:colors.*.sizes|string|exists:size_categories,name',
             'colors.*.sizes.*.name' => 'required_with:colors.*.sizes|string|max:255',
             'colors.*.sizes.*.value' => 'nullable|string',
             'colors.*.sizes.*.additional_info' => 'nullable|string',

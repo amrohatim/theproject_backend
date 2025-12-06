@@ -14,6 +14,11 @@
         Categories
     </a>
 
+    <a href="{{ route('admin.size-categories.index') }}" class="sidebar-item flex items-center px-4 py-2 text-sm font-medium rounded-md {{ request()->routeIs('admin.size-categories.*') ? 'sidebar-active' : 'text-gray-700 dark:text-gray-300' }}">
+        <i class="fas fa-ruler-combined mr-3"></i>
+        Size Management
+    </a>
+
     <a href="{{ route('admin.business-types.index') }}" class="sidebar-item flex items-center px-4 py-2 text-sm font-medium rounded-md {{ request()->routeIs('admin.business-types.*') ? 'sidebar-active' : 'text-gray-700 dark:text-gray-300' }}">
         <i class="fas fa-industry mr-3"></i>
         Business Types

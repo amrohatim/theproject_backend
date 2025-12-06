@@ -13,14 +13,23 @@ class SizeCategoryController extends Controller
     /**
      * Get all active size categories.
      */
-    public function index()
+    public function index(Request $request)
     {
         try {
-            $sizeCategories = SizeCategory::active()
+            $includeInactive = $request->boolean('include_inactive', false);
+
+            $sizesScope = function ($query) use ($includeInactive) {
+                if (!$includeInactive) {
+                    $query->where('is_active', true);
+                }
+                $query->orderBy('display_order');
+            };
+
+            $sizeCategories = SizeCategory::query()
+                ->when(!$includeInactive, fn ($q) => $q->where('is_active', true))
                 ->orderBy('display_order')
-                ->with(['standardizedSizes' => function ($query) {
-                    $query->where('is_active', true)->orderBy('display_order');
-                }])
+                ->orderBy('name')
+                ->with(['standardizedSizes' => $sizesScope])
                 ->get();
 
             return response()->json([

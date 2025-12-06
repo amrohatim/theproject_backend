@@ -191,14 +191,24 @@
               <i class="fas fa-layer-group"></i>
               {{ $t('vendor.size_category') }}
             </label>
+            <div v-if="sizeCategoriesLoading" class="text-xs text-gray-500">
+              {{ $t('loading') }}...
+            </div>
+            <div v-else-if="sizeCategoriesError" class="text-xs text-red-500">
+              {{ sizeCategoriesError }}
+            </div>
             <select v-model="newSize.category"
                     class="vue-form-control-enhanced-blue"
                     :class="{ 'border-red-500': newSize.errors?.category }"
-                    @change="onCategoryChange">
+                    @change="onCategoryChange"
+                    :disabled="sizeCategoriesLoading">
               <option value="">{{ $t('select_category') }}</option>
-              <option value="clothes">{{ $t('clothes') }}</option>
-              <option value="shoes">{{ $t('shoes') }}</option>
-              <option value="hats">{{ $t('hats') }}</option>
+              <option
+                v-for="category in sizeCategories"
+                :key="category.id"
+                :value="category.name">
+                {{ getCategoryLabel(category) }}
+              </option>
             </select>
             <div v-if="newSize.errors?.category" class="text-red-500 text-xs">{{ newSize.errors.category }}</div>
           </div>
@@ -304,6 +314,7 @@
 
 <script>
 import { ref, reactive, computed, onMounted, watch } from 'vue'
+import axios from 'axios'
 
 export default {
   name: 'VendorSizeManagement',
@@ -329,6 +340,10 @@ export default {
     const showAddSizeModal = ref(false)
     const sizes = ref([])
     const errorMessage = ref(null)
+    const sizeCategories = ref([])
+    const sizeCategoriesLoading = ref(false)
+    const sizeCategoriesError = ref(null)
+    const sizeOptionsMap = ref({})
 
     const newSize = reactive({
       name: '',
@@ -339,35 +354,6 @@ export default {
       is_available: true,
       errors: {}
     })
-
-    // Size options based on category (matching merchant component)
-    const sizeOptions = {
-      clothes: {
-        'XXS': 'Extra Extra Small',
-        'XS': 'Extra Small',
-        'S': 'Small',
-        'M': 'Medium',
-        'L': 'Large',
-        'XL': 'Extra Large',
-        'XXL': 'Extra Extra Large',
-        '3XL': 'Triple Extra Large',
-        '4XL': 'Quadruple Extra Large',
-        '5XL': 'Quintuple Extra Large'
-      },
-      shoes: {
-        16: '9.7cm', 17: '10.4cm', 18: '11.0cm', 19: '11.7cm', 20: '12.3cm',
-        21: '13.0cm', 22: '13.7cm', 23: '14.3cm', 24: '15.0cm', 25: '15.7cm',
-        26: '16.3cm', 27: '17.0cm', 28: '17.7cm', 29: '18.3cm', 30: '19.0cm',
-        31: '19.7cm', 32: '20.3cm', 33: '21.0cm', 34: '21.7cm', 35: '22.5cm',
-        36: '23.0cm', 37: '23.5cm', 38: '24.0cm', 39: '24.5cm', 40: '25.0cm',
-        41: '25.5cm', 42: '26.0cm', 43: '26.5cm', 44: '27.0cm', 45: '27.5cm',
-        46: '28.0cm', 47: '28.5cm', 48: '29.0cm'
-      },
-      hats: {
-        56: 'Youth/Adult XS', 57: 'Adult S', 58: 'Adult M',
-        59: 'Adult M/L', 60: 'Adult L', 61: 'Adult XL'
-      }
-    }
 
     // Computed property to determine if we're in product creation mode
     const isProductCreationMode = computed(() => {
@@ -381,20 +367,16 @@ export default {
 
     // Computed properties for size options
     const availableSizeNames = computed(() => {
-      if (!newSize.category || !sizeOptions[newSize.category]) {
+      if (!newSize.category || !sizeOptionsMap.value[newSize.category]) {
         return []
       }
-      return Object.keys(sizeOptions[newSize.category]).map(key => ({
-        value: key,
-        label: `${key} (${sizeOptions[newSize.category][key]})`
-      }))
+      return sizeOptionsMap.value[newSize.category]
     })
 
     const availableSizeValues = computed(() => {
-      if (!newSize.category || !newSize.name || !sizeOptions[newSize.category]) {
+      if (!newSize.category || !newSize.name || !sizeOptionsMap.value[newSize.category]) {
         return []
       }
-      // For the new structure, name and value are the same
       return [newSize.name]
     })
 
@@ -477,9 +459,9 @@ export default {
 
     // Handle size name change
     const onSizeNameChange = () => {
-      // For the new structure, value should be the same as name
       if (newSize.name) {
-        newSize.value = newSize.name
+        const option = (sizeOptionsMap.value[newSize.category] || []).find(opt => opt.value === newSize.name)
+        newSize.value = option ? option.sizeValue : newSize.name
       } else {
         newSize.value = ''
       }
@@ -497,6 +479,73 @@ export default {
     // Get the appropriate API base path
     const getApiBasePath = () => {
       return isProductsManagerContext.value ? '/products-manager' : '/vendor'
+    }
+
+    const getCategoryLabel = (category) => {
+      if (!category) return ''
+      if (isRTL.value && category.display_name_arabic) {
+        return category.display_name_arabic
+      }
+      return category.display_name || category.name
+    }
+
+    const buildSizeOptionsMap = (categories) => {
+      const map = {}
+      categories.forEach((category) => {
+        const sizes = (category.standardized_sizes || []).map((size) => {
+          const pieces = []
+          pieces.push(size.name)
+          const valuePart = size.value && size.value !== size.name ? size.value : null
+          if (valuePart) {
+            pieces.push(`(${valuePart})`)
+          }
+          if (size.additional_info) {
+            pieces.push(`- ${size.additional_info}`)
+          }
+          return {
+            value: size.name,
+            sizeValue: size.value || size.name,
+            label: pieces.join(' '),
+          }
+        })
+        map[category.name] = sizes
+      })
+      sizeOptionsMap.value = map
+    }
+
+    const fetchSizeCategories = async () => {
+      try {
+        sizeCategoriesLoading.value = true
+        sizeCategoriesError.value = null
+
+        const response = await axios.get('/api/size-categories', {
+          params: { include_inactive: true }
+        })
+        if (!response.data.success) {
+          console.error('Size categories API returned success=false', response.data)
+          sizeCategoriesError.value = response.data.message || 'Failed to load size categories'
+          return
+        }
+
+        const raw = response.data.data ?? response.data.size_categories ?? []
+        const normalized = Array.isArray(raw) ? raw.map(cat => ({
+          ...cat,
+          standardized_sizes: cat.standardized_sizes ?? cat.standardizedSizes ?? []
+        })) : []
+
+        sizeCategories.value = normalized
+        buildSizeOptionsMap(sizeCategories.value)
+
+        // Auto-select first category if none chosen
+        if (!newSize.category && sizeCategories.value.length > 0) {
+          newSize.category = sizeCategories.value[0].name
+        }
+      } catch (error) {
+        console.error('Error fetching size categories:', error)
+        sizeCategoriesError.value = 'Failed to load size categories'
+      } finally {
+        sizeCategoriesLoading.value = false
+      }
     }
 
     // Fetch existing sizes from API
@@ -522,7 +571,7 @@ export default {
 
         // Use context-aware API path
         const apiPath = `${getApiBasePath()}/api/color-sizes/get-sizes-for-color`
-        const response = await window.axios.post(apiPath, {
+        const response = await axios.post(apiPath, {
           color_id: parseInt(props.colorId),
           product_id: parseInt(props.productId),
           only_allocated: true
@@ -612,7 +661,7 @@ export default {
 
         // Use context-aware API path
         const apiPath = `${getApiBasePath()}/api/sizes/update`
-        const response = await window.axios.post(apiPath, {
+        const response = await axios.post(apiPath, {
           size_id: size.id,
           color_id: props.colorId,
           name: size.name,
@@ -686,7 +735,7 @@ export default {
 
         // Use context-aware API path
         const apiPath = `${getApiBasePath()}/api/sizes/delete`
-        const response = await window.axios.post(apiPath, {
+        const response = await axios.post(apiPath, {
           size_id: size.id,
           color_id: props.colorId
         })
@@ -709,7 +758,7 @@ export default {
       Object.assign(newSize, {
         name: '',
         value: '',
-        category: 'clothes', // Default to clothes like merchant component
+        category: sizeCategories.value.length ? sizeCategories.value[0].name : '',
         stock: 0,
         price_adjustment: 0,
         is_available: true,
@@ -737,7 +786,7 @@ export default {
         // Call the API to create the size with the pending data
         // Use context-aware API path
         const apiPath = `${getApiBasePath()}/api/sizes/create`
-        const response = await window.axios.post(apiPath, {
+        const response = await axios.post(apiPath, {
           product_id: props.productId,
           color_id: colorId,
           name: pendingSizeData.name,
@@ -862,7 +911,7 @@ export default {
         // Call the API to create the size
         // Use context-aware API path
         const apiPath = `${getApiBasePath()}/api/sizes/create`
-        const response = await window.axios.post(apiPath, {
+        const response = await axios.post(apiPath, {
           product_id: props.productId,
           color_id: colorId,
           name: newSize.name,
@@ -918,10 +967,12 @@ export default {
 
     // Lifecycle hooks
     onMounted(() => {
-      // Only fetch sizes if we're not in product creation mode
-      if (props.colorId && !isProductCreationMode.value) {
-        fetchSizes()
-      }
+      fetchSizeCategories().then(() => {
+        // Only fetch sizes if we're not in product creation mode
+        if (props.colorId && !isProductCreationMode.value) {
+          fetchSizes()
+        }
+      })
     })
 
     // Watch for color changes
@@ -931,6 +982,13 @@ export default {
         // Clear existing sizes first to show loading state
         sizes.value = []
         fetchSizes()
+      }
+    })
+
+    // Ensure categories are loaded when the add modal opens (create flow)
+    watch(() => showAddSizeModal.value, (open) => {
+      if (open && sizeCategories.value.length === 0) {
+        fetchSizeCategories()
       }
     })
 
@@ -971,11 +1029,15 @@ export default {
       isRTL,
       availableSizeNames,
       availableSizeValues,
+      sizeCategoriesLoading,
+      sizeCategoriesError,
       validateSizeStock,
       validateSizeField,
       validateNewSizeField,
       onCategoryChange,
       onSizeNameChange,
+      sizeCategories,
+      getCategoryLabel,
       fetchSizes,
       editSize,
       cancelEdit,

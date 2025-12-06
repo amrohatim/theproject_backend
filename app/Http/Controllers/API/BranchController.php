@@ -48,6 +48,40 @@ class BranchController extends Controller
     }
 
     /**
+     * Public endpoint to fetch all branches with optional search and pagination.
+     */
+    public function getAll(Request $request)
+    {
+        $perPage = $request->input('per_page', 50);
+        $search = $request->input('search');
+
+        $query = Branch::with(['user', 'company'])
+            ->where('status', 'active')
+            ->orderByDesc('created_at');
+
+        if (!empty($search)) {
+            $query->where(function ($q) use ($search) {
+                $q->where('name', 'like', "%{$search}%")
+                    ->orWhere('address', 'like', "%{$search}%");
+            });
+        }
+
+        $branches = $query->paginate($perPage);
+
+        return response()->json([
+            'success' => true,
+            'branches' => $branches->items(),
+            'pagination' => [
+                'current_page' => $branches->currentPage(),
+                'last_page' => $branches->lastPage(),
+                'per_page' => $branches->perPage(),
+                'total' => $branches->total(),
+                'has_more_pages' => $branches->hasMorePages(),
+            ],
+        ]);
+    }
+
+    /**
      * Store a newly created branch in storage.
      *
      * @param  \Illuminate\Http\Request  $request
