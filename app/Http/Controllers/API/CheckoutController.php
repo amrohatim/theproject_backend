@@ -16,6 +16,7 @@ use App\Models\ProductOptionType;
 use App\Models\ProductOptionValue;
 use App\Services\ShippingService;
 use App\Services\StockManagementService;
+use App\Services\TrendingService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
@@ -31,18 +32,25 @@ class CheckoutController extends Controller
      */
     protected $shippingService;
     protected $stockManagementService;
+    protected $trendingService;
 
     /**
      * Create a new controller instance.
      *
      * @param  \App\Services\ShippingService  $shippingService
      * @param  \App\Services\StockManagementService  $stockManagementService
+     * @param  \App\Services\TrendingService  $trendingService
      * @return void
      */
-    public function __construct(ShippingService $shippingService, StockManagementService $stockManagementService)
+    public function __construct(
+        ShippingService $shippingService,
+        StockManagementService $stockManagementService,
+        TrendingService $trendingService
+    )
     {
         $this->shippingService = $shippingService;
         $this->stockManagementService = $stockManagementService;
+        $this->trendingService = $trendingService;
     }
 
     /**
@@ -255,6 +263,16 @@ class CheckoutController extends Controller
                         // If it's a different error, rethrow it
                         throw $columnException;
                     }
+                }
+
+                // Increment product order count for trending calculations
+                try {
+                    $this->trendingService->incrementProductOrder($orderItem->product_id);
+                } catch (\Exception $e) {
+                    Log::warning('Failed to increment product order count for trending', [
+                        'product_id' => $orderItem->product_id ?? null,
+                        'error' => $e->getMessage(),
+                    ]);
                 }
 
                 // Process selected options

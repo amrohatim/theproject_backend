@@ -6,6 +6,8 @@ use App\Http\Controllers\Controller;
 use App\Models\Product;
 use App\Models\Deal;
 use App\Services\ProductDealService;
+use App\Services\TrendingService;
+use App\Services\ViewTrackingService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Log;
@@ -18,16 +20,65 @@ class ProductController extends Controller
      * @var \App\Services\ProductDealService
      */
     protected $dealService;
+    protected $trendingService;
+    protected $viewTrackingService;
 
     /**
      * Create a new controller instance.
      *
      * @param  \App\Services\ProductDealService  $dealService
+     * @param  \App\Services\TrendingService  $trendingService
+     * @param  \App\Services\ViewTrackingService  $viewTrackingService
      * @return void
      */
-    public function __construct(ProductDealService $dealService)
+    public function __construct(
+        ProductDealService $dealService,
+        TrendingService $trendingService,
+        ViewTrackingService $viewTrackingService
+    )
     {
         $this->dealService = $dealService;
+        $this->trendingService = $trendingService;
+        $this->viewTrackingService = $viewTrackingService;
+    }
+
+    /**
+     * Get trending products ordered by trending_score.
+     */
+    public function trendingProducts(Request $request)
+    {
+        $limit = (int) $request->input('limit', 20);
+
+        // Primary: products with a positive trending score
+        $products = Product::with(['branch', 'category'])
+            ->where('is_available', true)
+            ->where('trending_score', '>', 0)
+            ->orderByDesc('trending_score')
+            ->take($limit)
+            ->get();
+
+        // Fallback: if no scores, use order_count/view_count/rating
+        if ($products->isEmpty()) {
+            $products = Product::with(['branch', 'category'])
+                ->where('is_available', true)
+                ->orderByDesc('order_count')
+                ->orderByDesc('view_count')
+                ->orderByDesc('rating')
+                ->take($limit)
+                ->get();
+        }
+
+        // Add convenience fields
+        $products->transform(function ($product) {
+            $product->branch_name = $product->branch ? $product->branch->name : null;
+            $product->default_color_image = $product->getDefaultColorImage();
+            return $product;
+        });
+
+        return response()->json([
+            'success' => true,
+            'products' => $products,
+        ]);
     }
     /**
      * Display a listing of the products with advanced filtering.
@@ -192,6 +243,25 @@ class ProductController extends Controller
             'colorSizes.color',
             'colorSizes.size'
         ])->findOrFail($id);
+
+        // Track unique product view and increment counters
+        try {
+            $this->viewTrackingService->trackView('product', $product->id, request());
+        } catch (\Exception $e) {
+            Log::warning('Failed to track product view', [
+                'product_id' => $product->id,
+                'error' => $e->getMessage(),
+            ]);
+        }
+
+        try {
+            $this->trendingService->incrementProductView($product->id);
+        } catch (\Exception $e) {
+            Log::warning('Failed to increment product view count', [
+                'product_id' => $product->id,
+                'error' => $e->getMessage(),
+            ]);
+        }
 
         // Add branch_name to the product (with null check)
         $product->branch_name = $product->branch ? $product->branch->name : null;

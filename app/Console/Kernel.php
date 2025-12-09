@@ -12,8 +12,11 @@ class Kernel extends ConsoleKernel
      */
     protected function schedule(Schedule $schedule): void
     {
-        // Calculate trending scores daily at 3 AM
-        $schedule->command('trending:calculate')->dailyAt('03:00');
+        // Calculate trending scores (products + services + categories) hourly
+        $schedule->command('trending:calculate')->hourly();
+
+        // Refresh trending scores (including products and services) hourly via script
+        $schedule->exec('php ' . base_path('calculate_trending_scores.php'))->hourly();
 
         // Check license expiration daily at 2 AM
         $schedule->command('license:check-expiration')->dailyAt('02:00');

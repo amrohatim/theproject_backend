@@ -248,6 +248,9 @@ class ViewTrackingService
                 case 'company':
                     $table = 'companies';
                     break;
+                case 'product':
+                    $table = 'products';
+                    break;
                 case 'branch':
                     $table = 'branches';
                     break;
@@ -259,6 +262,9 @@ class ViewTrackingService
                     break;
                 case 'category':
                     $table = 'categories';
+                    break;
+                case 'service':
+                    $table = 'services';
                     break;
                 default:
                     Log::warning("Unknown entity type for view tracking: {$entityType}");

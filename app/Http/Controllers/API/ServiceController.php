@@ -5,6 +5,8 @@ namespace App\Http\Controllers\API;
 use App\Http\Controllers\Controller;
 use App\Models\Service;
 use App\Services\ServiceDealService;
+use App\Services\TrendingService;
+use App\Services\ViewTrackingService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Carbon;
@@ -12,10 +14,17 @@ use Illuminate\Support\Carbon;
 class ServiceController extends Controller
 {
     protected $serviceDealService;
+    protected $trendingService;
+    protected $viewTrackingService;
 
-    public function __construct(ServiceDealService $serviceDealService)
-    {
+    public function __construct(
+        ServiceDealService $serviceDealService,
+        TrendingService $trendingService,
+        ViewTrackingService $viewTrackingService
+    ) {
         $this->serviceDealService = $serviceDealService;
+        $this->trendingService = $trendingService;
+        $this->viewTrackingService = $viewTrackingService;
     }
     /**
      * Display a listing of the services with advanced filtering.
@@ -102,9 +111,61 @@ class ServiceController extends Controller
 
         $service = $this->transformService($service);
 
+        // Track view for trending
+        try {
+            $this->viewTrackingService->trackView('service', $service->id, request());
+        } catch (\Exception $e) {
+            // Silent log to avoid user-facing errors
+            \Log::warning('Failed to track service view', [
+                'service_id' => $service->id,
+                'error' => $e->getMessage(),
+            ]);
+        }
+
+        try {
+            $this->trendingService->incrementServiceView($service->id);
+        } catch (\Exception $e) {
+            \Log::warning('Failed to increment service view count', [
+                'service_id' => $service->id,
+                'error' => $e->getMessage(),
+            ]);
+        }
+
         return response()->json([
             'success' => true,
             'service' => $service,
+        ]);
+    }
+
+    /**
+     * Get trending services ordered by trending_score.
+     */
+    public function trendingServices(Request $request)
+    {
+        $limit = (int) $request->input('limit', 10);
+
+        $services = Service::with(['branch', 'category'])
+            ->where('is_available', true)
+            ->where('trending_score', '>', 0)
+            ->orderByDesc('trending_score')
+            ->take($limit)
+            ->get();
+
+        if ($services->isEmpty()) {
+            $services = Service::with(['branch', 'category'])
+                ->where('is_available', true)
+                ->orderByDesc('order_count')
+                ->orderByDesc('view_count')
+                ->orderByDesc('rating')
+                ->take($limit)
+                ->get();
+        }
+
+        $services->transform(fn ($service) => $this->transformService($service));
+
+        return response()->json([
+            'success' => true,
+            'services' => $services,
         ]);
     }
 

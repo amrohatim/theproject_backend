@@ -24,6 +24,16 @@ echo "🏪 Calculating branch popularity scores...\n";
 $trendingService->calculateBranchPopularityScores();
 echo "✅ Branch popularity scores calculated successfully!\n\n";
 
+// Calculate product scores
+echo "🛍️ Calculating product trending scores...\n";
+$trendingService->calculateProductScores();
+echo "✅ Product trending scores calculated successfully!\n\n";
+
+// Calculate service scores
+echo "🧴 Calculating service trending scores...\n";
+$trendingService->calculateServiceScores();
+echo "✅ Service trending scores calculated successfully!\n\n";
+
 // Calculate trending scores for categories (already done by seeder, but let's refresh)
 echo "🔥 Recalculating trending scores for categories...\n";
 $trendingService->calculateTrendingScores();

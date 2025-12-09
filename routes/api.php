@@ -114,6 +114,8 @@ Route::get('/size-categories', [SizeCategoryController::class, 'index']);
 Route::get('/top-vendors', [CompanyController::class, 'topVendors']);
 Route::get('/popular-branches', [BranchController::class, 'popular']);
 Route::get('/trending-categories', [CategoryController::class, 'trending']);
+Route::get('/trending-products', [ProductController::class, 'trendingProducts']);
+Route::get('/trending-services', [ServiceController::class, 'trendingServices']);
 
 // Public business type routes (no authentication required)
 Route::get('/business-types', [BusinessTypeController::class, 'index']);

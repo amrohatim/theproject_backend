@@ -8,8 +8,10 @@ use App\Models\Branch;
 use App\Models\Provider;
 use App\Models\Product;
 use App\Models\OrderItem;
+use App\Models\Service;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Schema;
 use Illuminate\Http\Request;
 
 class TrendingService
@@ -78,6 +80,159 @@ class TrendingService
             }
         } catch (\Exception $e) {
             Log::error('Error calculating trending scores: ' . $e->getMessage());
+        }
+    }
+
+    /**
+     * Increment view count for a product.
+     *
+     * @param  int  $productId
+     * @return void
+     */
+    public function incrementProductView($productId)
+    {
+        try {
+            $product = Product::find($productId);
+            if ($product) {
+                $product->increment('view_count');
+            }
+        } catch (\Exception $e) {
+            Log::error('Error incrementing product view: ' . $e->getMessage());
+        }
+    }
+
+    /**
+     * Increment order count for a product.
+     *
+     * @param  int  $productId
+     * @return void
+     */
+    public function incrementProductOrder($productId)
+    {
+        try {
+            $product = Product::find($productId);
+            if ($product) {
+                $product->increment('order_count');
+            }
+        } catch (\Exception $e) {
+            Log::error('Error incrementing product order: ' . $e->getMessage());
+        }
+    }
+
+    /**
+     * Calculate trending scores for all products.
+     *
+     * Combines recent orders, total views, and rating to give a fast, cacheable score.
+     *
+     * @return void
+     */
+    public function calculateProductScores()
+    {
+        try {
+            $products = Product::all();
+            $recentWindow = Carbon::now()->subDays(30);
+
+            foreach ($products as $product) {
+                // Recent orders carry the most weight
+                $recentOrderCount = OrderItem::where('product_id', $product->id)
+                    ->where('created_at', '>=', $recentWindow)
+                    ->sum('quantity');
+
+                $viewWeight = 1;
+                $orderWeight = 5;
+                $ratingWeight = 10;
+
+                $ratingComponent = $product->rating ? ($product->rating * $ratingWeight) : 0;
+
+                $trendingScore = ($product->view_count * $viewWeight)
+                    + ($recentOrderCount * $orderWeight)
+                    + $ratingComponent;
+
+                $product->trending_score = (int) $trendingScore;
+                $product->last_trending_calculation = Carbon::now();
+                $product->order_count = $product->order_count ?? 0;
+                $product->save();
+            }
+        } catch (\Exception $e) {
+            Log::error('Error calculating product trending scores: ' . $e->getMessage());
+        }
+    }
+
+    /**
+     * Increment view count for a service.
+     *
+     * @param  int  $serviceId
+     * @return void
+     */
+    public function incrementServiceView($serviceId)
+    {
+        try {
+            $service = Service::find($serviceId);
+            if ($service) {
+                $service->increment('view_count');
+            }
+        } catch (\Exception $e) {
+            Log::error('Error incrementing service view: ' . $e->getMessage());
+        }
+    }
+
+    /**
+     * Increment order count for a service.
+     *
+     * @param  int  $serviceId
+     * @return void
+     */
+    public function incrementServiceOrder($serviceId)
+    {
+        try {
+            $service = Service::find($serviceId);
+            if ($service) {
+                $service->increment('order_count');
+            }
+        } catch (\Exception $e) {
+            Log::error('Error incrementing service order: ' . $e->getMessage());
+        }
+    }
+
+    /**
+     * Calculate trending scores for services.
+     *
+     * Combines view counts, ratings, and recent order count (if available).
+     *
+     * @return void
+     */
+    public function calculateServiceScores()
+    {
+        try {
+            $services = Service::all();
+            $recentWindow = Carbon::now()->subDays(30);
+
+            foreach ($services as $service) {
+                // If service orders are tracked via order_items (not guaranteed), attempt lookup
+                $recentOrderCount = 0;
+                if (Schema::hasTable('order_items') && Schema::hasColumn('order_items', 'service_id')) {
+                    $recentOrderCount = OrderItem::where('service_id', $service->id)
+                        ->where('created_at', '>=', $recentWindow)
+                        ->sum('quantity');
+                }
+
+                $viewWeight = 1;
+                $orderWeight = 5;
+                $ratingWeight = 10;
+
+                $ratingComponent = $service->rating ? ($service->rating * $ratingWeight) : 0;
+
+                $trendingScore = ($service->view_count * $viewWeight)
+                    + ($recentOrderCount * $orderWeight)
+                    + $ratingComponent;
+
+                $service->trending_score = (int) $trendingScore;
+                $service->last_trending_calculation = Carbon::now();
+                $service->order_count = $service->order_count ?? 0;
+                $service->save();
+            }
+        } catch (\Exception $e) {
+            Log::error('Error calculating service trending scores: ' . $e->getMessage());
         }
     }
 

@@ -7,6 +7,7 @@ use App\Models\Booking;
 use App\Models\Service;
 use App\Models\Branch;
 use App\Models\UserLocation;
+use App\Services\TrendingService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Validator;
@@ -137,6 +138,16 @@ class BookingController extends Controller
         ]);
 
         $booking->load(['service', 'branch']);
+
+        // Increment service order count for trending
+        try {
+            app(TrendingService::class)->incrementServiceOrder($service->id);
+        } catch (\Exception $e) {
+            \Log::warning('Failed to increment service order count', [
+                'service_id' => $service->id,
+                'error' => $e->getMessage(),
+            ]);
+        }
 
         return response()->json([
             'success' => true,
