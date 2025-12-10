@@ -730,12 +730,13 @@ export default {
         // Add colors data
         productData.colors.forEach((color, index) => {
           // Only include essential color fields and handle null/undefined values
-          const colorFields = {
-            id: color.id || null,
-            name: color.name || '',
-            color_code: color.color_code || '#000000',
-            price_adjustment: color.price_adjustment || 0,
-            stock: color.stock || 0,
+        const colorFields = {
+          id: color.id || null,
+          name: color.name || '',
+          name_arabic: color.name_arabic || '',
+          color_code: color.color_code || '#000000',
+          price_adjustment: color.price_adjustment || 0,
+          stock: color.stock || 0,
             display_order: color.display_order || index,
             is_default: color.is_default ? 1 : 0
           }
@@ -840,6 +841,7 @@ export default {
       const newColor = {
         id: null,
         name: '',
+        name_arabic: '',
         color_code: '#000000',
         price_adjustment: 0,
         stock: 0,

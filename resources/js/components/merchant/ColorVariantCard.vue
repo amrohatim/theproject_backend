@@ -54,7 +54,7 @@
                     <div class="color-swatch"
                          :style="{ backgroundColor: getColorCode(color.name) || '#e5e7eb' }"></div>
                     <div class="color-info">
-                      <span class="color-name">{{ color.name || t.select_color }}</span>
+                      <span class="color-name">{{ localizedSelectedName }}</span>
                       <span v-if="color.name" class="color-code">{{ getColorCode(color.name) }}</span>
                     </div>
                   </div>
@@ -83,7 +83,7 @@
                       <div class="color-swatch"
                            :style="{ backgroundColor: colorOption.code }"></div>
                       <div class="color-details">
-                        <span class="color-name">{{ colorOption.name }}</span>
+                        <span class="color-name">{{ getLocalizedColorLabel(colorOption) }}</span>
                         <span class="color-code">{{ colorOption.code }}</span>
                       </div>
                     </div>
@@ -104,6 +104,8 @@
                 </option>
               </select>
             </div>
+
+    
 
             <div class="space-y-2 mt-2">
               <label class="block vue-text-sm font-medium">
@@ -398,6 +400,7 @@ export default {
       default: $t('default'),
       set_as_default: $t('set_as_default'),
       color_name: $t('color_name'),
+      color_name_arabic: $t('color_name_arabic') || 'اسم اللون بالعربية',
       select_color: $t('select_color'),
       color_code: $t('color_code'),
       price: $t('price'),
@@ -419,6 +422,10 @@ export default {
       search_colors: $t('search_colors')
     }))
 
+    // Locale helpers
+    const currentLocale = computed(() => (document.documentElement.lang || window.Laravel?.locale || 'en').toString())
+    const isArabicLocale = computed(() => currentLocale.value.toLowerCase().startsWith('ar'))
+
     // RTL support
     const isRTL = computed(() => {
       return document.documentElement.dir === 'rtl' || 
@@ -433,35 +440,36 @@ export default {
 
     // Color options with hex codes
     const colorOptionsWithCodes = [
-      { name: 'DarkRed', code: '#8B0000' },
-      { name: 'IndianRed', code: '#CD5C5C' },
-      { name: 'LightCoral', code: '#F08080' },
-      { name: 'Salmon', code: '#FA8072' },
-      { name: 'DarkSalmon', code: '#E9967A' },
-      { name: 'LightSalmon', code: '#FFA07A' },
-      { name: 'Orange', code: '#FFA500' },
-      { name: 'DarkOrange', code: '#FF8C00' },
-      { name: 'Coral', code: '#FF7F50' },
-      { name: 'Red', code: '#FF0000' },
-      { name: 'Blue', code: '#0000FF' },
-      { name: 'Green', code: '#008000' },
-      { name: 'Navy Blue', code: '#000080' },
-      { name: 'Forest Green', code: '#228B22' },
-      { name: 'Black', code: '#000000' },
-      { name: 'White', code: '#FFFFFF' },
-      { name: 'Gray', code: '#808080' },
-      { name: 'Yellow', code: '#FFFF00' },
-      { name: 'Purple', code: '#800080' },
-      { name: 'Pink', code: '#FFC0CB' },
-      { name: 'Brown', code: '#A52A2A' },
-      { name: 'Silver', code: '#C0C0C0' },
-      { name: 'Gold', code: '#FFD700' },
-      { name: 'Maroon', code: '#800000' },
-      { name: 'Teal', code: '#008080' },
-      { name: 'Olive', code: '#808000' },
-      { name: 'Lime', code: '#00FF00' },
-      { name: 'Aqua', code: '#00FFFF' },
-      { name: 'Fuchsia', code: '#FF00FF' }
+      { name: 'No Color', name_arabic: 'بدون لون', code: '#F3F4F6' },
+      { name: 'DarkRed', name_arabic: 'أحمر داكن', code: '#8B0000' },
+      { name: 'IndianRed', name_arabic: 'أحمر هندي', code: '#CD5C5C' },
+      { name: 'LightCoral', name_arabic: 'مرجاني فاتح', code: '#F08080' },
+      { name: 'Salmon', name_arabic: 'سلموني', code: '#FA8072' },
+      { name: 'DarkSalmon', name_arabic: 'سلموني داكن', code: '#E9967A' },
+      { name: 'LightSalmon', name_arabic: 'سلموني فاتح', code: '#FFA07A' },
+      { name: 'Orange', name_arabic: 'برتقالي', code: '#FFA500' },
+      { name: 'DarkOrange', name_arabic: 'برتقالي داكن', code: '#FF8C00' },
+      { name: 'Coral', name_arabic: 'مرجاني', code: '#FF7F50' },
+      { name: 'Red', name_arabic: 'أحمر', code: '#FF0000' },
+      { name: 'Blue', name_arabic: 'أزرق', code: '#0000FF' },
+      { name: 'Green', name_arabic: 'أخضر', code: '#008000' },
+      { name: 'Navy Blue', name_arabic: 'أزرق كحلي', code: '#000080' },
+      { name: 'Forest Green', name_arabic: 'أخضر غامق', code: '#228B22' },
+      { name: 'Black', name_arabic: 'أسود', code: '#000000' },
+      { name: 'White', name_arabic: 'أبيض', code: '#FFFFFF' },
+      { name: 'Gray', name_arabic: 'رمادي', code: '#808080' },
+      { name: 'Yellow', name_arabic: 'أصفر', code: '#FFFF00' },
+      { name: 'Purple', name_arabic: 'بنفسجي', code: '#800080' },
+      { name: 'Pink', name_arabic: 'وردي', code: '#FFC0CB' },
+      { name: 'Brown', name_arabic: 'بني', code: '#A52A2A' },
+      { name: 'Silver', name_arabic: 'فضي', code: '#C0C0C0' },
+      { name: 'Gold', name_arabic: 'ذهبي', code: '#FFD700' },
+      { name: 'Maroon', name_arabic: 'خمري', code: '#800000' },
+      { name: 'Teal', name_arabic: 'تركوازي', code: '#008080' },
+      { name: 'Olive', name_arabic: 'زيتي', code: '#808000' },
+      { name: 'Lime', name_arabic: 'ليموني', code: '#00FF00' },
+      { name: 'Aqua', name_arabic: 'أزرق فاتح', code: '#00FFFF' },
+      { name: 'Fuchsia', name_arabic: 'أرجواني', code: '#FF00FF' }
     ]
 
     // Legacy array for backward compatibility
@@ -473,7 +481,8 @@ export default {
         return colorOptionsWithCodes
       }
       return colorOptionsWithCodes.filter(color =>
-        color.name.toLowerCase().includes(colorSearchQuery.value.toLowerCase())
+        color.name.toLowerCase().includes(colorSearchQuery.value.toLowerCase()) ||
+        (color.name_arabic && color.name_arabic.toLowerCase().includes(colorSearchQuery.value.toLowerCase()))
       )
     })
 
@@ -551,7 +560,11 @@ export default {
           color.code.toLowerCase() === finalValue.toLowerCase()
         )
         if (matchingColor && matchingColor.name !== props.color.name) {
-          const updatedColorWithName = { ...updatedColor, name: matchingColor.name }
+          const updatedColorWithName = { 
+            ...updatedColor, 
+            name: matchingColor.name,
+            name_arabic: matchingColor.name_arabic || updatedColor.name_arabic || '' 
+          }
           emit('update', props.index, updatedColorWithName)
         }
       }
@@ -581,6 +594,20 @@ export default {
       return colorOption ? colorOption.code : null
     }
 
+    const getLocalizedColorLabel = (colorOption) => {
+      if (isArabicLocale.value && colorOption.name_arabic) {
+        return colorOption.name_arabic
+      }
+      return colorOption.name
+    }
+
+    const localizedSelectedName = computed(() => {
+      if (isArabicLocale.value && props.color.name_arabic) {
+        return props.color.name_arabic
+      }
+      return props.color.name || t.value.select_color
+    })
+
     const toggleColorDropdown = () => {
       showColorDropdown.value = !showColorDropdown.value
       if (showColorDropdown.value) {
@@ -590,10 +617,12 @@ export default {
 
     const selectColor = (colorName) => {
       // Update the color name first
+      const colorOption = colorOptionsWithCodes.find(option => option.name === colorName)
       updateColor('name', colorName)
+      updateColor('name_arabic', colorOption?.name_arabic || '')
 
       // Then update the color code
-      const colorCode = getColorCode(colorName)
+      const colorCode = colorOption?.code || getColorCode(colorName)
       if (colorCode) {
         updateColor('color_code', colorCode)
       }
@@ -631,6 +660,9 @@ export default {
         )
         if (matchingColor && matchingColor.name !== props.color.name) {
           updateColor('name', matchingColor.name)
+          if (matchingColor.name_arabic) {
+            updateColor('name_arabic', matchingColor.name_arabic)
+          }
         }
       }
     })
@@ -735,6 +767,8 @@ export default {
       colorSearchQuery,
       colorOptionsArray,
       filteredColorOptions,
+      getLocalizedColorLabel,
+      localizedSelectedName,
       hasImage,
       imagePreviewUrl,
       otherColorsStock,

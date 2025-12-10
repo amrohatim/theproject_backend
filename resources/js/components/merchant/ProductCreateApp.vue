@@ -657,6 +657,7 @@ export default {
         // Add colors data
         productData.colors.forEach((color, index) => {
           formData.append(`colors[${index}][name]`, color.name)
+          formData.append(`colors[${index}][name_arabic]`, color.name_arabic || '')
           formData.append(`colors[${index}][color_code]`, color.color_code || '')
           formData.append(`colors[${index}][price_adjustment]`, color.price_adjustment || 0)
           formData.append(`colors[${index}][stock]`, color.stock || 0)
@@ -716,6 +717,7 @@ export default {
     const addNewColor = () => {
       const newColor = {
         name: '',
+        name_arabic: '',
         color_code: '',
         price_adjustment: 0,
         stock: 0,

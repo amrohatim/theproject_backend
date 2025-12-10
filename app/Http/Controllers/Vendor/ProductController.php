@@ -507,6 +507,7 @@ class ProductController extends Controller
             // Colors validation - now required
             'colors' => 'required|array|min:1',
             'colors.*.name' => 'required|string|max:255',
+            'colors.*.name_arabic' => 'nullable|string|max:255',
             'colors.*.color_code' => 'nullable|string|max:10',
             'colors.*.price_adjustment' => 'nullable|numeric',
             'colors.*.stock' => 'nullable|integer|min:0',
@@ -655,6 +656,7 @@ class ProductController extends Controller
 
             $color = $product->colors()->create([
                 'name' => $colorData['name'],
+                'name_arabic' => $colorData['name_arabic'] ?? null,
                 'color_code' => $colorData['color_code'] ?? null,
                 'image' => $image,
                 'price_adjustment' => $colorData['price_adjustment'] ?? 0,
@@ -944,6 +946,7 @@ class ProductController extends Controller
             return [
                 'id' => $color->id,
                 'name' => $color->name,
+                'name_arabic' => $color->name_arabic,
                 'color_code' => $color->color_code,
                 'price_adjustment' => $color->price_adjustment,
                 'stock' => $color->stock,
@@ -1043,6 +1046,7 @@ class ProductController extends Controller
             // Colors validation - now optional for updates
             'colors' => 'nullable|array',
             'colors.*.name' => 'required_with:colors|string|max:255',
+            'colors.*.name_arabic' => 'nullable|string|max:255',
             'colors.*.color_code' => 'nullable|string|max:10',
             'colors.*.price_adjustment' => 'nullable|numeric',
             'colors.*.stock' => 'nullable|integer|min:0',
@@ -1399,6 +1403,7 @@ class ProductController extends Controller
                 // Update existing color
                 $existingColors[$colorId]->update([
                     'name' => $colorData['name'],
+                    'name_arabic' => $colorData['name_arabic'] ?? $existingColors[$colorId]->name_arabic,
                     'color_code' => $colorData['color_code'] ?? null,
                     'image' => $colorImagePath,
                     'price_adjustment' => $colorData['price_adjustment'] ?? 0,
@@ -1418,6 +1423,7 @@ class ProductController extends Controller
                 $newColor = \App\Models\ProductColor::create([
                     'product_id' => $product->id,
                     'name' => $colorData['name'],
+                    'name_arabic' => $colorData['name_arabic'] ?? null,
                     'color_code' => $colorData['color_code'] ?? null,
                     'image' => $colorImagePath,
                     'price_adjustment' => $colorData['price_adjustment'] ?? 0,
@@ -1500,11 +1506,15 @@ class ProductController extends Controller
             $existingName = trim($existingColor->name ?? '');
             $requestName = trim($requestColor['name'] ?? '');
 
+            $existingNameArabic = trim($existingColor->name_arabic ?? '');
+            $requestNameArabic = trim($requestColor['name_arabic'] ?? '');
+
             $existingColorCode = trim($existingColor->color_code ?? '');
             $requestColorCode = trim($requestColor['color_code'] ?? '');
 
             // Check if basic color properties have changed with proper type comparisons
             if ($existingName !== $requestName ||
+                $existingNameArabic !== $requestNameArabic ||
                 $existingColorCode !== $requestColorCode ||
                 $existingPriceAdjustment !== $requestPriceAdjustment ||
                 $existingStock !== $requestStock ||

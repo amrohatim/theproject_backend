@@ -382,6 +382,7 @@ class ProductController extends Controller
                 // Colors validation - now required
                 'colors' => 'required|array|min:1',
                 'colors.*.name' => 'required|string|max:255',
+                'colors.*.name_arabic' => 'nullable|string|max:255',
                 'colors.*.color_code' => 'nullable|string|max:10',
                 'colors.*.price_adjustment' => 'nullable|numeric',
                 'colors.*.stock' => 'nullable|integer|min:0',
@@ -545,6 +546,7 @@ class ProductController extends Controller
             $color = ProductColor::create([
                 'product_id' => $product->id,
                 'name' => $colorData['name'],
+                'name_arabic' => $colorData['name_arabic'] ?? null,
                 'color_code' => $colorData['color_code'] ?? null,
                 'image' => $colorImagePath,
                 'price_adjustment' => $colorData['price_adjustment'] ?? 0,
@@ -816,6 +818,7 @@ class ProductController extends Controller
             // Colors validation - now required for updates too
             'colors' => 'required|array|min:1',
             'colors.*.name' => 'required|string|max:255',
+            'colors.*.name_arabic' => 'nullable|string|max:255',
             'colors.*.color_code' => 'nullable|string|max:10',
             'colors.*.price_adjustment' => 'nullable|numeric',
             'colors.*.stock' => 'nullable|integer|min:0',
@@ -1271,6 +1274,7 @@ class ProductController extends Controller
                 // Update existing color
                 $existingColors[$colorId]->update([
                     'name' => $colorData['name'],
+                    'name_arabic' => $colorData['name_arabic'] ?? $existingColors[$colorId]->name_arabic,
                     'color_code' => $colorData['color_code'] ?? null,
                     'image' => $colorImagePath,
                     'price_adjustment' => $colorData['price_adjustment'] ?? 0,
@@ -1284,6 +1288,7 @@ class ProductController extends Controller
                 $newColor = ProductColor::create([
                     'product_id' => $product->id,
                     'name' => $colorData['name'],
+                    'name_arabic' => $colorData['name_arabic'] ?? null,
                     'color_code' => $colorData['color_code'] ?? null,
                     'image' => $colorImagePath,
                     'price_adjustment' => $colorData['price_adjustment'] ?? 0,
