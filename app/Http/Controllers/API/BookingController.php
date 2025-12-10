@@ -386,6 +386,8 @@ class BookingController extends Controller
             'amount' => (float) $booking->price,
             'notes' => $booking->notes,
             'service_name' => optional($booking->service)->name,
+            'service_image_url' => optional($booking->service)->image,
+            'service_image' => optional($booking->service)->image,
             'branch_name' => optional($booking->branch)->name,
             'booking_number' => $booking->booking_number,
             'payment_status' => $booking->payment_status,
