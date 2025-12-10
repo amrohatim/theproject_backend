@@ -237,8 +237,8 @@ class ProductSpecificationController extends Controller
             $totalColors = ProductColor::count();
             Log::info("Total colors in database: {$totalColors}");
 
-            // Get all unique colors from product_colors table
-            $colors = ProductColor::select('id', 'name', 'color_code')
+            // Get all unique colors from product_colors table (include Arabic name for localization)
+            $colors = ProductColor::select('id', 'name', 'name_arabic', 'color_code')
                 ->distinct()
                 ->orderBy('name')
                 ->get();
@@ -254,6 +254,7 @@ class ProductSpecificationController extends Controller
                 return [
                     'id' => $color->id,
                     'name' => $color->name,
+                    'name_arabic' => $color->name_arabic,
                     'color_code' => $color->color_code,
                     'hex_code' => $color->color_code, // For compatibility
                 ];
