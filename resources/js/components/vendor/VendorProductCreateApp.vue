@@ -804,16 +804,27 @@ export default {
 
         // Add colors data
         productData.colors.forEach((color, index) => {
+          const nameArabic = (typeof color.name_arabic === 'string' && color.name_arabic.trim() !== '')
+            ? color.name_arabic
+            : (color.name || '')
+
           Object.keys(color).forEach(key => {
             if (key !== 'image' && key !== 'sizes') {  // Exclude sizes - handle separately
               let value = color[key]
-              // Convert boolean is_default to string
-              if (key === 'is_default') {
+              // Normalize Arabic name and boolean default flag
+              if (key === 'name_arabic') {
+                value = nameArabic
+              } else if (key === 'is_default') {
                 value = value ? '1' : '0'
               }
-              formData.append(`colors[${index}][${key}]`, value)
+              formData.append(`colors[${index}][${key}]`, value ?? '')
             }
           })
+
+          // Ensure Arabic name is always sent even if the property was missing
+          if (!('name_arabic' in color)) {
+            formData.append(`colors[${index}][name_arabic]`, nameArabic)
+          }
 
           // Add color image if it exists
           if (color.image instanceof File) {
@@ -918,6 +929,7 @@ export default {
     const addNewColor = () => {
       const newColor = {
         name: '',
+        name_arabic: '',
         color_code: '',
         price_adjustment: 0,
         stock: 0,

@@ -763,10 +763,16 @@ export default {
 
         // Add colors data
         productData.colors.forEach((color, index) => {
+          // Normalize Arabic name and ensure it is always sent (fallback to English name)
+          const nameArabic = (typeof color.name_arabic === 'string' && color.name_arabic.trim() !== '')
+            ? color.name_arabic
+            : (color.name || '')
+
           // Only include essential color fields and handle null/undefined values
           const colorFields = {
             id: color.id || null,
             name: color.name || '',
+            name_arabic: nameArabic,
             color_code: color.color_code || '#000000',
             price_adjustment: color.price_adjustment || 0,
             stock: color.stock || 0,
@@ -874,6 +880,7 @@ export default {
       const newColor = {
         id: null,
         name: '',
+        name_arabic: '',
         color_code: '#000000',
         price_adjustment: 0,
         stock: 0,
