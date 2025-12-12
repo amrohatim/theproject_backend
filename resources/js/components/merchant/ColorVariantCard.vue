@@ -106,7 +106,7 @@
             </div>
 
     
-
+ 
             <div class="space-y-2 mt-2">
               <label class="block vue-text-sm font-medium">
                 <i class="fas fa-palette w-4 h-4 mr-2 text-blue-500"></i>
