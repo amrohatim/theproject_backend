@@ -26,7 +26,7 @@ class BookingController extends Controller
     public function index(Request $request)
     {
         $user = Auth::user();
-        $query = Booking::with(['service', 'branch'])
+        $query = Booking::with(['service', 'branch', 'user'])
             ->where('user_id', $user->id)
             ->orderBy('booking_date', 'desc')
             ->orderBy('booking_time', 'desc');
@@ -137,7 +137,7 @@ class BookingController extends Controller
             'address' => $request->input('address'),
         ]);
 
-        $booking->load(['service', 'branch']);
+        $booking->load(['service', 'branch', 'user']);
 
         // Increment service order count for trending
         try {
@@ -165,7 +165,7 @@ class BookingController extends Controller
     public function show($id)
     {
         $user = Auth::user();
-        $booking = Booking::with(['service', 'branch'])
+        $booking = Booking::with(['service', 'branch', 'user'])
             ->where('user_id', $user->id)
             ->findOrFail($id);
 
@@ -219,7 +219,7 @@ class BookingController extends Controller
         return response()->json([
             'success' => true,
             'message' => 'Booking updated successfully',
-            'booking' => $this->transformBooking($booking->load(['service', 'branch'])),
+            'booking' => $this->transformBooking($booking->load(['service', 'branch', 'user'])),
         ]);
     }
 
@@ -249,7 +249,7 @@ class BookingController extends Controller
         return response()->json([
             'success' => true,
             'message' => 'Booking cancelled successfully',
-            'booking' => $this->transformBooking($booking->load(['service', 'branch'])),
+            'booking' => $this->transformBooking($booking->load(['service', 'branch', 'user'])),
         ]);
     }
 
@@ -371,9 +371,10 @@ class BookingController extends Controller
      */
     protected function transformBooking(Booking $booking): array
     {
-        $booking->loadMissing(['service', 'branch']);
+        $booking->loadMissing(['service', 'branch', 'user']);
 
         $location = $this->formatCustomerLocation($booking->customer_location);
+        $user = $booking->user;
 
         return [
             'id' => $booking->id,
@@ -389,6 +390,9 @@ class BookingController extends Controller
             'service_image_url' => optional($booking->service)->image,
             'service_image' => optional($booking->service)->image,
             'branch_name' => optional($booking->branch)->name,
+            'branch_lat' => optional($booking->branch)->lat,
+            'branch_lng' => optional($booking->branch)->lng,
+            'branch_emirate' => optional($booking->branch)->emirate,
             'booking_number' => $booking->booking_number,
             'payment_status' => $booking->payment_status,
             'payment_method' => $booking->payment_method,
@@ -399,6 +403,15 @@ class BookingController extends Controller
             'service_location' => $booking->service_location,
             'customer_location' => $location,
             'address' => $booking->address,
+            'customer_name' => optional($user)->name,
+            'customer_email' => optional($user)->email,
+            'customer_phone' => optional($user)->phone,
+            'user' => $user ? [
+                'id' => $user->id,
+                'name' => $user->name,
+                'email' => $user->email,
+                'phone' => $user->phone,
+            ] : null,
         ];
     }
 

@@ -41,6 +41,7 @@ class DatabaseSeeder extends Seeder
             PaymentMethodsTableSeeder::class,
             OrdersTableSeeder::class,
             BookingsTableSeeder::class,
+            BookingHomeServiceBackfillSeeder::class, // Fill missing customer location/home service fields on existing bookings
             ReviewsTableSeeder::class,
             FeaturedDataSeeder::class,
             ProviderSeeder::class,
