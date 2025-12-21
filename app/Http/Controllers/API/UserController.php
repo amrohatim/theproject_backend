@@ -8,6 +8,7 @@ use App\Models\UserLocation;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Storage;
 use Illuminate\Validation\Rule;
 
 class UserController extends Controller
@@ -232,33 +233,69 @@ class UserController extends Controller
         $user = User::findOrFail(Auth::id());
 
         $request->validate([
-            'name' => 'string|max:255',
+            'name' => 'sometimes|string|max:255',
             'email' => [
+                'sometimes',
                 'string',
                 'email',
                 'max:255',
                 Rule::unique('users')->ignore(Auth::id()),
             ],
-            'password' => 'nullable|string|min:8',
-            'phone' => 'nullable|string|max:20',
-            'profile_image' => 'nullable|string',
+            'phone' => 'sometimes|nullable|string|max:20',
+            'current_password' => 'required_with:new_password|string',
+            'new_password' => 'nullable|string|min:8|confirmed',
+            'new_password_confirmation' => 'nullable|string',
+            // Allow either an uploaded image or an existing URL/path
+            'profile_image' =>
+                'sometimes|nullable|required_without:profile_image_url|image|mimes:jpg,jpeg,png,webp|max:2048',
+            'profile_image_url' => 'sometimes|nullable|string',
         ]);
 
-        $data = $request->all();
+        // Validate current password if a new password is requested
+        if ($request->filled('new_password')) {
+            if (!$request->filled('current_password') || !Hash::check($request->current_password, $user->password)) {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'Current password is incorrect.',
+                ], 422);
+            }
 
-        // Hash password if provided
-        if ($request->has('password')) {
-            $data['password'] = Hash::make($request->password);
-        } else {
-            unset($data['password']);
+            $user->password = Hash::make($request->new_password);
         }
 
-        $user->update($data);
+        // Update basic fields
+        if ($request->filled('name')) {
+            $user->name = $request->name;
+        }
+
+        if ($request->filled('email')) {
+            $user->email = $request->email;
+        }
+
+        if ($request->has('phone')) {
+            $user->phone = $request->phone;
+        }
+
+        // Handle profile image upload or direct URL/path assignment
+        if ($request->hasFile('profile_image')) {
+            $imagePath = $request->file('profile_image')->store('profile_images', 'public');
+
+            // Remove old profile image if it exists
+            if ($user->profile_image && Storage::disk('public')->exists($user->profile_image)) {
+                Storage::disk('public')->delete($user->profile_image);
+            }
+
+            $user->profile_image = $imagePath;
+        } elseif ($request->filled('profile_image_url')) {
+            $user->profile_image = $request->input('profile_image_url');
+        }
+
+        $user->save();
 
         return response()->json([
             'success' => true,
             'message' => 'Profile updated successfully',
-            'user' => $user,
+            'user' => $user->fresh(),
         ]);
     }
 
