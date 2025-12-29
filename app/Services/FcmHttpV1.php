@@ -20,7 +20,10 @@ class FcmHttpV1
             'timeout' => 10,
         ]);
 
-        $this->projectId = env('FIREBASE_PROJECT_ID');
+        $this->projectId = config('services.firebase.project_id') ?? env('FIREBASE_PROJECT_ID', '');
+        if (empty($this->projectId)) {
+            throw new RuntimeException('Firebase project id is not configured.');
+        }
 
         $credentialsPath = config('services.firebase.credentials_file')
             ?? base_path(env('FIREBASE_CREDENTIALS', ''));
