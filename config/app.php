@@ -130,6 +130,13 @@ return [
         ),
     ],
 
+
+//     'providers' => [
+//     // ...
+//     App\Providers\FirebaseServiceProvider::class,
+// ],
+
+
     /*
     |--------------------------------------------------------------------------
     | Maintenance Mode Driver
