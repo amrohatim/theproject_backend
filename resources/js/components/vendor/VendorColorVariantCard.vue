@@ -1,9 +1,9 @@
 <template>
-  <div class="vue-card  transition-all duration-200"
+  <div class="vue-card vendor-color-variant-card transition-all duration-200"
        :class= "{ 'ring-2 border-primary-200': isDefault, 'rtl': isRTL } "
        :style="isDefault ? { '--tw-ring-color': 'var(--primary-blue)' } : {}">
     <div class="p-6 border-b" style="border-color: var(--gray-200);">
-      <div class="flex items-center justify-between">
+      <div class="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
         <div class="flex items-center gap-3">
           <div class="w-6 h-6 rounded-full border-2 border-white shadow-sm"
                :style="{ backgroundColor: color.color_code || '#000000' }"></div>
@@ -18,7 +18,7 @@
             </span>
           </h4>
         </div>
-        <div class="flex items-center gap-2">
+        <div class="flex flex-wrap items-center gap-2">
           <button v-if="!isDefault"
                   type="button"
                   class="vue-btn-blue-solid text-sm font-medium"
@@ -1255,6 +1255,31 @@ export default {
 .rtl .color-dropdown {
   left: auto;
   right: 0;
+}
+
+/* Mobile responsiveness */
+@media (max-width: 640px) {
+  .vendor-color-variant-card .color-dropdown {
+    min-width: 0;
+    width: 100%;
+    max-width: 100%;
+    left: 0;
+    right: 0;
+  }
+
+  .vendor-color-variant-card .color-grid-vendor,
+  .vendor-color-variant-card .color-grid-pm {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .vendor-color-variant-card .image-preview-container {
+    width: 100% !important;
+    height: 260px !important;
+  }
+
+  .vendor-color-variant-card .modern-file-input {
+    max-width: 100% !important;
+  }
 }
 
 /* Dark mode support */

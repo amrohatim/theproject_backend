@@ -17,16 +17,16 @@
     </div>
 
     <!-- Main Content -->
-    <div v-else class="container mx-auto">
+    <div v-else class="container mx-auto px-4 sm:px-6 lg:px-8">
       <!-- Header -->
       <div class="mb-6">
-        <div class="flex items-center justify-between">
+        <div class="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
           <div>
             <h2 class="text-2xl font-bold text-gray-800 dark:text-white">{{ $t('vendor.create_new_product') }}</h2>
         <p class="mt-1 text-gray-600 dark:text-gray-400">{{ $t('vendor.add_new_product_inventory') }}</p>
           </div>
           <div>
-            <a :href="backUrl" class="inline-flex items-center px-4 py-2 bg-gray-600 border border-transparent rounded-md font-semibold text-xs text-white uppercase tracking-widest hover:bg-gray-700 active:bg-gray-900 focus:outline-none focus:border-gray-900 focus:ring ring-gray-300 disabled:opacity-25 transition ease-in-out duration-150">
+            <a :href="backUrl" class="inline-flex w-full items-center justify-center px-4 py-2 bg-gray-600 border border-transparent rounded-md font-semibold text-xs text-white uppercase tracking-widest hover:bg-gray-700 active:bg-gray-900 focus:outline-none focus:border-gray-900 focus:ring ring-gray-300 disabled:opacity-25 transition ease-in-out duration-150 sm:w-auto">
               <i class="fas fa-arrow-left" :class="isRTL ? 'ml-2' : 'mr-2'"></i> {{ $t('vendor.back_to_products') }}
             </a>
           </div>
@@ -36,7 +36,7 @@
       <!-- Tab Navigation -->
       <div class="bg-white dark:bg-gray-800 rounded-lg shadow border border-gray-200 dark:border-gray-700 mb-6">
         <div class="border-b border-gray-200 dark:border-gray-700">
-          <nav class="-mb-px flex space-x-8 px-6" aria-label="Tabs">
+          <nav class="-mb-px flex flex-nowrap gap-4 overflow-x-auto px-4 sm:gap-8 sm:px-6" aria-label="Tabs">
             <button
               v-for="tab in tabs"
               :key="tab.id"
@@ -51,10 +51,10 @@
         </div>
 
         <!-- Tab Content -->
-        <div class="p-6">
+        <div class="p-4 sm:p-6">
           <!-- Basic Information Tab -->
           <div v-show="activeTab === 'basic'" class="vue-tab-content space-y-6">
-            <div class="flex items-center justify-between">
+            <div class="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
               <div>
                 <h3 class="vue-text-lg">{{ $t('vendor.product_details') }}</h3>
             <p class="text-sm text-gray-600">{{ $t('vendor.enter_basic_details') }}</p>
@@ -273,14 +273,14 @@
 
           <!-- Colors & Images Tab -->
           <div v-show="activeTab === 'colors'" class="vue-tab-content space-y-6">
-            <div class="flex items-center justify-between">
+            <div class="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
               <div>
                 <h3 class="vue-text-lg">{{ $t('vendor.colors_and_images') }}</h3>
             <p class="text-sm text-gray-600">{{ $t('vendor.add_color_variants_images') }}</p>
               </div>
               <button type="button" @click="addNewColor" style="color: #ffffff;
   border-color: transparent;
-  box-shadow: 0 2px 4px 0 var(--theme-shadow);" class="vue-btn" :class="userRole === 'vendor' ? 'bg-blue-400 hover:bg-blue-500' : 'bg-orange-400 hover:bg-orange-500'">
+  box-shadow: 0 2px 4px 0 var(--theme-shadow);" class="vue-btn w-full justify-center sm:w-auto" :class="userRole === 'vendor' ? 'bg-blue-400 hover:bg-blue-500' : 'bg-orange-400 hover:bg-orange-500'">
                 <i class="fas fa-plus w-4 h-4"></i>
                 {{ $t('vendor.add_color') }}
               </button>
@@ -316,7 +316,7 @@
               <p class="text-gray-500 mb-4">{{ $t('vendor.add_color_variants_appealing') }}</p>
               <button type="button" @click="addNewColor" style="color: #ffffff;
   border-color: transparent;
-  box-shadow: 0 2px 4px 0 var(--theme-shadow);" class="vue-btn" :class="userRole === 'vendor' ? 'bg-blue-400 hover:bg-blue-500' : 'bg-orange-400 hover:bg-orange-500'">
+  box-shadow: 0 2px 4px 0 var(--theme-shadow);" class="vue-btn w-full justify-center sm:w-auto" :class="userRole === 'vendor' ? 'bg-blue-400 hover:bg-blue-500' : 'bg-orange-400 hover:bg-orange-500'">
                 <i class="fas fa-plus mr-2"></i>
                 {{ $t('vendor.add_first_color') }}
               </button>
@@ -347,14 +347,14 @@
 
           <!-- Specifications Tab -->
           <div v-show="activeTab === 'specifications'" class="vue-tab-content space-y-6">
-            <div class="flex items-center justify-between">
+            <div class="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
               <div>
                 <h3 class="vue-text-lg">{{ $t('vendor.product_specifications') }}</h3>
             <p class="text-sm text-gray-600">{{ $t('vendor.add_detailed_specifications') }}</p>
               </div>
               <button type="button" @click="addNewSpecification" style="color: #ffffff;
   border-color: transparent;
-  box-shadow: 0 2px 4px 0 var(--theme-shadow);" class="vue-btn" :class="userRole === 'vendor' ? 'bg-blue-400 hover:bg-blue-500' : 'bg-orange-400 hover:bg-orange-500'">
+  box-shadow: 0 2px 4px 0 var(--theme-shadow);" class="vue-btn w-full justify-center sm:w-auto" :class="userRole === 'vendor' ? 'bg-blue-400 hover:bg-blue-500' : 'bg-orange-400 hover:bg-orange-500'">
                 <i class="fas fa-plus w-4 h-4"></i>
                 {{ $t('vendor.add_specification') }}
               </button>
@@ -377,7 +377,7 @@
               <i class="fas fa-file-text text-gray-400 text-4xl mb-4"></i>
               <h3 class="text-lg font-medium text-gray-900 mb-2">{{ $t('vendor.no_specifications_added_yet') }}</h3>
               <p class="text-gray-500 mb-4">{{ $t('vendor.add_specifications_detailed_info') }}</p>
-              <button type="button" @click="addNewSpecification" class="vue-btn" style="color: #ffffff;
+              <button type="button" @click="addNewSpecification" class="vue-btn w-full justify-center sm:w-auto" style="color: #ffffff;
   border-color: transparent;
   box-shadow: 0 2px 4px 0 var(--theme-shadow);" :class="userRole === 'vendor' ? 'bg-blue-400 hover:bg-blue-500' : 'bg-orange-400 hover:bg-orange-500'">
                 <i class="fas fa-plus mr-2"></i>
@@ -389,24 +389,24 @@
 
         <!-- Tab Navigation Footer -->
         <div class="border-t border-gray-200 dark:border-gray-700 px-6 py-4">
-          <div class="flex justify-between">
+          <div class="flex flex-col gap-4 sm:flex-row sm:justify-between">
             <button
               v-if="activeTab !== 'basic'"
               type="button"
               @click="previousTab"
-              class="vue-btn vue-btn-secondary"
+              class="vue-btn vue-btn-secondary w-full justify-center sm:w-auto"
             >
               <i class="fas fa-arrow-left" :class="isRTL ? 'ml-2' : 'mr-2'"></i>
               {{ $t('vendor.previous') }}
             </button>
             <div v-else></div>
 
-            <div class="flex space-x-3">
+            <div class="flex flex-col gap-3 sm:flex-row sm:items-center sm:space-x-3">
               <button
                 v-if="activeTab !== 'specifications'"
                 type="button"
                 @click="nextTab"
-                class="vue-btn" style="color: #ffffff;
+                class="vue-btn w-full justify-center sm:w-auto" style="color: #ffffff;
   border-color: transparent;
   box-shadow: 0 2px 4px 0 var(--theme-shadow);" :class="userRole === 'vendor' ? 'bg-blue-400 hover:bg-blue-500' : 'bg-orange-400 hover:bg-orange-500'"
               >
@@ -418,7 +418,7 @@
                 type="button"
                 @click="saveProduct"
                 :disabled="saving"
-                class="vue-btn vue-btn-success"
+                class="vue-btn vue-btn-success w-full justify-center sm:w-auto"
               >
                 <i v-if="saving" class="fas fa-spinner fa-spin" :class="isRTL ? 'ml-2' : 'mr-2'"></i>
                 <i v-else class="fas fa-save" :class="isRTL ? 'ml-2' : 'mr-2'"></i>
@@ -432,7 +432,7 @@
 
     <!-- Success Modal -->
     <div v-if="showSuccessModal" class="fixed inset-0 bg-gray-600 bg-opacity-50 overflow-y-auto h-full w-full z-50">
-      <div class="relative top-20 mx-auto p-5 border w-96 shadow-lg rounded-md bg-white">
+      <div class="relative top-10 mx-auto w-11/12 max-w-sm rounded-md border bg-white p-5 shadow-lg sm:top-20">
         <div class="mt-3 text-center">
           <div class="mx-auto flex items-center justify-center h-12 w-12 rounded-full bg-green-100">
             <i class="fas fa-check text-green-600 text-xl"></i>
@@ -453,7 +453,7 @@
 
     <!-- Error Modal -->
     <div v-if="showErrorModal" class="fixed inset-0 bg-gray-600 bg-opacity-50 overflow-y-auto h-full w-full z-50">
-      <div class="relative top-20 mx-auto p-5 border w-96 shadow-lg rounded-md bg-white">
+      <div class="relative top-10 mx-auto w-11/12 max-w-sm rounded-md border bg-white p-5 shadow-lg sm:top-20">
         <div class="mt-3 text-center">
           <div class="mx-auto flex items-center justify-center h-12 w-12 rounded-full bg-red-100">
             <i class="fas fa-exclamation-triangle text-red-600 text-xl"></i>
