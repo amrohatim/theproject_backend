@@ -262,14 +262,13 @@
                         <i class="fas fa-warehouse absolute left-3 top-1/2 transform -translate-y-1/2 w-4 h-4" style="color: var(--gray-400);"></i>
                         <input type="text"
                                id="stock"
-                               v-model="productData.stock"
-                               class="vue-form-control pl-10"
+                               :value="totalAllocatedStock"
+                               class="vue-form-control pl-10 total-stock-readonly"
                                :class="{ 'border-red-500': errors.stock }"
-                               @input="e => productData.stock = e.target.value.replace(/[^0-9]/g, '')"
-                               @blur="e => productData.stock = parseInt(e.target.value) || 0"
                                pattern="[0-9]*"
                                inputmode="numeric"
                                min="0"
+                               readonly
                                required>
                       </div>
                       <p class="text-xs" style="color: var(--gray-500);">{{ $t('vendor.total_inventory_allocation_note') }}</p>
@@ -362,6 +361,7 @@
                 :is-default="color.is_default"
                 :product-id="productId"
                 :general-stock="productData.stock"
+                :enforce-general-stock="false"
                 :all-colors="productData.colors"
                 @update="updateColor"
                 @remove="removeColor"
@@ -554,13 +554,17 @@ export default {
     // Computed properties
     const totalAllocatedStock = computed(() => {
       return productData.colors.reduce((total, color) => {
-        // Sum up stock from all sizes within this color
-        const colorSizesStock = (color.sizes || []).reduce((colorTotal, size) => {
-          return colorTotal + (parseInt(size.stock) || 0)
-        }, 0)
-        return total + colorSizesStock
+        return total + (parseInt(color.stock) || 0)
       }, 0)
     })
+
+    watch(
+      () => productData.colors,
+      () => {
+        productData.stock = totalAllocatedStock.value
+      },
+      { deep: true, immediate: true }
+    )
 
     const stockProgressPercentage = computed(() => {
       if (!productData.stock || productData.stock === 0) return 0
@@ -1077,14 +1081,6 @@ export default {
       }
     }
 
-    // Watchers
-    watch(() => productData.stock, (newStock) => {
-      // Validate stock allocation when total stock changes
-      if (totalAllocatedStock.value > newStock) {
-        console.warn('Stock over-allocated')
-      }
-    })
-
     // Modal methods
     const closeSuccessModal = () => {
       showSuccessModal.value = false
@@ -1231,6 +1227,19 @@ export default {
 
 .vue-form-control::placeholder {
   color: #9ca3af;
+}
+
+.total-stock-readonly {
+  background-color: var(--gray-100);
+  color: var(--gray-600);
+  cursor: default;
+  caret-color: transparent;
+}
+
+.total-stock-readonly:focus {
+  outline: none;
+  border-color: #d1d5db;
+  box-shadow: none;
 }
 
 /* Modern buttons */

@@ -352,6 +352,10 @@ export default {
       type: Number,
       default: 0
     },
+    enforceGeneralStock: {
+      type: Boolean,
+      default: true
+    },
     allColors: {
       type: Array,
       default: () => []
@@ -409,6 +413,7 @@ export default {
       units: $t('units'),
       in_stock: $t('in_stock'),
       out_of_stock: $t('out_of_stock'),
+      stock_auto_corrected: $t('stock_auto_corrected'),
       display_order: $t('display_order'),
       lower_numbers_appear_first: $t('lower_numbers_appear_first'),
       product_image: $t('product_image'),
@@ -515,6 +520,11 @@ export default {
       return (parseInt(props.color.stock) || 0) > availableStock.value
     })
 
+    const sizesTotalStock = computed(() => {
+      const sizes = Array.isArray(props.color.sizes) ? props.color.sizes : []
+      return sizes.reduce((total, size) => total + (parseInt(size.stock) || 0), 0)
+    })
+
     // Computed property to determine when to show size management
     const shouldShowSizeManagement = computed(() => {
       // Show size management if:
@@ -534,16 +544,28 @@ export default {
       // Special handling for stock field with validation and auto-correction
       if (field === 'stock') {
         const stockValue = parseInt(value) || 0
+        const minAllowed = sizesTotalStock.value
         const maxAllowed = availableStock.value
+        const hasSizesAllocation = minAllowed > 0
 
-        if (stockValue > maxAllowed) {
+        if (hasSizesAllocation && stockValue < minAllowed) {
+          finalValue = minAllowed
+          showStockCorrectionFeedback(stockValue, minAllowed)
+          emit('stock-corrected', {
+            colorIndex: props.index,
+            attempted: stockValue,
+            corrected: minAllowed,
+            minimum: minAllowed
+          })
+        } else if (props.enforceGeneralStock && !hasSizesAllocation && stockValue > maxAllowed) {
           finalValue = maxAllowed
           showStockCorrectionFeedback(stockValue, maxAllowed)
           emit('stock-corrected', {
             colorIndex: props.index,
             attempted: stockValue,
             corrected: maxAllowed,
-            available: maxAllowed
+            available: maxAllowed,
+            minimum: minAllowed
           })
         } else {
           // Clear any previous correction message
@@ -774,6 +796,7 @@ export default {
       otherColorsStock,
       availableStock,
       isStockExceeded,
+      sizesTotalStock,
       shouldShowSizeManagement,
       stockCorrectionMessage,
       showStockCorrection,

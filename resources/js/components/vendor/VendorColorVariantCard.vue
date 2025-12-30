@@ -145,14 +145,14 @@
             <div class="space-y-2">
               <label class="block vue-text-sm">
                 {{ $t('vendor.stock') }}
-                <span v-if="isStockExceeded" :class="isRTL ? 'mr-1' : 'ml-1'" class="text-red-500 text-xs">
+                <span v-if="enforceGeneralStock && isStockExceeded" :class="isRTL ? 'mr-1' : 'ml-1'" class="text-red-500 text-xs">
                   {{ $t('vendor.exceeds_available') }} : {{ availableStock }}
                 </span>
               </label>
               <div class="relative">
                 <input type="number"
                        min="0"
-                       :max="availableStock"
+                       :max="enforceGeneralStock ? availableStock : null"
                        :value="color.stock"
                        @input="e => updateColor('stock', parseInt(e.target.value) || 0)"
                        @keypress="$event.key.match(/[0-9]/) === null && $event.preventDefault()"
@@ -172,7 +172,7 @@
                 </div>
               </div>
               <!-- Stock allocation info -->
-              <div class="text-xs text-gray-600 space-y-1">
+              <div v-if="enforceGeneralStock" class="text-xs text-gray-600 space-y-1">
                 <div class="flex justify-between">
                   <span>{{ $t('vendor.available_for_this_color') }}:</span>
                   <span class="font-medium">{{ availableStock }}</span>
@@ -183,7 +183,7 @@
                 </div>
               </div>
               <!-- Stock progress bar -->
-              <div v-if="generalStock > 0" class="w-full bg-gray-200 rounded-full h-2">
+              <div v-if="enforceGeneralStock && generalStock > 0" class="w-full bg-gray-200 rounded-full h-2">
                 <div class="bg-blue-600 h-2 rounded-full transition-all duration-300"
                      :style="{ width: Math.min((parseInt(color.stock) || 0) / availableStock * 100, 100) + '%' }"
                      :class="{ 'bg-red-600': isStockExceeded }"></div>
@@ -356,6 +356,10 @@ export default {
       type: Number,
       default: 0
     },
+    enforceGeneralStock: {
+      type: Boolean,
+      default: true
+    },
     productId: {
       type: [String, Number],
       default: null
@@ -481,11 +485,22 @@ export default {
     })
 
     const availableStock = computed(() => {
+      if (!props.enforceGeneralStock) {
+        return 0
+      }
       return Math.max(0, props.generalStock - otherColorsStock.value)
     })
 
     const isStockExceeded = computed(() => {
+      if (!props.enforceGeneralStock) {
+        return false
+      }
       return (parseInt(props.color.stock) || 0) > availableStock.value
+    })
+
+    const sizesTotalStock = computed(() => {
+      const sizes = Array.isArray(props.color.sizes) ? props.color.sizes : []
+      return sizes.reduce((total, size) => total + (parseInt(size.stock) || 0), 0)
     })
 
     // Computed property to determine when to show size management
@@ -569,9 +584,19 @@ export default {
       // Special handling for stock field with validation and auto-correction
       if (field === 'stock') {
         const stockValue = parseInt(value) || 0
+        const minAllowed = sizesTotalStock.value
         const maxAllowed = availableStock.value
 
-        if (stockValue > maxAllowed) {
+        if (minAllowed > 0 && stockValue < minAllowed) {
+          finalValue = minAllowed
+          showStockCorrectionFeedback(stockValue, minAllowed)
+          emit('stock-corrected', {
+            colorIndex: props.index,
+            attempted: stockValue,
+            corrected: minAllowed,
+            minimum: minAllowed
+          })
+        } else if (props.enforceGeneralStock && stockValue > maxAllowed) {
           finalValue = maxAllowed
           showStockCorrectionFeedback(stockValue, maxAllowed)
           emit('stock-corrected', {
@@ -721,6 +746,7 @@ export default {
       otherColorsStock,
       availableStock,
       isStockExceeded,
+      sizesTotalStock,
       shouldShowSizeManagement,
       isRTL,
       getColorCode,

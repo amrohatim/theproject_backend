@@ -596,6 +596,7 @@ export default {
           console.log('📋 Size details:', newSizes)
 
           sizes.value = newSizes
+          emit('sizes-updated', sizes.value)
         } else {
           console.error('API returned success=false:', response.data)
           throw new Error(response.data.message || 'API returned unsuccessful response')

@@ -210,14 +210,13 @@
                   </label>
                   <input type="text" 
                          id="stock" 
-                         v-model="productData.stock"
-                         class="vue-form-control"
+                         :value="totalAllocatedStock"
+                         class="vue-form-control total-stock-readonly"
                          :class="{ 'border-red-500': errors.stock }"
-                         @input="e => productData.stock = e.target.value.replace(/[^0-9]/g, '')"
-                         @blur="e => productData.stock = parseInt(e.target.value) || 0"
                          pattern="[0-9]*"
                          inputmode="numeric"
                          min="0"
+                         readonly
                          required>
                   <p v-if="errors.stock" class="text-red-500 text-sm">{{ errors.stock }}</p>
                 </div>
@@ -257,6 +256,7 @@
               :is-default="color.is_default"
               :product-id="'new'"
               :general-stock="productData.stock"
+              :enforce-general-stock="false"
               :all-colors="productData.colors"
               @update="updateColor"
               @remove="removeColor"
@@ -421,7 +421,7 @@
 </template>
 
 <script>
-import { ref, reactive, computed, onMounted } from 'vue'
+import { ref, reactive, computed, onMounted, watch } from 'vue'
 import ColorVariantCard from './ColorVariantCard.vue'
 import SpecificationItem from './SpecificationItem.vue'
 import LanguageSwitch from '../common/LanguageSwitch.vue'
@@ -493,6 +493,14 @@ export default {
         return total + (parseInt(color.stock) || 0)
       }, 0)
     })
+
+    watch(
+      () => productData.colors,
+      () => {
+        productData.stock = totalAllocatedStock.value
+      },
+      { deep: true, immediate: true }
+    )
 
     const stockProgressPercentage = computed(() => {
       if (productData.stock === 0) return 0
@@ -970,6 +978,19 @@ export default {
 .rtl .ml-4 {
   margin-left: 0;
   margin-right: 1rem;
+}
+
+.total-stock-readonly {
+  background-color: var(--gray-100);
+  color: var(--gray-600);
+  cursor: default;
+  caret-color: transparent;
+}
+
+.total-stock-readonly:focus {
+  outline: none;
+  border-color: var(--gray-300);
+  box-shadow: none;
 }
 
 .rtl .mr-4 {

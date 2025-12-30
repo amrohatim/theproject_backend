@@ -208,14 +208,13 @@
                 </label>
                 <input
                   type="text" 
-                  v-model="productData.stock"
-                  class="vue-form-control"
+                  :value="totalAllocatedStock"
+                  class="vue-form-control total-stock-readonly"
                   placeholder="0"
                   required
-                  @input="e => productData.stock = e.target.value.replace(/[^0-9]/g, '')"
-                  @blur="e => productData.stock = parseInt(e.target.value) || 0"
                   pattern="[0-9]*"
                   inputmode="numeric"
+                  readonly
                 />
                 <p class="mt-1 text-xs text-gray-500">{{ $t('vendor.total_stock_quantity_available') }}</p>
                 <div v-if="errors.stock" class="text-red-500 text-sm mt-1">{{ errors.stock }}</div>
@@ -289,18 +288,19 @@
 
             <!-- Colors List -->
             <div v-if="productData.colors.length > 0" class="space-y-4">
-              <VendorColorVariantCard
-                v-for="(color, index) in productData.colors"
-                :key="index"
-                :color="color"
-                :index="index"
-                :is-default="color.is_default"
-                :product-id="'new'"
-                :general-stock="productData.stock"
-                :all-colors="productData.colors"
-                :errors="errors"
-                :user-role="userRole"
-                @update="updateColor"
+                <VendorColorVariantCard
+                  v-for="(color, index) in productData.colors"
+                  :key="index"
+                  :color="color"
+                  :index="index"
+                  :is-default="color.is_default"
+                  :product-id="'new'"
+                  :general-stock="productData.stock"
+                  :enforce-general-stock="false"
+                  :all-colors="productData.colors"
+                  :errors="errors"
+                  :user-role="userRole"
+                  @update="updateColor"
                 @remove="removeColor"
                 @set-default="setDefaultColor"
                 @image-upload="handleImageUpload"
@@ -588,6 +588,14 @@ export default {
         return total + (parseInt(color.stock) || 0)
       }, 0)
     })
+
+    watch(
+      () => productData.colors,
+      () => {
+        productData.stock = totalAllocatedStock.value
+      },
+      { deep: true, immediate: true }
+    )
 
     const stockProgressPercentage = computed(() => {
       if (productData.stock === 0) return 0
@@ -1004,14 +1012,6 @@ export default {
       console.log('Stock corrected:', data)
     }
 
-    // Watchers
-    watch(() => productData.stock, (newStock) => {
-      // Validate stock allocation when total stock changes
-      if (totalAllocatedStock.value > newStock) {
-        console.warn('Stock over-allocated')
-      }
-    })
-
     // Modal methods
     const closeSuccessModal = () => {
       showSuccessModal.value = false
@@ -1165,6 +1165,19 @@ export default {
   outline: none;
   border-color: var(--theme-primary);
   box-shadow: 0 0 0 3px var(--theme-ring);
+}
+
+.total-stock-readonly {
+  background-color: var(--gray-100);
+  color: var(--gray-600);
+  cursor: default;
+  caret-color: transparent;
+}
+
+.total-stock-readonly:focus {
+  outline: none;
+  border-color: #d1d5db;
+  box-shadow: none;
 }
 
 .vue-btn {

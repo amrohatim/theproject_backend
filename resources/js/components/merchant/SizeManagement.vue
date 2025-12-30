@@ -535,6 +535,7 @@ export default {
           console.log('📋 Regular fetchSizes - Size details:', newSizes)
 
           sizes.value = newSizes
+          emit('sizes-updated', sizes.value)
 
           // Update color info if available
           if (response.data.color) {
@@ -637,6 +638,7 @@ export default {
           console.log('📋 Size details:', newSizes)
 
           sizes.value = newSizes
+          emit('sizes-updated', sizes.value)
 
           // Update color info if available
           if (response.data.color) {
