@@ -1,6 +1,12 @@
 {{-- Products Table Partial for AJAX responses --}}
 @if($products->count() > 0)
-<div class="overflow-x-auto -mx-4 sm:mx-0">
+<div class="block md:hidden space-y-4 px-4 py-4">
+    @foreach($products as $product)
+        <x-mobile-product-card :product="$product" />
+    @endforeach
+</div>
+
+<div class="hidden md:block overflow-x-auto">
     <div class="inline-block min-w-full align-middle">
         <table class="min-w-full divide-y divide-gray-200">
         <thead class="bg-gray-50">

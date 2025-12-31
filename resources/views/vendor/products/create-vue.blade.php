@@ -8,8 +8,7 @@
     /* Vue.js specific styles with modern UI improvements */
     .vue-app-container {
         min-height: 100vh;
-        background: linear-gradient(135deg, #f5f7fa 0%, #f0f2f5 100%);
-        padding: 2rem 0;
+        background: linear-gradient(135deg, #f5f7fa 0%, #f5f0f4ff 100%);
     }
 
     /* Loading spinner styles - Enhanced */
@@ -242,8 +241,15 @@
 
     /* Responsive adjustments */
     @media (max-width: 768px) {
+        .flex-1.overflow-auto.p-4 {
+            padding-left: 0;
+            padding-right: 0;
+        }
+
         .vue-app-container {
-            padding: 1rem;
+            padding: 0;
+            margin: 0;
+            width: 100%;
         }
 
         .vue-btn {

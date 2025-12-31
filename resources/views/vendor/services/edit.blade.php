@@ -309,11 +309,24 @@
         background-color: #4b5563;
         color: #f9fafb;
     }
+
+    /* Keep language switcher visible and tappable on mobile */
+    @media (max-width: 768px) {
+        .vendor-services-form .form-language-switcher .language-name {
+            display: inline;
+            font-size: 0.8rem;
+        }
+
+        .vendor-services-form .form-language-switcher .language-tab {
+            padding: 0.625rem 0.875rem;
+            min-height: 2.5rem;
+        }
+    }
 </style>
 @endsection
 
 @section('content')
-<div class="container mx-auto">
+<div class="container mx-auto vendor-services-form">
     <div class="mb-6">
         <div class="flex items-center justify-between">
             <div>

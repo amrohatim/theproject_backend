@@ -241,6 +241,14 @@
     .color-item[style*="--tw-ring-color"] {
         --tw-ring-color: var(--pm-orange) !important;
     }
+
+    /* Mobile adjustments for Products Manager create */
+    @media (max-width: 768px) {
+        .products-manager-theme {
+            padding-left: 0;
+            padding-right: 0;
+        }
+    }
 </style>
 
 <div class="products-manager-theme">
@@ -275,13 +283,13 @@
     @else
         <!-- Page Header -->
         <div class="mb-6">
-            <div class="flex items-center justify-between">
+            <div class="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
                 <div>
                     <h1 class="text-2xl font-semibold text-gray-900 dark:text-white">Create Product</h1>
                     <p class="text-gray-600 dark:text-gray-400">Add a new product to your inventory</p>
                 </div>
                 <a href="{{ route('products-manager.products.index') }}" 
-                   class="inline-flex items-center px-4 py-2 bg-gray-500 hover:bg-gray-600 text-white rounded-md transition-colors ajax-nav">
+                   class="inline-flex w-full items-center justify-center px-4 py-2 bg-gray-500 hover:bg-gray-600 text-white rounded-md transition-colors ajax-nav sm:w-auto">
                     <i class="fas fa-arrow-left mr-2"></i>
                     Back to Products
                 </a>

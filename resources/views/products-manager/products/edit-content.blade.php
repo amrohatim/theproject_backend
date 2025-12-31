@@ -1,4 +1,14 @@
 {{-- Products Manager Products Edit Content - For AJAX Loading --}}
+<style>
+    /* Mobile adjustments for Products Manager edit */
+    @media (max-width: 768px) {
+        .products-manager-theme {
+            padding-left: 0;
+            padding-right: 0;
+        }
+    }
+</style>
+
 <div class="products-manager-theme">
     @if(isset($error))
         <!-- Error Message -->
@@ -9,7 +19,7 @@
             <h3 class="text-lg font-medium text-gray-900 dark:text-white mb-2">Access Denied</h3>
             <p class="text-gray-500 dark:text-gray-400 mb-6">{{ $error }}</p>
             <a href="{{ route('products-manager.products.index') }}" 
-               class="inline-flex items-center px-4 py-2 bg-orange-500 hover:bg-orange-600 text-white rounded-md transition-colors ajax-nav">
+               class="inline-flex w-full items-center justify-center px-4 py-2 bg-orange-500 hover:bg-orange-600 text-white rounded-md transition-colors ajax-nav sm:w-auto">
                 <i class="fas fa-arrow-left mr-2"></i>
                 Back to Products
             </a>

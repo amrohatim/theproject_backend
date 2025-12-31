@@ -39,6 +39,9 @@
             <p class="mt-1 text-gray-600 dark:text-gray-400">{{ $booking->created_at ? $booking->created_at->format('F d, Y h:i A') : 'N/A' }}</p>
         </div>
         <div class="mt-4 md:mt-0 flex space-x-2">
+            <a href="{{ route('service-provider.bookings.edit', $booking) }}" class="inline-flex items-center px-4 py-2 bg-[#53D2DC] border border-transparent rounded-md font-semibold text-xs text-white uppercase tracking-widest hover:opacity-90 active:opacity-80 focus:outline-none focus:ring ring-[#53D2DC]/30 disabled:opacity-25 transition ease-in-out duration-150">
+                <i class="fas fa-edit mr-2"></i> {{ __('messages.edit_booking') }}
+            </a>
             <a href="{{ route('service-provider.bookings.invoice', $booking) }}" class="inline-flex items-center px-4 py-2 border border-[#53D2DC] text-[#53D2DC] rounded-md font-semibold text-xs uppercase tracking-widest hover:bg-[#53D2DC] hover:text-white transition">
                 <i class="fas fa-file-invoice mr-2"></i> {{ __('messages.invoice') }}
             </a>

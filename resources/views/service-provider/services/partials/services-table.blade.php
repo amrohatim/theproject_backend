@@ -1,6 +1,18 @@
 @if($services->count())
-    <div class="overflow-x-auto">
-        <table class="min-w-full divide-y divide-gray-200 dark:divide-gray-700">
+    <div class="block md:hidden space-y-4 px-4 py-4">
+        @foreach($services as $service)
+            <x-mobile-product-card
+                :product="$service"
+                :edit-url="route('service-provider.services.edit', $service)"
+                :delete-url="route('service-provider.services.destroy', $service)"
+                :delete-confirm="__('service_provider.confirm_delete_service')"
+                edit-button-class="bg-[#53d2dc] hover:bg-[#46c1cb]"
+            />
+        @endforeach
+    </div>
+
+    <div class="hidden md:block overflow-x-auto">
+        <table class="sp-responsive-table min-w-full divide-y divide-gray-200 dark:divide-gray-700">
             <thead class="bg-gray-50 dark:bg-gray-700/50">
                 <tr>
                     <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">{{ __('service_provider.service') }}</th>
@@ -15,7 +27,7 @@
             <tbody class="bg-white dark:bg-gray-800 divide-y divide-gray-200 dark:divide-gray-700">
                 @foreach($services as $service)
                     <tr class="hover:bg-gray-50 dark:hover:bg-gray-700/50 transition-colors">
-                        <td class="px-4 py-3">
+                        <td class="px-4 py-3" data-label="{{ __('service_provider.service') }}">
                             <div class="flex items-center">
                                 @if($service->image)
                                     <img src="{{ $service->image }}" alt="{{ $service->name }}" class="h-10 w-10 rounded-lg object-cover mr-3">
@@ -32,19 +44,19 @@
                                 </div>
                             </div>
                         </td>
-                        <td class="px-4 py-3 text-sm text-gray-700 dark:text-gray-300">
+                        <td class="px-4 py-3 text-sm text-gray-700 dark:text-gray-300" data-label="{{ __('service_provider.branch') }}">
                             {{ $service->branch->name ?? '-' }}
                         </td>
-                        <td class="px-4 py-3 text-sm text-gray-700 dark:text-gray-300">
+                        <td class="px-4 py-3 text-sm text-gray-700 dark:text-gray-300" data-label="{{ __('service_provider.category') }}">
                             {{ $service->category->name ?? '-' }}
                         </td>
-                        <td class="px-4 py-3 text-sm font-medium text-gray-900 dark:text-white">
+                        <td class="px-4 py-3 text-sm font-medium text-gray-900 dark:text-white" data-label="{{ __('service_provider.price') }}">
                             ${{ number_format($service->price, 2) }}
                         </td>
-                        <td class="px-4 py-3 text-sm text-gray-700 dark:text-gray-300">
+                        <td class="px-4 py-3 text-sm text-gray-700 dark:text-gray-300" data-label="{{ __('service_provider.duration') }}">
                             {{ $service->duration }} min
                         </td>
-                        <td class="px-4 py-3">
+                        <td class="px-4 py-3" data-label="{{ __('service_provider.status') }}">
                             @if($service->is_available)
                                 <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-200">
                                     <i class="fas fa-check-circle mr-1"></i>
@@ -57,7 +69,7 @@
                                 </span>
                             @endif
                         </td>
-                        <td class="px-4 py-3 text-right">
+                        <td class="px-4 py-3 text-right" data-label="{{ __('service_provider.actions') }}">
                             <div class="flex items-center justify-end space-x-2">
                                 <a href="{{ route('service-provider.services.show', $service) }}"
                                    class="inline-flex items-center px-2 py-1 text-xs font-medium text-[#53D2DC] hover:text-[#53D2DC]/80 hover:bg-[#53D2DC]/10 rounded transition-colors">

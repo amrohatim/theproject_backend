@@ -207,6 +207,18 @@
     .dark input[type="time"] {
         background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 20 20'%3e%3cpath stroke='%239ca3af' stroke-linecap='round' stroke-linejoin='round' stroke-width='1.5' d='M10 6v4l3 3m5-3a8 8 0 11-16 0 8 8 0 0116 0z'/%3e%3c/svg%3e");
     }
+
+    @media (max-width: 768px) {
+        .service-provider-services-form .form-language-switcher .language-name {
+            display: inline;
+            font-size: 0.8rem;
+        }
+
+        .service-provider-services-form .form-language-switcher .language-tab {
+            padding: 0.625rem 0.875rem;
+            min-height: 2.5rem;
+        }
+    }
     /* Time picker overlay styles */
     .time-picker-overlay {
         position: fixed;
@@ -313,7 +325,7 @@
 @endsection
 
 @section('content')
-<div class="container mx-auto">
+<div class="container mx-auto service-provider-services-form">
     <div class="mb-6">
         <div class="flex items-center justify-between">
             <div>

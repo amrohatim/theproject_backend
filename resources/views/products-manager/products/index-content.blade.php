@@ -1,14 +1,14 @@
-{{-- Products Manager Products Index Content - For AJAX Loading --}}
-<div class="products-manager-theme">
+{{-- Products Manager Products Index Content - For AJAX Loading
+<div class="products-manager-theme px-0 sm:px-0 md:px-6 lg:px-8">
     <!-- Page Header -->
     <div class="mb-6">
-        <div class="flex items-center justify-between">
+        <div class="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
             <div>
                 <h1 class="text-2xl font-semibold text-gray-900 dark:text-white">{{ __('products_manager.products_title') }}</h1>
                 <p class="text-gray-600 dark:text-gray-400">{{ __('products_manager.manage_products_description') }}</p>
             </div>
             <a href="{{ route('products-manager.products.create') }}"
-               class="inline-flex items-center px-4 py-2 bg-orange-500 hover:bg-orange-600 text-white rounded-md transition-colors ajax-nav">
+               class="inline-flex w-full items-center justify-center px-4 py-2 bg-orange-500 hover:bg-orange-600 text-white rounded-md transition-colors ajax-nav sm:w-auto">
                 <i class="fas fa-plus mr-2"></i>
                 {{ __('products_manager.add_product') }}
             </a>
@@ -59,7 +59,7 @@
                 </select>
             </div>
             <div class="flex items-end">
-                <button type="submit" class="inline-flex items-center px-4 py-2 bg-orange-500 hover:bg-orange-600 text-white rounded-md transition-colors">
+                <button type="submit" class="inline-flex w-full items-center justify-center px-4 py-2 bg-orange-500 hover:bg-orange-600 text-white rounded-md transition-colors sm:w-auto">
                     <i class="fas fa-filter mr-2"></i>
                     {{ __('products_manager.filter') }}
                 </button>
@@ -71,7 +71,7 @@
     <div class="bg-white dark:bg-gray-800 rounded-lg shadow border border-gray-200 dark:border-gray-700">
         @if(($products ?? collect())->count() > 0)
             <div class="overflow-x-auto">
-                <table class="min-w-full divide-y divide-gray-200 dark:divide-gray-700">
+                <table class="pm-responsive-table min-w-full divide-y divide-gray-200 dark:divide-gray-700">
                     <thead class="bg-gray-50 dark:bg-gray-700/50">
                         <tr>
                             <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">
@@ -100,7 +100,7 @@
                     <tbody class="bg-white dark:bg-gray-800 divide-y divide-gray-200 dark:divide-gray-700">
                         @foreach($products as $product)
                             <tr class="hover:bg-gray-50 dark:hover:bg-gray-700/50">
-                                <td class="px-6 py-4 whitespace-nowrap">
+                                <td class="px-6 py-4 md:whitespace-nowrap" data-label="{{ __('products_manager.product') }}">
                                     <div class="flex items-center">
                                         @if($product->image)
                                             <img class="h-10 w-10 rounded-lg object-cover mr-3" src="{{ $product->image }}" alt="{{ $product->name }}">
@@ -117,19 +117,19 @@
                                         </div>
                                     </div>
                                 </td>
-                                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900 dark:text-white">
+                                <td class="px-6 py-4 md:whitespace-nowrap text-sm text-gray-900 dark:text-white" data-label="{{ __('products_manager.category') }}">
                                     {{ $product->category->name ?? 'No Category' }}
                                 </td>
-                                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900 dark:text-white">
+                                <td class="px-6 py-4 md:whitespace-nowrap text-sm text-gray-900 dark:text-white" data-label="{{ __('products_manager.branch') }}">
                                     {{ $product->branch->name ?? 'No Branch' }}
                                 </td>
-                                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900 dark:text-white">
+                                <td class="px-6 py-4 md:whitespace-nowrap text-sm text-gray-900 dark:text-white" data-label="{{ __('products_manager.price') }}">
                                     ${{ number_format($product->price, 2) }}
                                     @if($product->original_price && $product->original_price > $product->price)
                                         <span class="text-xs text-gray-500 line-through ml-1">${{ number_format($product->original_price, 2) }}</span>
                                     @endif
                                 </td>
-                                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900 dark:text-white">
+                                <td class="px-6 py-4 md:whitespace-nowrap text-sm text-gray-900 dark:text-white" data-label="{{ __('products_manager.stock') }}">
                                     <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium
                                         @if($product->stock > 10) bg-orange-100 text-orange-800 dark:bg-orange-900 dark:text-orange-200
                                         @elseif($product->stock > 0) bg-orange-200 text-orange-900 dark:bg-orange-800 dark:text-orange-100
@@ -137,7 +137,7 @@
                                         {{ $product->stock }}
                                     </span>
                                 </td>
-                                <td class="px-6 py-4 whitespace-nowrap">
+                                <td class="px-6 py-4 md:whitespace-nowrap" data-label="{{ __('products_manager.status') }}">
                                     @if($product->is_available)
                                         <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-200">
                                             {{ __('products_manager.active') }}
@@ -148,12 +148,8 @@
                                         </span>
                                     @endif
                                 </td>
-                                <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
+                                <td class="px-6 py-4 md:whitespace-nowrap text-right text-sm font-medium" data-label="{{ __('products_manager.actions') }}">
                                     <div class="flex items-center justify-end space-x-2">
-                                        <a href="{{ route('products-manager.products.show', $product) }}" 
-                                           class="text-orange-600 hover:text-orange-900 dark:text-orange-400 dark:hover:text-orange-300 ajax-nav">
-                                            <i class="fas fa-eye"></i>
-                                        </a>
                                         <a href="{{ route('products-manager.products.edit', $product) }}" 
                                            class="text-orange-600 hover:text-orange-900 dark:text-orange-400 dark:hover:text-orange-300 ajax-nav">
                                             <i class="fas fa-edit"></i>
@@ -233,4 +229,4 @@ document.getElementById('products-filter-form').addEventListener('submit', funct
         window.location.href = url;
     }
 });
-</script>
+</script> --}}

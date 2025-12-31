@@ -3,6 +3,92 @@
 @section('title', __('service_provider.services'))
 @section('page-title', __('service_provider.services'))
 
+@section('styles')
+<style>
+    .sp-filter-input {
+        border-width: 2px;
+        border-color: #d1d5db;
+        background-color: #ffffff;
+        padding: 0.75rem 1rem;
+        transition: border-color 0.2s ease, box-shadow 0.2s ease;
+    }
+
+    .dark .sp-filter-input {
+        border-color: #4b5563;
+        background-color: #374151;
+    }
+
+    .sp-filter-input:hover {
+        border-color: #9ca3af;
+    }
+
+    .dark .sp-filter-input:hover {
+        border-color: #6b7280;
+    }
+
+    .sp-filter-input:focus {
+        border-color: #53D2DC;
+        box-shadow: 0 0 0 3px rgba(83, 210, 220, 0.2);
+        outline: none;
+    }
+
+    @media (max-width: 768px) {
+        .sp-responsive-table thead {
+            display: none;
+        }
+
+        .sp-responsive-table,
+        .sp-responsive-table tbody,
+        .sp-responsive-table tr,
+        .sp-responsive-table td {
+            display: block;
+            width: 100%;
+        }
+
+        .sp-responsive-table tbody tr {
+            margin-bottom: 1rem;
+            border: 1px solid #53D2DC !important;
+            border-radius: 0.375rem !important;
+            overflow: hidden;
+            background-color: #ffffff;
+            box-shadow: 0 1px 2px rgba(15, 23, 42, 0.06);
+        }
+
+        .dark .sp-responsive-table tbody tr {
+            background-color: #1f2937;
+            border-color: #53D2DC !important;
+        }
+
+        .sp-responsive-table td {
+            position: relative;
+            padding: 0.75rem 1rem 0.75rem 9.5rem;
+            text-align: left;
+            white-space: normal;
+        }
+
+        .sp-responsive-table td::before {
+            content: attr(data-label);
+            position: absolute;
+            left: 1rem;
+            top: 0.75rem;
+            font-size: 0.7rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.04em;
+            color: #6b7280;
+        }
+
+        .dark .sp-responsive-table td::before {
+            color: #9ca3af;
+        }
+
+        .sp-responsive-table td:last-child {
+            text-align: left;
+        }
+    }
+</style>
+@endsection
+
 @section('content')
 <div class="container mx-auto">
     <!-- Filters Section -->
@@ -37,7 +123,7 @@
                                id="searchInput"
                                value="{{ request('search') }}"
                                placeholder="{{ __('service_provider.search_placeholder') }}"
-                               class="w-full rounded-md border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-white focus:ring-2 focus:ring-[#53D2DC] focus:border-[#53D2DC] transition-colors" />
+                               class="sp-filter-input w-full rounded-md dark:text-white" />
                     </div>
                     <div>
                         <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
@@ -46,7 +132,7 @@
                         </label>
                         <select name="sort_by"
                                 id="sortBy"
-                                class="w-full rounded-md border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-white focus:ring-2 focus:ring-[#53D2DC] focus:border-[#53D2DC]">
+                                class="sp-filter-input w-full rounded-md dark:text-white">
                             <option value="name" @selected(request('sort_by') == 'name')>{{ __('service_provider.sort_name_az') }}</option>
                             <option value="price_low" @selected(request('sort_by') == 'price_low')>{{ __('service_provider.sort_price_low_high') }}</option>
                             <option value="price_high" @selected(request('sort_by') == 'price_high')>{{ __('service_provider.sort_price_high_low') }}</option>
@@ -66,7 +152,7 @@
                         </label>
                         <select name="branch_id"
                                 id="branchFilter"
-                                class="w-full rounded-md border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-white focus:ring-2 focus:ring-[#53D2DC] focus:border-[#53D2DC]">
+                                class="sp-filter-input w-full rounded-md dark:text-white">
                             <option value="">{{ __('service_provider.all_branches') }}</option>
                             @foreach(($branches ?? []) as $branch)
                                 <option value="{{ $branch->id }}" @selected(request('branch_id') == $branch->id)>{{ $branch->name }}</option>
@@ -80,7 +166,7 @@
                         </label>
                         <select name="category_id"
                                 id="categoryFilter"
-                                class="w-full rounded-md border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-white focus:ring-2 focus:ring-[#53D2DC] focus:border-[#53D2DC]">
+                                class="sp-filter-input w-full rounded-md dark:text-white">
                             <option value="">{{ __('service_provider.all_categories') }}</option>
                             @foreach(($categories ?? []) as $category)
                                 <option value="{{ $category->id }}" @selected(request('category_id') == $category->id)>{{ $category->name }}</option>
@@ -94,7 +180,7 @@
                         </label>
                         <select name="status"
                                 id="statusFilter"
-                                class="w-full rounded-md border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-white focus:ring-2 focus:ring-[#53D2DC] focus:border-[#53D2DC]">
+                                class="sp-filter-input w-full rounded-md dark:text-white">
                             <option value="">{{ __('service_provider.all_status') }}</option>
                             <option value="available" @selected(request('status') == 'available')>{{ __('service_provider.available') }}</option>
                             <option value="unavailable" @selected(request('status') == 'unavailable')>{{ __('service_provider.unavailable') }}</option>
@@ -113,7 +199,7 @@
                                    placeholder="{{ __('service_provider.min') }}"
                                    min="0"
                                    step="0.01"
-                                   class="w-full rounded-md border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-white focus:ring-2 focus:ring-[#53D2DC] focus:border-[#53D2DC] text-sm" />
+                                   class="sp-filter-input w-full rounded-md text-sm dark:text-white" />
                             <input type="number"
                                    name="max_price"
                                    id="maxPrice"
@@ -121,7 +207,7 @@
                                    placeholder="{{ __('service_provider.max') }}"
                                    min="0"
                                    step="0.01"
-                                   class="w-full rounded-md border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-white focus:ring-2 focus:ring-[#53D2DC] focus:border-[#53D2DC] text-sm" />
+                                   class="sp-filter-input w-full rounded-md text-sm dark:text-white" />
                         </div>
                     </div>
                 </div>

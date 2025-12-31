@@ -172,8 +172,15 @@
 
     /* Responsive adjustments */
     @media (max-width: 768px) {
+        .flex-1.overflow-auto.p-4 {
+            padding-left: 0;
+            padding-right: 0;
+        }
+
         .vue-app-container {
-            padding: 1rem;
+            padding: 0;
+            margin: 0;
+            width: 100%;
         }
     }
 </style>

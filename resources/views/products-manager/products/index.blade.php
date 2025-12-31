@@ -4,14 +4,14 @@
 @section('page-title', __('products_manager.products_title'))
 
 @section('content')
-<div class="container mx-auto">
-    <div class="mb-6 flex flex-col md:flex-row md:items-center md:justify-between">
+<div class="container mx-auto px-0 sm:px-0 md:px-6 lg:px-8">
+    <div class="mb-6 px-4 sm:px-4 flex flex-col gap-3 md:flex-row md:items-center md:justify-between">
         <div>
             <h2 class="text-2xl font-bold text-gray-800 dark:text-white">{{ __('products_manager.products_title') }}</h2>
             <p class="mt-1 text-gray-600 dark:text-gray-400">{{ __('products_manager.manage_products_description') }}</p>
         </div>
         <div class="mt-4 md:mt-0">
-            <a href="{{ route('products-manager.products.create') }}" class="inline-flex items-center px-4 py-2 bg-orange-500 border border-transparent rounded-md font-semibold text-xs text-white uppercase tracking-widest hover:bg-orange-600 active:bg-orange-700 focus:outline-none focus:border-orange-700 focus:ring ring-orange-300 disabled:opacity-25 transition ease-in-out duration-150">
+            <a href="{{ route('products-manager.products.create') }}" class="inline-flex w-full items-center justify-center px-4 py-2 bg-orange-500 border border-transparent rounded-md font-semibold text-xs text-white uppercase tracking-widest hover:bg-orange-600 active:bg-orange-700 focus:outline-none focus:border-orange-700 focus:ring ring-orange-300 disabled:opacity-25 transition ease-in-out duration-150 md:w-auto">
                 <i class="fas fa-plus mr-2"></i> {{ __('products_manager.add_product') }}
             </a>
         </div>
@@ -64,7 +64,7 @@
             </div>
 
             <div class="flex justify-end">
-                <button type="submit" class="inline-flex items-center px-4 py-2 bg-orange-500 border border-transparent rounded-md font-semibold text-xs text-white uppercase tracking-widest hover:bg-orange-600 active:bg-orange-700 focus:outline-none focus:border-orange-700 focus:ring ring-orange-300 disabled:opacity-25 transition ease-in-out duration-150">
+                <button type="submit" class="inline-flex w-full items-center justify-center px-4 py-2 bg-orange-500 border border-transparent rounded-md font-semibold text-xs text-white uppercase tracking-widest hover:bg-orange-600 active:bg-orange-700 focus:outline-none focus:border-orange-700 focus:ring ring-orange-300 disabled:opacity-25 transition ease-in-out duration-150 sm:w-auto">
                     <i class="fas fa-filter mr-2"></i> {{ __('products_manager.filter') }}
                 </button>
             </div>
@@ -74,8 +74,19 @@
     <!-- Products List -->
     <div class="bg-white dark:bg-gray-800 rounded-lg shadow border border-gray-200 dark:border-gray-700">
         @if(($products ?? collect())->count())
-            <div class="overflow-x-auto">
-                <table class="min-w-full divide-y divide-gray-200 dark:divide-gray-700">
+            <div class="block md:hidden space-y-4 px-4 py-4">
+                @foreach($products as $product)
+                    <x-mobile-product-card
+                        :product="$product"
+                        :edit-url="route('products-manager.products.edit', $product)"
+                        :delete-url="route('products-manager.products.destroy', $product)"
+                        :delete-confirm="__('products_manager.confirm_delete_product')"
+                    />
+                @endforeach
+            </div>
+
+            <div class="hidden md:block overflow-x-auto">
+                <table class="pm-responsive-table min-w-full divide-y divide-gray-200 dark:divide-gray-700">
                     <thead class="bg-gray-50 dark:bg-gray-700/50">
                         <tr>
                             <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">{{ __('products_manager.product') }}</th>
@@ -90,7 +101,7 @@
                     <tbody class="bg-white dark:bg-gray-800 divide-y divide-gray-200 dark:divide-gray-700">
                         @foreach($products as $product)
                             <tr class="hover:bg-gray-50 dark:hover:bg-gray-700/50">
-                                <td class="px-6 py-4 whitespace-nowrap">
+                                <td class="px-6 py-4 md:whitespace-nowrap" data-label="{{ __('products_manager.product') }}">
                                     <div class="flex items-center">
                                         <div class="flex-shrink-0 h-10 w-10">
                                             @if($product->colors->first() && $product->colors->first()->image)
@@ -107,10 +118,10 @@
                                         </div>
                                     </div>
                                 </td>
-                                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900 dark:text-white">{{ $product->category->name ?? '-' }}</td>
-                                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900 dark:text-white">{{ $product->branch->name ?? '-' }}</td>
-                                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900 dark:text-white">${{ number_format($product->price, 2) }}</td>
-                                <td class="px-6 py-4 whitespace-nowrap">
+                                <td class="px-6 py-4 md:whitespace-nowrap text-sm text-gray-900 dark:text-white" data-label="{{ __('products_manager.category') }}">{{ $product->category->name ?? '-' }}</td>
+                                <td class="px-6 py-4 md:whitespace-nowrap text-sm text-gray-900 dark:text-white" data-label="{{ __('products_manager.branch') }}">{{ $product->branch->name ?? '-' }}</td>
+                                <td class="px-6 py-4 md:whitespace-nowrap text-sm text-gray-900 dark:text-white" data-label="{{ __('products_manager.price') }}">${{ number_format($product->price, 2) }}</td>
+                                <td class="px-6 py-4 md:whitespace-nowrap" data-label="{{ __('products_manager.stock') }}">
                                     @if($product->stock <= 0)
                                         <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-red-100 text-red-800 dark:bg-red-900 dark:text-red-200">
                                             {{ __('products_manager.out_of_stock') }}
@@ -125,8 +136,8 @@
                                         </span>
                                     @endif
                                 </td>
-                                <td class="px-6 py-4 whitespace-nowrap">
-                                    @if($product->is_active)
+                                <td class="px-6 py-4 md:whitespace-nowrap" data-label="{{ __('products_manager.status') }}">
+                                    @if($product->is_available)
                                         <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-200">
                                             {{ __('products_manager.active') }}
                                         </span>
@@ -136,11 +147,8 @@
                                         </span>
                                     @endif
                                 </td>
-                                <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
+                                <td class="px-6 py-4 md:whitespace-nowrap text-right text-sm font-medium" data-label="{{ __('products_manager.actions') }}">
                                     <div class="flex items-center justify-end space-x-2">
-                                        <a href="{{ route('products-manager.products.show', $product) }}" class="text-orange-600 hover:text-orange-900 dark:text-orange-400 dark:hover:text-orange-300">
-                                            <i class="fas fa-eye"></i>
-                                        </a>
                                         <a href="{{ route('products-manager.products.edit', $product) }}" class="text-orange-600 hover:text-orange-900 dark:text-orange-400 dark:hover:text-orange-300">
                                             <i class="fas fa-edit"></i>
                                         </a>

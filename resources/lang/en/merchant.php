@@ -47,6 +47,8 @@ return [
     'status' => 'Status',
     'available' => 'Available',
     'unavailable' => 'Unavailable',
+    'available_stock' => 'available stock',
+    'date_created' => 'Date created',
     'no_products' => 'No products',
     'get_started_first_product' => 'Get started by creating your first product.',
     'add_your_first_product' => 'Add Your First Product',

@@ -31,14 +31,16 @@ class ProductController extends Controller
             $q->where('company_id', $company->id);
         })->with(['branch', 'category']);
 
-        // Filter by branch if provided
-        if ($request->filled('branch_id')) {
-            $query->where('branch_id', $request->branch_id);
+        // Filter by branch if provided (support both branch_id and branch inputs)
+        $branchId = $request->input('branch_id', $request->input('branch'));
+        if (!empty($branchId)) {
+            $query->where('branch_id', $branchId);
         }
 
-        // Filter by category if provided
-        if ($request->filled('category_id')) {
-            $query->where('category_id', $request->category_id);
+        // Filter by category if provided (support both category_id and category inputs)
+        $categoryId = $request->input('category_id', $request->input('category'));
+        if (!empty($categoryId)) {
+            $query->where('category_id', $categoryId);
         }
 
         // Filter by status if provided

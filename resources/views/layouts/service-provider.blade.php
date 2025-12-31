@@ -23,11 +23,11 @@
 <body class="font-sans antialiased bg-gray-100 dark:bg-gray-900">
     <div class="min-h-screen flex">
         <!-- Sidebar -->
-        <div class="w-64 bg-white dark:bg-gray-800 shadow-lg">
+        <div id="sp-sidebar" class="fixed inset-y-0 left-0 z-40 w-64 transform -translate-x-full bg-white dark:bg-gray-800 shadow-lg transition-transform duration-200 md:static md:translate-x-0">
             <div class="flex flex-col h-full">
                 <!-- Logo -->
                 <div class="flex items-center justify-center h-16 px-4 bg-[#53D2DC] dark:bg-[#53D2DC]">
-                    <h1 class="text-xl font-bold text-white">{{ config('app.name', 'Dala3Chic') }}</h1>
+                    <h1 class="text-xl font-bold text-white">{{ __('service_provider.service_provider') }}</h1>
                 </div>
 
                 <!-- User Info -->
@@ -94,13 +94,19 @@
             </div>
         </div>
 
+        <!-- Sidebar overlay for mobile -->
+        <div id="sp-sidebar-overlay" class="fixed inset-0 z-30 hidden bg-black bg-opacity-50 md:hidden"></div>
+
         <!-- Main Content -->
         <div class="flex-1 flex flex-col overflow-hidden">
             <!-- Top Bar -->
             <header class="bg-white dark:bg-gray-800 shadow-sm border-b border-gray-200 dark:border-gray-700">
                 <div class="px-6 py-4">
                     <div class="flex items-center justify-between">
-                        <div>
+                        <div class="flex items-center gap-3">
+                            <button type="button" id="sp-mobile-menu-toggle" class="text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200 md:hidden">
+                                <i class="fas fa-bars"></i>
+                            </button>
                             <h1 class="text-2xl font-semibold text-gray-900 dark:text-white">@yield('page-title', __('service_provider.dashboard'))</h1>
                         </div>
                         <div class="flex items-center space-x-4">
@@ -179,6 +185,33 @@
                 alert.style.display = 'none';
             });
         }, 5000);
+
+        // Mobile sidebar toggle
+        const sidebarToggle = document.getElementById('sp-mobile-menu-toggle');
+        const sidebar = document.getElementById('sp-sidebar');
+        const sidebarOverlay = document.getElementById('sp-sidebar-overlay');
+
+        function closeSidebar() {
+            sidebar.classList.add('-translate-x-full');
+            sidebarOverlay.classList.add('hidden');
+        }
+
+        function openSidebar() {
+            sidebar.classList.remove('-translate-x-full');
+            sidebarOverlay.classList.remove('hidden');
+        }
+
+        if (sidebarToggle && sidebar && sidebarOverlay) {
+            sidebarToggle.addEventListener('click', function() {
+                if (sidebar.classList.contains('-translate-x-full')) {
+                    openSidebar();
+                } else {
+                    closeSidebar();
+                }
+            });
+
+            sidebarOverlay.addEventListener('click', closeSidebar);
+        }
 
         // Dark mode toggle (if needed)
         function toggleDarkMode() {

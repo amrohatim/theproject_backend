@@ -211,6 +211,18 @@
         }
     }
 
+    @media (max-width: 768px) {
+        .service-provider-services-form .form-language-switcher .language-name {
+            display: inline;
+            font-size: 0.8rem;
+        }
+
+        .service-provider-services-form .form-language-switcher .language-tab {
+            padding: 0.625rem 0.875rem;
+            min-height: 2.5rem;
+        }
+    }
+
     /* Day Selection Styling */
     .day-checkbox-container .day-checkbox:checked + .day-label {
         background-color: #3b82f6;
@@ -371,7 +383,7 @@
 @endsection
 
 @section('content')
-<div class="container mx-auto">
+<div class="container mx-auto service-provider-services-form">
     <div class="mb-6">
         <div class="flex items-center justify-between">
             <div>

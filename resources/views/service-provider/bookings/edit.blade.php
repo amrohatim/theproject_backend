@@ -32,6 +32,7 @@
                         <option value="in_progress" {{ $booking->status == 'in_progress' ? 'selected' : '' }}>{{ __('service_provider.booking_status_in_progress') }}</option>
                         <option value="completed" {{ $booking->status == 'completed' ? 'selected' : '' }}>{{ __('messages.completed') }}</option>
                         <option value="cancelled" {{ $booking->status == 'cancelled' ? 'selected' : '' }}>{{ __('messages.cancelled') }}</option>
+                        <option value="no_show" {{ $booking->status == 'no_show' ? 'selected' : '' }}>{{ __('messages.no_show') }}</option>
                     </select>
                     @error('status')
                         <p class="mt-1 text-sm text-red-600 dark:text-red-400">{{ $message }}</p>

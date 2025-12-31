@@ -36,10 +36,10 @@
     </div>
 
     <div class="p-6 space-y-6">
-      <div class="grid lg:grid-cols-2 gap-6">
+        <div class="grid lg:grid-cols-2 gap-6">
         <!-- Color Details -->
         <div class="space-y-4">
-          <div class="grid grid-cols-2 gap-4">
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
             <div class="space-y-2">
               <label class="block vue-text-sm">
                 {{ $t('vendor.color_name') }} <span class="text-red-500">*</span>
@@ -129,7 +129,7 @@
             </div>
           </div>
 
-          <div class="grid grid-cols-2 gap-4">
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
             <div class="space-y-2">
               <label class="block vue-text-sm">{{ $t('vendor.price_adjustment') }}</label>
               <input type="number"

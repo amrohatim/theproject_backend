@@ -3,6 +3,65 @@
 @section('title', 'Bookings Management')
 @section('page-title', 'Bookings Management')
 
+@section('styles')
+<style>
+    @media (max-width: 768px) {
+        .responsive-table thead {
+            display: none;
+        }
+
+        .responsive-table,
+        .responsive-table tbody,
+        .responsive-table tr,
+        .responsive-table td {
+            display: block;
+            width: 100%;
+        }
+
+        .responsive-table tbody tr {
+            margin-bottom: 1rem;
+            border: 1px solid #3b82f6 !important;
+            border-radius: 0.375rem !important;
+            overflow: hidden;
+            background-color: #ffffff;
+            box-shadow: 0 1px 2px rgba(15, 23, 42, 0.06);
+        }
+
+        .dark .responsive-table tbody tr {
+            background-color: #1f2937;
+            border-color: #60a5fa !important;
+        }
+
+        .responsive-table td {
+            position: relative;
+            padding: 0.75rem 1rem 0.75rem 9.5rem;
+            text-align: left;
+            white-space: normal;
+        }
+
+        .responsive-table td::before {
+            content: attr(data-label);
+            position: absolute;
+            left: 1rem;
+            top: 0.75rem;
+            font-size: 0.7rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.04em;
+            color: #6b7280;
+        }
+
+        .dark .responsive-table td::before {
+            color: #9ca3af;
+        }
+
+        .responsive-table td:last-child {
+            text-align: left;
+        }
+    }
+</style>
+@endsection
+
 @section('content')
 <div class="container mx-auto">
     <div class="mb-6 flex flex-col md:flex-row md:items-center md:justify-between">
@@ -132,7 +191,7 @@
     <!-- Bookings list -->
     <div class="bg-white dark:bg-gray-800 rounded-lg shadow mb-6 border border-gray-200 dark:border-gray-700">
         <div class="overflow-x-auto">
-            <table class="min-w-full divide-y divide-gray-200 dark:divide-gray-700">
+            <table class="responsive-table min-w-full divide-y divide-gray-200 dark:divide-gray-700">
                 <thead class="bg-gray-50 dark:bg-gray-700">
                     <tr>
                         <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">{{ __('messages.booking_id') }}</th>
@@ -147,25 +206,25 @@
                 <tbody class="bg-white dark:bg-gray-800 divide-y divide-gray-200 dark:divide-gray-700">
                     @forelse($bookings ?? [] as $booking)
                     <tr>
-                        <td class="px-6 py-4 whitespace-nowrap">
+                        <td class="px-6 py-4 whitespace-nowrap" data-label="{{ __('messages.booking_id') }}">
                             <div class="text-sm font-medium text-gray-900 dark:text-white">#{{ $booking->booking_number }}</div>
                         </td>
-                        <td class="px-6 py-4 whitespace-nowrap">
+                        <td class="px-6 py-4 whitespace-nowrap" data-label="{{ __('messages.customer') }}">
                             <div class="text-sm text-gray-900 dark:text-white">{{ $booking->user->name ?? __('messages.guest') }}</div>
                             <div class="text-xs text-gray-500 dark:text-gray-400">{{ $booking->user->email ?? __('messages.no_email') }}</div>
                         </td>
-                        <td class="px-6 py-4 whitespace-nowrap">
+                        <td class="px-6 py-4 whitespace-nowrap" data-label="{{ __('messages.service') }}">
                             <div class="text-sm text-gray-900 dark:text-white">{{ $booking->service->name ?? __('messages.unknown_service') }}</div>
                             <div class="text-xs text-gray-500 dark:text-gray-400">${{ number_format($booking->service->price ?? 0, 2) }} • {{ $booking->service->duration ?? 0 }} {{ __('messages.min') }}</div>
                         </td>
-                        <td class="px-6 py-4 whitespace-nowrap">
+                        <td class="px-6 py-4 whitespace-nowrap" data-label="{{ __('messages.branch') }}">
                             <div class="text-sm text-gray-500 dark:text-gray-400">{{ $booking->branch->name ?? __('messages.no_branch') }}</div>
                         </td>
-                        <td class="px-6 py-4 whitespace-nowrap">
+                        <td class="px-6 py-4 whitespace-nowrap" data-label="{{ __('messages.date_time') }}">
                             <div class="text-sm text-gray-500 dark:text-gray-400">{{ $booking->booking_date ? date('M d, Y', strtotime($booking->booking_date)) : __('messages.no_date') }}</div>
                             <div class="text-xs text-gray-500 dark:text-gray-400">{{ $booking->booking_time ? date('h:i A', strtotime($booking->booking_time)) : '' }}</div>
                         </td>
-                        <td class="px-6 py-4 whitespace-nowrap">
+                        <td class="px-6 py-4 whitespace-nowrap" data-label="{{ __('messages.status') }}">
                             <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full
                                 @if($booking->status == 'completed') bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-200
                                 @elseif($booking->status == 'confirmed') bg-blue-100 text-blue-800 dark:bg-blue-900 dark:text-blue-200
@@ -175,7 +234,7 @@
                                 {{ ucfirst($booking->status ?? 'pending') }}
                             </span>
                         </td>
-                        <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
+                        <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium" data-label="{{ __('messages.actions') }}">
                             <a href="{{ route('vendor.bookings.show', $booking->id) }}" class="text-blue-600 dark:text-blue-400 hover:text-blue-900 dark:hover:text-blue-300 mr-3">
                                 <i class="fas fa-eye"></i> {{ __('messages.view') }}
                             </a>

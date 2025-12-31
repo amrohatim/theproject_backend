@@ -23,6 +23,7 @@
     /* Vue.js specific styles with orange theme */
     .vue-app-container {
         min-height: 100vh;
+        
     }
 
     .vue-btn-blue-solid {
@@ -245,6 +246,14 @@
     /* Ring colors for default items */
     .color-item[style*="--tw-ring-color"] {
         --tw-ring-color: var(--pm-orange) !important;
+    }
+
+    /* Mobile adjustments for Products Manager create */
+    @media (max-width: 768px) {
+        .products-manager-theme {
+            padding-left: 0;
+            padding-right: 0;
+        }
     }
 </style>
 @endsection

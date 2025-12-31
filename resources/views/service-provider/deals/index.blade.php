@@ -16,7 +16,7 @@
             @if(($activeDeals ?? collect())->count())
                 <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
                     @foreach($activeDeals as $deal)
-                        <div class="p-4 bg-gradient-to-r from-[#53D2DC]/5 to-[#53D2DC]/3 rounded-lg border border-[#53D2DC]/30 hover:shadow-md transition-shadow">
+                        <div class="p-4 rounded-lg border border-[#53D2DC]/30 hover:shadow-md transition-shadow">
                             <!-- Deal Header -->
                             <div class="flex items-start justify-between mb-3">
                                 <div class="flex-1">

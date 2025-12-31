@@ -4,11 +4,11 @@
 @section('page-title', __('products_manager.dashboard_title'))
 
 @section('content')
-<div class="container mx-auto">
+<div class="container mx-auto px-4 sm:px-6 lg:px-8">
     <!-- Welcome Section -->
     <div class="mb-6">
         <div class="bg-white dark:bg-gray-800 rounded-lg shadow p-6 border border-gray-200 dark:border-gray-700">
-            <div class="flex flex-col md:flex-row md:items-center md:justify-between">
+            <div class="flex flex-col gap-3 md:flex-row md:items-center md:justify-between">
                 <div>
                     <h2 class="text-2xl font-bold text-gray-800 dark:text-white">{{ __('products_manager.welcome_message', ['name' => $user->name]) }}</h2>
                     <p class="mt-1 text-gray-600 dark:text-gray-400">{{ __('products_manager.manage_products_across', ['company' => $company->name]) }}</p>
@@ -137,7 +137,7 @@
         <!-- Top Products -->
         <div class="bg-white dark:bg-gray-800 rounded-lg shadow border border-gray-200 dark:border-gray-700">
             <div class="px-6 py-4 border-b border-gray-200 dark:border-gray-700">
-                <div class="flex items-center justify-between">
+                <div class="flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
                     <h3 class="text-lg font-medium text-gray-900 dark:text-white">{{ __('products_manager.top_selling_products') }}</h3>
                     <a href="{{ route('products-manager.products.index') }}" class="text-purple-600 hover:text-purple-800 dark:text-purple-400 dark:hover:text-purple-300 text-sm font-medium">
                         {{ __('products_manager.view_all') }}
@@ -148,7 +148,7 @@
                 @if($topProducts->count() > 0)
                     <div class="space-y-4">
                         @foreach($topProducts as $product)
-                            <div class="flex items-center justify-between p-3 bg-gray-50 dark:bg-gray-700 rounded-lg">
+                            <div class="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between p-3 bg-gray-50 dark:bg-gray-700 rounded-lg">
                                 <div class="flex items-center">
                                     <div class="flex-shrink-0">
                                         @if($product->image)
@@ -164,7 +164,7 @@
                                         <p class="text-sm text-gray-500 dark:text-gray-400">{{ $product->branch->name ?? __('products_manager.no_branch') }}</p>
                                     </div>
                                 </div>
-                                <div class="text-right">
+                                <div class="text-left sm:text-right">
                                     <p class="text-sm font-medium text-gray-900 dark:text-white">${{ number_format($product->price, 2) }}</p>
                                     <p class="text-sm text-gray-500 dark:text-gray-400">{{ $product->order_items_count ?? 0 }} {{ __('products_manager.sold') }}</p>
                                 </div>
@@ -191,7 +191,7 @@
         <!-- Recent Orders -->
         <div class="bg-white dark:bg-gray-800 rounded-lg shadow border border-gray-200 dark:border-gray-700">
             <div class="px-6 py-4 border-b border-gray-200 dark:border-gray-700">
-                <div class="flex items-center justify-between">
+                <div class="flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
                     <h3 class="text-lg font-medium text-gray-900 dark:text-white">{{ __('products_manager.recent_orders') }}</h3>
                     <a href="{{ route('products-manager.orders.index') }}" class="text-purple-600 hover:text-purple-800 dark:text-purple-400 dark:hover:text-purple-300 text-sm font-medium">
                         {{ __('products_manager.view_all') }}
@@ -202,7 +202,7 @@
                 @if($recentOrders->count() > 0)
                     <div class="space-y-4">
                         @foreach($recentOrders as $order)
-                            <div class="flex items-center justify-between p-3 bg-gray-50 dark:bg-gray-700 rounded-lg">
+                            <div class="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between p-3 bg-gray-50 dark:bg-gray-700 rounded-lg">
                                 <div class="flex items-center">
                                     <div class="flex-shrink-0">
                                         <div class="h-10 w-10 rounded-full bg-blue-100 dark:bg-blue-900 flex items-center justify-center">
@@ -214,7 +214,7 @@
                                         <p class="text-sm text-gray-500 dark:text-gray-400">{{ __('products_manager.order_number', ['id' => $order->id]) }}</p>
                                     </div>
                                 </div>
-                                <div class="text-right">
+                                <div class="text-left sm:text-right">
                                     <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium 
                                         @if($order->status === 'pending') bg-yellow-100 text-yellow-800 dark:bg-yellow-900 dark:text-yellow-200
                                         @elseif($order->status === 'processing') bg-blue-100 text-blue-800 dark:bg-blue-900 dark:text-blue-200

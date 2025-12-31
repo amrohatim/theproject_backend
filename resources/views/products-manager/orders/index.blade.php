@@ -4,7 +4,7 @@
 @section('page-title', __('products_manager.all_orders'))
 
 @section('content')
-<div class="container mx-auto">
+<div class="container mx-auto px-0 sm:px-0 md:px-6 lg:px-8">
     <!-- Filters -->
     <div class="mb-4 bg-white dark:bg-gray-800 rounded-lg border border-gray-200 dark:border-gray-700 p-4">
         <form method="GET" class="grid grid-cols-1 md:grid-cols-5 gap-3">

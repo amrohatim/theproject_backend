@@ -1,7 +1,7 @@
 @extends('layouts.service-provider')
 
-@section('title', __('service_provider.dashboard'))
-@section('page-title', __('service_provider.dashboard'))
+@section('title', __('service_provider.service_provider'))
+@section('page-title', __('service_provider.service_provider'))
 
 @section('content')
 <div class="container mx-auto">

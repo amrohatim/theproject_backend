@@ -7,6 +7,65 @@
 use Illuminate\Support\Facades\Storage;
 @endphp
 
+@section('styles')
+<style>
+    @media (max-width: 768px) {
+        .responsive-table thead {
+            display: none;
+        }
+
+        .responsive-table,
+        .responsive-table tbody,
+        .responsive-table tr,
+        .responsive-table td {
+            display: block;
+            width: 100%;
+        }
+
+        .responsive-table tbody tr {
+            margin-bottom: 1rem;
+            border: 1px solid #3b82f6 !important;
+            border-radius: 0.375rem !important;
+            overflow: hidden;
+            background-color: #ffffff;
+            box-shadow: 0 1px 2px rgba(15, 23, 42, 0.06);
+        }
+
+        .dark .responsive-table tbody tr {
+            background-color: #1f2937;
+            border-color: #60a5fa !important;
+        }
+
+        .responsive-table td {
+            position: relative;
+            padding: 0.75rem 1rem 0.75rem 9.5rem;
+            text-align: left;
+            white-space: normal;
+        }
+
+        .responsive-table td::before {
+            content: attr(data-label);
+            position: absolute;
+            left: 1rem;
+            top: 0.75rem;
+            font-size: 0.7rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.04em;
+            color: #6b7280;
+        }
+
+        .dark .responsive-table td::before {
+            color: #9ca3af;
+        }
+
+        .responsive-table td:last-child {
+            text-align: left;
+        }
+    }
+</style>
+@endsection
+
 @section('content')
 <div class="container mx-auto">
     <div class="mb-6 flex flex-col md:flex-row md:items-center md:justify-between">
@@ -66,7 +125,7 @@ use Illuminate\Support\Facades\Storage;
     <!-- Branches list -->
     <div class="bg-white dark:bg-gray-800 rounded-lg shadow mb-6 border border-gray-200 dark:border-gray-700">
         <div class="overflow-x-auto">
-            <table class="min-w-full divide-y divide-gray-200 dark:divide-gray-700">
+            <table class="responsive-table min-w-full divide-y divide-gray-200 dark:divide-gray-700">
                 <thead class="bg-gray-50 dark:bg-gray-700">
                     <tr>
                         <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">{{ __('messages.branch') }}</th>
@@ -83,7 +142,7 @@ use Illuminate\Support\Facades\Storage;
                 <tbody class="bg-white dark:bg-gray-800 divide-y divide-gray-200 dark:divide-gray-700">
                     @forelse($branches ?? [] as $branch)
                     <tr>
-                        <td class="px-6 py-4 whitespace-nowrap">
+                        <td class="px-6 py-4 whitespace-nowrap" data-label="{{ __('messages.branch') }}">
                             <div class="flex items-center">
                                 <div class="flex-shrink-0 h-10 w-10">
                                     @php
@@ -105,11 +164,11 @@ use Illuminate\Support\Facades\Storage;
                                 </div>
                             </div>
                         </td>
-                        <td class="px-6 py-4 whitespace-nowrap">
+                        <td class="px-6 py-4 whitespace-nowrap" data-label="{{ __('messages.location') }}">
                             <div class="text-sm text-gray-500 dark:text-gray-400">{{ $branch->address ?? 'N/A' }}</div>
                             <div class="text-xs text-gray-500 dark:text-gray-400">{{ $branch->city ?? '' }}, {{ $branch->state ?? '' }}</div>
                         </td>
-                        <td class="px-6 py-4 whitespace-nowrap">
+                        <td class="px-6 py-4 whitespace-nowrap" data-label="Business Type">
                             <div class="text-sm text-gray-900 dark:text-white">
                                 @if($branch->business_type)
                                     <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-blue-100 text-blue-800 dark:bg-blue-900 dark:text-blue-200">
@@ -121,17 +180,17 @@ use Illuminate\Support\Facades\Storage;
                                 @endif
                             </div>
                         </td>
-                        <td class="px-6 py-4 whitespace-nowrap">
+                        <td class="px-6 py-4 whitespace-nowrap" data-label="{{ __('messages.contact') }}">
                             <div class="text-sm text-gray-500 dark:text-gray-400">{{ $branch->phone ?? 'N/A' }}</div>
                             <div class="text-xs text-gray-500 dark:text-gray-400">{{ $branch->email ?? 'N/A' }}</div>
                         </td>
-                        <td class="px-6 py-4 whitespace-nowrap">
+                        <td class="px-6 py-4 whitespace-nowrap" data-label="{{ __('messages.products') }}">
                             <div class="text-sm text-gray-500 dark:text-gray-400">{{ $branch->products_count ?? 0 }}</div>
                         </td>
-                        <td class="px-6 py-4 whitespace-nowrap">
+                        <td class="px-6 py-4 whitespace-nowrap" data-label="{{ __('messages.services') }}">
                             <div class="text-sm text-gray-500 dark:text-gray-400">{{ $branch->services_count ?? 0 }}</div>
                         </td>
-                        <td class="px-6 py-4 whitespace-nowrap">
+                        <td class="px-6 py-4 whitespace-nowrap" data-label="{{ __('messages.license_status') }}">
                             @php
                                 $licenseStatus = $branch->getLicenseStatus();
                             @endphp
@@ -154,7 +213,7 @@ use Illuminate\Support\Facades\Storage;
                                 @endif
                             </span>
                         </td>
-                        <td class="px-6 py-4 whitespace-nowrap">
+                        <td class="px-6 py-4 whitespace-nowrap" data-label="{{ __('messages.status') }}">
                             <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full
                                 @if($branch->status == 'active') bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-200
                                 @else bg-red-100 text-red-800 dark:bg-red-900 dark:text-red-200 @endif">
@@ -165,7 +224,7 @@ use Illuminate\Support\Facades\Storage;
                                 @endif
                             </span>
                         </td>
-                        <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
+                        <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium" data-label="{{ __('messages.actions') }}">
                             <a href="{{ route('vendor.branches.show', $branch->id) }}" class="text-blue-600 dark:text-blue-400 hover:text-blue-900 dark:hover:text-blue-300 mr-3" title="{{ __('messages.view') }}">
                                 <i class="fas fa-eye"></i>
                             </a>

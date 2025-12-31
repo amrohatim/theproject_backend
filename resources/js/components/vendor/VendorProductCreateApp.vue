@@ -17,16 +17,16 @@
     </div>
 
     <!-- Main Content -->
-    <div v-else class="container mx-auto px-4 sm:px-6 lg:px-8">
+    <div v-else class="w-full px-0 sm:container sm:mx-auto sm:px-6 lg:px-8">
       <!-- Header -->
-      <div class="mb-6">
+      <div class="mb-6 px-4 sm:px-0">
         <div class="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
-          <div>
-            <h2 class="text-2xl font-bold text-gray-800 dark:text-white">{{ $t('vendor.create_new_product') }}</h2>
-        <p class="mt-1 text-gray-600 dark:text-gray-400">{{ $t('vendor.add_new_product_inventory') }}</p>
+          <div class="text-center sm:text-left">
+            <h2 class="text-xl sm:text-2xl font-bold text-gray-800 dark:text-white">{{ $t('vendor.create_new_product') }}</h2>
+            <p class="mt-1 text-sm sm:text-base text-gray-600 dark:text-gray-400">{{ $t('vendor.add_new_product_inventory') }}</p>
           </div>
-          <div>
-            <a :href="backUrl" class="inline-flex w-full items-center justify-center px-4 py-2 bg-gray-600 border border-transparent rounded-md font-semibold text-xs text-white uppercase tracking-widest hover:bg-gray-700 active:bg-gray-900 focus:outline-none focus:border-gray-900 focus:ring ring-gray-300 disabled:opacity-25 transition ease-in-out duration-150 sm:w-auto">
+          <div class="w-full sm:w-auto">
+            <a :href="backUrl" class="inline-flex w-full items-center justify-center px-4 py-3 sm:py-2 bg-gray-600 border border-transparent rounded-md font-semibold text-xs text-white uppercase tracking-widest hover:bg-gray-700 active:bg-gray-900 focus:outline-none focus:border-gray-900 focus:ring ring-gray-300 disabled:opacity-25 transition ease-in-out duration-150">
               <i class="fas fa-arrow-left" :class="isRTL ? 'ml-2' : 'mr-2'"></i> {{ $t('vendor.back_to_products') }}
             </a>
           </div>

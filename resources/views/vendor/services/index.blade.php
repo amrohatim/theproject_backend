@@ -3,6 +3,65 @@
 @section('title', 'Services')
 @section('page-title', 'Services')
 
+@section('styles')
+<style>
+    @media (max-width: 768px) {
+        .responsive-table thead {
+            display: none;
+        }
+
+        .responsive-table,
+        .responsive-table tbody,
+        .responsive-table tr,
+        .responsive-table td {
+            display: block;
+            width: 100%;
+        }
+
+        .responsive-table tbody tr {
+            margin-bottom: 1rem;
+            border: 1px solid #3b82f6 !important;
+            border-radius: 0.375rem !important;
+            overflow: hidden;
+            background-color: #ffffff;
+            box-shadow: 0 1px 2px rgba(15, 23, 42, 0.06);
+        }
+
+        .dark .responsive-table tbody tr {
+            background-color: #1f2937;
+            border-color: #60a5fa !important;
+        }
+
+        .responsive-table td {
+            position: relative;
+            padding: 0.75rem 1rem 0.75rem 9.5rem;
+            text-align: left;
+            white-space: normal;
+        }
+
+        .responsive-table td::before {
+            content: attr(data-label);
+            position: absolute;
+            left: 1rem;
+            top: 0.75rem;
+            font-size: 0.7rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.04em;
+            color: #6b7280;
+        }
+
+        .dark .responsive-table td::before {
+            color: #9ca3af;
+        }
+
+        .responsive-table td:last-child {
+            text-align: left;
+        }
+    }
+</style>
+@endsection
+
 @section('content')
 <div class="container mx-auto">
     <div class="mb-6 flex flex-col md:flex-row md:items-center md:justify-between">
@@ -73,8 +132,27 @@
 
     <!-- Services list -->
     <div class="bg-white dark:bg-gray-800 rounded-lg shadow mb-6 border border-gray-200 dark:border-gray-700">
-        <div class="overflow-x-auto">
-            <table class="min-w-full divide-y divide-gray-200 dark:divide-gray-700">
+        <div class="block md:hidden space-y-4 px-4 py-4">
+            @forelse($services ?? [] as $service)
+                <x-mobile-product-card
+                    :product="$service"
+                    :edit-url="route('vendor.services.edit', $service->id)"
+                    :delete-url="route('vendor.services.destroy', $service->id)"
+                    :delete-confirm="__('messages.delete_service_confirmation')"
+                />
+            @empty
+                <div class="text-center py-12 px-4">
+                    <i class="fas fa-concierge-bell text-gray-300 dark:text-gray-600 text-5xl mb-4"></i>
+                    <p class="text-sm text-gray-500 dark:text-gray-400">{{ __('messages.no_services_found') }}</p>
+                    <a href="{{ route('vendor.services.create') }}" class="mt-3 inline-flex items-center px-4 py-2 bg-indigo-600 border border-transparent rounded-md font-semibold text-xs text-white uppercase tracking-widest hover:bg-indigo-700 active:bg-indigo-900 focus:outline-none focus:border-indigo-900 focus:ring ring-indigo-300 disabled:opacity-25 transition ease-in-out duration-150">
+                        <i class="fas fa-plus mr-2"></i> {{ __('messages.add_service') }}
+                    </a>
+                </div>
+            @endforelse
+        </div>
+
+        <div class="hidden md:block overflow-x-auto">
+            <table class="responsive-table min-w-full divide-y divide-gray-200 dark:divide-gray-700">
                 <thead class="bg-gray-50 dark:bg-gray-700">
                     <tr>
                         <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">{{ __('messages.service') }}</th>
@@ -89,7 +167,7 @@
                 <tbody class="bg-white dark:bg-gray-800 divide-y divide-gray-200 dark:divide-gray-700">
                     @forelse($services ?? [] as $service)
                     <tr>
-                        <td class="px-6 py-4 whitespace-nowrap">
+                        <td class="px-6 py-4 whitespace-nowrap" data-label="{{ __('messages.service') }}">
                             <div class="flex items-center">
                                 <div class="flex-shrink-0 h-10 w-10">
                                     @if($service->image)
@@ -109,26 +187,26 @@
                                 </div>
                             </div>
                         </td>
-                        <td class="px-6 py-4 whitespace-nowrap">
+                        <td class="px-6 py-4 whitespace-nowrap" data-label="{{ __('messages.category') }}">
                             <div class="text-sm text-gray-500 dark:text-gray-400">{{ $service->category->name ?? 'N/A' }}</div>
                         </td>
-                        <td class="px-6 py-4 whitespace-nowrap">
+                        <td class="px-6 py-4 whitespace-nowrap" data-label="{{ __('messages.branch') }}">
                             <div class="text-sm text-gray-500 dark:text-gray-400">{{ $service->branch->name ?? 'N/A' }}</div>
                         </td>
-                        <td class="px-6 py-4 whitespace-nowrap">
+                        <td class="px-6 py-4 whitespace-nowrap" data-label="{{ __('messages.price') }}">
                             <div class="text-sm font-medium text-gray-900 dark:text-white">${{ number_format($service->price, 2) }}</div>
                         </td>
-                        <td class="px-6 py-4 whitespace-nowrap">
+                        <td class="px-6 py-4 whitespace-nowrap" data-label="{{ __('messages.duration') }}">
                             <div class="text-sm text-gray-500 dark:text-gray-400">{{ $service->duration }} {{ __('messages.min') }}</div>
                         </td>
-                        <td class="px-6 py-4 whitespace-nowrap">
+                        <td class="px-6 py-4 whitespace-nowrap" data-label="{{ __('messages.status') }}">
                             <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full
                                 @if($service->is_available) bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-200
                                 @else bg-red-100 text-red-800 dark:bg-red-900 dark:text-red-200 @endif">
                                 {{ $service->is_available ? __('messages.available') : __('messages.unavailable') }}
                             </span>
                         </td>
-                        <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
+                        <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium" data-label="{{ __('messages.actions') }}">
                             <a href="{{ route('vendor.services.edit', $service->id) }}" class="text-indigo-600 dark:text-indigo-400 hover:text-indigo-900 dark:hover:text-indigo-300 mr-3">
                                 <i class="fas fa-edit"></i>
                             </a>

@@ -4,7 +4,7 @@
 @section('page-title', __('products_manager.pending_orders'))
 
 @section('content')
-<div class="container mx-auto">
+<div class="container mx-auto px-0 sm:px-0 md:px-6 lg:px-8">
     <div class="bg-white dark:bg-gray-800 rounded-lg shadow border border-gray-200 dark:border-gray-700">
         <div class="px-4 py-3 border-b border-gray-200 dark:border-gray-700 flex items-center justify-between">
             <h3 class="text-lg font-medium text-gray-900 dark:text-white">{{ __('products_manager.pending_orders') }}</h3>

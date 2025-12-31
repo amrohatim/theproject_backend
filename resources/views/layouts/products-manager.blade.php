@@ -32,7 +32,7 @@
 <body class="font-sans antialiased bg-gray-100 dark:bg-gray-900">
     <div class="min-h-screen flex">
         <!-- Sidebar -->
-        <div class="w-64 bg-white dark:bg-gray-800 shadow-lg">
+        <div id="pm-sidebar" class="fixed inset-y-0 left-0 z-40 w-64 transform -translate-x-full bg-white shadow-lg transition-transform duration-200 dark:bg-gray-800 md:static md:translate-x-0">
             <div class="flex flex-col h-full">
                 <!-- Logo -->
                 <div class="flex items-center justify-center h-16 px-4 bg-orange-500 dark:bg-orange-600">
@@ -135,13 +135,19 @@
             </div>
         </div>
 
+        <!-- Sidebar overlay for mobile -->
+        <div id="pm-sidebar-overlay" class="fixed inset-0 z-30 hidden bg-black bg-opacity-50 md:hidden"></div>
+
         <!-- Main Content -->
         <div class="flex-1 flex flex-col overflow-hidden">
             <!-- Top Bar -->
             <header class="bg-white dark:bg-gray-800 shadow-sm border-b border-gray-200 dark:border-gray-700">
                 <div class="px-6 py-4">
                     <div class="flex items-center justify-between">
-                        <div>
+                        <div class="flex items-center gap-3">
+                            <button type="button" id="pm-mobile-menu-toggle" class="text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200 md:hidden">
+                                <i class="fas fa-bars"></i>
+                            </button>
                             <h1 class="text-2xl font-semibold text-gray-900 dark:text-white">@yield('page-title', __('products_manager.dashboard_title'))</h1>
                         </div>
                         <div class="flex items-center space-x-4">
@@ -156,7 +162,7 @@
             </header>
 
             <!-- Main Content Area -->
-            <main class="flex-1 overflow-y-auto p-6" id="main-content-area">
+            <main class="flex-1 overflow-y-auto p-0" id="main-content-area">
                 <!-- Loading Indicator -->
                 <div id="ajax-loading-indicator" class="hidden fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
                     <div class="bg-white rounded-lg p-6 flex items-center space-x-3">
@@ -205,7 +211,7 @@
                 </div>
 
                 <!-- Dynamic Page Content -->
-                <div id="dynamic-content">
+                <div id="dynamic-content" class="p-0">
                     @yield('content')
                 </div>
             </main>
@@ -228,6 +234,65 @@
         .products-manager-theme .container { max-width: 100% !important; }
         .products-manager-theme table { width: 100% !important; }
         .products-manager-theme .overflow-x-auto { overflow-x: auto !important; }
+
+        /* Responsive table for products list */
+        @media (max-width: 768px) {
+            .pm-responsive-table thead {
+                display: none;
+            }
+
+            .pm-responsive-table,
+            .pm-responsive-table tbody,
+            .pm-responsive-table tr,
+            .pm-responsive-table td {
+                display: block;
+                width: 100%;
+            }
+
+            .pm-responsive-table tbody tr {
+                margin-bottom: 1rem;
+                border: 1px solid #f59e0b !important;
+                border-radius: 0.375rem;
+                overflow: hidden;
+                background-color: #ffffff;
+                box-shadow: 0 0 0 1px #f59e0b !important;
+            }
+
+            .pm-responsive-table tbody td {
+                display: flex;
+                align-items: flex-start;
+                gap: 0.75rem;
+                padding: 0.75rem 1rem !important;
+                border-top: 1px solid #e9ebe5ff;
+            }
+
+            .pm-responsive-table tbody tr td:first-child {
+                border-top: 0;
+            }
+
+            .pm-responsive-table tbody td::before {
+                content: attr(data-label);
+                flex: 0 0 38%;
+                font-weight: 600;
+                color: #6b7280;
+                text-transform: uppercase;
+                letter-spacing: 0.03em;
+                font-size: 0.7rem;
+            }
+
+            .pm-responsive-table tbody td > * {
+                flex: 1;
+            }
+
+            .dark .pm-responsive-table tbody tr {
+                border-color: #d97706;
+                background-color: #1f2937;
+            }
+
+            .dark .pm-responsive-table tbody td {
+                border-top-color: #374151;
+            }
+        }
     </style>
 
     <!-- Scripts -->
@@ -326,8 +391,15 @@
             }
 
             shouldInterceptUrl(url) {
+                const isProductsManagerList = url.includes('/products-manager/products')
+                    && !url.includes('/products-manager/products/create')
+                    && !url.match(/\/products-manager\/products\/\d/);
+
+                if (isProductsManagerList) {
+                    return false;
+                }
+
                 const productUrls = [
-                    '/products-manager/products',
                     '/products-manager/products/create',
                     '/products-manager/products/',
                     '/vendor/products/create',
@@ -864,6 +936,45 @@
             }
 
             document.documentElement.lang = currentLocale;
+        });
+
+        // Mobile sidebar toggle
+        document.addEventListener('DOMContentLoaded', function() {
+            const sidebar = document.getElementById('pm-sidebar');
+            const sidebarOverlay = document.getElementById('pm-sidebar-overlay');
+            const mobileMenuToggle = document.getElementById('pm-mobile-menu-toggle');
+
+            if (!sidebar || !sidebarOverlay || !mobileMenuToggle) {
+                return;
+            }
+
+            const openSidebar = () => {
+                sidebar.classList.remove('-translate-x-full');
+                sidebarOverlay.classList.remove('hidden');
+                document.body.classList.add('overflow-hidden');
+            };
+
+            const closeSidebar = () => {
+                sidebar.classList.add('-translate-x-full');
+                sidebarOverlay.classList.add('hidden');
+                document.body.classList.remove('overflow-hidden');
+            };
+
+            mobileMenuToggle.addEventListener('click', function() {
+                if (sidebar.classList.contains('-translate-x-full')) {
+                    openSidebar();
+                } else {
+                    closeSidebar();
+                }
+            });
+
+            sidebarOverlay.addEventListener('click', closeSidebar);
+
+            window.addEventListener('resize', function() {
+                if (window.innerWidth >= 768) {
+                    closeSidebar();
+                }
+            });
         });
 
         // Initialize AJAX navigation when DOM is loaded

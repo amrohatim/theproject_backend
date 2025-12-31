@@ -52,7 +52,7 @@ document.querySelectorAll('button[data-page]').forEach(button => {
         window.history.pushState({}, '', newUrl);
 
         // Trigger search/filter update
-        if (window.productsManagerAjaxNav) {
+        if (window.productsManagerAjaxNav && window.productsManagerAjaxNav.shouldInterceptUrl(newUrl)) {
             window.productsManagerAjaxNav.loadContent(newUrl, true);
         } else {
             window.location.href = newUrl;

@@ -48,6 +48,8 @@ return [
     'status' => 'الحالة',
     'available' => 'متوفر',
     'unavailable' => 'غير متوفر',
+    'available_stock' => 'المخزون المتاح',
+    'date_created' => 'تاريخ الإنشاء',
     'no_products' => 'لا توجد منتجات',
     'get_started_first_product' => 'ابدأ بإنشاء منتجك الأول.',
     'add_your_first_product' => 'أضف منتجك الأول',

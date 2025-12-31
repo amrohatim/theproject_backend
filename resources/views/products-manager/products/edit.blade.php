@@ -246,6 +246,14 @@
     .color-item[style*="--tw-ring-color"] {
         --tw-ring-color: var(--pm-orange) !important;
     }
+
+    /* Mobile adjustments for Products Manager edit */
+    @media (max-width: 768px) {
+        .products-manager-theme {
+            padding-left: 0;
+            padding-right: 0;
+        }
+    }
 </style>
 @endsection
 
