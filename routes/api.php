@@ -160,6 +160,7 @@ Route::post('/search/filter', [\App\Http\Controllers\API\SearchController::class
 // Authentication routes
 Route::post('/register', [AuthController::class, 'register']);
 Route::post('/login', [AuthController::class, 'login']);
+Route::post('/login/social', [AuthController::class, 'socialLogin']);
 Route::post('/password/forgot', [PasswordResetController::class, 'request']);
 Route::post('/password/email', [PasswordResetController::class, 'request']);
 Route::post('/password/verify-code', [PasswordResetController::class, 'verifyCode']);

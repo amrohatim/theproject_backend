@@ -9,6 +9,7 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Validator;
+use App\Providers\FirebaseServiceProvider;
 
 class AuthController extends Controller
 {
@@ -163,6 +164,106 @@ class AuthController extends Controller
             'user' => $user,
             'token' => $token,
         ]);
+    }
+
+    /**
+     * Social login using Firebase ID token (Google).
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @return \Illuminate\Http\Response
+     */
+    public function socialLogin(Request $request)
+    {
+        $validator = Validator::make($request->all(), [
+            'provider' => 'required|string|in:google',
+            'id_token' => 'required|string',
+        ]);
+
+        if ($validator->fails()) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Validation error',
+                'errors' => $validator->errors(),
+            ], 422);
+        }
+
+        $auth = FirebaseServiceProvider::getAuth();
+        if (!$auth) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Firebase service not available. Please try again later.',
+            ], 500);
+        }
+
+        try {
+            $verifiedToken = $auth->verifyIdToken($request->input('id_token'));
+            $claims = $verifiedToken->claims();
+            $email = $claims->get('email');
+            $emailVerified = $claims->get('email_verified');
+
+            if (!$email) {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'Email not available from Google token.',
+                ], 400);
+            }
+
+            if (!$emailVerified) {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'Google email is not verified.',
+                ], 403);
+            }
+
+            $user = User::where('email', $email)->first();
+            if (!$user) {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'You dont have account please create account first',
+                ], 404);
+            }
+
+            if ($user->status !== 'active') {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'Your account is not active. Please contact support.',
+                ], 403);
+            }
+
+            try {
+                $user->tokens()->delete();
+            } catch (\Exception $e) {
+                Log::error('Error deleting tokens: ' . $e->getMessage());
+            }
+
+            try {
+                $token = $user->createToken('auth_token')->plainTextToken;
+            } catch (\Exception $e) {
+                Log::error('Error creating token: ' . $e->getMessage());
+
+                return response()->json([
+                    'success' => true,
+                    'message' => 'Login successful (token creation failed - API authentication is not available)',
+                    'user' => $user,
+                    'token' => 'authentication-not-available',
+                    'error_details' => 'The personal_access_tokens table is missing. Please run migrations.'
+                ]);
+            }
+
+            return response()->json([
+                'success' => true,
+                'message' => 'Login successful',
+                'user' => $user,
+                'token' => $token,
+            ]);
+        } catch (\Exception $e) {
+            Log::error('Social login failed: ' . $e->getMessage());
+
+            return response()->json([
+                'success' => false,
+                'message' => 'Invalid Google token. Please try again.',
+            ], 401);
+        }
     }
 
     /**
