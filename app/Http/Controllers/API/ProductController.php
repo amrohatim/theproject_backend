@@ -246,10 +246,38 @@ class ProductController extends Controller
             ->whereIn('id', $categoryIds)
             ->get();
 
-        $parentIds = $categoryRows
-            ->map(fn ($category) => $category->parent_id ?: $category->id)
-            ->unique()
-            ->values();
+        $categoryMap = $categoryRows->pluck('parent_id', 'id')->toArray();
+        $pendingParentIds = array_values(array_filter($categoryMap));
+
+        while (!empty($pendingParentIds)) {
+            $pendingParentIds = array_values(array_diff(
+                $pendingParentIds,
+                array_keys($categoryMap)
+            ));
+
+            if (empty($pendingParentIds)) {
+                break;
+            }
+
+            $parentRows = Category::query()
+                ->select(['id', 'parent_id'])
+                ->whereIn('id', $pendingParentIds)
+                ->get();
+
+            foreach ($parentRows as $row) {
+                $categoryMap[$row->id] = $row->parent_id;
+            }
+
+            $pendingParentIds = $parentRows->pluck('parent_id')->filter()->values()->toArray();
+        }
+
+        $parentIds = collect($categoryIds)->map(function ($categoryId) use ($categoryMap) {
+            $current = $categoryId;
+            while (isset($categoryMap[$current]) && $categoryMap[$current]) {
+                $current = $categoryMap[$current];
+            }
+            return $current;
+        })->unique()->values();
 
         $categories = Category::query()
             ->whereIn('id', $parentIds)
