@@ -241,8 +241,18 @@ class ProductController extends Controller
             ->distinct()
             ->pluck('category_id');
 
-        $categories = Category::query()
+        $categoryRows = Category::query()
+            ->select(['id', 'parent_id'])
             ->whereIn('id', $categoryIds)
+            ->get();
+
+        $parentIds = $categoryRows
+            ->map(fn ($category) => $category->parent_id ?: $category->id)
+            ->unique()
+            ->values();
+
+        $categories = Category::query()
+            ->whereIn('id', $parentIds)
             ->where('type', 'product')
             ->orderBy('name')
             ->get();
@@ -270,7 +280,7 @@ class ProductController extends Controller
         ])
             ->where('branch_id', $branchId);
 
-        $includeSubcategories = $request->boolean('include_subcategories', false);
+        $includeSubcategories = $request->boolean('include_subcategories', true);
         $query->filterByCategory($selectedCategoryId, $includeSubcategories);
 
         if ($request->has('only_available')) {
