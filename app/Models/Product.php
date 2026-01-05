@@ -458,11 +458,23 @@ class Product extends Model
             return $query->where('category_id', $categoryId);
         }
 
-        // Get all subcategory IDs
-        $subcategoryIds = $category->children()->pluck('id')->toArray();
+        // Collect all descendant category IDs (recursive)
+        $allCategoryIds = [$categoryId];
+        $nextParentIds = [$categoryId];
 
-        // Include the parent category ID and all subcategory IDs
-        $allCategoryIds = array_merge([$categoryId], $subcategoryIds);
+        while (!empty($nextParentIds)) {
+            $childIds = Category::query()
+                ->whereIn('parent_id', $nextParentIds)
+                ->pluck('id')
+                ->toArray();
+
+            if (empty($childIds)) {
+                break;
+            }
+
+            $allCategoryIds = array_merge($allCategoryIds, $childIds);
+            $nextParentIds = $childIds;
+        }
 
         return $query->whereIn('category_id', $allCategoryIds);
     }
