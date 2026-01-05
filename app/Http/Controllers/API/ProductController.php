@@ -5,6 +5,7 @@ namespace App\Http\Controllers\API;
 use App\Http\Controllers\Controller;
 use App\Models\Product;
 use App\Models\Deal;
+use App\Models\Category;
 use App\Services\ProductDealService;
 use App\Services\TrendingService;
 use App\Services\ViewTrackingService;
@@ -221,6 +222,105 @@ class ProductController extends Controller
 
         return response()->json([
             'success' => true,
+            'products' => $products,
+        ]);
+    }
+
+    /**
+     * Get branch products grouped by category with optional category filtering.
+     */
+    public function branchProductsByCategory(Request $request, $branchId)
+    {
+        $perPage = (int) $request->input('per_page', 10);
+        $categoryId = $request->input('category_id');
+        $includeProducts = $request->boolean('include_products', true);
+
+        $categoryIds = Product::query()
+            ->where('branch_id', $branchId)
+            ->whereNotNull('category_id')
+            ->distinct()
+            ->pluck('category_id');
+
+        $categories = Category::query()
+            ->whereIn('id', $categoryIds)
+            ->where('type', 'product')
+            ->orderBy('name')
+            ->get();
+
+        $selectedCategoryId = $categoryId ?: ($categories->first()->id ?? null);
+
+        if (!$includeProducts || $selectedCategoryId === null) {
+            return response()->json([
+                'success' => true,
+                'categories' => $categories,
+                'selected_category_id' => $selectedCategoryId,
+                'products' => [
+                    'data' => [],
+                ],
+            ]);
+        }
+
+        $query = Product::with([
+            'branch',
+            'category',
+            'colors',
+            'sizes',
+            'colorSizes.color',
+            'colorSizes.size'
+        ])
+            ->where('branch_id', $branchId);
+
+        $includeSubcategories = $request->boolean('include_subcategories', false);
+        $query->filterByCategory($selectedCategoryId, $includeSubcategories);
+
+        if ($request->has('only_available')) {
+            $query->filterByAvailability($request->boolean('only_available'));
+        }
+
+        $products = $query->paginate($perPage);
+
+        $products->getCollection()->transform(function ($product) {
+            $product->branch_name = $product->branch ? $product->branch->name : null;
+
+            $dealInfo = $this->dealService->calculateDiscountedPrice($product);
+            $product->has_discount = $dealInfo['has_discount'];
+            $product->original_price = $dealInfo['original_price'];
+            $product->discounted_price = $dealInfo['discounted_price'];
+            $product->discount_percentage = $dealInfo['discount_percentage'];
+            $product->discount_amount = $dealInfo['discount_amount'];
+
+            if ($dealInfo['deal']) {
+                $product->deal = $dealInfo['deal'];
+            }
+
+            $product->default_color_image = $product->getDefaultColorImage();
+
+            $colorSizeCombinations = [];
+            foreach ($product->colorSizes as $colorSize) {
+                $colorSizeCombinations[] = [
+                    'id' => $colorSize->id,
+                    'product_id' => $colorSize->product_id,
+                    'color_id' => $colorSize->product_color_id,
+                    'size_id' => $colorSize->product_size_id,
+                    'color_name' => $colorSize->color ? $colorSize->color->name : null,
+                    'color_code' => $colorSize->color ? $colorSize->color->color_code : null,
+                    'size_name' => $colorSize->size ? $colorSize->size->name : null,
+                    'size_value' => $colorSize->size ? $colorSize->size->value : null,
+                    'stock' => $colorSize->stock,
+                    'price_adjustment' => $colorSize->price_adjustment,
+                    'is_available' => $colorSize->is_available,
+                ];
+            }
+
+            $product->color_size_combinations = $colorSizeCombinations;
+
+            return $product;
+        });
+
+        return response()->json([
+            'success' => true,
+            'categories' => $categories,
+            'selected_category_id' => $selectedCategoryId,
             'products' => $products,
         ]);
     }

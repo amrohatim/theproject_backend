@@ -85,6 +85,8 @@ Route::prefix('public')->group(function () {
 
     // Branch public routes
     Route::get('/branches/{id}/ratings', [BranchRatingController::class, 'index']);
+    Route::get('/branches/{id}/products-by-category', [ProductController::class, 'branchProductsByCategory']);
+    Route::get('/branches/{id}/services-by-category', [ServiceController::class, 'branchServicesByCategory']);
 
     // Review public routes
     Route::get('/{type}/{id}/reviews', [ReviewController::class, 'index']);

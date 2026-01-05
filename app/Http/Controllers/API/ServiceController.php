@@ -4,6 +4,7 @@ namespace App\Http\Controllers\API;
 
 use App\Http\Controllers\Controller;
 use App\Models\Service;
+use App\Models\Category;
 use App\Services\ServiceDealService;
 use App\Services\TrendingService;
 use App\Services\ViewTrackingService;
@@ -95,6 +96,62 @@ class ServiceController extends Controller
 
         return response()->json([
             'success' => true,
+            'services' => $services,
+        ]);
+    }
+
+    /**
+     * Get branch services grouped by category with optional category filtering.
+     */
+    public function branchServicesByCategory(Request $request, $branchId)
+    {
+        $perPage = (int) $request->input('per_page', 10);
+        $categoryId = $request->input('category_id');
+        $includeServices = $request->boolean('include_services', true);
+
+        $categoryIds = Service::query()
+            ->where('branch_id', $branchId)
+            ->whereNotNull('category_id')
+            ->distinct()
+            ->pluck('category_id');
+
+        $categories = Category::query()
+            ->whereIn('id', $categoryIds)
+            ->where('type', 'service')
+            ->orderBy('name')
+            ->get();
+
+        $selectedCategoryId = $categoryId ?: ($categories->first()->id ?? null);
+
+        if (!$includeServices || $selectedCategoryId === null) {
+            return response()->json([
+                'success' => true,
+                'categories' => $categories,
+                'selected_category_id' => $selectedCategoryId,
+                'services' => [
+                    'data' => [],
+                ],
+            ]);
+        }
+
+        $query = Service::with(['branch', 'category'])
+            ->where('branch_id', $branchId);
+
+        $includeSubcategories = $request->boolean('include_subcategories', false);
+        $query->filterByCategory($selectedCategoryId, $includeSubcategories);
+
+        if ($request->has('only_available')) {
+            $query->filterByAvailability($request->boolean('only_available'));
+        }
+
+        $services = $query->paginate($perPage);
+
+        $services->getCollection()->transform(fn ($service) => $this->transformService($service));
+
+        return response()->json([
+            'success' => true,
+            'categories' => $categories,
+            'selected_category_id' => $selectedCategoryId,
             'services' => $services,
         ]);
     }
