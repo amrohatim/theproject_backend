@@ -6,6 +6,8 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\Product;
 use App\Models\Service;
+use App\Models\Company;
+use App\Models\Merchant;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\DB;
 
@@ -707,5 +709,88 @@ class SearchController extends Controller
         Log::info('Final category IDs for filtering', ['final_ids' => $finalCategoryIds]);
 
         return $finalCategoryIds;
+    }
+
+    /**
+     * Get search suggestions for autocomplete.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @return \Illuminate\Http\Response
+     */
+    public function suggestions(Request $request)
+    {
+        $query = trim($request->input('query', ''));
+        $limit = (int) $request->input('limit', 8);
+        $limit = max(1, min($limit, 20));
+
+        if ($query === '') {
+            return response()->json([
+                'success' => true,
+                'suggestions' => [],
+            ]);
+        }
+
+        $suggestions = collect();
+        $perType = min($limit, 10);
+
+        $addSuggestion = function ($value) use (&$suggestions) {
+            $trimmed = trim((string) $value);
+            if ($trimmed !== '') {
+                $suggestions->push($trimmed);
+            }
+        };
+
+        $products = Product::query()
+            ->where('name', 'like', "%{$query}%")
+            ->orWhere('product_name_arabic', 'like', "%{$query}%")
+            ->limit($perType)
+            ->get(['name', 'product_name_arabic']);
+
+        foreach ($products as $product) {
+            $addSuggestion($product->name);
+            $addSuggestion($product->product_name_arabic);
+        }
+
+        $services = Service::query()
+            ->where('name', 'like', "%{$query}%")
+            ->orWhere('service_name_arabic', 'like', "%{$query}%")
+            ->limit($perType)
+            ->get(['name', 'service_name_arabic']);
+
+        foreach ($services as $service) {
+            $addSuggestion($service->name);
+            $addSuggestion($service->service_name_arabic);
+        }
+
+        $companies = Company::query()
+            ->where('name', 'like', "%{$query}%")
+            ->limit($perType)
+            ->get(['name']);
+
+        foreach ($companies as $company) {
+            $addSuggestion($company->name);
+        }
+
+        $merchants = Merchant::query()
+            ->where('business_name', 'like', "%{$query}%")
+            ->limit($perType)
+            ->get(['business_name']);
+
+        foreach ($merchants as $merchant) {
+            $addSuggestion($merchant->business_name);
+        }
+
+        $unique = $suggestions
+            ->unique(function ($value) {
+                return mb_strtolower($value);
+            })
+            ->values()
+            ->take($limit)
+            ->values();
+
+        return response()->json([
+            'success' => true,
+            'suggestions' => $unique,
+        ]);
     }
 }

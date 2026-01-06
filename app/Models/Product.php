@@ -548,7 +548,9 @@ class Product extends Model
     {
         return $query->where(function ($query) use ($search) {
             $query->where('name', 'like', "%{$search}%")
-                  ->orWhere('description', 'like', "%{$search}%");
+                  ->orWhere('description', 'like', "%{$search}%")
+                  ->orWhere('product_name_arabic', 'like', "%{$search}%")
+                  ->orWhere('product_description_arabic', 'like', "%{$search}%");
         });
     }
 

@@ -311,7 +311,9 @@ class Service extends Model
     {
         return $query->where(function ($query) use ($search) {
             $query->where('name', 'like', "%{$search}%")
-                  ->orWhere('description', 'like', "%{$search}%");
+                  ->orWhere('description', 'like', "%{$search}%")
+                  ->orWhere('service_name_arabic', 'like', "%{$search}%")
+                  ->orWhere('service_description_arabic', 'like', "%{$search}%");
         });
     }
 

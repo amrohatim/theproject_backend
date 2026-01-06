@@ -11,6 +11,36 @@ use Illuminate\Support\Facades\Storage;
 class CompanyController extends Controller
 {
     /**
+     * Public endpoint to fetch companies with optional search and pagination.
+     */
+    public function publicIndex(Request $request)
+    {
+        $perPage = $request->input('per_page', 25);
+        $search = $request->input('search');
+
+        $query = Company::where('status', 'active')
+            ->orderByDesc('created_at');
+
+        if (!empty($search)) {
+            $query->where('name', 'like', "%{$search}%");
+        }
+
+        $companies = $query->paginate($perPage);
+
+        return response()->json([
+            'success' => true,
+            'companies' => $companies->items(),
+            'pagination' => [
+                'current_page' => $companies->currentPage(),
+                'last_page' => $companies->lastPage(),
+                'per_page' => $companies->perPage(),
+                'total' => $companies->total(),
+                'has_more_pages' => $companies->hasMorePages(),
+            ],
+        ]);
+    }
+
+    /**
      * Display a listing of the companies.
      *
      * @return \Illuminate\Http\Response

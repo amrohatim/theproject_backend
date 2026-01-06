@@ -70,8 +70,10 @@ Route::prefix('language')->group(function () {
 
 // Public routes (no authentication required)
 Route::prefix('public')->group(function () {
+    Route::get('/search/suggestions', [SearchController::class, 'suggestions']);
     Route::get('/branches', [BranchController::class, 'index']);
     Route::get('/branches/{id}', [BranchController::class, 'show']);
+    Route::get('/companies', [CompanyController::class, 'publicIndex']);
     Route::get('/companies/{id}', [CompanyController::class, 'show']);
     Route::get('/companies/{id}/branches', [CompanyController::class, 'getBranches']);
     Route::post('/branches/{id}/track-view', [BranchController::class, 'trackView']);
