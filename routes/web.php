@@ -2518,6 +2518,5 @@ Route::get('/aboutvendor', function () {
     return view('aboutvendor');
 })->name('aboutvendor');
 
-Route::get('branchimageByid/{id}', [\App\Http\Controllers\Vendor\BranchController::class, 'branchimageByid']);
 
 require __DIR__.'/test.php';

@@ -396,3 +396,6 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::get('/product-image/{filename}', [ProductController::class, 'getImage']);
     Route::get('/provider-product-image/{filename}', [ProductController::class, 'getProviderProductImage']);
 });
+
+
+Route::get('branchimageByid/{id}', [BranchController::class, 'branchimageByid']);
