@@ -582,4 +582,20 @@ class BranchController extends Controller
         return preg_replace('/(' . preg_quote($query, '/') . ')/i', '<mark>$1</mark>', $text);
     }
 
+     public function branchimageByid($id)
+    {
+        $branch = Branch::find($id);
+        if (!$branch) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Branch not found',
+            ], 404);
+        }
+
+        return response()->json([
+            'success' => true,
+            'branch_image' => $branch->branch_image,
+        ]);
+    }
+
 }

@@ -549,4 +549,22 @@ class BranchController extends Controller
             ], 500);
         }
     }
+
+    function branchimageByid($id)
+    {
+        // $branch = Branch::find($id);
+        // if (!$branch) {
+        //     return response()->json([
+        //         'success' => false,
+        //         'message' => 'Branch not found',
+        //     ], 404);
+        // }
+
+        // return response()->json([
+        //     'success' => true,
+        //     'branch_image' => $branch->branch_image,
+        // ]);
+    
+    return "dd($id);";
+    }
 }
