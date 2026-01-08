@@ -398,4 +398,3 @@ Route::middleware('auth:sanctum')->group(function () {
 });
 
 
-Route::get('branchimageByid/{id}', [BranchController::class, 'branchimageByid']);

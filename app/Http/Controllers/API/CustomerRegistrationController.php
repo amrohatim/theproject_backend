@@ -12,6 +12,7 @@ use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Str;
 use App\Services\SMSalaService;
 
 class CustomerRegistrationController extends Controller
@@ -266,10 +267,10 @@ class CustomerRegistrationController extends Controller
     public function completeRegistration(Request $request)
     {
         $validator = Validator::make($request->all(), [
-            'email' => 'required|email|unique:users,email',
-            'phone' => 'required|string|regex:/^\+971[0-9]{9}$/|unique:users,phone',
-            'password' => 'required|string|min:8|confirmed',
-            'name' => 'required|string|min:3|max:255',
+            'email' => 'nullable|email|unique:users,email',
+            'phone' => 'nullable|string|regex:/^\+971[0-9]{9}$/|unique:users,phone',
+            'password' => 'nullable|string|min:8|confirmed',
+            'name' => 'required|string|min:1|max:255',
             'avatar_id' => 'required|exists:avatars,id',
             'social_provider' => 'nullable|string|in:google,facebook', // Allow social provider info
             'social_id' => 'nullable|string', // Social provider user ID
@@ -283,31 +284,57 @@ class CustomerRegistrationController extends Controller
             ], 422);
         }
 
-        // Check verification status based on registration method
         $socialProvider = $request->social_provider;
-        $phoneVerified = Cache::get("phone_verified_{$request->phone}");
+        $email = trim((string) $request->email);
+        $phone = trim((string) $request->phone);
 
-        // For social login users (Google/Facebook), skip email verification check
-        // as their emails are already verified by the OAuth provider
-        if (!$socialProvider) {
-            // Regular registration - check email verification
-            $emailVerified = Cache::get("email_verified_{$request->email}");
-            if (!$emailVerified) {
-                return response()->json([
-                    'success' => false,
-                    'message' => 'Email not verified',
-                ], 400);
-            }
-        } else {
-            // Social login - log that we're skipping email verification
-            Log::info("Skipping email verification for {$socialProvider} user: {$request->email}");
-        }
-
-        if (!$phoneVerified) {
+        if ($email === '' && $phone === '') {
             return response()->json([
                 'success' => false,
-                'message' => 'Phone not verified',
-            ], 400);
+                'message' => 'Email or phone is required',
+            ], 422);
+        }
+
+        if (!$socialProvider && trim((string) $request->password) === '') {
+            return response()->json([
+                'success' => false,
+                'message' => 'Password is required',
+            ], 422);
+        }
+
+        if ($socialProvider && $email === '') {
+            return response()->json([
+                'success' => false,
+                'message' => 'Email is required for social registration',
+            ], 422);
+        }
+
+        $emailVerified = false;
+        $phoneVerified = false;
+
+        if ($email !== '') {
+            if ($socialProvider) {
+                $emailVerified = true;
+                Log::info("Skipping email verification for {$socialProvider} user: {$email}");
+            } else {
+                $emailVerified = (bool) Cache::get("email_verified_{$email}");
+                if (!$emailVerified) {
+                    return response()->json([
+                        'success' => false,
+                        'message' => 'Email not verified',
+                    ], 400);
+                }
+            }
+        }
+
+        if ($phone !== '') {
+            $phoneVerified = (bool) Cache::get("phone_verified_{$phone}");
+            if (!$phoneVerified) {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'Phone not verified',
+                ], 400);
+            }
         }
 
         try {
@@ -323,19 +350,27 @@ class CustomerRegistrationController extends Controller
                     'registration_method' => 'social_login',
                     'email_verified_by' => $socialProvider, // Track that email was verified by OAuth provider
                 ];
+            } else {
+                $registrationData = [
+                    'registration_method' => $email !== '' && $phone !== '' ? 'email_phone' : ($email !== '' ? 'email' : 'phone'),
+                ];
             }
+
+            $passwordHash = $request->password
+                ? Hash::make($request->password)
+                : Hash::make(Str::random(32));
 
             // Create user
             $user = User::create([
                 'name' => $request->name,
-                'email' => $request->email,
-                'phone' => $request->phone,
-                'password' => Hash::make($request->password),
+                'email' => $email !== '' ? $email : null,
+                'phone' => $phone !== '' ? $phone : null,
+                'password' => $passwordHash,
                 'role' => 'customer',
                 'profile_image' => $avatar ? $avatar->avatar_image : null,
-                'email_verified_at' => now(),
-                'phone_verified' => true,
-                'phone_verified_at' => now(),
+                'email_verified_at' => $emailVerified ? now() : null,
+                'phone_verified' => $phoneVerified,
+                'phone_verified_at' => $phoneVerified ? now() : null,
                 'registration_step' => 'verified',
                 'status' => 'active',
                 'registration_data' => $registrationData,
@@ -345,8 +380,12 @@ class CustomerRegistrationController extends Controller
             $token = $user->createToken('auth_token')->plainTextToken;
 
             // Clean up verification cache
-            Cache::forget("email_verified_{$request->email}");
-            Cache::forget("phone_verified_{$request->phone}");
+            if ($email !== '') {
+                Cache::forget("email_verified_{$email}");
+            }
+            if ($phone !== '') {
+                Cache::forget("phone_verified_{$phone}");
+            }
 
             return response()->json([
                 'success' => true,

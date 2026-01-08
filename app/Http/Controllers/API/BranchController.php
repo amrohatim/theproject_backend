@@ -550,22 +550,5 @@ class BranchController extends Controller
         }
     }
 
-    public function branchimageByid($id)
-    {
-       $branch = Branch::find($id);
-$image = $branch ? $branch->branch_image : null;
 
-
-        if (!$branch) {
-            return response()->json([
-                'success' => false,
-                'message' => 'Branch not found',
-            ], 404);
-        }
-
-        return response()->json([
-            'success' => true,
-            'branch_image' => $image
-        ]);
-    }
 }
