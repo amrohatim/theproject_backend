@@ -189,6 +189,8 @@ return [
     'sku_auto_generated' => 'Will be auto-generated if left blank',
     'sku_help' => 'Will be auto-generated if left blank',
     'stock_quantity' => 'Stock Quantity',
+    'min_order' => 'Minimum Order',
+    'min_order_help' => 'Minimum quantity per order',
     'product_image' => 'Product Image',
     'no_image_selected' => 'No image selected',
     'select_image' => 'Select Image',
@@ -203,6 +205,7 @@ return [
     'required_field' => 'This field is required',
     'invalid_price' => 'Please enter a valid price',
     'invalid_stock' => 'Please enter a valid stock quantity',
+    'min_order_cannot_exceed_stock' => 'Minimum order cannot be greater than stock',
     'image_too_large' => 'Image file is too large',
     'invalid_image_format' => 'Invalid image format',
 

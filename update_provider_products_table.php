@@ -24,6 +24,7 @@ try {
             $table->decimal('price', 10, 2);
             $table->decimal('original_price', 10, 2)->nullable();
             $table->integer('stock')->default(0);
+            $table->unsignedInteger('min_order')->default(1);
             $table->string('image')->nullable();
             $table->unsignedBigInteger('category_id')->nullable();
             $table->foreign('category_id')->references('id')->on('categories')->onDelete('set null');
@@ -63,6 +64,11 @@ try {
             if (!Schema::hasColumn('provider_products', 'stock')) {
                 $table->integer('stock')->default(0);
                 echo "Added stock column.\n";
+            }
+
+            if (!Schema::hasColumn('provider_products', 'min_order')) {
+                $table->unsignedInteger('min_order')->default(1);
+                echo "Added min_order column.\n";
             }
             
             if (!Schema::hasColumn('provider_products', 'image')) {

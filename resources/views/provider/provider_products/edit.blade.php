@@ -165,6 +165,21 @@
                                     </div>
                                 </div>
                             </div>
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <div class="mb-3">
+                                        <label for="min_order" style="display: block; margin-bottom: 8px; color: var(--discord-lightest); font-weight: 500;">
+                                            {{ __('provider.min_order') }} <span style="color: var(--discord-red);">*</span>
+                                        </label>
+                                        <input type="number" min="1" class="form-control" id="min_order" name="min_order" value="{{ old('min_order', $providerProduct->min_order ?? 1) }}" required 
+                                            style="background-color: var(--discord-dark); border: none; color: var(--discord-lightest); padding: 10px 12px; border-radius: 4px; width: 100%;">
+                                        <small style="color: var(--discord-light); font-size: 12px;">{{ __('provider.min_order_help') }}</small>
+                                        @error('min_order')
+                                            <div style="color: var(--discord-red); font-size: 14px; margin-top: 5px;">{{ $message }}</div>
+                                        @enderror
+                                    </div>
+                                </div>
+                            </div>
                         </div>
                     </div>
                     
@@ -316,6 +331,16 @@ $(document).ready(function() {
             });
         }
 
+        // Min order validation
+        var stockValue = parseInt($('#stock').val(), 10);
+        var minOrderValue = parseInt($('#min_order').val(), 10);
+        if (!isNaN(stockValue) && !isNaN(minOrderValue) && minOrderValue > stockValue) {
+            errors.push({
+                field: 'min_order',
+                message: '{{ __('provider.min_order_cannot_exceed_stock') }}'
+            });
+        }
+
         // If there are errors, show modal and prevent submission
         if (errors.length > 0) {
             e.preventDefault();
@@ -377,7 +402,8 @@ function getFieldDisplayName(fieldName) {
         'product_name': '{{ __('provider.product_name') }}',
         'product_name_arabic': '{{ __('provider.product_name_arabic') }}',
         'price': '{{ __('provider.price') }}',
-        'stock': '{{ __('provider.stock_quantity') }}'
+        'stock': '{{ __('provider.stock_quantity') }}',
+        'min_order': '{{ __('provider.min_order') }}'
     };
     return fieldNames[fieldName] || fieldName;
 }

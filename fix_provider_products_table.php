@@ -47,6 +47,12 @@ if (!Schema::hasColumn('provider_products', 'sku')) {
     echo "Added sku column.\n";
 }
 
+// Add min_order column if it doesn't exist
+if (!Schema::hasColumn('provider_products', 'min_order')) {
+    DB::statement('ALTER TABLE provider_products ADD COLUMN min_order INT UNSIGNED DEFAULT 1 AFTER stock');
+    echo "Added min_order column.\n";
+}
+
 // Add category_id column if it doesn't exist
 if (!Schema::hasColumn('provider_products', 'category_id')) {
     DB::statement('ALTER TABLE provider_products ADD COLUMN category_id BIGINT UNSIGNED NULL AFTER sku');

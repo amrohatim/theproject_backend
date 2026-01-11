@@ -100,6 +100,7 @@ class ProviderProductController extends Controller
             'price' => 'required|numeric|min:0',
             'original_price' => 'nullable|numeric|min:0',
             'stock' => 'required|integer|min:0',
+            'min_order' => 'required|integer|min:1|lte:stock',
             'sku' => 'nullable|string|max:100',
             'category_id' => [
                 'required',
@@ -150,6 +151,7 @@ class ProviderProductController extends Controller
         $providerProduct->price = $request->price;
         $providerProduct->original_price = $request->original_price;
         $providerProduct->stock = $request->stock;
+        $providerProduct->min_order = $request->min_order;
         $providerProduct->sku = $request->sku;
         $providerProduct->category_id = $request->category_id;
         $providerProduct->is_active = $request->has('is_active') ? true : false;
@@ -287,6 +289,7 @@ class ProviderProductController extends Controller
             'price' => 'required|numeric|min:0',
             'original_price' => 'nullable|numeric|min:0',
             'stock' => 'required|integer|min:0',
+            'min_order' => 'required|integer|min:1|lte:stock',
             'sku' => 'nullable|string|max:100',
             'category_id' => [
                 'required',
@@ -330,6 +333,7 @@ class ProviderProductController extends Controller
         $providerProduct->price = $request->price;
         $providerProduct->original_price = $request->original_price;
         $providerProduct->stock = $request->stock;
+        $providerProduct->min_order = $request->min_order;
         $providerProduct->sku = $request->sku;
         $providerProduct->category_id = $request->category_id;
         $providerProduct->is_active = $request->has('is_active') ? true : false;

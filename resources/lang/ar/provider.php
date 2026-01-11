@@ -189,6 +189,8 @@ return [
     'sku_auto_generated' => 'سيتم إنشاؤه تلقائياً إذا ترك فارغاً',
     'sku_help' => 'سيتم إنشاؤه تلقائياً إذا ترك فارغاً',
     'stock_quantity' => 'كمية المخزون',
+    'min_order' => 'الحد الأدنى للطلب',
+    'min_order_help' => 'الحد الأدنى للكمية لكل طلب',
     'product_image' => 'صورة المنتج',
     'no_image_selected' => 'لم يتم اختيار صورة',
     'select_image' => 'اختر صورة',
@@ -203,6 +205,7 @@ return [
     'required_field' => 'هذا الحقل مطلوب',
     'invalid_price' => 'يرجى إدخال سعر صحيح',
     'invalid_stock' => 'يرجى إدخال كمية مخزون صحيحة',
+    'min_order_cannot_exceed_stock' => 'الحد الأدنى للطلب لا يمكن أن يكون أكبر من المخزون',
     'image_too_large' => 'حجم ملف الصورة كبير جداً',
     'invalid_image_format' => 'تنسيق الصورة غير صحيح',
 
