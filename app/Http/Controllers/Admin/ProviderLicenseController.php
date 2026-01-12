@@ -140,6 +140,49 @@ class ProviderLicenseController extends Controller
     }
 
     /**
+     * Download a provider license file.
+     */
+    public function downloadLicense($id)
+    {
+        $license = License::with(['user'])->findOrFail($id);
+
+        if (!$license->license_file_path) {
+            return redirect()->back()->with('error', 'No license file found.');
+        }
+
+        $filePath = storage_path('app/public/' . $license->license_file_path);
+
+        if (!file_exists($filePath)) {
+            return redirect()->back()->with('error', 'License file not found.');
+        }
+
+        return response()->download($filePath, basename($license->license_file_path));
+    }
+
+    /**
+     * View a provider license file in the browser.
+     */
+    public function viewLicense($id)
+    {
+        $license = License::with(['user'])->findOrFail($id);
+
+        if (!$license->license_file_path) {
+            abort(404, 'No license file found.');
+        }
+
+        $filePath = storage_path('app/public/' . $license->license_file_path);
+
+        if (!file_exists($filePath)) {
+            abort(404, 'License file not found.');
+        }
+
+        return response()->file($filePath, [
+            'Content-Type' => 'application/pdf',
+            'Content-Disposition' => 'inline; filename="' . basename($license->license_file_path) . '"'
+        ]);
+    }
+
+    /**
      * Bulk approve multiple licenses.
      */
     public function bulkApprove(Request $request, LicenseManagementService $licenseService)

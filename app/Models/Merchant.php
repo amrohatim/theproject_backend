@@ -348,7 +348,7 @@ class Merchant extends Model
             return null;
         }
 
-        return route('admin.merchant-licenses.view', $this->id);
+        return route('merchant.license.view');
     }
 
     /**

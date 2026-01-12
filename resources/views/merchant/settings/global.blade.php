@@ -477,15 +477,20 @@
 
                             <div class="flex justify-between items-center py-3 border-b border-slate-200">
                                 <span class="text-slate-600">{{ __('merchant.license_status') }}:</span>
-                                @if($licenseStatus['text'] === 'Approved')
+                                @if($licenseStatus['status'] === 'verified')
                                     <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-emerald-500/10 text-emerald-600 border border-emerald-500/20">
                                         <i class="fas fa-check-circle w-3 h-3 mr-1"></i>
                                         {{ __('merchant.approved') }}
                                     </span>
-                                @elseif($licenseStatus['text'] === 'Rejected')
+                                @elseif($licenseStatus['status'] === 'rejected')
                                     <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-red-500/10 text-red-600 border border-red-500/20">
                                         <i class="fas fa-times w-3 h-3 mr-1"></i>
                                         {{ __('merchant.rejected') }}
+                                    </span>
+                                @elseif($licenseStatus['status'] === 'expired')
+                                    <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-red-500/10 text-red-600 border border-red-500/20">
+                                        <i class="fas fa-times-circle w-3 h-3 mr-1"></i>
+                                        {{ __('merchant.expired') }}
                                     </span>
                                 @else
                                     <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-amber-500/10 text-amber-600 border border-amber-500/20">
@@ -599,6 +604,38 @@
             </div>
         </div>
         @endif
+    </div>
+</div>
+
+<!-- License Upload Confirmation Modal -->
+<div id="license-confirm-modal" class="fixed inset-0 z-50 hidden items-center justify-center bg-black/50">
+    <div class="bg-white rounded-lg shadow-xl max-w-md w-full mx-4 p-6">
+        <div class="flex items-start gap-3 mb-4">
+            <div class="w-10 h-10 rounded-full bg-amber-100 flex items-center justify-center">
+                <i class="fas fa-exclamation-triangle text-amber-600"></i>
+            </div>
+            <div>
+                <h3 class="text-lg font-semibold text-slate-800">{{ __('merchant.license_confirm_title') }}</h3>
+                <p class="text-sm text-slate-600 mt-1">
+                    {{ __('merchant.license_confirm_message') }}
+                </p>
+            </div>
+        </div>
+        <div class="text-sm text-slate-600 mb-4">
+            {{ __('merchant.license_confirm_countdown_prefix') }}
+            <span id="license-countdown" class="font-semibold text-slate-800">10</span>
+            {{ __('merchant.license_confirm_countdown_suffix') }}
+        </div>
+        <div class="flex justify-end gap-2">
+            <button type="button" id="license-cancel-btn"
+                    class="px-4 py-2 text-sm font-medium rounded-md border border-slate-300 text-slate-700 hover:bg-slate-50">
+                {{ __('merchant.cancel') }}
+            </button>
+            <button type="button" id="license-confirm-btn" disabled
+                    class="px-4 py-2 text-sm font-medium rounded-md bg-purple-600 text-white disabled:bg-gray-300 disabled:text-gray-500">
+                {{ __('merchant.upload_license') }}
+            </button>
+        </div>
     </div>
 </div>
 
@@ -868,6 +905,13 @@ document.addEventListener('DOMContentLoaded', function() {
     const fileName = document.getElementById('file-name');
     const fileSize = document.getElementById('file-size');
     const submitBtn = document.getElementById('license-submit-btn');
+    const licenseForm = document.getElementById('license-form');
+    const licenseModal = document.getElementById('license-confirm-modal');
+    const licenseCountdown = document.getElementById('license-countdown');
+    const licenseConfirmBtn = document.getElementById('license-confirm-btn');
+    const licenseCancelBtn = document.getElementById('license-cancel-btn');
+    let licenseConfirmed = false;
+    let countdownTimer = null;
 
     if (licenseFileInput) {
         licenseFileInput.addEventListener('change', function(e) {
@@ -907,7 +951,75 @@ document.addEventListener('DOMContentLoaded', function() {
             }
         });
     }
+
+    function resetLicenseModal() {
+        if (!licenseCountdown || !licenseConfirmBtn) {
+            return;
+        }
+        licenseCountdown.textContent = '10';
+        licenseConfirmBtn.disabled = true;
+        if (countdownTimer) {
+            clearInterval(countdownTimer);
+            countdownTimer = null;
+        }
+    }
+
+    function openLicenseModal() {
+        if (!licenseModal) {
+            return;
+        }
+        resetLicenseModal();
+        licenseModal.classList.remove('hidden');
+        licenseModal.classList.add('flex');
+        let remaining = 10;
+        countdownTimer = setInterval(() => {
+            remaining -= 1;
+            if (licenseCountdown) {
+                licenseCountdown.textContent = String(remaining);
+            }
+            if (remaining <= 0) {
+                clearInterval(countdownTimer);
+                countdownTimer = null;
+                if (licenseConfirmBtn) {
+                    licenseConfirmBtn.disabled = false;
+                }
+            }
+        }, 1000);
+    }
+
+    function closeLicenseModal() {
+        if (!licenseModal) {
+            return;
+        }
+        licenseModal.classList.add('hidden');
+        licenseModal.classList.remove('flex');
+        resetLicenseModal();
+    }
+
+    if (licenseForm) {
+        licenseForm.addEventListener('submit', function(e) {
+            if (!licenseConfirmed) {
+                e.preventDefault();
+                openLicenseModal();
+            }
+        });
+    }
+
+    if (licenseCancelBtn) {
+        licenseCancelBtn.addEventListener('click', function() {
+            closeLicenseModal();
+        });
+    }
+
+    if (licenseConfirmBtn) {
+        licenseConfirmBtn.addEventListener('click', function() {
+            licenseConfirmed = true;
+            closeLicenseModal();
+            if (licenseForm) {
+                licenseForm.submit();
+            }
+        });
+    }
 });
 </script>
 @endsection
-

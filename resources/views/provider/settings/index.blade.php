@@ -203,7 +203,7 @@
                             </div>
                         </div>
                         @if($license->license_file_path)
-                            <button class="flex items-center px-3 py-1 border border-blue-200 text-blue-700 rounded hover:bg-blue-50" onclick="window.open('{{ asset('storage/' . $license->license_file_path) }}', '_blank')">
+                            <button class="flex items-center px-3 py-1 border border-blue-200 text-blue-700 rounded hover:bg-blue-50" onclick="window.open('{{ route('provider.settings.license.view') }}', '_blank')">
                                 <i data-lucide="file-text" class="w-4 h-4 mr-2"></i>
                                 {{ __('provider.view_license_file') }}
                             </button>
@@ -250,6 +250,38 @@
         </div>
     </div>
 </div>
+    </div>
+</div>
+
+<!-- License Upload Confirmation Modal -->
+<div id="license-confirm-modal" class="fixed inset-0 z-50 hidden items-center justify-center bg-black/50">
+    <div class="bg-white rounded-lg shadow-xl max-w-md w-full mx-4 p-6">
+        <div class="flex items-start gap-3 mb-4">
+            <div class="w-10 h-10 rounded-full bg-amber-100 flex items-center justify-center">
+                <i class="fas fa-exclamation-triangle text-amber-600"></i>
+            </div>
+            <div>
+                <h3 class="text-lg font-semibold text-gray-900">{{ __('provider.license_confirm_title') }}</h3>
+                <p class="text-sm text-gray-600 mt-1">
+                    {{ __('provider.license_confirm_message') }}
+                </p>
+            </div>
+        </div>
+        <div class="text-sm text-gray-600 mb-4">
+            {{ __('provider.license_confirm_countdown_prefix') }}
+            <span id="license-countdown" class="font-semibold text-gray-900">10</span>
+            {{ __('provider.license_confirm_countdown_suffix') }}
+        </div>
+        <div class="flex justify-end gap-2">
+            <button type="button" id="license-cancel-btn"
+                    class="px-4 py-2 text-sm font-medium rounded-md border border-gray-300 text-gray-700 hover:bg-gray-50">
+                {{ __('provider.cancel') }}
+            </button>
+            <button type="button" id="license-confirm-btn" disabled
+                    class="px-4 py-2 text-sm font-medium rounded-md bg-green-600 text-white disabled:bg-gray-300 disabled:text-gray-500">
+                {{ __('provider.upload_license') }}
+            </button>
+        </div>
     </div>
 </div>
 
@@ -321,13 +353,65 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     });
     
-    // Handle license form submission
-    document.getElementById('license-form').addEventListener('submit', function(e) {
-        e.preventDefault();
-        
-        const submitButton = this.querySelector('button[type="submit"]');
+    const licenseForm = document.getElementById('license-form');
+    const licenseModal = document.getElementById('license-confirm-modal');
+    const licenseCountdown = document.getElementById('license-countdown');
+    const licenseConfirmBtn = document.getElementById('license-confirm-btn');
+    const licenseCancelBtn = document.getElementById('license-cancel-btn');
+    let licenseConfirmed = false;
+    let countdownTimer = null;
+
+    function resetLicenseModal() {
+        if (!licenseCountdown || !licenseConfirmBtn) {
+            return;
+        }
+        licenseCountdown.textContent = '10';
+        licenseConfirmBtn.disabled = true;
+        if (countdownTimer) {
+            clearInterval(countdownTimer);
+            countdownTimer = null;
+        }
+    }
+
+    function openLicenseModal() {
+        if (!licenseModal) {
+            return;
+        }
+        resetLicenseModal();
+        licenseModal.classList.remove('hidden');
+        licenseModal.classList.add('flex');
+        let remaining = 10;
+        countdownTimer = setInterval(() => {
+            remaining -= 1;
+            if (licenseCountdown) {
+                licenseCountdown.textContent = String(remaining);
+            }
+            if (remaining <= 0) {
+                clearInterval(countdownTimer);
+                countdownTimer = null;
+                if (licenseConfirmBtn) {
+                    licenseConfirmBtn.disabled = false;
+                }
+            }
+        }, 1000);
+    }
+
+    function closeLicenseModal() {
+        if (!licenseModal) {
+            return;
+        }
+        licenseModal.classList.add('hidden');
+        licenseModal.classList.remove('flex');
+        resetLicenseModal();
+    }
+
+    function submitLicenseForm() {
+        if (!licenseForm) {
+            return;
+        }
+        const submitButton = licenseForm.querySelector('button[type="submit"]');
         const originalText = submitButton.innerHTML;
-        
+
         // Show loading state
         submitButton.disabled = true;
         submitButton.innerHTML = `
@@ -338,7 +422,7 @@ document.addEventListener('DOMContentLoaded', function() {
             Uploading...
         `;
         
-        const formData = new FormData(this);
+        const formData = new FormData(licenseForm);
         
         fetch('{{ route("provider.settings.license") }}', {
             method: 'POST',
@@ -352,7 +436,7 @@ document.addEventListener('DOMContentLoaded', function() {
             if (data.success) {
                 showAlert('success', '{{ __('provider.license_uploaded_successfully') }}');
                 // Reset form
-                this.reset();
+                licenseForm.reset();
                 // Reload page to show updated license info
                 setTimeout(() => {
                     window.location.reload();
@@ -376,11 +460,38 @@ document.addEventListener('DOMContentLoaded', function() {
             showAlert('error', '{{ __('provider.error_uploading_license') }}');
         })
         .finally(() => {
+            licenseConfirmed = false;
             // Restore button state
             submitButton.disabled = false;
             submitButton.innerHTML = originalText;
         });
-    });
+    }
+
+    if (licenseForm) {
+        licenseForm.addEventListener('submit', function(e) {
+            if (!licenseConfirmed) {
+                e.preventDefault();
+                openLicenseModal();
+                return;
+            }
+            e.preventDefault();
+            submitLicenseForm();
+        });
+    }
+
+    if (licenseCancelBtn) {
+        licenseCancelBtn.addEventListener('click', function() {
+            closeLicenseModal();
+        });
+    }
+
+    if (licenseConfirmBtn) {
+        licenseConfirmBtn.addEventListener('click', function() {
+            licenseConfirmed = true;
+            closeLicenseModal();
+            submitLicenseForm();
+        });
+    }
     
     // File upload preview
     document.getElementById('license_file').addEventListener('change', function(e) {

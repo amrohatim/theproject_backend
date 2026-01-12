@@ -146,4 +146,33 @@ class SettingsController extends Controller
             ], 500);
         }
     }
+
+    /**
+     * View the provider's current license file in the browser.
+     *
+     * @return \Symfony\Component\HttpFoundation\StreamedResponse|\Symfony\Component\HttpFoundation\Response
+     */
+    public function viewLicense()
+    {
+        $user = Auth::user();
+
+        $license = License::where('user_id', $user->id)
+            ->orderBy('created_at', 'desc')
+            ->first();
+
+        if (!$license || !$license->license_file_path) {
+            abort(404, 'No license file found.');
+        }
+
+        $filePath = storage_path('app/public/' . $license->license_file_path);
+
+        if (!file_exists($filePath)) {
+            abort(404, 'License file not found.');
+        }
+
+        return response()->file($filePath, [
+            'Content-Type' => 'application/pdf',
+            'Content-Disposition' => 'inline; filename="' . basename($license->license_file_path) . '"'
+        ]);
+    }
 }

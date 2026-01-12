@@ -1308,6 +1308,8 @@ Route::prefix('admin')->name('admin.')->middleware(['auth', \App\Http\Middleware
     // Provider License Management
     Route::get('/provider-licenses', [App\Http\Controllers\Admin\ProviderLicenseController::class, 'index'])->name('provider-licenses.index');
     Route::get('/provider-licenses/{id}', [App\Http\Controllers\Admin\ProviderLicenseController::class, 'show'])->name('provider-licenses.show');
+    Route::get('/provider-licenses/{id}/view', [App\Http\Controllers\Admin\ProviderLicenseController::class, 'viewLicense'])->name('provider-licenses.view');
+    Route::get('/provider-licenses/{id}/download', [App\Http\Controllers\Admin\ProviderLicenseController::class, 'downloadLicense'])->name('provider-licenses.download');
     Route::post('/provider-licenses/{id}/approve', [App\Http\Controllers\Admin\ProviderLicenseController::class, 'approve'])->name('provider-licenses.approve');
     Route::post('/provider-licenses/{id}/reject', [App\Http\Controllers\Admin\ProviderLicenseController::class, 'reject'])->name('provider-licenses.reject');
     Route::post('/provider-licenses/bulk-approve', [App\Http\Controllers\Admin\ProviderLicenseController::class, 'bulkApprove'])->name('provider-licenses.bulk-approve');
@@ -2318,6 +2320,7 @@ Route::prefix('provider')->name('provider.')->middleware(['auth', \App\Http\Midd
     Route::get('/settings', [App\Http\Controllers\Provider\SettingsController::class, 'index'])->name('settings.index');
     Route::post('/settings/delivery', [App\Http\Controllers\Provider\SettingsController::class, 'updateDelivery'])->name('settings.delivery');
     Route::post('/settings/license', [App\Http\Controllers\Provider\SettingsController::class, 'uploadLicense'])->name('settings.license');
+    Route::get('/settings/license/view', [App\Http\Controllers\Provider\SettingsController::class, 'viewLicense'])->name('settings.license.view');
 
     // Subscription
     Route::get('/subscription', [App\Http\Controllers\Provider\SubscriptionController::class, 'index'])->name('subscription.index');
@@ -2353,6 +2356,9 @@ Route::prefix('merchant')->name('merchant.')->middleware(['auth', \App\Http\Midd
 
     // Subscription
     Route::get('/subscription', [App\Http\Controllers\Merchant\SubscriptionController::class, 'index'])->name('subscription.index');
+
+    // License
+    Route::get('/license/view', [App\Http\Controllers\Merchant\SettingsController::class, 'viewLicense'])->name('license.view');
 
     // Products
     Route::get('/products', [App\Http\Controllers\Merchant\ProductController::class, 'index'])->name('products.index');

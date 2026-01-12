@@ -1498,6 +1498,10 @@ return [
     'license_management' => 'License Management',
     'update_license_documents_dates' => 'Update license documents and dates',
     'update_license' => 'Update License',
+    'license_confirm_title' => 'Are you sure?',
+    'license_confirm_message_vendor' => 'You cannot add products or service until our team review your license.',
+    'license_confirm_countdown_prefix' => 'Upload will be enabled in',
+    'license_confirm_countdown_suffix' => 'seconds.',
 
 
     // Deal Conflict Validation

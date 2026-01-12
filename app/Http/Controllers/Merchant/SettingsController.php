@@ -243,4 +243,28 @@ class SettingsController extends Controller
                 ->with('error', 'An error occurred while uploading the license. Please try again.');
         }
     }
+
+    /**
+     * View the merchant's current license file in the browser.
+     */
+    public function viewLicense()
+    {
+        $user = Auth::user();
+        $merchant = $user->merchantRecord;
+
+        if (!$merchant || !$merchant->license_file) {
+            abort(404, 'No license file found.');
+        }
+
+        $filePath = storage_path('app/public/' . $merchant->license_file);
+
+        if (!file_exists($filePath)) {
+            abort(404, 'License file not found.');
+        }
+
+        return response()->file($filePath, [
+            'Content-Type' => 'application/pdf',
+            'Content-Disposition' => 'inline; filename="' . basename($merchant->license_file) . '"'
+        ]);
+    }
 }

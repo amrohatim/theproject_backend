@@ -2276,7 +2276,11 @@ return [
 
 'license_management' => 'إدارة الترخيص',
 'update_license_documents_dates' => 'تحديث مستندات وتواريخ الترخيص',
-'update_license' => 'تحديث الترخيص',
+    'update_license' => 'تحديث الترخيص',
+    'license_confirm_title' => 'هل أنت متأكد؟',
+    'license_confirm_message_vendor' => 'لن تتمكن من إضافة المنتجات أو الخدمات حتى يراجع فريقنا ترخيصك.',
+    'license_confirm_countdown_prefix' => 'سيتم تفعيل رفع الترخيص خلال',
+    'license_confirm_countdown_suffix' => 'ثوانٍ.',
 
 
     // Deal Conflict Validation

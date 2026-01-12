@@ -122,13 +122,13 @@
                                 </svg>
                                 <span id="toggle-text">View Inline</span>
                             </button>
-                            <a href="{{ asset('storage/' . $license->license_file_path) }}" target="_blank" class="inline-flex items-center px-3 py-2 border border-gray-300 dark:border-gray-600 shadow-sm text-sm leading-4 font-medium rounded-md text-gray-700 dark:text-gray-300 bg-white dark:bg-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
+                            <a href="{{ route('admin.provider-licenses.view', $license->id) }}" target="_blank" class="inline-flex items-center px-3 py-2 border border-gray-300 dark:border-gray-600 shadow-sm text-sm leading-4 font-medium rounded-md text-gray-700 dark:text-gray-300 bg-white dark:bg-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
                                 <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"></path>
                                 </svg>
                                 Open in New Tab
                             </a>
-                            <a href="{{ asset('storage/' . $license->license_file_path) }}" download="{{ $license->license_file_name }}" class="inline-flex items-center px-3 py-2 border border-gray-300 dark:border-gray-600 shadow-sm text-sm leading-4 font-medium rounded-md text-gray-700 dark:text-gray-300 bg-white dark:bg-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
+                            <a href="{{ route('admin.provider-licenses.download', $license->id) }}" download="{{ $license->license_file_name }}" class="inline-flex items-center px-3 py-2 border border-gray-300 dark:border-gray-600 shadow-sm text-sm leading-4 font-medium rounded-md text-gray-700 dark:text-gray-300 bg-white dark:bg-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
                                 <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
                                 </svg>
@@ -145,11 +145,11 @@
                     <div id="pdf-viewer" class="hidden">
                         <div class="border border-gray-300 dark:border-gray-600 rounded-lg overflow-hidden">
                             <iframe 
-                                src="{{ asset('storage/' . $license->license_file_path) }}" 
+                                src="{{ route('admin.provider-licenses.view', $license->id) }}" 
                                 class="w-full h-96"
                                 title="License Document">
                                 <p>Your browser does not support PDFs. 
-                                   <a href="{{ asset('storage/' . $license->license_file_path) }}" target="_blank">Download the PDF</a>.
+                                   <a href="{{ route('admin.provider-licenses.download', $license->id) }}" target="_blank">Download the PDF</a>.
                                 </p>
                             </iframe>
                         </div>

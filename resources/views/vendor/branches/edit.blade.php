@@ -577,6 +577,38 @@
         </form>
     </div>
 </div>
+
+<!-- License Upload Confirmation Modal -->
+<div id="license-confirm-modal" class="fixed inset-0 z-50 hidden items-center justify-center bg-black/50">
+    <div class="bg-white dark:bg-gray-800 rounded-lg shadow-xl max-w-md w-full mx-4 p-6">
+        <div class="flex items-start gap-3 mb-4">
+            <div class="w-10 h-10 rounded-full bg-amber-100 dark:bg-amber-900/40 flex items-center justify-center">
+                <i class="fas fa-exclamation-triangle text-amber-600"></i>
+            </div>
+            <div>
+                <h3 class="text-lg font-semibold text-gray-900 dark:text-white">{{ __('messages.license_confirm_title') }}</h3>
+                <p class="text-sm text-gray-600 dark:text-gray-300 mt-1">
+                    {{ __('messages.license_confirm_message_vendor') }}
+                </p>
+            </div>
+        </div>
+        <div class="text-sm text-gray-600 dark:text-gray-300 mb-4">
+            {{ __('messages.license_confirm_countdown_prefix') }}
+            <span id="license-countdown" class="font-semibold text-gray-900 dark:text-white">10</span>
+            {{ __('messages.license_confirm_countdown_suffix') }}
+        </div>
+        <div class="flex justify-end gap-2">
+            <button type="button" id="license-cancel-btn"
+                    class="px-4 py-2 text-sm font-medium rounded-md border border-gray-300 dark:border-gray-600 text-gray-700 dark:text-gray-200 hover:bg-gray-50 dark:hover:bg-gray-700">
+                {{ __('messages.cancel') }}
+            </button>
+            <button type="button" id="license-confirm-btn" disabled
+                    class="px-4 py-2 text-sm font-medium rounded-md bg-green-600 text-white disabled:bg-gray-300 disabled:text-gray-500">
+                {{ __('messages.upload_license') }}
+            </button>
+        </div>
+    </div>
+</div>
 @endsection
 
 @section('scripts')
@@ -1102,7 +1134,136 @@
 
         // Initialize form handlers
         handleFormSubmission('branch-info-form', 'Branch information updated successfully.');
-        handleFormSubmission('license-form', 'License updated successfully.');
+        const licenseForm = document.getElementById('license-form');
+        const licenseModal = document.getElementById('license-confirm-modal');
+        const licenseCountdown = document.getElementById('license-countdown');
+        const licenseConfirmBtn = document.getElementById('license-confirm-btn');
+        const licenseCancelBtn = document.getElementById('license-cancel-btn');
+        let licenseConfirmed = false;
+        let countdownTimer = null;
+
+        function resetLicenseModal() {
+            if (!licenseCountdown || !licenseConfirmBtn) {
+                return;
+            }
+            licenseCountdown.textContent = '10';
+            licenseConfirmBtn.disabled = true;
+            if (countdownTimer) {
+                clearInterval(countdownTimer);
+                countdownTimer = null;
+            }
+        }
+
+        function openLicenseModal() {
+            if (!licenseModal) {
+                return;
+            }
+            resetLicenseModal();
+            licenseModal.classList.remove('hidden');
+            licenseModal.classList.add('flex');
+            let remaining = 10;
+            countdownTimer = setInterval(() => {
+                remaining -= 1;
+                if (licenseCountdown) {
+                    licenseCountdown.textContent = String(remaining);
+                }
+                if (remaining <= 0) {
+                    clearInterval(countdownTimer);
+                    countdownTimer = null;
+                    if (licenseConfirmBtn) {
+                        licenseConfirmBtn.disabled = false;
+                    }
+                }
+            }, 1000);
+        }
+
+        function closeLicenseModal() {
+            if (!licenseModal) {
+                return;
+            }
+            licenseModal.classList.add('hidden');
+            licenseModal.classList.remove('flex');
+            resetLicenseModal();
+        }
+
+        if (licenseForm) {
+            licenseForm.addEventListener('submit', function(e) {
+                if (!licenseConfirmed) {
+                    e.preventDefault();
+                    openLicenseModal();
+                    return;
+                }
+                e.preventDefault();
+                submitLicenseForm();
+            });
+        }
+
+        if (licenseCancelBtn) {
+            licenseCancelBtn.addEventListener('click', function() {
+                closeLicenseModal();
+            });
+        }
+
+        if (licenseConfirmBtn) {
+            licenseConfirmBtn.addEventListener('click', function() {
+                licenseConfirmed = true;
+                closeLicenseModal();
+                if (licenseForm) {
+                    submitLicenseForm();
+                }
+            });
+        }
+
+        function submitLicenseForm() {
+            if (!licenseForm) {
+                return;
+            }
+            const formData = new FormData(licenseForm);
+            const submitButton = licenseForm.querySelector('button[type="submit"]');
+            const originalText = submitButton ? submitButton.textContent : 'Submit';
+
+            if (submitButton) {
+                submitButton.disabled = true;
+                submitButton.textContent = 'Updating...';
+            }
+
+            const csrfToken = document.querySelector('meta[name="csrf-token"]');
+            const headers = {
+                'X-Requested-With': 'XMLHttpRequest'
+            };
+
+            if (csrfToken) {
+                headers['X-CSRF-TOKEN'] = csrfToken.getAttribute('content');
+            }
+
+            fetch(licenseForm.action, {
+                method: 'POST',
+                body: formData,
+                headers: headers
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    showSuccessModal(data.message);
+                    setTimeout(() => {
+                        window.location.reload();
+                    }, 2000);
+                } else {
+                    showErrorModal(data.message || 'An error occurred while updating.');
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                showErrorModal('An unexpected error occurred. Please try again.');
+            })
+            .finally(() => {
+                licenseConfirmed = false;
+                if (submitButton) {
+                    submitButton.disabled = false;
+                    submitButton.textContent = originalText;
+                }
+            });
+        }
 
         // Form validation functionality
         function initializeFormValidation() {
