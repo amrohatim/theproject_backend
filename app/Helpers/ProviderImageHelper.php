@@ -4,6 +4,7 @@ namespace App\Helpers;
 
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\File;
+use Illuminate\Support\Facades\Storage;
 
 class ProviderImageHelper
 {
@@ -27,6 +28,14 @@ class ProviderImageHelper
         // Remove any leading slash
         $imagePath = ltrim($imagePath, '/');
 
+        // If the path points to public storage, trust the disk check (symlink may be restricted)
+        if (str_starts_with($imagePath, 'storage/')) {
+            $storageRelativePath = substr($imagePath, strlen('storage/'));
+            if (Storage::disk('public')->exists($storageRelativePath)) {
+                return '/' . $imagePath;
+            }
+        }
+
         // Check if file exists in public directory
         if (file_exists(public_path($imagePath))) {
             return '/' . $imagePath;
@@ -44,6 +53,15 @@ class ProviderImageHelper
         ];
 
         foreach ($possiblePaths as $path) {
+            if (str_starts_with($path, 'storage/')) {
+                $storageRelativePath = substr($path, strlen('storage/'));
+                if (Storage::disk('public')->exists($storageRelativePath)) {
+                    Log::info("Found image at alternative path: {$path} for original: {$imagePath}");
+                    return '/' . $path;
+                }
+                continue;
+            }
+
             if (file_exists(public_path($path))) {
                 Log::info("Found image at alternative path: {$path} for original: {$imagePath}");
                 return '/' . $path;
@@ -101,6 +119,11 @@ class ProviderImageHelper
 
         // Remove any leading slash
         $path = ltrim($path, '/');
+
+        if (str_starts_with($path, 'storage/')) {
+            $storageRelativePath = substr($path, strlen('storage/'));
+            return Storage::disk('public')->exists($storageRelativePath);
+        }
 
         // Check if file exists in public directory
         return file_exists(public_path($path));
