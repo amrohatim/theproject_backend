@@ -169,7 +169,7 @@ class ProviderController extends Controller
     {
         try {
             // Include the user relationship to get profile_image
-            $provider = Provider::with('user:id,name,profile_image')->findOrFail($id);
+            $provider = Provider::with('user:id,name,email,phone,profile_image')->findOrFail($id);
 
             // Track the view for analytics using the new service
             try {
