@@ -179,6 +179,24 @@
                                         @enderror
                                     </div>
                                 </div>
+                                <div class="col-md-6">
+                                    <div class="mb-3">
+                                        <label style="display: block; margin-bottom: 8px; color: var(--discord-lightest); font-weight: 500;">
+                                            {{ __('provider.status') }}
+                                        </label>
+                                        <input type="hidden" name="is_active" value="0">
+                                        <div class="form-check">
+                                            <input class="form-check-input" type="checkbox" id="is_active" name="is_active" value="1"
+                                                {{ old('is_active', $providerProduct->is_active) ? 'checked' : '' }}>
+                                            <label class="form-check-label" for="is_active" style="color: var(--discord-lightest);">
+                                                {{ __('provider.active') }}
+                                            </label>
+                                        </div>
+                                        @error('is_active')
+                                            <div style="color: var(--discord-red); font-size: 14px; margin-top: 5px;">{{ $message }}</div>
+                                        @enderror
+                                    </div>
+                                </div>
                             </div>
                         </div>
                     </div>

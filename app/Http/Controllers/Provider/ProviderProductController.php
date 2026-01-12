@@ -154,7 +154,9 @@ class ProviderProductController extends Controller
         $providerProduct->min_order = $request->min_order;
         $providerProduct->sku = $request->sku;
         $providerProduct->category_id = $request->category_id;
-        $providerProduct->is_active = $request->has('is_active') ? true : false;
+        if ($request->has('is_active')) {
+            $providerProduct->is_active = $request->boolean('is_active');
+        }
 
         // Store branch information if we have a branch
         if ($userBranch) {
@@ -336,7 +338,9 @@ class ProviderProductController extends Controller
         $providerProduct->min_order = $request->min_order;
         $providerProduct->sku = $request->sku;
         $providerProduct->category_id = $request->category_id;
-        $providerProduct->is_active = $request->has('is_active') ? true : false;
+        if ($request->has('is_active')) {
+            $providerProduct->is_active = $request->boolean('is_active');
+        }
 
         // Handle image upload
         if ($request->hasFile('image')) {
