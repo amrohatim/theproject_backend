@@ -63,6 +63,7 @@ class ProviderController extends Controller
                     'price' => $price,
                     'original_price' => $providerProduct->original_price,
                     'stock' => $stock,
+                    'min_order' => $providerProduct->min_order,
                     'description' => $providerProduct->description,
                     'image' => $providerProduct->image,
                     'is_available' => $isActive,
@@ -91,6 +92,9 @@ class ProviderController extends Controller
             }
             if ($providerProduct->stock !== null) {
                 $productData['stock'] = $providerProduct->stock;
+            }
+            if ($providerProduct->min_order !== null) {
+                $productData['min_order'] = $providerProduct->min_order;
             }
             if ($providerProduct->description) {
                 $productData['description'] = $providerProduct->description;
