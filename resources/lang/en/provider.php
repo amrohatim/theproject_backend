@@ -22,6 +22,7 @@ return [
     'products' => 'Products',
     'locations' => 'Locations',
     'orders' => 'Orders',
+    'jobs' => 'Jobs',
     'profile' => 'Profile',
     'settings' => 'Settings',
 

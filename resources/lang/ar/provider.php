@@ -22,6 +22,7 @@ return [
     'products' => 'المنتجات',
     'locations' => 'المواقع',
     'orders' => 'الطلبات',
+    'jobs' => 'الوظائف',
     'profile' => 'الملف الشخصي',
     'settings' => 'الإعدادات',
 

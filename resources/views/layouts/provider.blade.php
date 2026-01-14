@@ -618,6 +618,10 @@ $direction = $isRtl ? 'rtl' : 'ltr';
                     <i class="fas fa-shopping-cart channel-icon"></i>
                     <span class="channel-name">{{ __('provider.orders') }}</span>
                 </li>
+                <li class="channel-item {{ request()->is('provider/jobs*') ? 'active' : '' }}" onclick="window.location.href='{{ route('provider.jobs.index') }}'">
+                    <i class="fas fa-briefcase channel-icon"></i>
+                    <span class="channel-name">{{ __('provider.jobs') }}</span>
+                </li>
             </ul>
 
             <div class="channel-category">

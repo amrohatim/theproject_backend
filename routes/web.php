@@ -5,6 +5,7 @@ use Illuminate\Support\Facades\Auth;
 use App\Http\Controllers\Admin\DashboardController as AdminDashboardController;
 use App\Http\Controllers\Admin\SizeCategoryController;
 use App\Http\Controllers\Vendor\DashboardController as VendorDashboardController;
+use App\Http\Controllers\Vendor\JobController as VendorJobController;
 use App\Http\Controllers\Vendor\SettingsController as VendorSettingsController;
 use App\Http\Controllers\LandingController;
 use App\Http\Controllers\Web\RegistrationController;
@@ -1434,6 +1435,12 @@ Route::prefix('vendor')->name('vendor.')->middleware(['auth', \App\Http\Middlewa
     Route::put('/deals/{id}', [\App\Http\Controllers\Vendor\DealController::class, 'update'])->name('deals.update');
     Route::delete('/deals/{id}', [\App\Http\Controllers\Vendor\DealController::class, 'destroy'])->name('deals.destroy');
 
+    // Jobs
+    Route::get('/jobs', [VendorJobController::class, 'index'])->name('jobs.index');
+    Route::get('/jobs/create', [VendorJobController::class, 'create'])->name('jobs.create');
+    Route::post('/jobs', [VendorJobController::class, 'store'])->name('jobs.store');
+    Route::delete('/jobs/{job}', [VendorJobController::class, 'destroy'])->name('jobs.destroy');
+
     // Company
     Route::get('/company', function () {
         $company = \App\Models\Company::where('user_id', \Illuminate\Support\Facades\Auth::id())->first();
@@ -2310,6 +2317,12 @@ Route::prefix('provider')->name('provider.')->middleware(['auth', \App\Http\Midd
     Route::get('/orders/{id}', [App\Http\Controllers\Provider\OrderController::class, 'show'])->name('orders.show');
     Route::put('/orders/{id}/status', [App\Http\Controllers\Provider\OrderController::class, 'updateStatus'])->name('orders.update-status');
 
+    // Jobs
+    Route::get('/jobs', [App\Http\Controllers\Provider\JobController::class, 'index'])->name('jobs.index');
+    Route::get('/jobs/create', [App\Http\Controllers\Provider\JobController::class, 'create'])->name('jobs.create');
+    Route::post('/jobs', [App\Http\Controllers\Provider\JobController::class, 'store'])->name('jobs.store');
+    Route::delete('/jobs/{job}', [App\Http\Controllers\Provider\JobController::class, 'destroy'])->name('jobs.destroy');
+
     // Profile
     Route::get('/profile', [App\Http\Controllers\Provider\ProfileController::class, 'index'])->name('profile.index');
     Route::put('/profile', [App\Http\Controllers\Provider\ProfileController::class, 'update'])->name('profile.update');
@@ -2351,6 +2364,12 @@ Route::prefix('merchant')->name('merchant.')->middleware(['auth', \App\Http\Midd
 
     // Global Search APIs
     Route::get('/dashboard/search', [App\Http\Controllers\Merchant\DashboardController::class, 'globalSearch'])->name('dashboard.search');
+
+    // Jobs
+    Route::get('/jobs', [App\Http\Controllers\Merchant\JobController::class, 'index'])->name('jobs.index');
+    Route::get('/jobs/create', [App\Http\Controllers\Merchant\JobController::class, 'create'])->name('jobs.create');
+    Route::post('/jobs', [App\Http\Controllers\Merchant\JobController::class, 'store'])->name('jobs.store');
+    Route::delete('/jobs/{job}', [App\Http\Controllers\Merchant\JobController::class, 'destroy'])->name('jobs.destroy');
     Route::get('/dashboard/search/suggestions', [App\Http\Controllers\Merchant\DashboardController::class, 'searchSuggestions'])->name('dashboard.search.suggestions');
     Route::post('/dashboard/search/save', [App\Http\Controllers\Merchant\DashboardController::class, 'saveSearch'])->name('dashboard.search.save');
 

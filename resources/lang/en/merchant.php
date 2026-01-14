@@ -34,6 +34,7 @@ return [
     'services' => 'Services',
     'deals' => 'Deals',
     'orders' => 'Orders',
+    'jobs' => 'Jobs',
     'customers' => 'Customers',
     'average_rating' => 'Average Rating',
     'reviews' => 'reviews',

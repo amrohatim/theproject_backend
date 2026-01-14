@@ -682,6 +682,14 @@ $direction = $isRtl ? 'rtl' : 'ltr';
                             </a>
                         </li>
                         <li class="nav-item">
+                            <a href="{{ route('merchant.jobs.index') }}" class="nav-link {{ request()->routeIs('merchant.jobs.*') ? 'active' : '' }}">
+                                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" width="20" height="20">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m2 0a2 2 0 012 2v6H5v-6a2 2 0 012-2m2-7h6m-6 0V7a2 2 0 012-2h2a2 2 0 012 2v2"></path>
+                                </svg>
+                                {{ __('merchant.jobs') }}
+                            </a>
+                        </li>
+                        <li class="nav-item">
                             <a href="{{ route('merchant.customers.index') }}" class="nav-link {{ request()->routeIs('merchant.customers.*') ? 'active' : '' }}">
                                 <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" width="20" height="20">
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197m13.5-9a2.5 2.5 0 11-5 0 2.5 2.5 0 015 0z"></path>

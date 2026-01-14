@@ -322,6 +322,10 @@
                     <i class="fas fa-percent"></i>
                     {{ __('messages.deals') }}
                 </a>
+                <a href="{{ route('vendor.jobs.index') }}" class="{{ request()->routeIs('vendor.jobs.*') ? 'active' : '' }}">
+                    <i class="fas fa-briefcase"></i>
+                    {{ __('messages.jobs') }}
+                </a>
                 <a href="{{ route('vendor.orders.index') }}" class="{{ request()->routeIs('vendor.orders.index') ? 'active' : '' }}">
                     <i class="fas fa-shopping-cart"></i>
                     {{ __('messages.all_orders') }}

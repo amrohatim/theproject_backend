@@ -35,6 +35,7 @@ return [
     'services' => 'الخدمات',
     'deals' => 'العروض',
     'orders' => 'الطلبات',
+    'jobs' => 'الوظائف',
     'customers' => 'العملاء',
     'average_rating' => 'متوسط التقييم',
     'reviews' => 'مراجعة',
