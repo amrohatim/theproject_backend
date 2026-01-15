@@ -79,13 +79,23 @@
                                 <div class="text-sm text-gray-500 dark:text-gray-400">{{ $job->number_of_applications }}</div>
                             </td>
                             <td class="px-6 py-4 whitespace-nowrap text-right">
-                                <form method="POST" action="{{ route('vendor.jobs.destroy', $job->id) }}" onsubmit="return confirm('{{ __('messages.confirm_delete') }}');">
-                                    @csrf
-                                    @method('DELETE')
-                                    <button type="submit" class="inline-flex items-center text-sm font-medium text-red-600 hover:text-red-800">
-                                        <i class="fas fa-trash mr-1"></i>
-                                    </button>
-                                </form>
+                                <div class="flex items-center justify-end space-x-3">
+                                    <a href="{{ route('vendor.jobs.show', $job->id) }}" class="inline-flex items-center px-3 py-1 text-xs font-semibold text-gray-700 bg-gray-100 rounded-md hover:bg-gray-200">
+                                        View
+                                    </a>
+                                    @if($job->number_of_applications > 0)
+                                        <a href="{{ route('vendor.jobs.applicants', $job->id) }}" class="inline-flex items-center px-3 py-1 text-xs font-semibold text-blue-700 bg-blue-100 rounded-md hover:bg-blue-200">
+                                            View Applicants
+                                        </a>
+                                    @endif
+                                    <form method="POST" action="{{ route('vendor.jobs.destroy', $job->id) }}" onsubmit="return confirm('{{ __('messages.confirm_delete') }}');">
+                                        @csrf
+                                        @method('DELETE')
+                                        <button type="submit" class="inline-flex items-center text-sm font-medium text-red-600 hover:text-red-800">
+                                            <i class="fas fa-trash mr-1"></i>
+                                        </button>
+                                    </form>
+                                </div>
                             </td>
                         </tr>
                     @empty

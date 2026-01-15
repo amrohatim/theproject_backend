@@ -54,13 +54,23 @@
                         <td>{{ $job->location }}</td>
                         <td>{{ $job->number_of_applications }}</td>
                         <td class="text-end">
-                            <form method="POST" action="{{ route('provider.jobs.destroy', $job->id) }}" onsubmit="return confirm('{{ __('messages.confirm_delete') }}');">
-                                @csrf
-                                @method('DELETE')
-                                <button type="submit" class="btn btn-link p-0 text-danger">
-                                    <i class="fas fa-trash me-1"></i>
-                                </button>
-                            </form>
+                            <div class="d-inline-flex align-items-center gap-2">
+                                <a href="{{ route('provider.jobs.show', $job->id) }}" class="btn btn-sm btn-outline-secondary">
+                                    View
+                                </a>
+                                @if($job->number_of_applications > 0)
+                                    <a href="{{ route('provider.jobs.applicants', $job->id) }}" class="btn btn-sm btn-outline-primary">
+                                        View Applicants
+                                    </a>
+                                @endif
+                                <form method="POST" action="{{ route('provider.jobs.destroy', $job->id) }}" onsubmit="return confirm('{{ __('messages.confirm_delete') }}');">
+                                    @csrf
+                                    @method('DELETE')
+                                    <button type="submit" class="btn btn-link p-0 text-danger">
+                                        <i class="fas fa-trash me-1"></i>
+                                    </button>
+                                </form>
+                            </div>
                         </td>
                     </tr>
                 @empty

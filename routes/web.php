@@ -1438,7 +1438,11 @@ Route::prefix('vendor')->name('vendor.')->middleware(['auth', \App\Http\Middlewa
     // Jobs
     Route::get('/jobs', [VendorJobController::class, 'index'])->name('jobs.index');
     Route::get('/jobs/create', [VendorJobController::class, 'create'])->name('jobs.create');
+    Route::get('/jobs/{job}', [VendorJobController::class, 'show'])->name('jobs.show');
     Route::post('/jobs', [VendorJobController::class, 'store'])->name('jobs.store');
+    Route::get('/jobs/{job}/applicants', [VendorJobController::class, 'applicants'])->name('jobs.applicants');
+    Route::get('/jobs/applications/{application}/cv', [VendorJobController::class, 'applicantCv'])->name('jobs.applicants.cv');
+    Route::delete('/jobs/applications/{application}', [VendorJobController::class, 'destroyApplication'])->name('jobs.applicants.destroy');
     Route::delete('/jobs/{job}', [VendorJobController::class, 'destroy'])->name('jobs.destroy');
 
     // Company
@@ -2320,7 +2324,11 @@ Route::prefix('provider')->name('provider.')->middleware(['auth', \App\Http\Midd
     // Jobs
     Route::get('/jobs', [App\Http\Controllers\Provider\JobController::class, 'index'])->name('jobs.index');
     Route::get('/jobs/create', [App\Http\Controllers\Provider\JobController::class, 'create'])->name('jobs.create');
+    Route::get('/jobs/{job}', [App\Http\Controllers\Provider\JobController::class, 'show'])->name('jobs.show');
     Route::post('/jobs', [App\Http\Controllers\Provider\JobController::class, 'store'])->name('jobs.store');
+    Route::get('/jobs/{job}/applicants', [App\Http\Controllers\Provider\JobController::class, 'applicants'])->name('jobs.applicants');
+    Route::get('/jobs/applications/{application}/cv', [App\Http\Controllers\Provider\JobController::class, 'applicantCv'])->name('jobs.applicants.cv');
+    Route::delete('/jobs/applications/{application}', [App\Http\Controllers\Provider\JobController::class, 'destroyApplication'])->name('jobs.applicants.destroy');
     Route::delete('/jobs/{job}', [App\Http\Controllers\Provider\JobController::class, 'destroy'])->name('jobs.destroy');
 
     // Profile
@@ -2368,7 +2376,11 @@ Route::prefix('merchant')->name('merchant.')->middleware(['auth', \App\Http\Midd
     // Jobs
     Route::get('/jobs', [App\Http\Controllers\Merchant\JobController::class, 'index'])->name('jobs.index');
     Route::get('/jobs/create', [App\Http\Controllers\Merchant\JobController::class, 'create'])->name('jobs.create');
+    Route::get('/jobs/{job}', [App\Http\Controllers\Merchant\JobController::class, 'show'])->name('jobs.show');
     Route::post('/jobs', [App\Http\Controllers\Merchant\JobController::class, 'store'])->name('jobs.store');
+    Route::get('/jobs/{job}/applicants', [App\Http\Controllers\Merchant\JobController::class, 'applicants'])->name('jobs.applicants');
+    Route::get('/jobs/applications/{application}/cv', [App\Http\Controllers\Merchant\JobController::class, 'applicantCv'])->name('jobs.applicants.cv');
+    Route::delete('/jobs/applications/{application}', [App\Http\Controllers\Merchant\JobController::class, 'destroyApplication'])->name('jobs.applicants.destroy');
     Route::delete('/jobs/{job}', [App\Http\Controllers\Merchant\JobController::class, 'destroy'])->name('jobs.destroy');
     Route::get('/dashboard/search/suggestions', [App\Http\Controllers\Merchant\DashboardController::class, 'searchSuggestions'])->name('dashboard.search.suggestions');
     Route::post('/dashboard/search/save', [App\Http\Controllers\Merchant\DashboardController::class, 'saveSearch'])->name('dashboard.search.save');

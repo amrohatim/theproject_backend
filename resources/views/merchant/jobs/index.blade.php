@@ -65,13 +65,23 @@
                         <td class="px-6 py-4 text-sm text-gray-600">{{ $job->location }}</td>
                         <td class="px-6 py-4 text-sm text-gray-600">{{ $job->number_of_applications }}</td>
                         <td class="px-6 py-4 text-right">
-                            <form method="POST" action="{{ route('merchant.jobs.destroy', $job->id) }}" onsubmit="return confirm('{{ __('messages.confirm_delete') }}');">
-                                @csrf
-                                @method('DELETE')
-                                <button type="submit" class="text-red-600 hover:text-red-800 text-sm font-medium">
-                                    {{ __('messages.delete') }}
-                                </button>
-                            </form>
+                            <div class="flex items-center justify-end space-x-3">
+                                <a href="{{ route('merchant.jobs.show', $job->id) }}" class="inline-flex items-center px-3 py-1 text-xs font-semibold text-gray-700 bg-gray-100 rounded-md hover:bg-gray-200">
+                                    View
+                                </a>
+                                @if($job->number_of_applications > 0)
+                                    <a href="{{ route('merchant.jobs.applicants', $job->id) }}" class="inline-flex items-center px-3 py-1 text-xs font-semibold text-blue-700 bg-blue-100 rounded-md hover:bg-blue-200">
+                                        View Applicants
+                                    </a>
+                                @endif
+                                <form method="POST" action="{{ route('merchant.jobs.destroy', $job->id) }}" onsubmit="return confirm('{{ __('messages.confirm_delete') }}');">
+                                    @csrf
+                                    @method('DELETE')
+                                    <button type="submit" class="text-red-600 hover:text-red-800 text-sm font-medium">
+                                        {{ __('messages.delete') }}
+                                    </button>
+                                </form>
+                            </div>
                         </td>
                     </tr>
                 @empty

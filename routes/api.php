@@ -35,6 +35,8 @@ use App\Http\Controllers\API\CustomerNotificationController;
 use App\Http\Controllers\API\FcmTokenController;
 use App\Http\Controllers\API\SizeCategoryController;
 use App\Http\Controllers\LanguageController;
+use App\Http\Controllers\API\JobController as ApiJobController;
+use App\Http\Controllers\API\JobApplicationController;
 
 /*
 |--------------------------------------------------------------------------
@@ -157,6 +159,7 @@ Route::get('/categories', [CategoryController::class, 'index']);
 Route::get('/categories/{id}', [CategoryController::class, 'show']);
 Route::get('/featured/products', [ProductController::class, 'getFeatured']);
 Route::get('/featured/services', [ServiceController::class, 'featured']);
+Route::get('/jobs/featured', [ApiJobController::class, 'featured']);
 
 // Public filter routes (no authentication required) - for guest filtering
 Route::post('/search/filter', [\App\Http\Controllers\API\SearchController::class, 'filter']);
@@ -302,6 +305,10 @@ Route::middleware('auth:sanctum')->group(function () {
     // Featured content routes (authenticated - for management)
     Route::get('/featured/services-deals', [ServiceController::class, 'getServicesWithDeals']);
 
+    // Job applications
+    Route::get('/jobs/{job}/application-status', [JobApplicationController::class, 'status']);
+    Route::post('/jobs/{job}/apply', [JobApplicationController::class, 'apply']);
+
     // Provider routes - specific routes first to avoid conflicts
     Route::get('/providers/categories-with-products', [ProviderController::class, 'getCategoriesWithProducts']);
     Route::get('/providers/products/category/{categoryId}', [ProviderController::class, 'getProductsByCategory']);
@@ -396,5 +403,3 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::get('/product-image/{filename}', [ProductController::class, 'getImage']);
     Route::get('/provider-product-image/{filename}', [ProductController::class, 'getProviderProductImage']);
 });
-
-
