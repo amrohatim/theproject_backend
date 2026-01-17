@@ -34,6 +34,9 @@ use App\Http\Controllers\API\BusinessTypeController;
 use App\Http\Controllers\API\CustomerNotificationController;
 use App\Http\Controllers\API\FcmTokenController;
 use App\Http\Controllers\API\SizeCategoryController;
+use App\Http\Controllers\API\ProviderWishlistController;
+use App\Http\Controllers\API\GeneralWishlistController;
+use App\Http\Controllers\API\GeneralWishlistServiceController;
 use App\Http\Controllers\LanguageController;
 use App\Http\Controllers\API\JobController as ApiJobController;
 use App\Http\Controllers\API\JobApplicationController;
@@ -263,6 +266,19 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::post('/logout', [AuthController::class, 'logout']);
     Route::get('/user', [UserController::class, 'profile']);
     Route::put('/profile', [UserController::class, 'updateProfile']);
+
+    Route::get('/provider-wishlist', [ProviderWishlistController::class, 'index']);
+    Route::post('/provider-wishlist', [ProviderWishlistController::class, 'store']);
+    Route::delete('/provider-wishlist/{productId}', [ProviderWishlistController::class, 'destroy']);
+
+    Route::get('/general-wishlist', [GeneralWishlistController::class, 'index']);
+    Route::post('/general-wishlist', [GeneralWishlistController::class, 'store']);
+    Route::delete('/general-wishlist/{productId}', [GeneralWishlistController::class, 'destroy']);
+    Route::delete('/general-wishlist', [GeneralWishlistController::class, 'clear']);
+
+    Route::get('/general-wishlist/services', [GeneralWishlistServiceController::class, 'index']);
+    Route::post('/general-wishlist/services', [GeneralWishlistServiceController::class, 'store']);
+    Route::delete('/general-wishlist/services/{serviceId}', [GeneralWishlistServiceController::class, 'destroy']);
 
     // User management (admin only)
     Route::get('/users', [UserController::class, 'index']);

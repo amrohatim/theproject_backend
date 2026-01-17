@@ -1,0 +1,163 @@
+<?php
+
+namespace App\Http\Controllers\API;
+
+use App\Http\Controllers\Controller;
+use App\Models\ProviderProduct;
+use App\Models\Wishlist;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Log;
+
+class ProviderWishlistController extends Controller
+{
+    public function index()
+    {
+        $userId = Auth::id();
+
+        $productIds = Wishlist::where('user_id', $userId)
+            ->pluck('product_id')
+            ->toArray();
+
+        if (empty($productIds)) {
+            return response()->json([
+                'success' => true,
+                'products' => [],
+            ]);
+        }
+
+        $providerProducts = ProviderProduct::with(['product', 'branch', 'category'])
+            ->whereIn('id', $productIds)
+            ->get();
+
+        $products = $providerProducts->map(function ($providerProduct) {
+            return $this->transformProviderProduct($providerProduct);
+        })->values();
+
+        return response()->json([
+            'success' => true,
+            'products' => $products,
+        ]);
+    }
+
+    public function store(Request $request)
+    {
+        $validated = $request->validate([
+            'product_id' => ['required', 'integer', 'exists:provider_products,id'],
+        ]);
+
+        $userId = Auth::id();
+        $productId = $validated['product_id'];
+
+        Wishlist::firstOrCreate([
+            'user_id' => $userId,
+            'product_id' => $productId,
+        ]);
+
+        $providerProduct = ProviderProduct::with(['product', 'branch', 'category'])
+            ->find($productId);
+
+        if (!$providerProduct) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Product not found.',
+            ], 404);
+        }
+
+        return response()->json([
+            'success' => true,
+            'product' => $this->transformProviderProduct($providerProduct),
+        ]);
+    }
+
+    public function destroy($productId)
+    {
+        $userId = Auth::id();
+
+        Wishlist::where('user_id', $userId)
+            ->where('product_id', $productId)
+            ->delete();
+
+        return response()->json([
+            'success' => true,
+        ]);
+    }
+
+    private function transformProviderProduct(ProviderProduct $providerProduct)
+    {
+        $product = $providerProduct->product;
+
+        if (!$product) {
+            Log::info("Transforming wishlist provider product {$providerProduct->id} without base product");
+
+            $categoryId = $providerProduct->category_id ?? 1;
+            $productName = $providerProduct->product_name ?? 'Unknown Product';
+            $price = $providerProduct->price ?? 0;
+            $stock = $providerProduct->stock ?? 0;
+            $isActive = $providerProduct->is_active ?? true;
+
+            $branchName = null;
+            if ($providerProduct->branch) {
+                $branchName = $providerProduct->branch->name;
+            }
+
+            $categoryName = null;
+            if ($providerProduct->category) {
+                $categoryName = $providerProduct->category->name;
+            }
+
+            return [
+                'id' => $providerProduct->id,
+                'branch_id' => $providerProduct->branch_id ?? 0,
+                'category_id' => $categoryId,
+                'name' => $productName,
+                'price' => $price,
+                'original_price' => $providerProduct->original_price,
+                'stock' => $stock,
+                'min_order' => $providerProduct->min_order,
+                'description' => $providerProduct->description,
+                'image' => $providerProduct->image,
+                'is_available' => $isActive,
+                'rating' => null,
+                'featured' => false,
+                'has_discount' => false,
+                'branch_name' => $branchName,
+                'category_name' => $categoryName,
+            ];
+        }
+
+        $productData = $product->toArray();
+
+        if ($providerProduct->product_name) {
+            $productData['name'] = $providerProduct->product_name;
+        }
+        if ($providerProduct->product_name_arabic) {
+            $productData['product_name_arabic'] = $providerProduct->product_name_arabic;
+        }
+        if ($providerProduct->product_description_arabic) {
+            $productData['product_description_arabic'] = $providerProduct->product_description_arabic;
+        }
+        if ($providerProduct->price !== null) {
+            $productData['price'] = $providerProduct->price;
+        }
+        if ($providerProduct->original_price !== null) {
+            $productData['original_price'] = $providerProduct->original_price;
+        }
+        if ($providerProduct->stock !== null) {
+            $productData['stock'] = $providerProduct->stock;
+        }
+        if ($providerProduct->min_order !== null) {
+            $productData['min_order'] = $providerProduct->min_order;
+        }
+        if ($providerProduct->description) {
+            $productData['description'] = $providerProduct->description;
+        }
+        if ($providerProduct->image) {
+            $productData['image'] = $providerProduct->image;
+        }
+
+        $productData['is_available'] = $providerProduct->is_active ?? true;
+
+        return $productData;
+    }
+}

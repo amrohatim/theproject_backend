@@ -1,0 +1,24 @@
+<?php
+
+use Illuminate\Database\Migrations\Migration;
+use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Support\Facades\Schema;
+
+return new class extends Migration
+{
+    public function up(): void
+    {
+        Schema::create('general_wishlist_services', function (Blueprint $table) {
+            $table->id();
+            $table->foreignId('user_id')->constrained('users')->cascadeOnDelete();
+            $table->foreignId('service_id')->constrained('services')->cascadeOnDelete();
+            $table->timestamps();
+            $table->unique(['user_id', 'service_id'], 'general_wishlist_services_unique');
+        });
+    }
+
+    public function down(): void
+    {
+        Schema::dropIfExists('general_wishlist_services');
+    }
+};
