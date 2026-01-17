@@ -37,6 +37,8 @@ use App\Http\Controllers\API\SizeCategoryController;
 use App\Http\Controllers\API\ProviderWishlistController;
 use App\Http\Controllers\API\GeneralWishlistController;
 use App\Http\Controllers\API\GeneralWishlistServiceController;
+use App\Http\Controllers\API\GeneralWishlistBranchController;
+use App\Http\Controllers\API\GeneralWishlistMerchantController;
 use App\Http\Controllers\LanguageController;
 use App\Http\Controllers\API\JobController as ApiJobController;
 use App\Http\Controllers\API\JobApplicationController;
@@ -279,6 +281,14 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::get('/general-wishlist/services', [GeneralWishlistServiceController::class, 'index']);
     Route::post('/general-wishlist/services', [GeneralWishlistServiceController::class, 'store']);
     Route::delete('/general-wishlist/services/{serviceId}', [GeneralWishlistServiceController::class, 'destroy']);
+
+    Route::get('/general-wishlist/branches', [GeneralWishlistBranchController::class, 'index']);
+    Route::post('/general-wishlist/branches', [GeneralWishlistBranchController::class, 'store']);
+    Route::delete('/general-wishlist/branches/{branchId}', [GeneralWishlistBranchController::class, 'destroy']);
+
+    Route::get('/general-wishlist/merchants', [GeneralWishlistMerchantController::class, 'index']);
+    Route::post('/general-wishlist/merchants', [GeneralWishlistMerchantController::class, 'store']);
+    Route::delete('/general-wishlist/merchants/{merchantId}', [GeneralWishlistMerchantController::class, 'destroy']);
 
     // User management (admin only)
     Route::get('/users', [UserController::class, 'index']);
