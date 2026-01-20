@@ -371,6 +371,12 @@ class SearchController extends Controller
         $page = $request->input('page', 1);
         $products = $query->latest()->paginate($perPage, ['*'], 'page', $page);
 
+        $vendors = collect();
+        $merchants = collect();
+        if ($request->filled('emirate')) {
+            [$vendors, $merchants] = $this->getEmirateVendorsAndMerchants($request->emirate);
+        }
+
         $products->getCollection()->transform(function ($product) {
             $dealInfo = $this->productDealService->calculateDiscountedPrice($product);
             $product->has_discount = $dealInfo['has_discount'];
@@ -395,6 +401,8 @@ class SearchController extends Controller
             'success' => true,
             'message' => 'Products filtered successfully',
             'data' => $products->items(),
+            'vendors' => $vendors->values(),
+            'merchants' => $merchants->values(),
             'pagination' => [
                 'total' => $products->total(),
                 'per_page' => $products->perPage(),
@@ -515,6 +523,12 @@ class SearchController extends Controller
         $page = $request->input('page', 1);
         $services = $query->latest()->paginate($perPage, ['*'], 'page', $page);
 
+        $vendors = collect();
+        $merchants = collect();
+        if ($request->filled('emirate')) {
+            [$vendors, $merchants] = $this->getEmirateVendorsAndMerchants($request->emirate);
+        }
+
         $services->getCollection()->transform(function ($service) {
             $dealInfo = $this->serviceDealService->calculateDiscountedPrice($service);
             $service->has_discount = $dealInfo['has_discount'];
@@ -535,6 +549,8 @@ class SearchController extends Controller
             'success' => true,
             'message' => 'Services filtered successfully',
             'data' => $services->items(),
+            'vendors' => $vendors->values(),
+            'merchants' => $merchants->values(),
             'pagination' => [
                 'total' => $services->total(),
                 'per_page' => $services->perPage(),
@@ -749,6 +765,39 @@ class SearchController extends Controller
         Log::info('Final category IDs for filtering', ['final_ids' => $finalCategoryIds]);
 
         return $finalCategoryIds;
+    }
+
+    private function normalizeEmirate(string $emirate): string
+    {
+        $emirateMapping = [
+            'DXB' => 'Dubai',
+            'AUH' => 'Abu Dhabi',
+            'SHJ' => 'Sharjah',
+            'AJM' => 'Ajman',
+            'RAK' => 'Ras Al Khaimah',
+            'FUJ' => 'Fujairah',
+            'UAQ' => 'Umm Al Quwain',
+        ];
+
+        return $emirateMapping[$emirate] ?? $emirate;
+    }
+
+    private function getEmirateVendorsAndMerchants(string $emirate): array
+    {
+        $normalizedEmirate = $this->normalizeEmirate($emirate);
+        $emirateValues = array_values(array_unique([$emirate, $normalizedEmirate]));
+
+        $vendors = Company::where('status', 'active')
+            ->whereHas('branches', function ($query) use ($emirateValues) {
+                $query->whereIn('emirate', $emirateValues);
+            })
+            ->get();
+
+        $merchants = Merchant::where('status', 'active')
+            ->whereIn('emirate', $emirateValues)
+            ->get();
+
+        return [$vendors, $merchants];
     }
 
     /**
