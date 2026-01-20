@@ -628,6 +628,8 @@ class Product extends Model
                 return $query->orderBy('price', 'desc');
             case 'rating':
                 return $query->orderBy('rating', 'desc');
+            case 'view_count':
+                return $query->orderBy('view_count', 'desc');
             case 'newest':
                 return $query->orderBy('created_at', 'desc');
             case 'popularity':
