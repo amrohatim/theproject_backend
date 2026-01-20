@@ -378,26 +378,41 @@ class Service extends Model
     public function scopeFilterByActiveDeals($query)
     {
         $today = now()->format('Y-m-d');
+        $hasCategoryIds = \Illuminate\Support\Facades\Schema::hasColumn('deals', 'category_ids');
+        $hasServiceIds = \Illuminate\Support\Facades\Schema::hasColumn('deals', 'service_ids');
+
+        $clauses = [];
+        $clauses[] = "(deals.applies_to = 'all' AND (
+            EXISTS (
+                SELECT 1 FROM branches
+                INNER JOIN companies ON branches.company_id = companies.id
+                WHERE branches.id = services.branch_id
+                AND companies.user_id = deals.user_id
+            )
+            OR (services.branch_id IS NULL AND services.merchant_id = deals.user_id)
+        ))";
+        if ($hasServiceIds) {
+            $clauses[] = "(deals.applies_to IN ('services', 'products_and_services') AND JSON_SEARCH(deals.service_ids, 'one', services.id) IS NOT NULL)";
+        }
+        if ($hasCategoryIds) {
+            $clauses[] = "(deals.applies_to = 'categories' AND JSON_SEARCH(deals.category_ids, 'one', services.category_id) IS NOT NULL)";
+        }
+
+        if (empty($clauses)) {
+            return $query;
+        }
+
+        $conditions = implode("\n                OR ", $clauses);
 
         return $query->whereRaw("EXISTS (
             SELECT 1 FROM deals
             WHERE deals.status = 'active'
-            AND deals.start_date <= '$today'
-            AND deals.end_date >= '$today'
+            AND deals.start_date <= ?
+            AND deals.end_date >= ?
             AND (
-                (deals.applies_to = 'all' AND (
-                    EXISTS (
-                        SELECT 1 FROM branches
-                        INNER JOIN companies ON branches.company_id = companies.id
-                        WHERE branches.id = services.branch_id
-                        AND companies.user_id = deals.user_id
-                    )
-                    OR (services.branch_id IS NULL AND services.merchant_id = deals.user_id)
-                ))
-                OR (deals.applies_to IN ('services', 'products_and_services') AND JSON_SEARCH(deals.service_ids, 'one', services.id) IS NOT NULL)
-                OR (deals.applies_to = 'categories' AND JSON_SEARCH(deals.category_ids, 'one', services.category_id) IS NOT NULL)
+                $conditions
             )
-        )");
+        )", [$today, $today]);
     }
 
     /**
