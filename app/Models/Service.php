@@ -370,6 +370,37 @@ class Service extends Model
     }
 
     /**
+     * Scope a query to filter services that have active deals.
+     *
+     * @param  \Illuminate\Database\Eloquent\Builder  $query
+     * @return \Illuminate\Database\Eloquent\Builder
+     */
+    public function scopeFilterByActiveDeals($query)
+    {
+        $today = now()->format('Y-m-d');
+
+        return $query->whereRaw("EXISTS (
+            SELECT 1 FROM deals
+            WHERE deals.status = 'active'
+            AND deals.start_date <= '$today'
+            AND deals.end_date >= '$today'
+            AND (
+                (deals.applies_to = 'all' AND (
+                    EXISTS (
+                        SELECT 1 FROM branches
+                        INNER JOIN companies ON branches.company_id = companies.id
+                        WHERE branches.id = services.branch_id
+                        AND companies.user_id = deals.user_id
+                    )
+                    OR (services.branch_id IS NULL AND services.merchant_id = deals.user_id)
+                ))
+                OR (deals.applies_to IN ('services', 'products_and_services') AND JSON_SEARCH(deals.service_ids, 'one', services.id) IS NOT NULL)
+                OR (deals.applies_to = 'categories' AND JSON_SEARCH(deals.category_ids, 'one', services.category_id) IS NOT NULL)
+            )
+        )");
+    }
+
+    /**
      * Get the specifications for the service.
      */
     public function specifications()

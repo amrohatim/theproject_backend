@@ -8,11 +8,23 @@ use App\Models\Product;
 use App\Models\Service;
 use App\Models\Company;
 use App\Models\Merchant;
+use App\Services\ProductDealService;
+use App\Services\ServiceDealService;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\DB;
 
 class SearchController extends Controller
 {
+    protected ProductDealService $productDealService;
+    protected ServiceDealService $serviceDealService;
+
+    public function __construct(
+        ProductDealService $productDealService,
+        ServiceDealService $serviceDealService
+    ) {
+        $this->productDealService = $productDealService;
+        $this->serviceDealService = $serviceDealService;
+    }
     /**
      * Apply filters to products or services based on the filter type
      *
@@ -359,6 +371,19 @@ class SearchController extends Controller
         $page = $request->input('page', 1);
         $products = $query->latest()->paginate($perPage, ['*'], 'page', $page);
 
+        $products->getCollection()->transform(function ($product) {
+            $dealInfo = $this->productDealService->calculateDiscountedPrice($product);
+            $product->has_discount = $dealInfo['has_discount'];
+            $product->original_price = $dealInfo['original_price'];
+            $product->discounted_price = $dealInfo['discounted_price'];
+            $product->discount_percentage = $dealInfo['discount_percentage'];
+            $product->discount_amount = $dealInfo['discount_amount'];
+            if ($dealInfo['deal']) {
+                $product->deal = $dealInfo['deal'];
+            }
+            return $product;
+        });
+
         Log::info('Products filtered successfully', [
             'total' => $products->total(),
             'per_page' => $products->perPage(),
@@ -439,6 +464,11 @@ class SearchController extends Controller
             $query->filterByHomeService(true);
         }
 
+        // Apply deals filter - only if explicitly set to true
+        if ($request->has('deals') && $request->boolean('deals') === true) {
+            $query->filterByActiveDeals();
+        }
+
         // Apply emirate filter - only if provided and not empty
         if ($request->filled('emirate')) {
             $emirate = $request->emirate;
@@ -484,6 +514,16 @@ class SearchController extends Controller
         $perPage = $request->input('per_page', 40);
         $page = $request->input('page', 1);
         $services = $query->latest()->paginate($perPage, ['*'], 'page', $page);
+
+        $services->getCollection()->transform(function ($service) {
+            $dealInfo = $this->serviceDealService->calculateDiscountedPrice($service);
+            $service->has_discount = $dealInfo['has_discount'];
+            $service->discounted_price = $dealInfo['discounted_price'];
+            $service->discount_percentage = $dealInfo['discount_percentage'];
+            $service->discount_amount = $dealInfo['discount_amount'];
+            $service->deal = $dealInfo['deal'];
+            return $service;
+        });
 
         Log::info('Services filtered successfully', [
             'total' => $services->total(),

@@ -582,14 +582,17 @@ class Product extends Model
             AND deals.start_date <= '$today'
             AND deals.end_date >= '$today'
             AND (
-                (deals.applies_to = 'all' AND EXISTS (
-                    SELECT 1 FROM branches
-                    INNER JOIN companies ON branches.company_id = companies.id
-                    WHERE branches.id = products.branch_id
-                    AND companies.user_id = deals.user_id
+                (deals.applies_to = 'all' AND (
+                    EXISTS (
+                        SELECT 1 FROM branches
+                        INNER JOIN companies ON branches.company_id = companies.id
+                        WHERE branches.id = products.branch_id
+                        AND companies.user_id = deals.user_id
+                    )
+                    OR (products.branch_id IS NULL AND products.user_id = deals.user_id)
                 ))
                 OR (deals.applies_to = 'categories' AND JSON_SEARCH(deals.category_ids, 'one', products.category_id) IS NOT NULL)
-                OR (deals.applies_to = 'products' AND JSON_SEARCH(deals.product_ids, 'one', products.id) IS NOT NULL)
+                OR (deals.applies_to IN ('products', 'products_and_services') AND JSON_SEARCH(deals.product_ids, 'one', products.id) IS NOT NULL)
             )
         )");
     }
