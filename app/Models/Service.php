@@ -333,6 +333,8 @@ class Service extends Model
                 return $query->orderBy('price', 'desc');
             case 'rating':
                 return $query->orderBy('rating', 'desc');
+            case 'view_count':
+                return $query->orderBy('view_count', 'desc');
             case 'duration_low':
                 return $query->orderBy('duration', 'asc');
             case 'duration_high':
