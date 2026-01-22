@@ -424,6 +424,47 @@ class DealController extends Controller
                 }
             }
 
+            // Filter by business_type if provided
+            if ($request->has('business_type')) {
+                $businessType = $request->business_type;
+
+                $productIds = Product::whereHas('branch', function ($q) use ($businessType) {
+                    $q->where('business_type', $businessType);
+                })->pluck('id')->toArray();
+
+                $serviceIds = Service::whereHas('branch', function ($q) use ($businessType) {
+                    $q->where('business_type', $businessType);
+                })->pluck('id')->toArray();
+
+                if (empty($productIds) && empty($serviceIds)) {
+                    $query->whereRaw('1 = 0');
+                } else {
+                    $query->where(function ($q) use ($productIds, $serviceIds) {
+                        if (!empty($productIds)) {
+                            $q->where(function ($q2) use ($productIds) {
+                                $q2->whereIn('applies_to', ['products', 'products_and_services'])
+                                   ->where(function ($q3) use ($productIds) {
+                                       foreach ($productIds as $productId) {
+                                           $q3->orWhereJsonContains('product_ids', $productId);
+                                       }
+                                   });
+                            });
+                        }
+
+                        if (!empty($serviceIds)) {
+                            $q->orWhere(function ($q2) use ($serviceIds) {
+                                $q2->whereIn('applies_to', ['services', 'products_and_services'])
+                                   ->where(function ($q3) use ($serviceIds) {
+                                       foreach ($serviceIds as $serviceId) {
+                                           $q3->orWhereJsonContains('service_ids', $serviceId);
+                                       }
+                                   });
+                            });
+                        }
+                    });
+                }
+            }
+
             // Order by creation date (newest first)
             $query->orderBy('created_at', 'desc');
 
@@ -522,6 +563,47 @@ class DealController extends Controller
                 'message' => 'Failed to fetch deals analytics',
                 'error' => $e->getMessage()
             ], 500);
+                }
+            }
         }
-    }
-}
+
+        // Filter by business_type if provided - match deals tied to products/services in that business type
+        if ($request->has('business_type')) {
+            $businessType = $request->business_type;
+
+            $productIds = Product::whereHas('branch', function ($q) use ($businessType) {
+                $q->where('business_type', $businessType);
+            })->pluck('id')->toArray();
+
+            $serviceIds = Service::whereHas('branch', function ($q) use ($businessType) {
+                $q->where('business_type', $businessType);
+            })->pluck('id')->toArray();
+
+            if (empty($productIds) && empty($serviceIds)) {
+                $query->whereRaw('1 = 0');
+            } else {
+                $query->where(function ($q) use ($productIds, $serviceIds) {
+                    if (!empty($productIds)) {
+                        $q->where(function ($q2) use ($productIds) {
+                            $q2->whereIn('applies_to', ['products', 'products_and_services'])
+                               ->where(function ($q3) use ($productIds) {
+                                   foreach ($productIds as $productId) {
+                                       $q3->orWhereJsonContains('product_ids', $productId);
+                                   }
+                               });
+                        });
+                    }
+
+                    if (!empty($serviceIds)) {
+                        $q->orWhere(function ($q2) use ($serviceIds) {
+                            $q2->whereIn('applies_to', ['services', 'products_and_services'])
+                               ->where(function ($q3) use ($serviceIds) {
+                                   foreach ($serviceIds as $serviceId) {
+                                       $q3->orWhereJsonContains('service_ids', $serviceId);
+                                   }
+                               });
+                        });
+                    }
+                });
+            }
+        }
