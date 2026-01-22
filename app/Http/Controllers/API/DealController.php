@@ -501,18 +501,6 @@ class DealController extends Controller
                 'message' => 'Failed to fetch deals analytics',
                 'error' => $e->getMessage()
             ], 500);
-                }
-            }
         }
-
-        // Filter by business_type_id (preferred) or business_type name (fallback)
-        if ($request->has('business_type_id')) {
-            $query->where('business_type_id', $request->business_type_id);
-        } elseif ($request->has('business_type')) {
-            $businessTypeId = BusinessType::where('business_name', $request->business_type)->value('id');
-            if ($businessTypeId) {
-                $query->where('business_type_id', $businessTypeId);
-            } else {
-                $query->whereRaw('1 = 0');
-            }
-        }
+    }
+}
