@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Models\Deal;
 use App\Models\Service;
 use App\Models\Branch;
+use App\Models\BusinessType;
 use App\Services\WebPImageService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -128,17 +129,24 @@ class DealController extends Controller
             'status' => 'required|in:active,inactive',
             'service_ids' => 'required|array|min:1',
             'service_ids.*' => 'exists:services,id',
+            'branch_id' => 'nullable|exists:branches,id',
         ]);
 
         // Validate that all selected services belong to this service provider
         $selectedServices = $request->input('service_ids', []);
         $serviceProvider = $user->serviceProvider;
         $allowedServices = $serviceProvider->service_ids ?? [];
+        $allowedBranchIds = $serviceProvider->branch_ids ?? [];
 
         foreach ($selectedServices as $serviceId) {
             if (!in_array($serviceId, $allowedServices)) {
                 return back()->withErrors(['service_ids' => 'You can only create deals for services you manage.']);
             }
+        }
+
+        $selectedBranchId = $request->input('branch_id');
+        if ($selectedBranchId && !in_array($selectedBranchId, $allowedBranchIds)) {
+            return back()->withErrors(['branch_id' => 'You can only select branches you manage.'])->withInput();
         }
 
         // Validate that selected services don't have active deals
@@ -166,7 +174,9 @@ class DealController extends Controller
             'status' => $request->input('status'),
             'applies_to' => 'services',
             'service_ids' => $selectedServices,
+            'branch_id' => $request->input('branch_id'),
         ];
+        $dealData = $this->applyBranchSelection($dealData, $allowedBranchIds);
 
         // Handle image upload with WebP compression
         if ($request->hasFile('image')) {
@@ -322,16 +332,23 @@ class DealController extends Controller
             'status' => 'required|in:active,inactive',
             'service_ids' => 'required|array|min:1',
             'service_ids.*' => 'exists:services,id',
+            'branch_id' => 'nullable|exists:branches,id',
         ]);
 
         // Validate that all selected services belong to this service provider
         $selectedServices = $request->input('service_ids', []);
         $allowedServiceIds = $serviceProvider->service_ids ?? [];
+        $allowedBranchIds = $serviceProvider->branch_ids ?? [];
 
         foreach ($selectedServices as $serviceId) {
             if (!in_array($serviceId, $allowedServiceIds)) {
                 return back()->withErrors(['service_ids' => 'You can only create deals for services you manage.']);
             }
+        }
+
+        $selectedBranchId = $request->input('branch_id');
+        if ($selectedBranchId && !in_array($selectedBranchId, $allowedBranchIds)) {
+            return back()->withErrors(['branch_id' => 'You can only select branches you manage.'])->withInput();
         }
 
         // Validate that selected services don't have active deals (excluding current deal)
@@ -357,7 +374,9 @@ class DealController extends Controller
             'end_date' => $request->input('end_date'),
             'status' => $request->input('status'),
             'service_ids' => $selectedServices,
+            'branch_id' => $request->input('branch_id'),
         ];
+        $dealData = $this->applyBranchSelection($dealData, $allowedBranchIds);
 
         // Handle image upload with WebP compression
         if ($request->hasFile('image')) {
@@ -468,5 +487,31 @@ class DealController extends Controller
             return redirect()->route('service-provider.deals.index')
                 ->with('error', 'Failed to delete deal. Please try again.');
         }
+    }
+
+    private function applyBranchSelection(array $dealData, array $allowedBranchIds): array
+    {
+        if (empty($dealData['branch_id'])) {
+            $dealData['branch_id'] = null;
+            $dealData['business_type_id'] = null;
+            return $dealData;
+        }
+
+        if (!in_array($dealData['branch_id'], $allowedBranchIds)) {
+            abort(403, 'Invalid branch selection.');
+        }
+
+        $branch = Branch::whereIn('id', $allowedBranchIds)
+            ->where('id', $dealData['branch_id'])
+            ->first();
+
+        if (!$branch) {
+            abort(403, 'Invalid branch selection.');
+        }
+
+        $dealData['branch_id'] = $branch->id;
+        $dealData['business_type_id'] = BusinessType::where('business_name', $branch->business_type)->value('id');
+
+        return $dealData;
     }
 }

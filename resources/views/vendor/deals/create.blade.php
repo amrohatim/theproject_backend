@@ -333,6 +333,21 @@
                     </div>
                 </div>
 
+                <!-- Branch Selection -->
+                <div class="form-input-container has-label mt-4">
+                    <label for="branch_id" class="form-label {{ app()->getLocale() == 'ar' ? 'text-right' : 'text-left' }}">{{ __('messages.branch') }}</label>
+                    <select name="branch_id" id="branch_id" class="form-select {{ app()->getLocale() == 'ar' ? 'text-right' : 'text-left' }}">
+                        @foreach($branches as $branch)
+                            <option value="{{ $branch->id }}" {{ (string) old('branch_id') === (string) $branch->id ? 'selected' : '' }}>
+                                {{ $branch->name }}
+                            </option>
+                        @endforeach
+                    </select>
+                    @error('branch_id')
+                        <span class="field-error-message {{ app()->getLocale() == 'ar' ? 'text-right' : 'text-left' }}">{{ $message }}</span>
+                    @enderror
+                </div>
+
                 <!-- Date Range -->
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mt-4">
                     <!-- Start Date -->

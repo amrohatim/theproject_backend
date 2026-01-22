@@ -7,6 +7,8 @@ use App\Models\Deal;
 use App\Models\Product;
 use App\Models\Service;
 use App\Models\Category;
+use App\Models\Branch;
+use App\Models\BusinessType;
 use App\Services\WebPImageService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -36,6 +38,12 @@ class DealController extends Controller
      */
     public function create()
     {
+        $branches = Branch::join('companies', 'branches.company_id', '=', 'companies.id')
+            ->where('companies.user_id', Auth::id())
+            ->select('branches.*')
+            ->orderBy('branches.name')
+            ->get();
+
         // Get products for this vendor
         $products = Product::join('branches', 'products.branch_id', '=', 'branches.id')
             ->join('companies', 'branches.company_id', '=', 'companies.id')
@@ -54,7 +62,7 @@ class DealController extends Controller
         $productsWithActiveDeals = Deal::getProductIdsWithActiveDeals(null, Auth::id());
         $servicesWithActiveDeals = Deal::getServiceIdsWithActiveDeals(null, Auth::id());
 
-        return view('vendor.deals.create', compact('products', 'services', 'productsWithActiveDeals', 'servicesWithActiveDeals'));
+        return view('vendor.deals.create', compact('branches', 'products', 'services', 'productsWithActiveDeals', 'servicesWithActiveDeals'));
     }
 
     /**
@@ -93,10 +101,12 @@ class DealController extends Controller
             'applies_to' => 'required|in:products,services,products_and_services',
             'product_ids' => 'required_if:applies_to,products|required_if:applies_to,products_and_services|array',
             'service_ids' => 'required_if:applies_to,services|required_if:applies_to,products_and_services|array',
+            'branch_id' => 'nullable|exists:branches,id',
         ]);
 
         $data = $request->all();
         $data['user_id'] = Auth::id();
+        $data = $this->applyBranchSelection($data);
 
         // Handle image upload with WebP conversion
         if ($request->hasFile('image')) {
@@ -202,6 +212,12 @@ class DealController extends Controller
         $deal = Deal::where('user_id', Auth::id())
             ->findOrFail($id);
 
+        $branches = Branch::join('companies', 'branches.company_id', '=', 'companies.id')
+            ->where('companies.user_id', Auth::id())
+            ->select('branches.*')
+            ->orderBy('branches.name')
+            ->get();
+
         // Get products for this vendor
         $products = Product::join('branches', 'products.branch_id', '=', 'branches.id')
             ->join('companies', 'branches.company_id', '=', 'companies.id')
@@ -220,7 +236,7 @@ class DealController extends Controller
         $productsWithActiveDeals = Deal::getProductIdsWithActiveDeals($deal->id, Auth::id());
         $servicesWithActiveDeals = Deal::getServiceIdsWithActiveDeals($deal->id, Auth::id());
 
-        return view('vendor.deals.edit', compact('deal', 'products', 'services', 'productsWithActiveDeals', 'servicesWithActiveDeals'));
+        return view('vendor.deals.edit', compact('deal', 'branches', 'products', 'services', 'productsWithActiveDeals', 'servicesWithActiveDeals'));
     }
 
     /**
@@ -263,9 +279,11 @@ class DealController extends Controller
             'applies_to' => 'required|in:products,services,products_and_services',
             'product_ids' => 'required_if:applies_to,products|required_if:applies_to,products_and_services|array',
             'service_ids' => 'required_if:applies_to,services|required_if:applies_to,products_and_services|array',
+            'branch_id' => 'nullable|exists:branches,id',
         ]);
 
         $data = $request->all();
+        $data = $this->applyBranchSelection($data);
 
         // Validate that selected products/services don't have active deals (excluding current deal)
         if (isset($data['product_ids']) && is_array($data['product_ids'])) {
@@ -394,5 +412,29 @@ class DealController extends Controller
 
         return redirect()->route('vendor.deals.index')
             ->with('success', 'Deal deleted successfully.');
+    }
+
+    private function applyBranchSelection(array $data): array
+    {
+        if (empty($data['branch_id'])) {
+            $data['branch_id'] = null;
+            $data['business_type_id'] = null;
+            return $data;
+        }
+
+        $branch = Branch::join('companies', 'branches.company_id', '=', 'companies.id')
+            ->where('companies.user_id', Auth::id())
+            ->where('branches.id', $data['branch_id'])
+            ->select('branches.*')
+            ->first();
+
+        if (!$branch) {
+            abort(403, 'Invalid branch selection.');
+        }
+
+        $data['branch_id'] = $branch->id;
+        $data['business_type_id'] = BusinessType::where('business_name', $branch->business_type)->value('id');
+
+        return $data;
     }
 }

@@ -187,6 +187,21 @@
                     </div>
                 </div>
 
+                <!-- Branch Selection -->
+                <div class="mt-6">
+                    <label for="branch_id" class="block text-sm font-medium text-gray-700 dark:text-gray-300">{{ __('service_provider.branch') }}</label>
+                    <select name="branch_id" id="branch_id" class="mt-1 border-gray-300 border-[1px]  px-2 py-2 block w-full shadow-sm sm:text-sm border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-white rounded-md">
+                        @foreach($branches as $branch)
+                            <option value="{{ $branch->id }}" {{ (string) old('branch_id') === (string) $branch->id ? 'selected' : '' }}>
+                                {{ $branch->name }}
+                            </option>
+                        @endforeach
+                    </select>
+                    @error('branch_id')
+                        <p class="text-red-500 text-sm mt-1">{{ $message }}</p>
+                    @enderror
+                </div>
+
                 <!-- Date Range -->
                 <div class="mt-6 grid grid-cols-1 md:grid-cols-2 gap-6">
                     <div>

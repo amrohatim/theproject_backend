@@ -15,6 +15,8 @@ class Deal extends Model
      */
     protected $fillable = [
         'user_id',
+        'branch_id',
+        'business_type_id',
         'title',
         'title_arabic',
         'description',
