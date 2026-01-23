@@ -146,11 +146,13 @@
                             <select id="category_id" name="category_id" class="form-select @error('category_id') is-invalid @enderror" required>
                                 <option value="">Select Category</option>
                                 @foreach($parentCategories ?? [] as $parentCategory)
+                                    @continue(isset($parentCategory->type) && $parentCategory->type === 'service')
                                     <optgroup label="{{ $parentCategory->name }}">
                                         <option value="{{ $parentCategory->id }}" disabled style="color: #6c757d; font-weight: bold;">
                                             {{ $parentCategory->name }} (Category Group)
                                         </option>
                                         @foreach($parentCategory->children as $childCategory)
+                                            @continue(isset($childCategory->type) && $childCategory->type === 'service')
                                             <option value="{{ $childCategory->id }}"
                                                     {{ old('category_id') == $childCategory->id ? 'selected' : '' }}
                                                     {{ !$childCategory->canBeSelectedForProducts() ? 'disabled' : '' }}

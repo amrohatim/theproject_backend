@@ -7,11 +7,13 @@ use App\Models\Deal;
 use App\Models\Product;
 use App\Models\Category;
 use App\Models\Branch;
+use App\Models\BusinessType;
 use App\Services\WebPImageService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Validation\Rule;
 
 class DealController extends Controller
 {
@@ -99,6 +101,15 @@ class DealController extends Controller
      */
     public function store(Request $request)
     {
+        $user = Auth::user();
+        $productsManager = $user->productsManager;
+
+        if (!$productsManager) {
+            return redirect('/')->with('error', 'Products manager profile not found.');
+        }
+
+        $company = $productsManager->company;
+
         $request->validate([
             'title' => 'required|string|max:255',
             'title_arabic' => 'required|string|max:255',
@@ -114,6 +125,10 @@ class DealController extends Controller
             'applies_to' => 'required|in:products',
             'product_ids' => 'required|array',
             'product_ids.*' => 'exists:products,id',
+            'branch_id' => [
+                'required',
+                Rule::exists('branches', 'id')->where('company_id', $company->id),
+            ],
 
         ]);
 
@@ -130,6 +145,7 @@ class DealController extends Controller
 
         $data = $request->all();
         $data['user_id'] = Auth::id();
+        $data = $this->applyBranchSelection($data, $company->id);
 
         // Validate that selected products don't have active deals
         if (isset($data['product_ids']) && is_array($data['product_ids'])) {
@@ -313,6 +329,10 @@ class DealController extends Controller
             'applies_to' => 'required|in:products',
             'product_ids' => 'required|array',
             'product_ids.*' => 'exists:products,id',
+            'branch_id' => [
+                'required',
+                Rule::exists('branches', 'id')->where('company_id', $company->id),
+            ],
 
         ]);
 
@@ -328,6 +348,7 @@ class DealController extends Controller
         }
 
         $data = $request->all();
+        $data = $this->applyBranchSelection($data, $company->id);
 
         // Validate that selected products don't have active deals (excluding current deal)
         if (isset($data['product_ids']) && is_array($data['product_ids'])) {
@@ -413,6 +434,31 @@ class DealController extends Controller
 
         return redirect()->route('products-manager.deals.index')
             ->with('success', __('products_manager.deal_updated_successfully'));
+    }
+
+    /**
+     * Apply branch selection from products manager action.
+     */
+    private function applyBranchSelection(array $data, int $companyId): array
+    {
+        if (empty($data['branch_id'])) {
+            $data['branch_id'] = null;
+            $data['business_type_id'] = null;
+            return $data;
+        }
+
+        $branch = Branch::where('company_id', $companyId)
+            ->where('id', $data['branch_id'])
+            ->first();
+
+        if (!$branch) {
+            abort(403, 'Invalid branch selection.');
+        }
+
+        $data['branch_id'] = $branch->id;
+        $data['business_type_id'] = BusinessType::where('business_name', $branch->business_type)->value('id');
+
+        return $data;
     }
 
     /**

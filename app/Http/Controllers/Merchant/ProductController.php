@@ -332,6 +332,7 @@ class ProductController extends Controller
     {
         // Get categories with parent-child relationships for enhanced form
         $parentCategories = Category::where('is_active', true)
+            ->where('type', 'product')
             ->whereNull('parent_id')
             ->with(['children' => function($query) {
                 $query->where('is_active', true)->orderBy('name');
@@ -681,6 +682,7 @@ class ProductController extends Controller
 
         // Get categories with parent-child relationships for enhanced form
         $parentCategories = Category::where('is_active', true)
+            ->where('type', 'product')
             ->whereNull('parent_id')
             ->with(['children' => function($query) {
                 $query->where('is_active', true)->orderBy('name');
@@ -745,6 +747,7 @@ class ProductController extends Controller
 
         // Get categories with parent-child relationships
         $parentCategories = Category::where('is_active', true)
+            ->where('type', 'product')
             ->whereNull('parent_id')
             ->with(['children' => function($query) {
                 $query->where('is_active', true)->orderBy('name');

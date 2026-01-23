@@ -203,6 +203,23 @@
                     </div>
                 </div>
 
+                <!-- Branch Selection -->
+                <div class="mt-4">
+                    <label for="branch_id" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1 {{ app()->getLocale() == 'ar' ? 'text-right' : 'text-left' }}">{{ __('messages.branch') }} <span class="text-red-500">*</span></label>
+                    <select name="branch_id" id="branch_id"
+                            class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-[#F46C3F] focus:border-[#F46C3F] dark:bg-gray-700 dark:border-gray-600 dark:text-white {{ app()->getLocale() == 'ar' ? 'text-right' : 'text-left' }}"
+                            required>
+                        @foreach($branches as $branch)
+                            <option value="{{ $branch->id }}" {{ (string) old('branch_id', $deal->branch_id) === (string) $branch->id ? 'selected' : '' }}>
+                                {{ $branch->name }}
+                            </option>
+                        @endforeach
+                    </select>
+                    @error('branch_id')
+                        <p class="text-red-500 text-sm mt-1 {{ app()->getLocale() == 'ar' ? 'text-right' : 'text-left' }}">{{ $message }}</p>
+                    @enderror
+                </div>
+
                 <!-- Date Range -->
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mt-4">
                     <!-- Start Date -->

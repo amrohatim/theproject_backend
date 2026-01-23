@@ -493,11 +493,13 @@
                                         <select id="category_id" name="category_id" class="vue-form-control @error('category_id') border-red-500 @enderror" required>
                                             <option value="">Select category</option>
                                             @foreach($parentCategories ?? [] as $parentCategory)
+                                                @continue(isset($parentCategory->type) && $parentCategory->type === 'service')
                                                 <optgroup label="{{ $parentCategory->name }}">
                                                     <option value="{{ $parentCategory->id }}" disabled style="color: #6c757d; font-weight: bold;">
                                                         {{ $parentCategory->name }} (Category Group)
                                                     </option>
                                                     @foreach($parentCategory->children as $childCategory)
+                                                        @continue(isset($childCategory->type) && $childCategory->type === 'service')
                                                         <option value="{{ $childCategory->id }}"
                                                                 {{ old('category_id', $product->category_id) == $childCategory->id ? 'selected' : '' }}
                                                                 {{ !$childCategory->canBeSelectedForProducts() ? 'disabled' : '' }}
@@ -2126,5 +2128,4 @@ document.addEventListener('DOMContentLoaded', function() {
 
 </script>
 @endsection
-
 
