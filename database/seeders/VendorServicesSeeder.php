@@ -42,7 +42,7 @@ class VendorServicesSeeder extends Seeder
     private function initializeVendorData(): void
     {
         // Find the vendor user
-        $this->vendor = User::where('email', 'gogoh3296@gmail.com')->first();
+        $this->vendor = User::where('email', 'amrozr26@gmail.com')->first();
         
         if (!$this->vendor) {
             $this->command->error('❌ Vendor user with email gogoh3296@gmail.com not found!');
