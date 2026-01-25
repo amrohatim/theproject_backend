@@ -19,6 +19,22 @@ class FcmTokenController extends Controller
 
         $userId = $validated['user_id'] ?? $request->user()?->getKey();
 
+        if (FCMToken->user_id==$userId) {
+
+       FcmToken::update(
+            ['token' => $validated['token']],
+            [
+                'user_id' => $userId,
+                'platform' => $validated['platform'] ?? null,
+                'device_id' => $validated['device_id'] ?? null,
+                'last_seen_at' => now(),
+            ]
+        );
+                return response()->json(['ok' => true]);
+
+
+        }
+
         FcmToken::updateOrCreate(
             ['token' => $validated['token']],
             [
