@@ -117,8 +117,6 @@ $direction = $isRtl ? 'rtl' : 'ltr';
             display: flex;
             flex-direction: column;
             border-right: 1px solid #e0e1e5;
-            overflow-y: auto;
-            -webkit-overflow-scrolling: touch;
         }
 
         .server-header {
@@ -194,7 +192,7 @@ $direction = $isRtl ? 'rtl' : 'ltr';
         }
 
         .user-area {
-            margin-top: auto;
+            margin-top: 16px;
             padding: 10px;
             display: flex;
             align-items: center;
