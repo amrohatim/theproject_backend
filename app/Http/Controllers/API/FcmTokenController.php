@@ -18,16 +18,21 @@ class FcmTokenController extends Controller
         ]);
 
         $userId = $validated['user_id'] ?? $request->user()?->getKey();
+        if (!$userId) {
+            return response()->json(['ok' => false, 'message' => 'User is required'], 401);
+        }
 
-        FcmToken::updateOrCreate(
-            ['token' => $validated['token']],
-            [
-                'user_id' => $userId,
-                'platform' => $validated['platform'] ?? null,
-                'device_id' => $validated['device_id'] ?? null,
-                'last_seen_at' => now(),
-            ]
-        );
+        FcmToken::where('token', $validated['token'])
+            ->where('user_id', '!=', $userId)
+            ->delete();
+
+        FcmToken::updateOrCreate(['user_id' => $userId], [
+            'token' => $validated['token'],
+            'user_id' => $userId,
+            'platform' => $validated['platform'] ?? null,
+            'device_id' => $validated['device_id'] ?? null,
+            'last_seen_at' => now(),
+        ]);
 
         return response()->json(['ok' => true]);
     }
