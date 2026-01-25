@@ -755,14 +755,15 @@ $direction = $isRtl ? 'rtl' : 'ltr';
                 $('.channel-sidebar').toggleClass('show');
             });
 
-            $('#mobileMenuToggle').click(function() {
+            $('#mobileMenuToggle').click(function(event) {
+                event.stopPropagation();
                 $('.channel-sidebar').toggleClass('show');
             });
 
             // Close mobile menu when clicking outside
             $(document).click(function(event) {
                 if ($(window).width() <= 768) {
-                    if (!$(event.target).closest('.channel-sidebar, .server-icon').length) {
+                    if (!$(event.target).closest('.channel-sidebar, .server-icon, #mobileMenuToggle').length) {
                         $('.channel-sidebar').removeClass('show');
                     }
                 }
