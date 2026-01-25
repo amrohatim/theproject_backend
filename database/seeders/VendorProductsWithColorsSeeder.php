@@ -64,7 +64,9 @@ class VendorProductsWithColorsSeeder extends Seeder
         $this->command->info("✅ Found company: {$this->company->name} (ID: {$this->company->id})");
 
         // Get company branches
-        $this->branches = $this->company->branches;
+        $this->branches = $this->company->branches()
+            ->whereNotIn('id', [1, 6, 7])
+            ->get();
         if ($this->branches->isEmpty()) {
             $this->command->error('❌ No branches found for the vendor company!');
             return;
