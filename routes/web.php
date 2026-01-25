@@ -2555,20 +2555,9 @@ Route::get('/aboutvendor', function () {
     return view('aboutvendor');
 })->name('aboutvendor');
 
-Route::get('/amroscript', function () {
-    $path = 'charJS.js';
-       if (!Storage::disk('public')->exists($path)) {
-        abort(404);
-    }
 
-    return Storage::disk('public')->response($path, null, [
-        'Content-Type' => 'application/javascript',
-    ]);
-});
 
-Route::get('/amropage', function () {
-    return view('amropage');
-});
+
 
 
 require __DIR__.'/test.php';

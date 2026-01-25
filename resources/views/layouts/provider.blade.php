@@ -257,6 +257,7 @@ $direction = $isRtl ? 'rtl' : 'ltr';
             display: flex;
             align-items: center;
             flex-shrink: 0;
+            gap: 12px;
         }
 
         .content-header-title {
@@ -264,6 +265,22 @@ $direction = $isRtl ? 'rtl' : 'ltr';
             font-size: 16px;
             margin: 0;
             color: var(--discord-lightest);
+        }
+
+        .mobile-menu-toggle {
+            display: none;
+            background: none;
+            border: none;
+            color: var(--discord-light);
+            font-size: 18px;
+            padding: 6px 8px;
+            border-radius: 6px;
+            cursor: pointer;
+        }
+
+        .mobile-menu-toggle:hover {
+            color: var(--discord-lightest);
+            background-color: var(--discord-dark-hover);
         }
 
         .content-body {
@@ -567,6 +584,12 @@ $direction = $isRtl ? 'rtl' : 'ltr';
             [dir="rtl"] .content-area {
                 margin-right: 0;
             }
+
+            .mobile-menu-toggle {
+                display: inline-flex;
+                align-items: center;
+                justify-content: center;
+            }
         }
 
         @media (max-width: 576px) {
@@ -688,9 +711,12 @@ $direction = $isRtl ? 'rtl' : 'ltr';
 
         <!-- Main content area -->
         <div class="content-area">
-            {{-- <div class="content-header">
+            <div class="content-header">
+                <button class="mobile-menu-toggle" id="mobileMenuToggle" aria-label="Open menu">
+                    <i class="fas fa-bars"></i>
+                </button>
                 <h1 class="content-header-title">@yield('header', 'Dashboard')</h1>
-            </div> --}}
+            </div>
 
             <div class="content-body">
                 @if(session('success'))
@@ -726,9 +752,11 @@ $direction = $isRtl ? 'rtl' : 'ltr';
         $(document).ready(function() {
             // Mobile menu toggle
             $('.server-icon').click(function() {
-                if ($(window).width() <= 768) {
-                    $('.channel-sidebar').toggleClass('show');
-                }
+                $('.channel-sidebar').toggleClass('show');
+            });
+
+            $('#mobileMenuToggle').click(function() {
+                $('.channel-sidebar').toggleClass('show');
             });
 
             // Close mobile menu when clicking outside

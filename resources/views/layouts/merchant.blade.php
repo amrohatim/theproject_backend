@@ -111,6 +111,9 @@ $direction = $isRtl ? 'rtl' : 'ltr';
             transform: translateX(-100%);
             transition: transform 0.3s ease-in-out;
             overflow-y: auto;
+            display: flex;
+            flex-direction: column;
+            -webkit-overflow-scrolling: touch;
         }
 
         .sidebar.open {
@@ -165,6 +168,9 @@ $direction = $isRtl ? 'rtl' : 'ltr';
         .sidebar-nav {
             margin-top: 24px;
             padding: 0 12px;
+            flex: 1;
+            overflow-y: auto;
+            padding-bottom: 24px;
         }
 
         .nav-section {
@@ -227,9 +233,10 @@ $direction = $isRtl ? 'rtl' : 'ltr';
 
         /* Logout section */
         .sidebar-footer {
-            margin-top: 32px;
+            margin-top: auto;
             padding-top: 24px;
             border-top: 1px solid var(--gray-200);
+            padding-bottom: 16px;
         }
 
         /* Mobile sidebar overlay */
