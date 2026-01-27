@@ -106,9 +106,16 @@ class ReviewController extends Controller
      */
     public function store(Request $request, $type, $id)
     {
+        if (!Auth::check()) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Authentication required',
+            ], 401);
+        }
+
         $request->validate([
             'rating' => 'required|integer|min:1|max:5',
-            'comment' => 'required|string|min:10|max:1000',
+            'comment' => 'required|string|min:2|max:1000',
             'images' => 'nullable|array|max:5',
             'images.*' => 'string|url',
         ]);
@@ -182,9 +189,16 @@ class ReviewController extends Controller
      */
     public function update(Request $request, $reviewId)
     {
+        if (!Auth::check()) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Authentication required',
+            ], 401);
+        }
+
         $request->validate([
             'rating' => 'required|integer|min:1|max:5',
-            'comment' => 'required|string|min:10|max:1000',
+            'comment' => 'required|string|min:2|max:1000',
             'images' => 'nullable|array|max:5',
             'images.*' => 'string|url',
         ]);
@@ -237,6 +251,13 @@ class ReviewController extends Controller
      */
     public function destroy($reviewId)
     {
+        if (!Auth::check()) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Authentication required',
+            ], 401);
+        }
+
         try {
             $review = Review::where('id', $reviewId)
                 ->where('user_id', Auth::id())
@@ -278,6 +299,13 @@ class ReviewController extends Controller
      */
     public function getUserReview($type, $id)
     {
+        if (!Auth::check()) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Authentication required',
+            ], 401);
+        }
+
         try {
             $reviewable = $this->getReviewableModel($type, $id);
             if (!$reviewable) {

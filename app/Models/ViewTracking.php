@@ -20,7 +20,6 @@ class ViewTracking extends Model
         'entity_id',
         'user_id',
         'session_id',
-        'device_fingerprint',
         'ip_address',
         'user_agent',
         'viewed_at',
@@ -76,14 +75,6 @@ class ViewTracking extends Model
     }
 
     /**
-     * Scope to filter by device fingerprint.
-     */
-    public function scopeForDevice($query, string $deviceFingerprint)
-    {
-        return $query->where('device_fingerprint', $deviceFingerprint);
-    }
-
-    /**
      * Scope to filter by IP address.
      */
     public function scopeForIp($query, string $ipAddress)
@@ -115,7 +106,6 @@ class ViewTracking extends Model
         return $query->selectRaw('
             COUNT(DISTINCT CASE 
                 WHEN user_id IS NOT NULL THEN user_id 
-                WHEN device_fingerprint IS NOT NULL THEN device_fingerprint 
                 WHEN session_id IS NOT NULL THEN session_id 
                 ELSE ip_address 
             END) as unique_views

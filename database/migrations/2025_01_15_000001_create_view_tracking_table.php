@@ -19,7 +19,6 @@ return new class extends Migration
                 $table->unsignedBigInteger('entity_id');
                 $table->unsignedBigInteger('user_id')->nullable(); // null for anonymous users
                 $table->string('session_id')->nullable(); // for anonymous users
-                $table->string('device_fingerprint')->nullable(); // for anonymous users
                 $table->string('ip_address', 45);
                 $table->string('user_agent')->nullable();
                 $table->timestamp('viewed_at');
@@ -29,14 +28,12 @@ return new class extends Migration
                 $table->index(['entity_type', 'entity_id']);
                 $table->index(['user_id', 'entity_type', 'entity_id']);
                 $table->index(['session_id', 'entity_type', 'entity_id']);
-                $table->index(['device_fingerprint', 'entity_type', 'entity_id']);
                 $table->index(['ip_address', 'entity_type', 'entity_id']);
                 $table->index('viewed_at');
 
                 // Composite index for unique view checking (with custom names to avoid length issues)
                 $table->index(['entity_type', 'entity_id', 'user_id', 'viewed_at'], 'vt_entity_user_viewed_idx');
                 $table->index(['entity_type', 'entity_id', 'session_id', 'viewed_at'], 'vt_entity_session_viewed_idx');
-                $table->index(['entity_type', 'entity_id', 'device_fingerprint', 'viewed_at'], 'vt_entity_device_viewed_idx');
             });
         }
     }

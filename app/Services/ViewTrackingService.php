@@ -42,7 +42,6 @@ class ViewTrackingService
 
             $userId = Auth::id();
             $sessionId = $request->hasSession() ? $request->session()->getId() : null;
-            $deviceFingerprint = $request->header('X-Device-Fingerprint');
 
             // Get IP address, prioritizing X-Forwarded-For for testing
             $ipAddress = $request->header('X-Forwarded-For') ?: $request->ip();
@@ -54,11 +53,10 @@ class ViewTrackingService
                 'user_id' => $userId,
                 'session_id' => $sessionId,
                 'ip_address' => $ipAddress,
-                'has_device_fingerprint' => !empty($deviceFingerprint)
             ]);
 
             // Check if this is a duplicate view within the time window
-            if ($this->isDuplicateView($entityType, $entityId, $userId, $sessionId, $deviceFingerprint, $ipAddress)) {
+            if ($this->isDuplicateView($entityType, $entityId, $userId, $sessionId, $ipAddress)) {
                 Log::info("Duplicate view blocked for {$entityType} {$entityId}", [
                     'user_id' => $userId,
                     'session_id' => $sessionId,
@@ -68,7 +66,7 @@ class ViewTrackingService
             }
 
             // Check rate limiting
-            if ($this->isRateLimited($entityType, $entityId, $userId, $sessionId, $deviceFingerprint, $ipAddress)) {
+            if ($this->isRateLimited($entityType, $entityId, $userId, $sessionId, $ipAddress)) {
                 Log::warning("Rate limit exceeded for {$entityType} {$entityId}", [
                     'user_id' => $userId,
                     'session_id' => $sessionId,
@@ -83,7 +81,6 @@ class ViewTrackingService
                 'entity_id' => $entityId,
                 'user_id' => $userId,
                 'session_id' => $sessionId,
-                'device_fingerprint' => $deviceFingerprint,
                 'ip_address' => $ipAddress,
                 'user_agent' => $userAgent,
                 'viewed_at' => Carbon::now(),
@@ -132,7 +129,6 @@ class ViewTrackingService
         int $entityId,
         ?int $userId,
         ?string $sessionId,
-        ?string $deviceFingerprint,
         string $ipAddress
     ): bool {
         // For authenticated users: Check if THIS specific user has viewed this entity before
@@ -149,20 +145,6 @@ class ViewTrackingService
             return $isDuplicate;
         }
         
-        // For anonymous users, prioritize device fingerprint for better tracking
-        if ($deviceFingerprint) {
-            // Check if this device fingerprint has viewed this entity before
-            // Use permanent tracking for device fingerprints to prevent abuse
-            $isDuplicate = ViewTracking::where('entity_type', $entityType)
-                ->where('entity_id', $entityId)
-                ->where('device_fingerprint', $deviceFingerprint)
-                ->exists();
-
-            Log::info("Checking duplicate view for device fingerprint, Entity: $entityType:$entityId, Result: " .
-                ($isDuplicate ? 'DUPLICATE' : 'NEW VIEW'));
-            return $isDuplicate;
-        }
-
         // Check by session ID with time window (for anonymous users without device fingerprint)
         if ($sessionId) {
             $since = Carbon::now()->subHours(self::DUPLICATE_WINDOW_HOURS);
@@ -184,7 +166,6 @@ class ViewTrackingService
             ->where('entity_id', $entityId)
             ->where('ip_address', $ipAddress)
             ->where('user_id', null) // Only check anonymous users
-            ->where('device_fingerprint', null) // Only check users without device fingerprint
             ->where('session_id', null) // Only check users without session
             ->where('viewed_at', '>=', $since)
             ->exists();
@@ -203,7 +184,6 @@ class ViewTrackingService
         int $entityId,
         ?int $userId,
         ?string $sessionId,
-        ?string $deviceFingerprint,
         string $ipAddress
     ): bool {
         $since = Carbon::now()->subHour();
@@ -214,12 +194,6 @@ class ViewTrackingService
         // Check rate limit for authenticated user
         if ($userId) {
             $viewCount = $query->forUser($userId)->count();
-            return $viewCount >= self::RATE_LIMIT_PER_HOUR;
-        }
-
-        // Check rate limit for anonymous user by device fingerprint
-        if ($deviceFingerprint) {
-            $viewCount = $query->forDevice($deviceFingerprint)->count();
             return $viewCount >= self::RATE_LIMIT_PER_HOUR;
         }
 
