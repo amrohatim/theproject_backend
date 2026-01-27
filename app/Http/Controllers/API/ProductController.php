@@ -382,20 +382,11 @@ class ProductController extends Controller
             'colorSizes.size'
         ])->findOrFail($id);
 
-        // Track unique product view and increment counters
+        // Track unique product view with duplicate prevention
         try {
             $this->viewTrackingService->trackView('product', $product->id, request());
         } catch (\Exception $e) {
             Log::warning('Failed to track product view', [
-                'product_id' => $product->id,
-                'error' => $e->getMessage(),
-            ]);
-        }
-
-        try {
-            $this->trendingService->incrementProductView($product->id);
-        } catch (\Exception $e) {
-            Log::warning('Failed to increment product view count', [
                 'product_id' => $product->id,
                 'error' => $e->getMessage(),
             ]);

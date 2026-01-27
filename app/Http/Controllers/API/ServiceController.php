@@ -206,21 +206,12 @@ class ServiceController extends Controller
 
         $service = $this->transformService($service);
 
-        // Track view for trending
+        // Track view with duplicate prevention
         try {
             $this->viewTrackingService->trackView('service', $service->id, request());
         } catch (\Exception $e) {
             // Silent log to avoid user-facing errors
             \Log::warning('Failed to track service view', [
-                'service_id' => $service->id,
-                'error' => $e->getMessage(),
-            ]);
-        }
-
-        try {
-            $this->trendingService->incrementServiceView($service->id);
-        } catch (\Exception $e) {
-            \Log::warning('Failed to increment service view count', [
                 'service_id' => $service->id,
                 'error' => $e->getMessage(),
             ]);
