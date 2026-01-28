@@ -181,6 +181,8 @@
             'vendor.product_specifications' => __('vendor.product_specifications'),
             'vendor.add_detailed_specifications' => __('vendor.add_detailed_specifications'),
             'vendor.add_specifications_detailed_info' => __('vendor.add_specifications_detailed_info'),
+            'vendor.add_technical_specifications' => __('vendor.add_technical_specifications'),
+            'vendor.add_first_specification' => __('vendor.add_first_specification'),
             'vendor.add_specification' => __('vendor.add_specification'),
             'vendor.specification_name' => __('vendor.specification_name'),
             'vendor.specification_value' => __('vendor.specification_value'),

@@ -5,24 +5,41 @@
         <h4 class="vue-text-lg">{{ $t('vendor.size_management') }}</h4>
         <p class="text-sm text-gray-600">{{ $t('vendor.manage_sizes_stock_allocation') }}</p>
       </div>
-      <button type="button"
-              @click="showAddSizeModal = true"
-              class="vue-btn vue-btn-primary">
+      <button
+        type="button"
+        class="vue-btn"
+        :class="isProductsManagerContext
+          ? 'bg-orange-400 hover:bg-orange-500 border-orange-300 text-white'
+          : 'bg-blue-600 hover:bg-blue-700 border-blue-600 text-white'"
+        @click="showAddSizeModal = true"
+      >
         <i class="fas fa-plus w-4 h-4"></i>
         {{ $t('vendor.add_size') }}
       </button>
     </div>
 
     <!-- Stock Allocation Summary -->
-    <div v-if="colorStock > 0" class="mb-6 p-4 bg-orange-50 border border-orange-200 rounded-lg">
+    <div v-if="colorStock > 0"
+         class="mb-6 p-4 border rounded-lg"
+         :class="isProductsManagerContext ? 'bg-orange-50 border-orange-200' : 'bg-blue-50 border-blue-200'">
       <div class="flex items-center justify-between mb-2">
-        <span class="text-sm font-medium text-orange-900"> {{ $t('vendor.stock_allocation_for_color') }}</span>
-        <span class="text-sm text-orange-700">{{ totalSizeStock }} / {{ colorStock }} {{ $t('vendor.allocated') }}</span>
+        <span class="text-sm font-medium"
+              :class="isProductsManagerContext ? 'text-orange-900' : 'text-blue-900'">
+          {{ $t('vendor.stock_allocation_for_color') }}
+        </span>
+        <span class="text-sm"
+              :class="isProductsManagerContext ? 'text-orange-700' : 'text-blue-700'">
+          {{ totalSizeStock }} / {{ colorStock }} {{ $t('vendor.allocated') }}
+        </span>
       </div>
-      <div class="w-full bg-orange-200 rounded-full h-2">
-        <div class="bg-orange-600 h-2 rounded-full transition-all duration-300"
+      <div class="w-full rounded-full h-2"
+           :class="isProductsManagerContext ? 'bg-orange-200' : 'bg-blue-200'">
+        <div class="h-2 rounded-full transition-all duration-300"
              :style="{ width: Math.min((totalSizeStock / colorStock) * 100, 100) + '%' }"
-             :class="{ 'bg-red-600': totalSizeStock > colorStock }"></div>
+             :class="[
+               isProductsManagerContext ? 'bg-orange-600' : 'bg-blue-600',
+               { 'bg-red-600': totalSizeStock > colorStock }
+             ]"></div>
       </div>
       <div v-if="totalSizeStock > colorStock" class="mt-2 text-xs text-red-600">
         ⚠️ {{ $t('vendor.stock_allocation_exceeds_limit') }}
@@ -60,7 +77,8 @@
             <div class="flex items-center gap-2 justify-end">
               <button type="button"
                       @click="editSize(index)"
-                      class="text-orange-600 hover:text-orange-700 text-sm">
+                      class="text-sm"
+                      :class="isProductsManagerContext ? 'text-orange-600 hover:text-orange-700' : 'text-blue-600 hover:text-blue-700'">
                 <i class="fas fa-edit"></i>
               </button>
               <button type="button" 
@@ -294,10 +312,15 @@
 
         <!-- Modal Actions -->
         <div class="flex items-center gap-3 mt-6">
-          <button type="button" 
-                  @click="addSize"
-                  :disabled="saving"
-                  class="vue-btn vue-btn-primary flex-1">
+          <button
+            type="button"
+            class="vue-btn flex-1"
+            :class="isProductsManagerContext
+              ? 'bg-orange-400 hover:bg-orange-500 border-orange-300 text-white'
+              : 'bg-blue-600 hover:bg-blue-700 border-blue-600 text-white'"
+            @click="addSize"
+            :disabled="saving"
+          >
             <i class="fas fa-plus"></i>
             {{ saving ? $t('vendor.adding') : $t('vendor.add_size') }}
           </button>
@@ -1038,6 +1061,7 @@ export default {
       onCategoryChange,
       onSizeNameChange,
       sizeCategories,
+      isProductsManagerContext,
       getCategoryLabel,
       fetchSizes,
       editSize,

@@ -335,6 +335,8 @@
         'vendor.add_specification': '{{ __('vendor.add_specification') }}',
         'vendor.specification_key': '{{ __('vendor.specification_key') }}',
         'vendor.specification_value': '{{ __('vendor.specification_value') }}',
+        'vendor.specification_key_placeholder': '{{ __('vendor.specification_key_placeholder') }}',
+        'vendor.specification_value_placeholder': '{{ __('vendor.specification_value_placeholder') }}',
         'vendor.enter_specification_key': '{{ __('vendor.enter_specification_key') }}',
         'vendor.enter_specification_value': '{{ __('vendor.enter_specification_value') }}',
 

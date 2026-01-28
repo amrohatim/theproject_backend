@@ -215,6 +215,7 @@
                     class="sr-only"
                     @change="handleLogoChange"
                     :disabled="loading"
+                    required
                   />
                 </label>
                 <p class="pl-1">{{ $t('or_drag_and_drop') }}</p>
@@ -303,7 +304,8 @@ export default {
              this.formData.contact_number_1 &&
              this.formData.address &&
              this.formData.emirate &&
-             this.formData.city;
+             this.formData.city &&
+             (this.logoFile || this.formData.logo || this.logoPreview);
     },
   },
   watch: {
@@ -320,8 +322,14 @@ export default {
       return window.appTranslations && window.appTranslations[key] ? window.appTranslations[key] : key;
     },
     handleSubmit() {
+      this.errors = {};
+
+      if (!this.logoFile && !this.formData.logo) {
+        this.errors = { ...this.errors, logo: [this.$t('required_field')] };
+        return;
+      }
+
       if (this.isFormValid) {
-        this.errors = {};
         this.$emit('submit', this.logoFile);
       }
     },
@@ -341,7 +349,8 @@ export default {
         }
         
         this.logoFile = file;
-        
+        this.formData.logo = file;
+
         // Create preview
         const reader = new FileReader();
         reader.onload = (e) => {
@@ -359,6 +368,7 @@ export default {
     removeLogo() {
       this.logoFile = null;
       this.logoPreview = null;
+      this.formData.logo = null;
       if (this.$refs.logoInput) {
         this.$refs.logoInput.value = '';
       }

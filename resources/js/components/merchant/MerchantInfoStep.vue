@@ -125,6 +125,7 @@
             @change="handleLogoUpload"
             accept="image/*"
             class="file-input"
+            required
           >
           <label for="logo" class="file-upload-label">
             <div v-if="logoPreviewUrl" class="image-preview">
@@ -620,6 +621,10 @@ export default {
       }
 
       // UAE ID validation
+      if (!this.formData.logo) {
+        errors.push({ field: 'logo', message: this.$t('business_logo_optional') });
+      }
+
       if (!this.formData.uae_id_front) {
         errors.push({ field: 'uae_id_front', message: this.$t('uae_id_front_side_is_required') });
       }

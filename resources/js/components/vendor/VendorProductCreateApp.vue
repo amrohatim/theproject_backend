@@ -323,20 +323,34 @@
             </div>
 
             <!-- Stock Allocation Summary -->
-            <div v-if="productData.colors.length > 0 && productData.stock > 0" class="mt-6 p-4 bg-orange-50 border border-orange-200 rounded-lg">
+            <div v-if="productData.colors.length > 0 && productData.stock > 0"
+                 class="mt-6 p-4 border rounded-lg"
+                 :class="userRole === 'products_manager' ? 'bg-orange-50 border-orange-200' : 'bg-blue-50 border-blue-200'">
               <div class="flex items-center justify-between mb-2">
-                <span class="text-sm font-medium text-orange-900">{{ $t('vendor.stock_allocation_progress') }}</span>
-              <span class="text-sm text-orange-700">{{ totalAllocatedStock }} / {{ productData.stock }} {{ $t('vendor.allocated_stock') }}</span>
+                <span class="text-sm font-medium"
+                      :class="userRole === 'products_manager' ? 'text-orange-900' : 'text-blue-900'">
+                  {{ $t('vendor.stock_allocation_progress') }}
+                </span>
+              <span class="text-sm"
+                    :class="userRole === 'products_manager' ? 'text-orange-700' : 'text-blue-700'">
+                {{ totalAllocatedStock }} / {{ productData.stock }} {{ $t('vendor.allocated_stock') }}
+              </span>
               </div>
-              <div class="w-full bg-orange-200 rounded-full h-3">
-                <div class="bg-orange-600 h-3 rounded-full transition-all duration-300"
+              <div class="w-full rounded-full h-3"
+                   :class="userRole === 'products_manager' ? 'bg-orange-200' : 'bg-blue-200'">
+                <div class="h-3 rounded-full transition-all duration-300"
                      :style="{ width: stockProgressPercentage + '%' }"
-                     :class="{ 'bg-red-600': isStockOverAllocated }"></div>
+                     :class="[
+                       userRole === 'products_manager' ? 'bg-orange-600' : 'bg-blue-600',
+                       { 'bg-red-600': isStockOverAllocated }
+                     ]"></div>
               </div>
               <div v-if="isStockOverAllocated" class="mt-2 text-xs text-red-600">
                 {{ $t('vendor.stock_over_allocated_adjust') }}
               </div>
-              <div v-else-if="totalAllocatedStock < productData.stock" class="mt-2 text-xs text-amber-600">
+              <div v-else-if="totalAllocatedStock < productData.stock"
+                   class="mt-2 text-xs"
+                   :class="userRole === 'products_manager' ? 'text-amber-600' : 'text-blue-600'">
                 💡 {{ productData.stock - totalAllocatedStock }} {{ $t('vendor.remaining_stock') }}
               </div>
               <div v-else class="mt-2 text-xs text-green-600">
@@ -367,6 +381,7 @@
                 :key="index"
                 :specification="spec"
                 :index="index"
+                :user-role="userRole"
                 @update="updateSpecification"
                 @remove="removeSpecification"
               />

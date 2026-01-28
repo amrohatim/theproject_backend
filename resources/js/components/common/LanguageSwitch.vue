@@ -5,7 +5,11 @@
       <button
         type="button"
         class="language-button"
-        :class="{ 'active': currentLanguage === 'en', 'inactive': currentLanguage !== 'en' }"
+        :class="[
+          currentLanguage === 'en'
+            ? (isProductsManagerContext ? 'active-pm' : 'active-vendor')
+            : 'inactive'
+        ]"
         @click="switchLanguage('en')"
       >
         <span class="language-text">English</span>
@@ -28,7 +32,11 @@
       <button
         type="button"
         class="language-button"
-        :class="{ 'active': currentLanguage === 'ar', 'inactive': currentLanguage !== 'ar' }"
+        :class="[
+          currentLanguage === 'ar'
+            ? (isProductsManagerContext ? 'active-pm' : 'active-vendor')
+            : 'inactive'
+        ]"
         @click="switchLanguage('ar')"
       >
         <span class="language-text">Arabic</span>
@@ -46,6 +54,10 @@ export default {
     modelValue: {
       type: String,
       default: 'en'
+    },
+    userRole: {
+      type: String,
+      default: 'vendor'
     }
   },
   emits: ['update:modelValue', 'language-changed'],
@@ -53,6 +65,10 @@ export default {
     const currentLanguage = computed({
       get: () => props.modelValue,
       set: (value) => emit('update:modelValue', value)
+    })
+
+    const isProductsManagerContext = computed(() => {
+      return props.userRole === 'products_manager' || window.location.pathname.includes('/products-manager/')
     })
 
     const switchLanguage = (language) => {
@@ -64,6 +80,7 @@ export default {
 
     return {
       currentLanguage,
+      isProductsManagerContext,
       switchLanguage
     }
   }
@@ -101,8 +118,14 @@ export default {
   min-width: 80px;
 }
 
-.language-button.active {
+.language-button.active-vendor {
   background: #369FFF;
+  color: white;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
+}
+
+.language-button.active-pm {
+  background: #f59e0b;
   color: white;
   box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
 }

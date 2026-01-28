@@ -667,7 +667,7 @@
                                         <button type="button" onclick="removeLogo(event)" class="mt-2 text-sm text-red-600 hover:text-red-800">{{ __('messages.remove') }}</button>
                                     </div>
                                 </div>
-                                <input id="companyLogo" name="logo" type="file" accept="image/*" class="hidden">
+                                <input id="companyLogo" name="logo" type="file" accept="image/*" class="hidden" required>
                             </div>
                         </div>
                     </div>
@@ -907,6 +907,11 @@
 
             if (!address) {
                 showErrorModal('Address is required.');
+                return false;
+            }
+
+            if (!logoFile) {
+                showErrorModal('Company logo is required.');
                 return false;
             }
 

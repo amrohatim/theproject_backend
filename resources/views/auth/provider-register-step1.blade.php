@@ -368,9 +368,9 @@
                     <!-- Phone Field -->
                     <div class="space-y-2">
                         <label for="phone" class="text-sm font-medium text-gray-700">{{ __('messages.phone_number') }}</label>
-                        <div class="flex border border-gray-300 rounded-md focus-within:ring-2 focus-within:ring-purple-500 focus-within:border-transparent">
-                            <div class="flex items-center px-3 bg-gray-50 border-r border-gray-300 rounded-l-md">
-                                <img src="data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMjQiIGhlaWdodD0iMTgiIHZpZXdCb3g9IjAgMCAyNCAxOCIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KPHJlY3Qgd2lkdGg9IjI0IiBoZWlnaHQ9IjYiIGZpbGw9IiMwMDczMzMiLz4KPHJlY3QgeT0iNiIgd2lkdGg9IjI0IiBoZWlnaHQ9IjYiIGZpbGw9IiNGRkZGRkYiLz4KPHJlY3QgeT0iMTIiIHdpZHRoPSIyNCIgaGVpZ2h0PSI2IiBmaWxsPSIjRkYwMDAwIi8+Cjwvc3ZnPgo=" alt="UAE Flag" class="w-5 h-4 mr-2">
+                        <div class="flex border border-gray-300 rounded-md focus-within:ring-2 focus-within:ring-purple-500 focus-within:border-transparent" style="direction: ltr; flex-direction: row;">
+                            <div class="flex items-center px-3 bg-gray-50 border-r border-gray-300 rounded-l-md" dir="ltr" style="direction: ltr; flex-direction: row;">
+                                <img src="data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMjQiIGhlaWdodD0iMTgiIHZpZXdCb3g9IjAgMCAyNCAxOCIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KPHJlY3Qgd2lkdGg9IjYiIGhlaWdodD0iMTgiIGZpbGw9IiNGRjAwMDAiLz4KPHJlY3QgeD0iNiIgd2lkdGg9IjE4IiBoZWlnaHQ9IjYiIGZpbGw9IiMwMDczMkYiLz4KPHJlY3QgeD0iNiIgeT0iNiIgd2lkdGg9IjE4IiBoZWlnaHQ9IjYiIGZpbGw9IiNGRkZGRkYiLz4KPHJlY3QgeD0iNiIgeT0iMTIiIHdpZHRoPSIxOCIgaGVpZ2h0PSI2IiBmaWxsPSIjMDAwMDAwIi8+Cjwvc3ZnPg==" alt="UAE Flag" class="w-5 h-4 mr-2">
                                 <span class="text-sm font-medium text-gray-700">+971</span>
                             </div>
                             <input style = "direction: ltr; text-align: left;" id="phone" name="phone" type="tel" placeholder="50 123 4567" value="{{ old('phone') }}" required class="flex-1 px-3 py-2 border-0 rounded-r-md focus:outline-none focus:ring-0" maxlength="11">
@@ -381,10 +381,10 @@
                     <div class="space-y-2">
                         <label for="password" class="text-sm font-medium text-gray-700">{{ __('messages.password') }}</label>
                         <div class="relative">
-                            <input id="password" name="password" type="password" placeholder="{{ __('messages.create_strong_password') }}" required class="w-full pl-10 pr-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent">
-                            <svg class="absolute left-3 top-1/2 transform -translate-y-1/2 w-4 h-4 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"></path>
-                            </svg>
+                            <input id="password" name="password" type="password" placeholder="{{ __('messages.create_strong_password') }}" required class="w-full pl-10 pr-10 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent">
+                            <button type="button" class="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600" onclick="togglePasswordVisibility('password', this)" aria-label="Toggle password visibility">
+                                <i class="fas fa-eye"></i>
+                            </button>
                         </div>
                     </div>
 
@@ -392,10 +392,10 @@
                     <div class="space-y-2">
                         <label for="password_confirmation" class="text-sm font-medium text-gray-700">{{ __('messages.confirm_password') }}</label>
                         <div class="relative">
-                            <input id="password_confirmation" name="password_confirmation" type="password" placeholder="{{ __('messages.confirm_your_password') }}" required class="w-full pl-10 pr-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent">
-                            <svg class="absolute left-3 top-1/2 transform -translate-y-1/2 w-4 h-4 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"></path>
-                            </svg>
+                            <input id="password_confirmation" name="password_confirmation" type="password" placeholder="{{ __('messages.confirm_your_password') }}" required class="w-full pl-10 pr-10 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent">
+                            <button type="button" class="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600" onclick="togglePasswordVisibility('password_confirmation', this)" aria-label="Toggle password visibility">
+                                <i class="fas fa-eye"></i>
+                            </button>
                         </div>
                     </div>
 
@@ -430,7 +430,7 @@
                                     <button type="button" class="text-sm text-red-600 hover:text-red-700" onclick="removeLogo()">Remove</button>
                                 </div>
                             </div>
-                            <input type="file" id="logo" name="logo" accept="image/jpeg,image/png,image/jpg,image/gif" class="hidden">
+                            <input type="file" id="logo" name="logo" accept="image/jpeg,image/png,image/jpg,image/gif" class="hidden" required>
                         </div>
                     </div>
 
@@ -788,9 +788,36 @@
             return emailRegex.test(email);
         }
 
+        function togglePasswordVisibility(inputId, buttonEl) {
+            const input = document.getElementById(inputId);
+            if (!input) return;
+            const isHidden = input.type === 'password';
+            input.type = isHidden ? 'text' : 'password';
+            const icon = buttonEl.querySelector('i');
+            if (icon) {
+                icon.className = isHidden ? 'fas fa-eye-slash' : 'fas fa-eye';
+            }
+        }
+
+        function getLogoValidationError(file) {
+            if (!file) return 'Company logo is required.';
+            const maxSize = 5 * 1024 * 1024; // 5MB
+            if (file.size > maxSize) return 'Company logo must be 5MB or less.';
+            const allowedTypes = ['image/jpeg', 'image/png', 'image/jpg', 'image/gif'];
+            if (!allowedTypes.includes(file.type)) return 'Company logo must be PNG, JPG, or GIF format.';
+            return null;
+        }
+
         // Form submission - server-side validation only
         document.querySelector('form').addEventListener('submit', async function(e) {
             e.preventDefault();
+
+            const logoFile = document.getElementById('logo').files[0];
+            const logoError = getLogoValidationError(logoFile);
+            if (logoError) {
+                showValidationModal(logoError);
+                return;
+            }
 
             // Submit form via AJAX for server-side validation
             const formData = new FormData(this);

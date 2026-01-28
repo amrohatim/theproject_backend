@@ -21,7 +21,15 @@
             <a :href="backUrl" class="inline-flex w-full items-center justify-center px-4 py-3 sm:py-2 bg-gray-600 border border-transparent rounded-md font-semibold text-xs text-white uppercase tracking-widest hover:bg-gray-700 active:bg-gray-900 focus:outline-none focus:border-gray-900 focus:ring ring-gray-300 disabled:opacity-25 transition ease-in-out duration-150 sm:w-auto">
               <i class="fas fa-arrow-left" :class="isRTL ? 'ml-2' : 'mr-2'"></i> {{ $t('vendor.back_to_products') }}
             </a>
-            <button type="button" class="inline-flex w-full items-center justify-center px-4 py-3 sm:py-2 bg-blue-600 border border-transparent rounded-md font-semibold text-xs text-white uppercase tracking-widest hover:bg-blue-700 active:bg-blue-900 focus:outline-none focus:border-blue-900 focus:ring ring-blue-300 disabled:opacity-25 transition ease-in-out duration-150 sm:w-auto" @click="saveProduct" :disabled="saving">
+            <button
+              type="button"
+              class="inline-flex w-full items-center justify-center px-4 py-3 sm:py-2 border border-transparent rounded-md font-semibold text-xs text-white uppercase tracking-widest focus:outline-none focus:ring disabled:opacity-25 transition ease-in-out duration-150 sm:w-auto"
+              :class="isProductsManagerContext
+                ? 'bg-orange-400 hover:bg-orange-500 active:bg-orange-600 focus:border-orange-500 ring-orange-300'
+                : 'bg-blue-600 hover:bg-blue-700 active:bg-blue-900 focus:border-blue-900 ring-blue-300'"
+              @click="saveProduct"
+              :disabled="saving"
+            >
               <i class="fas fa-save" :class="isRTL ? 'ml-2' : 'mr-2'"></i>
               {{ saving ? $t('vendor.saving') : $t('vendor.save_changes') }}
             </button>
@@ -30,15 +38,23 @@
       </div>
 
       <!-- Stock Progress Indicator -->
-      <div class="bg-orange-50 dark:bg-orange-900/20 border border-orange-200 dark:border-orange-800 rounded-lg p-4 mb-6">
+      <div class="border rounded-lg p-4 mb-6"
+           :class="isProductsManagerContext
+             ? 'bg-orange-50 dark:bg-orange-900/20 border-orange-200 dark:border-orange-800'
+             : 'bg-blue-50 dark:bg-blue-900/20 border-blue-200 dark:border-blue-800'">
         <div class="flex items-center justify-between mb-2">
-          <span class="text-sm font-medium text-orange-700 dark:text-orange-300">{{ $t('vendor.stock_allocation_progress') }}</span>
-          <span class="text-sm text-orange-600 dark:text-orange-400">
+          <span class="text-sm font-medium"
+                :class="isProductsManagerContext ? 'text-orange-700 dark:text-orange-300' : 'text-blue-700 dark:text-blue-300'">
+            {{ $t('vendor.stock_allocation_progress') }}
+          </span>
+          <span class="text-sm"
+                :class="isProductsManagerContext ? 'text-orange-600 dark:text-orange-400' : 'text-blue-600 dark:text-blue-400'">
             <span>{{ totalAllocatedStock }}</span> / {{ productData.stock }} {{ $t('vendor.units_allocated') }}
           </span>
         </div>
         <div class="w-full bg-gray-200 dark:bg-gray-700 rounded-full h-2">
-          <div class="bg-orange-600 h-2 rounded-full transition-all duration-300"
+          <div class="h-2 rounded-full transition-all duration-300"
+               :class="isProductsManagerContext ? 'bg-orange-600' : 'bg-blue-600'"
                :style="{ width: stockProgressPercentage + '%' }">
           </div>
         </div>
@@ -329,7 +345,14 @@
                 <h3 class="vue-text-lg">{{ $t('vendor.product_colors') }}</h3>
                 <p class="text-sm" style="color: var(--gray-600);">{{ $t('vendor.add_color_variants_with_images') }}</p>
               </div>
-              <button type="button" class="vue-btn vue-btn-primary w-full justify-center sm:w-auto" @click="addNewColor">
+              <button
+                type="button"
+                class="vue-btn w-full justify-center sm:w-auto"
+                :class="isProductsManagerContext
+                  ? 'bg-orange-400 hover:bg-orange-500 border-orange-300 text-white'
+                  : 'bg-blue-600 hover:bg-blue-700 border-blue-600 text-white'"
+                @click="addNewColor"
+              >
                 <i class="fas fa-plus w-4 h-4"></i>
                 {{ $t('vendor.add_color') }}
               </button>
@@ -343,7 +366,14 @@
                 <p class="text-center mb-4" style="color: var(--gray-600);">
                   {{ $t('vendor.add_at_least_one_color_variant') }}
                 </p>
-                <button type="button" class="vue-btn vue-btn-primary w-full justify-center sm:w-auto" @click="addNewColor">
+                <button
+                  type="button"
+                  class="vue-btn w-full justify-center sm:w-auto"
+                  :class="isProductsManagerContext
+                    ? 'bg-orange-400 hover:bg-orange-500 border-orange-300 text-white'
+                    : 'bg-blue-600 hover:bg-blue-700 border-blue-600 text-white'"
+                  @click="addNewColor"
+                >
                   <i class="fas fa-plus w-4 h-4"></i>
                   {{ $t('vendor.add_first_color') }}
                 </button>
@@ -363,6 +393,7 @@
                 :general-stock="productData.stock"
                 :enforce-general-stock="false"
                 :all-colors="productData.colors"
+                :user-role="isProductsManagerContext ? 'products_manager' : 'vendor'"
                 @update="updateColor"
                 @remove="removeColor"
                 @set-default="setDefaultColor"
@@ -381,7 +412,14 @@
                 <h3 class="vue-text-lg">{{ $t('vendor.product_specifications') }}</h3>
                 <p class="text-sm" style="color: var(--gray-600);">{{ $t('vendor.add_detailed_specifications') }}</p>
               </div>
-              <button type="button" class="vue-btn vue-btn-primary w-full justify-center sm:w-auto" @click="addNewSpecification">
+              <button
+                type="button"
+                class="vue-btn w-full justify-center sm:w-auto"
+                :class="isProductsManagerContext
+                  ? 'bg-orange-400 hover:bg-orange-500 border-orange-300 text-white'
+                  : 'bg-blue-600 hover:bg-blue-700 border-blue-600 text-white'"
+                @click="addNewSpecification"
+              >
                 <i class="fas fa-plus w-4 h-4"></i>
                 {{ $t('vendor.add_specification') }}
               </button>
@@ -396,7 +434,14 @@
                     <p class="mb-4" style="color: var(--gray-600);">
                       {{ $t('vendor.add_technical_specifications') }}
                     </p>
-                    <button type="button" class="vue-btn vue-btn-primary" @click="addNewSpecification">
+                    <button
+                      type="button"
+                      class="vue-btn"
+                      :class="isProductsManagerContext
+                        ? 'bg-orange-400 hover:bg-orange-500 border-orange-300 text-white'
+                        : 'bg-blue-600 hover:bg-blue-700 border-blue-600 text-white'"
+                      @click="addNewSpecification"
+                    >
                       <i class="fas fa-plus w-4 h-4"></i>
                       {{ $t('vendor.add_first_specification') }}
                     </button>
@@ -407,6 +452,7 @@
                     :key="spec.id || index"
                     :specification="spec"
                     :index="index"
+                    :user-role="isProductsManagerContext ? 'products_manager' : 'vendor'"
                     @update="updateSpecification"
                     @remove="removeSpecification"
                   />
@@ -508,6 +554,10 @@ export default {
     const saving = ref(false)
     const loading = ref(true)
     const errors = reactive({})
+
+    const isProductsManagerContext = computed(() => {
+      return window.location.pathname.includes('/products-manager/')
+    })
 
     const productData = reactive({
       id: null,
@@ -1140,6 +1190,7 @@ export default {
       saving,
       loading,
       errors,
+      isProductsManagerContext,
       productData,
       categories,
       branches,

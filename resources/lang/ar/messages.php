@@ -596,7 +596,7 @@ return [
     'enter_business_name' => 'أدخل اسم العمل',
     'enter_password' => 'أدخل كلمة المرور',
     'enter_confirm_password' => 'أدخل تأكيد كلمة المرور',
-    'business_logo_optional' => 'شعار العمل (اختياري)',
+    'business_logo_optional' => 'شعار العمل (اجباري)',
     'click_to_upload_logo' => 'انقر لرفع الشعار',
     'uae_id_front_side_required' => 'الجانب الأمامي للهوية الإماراتية (مطلوب)',
     'upload_front_side_uae_id' => 'رفع الجانب الأمامي للهوية الإماراتية',
@@ -1014,7 +1014,7 @@ return [
     'team_help_succeed' => 'فريقنا هنا لمساعدتك على النجاح في منصتنا',
 
     // Provider Form Fields (removing duplicates)
-    'company_logo_optional' => 'شعار الشركة (اختياري)',
+    'company_logo_optional' => 'شعار الشركة (اجباري)',
     'click_upload_drag_drop' => 'انقر للرفع أو اسحب وأفلت',
     'png_jpg_gif_5mb' => 'PNG، JPG، GIF حتى 5 ميجابايت',
     'delivery_service_configuration' => 'إعداد خدمة التوصيل',
@@ -1186,7 +1186,7 @@ return [
     
     // Merchant Info Step
     'uae_flag' => 'علم الإمارات',
-    'business_logo_optional' => 'شعار العمل (اختياري)',
+    'business_logo_optional' => 'شعار العمل (اجباري)',
     'click_upload_logo' => 'انقر لرفع الشعار',
     'click_to_upload_logo' => 'انقر لرفع الشعار',
     'click_to_change' => 'انقر للتغيير',

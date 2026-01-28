@@ -21,7 +21,8 @@
         <div class="flex flex-wrap items-center gap-2">
           <button v-if="!isDefault"
                   type="button"
-                  class="vue-btn-blue-solid text-sm font-medium"
+                  class="text-sm font-medium"
+                  :class="userRole === 'vendor' ? 'vue-btn-blue-solid-vendor' : 'vue-btn-blue-solid'"
                   @click="$emit('set-default', index)">
             <i :class="isRTL ? 'ml-2' : 'mr-2'" class="fas fa-star"></i>
             {{ $t('vendor.set_as_default') }}
@@ -213,6 +214,12 @@
             <!-- Image Preview Container -->
             <div class="image-preview-container"
                  :class="{ 'has-image': color.image }"
+                 :style="{
+                   '--image-preview-hover-border': userRole === 'vendor' ? '#3b82f6' : '#f59e0b',
+                   '--image-preview-hover-gradient': userRole === 'vendor'
+                     ? 'linear-gradient(135deg, rgba(59, 130, 246, 0.05) 0%, rgba(14, 165, 233, 0.05) 100%)'
+                     : 'linear-gradient(135deg, rgba(245, 158, 11, 0.05) 0%, rgba(249, 115, 22, 0.05) 100%)'
+                 }"
                  style="width: 300px; height: 400px; border: 2px dashed #d1d5db; border-radius: 8px; background-color: #f9fafb; display: flex; align-items: center; justify-content: center; overflow: hidden; position: relative;">
               <img v-if="imagePreviewUrl"
                    :src="imagePreviewUrl"
@@ -228,7 +235,10 @@
 
             <input type="file"
                    @change="handleImageUpload"
-                   class="modern-file-input block w-full text-sm text-gray-600 file:mr-4 file:py-3 file:px-6 file:rounded-xl file:border-0 file:text-sm file:font-semibold file:bg-gradient-to-r file:from-amber-50 file:to-orange-50 file:text-amber-700 hover:file:from-amber-100 hover:file:to-orange-100 file:transition-all file:duration-200 file:shadow-sm hover:file:shadow-md file:cursor-pointer"
+                   class="modern-file-input block w-full text-sm text-gray-600 file:mr-4 file:py-3 file:px-6 file:rounded-xl file:border-0 file:text-sm file:font-semibold file:bg-gradient-to-r file:transition-all file:duration-200 file:shadow-sm hover:file:shadow-md file:cursor-pointer"
+                   :class="userRole === 'vendor'
+                     ? 'file:from-blue-50 file:to-sky-50 file:text-blue-700 hover:file:from-blue-100 hover:file:to-sky-100'
+                     : 'file:from-amber-50 file:to-orange-50 file:text-amber-700 hover:file:from-amber-100 hover:file:to-orange-100'"
                    accept="image/*"
                    style="max-width: 300px;">
 
@@ -1131,7 +1141,7 @@ export default {
   left: 0;
   right: 0;
   bottom: 0;
-  background: linear-gradient(135deg, rgba(245, 158, 11, 0.05) 0%, rgba(249, 115, 22, 0.05) 100%);
+  background: var(--image-preview-hover-gradient, linear-gradient(135deg, rgba(245, 158, 11, 0.05) 0%, rgba(249, 115, 22, 0.05) 100%));
   opacity: 0;
   transition: opacity 0.3s ease;
   pointer-events: none;
@@ -1144,7 +1154,7 @@ export default {
 .image-preview-container:hover {
   box-shadow: 0 8px 16px -2px rgba(0, 0, 0, 0.1), 0 4px 8px -2px rgba(0, 0, 0, 0.06);
   transform: translateY(-2px);
-  border-color: #f59e0b !important;
+  border-color: var(--image-preview-hover-border, #f59e0b) !important;
 }
 
 .image-preview-container.has-image {
@@ -1174,7 +1184,7 @@ export default {
 .vue-btn-blue-solid {
   background: linear-gradient(135deg, #f59e0b 0%, #f97316 100%);
   color: #ffffff;
-  border: 2px solid transparent;
+  outline: none;
   padding: 0.75rem 1.25rem;
   border-radius: 0.75rem;
   font-size: 0.9375rem;
@@ -1193,6 +1203,39 @@ export default {
 .vue-btn-blue-solid:active {
   transform: translateY(0);
   box-shadow: 0 2px 4px 0 rgba(245, 158, 11, 0.2);
+}
+
+.vue-btn-blue-solid-vendor {
+  background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%);
+  color: #ffffff;
+  border: 2px solid transparent !important;
+  outline: none;
+  padding: 0.75rem 1.25rem;
+  border-radius: 0.75rem;
+  font-size: 0.9375rem;
+  font-weight: 600;
+  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+  box-shadow: 0 2px 4px 0 rgba(59, 130, 246, 0.2);
+  letter-spacing: -0.01em;
+}
+
+.vue-btn-blue-solid-vendor:hover {
+  background: linear-gradient(135deg, #2563eb 0%, #1d4ed8 100%);
+  box-shadow: 0 6px 16px 0 rgba(59, 130, 246, 0.4);
+  transform: translateY(-2px);
+}
+
+.vue-btn-blue-solid-vendor:active {
+  transform: translateY(0);
+  box-shadow: 0 2px 4px 0 rgba(59, 130, 246, 0.2);
+}
+
+.vue-btn-blue-solid:focus,
+.vue-btn-blue-solid:focus-visible,
+.vue-btn-blue-solid-vendor:focus,
+.vue-btn-blue-solid-vendor:focus-visible {
+  outline: none;
+  box-shadow: none;
 }
 
 

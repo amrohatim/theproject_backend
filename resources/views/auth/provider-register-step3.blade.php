@@ -249,7 +249,7 @@
                 </div>
 
                 <!-- License Information Card -->
-                <div class="bg-purple-50 border border-purple-200 rounded-lg p-6 mb-6">
+                <div class="rounded-lg p-6 mb-6">
                     <div class="flex items-center mb-4">
                         <i class="fas fa-info-circle text-purple-600 {{ app()->getLocale() == 'ar' ? 'ml-2' : 'mr-2' }}"></i>
                         <h3 class="font-semibold text-gray-900">{{ __('messages.license_information') }}</h3>
@@ -260,7 +260,7 @@
                 </div>
 
                 <!-- License Requirements -->
-                <div class="bg-yellow-50 border border-yellow-200 rounded-lg p-4 mb-6">
+                <div class="rounded-lg p-4 mb-6">
                     <h4 class="flex items-center text-yellow-800 font-semibold text-sm mb-2">
                         <i class="fas fa-exclamation-triangle {{ app()->getLocale() == 'ar' ? 'ml-2' : 'mr-2' }}"></i>
                         {{ __('messages.requirements') }}:

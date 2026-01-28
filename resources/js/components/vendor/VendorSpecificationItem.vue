@@ -1,6 +1,12 @@
 <template>
-  <div class="specification-item grid grid-cols-12 gap-4 items-center p-4 rounded-lg border border-gray-200 bg-white"
-       :class="{ 'rtl': isRTL }">
+  <div
+    class="specification-item grid grid-cols-12 gap-4 items-center p-4 rounded-lg border border-gray-200 bg-white"
+    :class="{ 'rtl': isRTL }"
+    :style="{
+      '--spec-focus-border': isProductsManagerContext ? '#f59e0b' : '#3b82f6',
+      '--spec-focus-ring': isProductsManagerContext ? 'rgba(245, 158, 11, 0.1)' : 'rgba(59, 130, 246, 0.1)'
+    }"
+  >
     <div class="col-span-4">
       <label class="block vue-text-sm mb-2">{{ $t('vendor.specification_key') }}</label>
       <input type="text"
@@ -47,6 +53,10 @@ export default {
     index: {
       type: Number,
       required: true
+    },
+    userRole: {
+      type: String,
+      default: 'vendor'
     }
   },
   emits: ['update', 'remove'],
@@ -58,12 +68,17 @@ export default {
       return ['ar', 'he', 'fa'].includes(window.Laravel?.locale || 'en')
     })
 
+    const isProductsManagerContext = computed(() => {
+      return props.userRole === 'products_manager' || window.location.pathname.includes('/products-manager/')
+    })
+
     const updateSpecification = (field, value) => {
       emit('update', props.index, field, value)
     }
 
     return {
       isRTL,
+      isProductsManagerContext,
       updateSpecification
     }
   }
@@ -90,8 +105,8 @@ export default {
 
 .vue-form-control:focus {
   outline: none;
-  border-color: #6366f1;
-  box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.1);
+  border-color: var(--spec-focus-border, #3b82f6);
+  box-shadow: 0 0 0 3px var(--spec-focus-ring, rgba(59, 130, 246, 0.1));
 }
 
 .specification-item {
@@ -150,8 +165,8 @@ export default {
   }
 
   .vue-form-control:focus {
-    border-color: #6366f1;
-    box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.1);
+    border-color: var(--spec-focus-border, #3b82f6);
+    box-shadow: 0 0 0 3px var(--spec-focus-ring, rgba(59, 130, 246, 0.1));
   }
 
   .specification-item {
