@@ -246,7 +246,7 @@ class BookingController extends Controller
         $booking->save();
 
         if ($statusChanged && $booking->user_id) {
-            $booking->loadMissing('branch');
+            $booking->loadMissing(['branch', 'service']);
 
             $messageStatus = $booking->status === 'pending'
                 ? 'Your service is pending.'
@@ -284,6 +284,9 @@ class BookingController extends Controller
                         'booking_id' => (string) $booking->id,
                         'status' => (string) $booking->status,
                     ];
+                    if ($booking->service?->image) {
+                        $data['image_url'] = (string) $booking->service->image;
+                    }
 
                     foreach ($tokens as $token) {
                         $fcmService->sendToToken($token, $title, $messageStatus, $data);

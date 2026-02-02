@@ -19,7 +19,7 @@ class CustomerNotificationController extends Controller
         $perPage = $perPage > 0 ? min($perPage, 100) : 15;
 
         $query = CustomerNotification::query()
-            ->with(['customer', 'booking', 'orderItem'])
+            ->with(['customer', 'booking.service', 'orderItem.product'])
             ->latest();
 
         if ($request->filled('customer_id')) {
@@ -34,7 +34,12 @@ class CustomerNotificationController extends Controller
             $query->where('notification_type', $request->input('notification_type'));
         }
 
-        return response()->json($query->paginate($perPage));
+        $paginator = $query->paginate($perPage);
+        $paginator->getCollection()->transform(function (CustomerNotification $notification) {
+            return $this->appendImageUrl($notification);
+        });
+
+        return response()->json($paginator);
     }
 
     /**
@@ -46,7 +51,8 @@ class CustomerNotificationController extends Controller
 
         $notification = CustomerNotification::create($data);
 
-        return response()->json($notification->load(['customer', 'booking', 'orderItem']), 201);
+        $notification->load(['customer', 'booking.service', 'orderItem.product']);
+        return response()->json($this->appendImageUrl($notification), 201);
     }
 
     /**
@@ -54,10 +60,10 @@ class CustomerNotificationController extends Controller
      */
     public function show(string $id): JsonResponse
     {
-        $notification = CustomerNotification::with(['customer', 'booking', 'orderItem'])
+        $notification = CustomerNotification::with(['customer', 'booking.service', 'orderItem.product'])
             ->findOrFail($id);
 
-        return response()->json($notification);
+        return response()->json($this->appendImageUrl($notification));
     }
 
     /**
@@ -72,7 +78,8 @@ class CustomerNotificationController extends Controller
         $notification->fill($data);
         $notification->save();
 
-        return response()->json($notification->load(['customer', 'booking', 'orderItem']));
+        $notification->load(['customer', 'booking.service', 'orderItem.product']);
+        return response()->json($this->appendImageUrl($notification));
     }
 
     /**
@@ -100,5 +107,20 @@ class CustomerNotificationController extends Controller
         ];
 
         return $request->validate($rules);
+    }
+
+    private function appendImageUrl(CustomerNotification $notification): CustomerNotification
+    {
+        $imageUrl = null;
+
+        if ($notification->booking?->service) {
+            $imageUrl = $notification->booking->service->image;
+        } elseif ($notification->orderItem?->product) {
+            $imageUrl = $notification->orderItem->product->image;
+        }
+
+        $notification->setAttribute('image_url', $imageUrl);
+
+        return $notification;
     }
 }

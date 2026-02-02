@@ -59,6 +59,7 @@ class FcmHttpV1
 
     public function sendToToken(string $token, string $title, string $body, array $data = []): void
     {
+        $imageUrl = $data['image_url'] ?? $data['image'] ?? null;
         $payload = [
             'message' => [
                 'token' => $token,
@@ -81,6 +82,14 @@ class FcmHttpV1
                 ],
             ],
         ];
+
+        if (!empty($imageUrl)) {
+            $payload['message']['notification']['image'] = $imageUrl;
+            $payload['message']['android']['notification']['image'] = $imageUrl;
+            $payload['message']['apns']['fcm_options'] = [
+                'image' => $imageUrl,
+            ];
+        }
 
         $this->http->post("v1/projects/{$this->projectId}/messages:send", [
             'headers' => [
