@@ -74,9 +74,14 @@ class FcmHttpV1
                     ],
                 ],
                 'apns' => [
+                    'headers' => [
+                        'apns-priority' => '10',
+                        'apns-push-type' => 'alert',
+                    ],
                     'payload' => [
                         'aps' => [
                             'sound' => 'default',
+                            'mutable-content' => 1,
                         ],
                     ],
                 ],
