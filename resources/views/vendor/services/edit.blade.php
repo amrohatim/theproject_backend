@@ -681,7 +681,7 @@
                         <div class="mt-2 grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-4">
                             @foreach($existingAdditionalImages as $serviceImage)
                                     <div class="border border-gray-200 dark:border-gray-700 rounded-md p-2">
-                                        <img src="{{ $serviceImage->image_path }}" alt="Service image" class="h-24 w-full object-cover rounded-md">
+                                    <img src="{{ \App\Helpers\ImageHelper::getFullImageUrl($serviceImage->image_path) }}" alt="Service image" class="h-24 w-full object-cover rounded-md">
                                         <label class="mt-2 flex items-center text-xs text-gray-600 dark:text-gray-400">
                                             <input type="checkbox" name="remove_additional_images[]" value="{{ $serviceImage->id }}" class="mr-2">
                                             Remove

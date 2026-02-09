@@ -424,7 +424,7 @@ class ServiceController extends Controller
      */
     protected function transformService(Service $service): Service
     {
-        $service->loadMissing(['branch', 'category']);
+        $service->loadMissing(['branch', 'category', 'serviceImages']);
 
         $service->branch_name = $service->branch ? $service->branch->name : ($service->merchant_name ?? 'Unknown Branch');
 
@@ -437,6 +437,7 @@ class ServiceController extends Controller
         $service->available_days = $this->normalizeAvailableDays($service->available_days);
         $service->start_time = $this->formatTimeField($service->start_time);
         $service->end_time = $this->formatTimeField($service->end_time);
+        $service->service_images = $service->serviceImages->pluck('image_path')->values();
 
         return $service;
     }
