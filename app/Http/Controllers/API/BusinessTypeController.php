@@ -10,6 +10,7 @@ use App\Models\Service;
 use App\Models\Category;
 use App\Models\Merchant;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 
 class BusinessTypeController extends Controller
 {
@@ -200,6 +201,91 @@ class BusinessTypeController extends Controller
                 'error' => $e->getMessage(),
             ], 500);
         }
+    }
+
+    /**
+     * Search branches by business type using product/service query.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @return \Illuminate\Http\Response
+     */
+    public function searchBranches(Request $request)
+    {
+        $businessType = $request->input('business_type');
+        $query = trim($request->input('query', ''));
+        $limit = (int) $request->input('limit', 20);
+        $limit = max(1, min($limit, 50));
+        $type = strtolower($request->input('type', 'both'));
+
+        if ($query === '') {
+            return response()->json([
+                'success' => true,
+                'branches' => [],
+            ]);
+        }
+
+        $branchQuery = Branch::query()->with(['company'])->where('status', 'active');
+        if (!empty($businessType) && $businessType !== 'all') {
+            $normalizedType = mb_strtolower(trim($businessType));
+            $branchQuery->whereRaw('LOWER(TRIM(business_type)) = ?', [$normalizedType]);
+        }
+        $eligibleBranchIds = $branchQuery->pluck('id');
+        if ($eligibleBranchIds->isEmpty()) {
+            return response()->json([
+                'success' => true,
+                'branches' => [],
+            ]);
+        }
+
+        $matchIds = collect();
+
+        if ($type === 'product' || $type === 'both') {
+            $productBranchIds = Product::query()
+                ->whereIn('branch_id', $eligibleBranchIds)
+                ->where(function ($q) use ($query) {
+                    $q->where('name', 'like', "%{$query}%")
+                        ->orWhere('product_name_arabic', 'like', "%{$query}%")
+                        ->orWhere('description', 'like', "%{$query}%")
+                        ->orWhere('product_description_arabic', 'like', "%{$query}%");
+                })
+                ->distinct()
+                ->limit($limit * 2)
+                ->pluck('branch_id');
+            $matchIds = $matchIds->merge($productBranchIds);
+        }
+
+        if ($type === 'service' || $type === 'both') {
+            $serviceBranchIds = Service::query()
+                ->whereIn('branch_id', $eligibleBranchIds)
+                ->where(function ($q) use ($query) {
+                    $q->where('name', 'like', "%{$query}%")
+                        ->orWhere('service_name_arabic', 'like', "%{$query}%")
+                        ->orWhere('description', 'like', "%{$query}%")
+                        ->orWhere('service_description_arabic', 'like', "%{$query}%");
+                })
+                ->distinct()
+                ->limit($limit * 2)
+                ->pluck('branch_id');
+            $matchIds = $matchIds->merge($serviceBranchIds);
+        }
+
+        $uniqueIds = $matchIds->unique()->values();
+        if ($uniqueIds->isEmpty()) {
+            return response()->json([
+                'success' => true,
+                'branches' => [],
+            ]);
+        }
+
+        $branches = Branch::with(['company'])
+            ->whereIn('id', $uniqueIds)
+            ->limit($limit)
+            ->get();
+
+        return response()->json([
+            'success' => true,
+            'branches' => $branches,
+        ]);
     }
 
     /**

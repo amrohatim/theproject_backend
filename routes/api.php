@@ -132,6 +132,7 @@ Route::get('/trending-services', [ServiceController::class, 'trendingServices'])
 Route::get('/business-types', [BusinessTypeController::class, 'index']);
 Route::get('/business-types/from-branches', [BusinessTypeController::class, 'getFromBranches']);
 Route::get('/business-types/suggestions', [BusinessTypeController::class, 'suggestions']);
+Route::get('/business-types/branch-search', [BusinessTypeController::class, 'searchBranches']);
 Route::get('/business-types/branches', [BusinessTypeController::class, 'getBranches']);
 Route::get('/business-types/products', [BusinessTypeController::class, 'getProducts']);
 Route::get('/business-types/services', [BusinessTypeController::class, 'getServices']);
