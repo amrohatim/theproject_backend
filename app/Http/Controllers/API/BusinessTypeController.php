@@ -203,6 +203,100 @@ class BusinessTypeController extends Controller
     }
 
     /**
+     * Get business type scoped search suggestions for products/services.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @return \Illuminate\Http\Response
+     */
+    public function suggestions(Request $request)
+    {
+        $businessType = $request->input('business_type');
+        $query = trim($request->input('query', ''));
+        $limit = (int) $request->input('limit', 10);
+        $limit = max(1, min($limit, 20));
+        $type = strtolower($request->input('type', 'both'));
+
+        if ($query === '') {
+            return response()->json([
+                'success' => true,
+                'suggestions' => [],
+            ]);
+        }
+
+        $branchQuery = Branch::query()->where('status', 'active');
+        if (!empty($businessType) && $businessType !== 'all') {
+            $normalizedType = mb_strtolower(trim($businessType));
+            $branchQuery->whereRaw('LOWER(TRIM(business_type)) = ?', [$normalizedType]);
+        }
+        $branchIds = $branchQuery->pluck('id');
+        if ($branchIds->isEmpty()) {
+            return response()->json([
+                'success' => true,
+                'suggestions' => [],
+            ]);
+        }
+
+        $suggestions = collect();
+        $perType = min($limit, 10);
+
+        $addSuggestion = function ($value) use (&$suggestions) {
+            $trimmed = trim((string) $value);
+            if ($trimmed !== '') {
+                $suggestions->push($trimmed);
+            }
+        };
+
+        if ($type === 'product' || $type === 'both') {
+            $products = Product::query()
+                ->whereIn('branch_id', $branchIds)
+                ->where(function ($q) use ($query) {
+                    $q->where('name', 'like', "%{$query}%")
+                        ->orWhere('product_name_arabic', 'like', "%{$query}%")
+                        ->orWhere('description', 'like', "%{$query}%")
+                        ->orWhere('product_description_arabic', 'like', "%{$query}%");
+                })
+                ->limit($perType)
+                ->get(['name', 'product_name_arabic']);
+
+            foreach ($products as $product) {
+                $addSuggestion($product->name);
+                $addSuggestion($product->product_name_arabic);
+            }
+        }
+
+        if ($type === 'service' || $type === 'both') {
+            $services = Service::query()
+                ->whereIn('branch_id', $branchIds)
+                ->where(function ($q) use ($query) {
+                    $q->where('name', 'like', "%{$query}%")
+                        ->orWhere('service_name_arabic', 'like', "%{$query}%")
+                        ->orWhere('description', 'like', "%{$query}%")
+                        ->orWhere('service_description_arabic', 'like', "%{$query}%");
+                })
+                ->limit($perType)
+                ->get(['name', 'service_name_arabic']);
+
+            foreach ($services as $service) {
+                $addSuggestion($service->name);
+                $addSuggestion($service->service_name_arabic);
+            }
+        }
+
+        $unique = $suggestions
+            ->unique(function ($value) {
+                return mb_strtolower($value);
+            })
+            ->values()
+            ->take($limit)
+            ->values();
+
+        return response()->json([
+            'success' => true,
+            'suggestions' => $unique,
+        ]);
+    }
+
+    /**
      * Get products filtered by business type.
      *
      * @param  \Illuminate\Http\Request  $request
