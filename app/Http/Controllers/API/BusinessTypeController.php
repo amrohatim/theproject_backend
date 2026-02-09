@@ -238,6 +238,8 @@ class BusinessTypeController extends Controller
         }
 
         $matchIds = collect();
+        $productBranchIds = collect();
+        $serviceBranchIds = collect();
 
         if ($type === 'product' || $type === 'both') {
             $productBranchIds = Product::query()
@@ -284,7 +286,14 @@ class BusinessTypeController extends Controller
 
         return response()->json([
             'success' => true,
-            'branches' => $branches,
+            'branches' => $branches->map(function ($branch) use ($productBranchIds, $serviceBranchIds) {
+                $isProduct = $productBranchIds->contains($branch->id);
+                $isService = $serviceBranchIds->contains($branch->id);
+                $matchType = $isProduct && $isService ? 'both' : ($isService ? 'service' : 'product');
+                $data = $branch->toArray();
+                $data['match_type'] = $matchType;
+                return $data;
+            }),
         ]);
     }
 
