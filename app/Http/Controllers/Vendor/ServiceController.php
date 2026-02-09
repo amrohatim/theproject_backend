@@ -6,6 +6,8 @@ use App\Http\Controllers\Controller;
 use App\Models\Branch;
 use App\Models\Category;
 use App\Models\Service;
+use App\Models\ServiceImage;
+use App\Models\BusinessType;
 use App\Services\WebPImageService;
 use App\Rules\ActiveBranchLicense;
 use Illuminate\Http\Request;
@@ -15,6 +17,28 @@ use Illuminate\Support\Facades\Storage;
 
 class ServiceController extends Controller
 {
+    /**
+     * Build a map of business type name => allowed service category IDs.
+     */
+    private function getBusinessTypeServiceCategoryMap(): array
+    {
+        return BusinessType::query()
+            ->pluck('service_categories', 'business_name')
+            ->mapWithKeys(function ($categories, $businessName) {
+                if (is_string($categories)) {
+                    $decoded = json_decode($categories, true);
+                    $ids = is_array($decoded) ? $decoded : [];
+                } else {
+                    $ids = is_array($categories) ? $categories : [];
+                }
+                $cleanIds = array_values(array_filter($ids, static fn ($id) => is_numeric($id)));
+                $cleanIds = array_values(array_map('intval', $cleanIds));
+                $normalizedName = strtolower(trim((string) $businessName));
+                return [$normalizedName => $cleanIds];
+            })
+            ->toArray();
+    }
+
     /**
      * Display a listing of the resource.
      */
@@ -65,6 +89,8 @@ class ServiceController extends Controller
      */
     public function create()
     {
+        $businessTypeCategoryMap = $this->getBusinessTypeServiceCategoryMap();
+
         // Get service categories with their children - force a fresh query to get the latest data
         $parentCategories = Category::where('type', 'service')
             ->whereNull('parent_id')
@@ -73,6 +99,39 @@ class ServiceController extends Controller
             }])
             ->orderBy('name')
             ->get();
+
+        if ($parentCategories->isEmpty()) {
+            $allCategoryIds = collect($businessTypeCategoryMap)
+                ->flatten()
+                ->filter()
+                ->unique()
+                ->values();
+
+            if ($allCategoryIds->isNotEmpty()) {
+                $parentIds = Category::whereIn('id', $allCategoryIds)
+                    ->pluck('parent_id')
+                    ->filter()
+                    ->unique()
+                    ->values();
+
+                $parentCategories = Category::whereIn('id', $parentIds)
+                    ->with(['children' => function($query) {
+                        $query->orderBy('name');
+                    }])
+                    ->orderBy('name')
+                    ->get();
+
+                $parentCategories->each(function ($parent) use ($allCategoryIds) {
+                    $parent->setRelation(
+                        'children',
+                        $parent->children->whereIn('id', $allCategoryIds)->values()
+                    );
+                });
+                $parentCategories = $parentCategories->filter(function ($parent) {
+                    return $parent->children->isNotEmpty();
+                })->values();
+            }
+        }
 
         // Get branches that belong to the vendor's company and have active licenses
         $branches = Branch::whereHas('company', function ($query) {
@@ -91,7 +150,7 @@ class ServiceController extends Controller
                 ->with('warning', 'No service categories found. Please contact the administrator.');
         }
 
-        return view('vendor.services.create', compact('parentCategories', 'branches'));
+        return view('vendor.services.create', compact('parentCategories', 'branches', 'businessTypeCategoryMap'));
     }
 
     /**
@@ -110,6 +169,10 @@ class ServiceController extends Controller
             'description' => 'nullable|string',
             'service_description_arabic' => 'nullable|string',
             'image' => 'nullable|image|mimes:jpeg,png,jpg,gif,webp|max:20480',
+            'additional_images' => 'nullable|array|max:8',
+            'additional_images.*' => 'nullable|image|mimes:jpeg,png,jpg,gif,webp|max:20480',
+            'remove_additional_images' => 'nullable|array',
+            'remove_additional_images.*' => 'integer|exists:service_images,id',
             'available_days' => 'required|array|min:1',
             'available_days.*' => 'integer|between:0,6',
         ];
@@ -177,7 +240,8 @@ class ServiceController extends Controller
             $data['image'] = $imagePath;
         }
 
-        Service::create($data);
+        $service = Service::create($data);
+        $this->storeAdditionalImages($request, $service);
 
         return redirect()->route('vendor.services.index')
             ->with('success', 'Service created successfully.');
@@ -188,6 +252,8 @@ class ServiceController extends Controller
      */
     public function edit(Service $service)
     {
+        $businessTypeCategoryMap = $this->getBusinessTypeServiceCategoryMap();
+
         // Check if the service belongs to the vendor's company
         $userBranches = Branch::whereHas('company', function ($query) {
             $query->where('user_id', Auth::id());
@@ -207,12 +273,54 @@ class ServiceController extends Controller
             ->orderBy('name')
             ->get();
 
+        $branchBusinessType = strtolower(trim((string) ($service->branch?->business_type)));
+        if ($branchBusinessType && isset($businessTypeCategoryMap[$branchBusinessType])) {
+            $allowedCategoryIds = $businessTypeCategoryMap[$branchBusinessType];
+            $parentCategories->each(function ($parent) use ($allowedCategoryIds) {
+                $parent->setRelation(
+                    'children',
+                    $parent->children->whereIn('id', $allowedCategoryIds)->values()
+                );
+            });
+            $parentCategories = $parentCategories->filter(function ($parent) {
+                return $parent->children->isNotEmpty();
+            })->values();
+        }
+
+        if ($parentCategories->isEmpty() && $branchBusinessType && isset($businessTypeCategoryMap[$branchBusinessType])) {
+            $allowedCategoryIds = $businessTypeCategoryMap[$branchBusinessType];
+            if (!empty($allowedCategoryIds)) {
+                $parentIds = Category::whereIn('id', $allowedCategoryIds)
+                    ->pluck('parent_id')
+                    ->filter()
+                    ->unique()
+                    ->values();
+
+                $parentCategories = Category::whereIn('id', $parentIds)
+                    ->with(['children' => function($query) {
+                        $query->orderBy('name');
+                    }])
+                    ->orderBy('name')
+                    ->get();
+
+                $parentCategories->each(function ($parent) use ($allowedCategoryIds) {
+                    $parent->setRelation(
+                        'children',
+                        $parent->children->whereIn('id', $allowedCategoryIds)->values()
+                    );
+                });
+                $parentCategories = $parentCategories->filter(function ($parent) {
+                    return $parent->children->isNotEmpty();
+                })->values();
+            }
+        }
+
         // Get branches that belong to the vendor's company and have active licenses
         $branches = Branch::whereHas('company', function ($query) {
             $query->where('user_id', Auth::id());
         })->withActiveLicense()->orderBy('name')->get();
 
-        return view('vendor.services.edit', compact('service', 'parentCategories', 'branches'));
+        return view('vendor.services.edit', compact('service', 'parentCategories', 'branches', 'businessTypeCategoryMap'));
     }
 
     /**
@@ -241,6 +349,8 @@ class ServiceController extends Controller
             'description' => 'nullable|string',
             'service_description_arabic' => 'nullable|string',
             'image' => 'nullable|image|mimes:jpeg,png,jpg,gif,webp|max:20480',
+            'additional_images' => 'nullable|array|max:8',
+            'additional_images.*' => 'nullable|image|mimes:jpeg,png,jpg,gif,webp|max:20480',
             'available_days' => 'required|array|min:1',
             'available_days.*' => 'integer|between:0,6',
         ];
@@ -268,6 +378,22 @@ class ServiceController extends Controller
         // If no times provided and service has existing times, don't validate time fields
 
         $request->validate($validationRules);
+
+        $additionalImages = $request->file('additional_images', []);
+        $newAdditionalCount = 0;
+        foreach ($additionalImages as $file) {
+            if ($file) {
+                $newAdditionalCount++;
+            }
+        }
+        $existingAdditionalCount = $service->serviceImages()->count();
+        $removeIds = $request->input('remove_additional_images', []);
+        $removeCount = is_array($removeIds) ? count($removeIds) : 0;
+        if (($existingAdditionalCount - $removeCount + $newAdditionalCount) > 8) {
+            return redirect()->back()
+                ->withErrors(['additional_images' => 'You can upload up to 8 additional images in total.'])
+                ->withInput();
+        }
 
         // Validate conditional description requirement
         $hasEnglishDescription = !empty($request->description);
@@ -315,9 +441,74 @@ class ServiceController extends Controller
         }
 
         $service->update($data);
+        $this->deleteAdditionalImages($request, $service);
+        $this->storeAdditionalImages($request, $service);
 
         return redirect()->route('vendor.services.index')
             ->with('success', 'Service updated successfully.');
+    }
+
+    /**
+     * Delete selected additional images from storage and database.
+     */
+    private function deleteAdditionalImages(Request $request, Service $service): void
+    {
+        $removeIds = $request->input('remove_additional_images', []);
+        if (empty($removeIds) || !is_array($removeIds)) {
+            return;
+        }
+
+        $images = $service->serviceImages()->whereIn('id', $removeIds)->get();
+        if ($images->isEmpty()) {
+            return;
+        }
+
+        $webpService = new WebPImageService();
+        foreach ($images as $image) {
+            if ($image->image_path) {
+                try {
+                    $webpService->deleteImage($image->image_path);
+                } catch (\Exception $e) {
+                    Log::warning('Failed to delete service additional image', [
+                        'service_id' => $service->id,
+                        'image_id' => $image->id,
+                        'image_path' => $image->image_path,
+                        'error' => $e->getMessage(),
+                    ]);
+                }
+            }
+
+            $image->delete();
+        }
+    }
+
+    /**
+     * Store additional service images using WebPImageService.
+     */
+    private function storeAdditionalImages(Request $request, Service $service): void
+    {
+        $additionalImages = $request->file('additional_images', []);
+        if (empty($additionalImages)) {
+            return;
+        }
+
+        $webpService = new WebPImageService();
+        foreach ($additionalImages as $file) {
+            if (!$file) {
+                continue;
+            }
+
+            $imagePath = $webpService->convertAndStoreWithUrl($file, 'services');
+            if (!$imagePath) {
+                $storagePath = $file->store('services', 'public');
+                $imagePath = Storage::url($storagePath);
+            }
+
+            ServiceImage::create([
+                'service_id' => $service->id,
+                'image_path' => $imagePath,
+            ]);
+        }
     }
 
     /**

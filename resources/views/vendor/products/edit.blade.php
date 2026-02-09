@@ -3,6 +3,17 @@
 @section('title', 'Edit Product')
 @section('page-title', 'Edit Product')
 
+@php
+    $businessTypeCategoryMap = $businessTypeCategoryMap
+        ?? \App\Models\BusinessType::query()
+            ->pluck('product_categories', 'business_name')
+            ->map(function ($categories) {
+                $ids = is_array($categories) ? $categories : [];
+                return array_values(array_filter($ids, static fn ($id) => is_numeric($id)));
+            })
+            ->toArray();
+@endphp
+
 @section('styles')
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/mdbassit/Coloris@latest/dist/coloris.min.css"/>
 <style>
@@ -142,7 +153,7 @@
                                 <optgroup label="{{ $parentCategory->name }}">
                                     <!-- Child categories -->
                                     @foreach($parentCategory->children as $childCategory)
-                                        <option value="{{ $childCategory->id }}" {{ old('category_id', $product->category_id) == $childCategory->id ? 'selected' : '' }}>&nbsp;&nbsp;{{ $childCategory->name }}</option>
+                                        <option value="{{ $childCategory->id }}" data-category-id="{{ $childCategory->id }}" {{ old('category_id', $product->category_id) == $childCategory->id ? 'selected' : '' }}>&nbsp;&nbsp;{{ $childCategory->name }}</option>
                                     @endforeach
                                 </optgroup>
                             @endforeach
@@ -158,7 +169,7 @@
                         <select id="branch_id" name="branch_id" class="mt-1 block w-full py-2 px-3 border border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-white bg-white rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm" required>
                             <option value="">Select Branch</option>
                             @foreach($branches ?? [] as $branch)
-                                <option value="{{ $branch->id }}" {{ old('branch_id', $product->branch_id) == $branch->id ? 'selected' : '' }}>{{ $branch->name }}</option>
+                                <option value="{{ $branch->id }}" data-business-type="{{ $branch->business_type }}" {{ old('branch_id', $product->branch_id) == $branch->id ? 'selected' : '' }}>{{ $branch->name }}</option>
                             @endforeach
                         </select>
                         @error('branch_id')
@@ -646,6 +657,58 @@
             }
         }
 
+        function setupCategoryBusinessTypeFilter() {
+            const branchSelect = document.getElementById('branch_id');
+            const categorySelect = document.getElementById('category_id');
+            if (!branchSelect || !categorySelect) {
+                return;
+            }
+
+            const businessTypeCategoryMap = @json($businessTypeCategoryMap ?? []);
+
+            function applyFilter() {
+                const selectedOption = branchSelect.options[branchSelect.selectedIndex];
+                const businessType = selectedOption ? selectedOption.getAttribute('data-business-type') : '';
+                const allowedIds = businessTypeCategoryMap[businessType] || null;
+                const hasFilter = Array.isArray(allowedIds) && allowedIds.length > 0;
+
+                if (!branchSelect.value) {
+                    categorySelect.value = '';
+                    categorySelect.disabled = true;
+                    categorySelect.querySelectorAll('option[data-category-id]').forEach(function(option) {
+                        option.hidden = true;
+                    });
+                    categorySelect.querySelectorAll('optgroup').forEach(function(group) {
+                        group.hidden = true;
+                    });
+                    return;
+                }
+
+                categorySelect.disabled = false;
+
+                categorySelect.querySelectorAll('option[data-category-id]').forEach(function(option) {
+                    const categoryId = parseInt(option.getAttribute('data-category-id'), 10);
+                    const show = hasFilter && Number.isFinite(categoryId) && allowedIds.includes(categoryId);
+                    option.hidden = !show;
+                });
+
+                categorySelect.querySelectorAll('optgroup').forEach(function(group) {
+                    const hasVisible = Array.from(group.querySelectorAll('option[data-category-id]')).some(function(option) {
+                        return !option.hidden;
+                    });
+                    group.hidden = !hasVisible;
+                });
+
+                const selectedCategory = categorySelect.options[categorySelect.selectedIndex];
+                if (selectedCategory && selectedCategory.getAttribute('data-category-id') && selectedCategory.hidden) {
+                    categorySelect.value = '';
+                }
+            }
+
+            branchSelect.addEventListener('change', applyFilter);
+            applyFilter();
+        }
+
         // Enhanced color stock change listeners for dynamic size allocation
         function setupColorStockListeners() {
             document.querySelectorAll('.color-stock-input').forEach(function(input) {
@@ -897,6 +960,7 @@
         // Initialize all validation functions
         setupDefaultColorSelection();
         setupCategoryValidation();
+        setupCategoryBusinessTypeFilter();
         setupStockValidation();
 
         // Setup color stock change listeners for dynamic size allocation

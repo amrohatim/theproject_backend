@@ -3,6 +3,25 @@
 @section('title', __('messages.edit_service'))
 @section('page-title', __('messages.edit_service'))
 
+@php
+    $businessTypeCategoryMap = $businessTypeCategoryMap
+        ?? \App\Models\BusinessType::query()
+            ->pluck('service_categories', 'business_name')
+            ->mapWithKeys(function ($categories, $businessName) {
+                if (is_string($categories)) {
+                    $decoded = json_decode($categories, true);
+                    $ids = is_array($decoded) ? $decoded : [];
+                } else {
+                    $ids = is_array($categories) ? $categories : [];
+                }
+                $cleanIds = array_values(array_filter($ids, static fn ($id) => is_numeric($id)));
+                $cleanIds = array_values(array_map('intval', $cleanIds));
+                $normalizedName = strtolower(trim((string) $businessName));
+                return [$normalizedName => $cleanIds];
+            })
+            ->toArray();
+@endphp
+
 @section('styles')
 <style>
     /* Modern Form Styling */
@@ -391,7 +410,7 @@
 
                                     <!-- Child categories -->
                                     @foreach($parentCategory->children as $childCategory)
-                                        <option value="{{ $childCategory->id }}" {{ old('category_id', $service->category_id) == $childCategory->id ? 'selected' : '' }}>&nbsp;&nbsp;{{ $childCategory->name }}</option>
+                                        <option value="{{ $childCategory->id }}" data-category-id="{{ $childCategory->id }}" {{ old('category_id', $service->category_id) == $childCategory->id ? 'selected' : '' }}>&nbsp;&nbsp;{{ $childCategory->name }}</option>
                                     @endforeach
                                 </optgroup>
                             @endforeach
@@ -423,6 +442,7 @@
                                 @endphp
                                 <option
                                     value="{{ $branch->id }}"
+                                    data-business-type="{{ $branch->business_type }}"
                                     {{ old('branch_id', $service->branch_id) == $branch->id ? 'selected' : '' }}
                                     {{ $hasActiveLicense ? '' : 'disabled' }}
                                     class="{{ $hasActiveLicense ? '' : 'text-gray-400 bg-gray-100' }}"
@@ -699,6 +719,54 @@
                             <p class="mt-1 text-sm text-red-600 dark:text-red-400">{{ $message }}</p>
                         @enderror
                     </div>
+
+                    @php
+                        $existingAdditionalImages = $service->serviceImages ?? collect();
+                        $remainingAdditionalSlots = max(0, 8 - $existingAdditionalImages->count());
+                    @endphp
+
+                    @if($existingAdditionalImages->count() > 0)
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 dark:text-gray-300">Current Additional Images</label>
+                        <div class="mt-2 grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-4">
+                            @foreach($existingAdditionalImages as $serviceImage)
+                                <div class="border border-gray-200 dark:border-gray-700 rounded-md p-2">
+                                    <img src="{{ $serviceImage->image_path }}" alt="Service image" class="h-24 w-full object-cover rounded-md">
+                                    <label class="mt-2 flex items-center text-xs text-gray-600 dark:text-gray-400">
+                                        <input type="checkbox" name="remove_additional_images[]" value="{{ $serviceImage->id }}" class="mr-2">
+                                        Remove
+                                    </label>
+                                </div>
+                            @endforeach
+                        </div>
+                    </div>
+                    @endif
+
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 dark:text-gray-300">Additional Images (optional, up to 8)</label>
+                        @if($remainingAdditionalSlots > 0)
+                            <p class="mt-1 text-xs text-gray-500 dark:text-gray-400">You can add up to {{ $remainingAdditionalSlots }} more image(s).</p>
+                            <div class="mt-2 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+                                @for ($i = 0; $i < $remainingAdditionalSlots; $i++)
+                                    <div class="relative flex items-center justify-center px-4 py-4 border-2 border-gray-300 dark:border-gray-600 border-dashed rounded-md h-28 overflow-hidden" data-preview-container>
+                                        <img id="additional-image-preview-{{ $i }}" class="hidden absolute inset-2 h-[calc(100%-1rem)] w-[calc(100%-1rem)] object-cover rounded-md" alt="Additional image preview {{ $i + 1 }}">
+                                        <label class="absolute inset-0 flex items-center justify-center text-sm text-gray-600 dark:text-gray-300 cursor-pointer transition" data-upload-label>
+                                            <span class="block" data-upload-label-text>{{ __('messages.upload_file') }}</span>
+                                            <input type="file" name="additional_images[]" class="sr-only" accept="image/*" data-preview-id="additional-image-preview-{{ $i }}">
+                                        </label>
+                                    </div>
+                                @endfor
+                            </div>
+                        @else
+                            <p class="mt-1 text-xs text-gray-500 dark:text-gray-400">You have already uploaded the maximum of 8 additional images.</p>
+                        @endif
+                        @error('additional_images')
+                            <p class="mt-1 text-sm text-red-600 dark:text-red-400">{{ $message }}</p>
+                        @enderror
+                        @error('additional_images.*')
+                            <p class="mt-1 text-sm text-red-600 dark:text-red-400">{{ $message }}</p>
+                        @enderror
+                    </div>
                 </div>
             </div>
 
@@ -730,6 +798,50 @@
             
             input.addEventListener('focus', function() {
                 clearFieldError(this);
+            });
+        });
+    }
+
+    function setupAdditionalImagePreviews() {
+        const inputs = document.querySelectorAll('input[name="additional_images[]"]');
+        inputs.forEach(input => {
+            input.addEventListener('change', function() {
+                const previewId = this.getAttribute('data-preview-id');
+                const preview = document.getElementById(previewId);
+                const container = this.closest('[data-preview-container]');
+                const label = container ? container.querySelector('[data-upload-label]') : null;
+                const labelText = label ? label.querySelector('[data-upload-label-text]') : null;
+                if (!preview) {
+                    return;
+                }
+
+                const file = this.files && this.files[0] ? this.files[0] : null;
+                if (!file || !file.type.startsWith('image/')) {
+                    preview.classList.add('hidden');
+                    preview.removeAttribute('src');
+                    if (label) {
+                        label.classList.remove('bg-black/40', 'text-white', 'opacity-0', 'hover:opacity-100');
+                        label.classList.add('text-gray-600', 'dark:text-gray-300');
+                    }
+                    if (labelText) {
+                        labelText.textContent = '{{ __('messages.upload_file') }}';
+                    }
+                    return;
+                }
+
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    preview.src = e.target.result;
+                    preview.classList.remove('hidden');
+                    if (label) {
+                        label.classList.remove('text-gray-600', 'dark:text-gray-300');
+                        label.classList.add('bg-black/40', 'text-white', 'opacity-0', 'hover:opacity-100');
+                    }
+                    if (labelText) {
+                        labelText.textContent = 'Change';
+                    }
+                };
+                reader.readAsDataURL(file);
             });
         });
     }
@@ -937,8 +1049,64 @@
             }
         }
 
+        function setupCategoryBusinessTypeFilter() {
+            const branchSelect = document.getElementById('branch_id');
+            const categorySelect = document.getElementById('category_id');
+            if (!branchSelect || !categorySelect) {
+                return;
+            }
+
+            const businessTypeCategoryMap = @json($businessTypeCategoryMap ?? []);
+
+            function applyFilter() {
+                const selectedOption = branchSelect.options[branchSelect.selectedIndex];
+                const rawBusinessType = selectedOption ? selectedOption.getAttribute('data-business-type') : '';
+                const businessType = (rawBusinessType || '').toLowerCase().trim();
+                const allowedIds = (businessTypeCategoryMap[businessType] || []).map(function(id) {
+                    return Number(id);
+                });
+                const hasFilter = Array.isArray(allowedIds) && allowedIds.length > 0;
+
+                if (!branchSelect.value) {
+                    categorySelect.value = '';
+                    categorySelect.disabled = true;
+                    categorySelect.querySelectorAll('option[data-category-id]').forEach(function(option) {
+                        option.hidden = true;
+                    });
+                    categorySelect.querySelectorAll('optgroup').forEach(function(group) {
+                        group.hidden = true;
+                    });
+                    return;
+                }
+
+                categorySelect.disabled = false;
+
+                categorySelect.querySelectorAll('option[data-category-id]').forEach(function(option) {
+                    const categoryId = parseInt(option.getAttribute('data-category-id'), 10);
+                    const show = !hasFilter || (Number.isFinite(categoryId) && allowedIds.includes(categoryId));
+                    option.hidden = !show;
+                });
+
+                categorySelect.querySelectorAll('optgroup').forEach(function(group) {
+                    const hasVisible = Array.from(group.querySelectorAll('option[data-category-id]')).some(function(option) {
+                        return !option.hidden;
+                    });
+                    group.hidden = !hasVisible;
+                });
+
+                const selectedCategory = categorySelect.options[categorySelect.selectedIndex];
+                if (selectedCategory && selectedCategory.getAttribute('data-category-id') && selectedCategory.hidden) {
+                    categorySelect.value = '';
+                }
+            }
+
+            branchSelect.addEventListener('change', applyFilter);
+            applyFilter();
+        }
+
         // Initialize category validation
         setupCategoryValidation();
+        setupCategoryBusinessTypeFilter();
 
         // Initialize bilingual form validation
         setupBilingualValidation();
@@ -946,6 +1114,7 @@
         // Initialize availability validation
         setupAvailabilityValidation();
         initializeTimePickerControls();
+        setupAdditionalImagePreviews();
 
         // Add image change listener
         const imageInput = document.getElementById('image');

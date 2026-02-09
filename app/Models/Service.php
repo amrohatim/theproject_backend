@@ -89,6 +89,34 @@ class Service extends Model
                     }
                 }
 
+                // Delete additional service images using WebPImageService
+                try {
+                    $webpService = new \App\Services\WebPImageService();
+                    $service->serviceImages()->each(function ($serviceImage) use ($webpService, $service) {
+                        $rawImagePath = $serviceImage->image_path;
+                        if (!$rawImagePath) {
+                            return;
+                        }
+
+                        try {
+                            $webpService->deleteImage($rawImagePath);
+                            Log::info("Deleted service additional image using WebPImageService", [
+                                'service_id' => $service->id,
+                                'image_path' => $rawImagePath
+                            ]);
+                        } catch (\Exception $e) {
+                            Log::warning("Failed to delete service additional image: " . $e->getMessage(), [
+                                'service_id' => $service->id,
+                                'image_path' => $rawImagePath
+                            ]);
+                        }
+                    });
+                } catch (\Exception $e) {
+                    Log::warning("Failed to delete service additional images: " . $e->getMessage(), [
+                        'service_id' => $service->id
+                    ]);
+                }
+
                 Log::info("Completed image cleanup for service ID: {$service->id}");
 
             } catch (\Exception $e) {
@@ -141,6 +169,14 @@ class Service extends Model
     public function category()
     {
         return $this->belongsTo(Category::class);
+    }
+
+    /**
+     * Get the additional images for the service.
+     */
+    public function serviceImages()
+    {
+        return $this->hasMany(ServiceImage::class);
     }
 
     /**

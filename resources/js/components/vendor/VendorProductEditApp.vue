@@ -146,9 +146,10 @@
                               class="vue-form-control"
                               :class="{ 'border-red-500': errors.category_id }"
                               required
+                              :disabled="!productData.branch_id"
                               @change="validateCategorySelection">
                         <option value="">{{ $t('vendor.select_category') }}</option>
-                        <optgroup v-for="parent in categories" :key="parent.id" :label="parent.name">
+                        <optgroup v-for="parent in filteredCategories" :key="parent.id" :label="parent.name">
                           <option v-for="child in parent.children"
                                   :key="child.id"
                                   :value="child.id"
@@ -159,6 +160,9 @@
                         </optgroup>
                       </select>
                       <div v-if="errors.category_id" class="text-red-500 text-xs mt-1">{{ errors.category_id }}</div>
+                      <div v-else-if="!productData.branch_id" class="text-amber-600 text-xs mt-1">
+                        {{ $t('vendor.select_branch_first') || 'Select a branch to see available categories.' }}
+                      </div>
                     </div>
 
                     <div class="space-y-2">
@@ -578,6 +582,7 @@ export default {
 
     const categories = ref([])
     const branches = ref([])
+    const businessTypeCategoryMap = ref({})
 
     // Component refs for accessing child components
     const colorVariantRefs = ref([])
@@ -655,6 +660,7 @@ export default {
         Object.assign(productData, response.data.product)
         categories.value = response.data.parentCategories || []
         branches.value = response.data.branches || []
+        businessTypeCategoryMap.value = response.data.businessTypeCategoryMap || {}
 
         // Ensure colors and specifications arrays exist
         if (!productData.colors) productData.colors = []
@@ -687,6 +693,27 @@ export default {
         loading.value = false
       }
     }
+
+    const getBranchBusinessType = () => {
+      const branchId = productData.branch_id
+      if (!branchId) return ''
+      const branch = branches.value.find(b => String(b.id) === String(branchId))
+      return branch?.business_type || ''
+    }
+
+    const filteredCategories = computed(() => {
+      if (!productData.branch_id) return []
+      const businessType = getBranchBusinessType()
+      const allowedIds = (businessTypeCategoryMap.value[businessType] || []).map(id => Number(id))
+      if (!Array.isArray(allowedIds) || allowedIds.length === 0) return []
+
+      return categories.value
+        .map(parent => {
+          const children = (parent.children || []).filter(child => allowedIds.includes(Number(child.id)))
+          return children.length ? { ...parent, children } : null
+        })
+        .filter(Boolean)
+    })
 
     const validateForm = () => {
       // Clear previous errors
@@ -1169,6 +1196,18 @@ export default {
           delete errors.category_id
         }
       }
+
+      if (!productData.branch_id) {
+        productData.category_id = ''
+        return
+      }
+
+      const businessType = getBranchBusinessType()
+      const allowedIds = (businessTypeCategoryMap.value[businessType] || []).map(id => Number(id))
+      if (!allowedIds.includes(Number(productData.category_id))) {
+        productData.category_id = ''
+        errors.category_id = translate('vendor.select_specific_subcategory')
+      }
     }
 
     // Check if RTL is enabled
@@ -1180,6 +1219,21 @@ export default {
     onMounted(() => {
       fetchProductData()
     })
+
+    watch(
+      () => productData.branch_id,
+      () => {
+        if (!productData.branch_id) {
+          productData.category_id = ''
+          return
+        }
+        const businessType = getBranchBusinessType()
+        const allowedIds = (businessTypeCategoryMap.value[businessType] || []).map(id => Number(id))
+        if (productData.category_id && !allowedIds.includes(Number(productData.category_id))) {
+          productData.category_id = ''
+        }
+      }
+    )
 
     return {
       // Translation function
@@ -1193,7 +1247,9 @@ export default {
       isProductsManagerContext,
       productData,
       categories,
+      filteredCategories,
       branches,
+      businessTypeCategoryMap,
       tabs,
       showSuccessModal,
       showErrorModal,

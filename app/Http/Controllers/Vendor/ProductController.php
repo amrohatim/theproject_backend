@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Vendor;
 
 use App\Http\Controllers\Controller;
 use App\Models\Branch;
+use App\Models\BusinessType;
 use App\Models\Category;
 use App\Models\Product;
 use App\Services\WebPImageService;
@@ -72,6 +73,41 @@ class ProductController extends Controller
     }
 
     /**
+     * Get allowed product category IDs based on the vendor's business type.
+     */
+    private function getAllowedProductCategoryIdsForBranch(?int $branchId): ?array
+    {
+        if (!$branchId) {
+            return null;
+        }
+
+        $branch = Branch::find($branchId);
+        $businessTypeName = $branch?->business_type;
+        if (!$businessTypeName) {
+            return [];
+        }
+
+        $businessType = BusinessType::where('business_name', $businessTypeName)->first();
+        $categoryIds = $businessType?->product_categories ?? [];
+
+        return array_values(array_filter($categoryIds, static fn ($id) => is_numeric($id)));
+    }
+
+    /**
+     * Build a map of business type name => allowed product category IDs.
+     */
+    private function getBusinessTypeProductCategoryMap(): array
+    {
+        return BusinessType::query()
+            ->pluck('product_categories', 'business_name')
+            ->map(function ($categories) {
+                $ids = is_array($categories) ? $categories : [];
+                return array_values(array_filter($ids, static fn ($id) => is_numeric($id)));
+            })
+            ->toArray();
+    }
+
+    /**
      * Display a listing of the resource.
      */
     public function index(Request $request)
@@ -132,6 +168,9 @@ class ProductController extends Controller
      */
     public function create(Request $request)
     {
+        $allowedCategoryIds = $this->getAllowedProductCategoryIdsForBranch($request->input('branch_id'));
+        $businessTypeCategoryMap = $this->getBusinessTypeProductCategoryMap();
+
         // Get product categories with their children - force a fresh query to get the latest data
         $parentCategories = Category::where('type', 'product')
             ->whereNull('parent_id')
@@ -158,10 +197,11 @@ class ProductController extends Controller
         if ($branches->isEmpty()) {
             if ($this->isProductsManagerRequest($request)) {
                 // For Products Manager AJAX requests, return content that will redirect to branch creation
-                return view('products-manager.products.create-content', [
-                    'needsBranch' => true,
-                    'message' => 'You need to create a branch before adding products. Please create a branch first.'
-                ]);
+            return view('products-manager.products.create-content', [
+                'needsBranch' => true,
+                'message' => 'You need to create a branch before adding products. Please create a branch first.',
+                'businessTypeCategoryMap' => $businessTypeCategoryMap,
+            ]);
             }
             return redirect()->route('vendor.branches.create')
                 ->with('warning', 'You need to create a branch before adding products. Please create a branch first.');
@@ -170,10 +210,11 @@ class ProductController extends Controller
         // Check if there are any categories
         if ($parentCategories->isEmpty()) {
             if ($this->isProductsManagerRequest($request)) {
-                return view('products-manager.products.create-content', [
-                    'needsCategories' => true,
-                    'message' => 'No product categories found. Please contact the administrator.'
-                ]);
+            return view('products-manager.products.create-content', [
+                'needsCategories' => true,
+                'message' => 'No product categories found. Please contact the administrator.',
+                'businessTypeCategoryMap' => $businessTypeCategoryMap,
+            ]);
             }
             return redirect()->route('vendor.products.index')
                 ->with('warning', 'No product categories found. Please contact the administrator.');
@@ -356,10 +397,10 @@ class ProductController extends Controller
 
         // Check if this is a Products Manager user accessing directly (full layout)
         if ($this->isProductsManagerUser()) {
-            return view('products-manager.products.create', compact('parentCategories', 'branches'));
+            return view('products-manager.products.create', compact('parentCategories', 'branches', 'businessTypeCategoryMap'));
         }
 
-        return view('vendor.products.create-vue', compact('parentCategories', 'branches'));
+        return view('vendor.products.create-vue', compact('parentCategories', 'branches', 'businessTypeCategoryMap'));
     }
 
     /**
@@ -411,7 +452,8 @@ class ProductController extends Controller
             return response()->json([
                 'success' => true,
                 'categories' => $parentCategories,
-                'branches' => $branches
+                'branches' => $branches,
+                'businessTypeCategoryMap' => $this->getBusinessTypeProductCategoryMap(),
             ]);
         } catch (\Exception $e) {
             return response()->json([
@@ -815,6 +857,9 @@ class ProductController extends Controller
      */
     public function edit(Product $product, Request $request)
     {
+        $allowedCategoryIds = $this->getAllowedProductCategoryIdsForBranch($product->branch_id);
+        $businessTypeCategoryMap = $this->getBusinessTypeProductCategoryMap();
+
         // Check if the product belongs to the vendor's company
         $userBranches = Branch::whereHas('company', function ($query) {
             $query->where('user_id', $this->getActingVendorUserId());
@@ -842,7 +887,8 @@ class ProductController extends Controller
 
             if ($this->isProductsManagerRequest($request)) {
                 return view('products-manager.products.edit-content', [
-                    'error' => $message
+                    'error' => $message,
+                    'businessTypeCategoryMap' => $businessTypeCategoryMap,
                 ]);
             }
             return redirect()->route('vendor.products.index')
@@ -857,6 +903,18 @@ class ProductController extends Controller
             }])
             ->orderBy('name')
             ->get();
+
+        if (is_array($allowedCategoryIds)) {
+            $parentCategories->each(function ($parent) use ($allowedCategoryIds) {
+                $parent->setRelation(
+                    'children',
+                    $parent->children->whereIn('id', $allowedCategoryIds)->values()
+                );
+            });
+            $parentCategories = $parentCategories->filter(function ($parent) {
+                return $parent->children->isNotEmpty();
+            })->values();
+        }
 
         // Add hierarchy information to categories
         $parentCategories->each(function ($parent) {
@@ -877,15 +935,15 @@ class ProductController extends Controller
         // Check if this is a Products Manager AJAX request (content-only)
         if ($this->isProductsManagerRequest($request)) {
             // Return only the content for AJAX loading
-            return view('products-manager.products.edit-content', compact('product', 'parentCategories', 'branches'));
+            return view('products-manager.products.edit-content', compact('product', 'parentCategories', 'branches', 'businessTypeCategoryMap'));
         }
 
         // Check if this is a Products Manager user accessing directly (full layout)
         if ($this->isProductsManagerUser()) {
-            return view('products-manager.products.edit', compact('product', 'parentCategories', 'branches'));
+            return view('products-manager.products.edit', compact('product', 'parentCategories', 'branches', 'businessTypeCategoryMap'));
         }
 
-        return view('vendor.products.edit-vue', compact('product'));
+        return view('vendor.products.edit-vue', compact('product', 'businessTypeCategoryMap'));
     }
 
     /**
@@ -893,6 +951,8 @@ class ProductController extends Controller
      */
     public function getEditData(Product $product)
     {
+        $allowedCategoryIds = $this->getAllowedProductCategoryIdsForBranch($product->branch_id);
+
         // Check if the product belongs to the vendor's company
         $userBranches = Branch::whereHas('company', function ($query) {
             $query->where('user_id', $this->getActingVendorUserId());
@@ -913,6 +973,18 @@ class ProductController extends Controller
             }])
             ->orderBy('name')
             ->get();
+
+        if (is_array($allowedCategoryIds)) {
+            $parentCategories->each(function ($parent) use ($allowedCategoryIds) {
+                $parent->setRelation(
+                    'children',
+                    $parent->children->whereIn('id', $allowedCategoryIds)->values()
+                );
+            });
+            $parentCategories = $parentCategories->filter(function ($parent) {
+                return $parent->children->isNotEmpty();
+            })->values();
+        }
 
         // Add hierarchy information to categories
         $parentCategories->each(function ($parent) {
@@ -999,7 +1071,8 @@ class ProductController extends Controller
                 'specifications' => $specifications
             ],
             'parentCategories' => $parentCategories,
-            'branches' => $branches
+            'branches' => $branches,
+            'businessTypeCategoryMap' => $this->getBusinessTypeProductCategoryMap(),
         ]);
     }
 

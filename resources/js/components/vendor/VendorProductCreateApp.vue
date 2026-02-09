@@ -109,10 +109,11 @@
                   v-model="productData.category_id"
                   class="vue-form-control"
                   required
+                  :disabled="!productData.branch_id"
                   @change="validateCategorySelection"
                 >
                   <option value="">{{ $t('vendor.select_category') }}</option>
-                  <optgroup v-for="parentCategory in categories" :key="parentCategory.id" :label="parentCategory.name">
+                  <optgroup v-for="parentCategory in filteredCategories" :key="parentCategory.id" :label="parentCategory.name">
                     <option
                       v-for="childCategory in parentCategory.children"
                       :key="childCategory.id"
@@ -123,6 +124,9 @@
                   </optgroup>
                 </select>
                 <div v-if="errors.category_id" class="text-red-500 text-sm mt-1">{{ errors.category_id }}</div>
+                <div v-else-if="!productData.branch_id" class="text-amber-600 text-xs mt-1">
+                  {{ $t('vendor.select_branch_first') || 'Select a branch to see available categories.' }}
+                </div>
               </div>
 
               <!-- Branch -->
@@ -556,6 +560,7 @@ export default {
 
     const categories = ref([])
     const branches = ref([])
+    const businessTypeCategoryMap = ref({})
 
     // Modal states
     const showSuccessModal = ref(false)
@@ -673,6 +678,7 @@ export default {
         if (data.success) {
           categories.value = data.categories || []
           branches.value = data.branches || []
+          businessTypeCategoryMap.value = data.businessTypeCategoryMap || {}
 
           // Auto-select branch if there's only one available
           if (branches.value.length === 1) {
@@ -689,6 +695,27 @@ export default {
         loading.value = false
       }
     }
+
+    const getBranchBusinessType = () => {
+      const branchId = productData.branch_id
+      if (!branchId) return ''
+      const branch = branches.value.find(b => String(b.id) === String(branchId))
+      return branch?.business_type || ''
+    }
+
+    const filteredCategories = computed(() => {
+      if (!productData.branch_id) return []
+      const businessType = getBranchBusinessType()
+      const allowedIds = (businessTypeCategoryMap.value[businessType] || []).map(id => Number(id))
+      if (!Array.isArray(allowedIds) || allowedIds.length === 0) return []
+
+      return categories.value
+        .map(parent => {
+          const children = (parent.children || []).filter(child => allowedIds.includes(Number(child.id)))
+          return children.length ? { ...parent, children } : null
+        })
+        .filter(Boolean)
+    })
 
     const clearErrors = () => {
       Object.keys(errors).forEach(key => delete errors[key])
@@ -1076,6 +1103,18 @@ export default {
       if (category && category.parent_id === null) {
         alert('Please select a subcategory, not a main category.')
         productData.category_id = ''
+        return
+      }
+
+      if (!productData.branch_id) {
+        productData.category_id = ''
+        return
+      }
+
+      const businessType = getBranchBusinessType()
+      const allowedIds = (businessTypeCategoryMap.value[businessType] || []).map(id => Number(id))
+      if (!allowedIds.includes(Number(productData.category_id))) {
+        productData.category_id = ''
       }
     }
 
@@ -1089,6 +1128,21 @@ export default {
       fetchInitialData()
     })
 
+    watch(
+      () => productData.branch_id,
+      () => {
+        if (!productData.branch_id) {
+          productData.category_id = ''
+          return
+        }
+        const businessType = getBranchBusinessType()
+        const allowedIds = (businessTypeCategoryMap.value[businessType] || []).map(id => Number(id))
+        if (productData.category_id && !allowedIds.includes(Number(productData.category_id))) {
+          productData.category_id = ''
+        }
+      }
+    )
+
     return {
       // Reactive data
       activeTab,
@@ -1097,7 +1151,9 @@ export default {
       errors,
       productData,
       categories,
+      filteredCategories,
       branches,
+      businessTypeCategoryMap,
       tabs,
       showSuccessModal,
       showErrorModal,
