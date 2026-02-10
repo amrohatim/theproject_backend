@@ -710,12 +710,12 @@
 
                     <!-- Additional Images -->
                     <div>
-                        <label class="block text-sm font-medium text-gray-700 dark:text-gray-300">Additional Images (optional, up to 8)</label>
-                        <p class="mt-1 text-xs text-gray-500 dark:text-gray-400">These images will be shown as gallery images for the service.</p>
+                        <label class="block text-sm font-medium text-gray-700 dark:text-gray-300">{{ __('vendor.additional_images_optional_up_to', ['count' => 8]) }}</label>
+                        <p class="mt-1 text-xs text-gray-500 dark:text-gray-400">{{ __('vendor.additional_images_help') }}</p>
                         <div class="mt-2 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
                             @for ($i = 0; $i < 8; $i++)
                                 <div class="relative flex items-center justify-center px-4 py-4 border-2 border-gray-300 dark:border-gray-600 border-dashed rounded-md h-28 overflow-hidden" data-preview-container>
-                                    <img id="additional-image-preview-{{ $i }}" class="hidden absolute inset-2 h-[calc(100%-1rem)] w-[calc(100%-1rem)] object-cover rounded-md" alt="Additional image preview {{ $i + 1 }}">
+                                    <img id="additional-image-preview-{{ $i }}" class="hidden absolute inset-2 h-[calc(100%-1rem)] w-[calc(100%-1rem)] object-cover rounded-md" alt="{{ __('vendor.additional_images') }} {{ $i + 1 }}">
                                     <label class="absolute inset-0 flex items-center justify-center text-sm text-gray-600 dark:text-gray-300 cursor-pointer transition" data-upload-label>
                                         <span class="block" data-upload-label-text>{{ __('messages.upload_file') }}</span>
                                         <input type="file" name="additional_images[]" class="sr-only" accept="image/*" data-preview-id="additional-image-preview-{{ $i }}">

@@ -1,5 +1,10 @@
+@php
+    $currentLocale = app()->getLocale();
+    $rtlLocales = ['ar', 'he', 'fa', 'ur'];
+    $isRtl = in_array($currentLocale, $rtlLocales);
+@endphp
 <!DOCTYPE html>
-<html lang="{{ str_replace('_', '-', app()->getLocale()) }}">
+<html lang="{{ str_replace('_', '-', $currentLocale) }}" dir="{{ $isRtl ? 'rtl' : 'ltr' }}">
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -25,6 +30,10 @@
     <link rel="stylesheet" href="{{ asset('css/global-styles.css') }}">
     <!-- Vue Styles -->
     <link rel="stylesheet" href="{{ asset('css/vue-styles.css') }}">
+    @if($isRtl)
+    <!-- RTL Styles -->
+    <link rel="stylesheet" href="{{ asset('css/rtl.css') }}">
+    @endif
 
     <!-- Additional Styles -->
     @yield('styles')
@@ -234,6 +243,30 @@
         .products-manager-theme .container { max-width: 100% !important; }
         .products-manager-theme table { width: 100% !important; }
         .products-manager-theme .overflow-x-auto { overflow-x: auto !important; }
+
+        /* RTL spacing helpers for Tailwind utilities */
+        [dir="rtl"] .space-x-1,
+        [dir="rtl"] .space-x-2,
+        [dir="rtl"] .space-x-3,
+        [dir="rtl"] .space-x-4,
+        [dir="rtl"] .space-x-5,
+        [dir="rtl"] .space-x-6 {
+            --tw-space-x-reverse: 1;
+        }
+        [dir="rtl"] .ml-auto {
+            margin-left: 0 !important;
+            margin-right: auto !important;
+        }
+        [dir="rtl"] .mr-auto {
+            margin-right: 0 !important;
+            margin-left: auto !important;
+        }
+        [dir="rtl"] .text-left {
+            text-align: right !important;
+        }
+        [dir="rtl"] .text-right {
+            text-align: left !important;
+        }
 
         /* Responsive table for products list */
         @media (max-width: 768px) {

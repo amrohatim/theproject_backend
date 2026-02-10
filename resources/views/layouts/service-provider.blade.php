@@ -1,5 +1,10 @@
+@php
+    $currentLocale = app()->getLocale();
+    $rtlLocales = ['ar', 'he', 'fa', 'ur'];
+    $isRtl = in_array($currentLocale, $rtlLocales);
+@endphp
 <!DOCTYPE html>
-<html lang="{{ str_replace('_', '-', app()->getLocale()) }}">
+<html lang="{{ str_replace('_', '-', $currentLocale) }}" dir="{{ $isRtl ? 'rtl' : 'ltr' }}">
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -16,6 +21,37 @@
 
     <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
+
+    @if($isRtl)
+    <!-- RTL Styles -->
+    <link rel="stylesheet" href="{{ asset('css/rtl.css') }}">
+    @endif
+
+    <!-- RTL Utility Overrides -->
+    <style>
+        [dir="rtl"] .space-x-1,
+        [dir="rtl"] .space-x-2,
+        [dir="rtl"] .space-x-3,
+        [dir="rtl"] .space-x-4,
+        [dir="rtl"] .space-x-5,
+        [dir="rtl"] .space-x-6 {
+            --tw-space-x-reverse: 1;
+        }
+        [dir="rtl"] .ml-auto {
+            margin-left: 0 !important;
+            margin-right: auto !important;
+        }
+        [dir="rtl"] .mr-auto {
+            margin-right: 0 !important;
+            margin-left: auto !important;
+        }
+        [dir="rtl"] .text-left {
+            text-align: right !important;
+        }
+        [dir="rtl"] .text-right {
+            text-align: left !important;
+        }
+    </style>
 
     <!-- Additional Styles -->
     @yield('styles')

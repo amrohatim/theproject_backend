@@ -677,14 +677,14 @@
 
                     @if($existingAdditionalImages->count() > 0)
                     <div>
-                        <label class="block text-sm font-medium text-gray-700 dark:text-gray-300">Current Additional Images</label>
+                        <label class="block text-sm font-medium text-gray-700 dark:text-gray-300">{{ __('vendor.current_additional_images') }}</label>
                         <div class="mt-2 grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-4">
                             @foreach($existingAdditionalImages as $serviceImage)
                                     <div class="border border-gray-200 dark:border-gray-700 rounded-md p-2">
-                                    <img src="{{ \App\Helpers\ImageHelper::getFullImageUrl($serviceImage->image_path) }}" alt="Service image" class="h-24 w-full object-cover rounded-md">
+                                    <img src="{{ \App\Helpers\ImageHelper::getFullImageUrl($serviceImage->image_path) }}" alt="{{ __('vendor.additional_images') }}" class="h-24 w-full object-cover rounded-md">
                                         <label class="mt-2 flex items-center text-xs text-gray-600 dark:text-gray-400">
                                             <input type="checkbox" name="remove_additional_images[]" value="{{ $serviceImage->id }}" class="mr-2">
-                                            Remove
+                                            {{ __('vendor.remove') }}
                                         </label>
                                     </div>
                             @endforeach
@@ -693,13 +693,13 @@
                     @endif
 
                     <div>
-                        <label class="block text-sm font-medium text-gray-700 dark:text-gray-300">Additional Images (optional, up to 8)</label>
+                        <label class="block text-sm font-medium text-gray-700 dark:text-gray-300">{{ __('vendor.additional_images_optional_up_to', ['count' => 8]) }}</label>
                         @if($remainingAdditionalSlots > 0)
-                            <p class="mt-1 text-xs text-gray-500 dark:text-gray-400">You can add up to {{ $remainingAdditionalSlots }} more image(s).</p>
+                            <p class="mt-1 text-xs text-gray-500 dark:text-gray-400">{{ __('vendor.additional_images_remaining', ['count' => $remainingAdditionalSlots]) }}</p>
                             <div class="mt-2 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
                                 @for ($i = 0; $i < $remainingAdditionalSlots; $i++)
                                     <div class="relative flex items-center justify-center px-4 py-4 border-2 border-gray-300 dark:border-gray-600 border-dashed rounded-md h-28 overflow-hidden" data-preview-container>
-                                        <img id="additional-image-preview-{{ $i }}" class="hidden absolute inset-2 h-[calc(100%-1rem)] w-[calc(100%-1rem)] object-cover rounded-md" alt="Additional image preview {{ $i + 1 }}">
+                                        <img id="additional-image-preview-{{ $i }}" class="hidden absolute inset-2 h-[calc(100%-1rem)] w-[calc(100%-1rem)] object-cover rounded-md" alt="{{ __('vendor.additional_images') }} {{ $i + 1 }}">
                                         <label class="absolute inset-0 flex items-center justify-center text-sm text-gray-600 dark:text-gray-300 cursor-pointer transition" data-upload-label>
                                             <span class="block" data-upload-label-text>{{ __('messages.upload_file') }}</span>
                                             <input type="file" name="additional_images[]" class="sr-only" accept="image/*" data-preview-id="additional-image-preview-{{ $i }}">
@@ -708,7 +708,7 @@
                                 @endfor
                             </div>
                         @else
-                            <p class="mt-1 text-xs text-gray-500 dark:text-gray-400">You have already uploaded the maximum of 8 additional images.</p>
+                            <p class="mt-1 text-xs text-gray-500 dark:text-gray-400">{{ __('vendor.additional_images_max_reached', ['count' => 8]) }}</p>
                         @endif
                         @error('additional_images')
                             <p class="mt-1 text-sm text-red-600 dark:text-red-400">{{ $message }}</p>

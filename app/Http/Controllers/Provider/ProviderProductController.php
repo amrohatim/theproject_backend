@@ -37,11 +37,76 @@ class ProviderProductController extends Controller
             ]);
         }
 
-        $providerProducts = ProviderProduct::where('provider_id', $provider->id)
-            ->with('category')
-            ->paginate(10);
+        $providerProductsQuery = ProviderProduct::where('provider_id', $provider->id)
+            ->with('category');
+
+        if ($request->filled('search')) {
+            $search = $request->search;
+            $providerProductsQuery->where(function ($q) use ($search) {
+                $q->where('product_name', 'like', "%{$search}%")
+                    ->orWhere('product_name_arabic', 'like', "%{$search}%")
+                    ->orWhere('sku', 'like', "%{$search}%")
+                    ->orWhere('description', 'like', "%{$search}%");
+            });
+        }
+
+        if ($request->filled('status')) {
+            $providerProductsQuery->where('is_active', $request->status == '1');
+        }
+
+        $providerProducts = $providerProductsQuery->paginate(10);
 
         return view('provider.provider_products.index', compact('providerProducts'));
+    }
+
+    /**
+     * Get search suggestions for provider products.
+     */
+    public function searchSuggestions(Request $request)
+    {
+        $query = $request->get('q', '');
+
+        if (strlen($query) < 2) {
+            return response()->json([]);
+        }
+
+        $user = Auth::user();
+        $provider = $user->providerRecord;
+
+        if (!$provider) {
+            return response()->json([]);
+        }
+
+        $suggestions = ProviderProduct::query()
+            ->where('provider_id', $provider->id)
+            ->where(function ($q) use ($query) {
+                $q->where('product_name', 'like', "%{$query}%")
+                    ->orWhere('product_name_arabic', 'like', "%{$query}%")
+                    ->orWhere('sku', 'like', "%{$query}%")
+                    ->orWhere('description', 'like', "%{$query}%");
+            })
+            ->limit(10)
+            ->get()
+            ->map(function ($product) use ($query) {
+                return [
+                    'id' => $product->id,
+                    'text' => $product->product_name,
+                    'type' => 'provider_product',
+                    'icon' => 'fas fa-box',
+                    'subtitle' => $product->sku ?: ($product->product_name_arabic ?: __('provider.product_inventory')),
+                    'highlight' => $this->highlightMatch($product->product_name, $query),
+                ];
+            });
+
+        return response()->json($suggestions);
+    }
+
+    /**
+     * Highlight matching text in search results.
+     */
+    private function highlightMatch($text, $query)
+    {
+        return preg_replace('/(' . preg_quote($query, '/') . ')/i', '<mark>$1</mark>', $text);
     }
 
     /**

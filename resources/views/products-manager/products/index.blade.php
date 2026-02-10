@@ -184,7 +184,18 @@
 @endsection
 
 @section('scripts')
+<script src="{{ asset('js/vendor-autocomplete.js') }}"></script>
 <script>
+document.addEventListener('DOMContentLoaded', function() {
+    const searchInput = document.getElementById('search');
+    if (searchInput) {
+        new VendorAutoComplete(searchInput, {
+            apiUrl: '{{ route('products-manager.products.search-suggestions') }}',
+            placeholder: '{{ __('products_manager.search_products') }}'
+        });
+    }
+});
+
 function deleteProduct(productId) {
     if (confirm('{{ __('products_manager.confirm_delete_product') }}')) {
         // Handle product deletion

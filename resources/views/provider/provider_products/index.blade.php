@@ -62,6 +62,21 @@
 </style>
 @endsection
 
+@section('scripts')
+<script src="{{ asset('js/vendor-autocomplete.js') }}"></script>
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const searchInput = document.getElementById('search');
+    if (searchInput) {
+        new VendorAutoComplete(searchInput, {
+            apiUrl: '{{ route('provider.provider-products.search-suggestions') }}',
+            placeholder: '{{ __('provider.search_products') }}'
+        });
+    }
+});
+</script>
+@endsection
+
 @section('content')
 <div class="container mx-auto">
     <div class="mb-6 flex flex-col md:flex-row md:items-center md:justify-between">
@@ -114,7 +129,7 @@
             <table class="responsive-table min-w-full divide-y divide-gray-200 dark:divide-gray-700">
                 <thead class="bg-gray-50 dark:bg-gray-700">
                     <tr>
-                        <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">{{ __('provider.product') ?? __('messages.product') }}</th>
+                        <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">{{ __('provider.products')}}</th>
                         <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">{{ __('provider.price') }}</th>
                         <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">{{ __('provider.stock') }}</th>
                         <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">{{ __('provider.status') }}</th>

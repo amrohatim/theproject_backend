@@ -2246,11 +2246,21 @@ Route::middleware(['auth', \App\Http\Middleware\ProductsManagerMiddleware::class
     Route::get('/products/create', [\App\Http\Controllers\ProductsManager\ProductController::class, 'create'])->name('products.create');
     Route::get('/products/create-data', [\App\Http\Controllers\Vendor\ProductController::class, 'getCreateData'])->name('products.create.data');
     Route::post('/products', [\App\Http\Controllers\ProductsManager\ProductController::class, 'store'])->name('products.store');
-    Route::get('/products/{product}', [\App\Http\Controllers\ProductsManager\ProductController::class, 'show'])->name('products.show');
-    Route::get('/products/{product}/edit', [\App\Http\Controllers\ProductsManager\ProductController::class, 'edit'])->name('products.edit');
-    Route::get('/products/{product}/edit-data', [\App\Http\Controllers\Vendor\ProductController::class, 'getEditData'])->name('products.edit.data');
-    Route::put('/products/{product}', [\App\Http\Controllers\ProductsManager\ProductController::class, 'update'])->name('products.update');
-    Route::delete('/products/{product}', [\App\Http\Controllers\ProductsManager\ProductController::class, 'destroy'])->name('products.destroy');
+    Route::get('/products/{product}', [\App\Http\Controllers\ProductsManager\ProductController::class, 'show'])
+        ->whereNumber('product')
+        ->name('products.show');
+    Route::get('/products/{product}/edit', [\App\Http\Controllers\ProductsManager\ProductController::class, 'edit'])
+        ->whereNumber('product')
+        ->name('products.edit');
+    Route::get('/products/{product}/edit-data', [\App\Http\Controllers\Vendor\ProductController::class, 'getEditData'])
+        ->whereNumber('product')
+        ->name('products.edit.data');
+    Route::put('/products/{product}', [\App\Http\Controllers\ProductsManager\ProductController::class, 'update'])
+        ->whereNumber('product')
+        ->name('products.update');
+    Route::delete('/products/{product}', [\App\Http\Controllers\ProductsManager\ProductController::class, 'destroy'])
+        ->whereNumber('product')
+        ->name('products.destroy');
     Route::get('/products/search-suggestions', [\App\Http\Controllers\Vendor\ProductController::class, 'searchSuggestions'])->name('products.search-suggestions');
     Route::get('/api/latest-product-id', [\App\Http\Controllers\Vendor\ProductController::class, 'getLatestProductId'])->name('api.latest-product-id');
     Route::get('/api/products/{id}/verify-sizes', [\App\Http\Controllers\Vendor\ProductController::class, 'verifySizes'])->name('api.products.verify-sizes');
@@ -2347,13 +2357,23 @@ Route::prefix('provider')->name('provider.')->middleware(['auth', \App\Http\Midd
     Route::get('/subscription', [App\Http\Controllers\Provider\SubscriptionController::class, 'index'])->name('subscription.index');
 
     // Provider Products
+    Route::get('/provider-products/search-suggestions', [App\Http\Controllers\Provider\ProviderProductController::class, 'searchSuggestions'])
+        ->name('provider-products.search-suggestions');
     Route::get('/provider-products', [App\Http\Controllers\Provider\ProviderProductController::class, 'index'])->name('provider-products.index');
     Route::get('/provider-products/create', [App\Http\Controllers\Provider\ProviderProductController::class, 'create'])->name('provider-products.create');
     Route::post('/provider-products', [App\Http\Controllers\Provider\ProviderProductController::class, 'store'])->name('provider-products.store');
-    Route::get('/provider-products/{id}', [App\Http\Controllers\Provider\ProviderProductController::class, 'show'])->name('provider-products.show');
-    Route::get('/provider-products/{id}/edit', [App\Http\Controllers\Provider\ProviderProductController::class, 'edit'])->name('provider-products.edit');
-    Route::put('/provider-products/{id}', [App\Http\Controllers\Provider\ProviderProductController::class, 'update'])->name('provider-products.update');
-    Route::delete('/provider-products/{id}', [App\Http\Controllers\Provider\ProviderProductController::class, 'destroy'])->name('provider-products.destroy');
+    Route::get('/provider-products/{id}', [App\Http\Controllers\Provider\ProviderProductController::class, 'show'])
+        ->whereNumber('id')
+        ->name('provider-products.show');
+    Route::get('/provider-products/{id}/edit', [App\Http\Controllers\Provider\ProviderProductController::class, 'edit'])
+        ->whereNumber('id')
+        ->name('provider-products.edit');
+    Route::put('/provider-products/{id}', [App\Http\Controllers\Provider\ProviderProductController::class, 'update'])
+        ->whereNumber('id')
+        ->name('provider-products.update');
+    Route::delete('/provider-products/{id}', [App\Http\Controllers\Provider\ProviderProductController::class, 'destroy'])
+        ->whereNumber('id')
+        ->name('provider-products.destroy');
 });
 
 // Merchant license upload routes (accessible without active license)

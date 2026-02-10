@@ -15,7 +15,7 @@
             </div>
             <div>
                 <label class="block text-sm text-gray-600 dark:text-gray-300 mb-1">{{ __('products_manager.status') }}</label>
-                <select name="status" class="w-full rounded-md border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-white focus:ring-0 focus:border-[#F46C3F]">
+                <select name="status" class="w-full p-2 rounded-md border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-white focus:ring-0 focus:border-[#F46C3F]">
                     <option value="">{{ __('products_manager.all_statuses') }}</option>
                     <option value="pending" @selected(request('status')=='pending')>{{ __('products_manager.pending') }}</option>
                     <option value="processing" @selected(request('status')=='processing')>{{ __('products_manager.processing') }}</option>
