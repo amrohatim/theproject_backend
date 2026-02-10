@@ -1,4 +1,4 @@
-@extends('layouts.provider')
+@extends('layouts.dashboard')
 
 @section('title', __('provider.settings'))
 

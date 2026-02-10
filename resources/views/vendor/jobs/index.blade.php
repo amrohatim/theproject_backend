@@ -79,7 +79,7 @@
                                 <div class="text-sm text-gray-500 dark:text-gray-400">{{ $job->number_of_applications }}</div>
                             </td>
                             <td class="px-6 py-4 whitespace-nowrap text-right">
-                                <div class="flex items-center justify-end space-x-3">
+                                <div class="flex items-center justify-end gap-3">
                                     <a href="{{ route('vendor.jobs.show', $job->id) }}" class="inline-flex items-center px-3 py-1 text-xs font-semibold text-gray-700 bg-gray-100 rounded-md hover:bg-gray-200">
                                         View
                                     </a>

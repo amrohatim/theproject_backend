@@ -64,6 +64,7 @@ return [
     // Actions
     'add_product' => 'إضافة منتج',
     'add_new_product' => 'إضافة منتج جديد',
+    'back_to_inventory' => 'العودة إلى المخزون',
     'view_all' => 'عرض الكل',
     'logout' => 'تسجيل الخروج',
 

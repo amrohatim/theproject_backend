@@ -1,125 +1,128 @@
-@extends('layouts.provider')
+@extends('layouts.dashboard')
 
 @section('title', __('messages.add_job'))
+@section('page-title', __('messages.add_job'))
 
 @section('styles')
 <style>
-    
-
     [dir="rtl"] .onsite-check {
         flex-direction: row-reverse;
-          display: flex;
+        display: inline-flex;
         align-items: center;
-        gap: 24px;
+        gap: 12px;
+    }
+    .provider-jobs-form input,
+    .provider-jobs-form textarea,
+    .provider-jobs-form select {
+        padding: 0.65rem 0.9rem;
     }
 </style>
 @endsection
 
 @section('content')
-<div class="d-flex justify-content-between align-items-center mb-4">
-    <div class="d-flex align-items-center">
-        <div style="width: 40px; height: 40px; background-color: var(--discord-primary); border-radius: 8px; display: flex; align-items: center; justify-content: center; margin-right: 15px;">
-            <i class="fas fa-briefcase text-white"></i>
-        </div>
+<div class="container mx-auto">
+    <div class="mb-6 flex flex-col md:flex-row md:items-center md:justify-between gap-4">
         <div>
-            <h4 class="mb-0">{{ __('messages.post_job') }}</h4>
-            <p class="text-muted mb-0" style="font-size: 14px; color: var(--discord-light);">{{ __('messages.manage_jobs') }}</p>
+            <h2 class="text-2xl font-semibold text-gray-900 dark:text-white">{{ __('messages.post_job') }}</h2>
+            <p class="mt-1 text-sm text-gray-600 dark:text-gray-400">{{ __('messages.manage_jobs') }}</p>
         </div>
+        <a href="{{ route('provider.jobs.index') }}" class="inline-flex items-center px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-md text-sm font-medium text-gray-700 dark:text-gray-200 bg-white dark:bg-gray-800 hover:bg-gray-50 dark:hover:bg-gray-700">
+            <i class="fas fa-arrow-left mr-2"></i> {{ __('messages.back') ?? 'Back' }}
+        </a>
     </div>
-</div>
 
-@if ($errors->any())
-    <div class="alert-container" style="margin-bottom: 20px;">
-        <div class="discord-alert discord-alert-danger">
-            <i class="fas fa-exclamation-circle me-2"></i>
-            <span>{{ __('messages.error') }}</span>
-        </div>
-        <div class="mt-2" style="color: var(--discord-light);">
-            <ul class="mb-0">
+    @if ($errors->any())
+        <div class="mb-6 rounded-lg border border-red-200 bg-red-50 p-4 text-sm text-red-700">
+            <div class="flex items-center gap-2 font-semibold">
+                <i class="fas fa-exclamation-circle"></i>
+                <span>{{ __('messages.error') }}</span>
+            </div>
+            <ul class="mt-2 list-disc space-y-1 pl-5">
                 @foreach ($errors->all() as $error)
                     <li>{{ $error }}</li>
                 @endforeach
             </ul>
         </div>
-    </div>
-@endif
+    @endif
 
-<div class="discord-card">
-    <div class="discord-card-header">
-        <i class="fas fa-plus me-2" style="color: var(--discord-primary);"></i>
-        {{ __('messages.add_job') }}
-    </div>
+    <div class="bg-white dark:bg-gray-800 rounded-lg border border-gray-200 dark:border-gray-700 p-6">
+        <form method="POST" action="{{ route('provider.jobs.store') }}" class="space-y-6 provider-jobs-form">
+            @csrf
 
-    <form method="POST" action="{{ route('provider.jobs.store') }}">
-        @csrf
-
-        <div class="row g-3">
-            <div class="col-md-6">
-                <label for="title" class="form-label">{{ __('messages.title') }}</label>
-                <input id="title" name="title" type="text" value="{{ old('title') }}" required  class="discord-input bg-white border border-gray-300 w-100">
-            </div>
-            <div class="col-md-6">
-                <label for="salary" class="form-label">{{ __('messages.salary') }} ({{ __('messages.optional') }})</label>
-                <input id="salary" name="salary" type="number" min="0" value="{{ old('salary') }}" class="discord-input bg-white border border-gray-300 w-100">
-            </div>
-        </div>
-
-        <div class="row g-3">
-            <div class="col-md-12">
-                <label for="description" class="form-label">{{ __('messages.description') }}</label>
-                <textarea id="description" name="description" rows="4" required class="discord-input bg-white border border-gray-300 w-100">{{ old('description') }}</textarea>
-            </div>
-        </div>
-
-        <div class="row g-3">
-            <div class="col-md-6">
-                <label for="nice_to_have" class="form-label">{{ __('messages.nice_to_have') }} ({{ __('messages.optional') }})</label>
-                <textarea id="nice_to_have" name="nice_to_have" rows="3" class="discord-input bg-white border border-gray-300 w-100">{{ old('nice_to_have') }}</textarea>
-            </div>
-            <div class="col-md-6">
-                <label for="deadline" class="form-label">{{ __('messages.deadline') }} ({{ __('messages.optional') }})</label>
-                <input id="deadline" name="deadline" type="date" value="{{ old('deadline') }}" class="discord-input bg-white border border-gray-300 w-100">
-            </div>
-        </div>
-
-        <div class="row g-3">
-            <div class="col-md-6">
-                <label for="type" class="form-label">{{ __('messages.job_type') }}</label>
-                <select id="type" name="type" required class="discord-input bg-white border border-gray-300 w-100">
-                    <option value="" disabled {{ old('type') ? '' : 'selected' }}>{{ __('messages.select_job_type') }}</option>
-                    @foreach ($parentCategories as $category)
-                        <option value="{{ $category->id }}" {{ old('type') == $category->id ? 'selected' : '' }}>
-                            {{ $category->name }}
-                        </option>
-                    @endforeach
-                    <option value="other" {{ old('type') === 'other' ? 'selected' : '' }}>{{ __('messages.other') }}</option>
-                </select>
-            </div>
-            <div class="col-md-6" id="type-other-wrapper" style="display: none;">
-                <label for="type_other" class="form-label">{{ __('messages.job_type_other') }}</label>
-                <input id="type_other" name="type_other" type="text" value="{{ old('type_other') }}" class="discord-input bg-white border border-gray-300 w-100">
-            </div>
-        </div>
-
-        <div class="row g-3">
-            <div class="col-md-6">
-                <label for="location" class="form-label">{{ __('messages.location') }}</label>
-                <input id="location" name="location" type="text" value="{{ old('location') }}" required class="discord-input bg-white border border-gray-300 w-100">
-            </div>
-            <div class="col-md-6 d-flex align-items-center" style="padding-top: 30px;">
-                <div class="onsite-check">
-                    <input class="form-check-input" type="checkbox" name="onsite" value="1" id="onsite" {{ old('onsite') ? 'checked' : '' }}>
-                    <label class="form-check-label" for="onsite">{{ __('messages.onsite') }}</label>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
+                <div>
+                    <label for="title" class="block text-sm font-medium text-gray-700 dark:text-gray-300">{{ __('messages.title') }}</label>
+                    <input id="title" name="title" type="text" value="{{ old('title') }}" required
+                           class="mt-2 block w-full rounded-md border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-white focus:ring-indigo-500 focus:border-indigo-500">
+                </div>
+                <div>
+                    <label for="salary" class="block text-sm font-medium text-gray-700 dark:text-gray-300">{{ __('messages.salary') }} ({{ __('messages.optional') }})</label>
+                    <input id="salary" name="salary" type="number" min="0" value="{{ old('salary') }}"
+                           class="mt-2 block w-full rounded-md border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-white focus:ring-indigo-500 focus:border-indigo-500">
                 </div>
             </div>
-        </div>
 
-        <div class="d-flex justify-content-end mt-4">
-            <button type="submit" class="discord-btn">
-                <i class="fas fa-save me-2"></i> {{ __('messages.save_job') }}
-            </button>
-        </div>
-    </form>
+            <div>
+                <label for="description" class="block text-sm font-medium text-gray-700 dark:text-gray-300">{{ __('messages.description') }}</label>
+                <textarea id="description" name="description" rows="4" required
+                          class="mt-2 block w-full rounded-md border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-white focus:ring-indigo-500 focus:border-indigo-500 resize-y">{{ old('description') }}</textarea>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
+                <div>
+                    <label for="nice_to_have" class="block text-sm font-medium text-gray-700 dark:text-gray-300">{{ __('messages.nice_to_have') }} ({{ __('messages.optional') }})</label>
+                    <textarea id="nice_to_have" name="nice_to_have" rows="3"
+                              class="mt-2 block w-full rounded-md border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-white focus:ring-indigo-500 focus:border-indigo-500 resize-y">{{ old('nice_to_have') }}</textarea>
+                </div>
+                <div>
+                    <label for="deadline" class="block text-sm font-medium text-gray-700 dark:text-gray-300">{{ __('messages.deadline') }} ({{ __('messages.optional') }})</label>
+                    <input id="deadline" name="deadline" type="date" value="{{ old('deadline') }}"
+                           class="mt-2 block w-full rounded-md border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-white focus:ring-indigo-500 focus:border-indigo-500">
+                </div>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
+                <div>
+                    <label for="type" class="block text-sm font-medium text-gray-700 dark:text-gray-300">{{ __('messages.job_type') }}</label>
+                    <select id="type" name="type" required
+                            class="mt-2 block w-full rounded-md border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-white focus:ring-indigo-500 focus:border-indigo-500">
+                        <option value="" disabled {{ old('type') ? '' : 'selected' }}>{{ __('messages.select_job_type') }}</option>
+                        @foreach ($parentCategories as $category)
+                            <option value="{{ $category->id }}" {{ old('type') == $category->id ? 'selected' : '' }}>
+                                {{ $category->name }}
+                            </option>
+                        @endforeach
+                        <option value="other" {{ old('type') === 'other' ? 'selected' : '' }}>{{ __('messages.other') }}</option>
+                    </select>
+                </div>
+                <div id="type-other-wrapper" style="display: none;">
+                    <label for="type_other" class="block text-sm font-medium text-gray-700 dark:text-gray-300">{{ __('messages.job_type_other') }}</label>
+                    <input id="type_other" name="type_other" type="text" value="{{ old('type_other') }}"
+                           class="mt-2 block w-full rounded-md border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-white focus:ring-indigo-500 focus:border-indigo-500">
+                </div>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
+                <div>
+                    <label for="location" class="block text-sm font-medium text-gray-700 dark:text-gray-300">{{ __('messages.location') }}</label>
+                    <input id="location" name="location" type="text" value="{{ old('location') }}" required
+                           class="mt-2 block w-full rounded-md border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-white focus:ring-indigo-500 focus:border-indigo-500">
+                </div>
+                <div class="flex items-end">
+                    <div class="onsite-check">
+                        <input class="h-4 w-4 rounded border-gray-300 text-indigo-600 focus:ring-indigo-500" type="checkbox" name="onsite" value="1" id="onsite" {{ old('onsite') ? 'checked' : '' }}>
+                        <label class="text-sm text-gray-700 dark:text-gray-300" for="onsite">{{ __('messages.onsite') }}</label>
+                    </div>
+                </div>
+            </div>
+
+            <div class="flex justify-end">
+                <button type="submit" class="inline-flex items-center px-4 py-2 bg-indigo-600 border border-transparent rounded-md text-sm font-medium text-white hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
+                    <i class="fas fa-save mr-2"></i> {{ __('messages.save_job') }}
+                </button>
+            </div>
+        </form>
+    </div>
 </div>
 @endsection
 

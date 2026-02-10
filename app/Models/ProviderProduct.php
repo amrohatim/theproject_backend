@@ -18,7 +18,6 @@ class ProviderProduct extends Model
      */
     protected $fillable = [
         'provider_id',
-        'product_id',
         'product_name',
         'description',
         'price',
@@ -31,7 +30,6 @@ class ProviderProduct extends Model
         'image',
         'rating',
         'total_ratings',
-        'branch_id',
         'product_name_arabic',
         'product_description_arabic',
     ];
@@ -147,27 +145,11 @@ class ProviderProduct extends Model
     }
 
     /**
-     * Get the product that belongs to the provider.
-     */
-    public function product()
-    {
-        return $this->belongsTo(Product::class, 'product_id');
-    }
-
-    /**
      * Get the category that the product belongs to.
      */
     public function category()
     {
         return $this->belongsTo(Category::class, 'category_id');
-    }
-
-    /**
-     * Get the branch that the product belongs to.
-     */
-    public function branch()
-    {
-        return $this->belongsTo(Branch::class, 'branch_id');
     }
 
     /**

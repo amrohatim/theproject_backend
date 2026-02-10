@@ -26,87 +26,28 @@ class ProviderController extends Controller
     {
         // Transform the provider products to match the expected format
         $transformedProducts = $providerProducts->map(function ($providerProduct) {
-            // Get the related product
-            $product = $providerProduct->product;
-
-            if (!$product) {
-                // If there's no related product, create a product-like object from provider_product data
-                Log::info("Creating product-like object for provider product ID {$providerProduct->id} with no related product");
-
-                // Ensure we have valid values for required fields
-                $categoryId = $providerProduct->category_id ?? 1; // Default to category ID 1 if null
-                $productName = $providerProduct->product_name ?? 'Unknown Product'; // Default name if null
-                $price = $providerProduct->price ?? 0; // Default price if null
-                $stock = $providerProduct->stock ?? 0; // Default stock if null
-
-                // Set is_active to true if it's null
-                $isActive = $providerProduct->is_active ?? true;
-
-                // Get branch information if available
-                $branchId = $providerProduct->branch_id ?? 0;
-                $branchName = null;
-                if ($branchId && $providerProduct->branch) {
-                    $branchName = $providerProduct->branch->name;
-                }
-
-                // Get category information if available
-                $categoryName = null;
-                if ($categoryId && $providerProduct->category) {
-                    $categoryName = $providerProduct->category->name;
-                }
-
-                return [
-                    'id' => $providerProduct->id,
-                    'branch_id' => $branchId,
-                    'category_id' => $categoryId,
-                    'name' => $productName,
-                    'price' => $price,
-                    'original_price' => $providerProduct->original_price,
-                    'stock' => $stock,
-                    'min_order' => $providerProduct->min_order,
-                    'description' => $providerProduct->description,
-                    'image' => $providerProduct->image,
-                    'is_available' => $isActive,
-                    // Add other fields that the Flutter app expects
-                    'rating' => null,
-                    'featured' => false,
-                    'has_discount' => false,
-                    'branch_name' => $branchName,
-                    'category_name' => $categoryName,
-                ];
+            $categoryId = $providerProduct->category_id ?? 1;
+            $categoryName = null;
+            if ($categoryId && $providerProduct->category) {
+                $categoryName = $providerProduct->category->name;
             }
 
-            // Merge product data with provider product data
-            $productData = $product->toArray();
-            Log::info("Transforming provider product ID {$providerProduct->id} with related product ID {$product->id}");
-
-            // Override product fields with provider product fields if they exist
-            if ($providerProduct->product_name) {
-                $productData['name'] = $providerProduct->product_name;
-            }
-            if ($providerProduct->price !== null) {
-                $productData['price'] = $providerProduct->price;
-            }
-            if ($providerProduct->original_price !== null) {
-                $productData['original_price'] = $providerProduct->original_price;
-            }
-            if ($providerProduct->stock !== null) {
-                $productData['stock'] = $providerProduct->stock;
-            }
-            if ($providerProduct->min_order !== null) {
-                $productData['min_order'] = $providerProduct->min_order;
-            }
-            if ($providerProduct->description) {
-                $productData['description'] = $providerProduct->description;
-            }
-            if ($providerProduct->image) {
-                $productData['image'] = $providerProduct->image;
-            }
-
-            // Ensure is_available is set based on provider product's is_active
-            $productData['is_available'] = $providerProduct->is_active ?? true;
-
-            return $productData;
+            return [
+                'id' => $providerProduct->id,
+                'category_id' => $categoryId,
+                'name' => $providerProduct->product_name ?? 'Unknown Product',
+                'price' => $providerProduct->price ?? 0,
+                'original_price' => $providerProduct->original_price,
+                'stock' => $providerProduct->stock ?? 0,
+                'min_order' => $providerProduct->min_order,
+                'description' => $providerProduct->description,
+                'image' => $providerProduct->image,
+                'is_available' => $providerProduct->is_active ?? true,
+                'rating' => null,
+                'featured' => false,
+                'has_discount' => false,
+                'category_name' => $categoryName,
+            ];
         });
 
         // Create a new paginator with the transformed products
@@ -231,7 +172,7 @@ class ProviderController extends Controller
 
             // Get all provider products from the provider_products table
             $query = ProviderProduct::query()
-                ->with(['product.category', 'product.colors', 'product.sizes', 'category', 'branch']);
+                ->with(['category']);
 
             // Apply filters if needed
             if ($request->filled('search')) {
@@ -261,12 +202,6 @@ class ProviderController extends Controller
                 Log::info("Provider product #{$index}: ID={$providerProduct->id}, Name={$providerProduct->product_name}, Active=" .
                     ($providerProduct->is_active === null ? 'NULL' : ($providerProduct->is_active ? 'true' : 'false')));
 
-                // Check if product relation exists
-                if ($providerProduct->product) {
-                    Log::info("  - Related product exists: ID={$providerProduct->product->id}, Name={$providerProduct->product->name}");
-                } else {
-                    Log::warning("  - No related product found for provider_product ID {$providerProduct->id}");
-                }
             }
 
             // Transform the provider products to match the expected format
@@ -304,7 +239,7 @@ class ProviderController extends Controller
                 ->where('provider_id', $providerId)
                 // Temporarily disable the is_active filter to show all provider products
                 // ->where('is_active', true)
-                ->with(['product.category', 'product.colors', 'product.sizes', 'category', 'branch']);
+                ->with(['category']);
 
             // Apply filters if needed
             if ($request->filled('search')) {
@@ -376,7 +311,7 @@ class ProviderController extends Controller
                 ->whereIn('category_id', $categoryIds)
                 // Temporarily disable the is_active filter to show all provider products
                 // ->where('is_active', true)
-                ->with(['product.category', 'product.colors', 'product.sizes', 'category', 'branch']);
+                ->with(['category']);
 
             // Apply filters if needed
             if ($request->filled('search')) {

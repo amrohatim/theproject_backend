@@ -2,6 +2,16 @@
 
 @section('title', 'Add New Product')
 
+@section('styles')
+<style>
+    .provider-products-form .form-control,
+    .provider-products-form textarea,
+    .provider-products-form select {
+        padding: 0.65rem 0.85rem;
+    }
+</style>
+@endsection
+
 @section('content')
 <div class="container-fluid">
     <div class="d-sm-flex align-items-center justify-content-between mb-4">
@@ -16,7 +26,7 @@
             <h6 class="m-0 font-weight-bold text-primary">Product Information</h6>
         </div>
         <div class="card-body">
-            <form action="{{ route('provider.products.store') }}" method="POST" enctype="multipart/form-data">
+            <form action="{{ route('provider.products.store') }}" method="POST" enctype="multipart/form-data" class="provider-products-form">
                 @csrf
                 
                 <div class="row">

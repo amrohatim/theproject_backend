@@ -1,291 +1,281 @@
-@extends('layouts.provider')
+@extends('layouts.dashboard')
 
 @section('title', __('provider.edit_product'))
+@section('page-title', __('provider.edit_product_title'))
 
-@section('header', __('provider.edit_product_title'))
+@section('styles')
+<style>
+    .lang-toggle {
+        display: inline-flex;
+        gap: 0.5rem;
+        padding: 0.25rem;
+        border: 1px solid #e5e7eb;
+        border-radius: 9999px;
+        background: #ffffff;
+    }
+    .lang-toggle button {
+        border: none;
+        background: transparent;
+        color: #6b7280;
+        font-size: 0.75rem;
+        font-weight: 600;
+        padding: 0.35rem 0.9rem;
+        border-radius: 9999px;
+        display: inline-flex;
+        align-items: center;
+        gap: 0.35rem;
+        cursor: pointer;
+    }
+    .lang-toggle button.active {
+        background: #f3f4f6;
+        color: #111827;
+    }
+    [dir="rtl"] .rtl-flip {
+        transform: scaleX(-1);
+    }
+    .dark .lang-toggle {
+        border-color: #374151;
+        background: #111827;
+    }
+    .dark .lang-toggle button {
+        color: #9ca3af;
+    }
+    .dark .lang-toggle button.active {
+        background: #1f2937;
+        color: #f9fafb;
+    }
+    .provider-product-form input,
+    .provider-product-form textarea,
+    .provider-product-form select {
+        padding: 0.65rem 0.9rem;
+    }
+</style>
+@endsection
 
 @section('content')
-<div class="d-flex justify-content-between align-items-center mb-4">
-    <div class="d-flex align-items-center">
-        <div style="width: 40px; height: 40px; background-color: var(--discord-primary); border-radius: 8px; display: flex; align-items: center; justify-content: center; margin-right: 15px;">
-            <i class="fas fa-edit text-white"></i>
-        </div>
+<div class="container mx-auto">
+    <div class="mb-6 flex flex-col md:flex-row md:items-center md:justify-between">
         <div>
-            <h4 class="mb-0">{{ __('provider.edit_product') }}</h4>
-            <p class="text-muted mb-0" style="font-size: 14px; color: var(--discord-light);">Edit product information</p>
+            <h2 class="text-2xl font-semibold text-gray-900 dark:text-white">{{ __('provider.edit_product') }}</h2>
+            <p class="mt-1 text-sm text-gray-600 dark:text-gray-400">{{ __('provider.edit_product_title') }}</p>
+        </div>
+        <div class="mt-4 md:mt-0 flex flex-wrap items-center gap-3">
+            <a href="{{ route('provider.provider-products.index') }}" class="inline-flex items-center px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-md text-sm font-medium text-gray-700 dark:text-gray-200 bg-white dark:bg-gray-800 hover:bg-gray-50 dark:hover:bg-gray-700">
+                <i class="fas fa-arrow-left mr-2 rtl-flip"></i> {{ __('provider.back_to_inventory') }}
+            </a>
+            <button type="submit" form="providerProductForm" class="inline-flex items-center px-4 py-2 bg-indigo-600 border border-transparent rounded-md text-sm font-medium text-white hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
+                <i class="fas fa-save mr-2"></i> {{ __('provider.update_product') }}
+            </button>
         </div>
     </div>
-    <a href="{{ route('provider.provider-products.index') }}" class="discord-btn discord-btn-secondary">
-        <i class="fas fa-arrow-left me-2"></i> Back to Inventory
-    </a>
-</div>
 
-<div class="discord-card mb-4">
-    <div class="discord-card-header">
-            <i class="fas fa-box me-2" style="color: var(--discord-primary);"></i>
-            {{ __('provider.product_information') }}
-        </div>
-        <div class="p-4">
-                <form action="{{ route('provider.provider-products.update', $providerProduct->id) }}" method="POST" enctype="multipart/form-data">
-                    @csrf
-                    @method('PUT')
-                    
-                    <div class="row">
-                        <!-- Left Column - Basic Information -->
-                        <div class="col-lg-8">
-                            <div class="mb-4" style="border-radius: 8px; padding: 16px; border: 1px solid #e0e1e5;">
-                                <h5 class="mb-3" style="font-weight: 600; font-size: 16px; color: var(--discord-lightest);">{{ __('provider.basic_information') }}</h5>
-                            
-                            <div class="mb-3">
-                                <label style="display: block; margin-bottom: 8px; color: var(--discord-lightest); font-weight: 500;">
-                                    {{ __('provider.product_name') }} <span style="color: var(--discord-red);">*</span>
-                                </label>
-                                
-                                <!-- Language Switch for Product Name -->
-                                <x-form-language-switch field-name="product_name" />
-                                
-                                <!-- English Product Name -->
-                                <div data-lang-field="product_name" data-lang="en" style="display: block;">
-                                    <input type="text" class="form-control" id="product_name" name="product_name" value="{{ old('product_name', $providerProduct->product_name) }}" required 
-                                        placeholder="{{ __('provider.enter_product_name_english') }}"
-                                        style="background-color: var(--discord-dark); border: none; color: var(--discord-lightest); padding: 10px 12px; border-radius: 4px; width: 100%;">
-                                    @error('product_name')
-                                        <div style="color: var(--discord-red); font-size: 14px; margin-top: 5px;">{{ $message }}</div>
-                                    @enderror
-                                </div>
-                                
-                                <!-- Arabic Product Name -->
-                                <div data-lang-field="product_name" data-lang="ar" style="display: none;" dir="rtl">
-                                    <input type="text" class="form-control" id="product_name_arabic" name="product_name_arabic" value="{{ old('product_name_arabic', $providerProduct->product_name_arabic) }}" required 
-                                        placeholder="{{ __('provider.enter_product_name_arabic') }}"
-                                        style="background-color: var(--discord-dark); border: none; color: var(--discord-lightest); padding: 10px 12px; border-radius: 4px; width: 100%;">
-                                    @error('product_name_arabic')
-                                        <div style="color: var(--discord-red); font-size: 14px; margin-top: 5px;">{{ $message }}</div>
-                                    @enderror
-                                </div>
-                            </div>
-                            
-                            <div class="mb-3">
-                                <label style="display: block; margin-bottom: 8px; color: var(--discord-lightest); font-weight: 500;">
-                                    {{ __('provider.description') }}
-                                </label>
-                                
-                                <!-- Language Switch for Product Description -->
-                                <x-form-language-switch field-name="product_description" />
-                                
-                                <!-- English Product Description -->
-                                <div data-lang-field="product_description" data-lang="en" style="display: block;">
-                                    <textarea class="form-control" id="description" name="description" rows="5" 
-                                        placeholder="{{ __('provider.enter_product_description_english') }}"
-                                        style="background-color: var(--discord-dark); border: none; color: var(--discord-lightest); padding: 10px 12px; border-radius: 4px; width: 100%; resize: vertical;">{{ old('description', $providerProduct->description) }}</textarea>
-                                    @error('description')
-                                        <div style="color: var(--discord-red); font-size: 14px; margin-top: 5px;">{{ $message }}</div>
-                                    @enderror
-                                </div>
-                                
-                                <!-- Arabic Product Description -->
-                                <div data-lang-field="product_description" data-lang="ar" style="display: none;" dir="rtl">
-                                    <textarea class="form-control" id="product_description_arabic" name="product_description_arabic" rows="5" 
-                                        placeholder="{{ __('provider.enter_product_description_arabic') }}"
-                                        style="background-color: var(--discord-dark); border: none; color: var(--discord-lightest); padding: 10px 12px; border-radius: 4px; width: 100%; resize: vertical;">{{ old('product_description_arabic', $providerProduct->product_description_arabic) }}</textarea>
-                                    @error('product_description_arabic')
-                                        <div style="color: var(--discord-red); font-size: 14px; margin-top: 5px;">{{ $message }}</div>
-                                    @enderror
-                                </div>
-                            </div>
-                        </div>
-                        
-                        <!-- Pricing -->
-                        <div class="mb-4" style="border-radius: 8px; padding: 16px; border: 1px solid #e0e1e5;">
-                            <h5 class="mb-3" style="font-weight: 600; font-size: 16px; color: var(--discord-lightest);">{{ __('provider.pricing') }}</h5>
-                            
-                            <div class="row">
-                                <div class="col-md-6">
-                                    <div class="mb-3">
-                                        <label for="price" style="display: block; margin-bottom: 8px; color: var(--discord-lightest); font-weight: 500;">
-                                            {{ __('provider.price') }} <span style="color: var(--discord-red);">*</span>
-                                        </label>
-                                        <div style="position: relative;">
-                                            <span style="position: absolute; left: 12px; top: 50%; transform: translateY(-50%); color: var(--discord-light); font-weight: 500;">$</span>
-                                            <input type="number" step="0.01" min="0" class="form-control" id="price" name="price" value="{{ old('price', $providerProduct->price) }}" required 
-                                                style="background-color: var(--discord-dark); border: none; color: var(--discord-lightest); padding: 10px 12px 10px 30px; border-radius: 4px; width: 100%;">
-                                        </div>
-                                        @error('price')
-                                            <div style="color: var(--discord-red); font-size: 14px; margin-top: 5px;">{{ $message }}</div>
-                                        @enderror
-                                    </div>
-                                </div>
-                                <div class="col-md-6">
-                                    <div class="mb-3">
-                                        <label for="original_price" style="display: block; margin-bottom: 8px; color: var(--discord-lightest); font-weight: 500;">
-                                            {{ __('provider.original_price') }}
-                                        </label>
-                                        <div style="position: relative;">
-                                            <span style="position: absolute; left: 12px; top: 50%; transform: translateY(-50%); color: var(--discord-light); font-weight: 500;">$</span>
-                                            <input type="number" step="0.01" min="0" class="form-control" id="original_price" name="original_price" value="{{ old('original_price', $providerProduct->original_price) }}" 
-                                                style="background-color: var(--discord-dark); border: none; color: var(--discord-lightest); padding: 10px 12px 10px 30px; border-radius: 4px; width: 100%;">
-                                        </div>
-                                        <small style="color: var(--discord-light); font-size: 12px;">{{ __('provider.original_price_description') }}</small>
-                                        @error('original_price')
-                                            <div style="color: var(--discord-red); font-size: 14px; margin-top: 5px;">{{ $message }}</div>
-                                        @enderror
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        
-                        <!-- Inventory -->
-                        <div class="mb-4" style="border-radius: 8px; padding: 16px; border: 1px solid #e0e1e5;">
-                            <h5 class="mb-3" style="font-weight: 600; font-size: 16px; color: var(--discord-lightest);">{{ __('provider.inventory') }}</h5>
-                            
-                            <div class="row">
-                                <div class="col-md-6">
-                                    <div class="mb-3">
-                                        <label for="sku" style="display: block; margin-bottom: 8px; color: var(--discord-lightest); font-weight: 500;">
-                                            {{ __('provider.sku') }}
-                                        </label>
-                                        <input type="text" class="form-control" id="sku" name="sku" value="{{ old('sku', $providerProduct->sku) }}" 
-                                            style="background-color: var(--discord-dark); border: none; color: var(--discord-lightest); padding: 10px 12px; border-radius: 4px; width: 100%;">
-                                        <small style="color: var(--discord-light); font-size: 12px;">{{ __('provider.sku_help') }}</small>
-                                        @error('sku')
-                                            <div style="color: var(--discord-red); font-size: 14px; margin-top: 5px;">{{ $message }}</div>
-                                        @enderror
-                                    </div>
-                                </div>
-                                <div class="col-md-6">
-                                    <div class="mb-3">
-                                        <label for="stock" style="display: block; margin-bottom: 8px; color: var(--discord-lightest); font-weight: 500;">
-                                            {{ __('provider.stock_quantity') }} <span style="color: var(--discord-red);">*</span>
-                                        </label>
-                                        <input type="number" min="0" class="form-control" id="stock" name="stock" value="{{ old('stock', $providerProduct->stock) }}" required 
-                                            style="background-color: var(--discord-dark); border: none; color: var(--discord-lightest); padding: 10px 12px; border-radius: 4px; width: 100%;">
-                                        @error('stock')
-                                            <div style="color: var(--discord-red); font-size: 14px; margin-top: 5px;">{{ $message }}</div>
-                                        @enderror
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="row">
-                                <div class="col-md-6">
-                                    <div class="mb-3">
-                                        <label for="min_order" style="display: block; margin-bottom: 8px; color: var(--discord-lightest); font-weight: 500;">
-                                            {{ __('provider.min_order') }} <span style="color: var(--discord-red);">*</span>
-                                        </label>
-                                        <input type="number" min="1" class="form-control" id="min_order" name="min_order" value="{{ old('min_order', $providerProduct->min_order ?? 1) }}" required 
-                                            style="background-color: var(--discord-dark); border: none; color: var(--discord-lightest); padding: 10px 12px; border-radius: 4px; width: 100%;">
-                                        <small style="color: var(--discord-light); font-size: 12px;">{{ __('provider.min_order_help') }}</small>
-                                        @error('min_order')
-                                            <div style="color: var(--discord-red); font-size: 14px; margin-top: 5px;">{{ $message }}</div>
-                                        @enderror
-                                    </div>
-                                </div>
-                                <div class="col-md-6">
-                                    <div class="mb-3">
-                                        <label style="display: block; margin-bottom: 8px; color: var(--discord-lightest); font-weight: 500;">
-                                            {{ __('provider.status') }}
-                                        </label>
-                                        <input type="hidden" name="is_active" value="0">
-                                        <div class="form-check">
-                                            <input class="form-check-input" type="checkbox" id="is_active" name="is_active" value="1"
-                                                {{ old('is_active', $providerProduct->is_active) ? 'checked' : '' }}>
-                                            <label class="form-check-label" for="is_active" style="color: var(--discord-lightest);">
-                                                {{ __('provider.active') }}
-                                            </label>
-                                        </div>
-                                        @error('is_active')
-                                            <div style="color: var(--discord-red); font-size: 14px; margin-top: 5px;">{{ $message }}</div>
-                                        @enderror
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
+    <form id="providerProductForm" action="{{ route('provider.provider-products.update', $providerProduct->id) }}" method="POST" enctype="multipart/form-data" class="space-y-6 provider-product-form">
+        @csrf
+        @method('PUT')
+
+        <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+            <div class="lg:col-span-2 space-y-6">
+                <div class="bg-white dark:bg-gray-800 rounded-lg border border-gray-200 dark:border-gray-700 p-6">
+                    <div class="flex items-center justify-between mb-6">
+                        <h3 class="text-sm font-semibold text-gray-900 dark:text-white uppercase tracking-wide">{{ __('provider.basic_information') }}</h3>
                     </div>
-                    
-                    <!-- Right Column - Image and Category -->
-                    <div class="col-lg-4">
-                        <div class="mb-4" style="border-radius: 8px; padding: 16px; border: 1px solid #e0e1e5;">
-                            <h5 class="mb-3" style="font-weight: 600; font-size: 16px; color: var(--discord-lightest);">{{ __('provider.product_image') }}</h5>
-                            
-                            <div class="text-center mb-3">
-                                @if($providerProduct->image)
-                                    <img id="image-preview" src="{{ asset($providerProduct->image) }}" alt="Current Image" style="max-width: 100%; max-height: 200px; border-radius: 8px; margin-bottom: 15px;">
-                                @else
-                                    <img id="image-preview" src="#" alt="Preview" style="max-width: 100%; max-height: 200px; display: none; border-radius: 8px; margin-bottom: 15px;">
-                                    <div id="image-placeholder" style="background-color: var(--discord-dark); border-radius: 8px; padding: 30px; margin-bottom: 15px;">
-                                        <i class="fas fa-image fa-3x" style="color: var(--discord-light); margin-bottom: 10px;"></i>
-                                        <p style="color: var(--discord-light); margin: 0;">{{ __('provider.no_image_selected') }}</p>
-                                    </div>
-                                @endif
-                            </div>
-                            
-                            <input type="file" id="image" name="image" accept="image/*" style="display: none;">
-                            <button type="button" onclick="document.getElementById('image').click()" 
-                                style="background-color: var(--discord-primary); color: white; border: none; padding: 10px 20px; border-radius: 4px; width: 100%; font-weight: 500; cursor: pointer;">
-                                <i class="fas fa-upload me-2"></i> {{ __('provider.select_image') }}
-                            </button>
-                            @error('image')
-                                <div style="color: var(--discord-red); font-size: 14px; margin-top: 5px;">{{ $message }}</div>
-                            @enderror
-                        </div>
-                        
-                        <div class="mb-3">
-                            <label for="category_id" style="display: block; margin-bottom: 8px; color: var(--discord-lightest); font-weight: 500;">
-                                {{ __('provider.select_category') }}
+
+                    <div class="space-y-5">
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 dark:text-gray-300">
+                                {{ __('provider.product_name') }} <span class="text-red-500">*</span>
                             </label>
-                            <select class="form-select" id="category_id" name="category_id" required
-                                style="background-color: var(--discord-dark); border: none; color: var(--discord-lightest); padding: 10px 12px; border-radius: 4px; width: 100%;">
-                                <option value="" style="background-color: var(--discord-dark);">{{ __('provider.select_category') }}</option>
-                                @foreach($parentCategories as $parentCategory)
-                                    <optgroup label="{{ $parentCategory->name }}" style="background-color: var(--discord-dark); color: var(--discord-primary);">
-                                        <option value="{{ $parentCategory->id }}"
-                                            {{ old('category_id', $providerProduct->category_id) == $parentCategory->id ? 'selected' : '' }}
-                                            style="background-color: var(--discord-dark); color: var(--discord-light); font-style: italic;"
-                                            disabled data-is-parent="true">
-                                            {{ $parentCategory->name }} ({{ __('provider.select_subcategory') }})
-                                        </option>
-                                        @foreach($parentCategory->children as $childCategory)
-                                            <option value="{{ $childCategory->id }}"
-                                                {{ old('category_id', $providerProduct->category_id) == $childCategory->id ? 'selected' : '' }}
-                                                style="background-color: var(--discord-dark); color: var(--discord-lightest);" data-is-parent="false">
-                                                — {{ $childCategory->name }}
-                                            </option>
-                                        @endforeach
-                                    </optgroup>
-                                @endforeach
-                            </select>
-                            @error('category_id')
-                                <div style="color: var(--discord-red); font-size: 14px; margin-top: 5px;">{{ $message }}</div>
+                            <div class="mt-3">
+                                <div class="lang-toggle" data-lang-toggle="product_name">
+                                    <button type="button" class="active" data-lang="en">EN</button>
+                                    <button type="button" data-lang="ar">AR</button>
+                                </div>
+                            </div>
+                            <div class="mt-4" data-lang-field="product_name" data-lang="en" style="display: block;">
+                                <input type="text" id="product_name" name="product_name" value="{{ old('product_name', $providerProduct->product_name) }}" required
+                                    placeholder="{{ __('provider.enter_product_name_english') }}"
+                                    class="block w-full rounded-md border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-white focus:ring-indigo-500 focus:border-indigo-500">
+                                @error('product_name')
+                                    <p class="mt-2 text-sm text-red-600">{{ $message }}</p>
+                                @enderror
+                            </div>
+                            <div class="mt-4" data-lang-field="product_name" data-lang="ar" style="display: none;" dir="rtl">
+                                <input type="text" id="product_name_arabic" name="product_name_arabic" value="{{ old('product_name_arabic', $providerProduct->product_name_arabic) }}" required
+                                    placeholder="{{ __('provider.enter_product_name_arabic') }}"
+                                    class="block w-full rounded-md border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-white focus:ring-indigo-500 focus:border-indigo-500">
+                                @error('product_name_arabic')
+                                    <p class="mt-2 text-sm text-red-600">{{ $message }}</p>
+                                @enderror
+                            </div>
+                        </div>
+
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 dark:text-gray-300">{{ __('provider.description') }}</label>
+                            <div class="mt-3">
+                                <div class="lang-toggle" data-lang-toggle="product_description">
+                                    <button type="button" class="active" data-lang="en">EN</button>
+                                    <button type="button" data-lang="ar">AR</button>
+                                </div>
+                            </div>
+                            <div class="mt-4" data-lang-field="product_description" data-lang="en" style="display: block;">
+                                <textarea id="description" name="description" rows="5"
+                                    
+                                    class="block w-full rounded-md border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-white focus:ring-indigo-500 focus:border-indigo-500 resize-y">{{ old('description', $providerProduct->description) }}</textarea>
+                                @error('description')
+                                    <p class="mt-2 text-sm text-red-600">{{ $message }}</p>
+                                @enderror
+                            </div>
+                            <div class="mt-4" data-lang-field="product_description" data-lang="ar" style="display: none;" dir="rtl">
+                                <textarea id="product_description_arabic" name="product_description_arabic" rows="5"
+                                    
+                                    class="block w-full rounded-md border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-white focus:ring-indigo-500 focus:border-indigo-500 resize-y">{{ old('product_description_arabic', $providerProduct->product_description_arabic) }}</textarea>
+                                @error('product_description_arabic')
+                                    <p class="mt-2 text-sm text-red-600">{{ $message }}</p>
+                                @enderror
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="bg-white dark:bg-gray-800 rounded-lg border border-gray-200 dark:border-gray-700 p-6">
+                    <h3 class="text-sm font-semibold text-gray-900 dark:text-white uppercase tracking-wide mb-6">{{ __('provider.pricing') }}</h3>
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
+                        <div>
+                            <label for="price" class="block text-sm font-medium text-gray-700 dark:text-gray-300">
+                                {{ __('provider.price') }} <span class="text-red-500">*</span>
+                            </label>
+                            <div class="mt-2 relative">
+                                <span class="absolute inset-y-0 left-0 pl-3 flex items-center text-gray-400">$</span>
+                                <input type="number" step="0.01" min="0" id="price" name="price" value="{{ old('price', $providerProduct->price) }}" required
+                                    class="block w-full pl-8 rounded-md border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-white focus:ring-indigo-500 focus:border-indigo-500">
+                            </div>
+                            @error('price')
+                                <p class="mt-2 text-sm text-red-600">{{ $message }}</p>
+                            @enderror
+                        </div>
+                        <div>
+                            <label for="original_price" class="block text-sm font-medium text-gray-700 dark:text-gray-300">
+                                {{ __('provider.original_price') }}
+                            </label>
+                            <div class="mt-2 relative">
+                                <span class="absolute inset-y-0 left-0 pl-3 flex items-center text-gray-400">$</span>
+                                <input type="number" step="0.01" min="0" id="original_price" name="original_price" value="{{ old('original_price', $providerProduct->original_price) }}"
+                                    class="block w-full pl-8 rounded-md border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-white focus:ring-indigo-500 focus:border-indigo-500">
+                            </div>
+                            <p class="mt-2 text-xs text-gray-500 dark:text-gray-400">{{ __('provider.original_price_description') }}</p>
+                            @error('original_price')
+                                <p class="mt-2 text-sm text-red-600">{{ $message }}</p>
                             @enderror
                         </div>
                     </div>
                 </div>
-                
-                <div class="d-flex justify-content-end mt-4 gap-2">
-                    <button type="submit" class="discord-btn">
-                        <i class="fas fa-save me-2"></i> {{ __('provider.update_product') }}
-                    </button>
+
+                <div class="bg-white dark:bg-gray-800 rounded-lg border border-gray-200 dark:border-gray-700 p-6">
+                    <h3 class="text-sm font-semibold text-gray-900 dark:text-white uppercase tracking-wide mb-6">{{ __('provider.inventory') }}</h3>
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
+                        <div>
+                            <label for="sku" class="block text-sm font-medium text-gray-700 dark:text-gray-300">{{ __('provider.sku') }}</label>
+                            <input type="text" id="sku" name="sku" value="{{ old('sku', $providerProduct->sku) }}"
+                                class="mt-2 block w-full rounded-md border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-white focus:ring-indigo-500 focus:border-indigo-500">
+                            <p class="mt-2 text-xs text-gray-500 dark:text-gray-400">{{ __('provider.sku_help') }}</p>
+                            @error('sku')
+                                <p class="mt-2 text-sm text-red-600">{{ $message }}</p>
+                            @enderror
+                        </div>
+                        <div>
+                            <label for="stock" class="block text-sm font-medium text-gray-700 dark:text-gray-300">
+                                {{ __('provider.stock_quantity') }} <span class="text-red-500">*</span>
+                            </label>
+                            <input type="number" min="0" id="stock" name="stock" value="{{ old('stock', $providerProduct->stock) }}" required
+                                class="mt-2 block w-full rounded-md border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-white focus:ring-indigo-500 focus:border-indigo-500">
+                            @error('stock')
+                                <p class="mt-2 text-sm text-red-600">{{ $message }}</p>
+                            @enderror
+                        </div>
+                        <div>
+                            <label for="min_order" class="block text-sm font-medium text-gray-700 dark:text-gray-300">
+                                {{ __('provider.min_order') }} <span class="text-red-500">*</span>
+                            </label>
+                            <input type="number" min="1" id="min_order" name="min_order" value="{{ old('min_order', $providerProduct->min_order ?? 1) }}" required
+                                class="mt-2 block w-full rounded-md border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-white focus:ring-indigo-500 focus:border-indigo-500">
+                            <p class="mt-2 text-xs text-gray-500 dark:text-gray-400">{{ __('provider.min_order_help') }}</p>
+                            @error('min_order')
+                                <p class="mt-2 text-sm text-red-600">{{ $message }}</p>
+                            @enderror
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 dark:text-gray-300">{{ __('provider.status') }}</label>
+                            <input type="hidden" name="is_active" value="0">
+                            <div class="mt-3 flex items-center">
+                                <input class="h-4 w-4 rounded border-gray-300 text-indigo-600 focus:ring-indigo-500" type="checkbox" id="is_active" name="is_active" value="1" {{ old('is_active', $providerProduct->is_active) ? 'checked' : '' }}>
+                                <label class="ml-2 text-sm text-gray-700 dark:text-gray-300" for="is_active">{{ __('provider.active') }}</label>
+                            </div>
+                            @error('is_active')
+                                <p class="mt-2 text-sm text-red-600">{{ $message }}</p>
+                            @enderror
+                        </div>
+                    </div>
                 </div>
-            </form>
+            </div>
+
+            <div class="space-y-6">
+                <div class="bg-white dark:bg-gray-800 rounded-lg border border-gray-200 dark:border-gray-700 p-6">
+                    <h3 class="text-sm font-semibold text-gray-900 dark:text-white uppercase tracking-wide mb-4">{{ __('provider.product_image') }}</h3>
+                    <div class="text-center">
+                        @php
+                            $imageUrl = \App\Helpers\ProviderImageHelper::getProviderProductImageUrl($providerProduct->image ?? null);
+                        @endphp
+                        <img id="image-preview" src="{{ $imageUrl }}" alt="Current Image" class="mx-auto mb-4 max-h-48 rounded-lg">
+                        <input type="file" id="image" name="image" accept="image/*" class="hidden">
+                        <label for="image" class="inline-flex items-center justify-center w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-md text-sm font-medium text-gray-700 dark:text-gray-200 bg-white dark:bg-gray-800 hover:bg-gray-50 dark:hover:bg-gray-700 cursor-pointer">
+                            <i class="fas fa-upload mr-2"></i> {{ __('provider.select_image') }}
+                        </label>
+                        @error('image')
+                            <p class="mt-2 text-sm text-red-600">{{ $message }}</p>
+                        @enderror
+                    </div>
+                </div>
+
+                <div class="bg-white dark:bg-gray-800 rounded-lg border border-gray-200 dark:border-gray-700 p-6">
+                    <h3 class="text-sm font-semibold text-gray-900 dark:text-white uppercase tracking-wide mb-4">{{ __('provider.category') }}</h3>
+                    <label for="category_id" class="block text-sm font-medium text-gray-700 dark:text-gray-300">{{ __('provider.select_category') }}</label>
+                    <select id="category_id" name="category_id" required
+                        class="mt-2 block w-full rounded-md border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-white focus:ring-indigo-500 focus:border-indigo-500">
+                        <option value="">{{ __('provider.select_category') }}</option>
+                        @foreach($parentCategories as $parentCategory)
+                            <optgroup label="{{ $parentCategory->name }}">
+                                @foreach($parentCategory->children as $childCategory)
+                                    <option value="{{ $childCategory->id }}" {{ old('category_id', $providerProduct->category_id) == $childCategory->id ? 'selected' : '' }}>
+                                        — {{ $childCategory->name }}
+                                    </option>
+                                @endforeach
+                            </optgroup>
+                        @endforeach
+                    </select>
+                    @error('category_id')
+                        <p class="mt-2 text-sm text-red-600">{{ $message }}</p>
+                    @enderror
+                </div>
+            </div>
         </div>
-    </div>
+
+    </form>
 </div>
 @endsection
 
 <!-- Validation Error Modal -->
-<div id="validationErrorModal" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background-color: rgba(0, 0, 0, 0.5); z-index: 9999; align-items: center; justify-content: center;">
-    <div style="background-color: var(--discord-darker); border-radius: 8px; padding: 24px; max-width: 500px; width: 90%; margin: 20px; box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);">
-        <div style="text-align: center; margin-bottom: 20px;">
-            <div style="width: 60px; height: 60px; background-color: var(--discord-red); border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto 16px;">
-                <i class="fas fa-exclamation-triangle" style="color: white; font-size: 24px;"></i>
+<div id="validationErrorModal" style="display: none; position: fixed; inset: 0; background-color: rgba(0,0,0,0.45); z-index: 9999; align-items: center; justify-content: center;">
+    <div class="bg-white dark:bg-gray-800 rounded-lg p-6 w-full max-w-lg mx-4 shadow-xl">
+        <div class="text-center mb-5">
+            <div class="mx-auto mb-3 flex h-12 w-12 items-center justify-center rounded-full bg-red-100 text-red-600">
+                <i class="fas fa-exclamation-triangle"></i>
             </div>
-            <h3 style="color: var(--discord-lightest); margin: 0 0 8px; font-size: 20px; font-weight: 600;">{{ __('provider.validation_error') }}</h3>
-            <p style="color: var(--discord-light); margin: 0; font-size: 14px;">{{ __('provider.please_correct_following_errors') }}</p>
+            <h3 class="text-lg font-semibold text-gray-900 dark:text-white">{{ __('provider.validation_error') }}</h3>
+            <p class="mt-1 text-sm text-gray-600 dark:text-gray-400">{{ __('provider.please_correct_following_errors') }}</p>
         </div>
-        <ul id="validationErrorList" style="list-style: none; padding: 0; margin: 0 0 20px; max-height: 300px; overflow-y: auto;">
-            <!-- Errors will be populated here -->
-        </ul>
-        <div style="text-align: center;">
-            <button onclick="closeValidationErrorModal()" style="background-color: var(--discord-red); color: white; border: none; padding: 10px 24px; border-radius: 4px; font-weight: 500; cursor: pointer;">
+        <ul id="validationErrorList" class="space-y-2 max-h-72 overflow-y-auto"></ul>
+        <div class="mt-5 text-center">
+            <button onclick="closeValidationErrorModal()" class="inline-flex items-center px-4 py-2 bg-red-600 text-white text-sm font-medium rounded-md hover:bg-red-700">
                 {{ __('provider.ok') }}
             </button>
         </div>
@@ -295,43 +285,30 @@
 @section('scripts')
 <script>
 $(document).ready(function() {
-    // Simple image preview functionality
+    initLangToggles();
+
     $('#image').on('change', function() {
         var file = this.files[0];
         if (file) {
             var reader = new FileReader();
             reader.onload = function(e) {
-                $('#image-preview').attr('src', e.target.result).show();
-                $('#image-placeholder').hide();
+                $('#image-preview').attr('src', e.target.result).removeClass('hidden');
             }
             reader.readAsDataURL(file);
         }
     });
 
-    // Form validation
     $('form').on('submit', function(e) {
         var errors = [];
 
-        // Category validation
         var categoryId = $('#category_id').val();
         if (!categoryId || categoryId === '') {
             errors.push({
                 field: 'category_id',
                 message: '{{ __('provider.category_selection_required') }}'
             });
-        } else {
-            // Check if selected category is a parent category
-            var selectedOption = $('#category_id option:selected');
-            var isParentCategory = selectedOption.data('is-parent') === true;
-            if (isParentCategory) {
-                errors.push({
-                    field: 'category_id',
-                    message: '{{ __('provider.select_specific_subcategory_not_parent') }}'
-                });
-            }
         }
 
-        // Bilingual description validation
         var englishDesc = $('#description').val().trim();
         var arabicDesc = $('#product_description_arabic').val().trim();
 
@@ -349,7 +326,6 @@ $(document).ready(function() {
             });
         }
 
-        // Min order validation
         var stockValue = parseInt($('#stock').val(), 10);
         var minOrderValue = parseInt($('#min_order').val(), 10);
         if (!isNaN(stockValue) && !isNaN(minOrderValue) && minOrderValue > stockValue) {
@@ -359,7 +335,6 @@ $(document).ready(function() {
             });
         }
 
-        // If there are errors, show modal and prevent submission
         if (errors.length > 0) {
             e.preventDefault();
             showValidationErrorModal(errors);
@@ -368,32 +343,61 @@ $(document).ready(function() {
     });
 });
 
-// Modal functions
+function initLangToggles() {
+    document.querySelectorAll('.lang-toggle').forEach(toggle => {
+        const fieldName = toggle.getAttribute('data-lang-toggle');
+        const buttons = toggle.querySelectorAll('button');
+
+        buttons.forEach(button => {
+            button.addEventListener('click', () => {
+                const lang = button.getAttribute('data-lang');
+
+                buttons.forEach(btn => btn.classList.remove('active'));
+                button.classList.add('active');
+
+                document.querySelectorAll(`[data-lang-field="${fieldName}"]`).forEach(field => {
+                    field.style.display = 'none';
+                });
+
+                const selectedField = document.querySelector(`[data-lang-field="${fieldName}"][data-lang="${lang}"]`);
+                if (selectedField) {
+                    selectedField.style.display = 'block';
+                }
+            });
+        });
+
+        const defaultField = document.querySelector(`[data-lang-field="${fieldName}"][data-lang="en"]`);
+        if (defaultField) {
+            defaultField.style.display = 'block';
+        }
+        const arabicField = document.querySelector(`[data-lang-field="${fieldName}"][data-lang="ar"]`);
+        if (arabicField) {
+            arabicField.style.display = 'none';
+        }
+    });
+}
+
 function showValidationErrorModal(errors) {
     const modal = document.getElementById('validationErrorModal');
     const errorList = document.getElementById('validationErrorList');
 
-    // Clear previous errors
     errorList.innerHTML = '';
 
-    // Add each error to the list
     errors.forEach(error => {
         const li = document.createElement('li');
-        li.style.cssText = 'padding: 12px; margin-bottom: 8px; background-color: rgba(220, 38, 38, 0.1); border: 1px solid rgba(220, 38, 38, 0.3); border-radius: 4px; display: flex; align-items: flex-start;';
+        li.className = 'flex items-start gap-3 rounded-md border border-red-200 bg-red-50 p-3 text-sm text-red-700';
         li.innerHTML = `
-            <i class="fas fa-exclamation-circle" style="color: var(--discord-red); margin-right: 12px; margin-top: 2px; flex-shrink: 0;"></i>
-            <div style="color: var(--discord-lightest); font-size: 14px; line-height: 1.4;">
+            <i class="fas fa-exclamation-circle mt-0.5 text-red-500"></i>
+            <div>
                 <strong>${getFieldDisplayName(error.field)}:</strong> ${error.message}
             </div>
         `;
         errorList.appendChild(li);
     });
 
-    // Show modal
     modal.style.display = 'flex';
     document.body.style.overflow = 'hidden';
 
-    // Focus first error field
     if (errors.length > 0) {
         const firstErrorField = document.getElementById(errors[0].field) ||
                               document.querySelector(`[name="${errors[0].field}"]`);

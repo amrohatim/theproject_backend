@@ -26,12 +26,12 @@
                 </svg>
                 {{ __('merchant.add_product') }}
             </a>
-            <a href="{{ route('merchant.services.create') }}" class="inline-flex items-center px-4 py-2 bg-violet-600 text-white text-sm font-medium rounded-lg hover:bg-violet-700 focus:outline-none focus:ring-2 focus:ring-violet-500 focus:ring-offset-2 transition-colors">
+            {{-- <a href="{{ route('merchant.services.create') }}" class="inline-flex items-center px-4 py-2 bg-violet-600 text-white text-sm font-medium rounded-lg hover:bg-violet-700 focus:outline-none focus:ring-2 focus:ring-violet-500 focus:ring-offset-2 transition-colors">
                 <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"></path>
                 </svg>
                 {{ __('merchant.add_service') }}
-            </a>
+            </a> --}}
         </div>
     </div>
 </div>
@@ -59,12 +59,12 @@
                 </svg>
                 {{ __('merchant.browse_products') }}
             </a>
-            <a href="{{ route('merchant.services.index') }}" class="inline-flex items-center px-4 py-3 border border-gray-300 rounded-lg text-sm font-medium text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 transition-colors">
+            {{-- <a href="{{ route('merchant.services.index') }}" class="inline-flex items-center px-4 py-3 border border-gray-300 rounded-lg text-sm font-medium text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 transition-colors">
                 <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"></path>
                 </svg>
                 {{ __('merchant.browse_services') }}
-            </a>
+            </a> --}}
         </div>
     </div>
 </div>
@@ -159,7 +159,7 @@
     </div>
 
     <!-- Services Card -->
-    <div class="bg-white rounded-xl shadow-sm border border-gray-200 p-4 sm:p-6 transition-all duration-300 hover:shadow-lg hover:-translate-y-1 cursor-pointer group">
+    {{-- <div class="bg-white rounded-xl shadow-sm border border-gray-200 p-4 sm:p-6 transition-all duration-300 hover:shadow-lg hover:-translate-y-1 cursor-pointer group">
         <div class="flex items-center justify-between h-full">
             <div class="flex-1 min-w-0">
                 <p class="text-xs sm:text-sm font-medium text-gray-600 mb-1 sm:mb-2 truncate">{{ __('merchant.services') }}</p>
@@ -173,7 +173,7 @@
                 </div>
             </div>
         </div>
-    </div>
+    </div> --}}
 
     <!-- Orders Card -->
     <div class="bg-white rounded-xl shadow-sm border border-gray-200 p-4 sm:p-6 transition-all duration-300 hover:shadow-lg hover:-translate-y-1 cursor-pointer group">
@@ -247,7 +247,7 @@
 </div>
 
 <!-- Main Content Area -->
-<div class="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-8">
+<div class="grid grid-cols-1 gap-6 mb-8">
     <!-- Recent Products -->
     <div class="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden transition-all duration-300 hover:shadow-md">
         <div class="px-6 py-4 border-b border-gray-200 bg-gradient-to-r from-blue-50 to-blue-100">
@@ -334,7 +334,7 @@
     </div>
 
     <!-- Recent Services -->
-    <div class="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden transition-all duration-300 hover:shadow-md">
+    {{-- <div class="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden transition-all duration-300 hover:shadow-md">
         <div class="px-6 py-4 border-b border-gray-200 bg-gradient-to-r from-green-50 to-green-100">
             <div class="flex items-center justify-between">
                 <h3 class="text-lg font-semibold text-gray-900 flex items-center">
@@ -417,7 +417,7 @@
             </table>
         </div>
     </div>
-</div>
+</div> --}}
 
 <!-- Account Summary -->
 <div class="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden transition-all duration-300 hover:shadow-md">

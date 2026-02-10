@@ -295,24 +295,6 @@ class Product extends Model
 
 
     /**
-     * Get the provider products pivot records.
-     */
-    public function providerProducts()
-    {
-        return $this->hasMany(ProviderProduct::class, 'product_id');
-    }
-
-    /**
-     * Get the providers that have this product.
-     */
-    public function providers()
-    {
-        return $this->belongsToMany(Provider::class, 'provider_products', 'product_id', 'provider_id');
-    }
-
-
-
-    /**
      * Get the specifications for the product.
      */
     public function specifications()

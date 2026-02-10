@@ -253,6 +253,19 @@
             margin-left: 0 !important;
             margin-right: 0.25rem !important;
         }
+        [dir="rtl"] .ms-2 { margin-left: 0 !important; margin-right: 0.5rem !important; }
+        [dir="rtl"] .ms-3 { margin-left: 0 !important; margin-right: 1rem !important; }
+        [dir="rtl"] .ms-4 { margin-left: 0 !important; margin-right: 1.5rem !important; }
+        [dir="rtl"] .ms-5 { margin-left: 0 !important; margin-right: 3rem !important; }
+
+        [dir="rtl"] .me-1 { margin-left: 0.25rem !important; margin-right: 0 !important; }
+        [dir="rtl"] .me-2 { margin-left: 0.5rem !important; margin-right: 0 !important; }
+        [dir="rtl"] .me-3 { margin-left: 1rem !important; margin-right: 0 !important; }
+        [dir="rtl"] .me-4 { margin-left: 1.5rem !important; margin-right: 0 !important; }
+        [dir="rtl"] .me-5 { margin-left: 3rem !important; margin-right: 0 !important; }
+
+        [dir="rtl"] .text-start { text-align: right !important; }
+        [dir="rtl"] .text-end { text-align: left !important; }
 
         /* Responsive */
         @media (max-width: 768px) {

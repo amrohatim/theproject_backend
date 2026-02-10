@@ -1,149 +1,41 @@
-@extends('layouts.provider')
+@extends('layouts.dashboard')
 
-@section('header', __('provider.locations'))
+@section('title', __('provider.locations'))
+@section('page-title', __('provider.locations'))
 
 @section('styles')
 <style>
     #map {
-        height: 500px;
+        height: 480px;
         width: 100%;
-        border-radius: 8px;
+        border-radius: 12px;
     }
-    .location-list {
-        margin-top: 20px;
+    .location-item + .location-item {
+        border-top: 1px solid #e5e7eb;
     }
-    .location-item {
-        background-color: var(--discord-dark);
-        border-radius: 8px;
-        padding: 12px;
-        margin-bottom: 10px;
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-    }
-    .location-info {
-        flex: 1;
-    }
-    .location-actions {
-        display: flex;
-        gap: 8px;
-    }
-    .location-label {
-        font-weight: bold;
-        color: var(--discord-lightest);
-    }
-    .location-emirate {
-        color: var(--discord-light);
-        font-size: 14px;
-    }
-    .location-coords {
-        color: var(--discord-light);
-        font-size: 12px;
-        margin-top: 4px;
-    }
-    .emirate-select {
-        margin-bottom: 15px;
-    }
-    .map-controls {
-        margin-bottom: 15px;
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-    }
-    .search-box {
-        flex: 1;
-        max-width: 400px;
-    }
-    .search-input {
-        width: 100%;
-        padding: 8px 12px;
-        border-radius: 4px;
-        border: 1px solid var(--discord-darker);
-        background-color: var(--discord-dark);
-        color: var(--discord-lightest);
-    }
-    .action-btn {
-        background-color: var(--discord-primary);
-        color: white;
-        border: none;
-        padding: 8px 16px;
-        border-radius: 4px;
-        cursor: pointer;
-        transition: background-color 0.2s;
-    }
-    .action-btn:hover {
-        background-color: var(--discord-primary-hover);
-    }
-    .action-btn.delete {
-        background-color: var(--discord-red);
-    }
-    .action-btn.delete:hover {
-        background-color: var(--discord-red-hover);
-    }
-    .action-btn.edit {
-        background-color: var(--discord-yellow);
-    }
-    .action-btn.edit:hover {
-        background-color: var(--discord-yellow-hover);
-    }
-    
-    /* RTL Support */
-    [dir="rtl"] .discord-card-header h2 {
-        text-align: right;
-    }
-    
-    [dir="rtl"] .discord-card-header p {
-        text-align: right;
-    }
-    
-    [dir="rtl"] .map-controls {
-        direction: rtl;
-    }
-    
-    [dir="rtl"] .emirate-select {
-        text-align: right;
-    }
-    
-    [dir="rtl"] .form-label {
-        text-align: right;
-        display: block;
-    }
-    
-    [dir="rtl"] .location-list h3 {
-        text-align: right;
-    }
-    
-    [dir="rtl"] .location-item {
-        direction: rtl;
-        text-align: right;
-    }
-    
-    [dir="rtl"] .location-actions {
-        flex-direction: row-reverse;
-    }
-    
-    [dir="rtl"] .action-btn {
-        margin-left: 0;
-        margin-right: 10px;
-    }
-    
-    [dir="rtl"] .action-btn:last-child {
-        margin-right: 0;
+    .dark .location-item + .location-item {
+        border-top-color: #374151;
     }
 </style>
 @endsection
 
 @section('content')
-<div class="discord-card">
-    <div class="discord-card-header">
-        <h2><i class="fas fa-map-marker-alt me-2"></i> {{ __('provider.stock_distribution_points') }}</h2>
-        <p>{{ __('provider.add_manage_locations') }}</p>
+<div class="container mx-auto">
+    <div class="mb-6 flex flex-col md:flex-row md:items-center md:justify-between gap-4">
+        <div>
+            <h2 class="text-2xl font-semibold text-gray-900 dark:text-white">{{ __('provider.stock_distribution_points') }}</h2>
+            <p class="mt-1 text-sm text-gray-600 dark:text-gray-400">{{ __('provider.add_manage_locations') }}</p>
+        </div>
+        <button id="save-locations" class="inline-flex items-center px-4 py-2 bg-indigo-600 border border-transparent rounded-md text-sm font-medium text-white hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
+            <i class="fas fa-save mr-2"></i> {{ __('provider.save_locations') }}
+        </button>
     </div>
-    <div class="discord-card-body">
-        <div class="map-controls">
-            <div class="emirate-select">
-                <label for="emirate" class="form-label">{{ __('provider.emirate') }}:</label>
-                <select id="emirate" class="form-select">
+
+    <div class="bg-white dark:bg-gray-800 rounded-lg border border-gray-200 dark:border-gray-700 p-6 mb-6">
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div>
+                <label for="emirate" class="block text-sm font-medium text-gray-700 dark:text-gray-300">{{ __('provider.emirate') }}</label>
+                <select id="emirate" class="mt-2 block w-full p-3 rounded-md border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-white focus:ring-indigo-500 focus:border-indigo-500">
                     <option value="">{{ __('provider.select_emirate') }}</option>
                     <option value="Dubai">{{ __('provider.dubai') }}</option>
                     <option value="Abu Dhabi">{{ __('provider.abu_dhabi') }}</option>
@@ -154,44 +46,49 @@
                     <option value="Fujairah">{{ __('provider.fujairah') }}</option>
                 </select>
             </div>
-            <div class="search-box">
-                <input id="pac-input" class="search-input" type="text" placeholder="{{ __('provider.search_location') }}">
+            <div>
+                <label for="pac-input" class="block text-sm font-medium text-gray-700 dark:text-gray-300">{{ __('provider.search_location') }}</label>
+                <input id="pac-input" type="text" placeholder="{{ __('provider.search_location') }}"
+                       class="mt-2 block px-2 w-full rounded-md border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-white focus:ring-indigo-500 focus:border-indigo-500">
             </div>
         </div>
+    </div>
 
+    <div class="bg-white dark:bg-gray-800 rounded-lg border border-gray-200 dark:border-gray-700 p-4 mb-6">
         <div id="map"></div>
+    </div>
 
-        <div class="d-flex justify-content-end mt-3">
-            <button id="save-locations" class="action-btn">
-                <i class="fas fa-save me-2"></i> {{ __('provider.save_locations') }}
-            </button>
+    <div class="bg-white dark:bg-gray-800 rounded-lg border border-gray-200 dark:border-gray-700">
+        <div class="px-6 py-4 border-b border-gray-200 dark:border-gray-700">
+            <h3 class="text-sm font-semibold text-gray-900 dark:text-white uppercase tracking-wide">{{ __('provider.saved_locations') }}</h3>
         </div>
-
-        <div class="location-list">
-            <h3 class="mb-3">{{ __('provider.saved_locations') }}</h3>
-            <div id="locations-container">
-                @if(count($locations) > 0)
-                    @foreach($locations as $location)
-                    <div class="location-item" data-id="{{ $location->id }}" data-lat="{{ $location->latitude }}" data-lng="{{ $location->longitude }}">
-                        <div class="location-info">
-                            <div class="location-label">{{ $location->label ?? 'Location ' . $loop->iteration }}</div>
-                            <div class="location-emirate">{{ $location->emirate }}</div>
-                            <div class="location-coords">{{ $location->latitude }}, {{ $location->longitude }}</div>
-                        </div>
-                        <div class="location-actions">
-                            <button class="action-btn edit edit-location" data-id="{{ $location->id }}">
-                                <i class="fas fa-edit"></i> {{ __('provider.edit') }}
-                            </button>
-                            <button class="action-btn delete delete-location" data-id="{{ $location->id }}">
-                                <i class="fas fa-trash"></i> {{ __('provider.delete') }}
-                            </button>
-                        </div>
+        <div id="locations-container">
+            @if(count($locations) > 0)
+                @foreach($locations as $location)
+                <div class="location-item px-6 py-4 flex flex-col md:flex-row md:items-center md:justify-between gap-4" data-id="{{ $location->id }}" data-lat="{{ $location->latitude }}" data-lng="{{ $location->longitude }}">
+                    <div>
+                        <div class="text-sm font-medium text-gray-900 dark:text-white">{{ $location->label ?? 'Location ' . $loop->iteration }}</div>
+                        <div class="text-sm text-gray-500 dark:text-gray-400">{{ $location->emirate }}</div>
+                        <div class="text-xs text-gray-400 dark:text-gray-500 mt-1">{{ $location->latitude }}, {{ $location->longitude }}</div>
                     </div>
-                    @endforeach
-                @else
-                    <p>{{ __('provider.no_locations_saved') }}</p>
-                @endif
-            </div>
+                    <div class="flex items-center gap-2">
+                        <button class="edit-location inline-flex items-center justify-center h-9 w-9 rounded-md border border-gray-200 dark:border-gray-600 text-gray-500 dark:text-gray-300 hover:text-indigo-600 dark:hover:text-indigo-400 hover:border-indigo-300" data-id="{{ $location->id }}" title="{{ __('provider.edit') }}">
+                            <i class="fas fa-pen"></i>
+                        </button>
+                        <button class="delete-location inline-flex items-center justify-center h-9 w-9 rounded-md border border-gray-200 dark:border-gray-600 text-gray-500 dark:text-gray-300 hover:text-red-600 dark:hover:text-red-400 hover:border-red-300" data-id="{{ $location->id }}" title="{{ __('provider.delete') }}">
+                            <i class="fas fa-trash"></i>
+                        </button>
+                    </div>
+                </div>
+                @endforeach
+            @else
+                <div class="px-6 py-12 text-center">
+                    <div class="mx-auto flex h-12 w-12 items-center justify-center rounded-full bg-gray-100 dark:bg-gray-700 text-gray-400">
+                        <i class="fas fa-map-marker-alt"></i>
+                    </div>
+                    <p class="mt-4 text-sm text-gray-500 dark:text-gray-400">{{ __('provider.no_locations_saved') }}</p>
+                </div>
+            @endif
         </div>
     </div>
 </div>
@@ -205,7 +102,7 @@
     let markers = [];
     let searchBox;
     let editingMarker = null;
-    
+
     // Translation strings for JavaScript
     const translations = {
         location_details: @json(__('provider.location_details')),
@@ -236,85 +133,26 @@
             center: center,
             zoom: 10,
             styles: [
-                { elementType: "geometry", stylers: [{ color: "#242f3e" }] },
-                { elementType: "labels.text.stroke", stylers: [{ color: "#242f3e" }] },
-                { elementType: "labels.text.fill", stylers: [{ color: "#746855" }] },
-                {
-                    featureType: "administrative.locality",
-                    elementType: "labels.text.fill",
-                    stylers: [{ color: "#d59563" }],
-                },
-                {
-                    featureType: "poi",
-                    elementType: "labels.text.fill",
-                    stylers: [{ color: "#d59563" }],
-                },
-                {
-                    featureType: "poi.park",
-                    elementType: "geometry",
-                    stylers: [{ color: "#263c3f" }],
-                },
-                {
-                    featureType: "poi.park",
-                    elementType: "labels.text.fill",
-                    stylers: [{ color: "#6b9a76" }],
-                },
-                {
-                    featureType: "road",
-                    elementType: "geometry",
-                    stylers: [{ color: "#38414e" }],
-                },
-                {
-                    featureType: "road",
-                    elementType: "geometry.stroke",
-                    stylers: [{ color: "#212a37" }],
-                },
-                {
-                    featureType: "road",
-                    elementType: "labels.text.fill",
-                    stylers: [{ color: "#9ca5b3" }],
-                },
-                {
-                    featureType: "road.highway",
-                    elementType: "geometry",
-                    stylers: [{ color: "#746855" }],
-                },
-                {
-                    featureType: "road.highway",
-                    elementType: "geometry.stroke",
-                    stylers: [{ color: "#1f2835" }],
-                },
-                {
-                    featureType: "road.highway",
-                    elementType: "labels.text.fill",
-                    stylers: [{ color: "#f3d19c" }],
-                },
-                {
-                    featureType: "transit",
-                    elementType: "geometry",
-                    stylers: [{ color: "#2f3948" }],
-                },
-                {
-                    featureType: "transit.station",
-                    elementType: "labels.text.fill",
-                    stylers: [{ color: "#d59563" }],
-                },
-                {
-                    featureType: "water",
-                    elementType: "geometry",
-                    stylers: [{ color: "#17263c" }],
-                },
-                {
-                    featureType: "water",
-                    elementType: "labels.text.fill",
-                    stylers: [{ color: "#515c6d" }],
-                },
-                {
-                    featureType: "water",
-                    elementType: "labels.text.stroke",
-                    stylers: [{ color: "#17263c" }],
-                },
-            ],
+                { elementType: "geometry", stylers: [{ color: "#f5f5f5" }] },
+                { elementType: "labels.icon", stylers: [{ visibility: "off" }] },
+                { elementType: "labels.text.fill", stylers: [{ color: "#6b7280" }] },
+                { elementType: "labels.text.stroke", stylers: [{ color: "#ffffff" }] },
+                { featureType: "administrative", elementType: "geometry", stylers: [{ color: "#d1d5db" }] },
+                { featureType: "administrative.country", elementType: "labels.text.fill", stylers: [{ color: "#4b5563" }] },
+                { featureType: "administrative.locality", elementType: "labels.text.fill", stylers: [{ color: "#6b7280" }] },
+                { featureType: "poi", elementType: "geometry", stylers: [{ color: "#e5e7eb" }] },
+                { featureType: "poi", elementType: "labels.text.fill", stylers: [{ color: "#9ca3af" }] },
+                { featureType: "poi.park", elementType: "geometry", stylers: [{ color: "#d1fae5" }] },
+                { featureType: "road", elementType: "geometry", stylers: [{ color: "#ffffff" }] },
+                { featureType: "road", elementType: "geometry.stroke", stylers: [{ color: "#e5e7eb" }] },
+                { featureType: "road", elementType: "labels.text.fill", stylers: [{ color: "#6b7280" }] },
+                { featureType: "road.highway", elementType: "geometry", stylers: [{ color: "#f3f4f6" }] },
+                { featureType: "road.highway", elementType: "geometry.stroke", stylers: [{ color: "#d1d5db" }] },
+                { featureType: "transit", elementType: "geometry", stylers: [{ color: "#e5e7eb" }] },
+                { featureType: "transit.station", elementType: "labels.text.fill", stylers: [{ color: "#9ca3af" }] },
+                { featureType: "water", elementType: "geometry", stylers: [{ color: "#dbeafe" }] },
+                { featureType: "water", elementType: "labels.text.fill", stylers: [{ color: "#6b7280" }] }
+            ]
         });
 
         // Initialize search box
@@ -458,15 +296,15 @@
         }
 
         return `
-            <div style="padding: 10px; min-width: 200px;">
-                <h3 style="margin-top: 0;">${translations.location_details}</h3>
+            <div style="padding: 12px; min-width: 220px; font-family: sans-serif;">
+                <h3 style="margin-top: 0; font-size: 14px;">${translations.location_details}</h3>
                 <div style="margin-bottom: 10px;">
-                    <label style="display: block; margin-bottom: 5px;">${translations.label}:</label>
-                    <input type="text" class="marker-label" data-marker-id="${marker.markerId}" value="${label}" style="width: 100%; padding: 5px;">
+                    <label style="display: block; margin-bottom: 6px; font-size: 12px; color: #6b7280;">${translations.label}:</label>
+                    <input type="text" class="marker-label" data-marker-id="${marker.markerId}" value="${label}" style="width: 100%; padding: 6px 8px; border: 1px solid #d1d5db; border-radius: 6px;">
                 </div>
                 <div style="margin-bottom: 10px;">
-                    <label style="display: block; margin-bottom: 5px;">${translations.emirate}:</label>
-                    <select class="marker-emirate" data-marker-id="${marker.markerId}" style="width: 100%; padding: 5px;">
+                    <label style="display: block; margin-bottom: 6px; font-size: 12px; color: #6b7280;">${translations.emirate}:</label>
+                    <select class="marker-emirate" data-marker-id="${marker.markerId}" style="width: 100%; padding: 6px 8px; border: 1px solid #d1d5db; border-radius: 6px;">
                         <option value="Dubai" ${emirate === 'Dubai' ? 'selected' : ''}>Dubai</option>
                         <option value="Abu Dhabi" ${emirate === 'Abu Dhabi' ? 'selected' : ''}>Abu Dhabi</option>
                         <option value="Sharjah" ${emirate === 'Sharjah' ? 'selected' : ''}>Sharjah</option>
@@ -476,11 +314,11 @@
                         <option value="Fujairah" ${emirate === 'Fujairah' ? 'selected' : ''}>Fujairah</option>
                     </select>
                 </div>
-                <div style="margin-bottom: 10px;">
-                    <p>${translations.latitude}: ${lat.toFixed(6)}</p>
-                    <p>${translations.longitude}: ${lng.toFixed(6)}</p>
+                <div style="margin-bottom: 10px; font-size: 12px; color: #6b7280;">
+                    <p style="margin: 0;">${translations.latitude}: ${lat.toFixed(6)}</p>
+                    <p style="margin: 0;">${translations.longitude}: ${lng.toFixed(6)}</p>
                 </div>
-                <button class="remove-marker" data-marker-id="${marker.markerId}" style="background-color: #f04747; color: white; border: none; padding: 5px 10px; border-radius: 4px; cursor: pointer;">${translations.remove}</button>
+                <button class="remove-marker" data-marker-id="${marker.markerId}" style="background-color: #ef4444; color: white; border: none; padding: 6px 10px; border-radius: 6px; cursor: pointer; font-size: 12px;">${translations.remove}</button>
             </div>
         `;
     }
@@ -493,8 +331,8 @@
             const id = item.dataset.id;
             const lat = parseFloat(item.dataset.lat);
             const lng = parseFloat(item.dataset.lng);
-            const label = item.querySelector('.location-label').textContent;
-            const emirate = item.querySelector('.location-emirate').textContent;
+            const label = item.querySelector('.location-label')?.textContent || item.querySelector('div')?.textContent || '';
+            const emirate = item.querySelector('.location-emirate')?.textContent || '';
 
             const position = new google.maps.LatLng(lat, lng);
             const marker = new google.maps.Marker({

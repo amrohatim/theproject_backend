@@ -3,8 +3,6 @@
 namespace App\Http\Controllers\Provider;
 
 use App\Http\Controllers\Controller;
-use App\Http\Controllers\Provider\BranchController;
-use App\Models\Branch;
 use App\Models\Product;
 use App\Models\Provider;
 use App\Models\ProviderProduct;
@@ -40,7 +38,7 @@ class ProviderProductController extends Controller
         }
 
         $providerProducts = ProviderProduct::where('provider_id', $provider->id)
-            ->with('product.category')
+            ->with('category')
             ->paginate(10);
 
         return view('provider.provider_products.index', compact('providerProducts'));
@@ -132,18 +130,9 @@ class ProviderProductController extends Controller
             ]);
         }
 
-        // Try to get the user's default branch if they have one
-        $userBranch = $user->branches()->first();
-
-        // If no branch exists, create a default one
-        if (!$userBranch) {
-            $userBranch = BranchController::createDefaultBranch($user);
-        }
-
         // Create the provider-specific product directly without creating a global product
         $providerProduct = new ProviderProduct();
         $providerProduct->provider_id = $provider->id;
-        $providerProduct->product_id = null; // No longer linked to a product in the products table
         $providerProduct->product_name = $request->product_name;
         $providerProduct->product_name_arabic = $request->product_name_arabic;
         $providerProduct->description = $request->description;
@@ -156,11 +145,6 @@ class ProviderProductController extends Controller
         $providerProduct->category_id = $request->category_id;
         if ($request->has('is_active')) {
             $providerProduct->is_active = $request->boolean('is_active');
-        }
-
-        // Store branch information if we have a branch
-        if ($userBranch) {
-            $providerProduct->branch_id = $userBranch->id;
         }
 
         // Handle image upload directly for the provider product

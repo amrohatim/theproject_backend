@@ -58,23 +58,4 @@ class ProviderProfile extends Model
     {
         return $this->hasMany(ProviderProduct::class, 'provider_id');
     }
-
-    /**
-     * Get the active provider products pivot records.
-     */
-    public function activeProviderProducts()
-    {
-        return $this->providerProducts()
-            ->join('products', 'provider_products.product_id', '=', 'products.id')
-            ->where('products.is_available', true)
-            ->select('provider_products.*');
-    }
-
-    /**
-     * Get the products through the provider_products table.
-     */
-    public function productsThrough()
-    {
-        return $this->belongsToMany(Product::class, 'provider_products', 'provider_id', 'product_id');
-    }
 }

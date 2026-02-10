@@ -64,6 +64,7 @@ return [
     // Actions
     'add_product' => 'Add Product',
     'add_new_product' => 'Add New Product',
+    'back_to_inventory' => 'Back to Inventory',
     'view_all' => 'View All',
     'logout' => 'Logout',
 

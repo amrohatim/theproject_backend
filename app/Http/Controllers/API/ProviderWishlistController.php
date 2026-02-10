@@ -26,7 +26,7 @@ class ProviderWishlistController extends Controller
             ]);
         }
 
-        $providerProducts = ProviderProduct::with(['product', 'branch', 'category'])
+        $providerProducts = ProviderProduct::with(['category'])
             ->whereIn('id', $productIds)
             ->get();
 
@@ -54,7 +54,7 @@ class ProviderWishlistController extends Controller
             'product_id' => $productId,
         ]);
 
-        $providerProduct = ProviderProduct::with(['product', 'branch', 'category'])
+        $providerProduct = ProviderProduct::with(['category'])
             ->find($productId);
 
         if (!$providerProduct) {
@@ -85,79 +85,31 @@ class ProviderWishlistController extends Controller
 
     private function transformProviderProduct(ProviderProduct $providerProduct)
     {
-        $product = $providerProduct->product;
+        Log::info("Transforming wishlist provider product {$providerProduct->id}");
 
-        if (!$product) {
-            Log::info("Transforming wishlist provider product {$providerProduct->id} without base product");
-
-            $categoryId = $providerProduct->category_id ?? 1;
-            $productName = $providerProduct->product_name ?? 'Unknown Product';
-            $price = $providerProduct->price ?? 0;
-            $stock = $providerProduct->stock ?? 0;
-            $isActive = $providerProduct->is_active ?? true;
-
-            $branchName = null;
-            if ($providerProduct->branch) {
-                $branchName = $providerProduct->branch->name;
-            }
-
-            $categoryName = null;
-            if ($providerProduct->category) {
-                $categoryName = $providerProduct->category->name;
-            }
-
-            return [
-                'id' => $providerProduct->id,
-                'branch_id' => $providerProduct->branch_id ?? 0,
-                'category_id' => $categoryId,
-                'name' => $productName,
-                'price' => $price,
-                'original_price' => $providerProduct->original_price,
-                'stock' => $stock,
-                'min_order' => $providerProduct->min_order,
-                'description' => $providerProduct->description,
-                'image' => $providerProduct->image,
-                'is_available' => $isActive,
-                'rating' => null,
-                'featured' => false,
-                'has_discount' => false,
-                'branch_name' => $branchName,
-                'category_name' => $categoryName,
-            ];
+        $categoryId = $providerProduct->category_id ?? 1;
+        $categoryName = null;
+        if ($providerProduct->category) {
+            $categoryName = $providerProduct->category->name;
         }
 
-        $productData = $product->toArray();
-
-        if ($providerProduct->product_name) {
-            $productData['name'] = $providerProduct->product_name;
-        }
-        if ($providerProduct->product_name_arabic) {
-            $productData['product_name_arabic'] = $providerProduct->product_name_arabic;
-        }
-        if ($providerProduct->product_description_arabic) {
-            $productData['product_description_arabic'] = $providerProduct->product_description_arabic;
-        }
-        if ($providerProduct->price !== null) {
-            $productData['price'] = $providerProduct->price;
-        }
-        if ($providerProduct->original_price !== null) {
-            $productData['original_price'] = $providerProduct->original_price;
-        }
-        if ($providerProduct->stock !== null) {
-            $productData['stock'] = $providerProduct->stock;
-        }
-        if ($providerProduct->min_order !== null) {
-            $productData['min_order'] = $providerProduct->min_order;
-        }
-        if ($providerProduct->description) {
-            $productData['description'] = $providerProduct->description;
-        }
-        if ($providerProduct->image) {
-            $productData['image'] = $providerProduct->image;
-        }
-
-        $productData['is_available'] = $providerProduct->is_active ?? true;
-
-        return $productData;
+        return [
+            'id' => $providerProduct->id,
+            'category_id' => $categoryId,
+            'name' => $providerProduct->product_name ?? 'Unknown Product',
+            'product_name_arabic' => $providerProduct->product_name_arabic,
+            'product_description_arabic' => $providerProduct->product_description_arabic,
+            'price' => $providerProduct->price ?? 0,
+            'original_price' => $providerProduct->original_price,
+            'stock' => $providerProduct->stock ?? 0,
+            'min_order' => $providerProduct->min_order,
+            'description' => $providerProduct->description,
+            'image' => $providerProduct->image,
+            'is_available' => $providerProduct->is_active ?? true,
+            'rating' => null,
+            'featured' => false,
+            'has_discount' => false,
+            'category_name' => $categoryName,
+        ];
     }
 }

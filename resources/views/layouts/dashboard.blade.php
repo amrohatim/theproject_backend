@@ -1,5 +1,13 @@
+@php
+    $currentLocale = app()->getLocale();
+    $rtlLocales = ['ar', 'he', 'fa', 'ur'];
+    $currentUser = auth()->user();
+    $isDashboardRtl = $currentUser
+        && in_array($currentUser->role, ['provider', 'vendor'])
+        && in_array($currentLocale, $rtlLocales);
+@endphp
 <!DOCTYPE html>
-<html lang="en">
+<html lang="{{ $currentLocale }}" dir="{{ $isDashboardRtl ? 'rtl' : 'ltr' }}" class="{{ $isDashboardRtl ? 'rtl-dashboard' : '' }}">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -15,6 +23,10 @@
     <link rel="stylesheet" href="{{ asset('css/modern-buttons.css') }}">
     <!-- Global Styles -->
     <link rel="stylesheet" href="{{ asset('css/global-styles.css') }}">
+    @if($isDashboardRtl)
+    <!-- RTL Styles -->
+    <link rel="stylesheet" href="{{ asset('css/rtl.css') }}">
+    @endif
     <!-- Custom styles -->
     <style>
         .sidebar-active {
@@ -26,6 +38,41 @@
         }
         .dark .sidebar-item:hover:not(.sidebar-active) {
             background-color: #374151;
+        }
+        /* Dashboard RTL sidebar positioning (no flash) */
+        .rtl-dashboard #sidebar {
+            right: 0;
+            left: auto;
+            border-left: 1px solid #e5e7eb;
+            border-right: none;
+        }
+        .dark .rtl-dashboard #sidebar {
+            border-left-color: #374151;
+        }
+        .rtl-dashboard #sidebar.-translate-x-full {
+            transform: translateX(100%);
+        }
+        @media (min-width: 768px) {
+            .rtl-dashboard #sidebar {
+                transform: translateX(0) !important;
+            }
+        }
+        /* RTL spacing helpers for Tailwind utilities */
+        [dir="rtl"] .space-x-1,
+        [dir="rtl"] .space-x-2,
+        [dir="rtl"] .space-x-3,
+        [dir="rtl"] .space-x-4,
+        [dir="rtl"] .space-x-5,
+        [dir="rtl"] .space-x-6 {
+            --tw-space-x-reverse: 1;
+        }
+        [dir="rtl"] .ml-auto {
+            margin-left: 0 !important;
+            margin-right: auto !important;
+        }
+        [dir="rtl"] .mr-auto {
+            margin-right: 0 !important;
+            margin-left: auto !important;
         }
     </style>
     @yield('styles')
@@ -58,6 +105,8 @@
                                 @include('layouts.admin-sidebar')
                             @elseif(auth()->user() && auth()->user()->role === 'vendor')
                                 @include('layouts.vendor-sidebar')
+                            @elseif(auth()->user() && auth()->user()->role === 'provider')
+                                @include('layouts.provider-sidebar')
                             @else
                                 <!-- Default sidebar for other roles or guests -->
                                 <nav class="mt-5 space-y-1">
