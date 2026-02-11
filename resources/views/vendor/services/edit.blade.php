@@ -329,15 +329,53 @@
         color: #f9fafb;
     }
 
+    .lang-toggle {
+        display: inline-flex;
+        gap: 0.5rem;
+        padding: 0.25rem;
+        border: 1px solid #e5e7eb;
+        border-radius: 9999px;
+        background: #ffffff;
+    }
+
+    .lang-toggle button {
+        border: none;
+        background: transparent;
+        color: #6b7280;
+        font-size: 0.75rem;
+        font-weight: 600;
+        padding: 0.35rem 0.9rem;
+        border-radius: 9999px;
+        display: inline-flex;
+        align-items: center;
+        gap: 0.35rem;
+        cursor: pointer;
+    }
+
+    .lang-toggle button.active {
+        background: #f3f4f6;
+        color: #111827;
+    }
+
+    .dark .lang-toggle {
+        border-color: #374151;
+        background: #111827;
+    }
+
+    .dark .lang-toggle button {
+        color: #9ca3af;
+    }
+
+    .dark .lang-toggle button.active {
+        background: #1f2937;
+        color: #f9fafb;
+    }
+
     /* Keep language switcher visible and tappable on mobile */
     @media (max-width: 768px) {
-        .vendor-services-form .form-language-switcher .language-name {
-            display: inline;
-            font-size: 0.8rem;
-        }
-
-        .vendor-services-form .form-language-switcher .language-tab {
-            padding: 0.625rem 0.875rem;
+        .vendor-services-form .lang-toggle button {
+            padding: 0.5rem 0.8rem;
+            font-size: 0.7rem;
             min-height: 2.5rem;
         }
     }
@@ -376,10 +414,13 @@
                         <label class="form-label">{{ __('messages.service_name') }} <span class="text-red-500">*</span></label>
 
                         <!-- Language Switcher for Service Name -->
-                        <x-form-language-switcher field-name="service_name" />
+                        <div class="lang-toggle" data-lang-toggle="service_name">
+                            <button type="button" class="active" data-lang="en">EN</button>
+                            <button type="button" data-lang="ar">AR</button>
+                        </div>
 
                         <!-- English Service Name -->
-                        <div data-language-field="service_name" data-language="en" class="active-language-field">
+                        <div data-lang-field="service_name" data-lang="en" class="active-language-field">
                             <input type="text" name="name" id="name" value="{{ old('name', $service->name) }}"
                                    class="form-input"
                                    placeholder="{{ __('messages.service_name_english') }}" required>
@@ -389,7 +430,7 @@
                         </div>
 
                         <!-- Arabic Service Name -->
-                        <div data-language-field="service_name" data-language="ar" style="display: none;">
+                        <div data-lang-field="service_name" data-lang="ar" style="display: none;">
                             <input type="text" name="service_name_arabic" id="service_name_arabic" value="{{ old('service_name_arabic', $service->service_name_arabic) }}"
                                    class="form-input"
                                    placeholder="{{ __('messages.service_name_arabic') }}" dir="rtl" required>
@@ -441,10 +482,13 @@
                         <p class="text-xs text-gray-500 dark:text-gray-400 mb-2">{{ __('messages.description_optional_both_or_none') }}</p>
 
                         <!-- Language Switcher for Description -->
-                        <x-form-language-switcher field-name="service_description" />
+                        <div class="lang-toggle" data-lang-toggle="service_description">
+                            <button type="button" class="active" data-lang="en">EN</button>
+                            <button type="button" data-lang="ar">AR</button>
+                        </div>
 
                         <!-- English Description -->
-                        <div data-language-field="service_description" data-language="en" class="active-language-field">
+                        <div data-lang-field="service_description" data-lang="en" class="active-language-field">
                             <textarea id="description" name="description" rows="4"
                                       class="form-textarea"
                                       >{{ old('description', $service->description) }}</textarea>
@@ -454,10 +498,10 @@
                         </div>
 
                         <!-- Arabic Description -->
-                        <div data-language-field="service_description" data-language="ar" style="display: none;">
+                        <div data-lang-field="service_description" data-lang="ar" style="display: none;">
                             <textarea id="service_description_arabic" name="service_description_arabic" rows="4"
                                       class="form-textarea"
-                                       dir="rtl">{{ old('service_description_arabic', $service->service_description_arabic) }}</textarea>
+                                      dir="rtl">{{ old('service_description_arabic', $service->service_description_arabic) }}</textarea>
                             @error('service_description_arabic')
                                 <span class="field-error-message">{{ $message }}</span>
                             @enderror
@@ -984,6 +1028,65 @@
         }
     }
 
+    function initLangToggles() {
+        document.querySelectorAll('.lang-toggle').forEach(toggle => {
+            const fieldName = toggle.getAttribute('data-lang-toggle');
+            const buttons = toggle.querySelectorAll('button');
+
+            buttons.forEach(button => {
+                button.addEventListener('click', () => {
+                    const lang = button.getAttribute('data-lang');
+
+                    buttons.forEach(btn => btn.classList.remove('active'));
+                    button.classList.add('active');
+
+                    toggleLanguageFields(fieldName, lang);
+                    sessionStorage.setItem(`formLanguage_${fieldName}`, lang);
+                });
+            });
+
+            const savedLanguage = sessionStorage.getItem(`formLanguage_${fieldName}`);
+            const defaultLang = savedLanguage || 'en';
+            const defaultButton = toggle.querySelector(`button[data-lang="${defaultLang}"]`);
+            if (defaultButton) {
+                buttons.forEach(btn => btn.classList.remove('active'));
+                defaultButton.classList.add('active');
+            }
+            toggleLanguageFields(fieldName, defaultLang);
+        });
+    }
+
+    function toggleLanguageFields(fieldName, language) {
+        const allFields = document.querySelectorAll(`[data-lang-field="${fieldName}"]`);
+        allFields.forEach(field => {
+            field.style.display = 'none';
+            field.classList.remove('active-language-field');
+        });
+
+        const targetField = document.querySelector(`[data-lang-field="${fieldName}"][data-lang="${language}"]`);
+        if (targetField) {
+            targetField.style.display = 'block';
+            targetField.classList.add('active-language-field');
+        }
+    }
+
+    function validateBilingualField(fieldName, isRequired = false) {
+        const enField = document.querySelector(`[data-lang-field="${fieldName}"][data-lang="en"] input, [data-lang-field="${fieldName}"][data-lang="en"] textarea`);
+        const arField = document.querySelector(`[data-lang-field="${fieldName}"][data-lang="ar"] input, [data-lang-field="${fieldName}"][data-lang="ar"] textarea`);
+
+        if (!enField || !arField) return true;
+
+        const enValue = enField.value.trim();
+        const arValue = arField.value.trim();
+
+        if (isRequired) {
+            return enValue !== '' && arValue !== '';
+        }
+
+        if (enValue === '' && arValue === '') return true;
+        return enValue !== '' && arValue !== '';
+    }
+
     document.addEventListener('DOMContentLoaded', function() {
         // Category selection validation
         function setupCategoryValidation() {
@@ -1057,6 +1160,7 @@
         // Initialize category validation
         setupCategoryValidation();
         setupCategoryBusinessTypeFilter();
+        initLangToggles();
 
         // Initialize bilingual form validation
         setupBilingualValidation();

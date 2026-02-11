@@ -62,7 +62,7 @@ class VendorServicesSeeder extends Seeder
         $this->command->info("✅ Found company: {$this->company->name} (ID: {$this->company->id})");
 
         // Get company branches
-        $this->branches = $this->company->branches()->whereNotIn('id' , [1,6,7])->get();
+        $this->branches = $this->company->branches()->get();
         if ($this->branches->isEmpty()) {
             $this->command->error('❌ No branches found for the vendor company!');
             return;
@@ -137,8 +137,8 @@ class VendorServicesSeeder extends Seeder
      */
     private function seedServices(): void
     {
-        $totalServices = 2000;
-        $batchSize = 100;
+        $totalServices = 60;
+        $batchSize = 30;
         $batches = ceil($totalServices / $batchSize);
 
         $this->command->info("Creating {$totalServices} services in {$batches} batches of {$batchSize}...");
