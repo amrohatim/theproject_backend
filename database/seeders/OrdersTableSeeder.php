@@ -84,7 +84,6 @@ class OrdersTableSeeder extends Seeder
                 // Create the order
                 $order = Order::create([
                     'user_id' => $customer->id,
-                    'branch_id' => $branch->id,
                     'order_number' => $orderNumber,
                     'total' => 0, // Will be updated after adding items
                     'status' => $status,

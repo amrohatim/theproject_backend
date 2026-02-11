@@ -650,9 +650,21 @@
                 <div>
                     <h4 class="text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Branch Information</h4>
                     <div class="space-y-1 text-sm text-gray-600 dark:text-gray-400">
-                        <p><strong>Branch:</strong> {{ $order->branch->name ?? 'N/A' }}</p>
-                        <p><strong>Address:</strong> {{ $order->branch->address ?? 'N/A' }}</p>
-                        <p><strong>Phone:</strong> {{ $order->branch->phone ?? 'N/A' }}</p>
+                        @php
+                            $branches = $order->items
+                                ->map(fn($item) => $item->product->branch ?? null)
+                                ->filter()
+                                ->unique('id')
+                                ->values();
+                            $branchName = $branches->count() === 1
+                                ? $branches->first()->name
+                                : ($branches->isNotEmpty() ? 'Multiple branches' : 'N/A');
+                            $branchAddress = $branches->count() === 1 ? ($branches->first()->address ?? 'N/A') : ($branches->isNotEmpty() ? 'Multiple branches' : 'N/A');
+                            $branchPhone = $branches->count() === 1 ? ($branches->first()->phone ?? 'N/A') : ($branches->isNotEmpty() ? 'Multiple branches' : 'N/A');
+                        @endphp
+                        <p><strong>Branch:</strong> {{ $branchName }}</p>
+                        <p><strong>Address:</strong> {{ $branchAddress }}</p>
+                        <p><strong>Phone:</strong> {{ $branchPhone }}</p>
                     </div>
                 </div>
             </div>

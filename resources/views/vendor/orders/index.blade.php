@@ -211,7 +211,17 @@
                             <div class="text-xs text-gray-500 dark:text-gray-400">{{ $order->user->email ?? 'N/A' }}</div>
                         </td>
                         <td class="px-6 py-4 whitespace-nowrap" data-label="{{ __('messages.branch') }}">
-                            <div class="text-sm text-gray-500 dark:text-gray-400">{{ $order->branch->name ?? 'N/A' }}</div>
+                            @php
+                                $branchNames = $order->items
+                                    ->map(fn($item) => optional($item->product->branch)->name)
+                                    ->filter()
+                                    ->unique()
+                                    ->values();
+                                $branchLabel = $branchNames->count() === 1
+                                    ? $branchNames->first()
+                                    : ($branchNames->isNotEmpty() ? 'Multiple branches' : 'N/A');
+                            @endphp
+                            <div class="text-sm text-gray-500 dark:text-gray-400">{{ $branchLabel }}</div>
                         </td>
                         <td class="px-6 py-4 whitespace-nowrap" data-label="{{ __('messages.date') }}">
                             <div class="text-sm text-gray-500 dark:text-gray-400">{{ $order->created_at ? $order->created_at->format('M d, Y') : 'N/A' }}</div>

@@ -15,6 +15,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Schema;
 use Illuminate\Support\Str;
 
 class OrderController extends Controller
@@ -156,7 +157,6 @@ class OrderController extends Controller
 
             // Validate the request
             $validated = $request->validate([
-                'branch_id' => 'required|exists:branches,id',
                 'items' => 'required|array|min:1',
                 'items.*.product_id' => 'required|exists:products,id',
                 'items.*.quantity' => 'required|integer|min:1',
@@ -174,7 +174,6 @@ class OrderController extends Controller
             // Create the order
             $order = new Order();
             $order->user_id = Auth::id();
-            $order->branch_id = $validated['branch_id'];
             $order->order_number = 'ORD-' . strtoupper(Str::random(8));
             $order->status = 'pending';
             $order->payment_status = 'pending';
@@ -250,7 +249,7 @@ class OrderController extends Controller
                 // Create order item with specifications and variant information
                 try {
                     // First try with all discount-related fields
-                    OrderItem::create([
+                    $orderItem = OrderItem::create([
                         'order_id' => $order->id,
                         'product_id' => $product->id,
                         'vendor_id' => $company->id,
@@ -271,12 +270,17 @@ class OrderController extends Controller
                         'size_name' => $sizeInfo ? $sizeInfo->name : null,
                         'size_value' => $sizeInfo ? $sizeInfo->value : null,
                     ]);
+
+                    if (Schema::hasColumn('order_items', 'branch_id')) {
+                        $orderItem->branch_id = $product->branch_id;
+                        $orderItem->save();
+                    }
                 } catch (\Exception $columnException) {
                     // If we get a column not found error, try without the discount-related fields
                     if (strpos($columnException->getMessage(), 'Unknown column') !== false) {
                         Log::warning('Discount columns not found in order_items table. Creating order item without discount fields.');
 
-                        OrderItem::create([
+                        $orderItem = OrderItem::create([
                             'order_id' => $order->id,
                             'product_id' => $product->id,
                             'vendor_id' => $company->id,
@@ -293,6 +297,11 @@ class OrderController extends Controller
                             'size_name' => $sizeInfo ? $sizeInfo->name : null,
                             'size_value' => $sizeInfo ? $sizeInfo->value : null,
                         ]);
+
+                        if (Schema::hasColumn('order_items', 'branch_id')) {
+                            $orderItem->branch_id = $product->branch_id;
+                            $orderItem->save();
+                        }
                     } else {
                         // If it's a different error, rethrow it
                         throw $columnException;

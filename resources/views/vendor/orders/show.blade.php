@@ -521,15 +521,27 @@
             <div class="space-y-2">
                 <div>
                     <span class="text-sm text-gray-500 dark:text-gray-400">{{ __('messages.branch') }}:</span>
-                    <p class="text-sm text-gray-900 dark:text-white">{{ $order->branch->name ?? 'N/A' }}</p>
+                    @php
+                        $branches = $order->items
+                            ->map(fn($item) => $item->product->branch ?? null)
+                            ->filter()
+                            ->unique('id')
+                            ->values();
+                        $branchName = $branches->count() === 1
+                            ? $branches->first()->name
+                            : ($branches->isNotEmpty() ? 'Multiple branches' : 'N/A');
+                        $branchAddress = $branches->count() === 1 ? ($branches->first()->address ?? 'N/A') : ($branches->isNotEmpty() ? 'Multiple branches' : 'N/A');
+                        $branchPhone = $branches->count() === 1 ? ($branches->first()->phone ?? 'N/A') : ($branches->isNotEmpty() ? 'Multiple branches' : 'N/A');
+                    @endphp
+                    <p class="text-sm text-gray-900 dark:text-white">{{ $branchName }}</p>
                 </div>
                 <div>
                     <span class="text-sm text-gray-500 dark:text-gray-400">{{ __('messages.address') }}:</span>
-                    <p class="text-sm text-gray-900 dark:text-white">{{ $order->branch->address ?? 'N/A' }}</p>
+                    <p class="text-sm text-gray-900 dark:text-white">{{ $branchAddress }}</p>
                 </div>
                 <div>
                     <span class="text-sm text-gray-500 dark:text-gray-400">Phone:</span>
-                    <p class="text-sm text-gray-900 dark:text-white">{{ $order->branch->phone ?? 'N/A' }}</p>
+                    <p class="text-sm text-gray-900 dark:text-white">{{ $branchPhone }}</p>
                 </div>
             </div>
         </div>

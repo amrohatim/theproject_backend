@@ -29,10 +29,19 @@
                 <p class="text-gray-600 dark:text-gray-400">Date: {{ $order->created_at ? $order->created_at->format('M d, Y') : 'N/A' }}</p>
             </div>
             <div class="mt-4 md:mt-0">
-                <h2 class="text-xl font-semibold text-gray-900 dark:text-white">{{ $order->branch->company->name ?? 'Company Name' }}</h2>
-                <p class="text-gray-600 dark:text-gray-400">{{ $order->branch->address ?? 'Branch Address' }}</p>
-                <p class="text-gray-600 dark:text-gray-400">{{ $order->branch->phone ?? 'Phone' }}</p>
-                <p class="text-gray-600 dark:text-gray-400">{{ $order->branch->email ?? 'Email' }}</p>
+                @php
+                    $branches = $order->items
+                        ->map(fn($item) => $item->product->branch ?? null)
+                        ->filter()
+                        ->unique('id')
+                        ->values();
+                    $branch = $branches->first();
+                    $hasMultipleBranches = $branches->count() > 1;
+                @endphp
+                <h2 class="text-xl font-semibold text-gray-900 dark:text-white">{{ $hasMultipleBranches ? 'Multiple Companies' : (optional($branch->company)->name ?? 'Company Name') }}</h2>
+                <p class="text-gray-600 dark:text-gray-400">{{ $hasMultipleBranches ? 'Multiple branches' : (optional($branch)->address ?? 'Branch Address') }}</p>
+                <p class="text-gray-600 dark:text-gray-400">{{ $hasMultipleBranches ? 'Multiple branches' : (optional($branch)->phone ?? 'Phone') }}</p>
+                <p class="text-gray-600 dark:text-gray-400">{{ $hasMultipleBranches ? 'Multiple branches' : (optional($branch)->email ?? 'Email') }}</p>
             </div>
         </div>
 

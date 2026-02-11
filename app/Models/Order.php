@@ -17,7 +17,6 @@ class Order extends Model
      */
     protected $fillable = [
         'user_id',
-        'branch_id',
         'order_number',
         'total',
         'discount',
@@ -58,14 +57,6 @@ class Order extends Model
     public function user()
     {
         return $this->belongsTo(User::class);
-    }
-
-    /**
-     * Get the branch that the order belongs to.
-     */
-    public function branch()
-    {
-        return $this->belongsTo(Branch::class);
     }
 
     /**

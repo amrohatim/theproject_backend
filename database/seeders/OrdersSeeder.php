@@ -56,7 +56,6 @@ class OrdersSeeder extends Seeder
 
             $order = Order::create([
                 'user_id' => $customer->id,
-                'branch_id' => $branch->id,
                 'order_number' => 'ORD-' . str_pad($i + 1, 6, '0', STR_PAD_LEFT),
                 'total' => 0, // Will be calculated based on items
                 'status' => ['pending', 'processing', 'shipped', 'delivered', 'cancelled'][rand(0, 4)],

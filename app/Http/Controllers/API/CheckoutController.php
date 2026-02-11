@@ -21,6 +21,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Schema;
 use Illuminate\Support\Str;
 
 class CheckoutController extends Controller
@@ -84,7 +85,6 @@ class CheckoutController extends Controller
                 'items.*.gift_options.gift_message' => 'nullable|string',
                 'items.*.gift_options.gift_from' => 'nullable|string',
                 'items.*.gift_options.gift_to' => 'nullable|string',
-                'branch_id' => 'required|exists:branches,id',
                 'shipping_address' => 'required|array',
                 'shipping_address.name' => 'required|string',
                 'shipping_address.address' => 'required|string',
@@ -102,7 +102,6 @@ class CheckoutController extends Controller
             // Create the order
             $order = new Order();
             $order->user_id = Auth::id();
-            $order->branch_id = $validated['branch_id'];
             $order->order_number = 'ORD-' . strtoupper(Str::random(8));
             $order->status = 'pending';
             $order->payment_status = 'pending';
@@ -237,6 +236,11 @@ class CheckoutController extends Controller
                         'size_name' => $sizeInfo?->name,
                         'size_value' => $sizeInfo?->value,
                     ]);
+
+                    if (Schema::hasColumn('order_items', 'branch_id')) {
+                        $orderItem->branch_id = $product->branch_id;
+                        $orderItem->save();
+                    }
                 } catch (\Exception $columnException) {
                     // If we get a column not found error, try without the discount-related fields
                     if (strpos($columnException->getMessage(), 'Unknown column') !== false) {
@@ -259,6 +263,11 @@ class CheckoutController extends Controller
                             'size_name' => $sizeInfo?->name,
                             'size_value' => $sizeInfo?->value,
                         ]);
+
+                        if (Schema::hasColumn('order_items', 'branch_id')) {
+                            $orderItem->branch_id = $product->branch_id;
+                            $orderItem->save();
+                        }
                     } else {
                         // If it's a different error, rethrow it
                         throw $columnException;

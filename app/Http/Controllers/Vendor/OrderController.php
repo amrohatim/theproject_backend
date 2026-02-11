@@ -173,12 +173,10 @@ class OrderController extends Controller
         // Show orders where either:
         // 1. The order's branch belongs to the vendor's company, OR
         // 2. The vendor has products in the order (vendor_id in order_items matches the vendor's company ID)
-        $query = Order::with(['user', 'branch', 'items.product'])
-            ->where(function($q) use ($branchIds, $companyId) {
-                $q->whereIn('branch_id', $branchIds)
-                  ->orWhereHas('items', function($itemQuery) use ($companyId) {
-                      $itemQuery->where('vendor_id', $companyId);
-                  });
+        $query = Order::with(['user', 'items.product'])
+            ->whereHas('items', function ($itemQuery) use ($companyId, $branchIds) {
+                $itemQuery->where('vendor_id', $companyId)
+                    ->orWhereIn('branch_id', $branchIds);
             })
             ->orderBy('created_at', 'desc');
 
@@ -205,7 +203,10 @@ class OrderController extends Controller
         }
 
         if ($request->filled('branch')) {
-            $query->where('branch_id', $request->branch);
+            $branchId = $request->branch;
+            $query->whereHas('items', function ($itemQuery) use ($branchId) {
+                $itemQuery->where('branch_id', $branchId);
+            });
         }
 
         if ($request->filled('date_range')) {
@@ -237,11 +238,9 @@ class OrderController extends Controller
         $orders = $query->paginate(10);
 
         // Calculate stats with the same query conditions as above
-        $statsQuery = Order::where(function($q) use ($branchIds, $companyId) {
-            $q->whereIn('branch_id', $branchIds)
-              ->orWhereHas('items', function($itemQuery) use ($companyId) {
-                  $itemQuery->where('vendor_id', $companyId);
-              });
+        $statsQuery = Order::whereHas('items', function ($itemQuery) use ($companyId, $branchIds) {
+            $itemQuery->where('vendor_id', $companyId)
+                ->orWhereIn('branch_id', $branchIds);
         });
 
         // Debug the stats query
@@ -297,10 +296,13 @@ class OrderController extends Controller
         \Log::info('Order ID: ' . $order->id);
         \Log::info('Company ID: ' . $companyId);
         \Log::info('User Branches: ' . json_encode($userBranches));
-        \Log::info('Order Branch ID: ' . $order->branch_id);
-
         // Check if vendor has items in this order
-        $vendorItems = $order->items()->where('vendor_id', $companyId)->get();
+        $vendorItems = $order->items()
+            ->where(function ($itemQuery) use ($companyId, $userBranches) {
+                $itemQuery->where('vendor_id', $companyId)
+                    ->orWhereIn('branch_id', $userBranches);
+            })
+            ->get();
         $hasVendorItems = $vendorItems->isNotEmpty();
 
         \Log::info('Vendor Items Count: ' . $vendorItems->count());
@@ -316,7 +318,7 @@ class OrderController extends Controller
             ];
         })));
 
-        if (!in_array($order->branch_id, $userBranches) && !$hasVendorItems) {
+        if (!$hasVendorItems) {
             return redirect()->route('vendor.orders.index')
                 ->with('error', 'You do not have permission to view this order.');
         }
@@ -324,7 +326,6 @@ class OrderController extends Controller
         // Load relationships
         $order->load([
             'user',
-            'branch',
             'items.product.specifications',
             'items.product.category',
             'vendorStatuses.vendor',
@@ -507,12 +508,10 @@ class OrderController extends Controller
         }
 
         $suggestions = Order::query()
-            ->with(['user', 'branch'])
-            ->where(function($q) use ($branchIds, $companyId) {
-                $q->whereIn('branch_id', $branchIds)
-                  ->orWhereHas('items', function($itemQuery) use ($companyId) {
-                      $itemQuery->where('vendor_id', $companyId);
-                  });
+            ->with(['user'])
+            ->whereHas('items', function ($itemQuery) use ($companyId, $branchIds) {
+                $itemQuery->where('vendor_id', $companyId)
+                    ->orWhereIn('branch_id', $branchIds);
             })
             ->where(function ($q) use ($query) {
                 $q->where('order_number', 'like', "%{$query}%")
