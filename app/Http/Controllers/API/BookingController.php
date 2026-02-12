@@ -203,6 +203,13 @@ class BookingController extends Controller
             $data = collect();
 
             if ($branchIds->isNotEmpty()) {
+                if (!Schema::hasTable('bookings')) {
+                    return response()->json([
+                        'success' => false,
+                        'message' => 'Bookings table missing',
+                    ], 500);
+                }
+
                 $dateColumn = Schema::hasColumn('bookings', 'created_at')
                     ? 'created_at'
                     : (Schema::hasColumn('bookings', 'booking_date') ? 'booking_date' : null);
@@ -217,7 +224,7 @@ class BookingController extends Controller
                 $hasPrice = Schema::hasColumn('bookings', 'price');
                 $hasPaymentStatus = Schema::hasColumn('bookings', 'payment_status');
                 $incomeSelect = ($hasPrice && $hasPaymentStatus)
-                    ? 'SUM(CASE WHEN payment_status = \"paid\" THEN price ELSE 0 END) as income_paid'
+                    ? "SUM(CASE WHEN payment_status = 'paid' THEN price ELSE 0 END) as income_paid"
                     : '0 as income_paid';
 
                 $data = Booking::whereIn('branch_id', $branchIds)
