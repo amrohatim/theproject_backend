@@ -390,6 +390,7 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::post('/bookings/check-availability', [BookingController::class, 'checkAvailability']);
     Route::get('/vendor/bookings/analytics', [BookingController::class, 'vendorAnalytics']);
     Route::get('/vendor/bookings/list', [BookingController::class, 'vendorBookingsList']);
+    Route::get('/vendor/bookings/top-services', [BookingController::class, 'vendorTopServices']);
 
     // Order routes
     Route::get('/orders', [OrderController::class, 'index']);

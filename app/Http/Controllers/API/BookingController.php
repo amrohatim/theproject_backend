@@ -362,6 +362,86 @@ class BookingController extends Controller
     }
 
     /**
+     * Vendor top services for a given month (default current month).
+     *
+     * GET /vendor/bookings/top-services?year=YYYY&month=MM
+     */
+    public function vendorTopServices(Request $request)
+    {
+        $user = Auth::user();
+
+        if (!$user || !$user->isVendor()) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Unauthorized',
+            ], 403);
+        }
+
+        try {
+            if (!Schema::hasTable('bookings')) {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'Bookings table missing',
+                ], 500);
+            }
+
+            $year = (int) ($request->query('year') ?? now()->year);
+            $month = (int) ($request->query('month') ?? now()->month);
+            $start = \Carbon\Carbon::create($year, $month, 1)->startOfMonth()->toDateString();
+            $end = \Carbon\Carbon::create($year, $month, 1)->endOfMonth()->toDateString();
+
+            $query = Booking::query()
+                ->whereBetween('booking_date', [$start, $end]);
+
+            if (Schema::hasColumn('bookings', 'company_id')) {
+                $companyId = \App\Models\Company::where('user_id', $user->id)->value('id');
+                if (!$companyId) {
+                    return response()->json([
+                        'success' => true,
+                        'data' => [],
+                    ]);
+                }
+                $query->where('company_id', $companyId);
+            } else {
+                $branchIds = Branch::whereHas('company', function ($q) use ($user) {
+                    $q->where('user_id', $user->id);
+                })->pluck('id');
+
+                if ($branchIds->isEmpty()) {
+                    return response()->json([
+                        'success' => true,
+                        'data' => [],
+                    ]);
+                }
+
+                $query->whereIn('branch_id', $branchIds);
+            }
+
+            $top = $query->join('services', 'bookings.service_id', '=', 'services.id')
+                ->selectRaw('services.name as service_name, COUNT(*) as total')
+                ->groupBy('services.name')
+                ->orderByDesc('total')
+                ->limit(5)
+                ->get();
+
+            return response()->json([
+                'success' => true,
+                'data' => $top,
+            ]);
+        } catch (\Throwable $e) {
+            Log::error('Vendor top services failed', [
+                'user_id' => $user?->id,
+                'error' => $e->getMessage(),
+            ]);
+
+            return response()->json([
+                'success' => false,
+                'message' => 'Server Error',
+            ], 500);
+        }
+    }
+
+    /**
      * Update the specified booking.
      *
      * @param  \Illuminate\Http\Request  $request
