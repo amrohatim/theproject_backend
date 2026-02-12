@@ -176,6 +176,60 @@ class BookingController extends Controller
     }
 
     /**
+     * Vendor monthly bookings analytics for all company branches.
+     *
+     * GET /vendor/bookings/analytics?year=YYYY
+     */
+    public function vendorAnalytics(Request $request)
+    {
+        $user = Auth::user();
+
+        if (!$user || !$user->isVendor()) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Unauthorized',
+            ], 403);
+        }
+
+        $year = (int) ($request->query('year') ?? now()->year);
+
+        $branchIds = Branch::whereHas('company', function ($query) use ($user) {
+            $query->where('user_id', $user->id);
+        })->pluck('id');
+
+        $data = collect();
+
+        if ($branchIds->isNotEmpty()) {
+            $data = Booking::whereIn('branch_id', $branchIds)
+                ->whereYear('created_at', $year)
+                ->selectRaw(
+                    'MONTH(created_at) as month, COUNT(*) as bookings_count, SUM(CASE WHEN payment_status = \"paid\" THEN price ELSE 0 END) as income_paid'
+                )
+                ->groupBy('month')
+                ->orderBy('month')
+                ->get();
+        }
+
+        $byMonth = $data->keyBy('month');
+        $responseData = [];
+
+        for ($month = 1; $month <= 12; $month++) {
+            $row = $byMonth->get($month);
+            $responseData[] = [
+                'month' => $month,
+                'bookings_count' => $row ? (int) $row->bookings_count : 0,
+                'income_paid' => $row ? (double) $row->income_paid : 0.0,
+            ];
+        }
+
+        return response()->json([
+            'success' => true,
+            'year' => $year,
+            'data' => $responseData,
+        ]);
+    }
+
+    /**
      * Update the specified booking.
      *
      * @param  \Illuminate\Http\Request  $request
