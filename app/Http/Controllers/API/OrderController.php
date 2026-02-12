@@ -351,8 +351,14 @@ class OrderController extends Controller
                 ->leftJoin('products', 'order_items.product_id', '=', 'products.id')
                 ->where('order_items.vendor_id', $companyId)
                 ->whereBetween('orders.created_at', [$start, $end])
-                ->selectRaw('products.name as product_name, SUM(order_items.quantity) as total')
-                ->groupBy('products.name')
+                ->selectRaw(
+                    "products.name as product_name,
+                     products.view_count as view_count,
+                     products.rating as average_rating,
+                     SUM(order_items.quantity) as total,
+                     SUM(CASE WHEN orders.payment_status = 'paid' THEN order_items.total ELSE 0 END) as income"
+                )
+                ->groupBy('products.name', 'products.view_count', 'products.rating')
                 ->orderByDesc('total')
                 ->limit(5)
                 ->get();
