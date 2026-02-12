@@ -398,6 +398,7 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::get('/orders/{id}/shipment', [OrderController::class, 'getShipment']);
     Route::post('/track-shipment', [OrderController::class, 'trackShipment']);
     Route::get('/vendor/orders/analytics', [OrderController::class, 'vendorAnalytics']);
+    Route::get('/vendor/order-items/list', [OrderController::class, 'vendorOrderItemsList']);
 
     // Checkout routes
     Route::post('/checkout', [CheckoutController::class, 'placeOrder']);

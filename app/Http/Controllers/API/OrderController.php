@@ -220,6 +220,96 @@ class OrderController extends Controller
         }
     }
 
+    /**
+     * Vendor order items list with order/payment info.
+     *
+     * GET /vendor/order-items/list?date_from=YYYY-MM-DD&page=1
+     */
+    public function vendorOrderItemsList(Request $request)
+    {
+        $user = Auth::user();
+
+        if (!$user || !$user->isVendor()) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Unauthorized',
+            ], 403);
+        }
+
+        try {
+            $companyId = Company::where('user_id', $user->id)->value('id');
+            if (!$companyId) {
+                return response()->json([
+                    'success' => true,
+                    'items' => [],
+                    'pagination' => [
+                        'current_page' => 1,
+                        'last_page' => 1,
+                        'per_page' => 15,
+                        'total' => 0,
+                    ],
+                ]);
+            }
+
+            if (!Schema::hasTable('order_items') || !Schema::hasTable('orders')) {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'Orders tables missing',
+                ], 500);
+            }
+
+            $dateFrom = $request->query('date_from');
+            $today = now()->toDateString();
+
+            $query = OrderItem::with(['product', 'order'])
+                ->where('order_items.vendor_id', $companyId);
+
+            if ($dateFrom) {
+                $query->whereHas('order', function ($q) use ($dateFrom, $today) {
+                    $q->whereDate('created_at', '>=', $dateFrom)
+                      ->whereDate('created_at', '<=', $today);
+                });
+            }
+
+            $items = $query->orderBy('order_items.created_at', 'desc')
+                ->paginate(15);
+
+            $transformed = $items->getCollection()->map(function (OrderItem $item) {
+                $order = $item->order;
+                return [
+                    'order_number' => $order?->order_number,
+                    'product_name' => optional($item->product)->name,
+                    'price' => (float) $item->total,
+                    'payment_status' => $order?->payment_status,
+                    'status' => $item->status ?? $order?->status,
+                    'quantity' => (int) $item->quantity,
+                    'date' => optional($order?->created_at)->toDateString(),
+                ];
+            });
+
+            return response()->json([
+                'success' => true,
+                'items' => $transformed,
+                'pagination' => [
+                    'current_page' => $items->currentPage(),
+                    'last_page' => $items->lastPage(),
+                    'per_page' => $items->perPage(),
+                    'total' => $items->total(),
+                ],
+            ]);
+        } catch (\Throwable $e) {
+            Log::error('Vendor order items list failed', [
+                'user_id' => $user?->id,
+                'error' => $e->getMessage(),
+            ]);
+
+            return response()->json([
+                'success' => false,
+                'message' => 'Server Error',
+            ], 500);
+        }
+    }
+
     private function buildEmptyMonthlySeries(): array
     {
         $series = [];
