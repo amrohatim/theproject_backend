@@ -274,6 +274,94 @@ class BookingController extends Controller
     }
 
     /**
+     * Vendor bookings list for all company branches.
+     *
+     * GET /vendor/bookings/list?date_from=YYYY-MM-DD
+     */
+    public function vendorBookingsList(Request $request)
+    {
+        $user = Auth::user();
+
+        if (!$user || !$user->isVendor()) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Unauthorized',
+            ], 403);
+        }
+
+        try {
+            if (!Schema::hasTable('bookings')) {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'Bookings table missing',
+                ], 500);
+            }
+
+            $dateFrom = $request->query('date_from');
+            $today = now()->toDateString();
+
+            $query = Booking::with(['service', 'branch', 'user']);
+
+            if (Schema::hasColumn('bookings', 'company_id')) {
+                $companyId = \App\Models\Company::where('user_id', $user->id)->value('id');
+                if (!$companyId) {
+                    return response()->json([
+                        'success' => true,
+                        'bookings' => [],
+                    ]);
+                }
+                $query->where('company_id', $companyId);
+            } else {
+                $branchIds = Branch::whereHas('company', function ($q) use ($user) {
+                    $q->where('user_id', $user->id);
+                })->pluck('id');
+
+                if ($branchIds->isEmpty()) {
+                    return response()->json([
+                        'success' => true,
+                        'bookings' => [],
+                    ]);
+                }
+
+                $query->whereIn('branch_id', $branchIds);
+            }
+
+            if ($dateFrom) {
+                $query->whereDate('booking_date', '>=', $dateFrom)
+                      ->whereDate('booking_date', '<=', $today);
+            }
+
+            $bookings = $query->orderBy('booking_date', 'desc')
+                ->orderBy('booking_time', 'desc')
+                ->paginate(15);
+
+            $bookingsTransformed = $bookings->getCollection()
+                ->map(fn (Booking $booking) => $this->transformBooking($booking));
+
+            return response()->json([
+                'success' => true,
+                'bookings' => $bookingsTransformed,
+                'pagination' => [
+                    'current_page' => $bookings->currentPage(),
+                    'last_page' => $bookings->lastPage(),
+                    'per_page' => $bookings->perPage(),
+                    'total' => $bookings->total(),
+                ],
+            ]);
+        } catch (\Throwable $e) {
+            Log::error('Vendor bookings list failed', [
+                'user_id' => $user?->id,
+                'error' => $e->getMessage(),
+            ]);
+
+            return response()->json([
+                'success' => false,
+                'message' => 'Server Error',
+            ], 500);
+        }
+    }
+
+    /**
      * Update the specified booking.
      *
      * @param  \Illuminate\Http\Request  $request

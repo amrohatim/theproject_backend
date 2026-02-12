@@ -389,6 +389,7 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::put('/bookings/{id}/cancel', [BookingController::class, 'cancel']);
     Route::post('/bookings/check-availability', [BookingController::class, 'checkAvailability']);
     Route::get('/vendor/bookings/analytics', [BookingController::class, 'vendorAnalytics']);
+    Route::get('/vendor/bookings/list', [BookingController::class, 'vendorBookingsList']);
 
     // Order routes
     Route::get('/orders', [OrderController::class, 'index']);
