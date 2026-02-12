@@ -10,6 +10,8 @@ use App\Models\UserLocation;
 use App\Services\TrendingService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Schema;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Str;
 use Carbon\Carbon;
@@ -191,42 +193,71 @@ class BookingController extends Controller
             ], 403);
         }
 
-        $year = (int) ($request->query('year') ?? now()->year);
+        try {
+            $year = (int) ($request->query('year') ?? now()->year);
 
-        $branchIds = Branch::whereHas('company', function ($query) use ($user) {
-            $query->where('user_id', $user->id);
-        })->pluck('id');
+            $branchIds = Branch::whereHas('company', function ($query) use ($user) {
+                $query->where('user_id', $user->id);
+            })->pluck('id');
 
-        $data = collect();
+            $data = collect();
 
-        if ($branchIds->isNotEmpty()) {
-            $data = Booking::whereIn('branch_id', $branchIds)
-                ->whereYear('created_at', $year)
-                ->selectRaw(
-                    'MONTH(created_at) as month, COUNT(*) as bookings_count, SUM(CASE WHEN payment_status = \"paid\" THEN price ELSE 0 END) as income_paid'
-                )
-                ->groupBy('month')
-                ->orderBy('month')
-                ->get();
+            if ($branchIds->isNotEmpty()) {
+                $dateColumn = Schema::hasColumn('bookings', 'created_at')
+                    ? 'created_at'
+                    : (Schema::hasColumn('bookings', 'booking_date') ? 'booking_date' : null);
+
+                if ($dateColumn === null) {
+                    return response()->json([
+                        'success' => false,
+                        'message' => 'Bookings date column missing',
+                    ], 500);
+                }
+
+                $hasPrice = Schema::hasColumn('bookings', 'price');
+                $hasPaymentStatus = Schema::hasColumn('bookings', 'payment_status');
+                $incomeSelect = ($hasPrice && $hasPaymentStatus)
+                    ? 'SUM(CASE WHEN payment_status = \"paid\" THEN price ELSE 0 END) as income_paid'
+                    : '0 as income_paid';
+
+                $data = Booking::whereIn('branch_id', $branchIds)
+                    ->whereYear($dateColumn, $year)
+                    ->selectRaw(
+                        'MONTH(' . $dateColumn . ') as month, COUNT(*) as bookings_count, ' . $incomeSelect
+                    )
+                    ->groupBy('month')
+                    ->orderBy('month')
+                    ->get();
+            }
+
+            $byMonth = $data->keyBy('month');
+            $responseData = [];
+
+            for ($month = 1; $month <= 12; $month++) {
+                $row = $byMonth->get($month);
+                $responseData[] = [
+                    'month' => $month,
+                    'bookings_count' => $row ? (int) $row->bookings_count : 0,
+                    'income_paid' => $row ? (double) $row->income_paid : 0.0,
+                ];
+            }
+
+            return response()->json([
+                'success' => true,
+                'year' => $year,
+                'data' => $responseData,
+            ]);
+        } catch (\Throwable $e) {
+            Log::error('Vendor bookings analytics failed', [
+                'user_id' => $user?->id,
+                'error' => $e->getMessage(),
+            ]);
+
+            return response()->json([
+                'success' => false,
+                'message' => 'Server Error',
+            ], 500);
         }
-
-        $byMonth = $data->keyBy('month');
-        $responseData = [];
-
-        for ($month = 1; $month <= 12; $month++) {
-            $row = $byMonth->get($month);
-            $responseData[] = [
-                'month' => $month,
-                'bookings_count' => $row ? (int) $row->bookings_count : 0,
-                'income_paid' => $row ? (double) $row->income_paid : 0.0,
-            ];
-        }
-
-        return response()->json([
-            'success' => true,
-            'year' => $year,
-            'data' => $responseData,
-        ]);
     }
 
     /**
