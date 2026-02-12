@@ -145,6 +145,110 @@ class OrderController extends Controller
     }
 
     /**
+     * Vendor monthly orders analytics for items belonging to the vendor.
+     *
+     * GET /vendor/orders/analytics?year=YYYY
+     */
+    public function vendorAnalytics(Request $request)
+    {
+        $user = Auth::user();
+
+        if (!$user || !$user->isVendor()) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Unauthorized',
+            ], 403);
+        }
+
+        try {
+            $year = (int) ($request->query('year') ?? now()->year);
+            $companyId = Company::where('user_id', $user->id)->value('id');
+
+            if (!$companyId) {
+                return response()->json([
+                    'success' => true,
+                    'year' => $year,
+                    'data' => $this->buildEmptyMonthlySeries(),
+                ]);
+            }
+
+            if (!Schema::hasTable('order_items') || !Schema::hasTable('orders')) {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'Orders tables missing',
+                ], 500);
+            }
+
+            $dateColumn = Schema::hasColumn('orders', 'created_at') ? 'orders.created_at' : null;
+            if ($dateColumn === null) {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'Orders date column missing',
+                ], 500);
+            }
+
+            $hasTotal = Schema::hasColumn('order_items', 'total');
+            $incomeSelect = $hasTotal
+                ? "SUM(CASE WHEN orders.payment_status = 'paid' THEN order_items.total ELSE 0 END) as income_paid"
+                : '0 as income_paid';
+
+            $data = OrderItem::join('orders', 'order_items.order_id', '=', 'orders.id')
+                ->where('order_items.vendor_id', $companyId)
+                ->whereYear($dateColumn, $year)
+                ->selectRaw(
+                    'MONTH(' . $dateColumn . ') as month, COUNT(*) as orders_count, ' . $incomeSelect
+                )
+                ->groupBy('month')
+                ->orderBy('month')
+                ->get();
+
+            return response()->json([
+                'success' => true,
+                'year' => $year,
+                'data' => $this->fillMonthlySeries($data, 'orders_count', 'income_paid'),
+            ]);
+        } catch (\Throwable $e) {
+            Log::error('Vendor orders analytics failed', [
+                'user_id' => $user?->id,
+                'error' => $e->getMessage(),
+            ]);
+
+            return response()->json([
+                'success' => false,
+                'message' => 'Server Error',
+            ], 500);
+        }
+    }
+
+    private function buildEmptyMonthlySeries(): array
+    {
+        $series = [];
+        for ($month = 1; $month <= 12; $month++) {
+            $series[] = [
+                'month' => $month,
+                'orders_count' => 0,
+                'income_paid' => 0.0,
+            ];
+        }
+        return $series;
+    }
+
+    private function fillMonthlySeries($data, string $countKey, string $incomeKey): array
+    {
+        $byMonth = $data->keyBy('month');
+        $series = [];
+        for ($month = 1; $month <= 12; $month++) {
+            $row = $byMonth->get($month);
+            $series[] = [
+                'month' => $month,
+                'orders_count' => $row ? (int) $row->{$countKey} : 0,
+                'income_paid' => $row ? (double) $row->{$incomeKey} : 0.0,
+            ];
+        }
+        return $series;
+    }
+
+    /**
      * Create a new order.
      *
      * @param  \Illuminate\Http\Request  $request

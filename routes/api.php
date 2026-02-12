@@ -396,6 +396,7 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::put('/orders/{id}/cancel', [OrderController::class, 'cancel']);
     Route::get('/orders/{id}/shipment', [OrderController::class, 'getShipment']);
     Route::post('/track-shipment', [OrderController::class, 'trackShipment']);
+    Route::get('/vendor/orders/analytics', [OrderController::class, 'vendorAnalytics']);
 
     // Checkout routes
     Route::post('/checkout', [CheckoutController::class, 'placeOrder']);
