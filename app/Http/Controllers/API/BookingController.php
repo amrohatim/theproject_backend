@@ -418,8 +418,14 @@ class BookingController extends Controller
             }
 
             $top = $query->join('services', 'bookings.service_id', '=', 'services.id')
-                ->selectRaw('services.name as service_name, COUNT(*) as total')
-                ->groupBy('services.name')
+                ->selectRaw(
+                    "services.name as service_name,
+                     services.view_count as view_count,
+                     services.rating as average_rating,
+                     COUNT(*) as total,
+                     SUM(CASE WHEN bookings.payment_status = 'paid' THEN bookings.price ELSE 0 END) as income"
+                )
+                ->groupBy('services.name', 'services.view_count', 'services.rating')
                 ->orderByDesc('total')
                 ->limit(5)
                 ->get();
