@@ -310,6 +310,70 @@ class OrderController extends Controller
         }
     }
 
+    /**
+     * Vendor top products for a given month (default current month).
+     *
+     * GET /vendor/order-items/top-products?year=YYYY&month=MM
+     */
+    public function vendorTopProducts(Request $request)
+    {
+        $user = Auth::user();
+
+        if (!$user || !$user->isVendor()) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Unauthorized',
+            ], 403);
+        }
+
+        try {
+            $companyId = Company::where('user_id', $user->id)->value('id');
+            if (!$companyId) {
+                return response()->json([
+                    'success' => true,
+                    'data' => [],
+                ]);
+            }
+
+            if (!Schema::hasTable('order_items') || !Schema::hasTable('orders')) {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'Orders tables missing',
+                ], 500);
+            }
+
+            $year = (int) ($request->query('year') ?? now()->year);
+            $month = (int) ($request->query('month') ?? now()->month);
+            $start = \Carbon\Carbon::create($year, $month, 1)->startOfMonth()->toDateString();
+            $end = \Carbon\Carbon::create($year, $month, 1)->endOfMonth()->toDateString();
+
+            $top = OrderItem::join('orders', 'order_items.order_id', '=', 'orders.id')
+                ->leftJoin('products', 'order_items.product_id', '=', 'products.id')
+                ->where('order_items.vendor_id', $companyId)
+                ->whereBetween('orders.created_at', [$start, $end])
+                ->selectRaw('products.name as product_name, SUM(order_items.quantity) as total')
+                ->groupBy('products.name')
+                ->orderByDesc('total')
+                ->limit(5)
+                ->get();
+
+            return response()->json([
+                'success' => true,
+                'data' => $top,
+            ]);
+        } catch (\Throwable $e) {
+            Log::error('Vendor top products failed', [
+                'user_id' => $user?->id,
+                'error' => $e->getMessage(),
+            ]);
+
+            return response()->json([
+                'success' => false,
+                'message' => 'Server Error',
+            ], 500);
+        }
+    }
+
     private function buildEmptyMonthlySeries(): array
     {
         $series = [];
