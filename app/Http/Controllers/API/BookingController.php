@@ -221,10 +221,16 @@ class BookingController extends Controller
                     ], 500);
                 }
 
-                $hasPrice = Schema::hasColumn('bookings', 'price');
                 $hasPaymentStatus = Schema::hasColumn('bookings', 'payment_status');
-                $incomeSelect = ($hasPrice && $hasPaymentStatus)
-                    ? "SUM(CASE WHEN payment_status = 'paid' THEN price ELSE 0 END) as income_paid"
+                $priceColumn = null;
+                if (Schema::hasColumn('bookings', 'price')) {
+                    $priceColumn = 'price';
+                } elseif (Schema::hasColumn('bookings', 'amount')) {
+                    $priceColumn = 'amount';
+                }
+
+                $incomeSelect = ($priceColumn && $hasPaymentStatus)
+                    ? "SUM(CASE WHEN payment_status = 'paid' THEN {$priceColumn} ELSE 0 END) as income_paid"
                     : '0 as income_paid';
 
                 $data = Booking::whereIn('branch_id', $branchIds)
