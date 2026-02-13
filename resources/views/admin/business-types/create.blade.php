@@ -150,7 +150,7 @@
                         </div>
                     @else
                         <div class="text-sm text-gray-500 dark:text-gray-400 p-4 border border-gray-200 dark:border-gray-600 rounded-lg">
-                            No product categories available. Categories must have associated products to appear here.
+                            No product categories available.
                         </div>
                     @endif
                 </div>
@@ -180,7 +180,7 @@
                         </div>
                     @else
                         <div class="text-sm text-gray-500 dark:text-gray-400 p-4 border border-gray-200 dark:border-gray-600 rounded-lg">
-                            No service categories available. Categories must have associated services to appear here.
+                            No service categories available.
                         </div>
                     @endif
                 </div>
