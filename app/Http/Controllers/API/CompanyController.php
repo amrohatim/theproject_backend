@@ -184,6 +184,37 @@ class CompanyController extends Controller
     }
 
     /**
+     * Get the authenticated vendor's company.
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function getMyCompany()
+    {
+        $user = Auth::user();
+
+        if (!$user || !$user->isVendor()) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Unauthorized access',
+            ], 403);
+        }
+
+        $company = Company::where('user_id', $user->id)->first();
+
+        if (!$company) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Company not found',
+            ], 404);
+        }
+
+        return response()->json([
+            'success' => true,
+            'company' => $company,
+        ]);
+    }
+
+    /**
      * Update the specified company in storage.
      *
      * @param  \Illuminate\Http\Request  $request
