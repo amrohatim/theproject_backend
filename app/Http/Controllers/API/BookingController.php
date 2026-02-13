@@ -339,8 +339,13 @@ class BookingController extends Controller
                 if ($dateField === 'created_at' && Schema::hasColumn('bookings', 'created_at')) {
                     $dateColumn = 'created_at';
                 }
-                $query->whereDate($dateColumn, '>=', $dateFrom)
-                      ->whereDate($dateColumn, '<=', $today);
+                $startDate = \Carbon\Carbon::parse($dateFrom)->toDateString();
+                $endDate = \Carbon\Carbon::parse($today)->toDateString();
+                if ($startDate > $endDate) {
+                    $endDate = $startDate;
+                }
+                $query->whereDate($dateColumn, '>=', $startDate)
+                      ->whereDate($dateColumn, '<=', $endDate);
             }
             if ($status) {
                 $query->where('status', $status);
