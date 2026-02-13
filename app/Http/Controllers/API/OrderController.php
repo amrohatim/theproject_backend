@@ -281,8 +281,13 @@ class OrderController extends Controller
 
             if ($dateFrom) {
                 if ($dateField === 'created_at') {
-                    $query->whereDate('order_items.created_at', '>=', $dateFrom)
-                          ->whereDate('order_items.created_at', '<=', $today);
+                    $startDate = \Carbon\Carbon::parse($dateFrom)->toDateString();
+                    $endDate = \Carbon\Carbon::parse($today)->toDateString();
+                    if ($startDate > $endDate) {
+                        $endDate = $startDate;
+                    }
+                    $query->whereDate('order_items.created_at', '>=', $startDate)
+                          ->whereDate('order_items.created_at', '<=', $endDate);
                 } else {
                     $query->whereHas('order', function ($q) use ($dateFrom, $today) {
                         $q->whereDate('created_at', '>=', $dateFrom)
