@@ -142,6 +142,14 @@ class BusinessTypeController extends Controller
             'service_categories.*' => 'exists:categories,id',
         ]);
 
+        if (!$request->has('product_categories')) {
+            $validated['product_categories'] = [];
+        }
+
+        if (!$request->has('service_categories')) {
+            $validated['service_categories'] = [];
+        }
+
         // Handle image upload
         if ($request->hasFile('image')) {
                      $webpService = new WebPImageService();
