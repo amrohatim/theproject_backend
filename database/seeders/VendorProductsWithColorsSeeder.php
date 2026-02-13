@@ -64,9 +64,7 @@ class VendorProductsWithColorsSeeder extends Seeder
         $this->command->info("✅ Found company: {$this->company->name} (ID: {$this->company->id})");
 
         // Get company branches
-        $this->branches = $this->company->branches()
-            ->whereNotIn('id', [1, 6, 7])
-            ->get();
+        $this->branches = $this->company->branches()->get();
         if ($this->branches->isEmpty()) {
             $this->command->error('❌ No branches found for the vendor company!');
             return;
@@ -162,8 +160,8 @@ class VendorProductsWithColorsSeeder extends Seeder
      */
     private function seedProducts(): void
     {
-        $totalProducts = 2000;
-        $batchSize = 100;
+        $totalProducts = 30;
+        $batchSize = 15;
         $batches = ceil($totalProducts / $batchSize);
 
         $this->command->info("Creating {$totalProducts} products in {$batches} batches of {$batchSize}...");
