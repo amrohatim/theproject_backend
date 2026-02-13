@@ -264,6 +264,7 @@ class OrderController extends Controller
             }
 
             $dateFrom = $request->query('date_from');
+            $dateField = $request->query('date_field');
             $status = $request->query('status');
             $today = now()->toDateString();
 
@@ -279,10 +280,15 @@ class OrderController extends Controller
             }
 
             if ($dateFrom) {
-                $query->whereHas('order', function ($q) use ($dateFrom, $today) {
-                    $q->whereDate('created_at', '>=', $dateFrom)
-                      ->whereDate('created_at', '<=', $today);
-                });
+                if ($dateField === 'created_at') {
+                    $query->whereDate('order_items.created_at', '>=', $dateFrom)
+                          ->whereDate('order_items.created_at', '<=', $today);
+                } else {
+                    $query->whereHas('order', function ($q) use ($dateFrom, $today) {
+                        $q->whereDate('created_at', '>=', $dateFrom)
+                          ->whereDate('created_at', '<=', $today);
+                    });
+                }
             }
 
             if (Schema::hasColumn('order_items', 'branch_id')) {
@@ -291,7 +297,11 @@ class OrderController extends Controller
                       ->addSelect('branches.name as branch_name');
             }
 
-            $items = $query->orderBy('order_items.created_at', 'desc')
+            $orderColumn = 'order_items.created_at';
+            if ($dateField === 'created_at') {
+                $orderColumn = 'order_items.created_at';
+            }
+            $items = $query->orderBy($orderColumn, 'desc')
                 ->paginate(15);
 
             $transformed = $items->getCollection()->map(function (OrderItem $item) {
@@ -307,6 +317,7 @@ class OrderController extends Controller
                     'status' => $item->status ?? $order?->status,
                     'quantity' => (int) $item->quantity,
                     'date' => optional($order?->created_at)->toDateString(),
+                    'created_at' => optional($item->created_at)->toDateTimeString(),
                 ];
             });
 
