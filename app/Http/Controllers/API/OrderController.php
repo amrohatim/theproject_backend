@@ -264,6 +264,7 @@ class OrderController extends Controller
             }
 
             $dateFrom = $request->query('date_from');
+            $status = $request->query('status');
             $today = now()->toDateString();
 
             $query = OrderItem::with(['product', 'order'])
@@ -273,12 +274,21 @@ class OrderController extends Controller
                     $query->where('order_items.branch_id', $branchId);
                 }
             }
+            if ($status) {
+                $query->where('order_items.status', $status);
+            }
 
             if ($dateFrom) {
                 $query->whereHas('order', function ($q) use ($dateFrom, $today) {
                     $q->whereDate('created_at', '>=', $dateFrom)
                       ->whereDate('created_at', '<=', $today);
                 });
+            }
+
+            if (Schema::hasColumn('order_items', 'branch_id')) {
+                $query->leftJoin('branches', 'order_items.branch_id', '=', 'branches.id')
+                      ->select('order_items.*')
+                      ->addSelect('branches.name as branch_name');
             }
 
             $items = $query->orderBy('order_items.created_at', 'desc')
@@ -290,6 +300,9 @@ class OrderController extends Controller
                     'order_number' => $order?->order_number,
                     'product_name' => optional($item->product)->name,
                     'price' => (float) $item->total,
+                    'unit_price' => (float) $item->price,
+                    'total' => (float) $item->total,
+                    'branch_name' => $item->branch_name,
                     'payment_status' => $order?->payment_status,
                     'status' => $item->status ?? $order?->status,
                     'quantity' => (int) $item->quantity,
