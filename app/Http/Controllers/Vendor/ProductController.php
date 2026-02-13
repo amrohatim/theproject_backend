@@ -951,8 +951,6 @@ class ProductController extends Controller
      */
     public function getEditData(Product $product)
     {
-        $allowedCategoryIds = $this->getAllowedProductCategoryIdsForBranch($product->branch_id);
-
         // Check if the product belongs to the vendor's company
         $userBranches = Branch::whereHas('company', function ($query) {
             $query->where('user_id', $this->getActingVendorUserId());
@@ -973,18 +971,6 @@ class ProductController extends Controller
             }])
             ->orderBy('name')
             ->get();
-
-        if (is_array($allowedCategoryIds)) {
-            $parentCategories->each(function ($parent) use ($allowedCategoryIds) {
-                $parent->setRelation(
-                    'children',
-                    $parent->children->whereIn('id', $allowedCategoryIds)->values()
-                );
-            });
-            $parentCategories = $parentCategories->filter(function ($parent) {
-                return $parent->children->isNotEmpty();
-            })->values();
-        }
 
         // Add hierarchy information to categories
         $parentCategories->each(function ($parent) {
