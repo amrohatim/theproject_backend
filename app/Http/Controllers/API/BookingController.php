@@ -194,7 +194,8 @@ class BookingController extends Controller
         }
 
         try {
-            $year = (int) ($request->query('year') ?? now()->year);
+        $year = (int) ($request->query('year') ?? now()->year);
+        $branchId = $request->query('branch_id');
 
             $branchIds = Branch::whereHas('company', function ($query) use ($user) {
                 $query->where('user_id', $user->id);
@@ -233,7 +234,12 @@ class BookingController extends Controller
                     ? "SUM(CASE WHEN payment_status = 'paid' THEN {$priceColumn} ELSE 0 END) as income_paid"
                     : '0 as income_paid';
 
-                $data = Booking::whereIn('branch_id', $branchIds)
+                $bookingQuery = Booking::whereIn('branch_id', $branchIds);
+                if ($branchId) {
+                    $bookingQuery->where('branch_id', $branchId);
+                }
+
+                $data = $bookingQuery
                     ->whereYear($dateColumn, $year)
                     ->selectRaw(
                         'MONTH(' . $dateColumn . ') as month, COUNT(*) as bookings_count, ' . $incomeSelect
@@ -330,6 +336,9 @@ class BookingController extends Controller
                 $query->whereDate('booking_date', '>=', $dateFrom)
                       ->whereDate('booking_date', '<=', $today);
             }
+            if ($branchId = $request->query('branch_id')) {
+                $query->where('branch_id', $branchId);
+            }
 
             $bookings = $query->orderBy('booking_date', 'desc')
                 ->orderBy('booking_time', 'desc')
@@ -387,6 +396,7 @@ class BookingController extends Controller
 
             $year = (int) ($request->query('year') ?? now()->year);
             $month = (int) ($request->query('month') ?? now()->month);
+            $branchId = $request->query('branch_id');
             $start = \Carbon\Carbon::create($year, $month, 1)->startOfMonth()->toDateString();
             $end = \Carbon\Carbon::create($year, $month, 1)->endOfMonth()->toDateString();
 
@@ -415,6 +425,9 @@ class BookingController extends Controller
                 }
 
                 $query->whereIn('branch_id', $branchIds);
+            }
+            if ($branchId) {
+                $query->where('branch_id', $branchId);
             }
 
             $top = $query->join('services', 'bookings.service_id', '=', 'services.id')

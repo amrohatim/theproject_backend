@@ -162,6 +162,7 @@ class OrderController extends Controller
 
         try {
             $year = (int) ($request->query('year') ?? now()->year);
+            $branchId = $request->query('branch_id');
             $companyId = Company::where('user_id', $user->id)->value('id');
 
             if (!$companyId) {
@@ -192,8 +193,12 @@ class OrderController extends Controller
                 ? "SUM(CASE WHEN orders.payment_status = 'paid' THEN order_items.total ELSE 0 END) as income_paid"
                 : '0 as income_paid';
 
-            $data = OrderItem::join('orders', 'order_items.order_id', '=', 'orders.id')
-                ->where('order_items.vendor_id', $companyId)
+            $orderItemsQuery = OrderItem::join('orders', 'order_items.order_id', '=', 'orders.id')
+                ->where('order_items.vendor_id', $companyId);
+            if ($branchId && Schema::hasColumn('order_items', 'branch_id')) {
+                $orderItemsQuery->where('order_items.branch_id', $branchId);
+            }
+            $data = $orderItemsQuery
                 ->whereYear($dateColumn, $year)
                 ->selectRaw(
                     'MONTH(' . $dateColumn . ') as month, COUNT(*) as orders_count, ' . $incomeSelect
@@ -263,6 +268,11 @@ class OrderController extends Controller
 
             $query = OrderItem::with(['product', 'order'])
                 ->where('order_items.vendor_id', $companyId);
+            if ($branchId = $request->query('branch_id')) {
+                if (Schema::hasColumn('order_items', 'branch_id')) {
+                    $query->where('order_items.branch_id', $branchId);
+                }
+            }
 
             if ($dateFrom) {
                 $query->whereHas('order', function ($q) use ($dateFrom, $today) {
@@ -344,13 +354,18 @@ class OrderController extends Controller
 
             $year = (int) ($request->query('year') ?? now()->year);
             $month = (int) ($request->query('month') ?? now()->month);
+            $branchId = $request->query('branch_id');
             $start = \Carbon\Carbon::create($year, $month, 1)->startOfMonth()->toDateString();
             $end = \Carbon\Carbon::create($year, $month, 1)->endOfMonth()->toDateString();
 
-            $top = OrderItem::join('orders', 'order_items.order_id', '=', 'orders.id')
+            $topQuery = OrderItem::join('orders', 'order_items.order_id', '=', 'orders.id')
                 ->leftJoin('products', 'order_items.product_id', '=', 'products.id')
                 ->where('order_items.vendor_id', $companyId)
-                ->whereBetween('orders.created_at', [$start, $end])
+                ->whereBetween('orders.created_at', [$start, $end]);
+            if ($branchId && Schema::hasColumn('order_items', 'branch_id')) {
+                $topQuery->where('order_items.branch_id', $branchId);
+            }
+            $top = $topQuery
                 ->selectRaw(
                     "products.name as product_name,
                      products.view_count as view_count,
