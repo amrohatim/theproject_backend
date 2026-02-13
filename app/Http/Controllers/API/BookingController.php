@@ -304,6 +304,7 @@ class BookingController extends Controller
             }
 
             $dateFrom = $request->query('date_from');
+            $status = $request->query('status');
             $today = now()->toDateString();
 
             $query = Booking::with(['service', 'branch', 'user']);
@@ -335,6 +336,9 @@ class BookingController extends Controller
             if ($dateFrom) {
                 $query->whereDate('booking_date', '>=', $dateFrom)
                       ->whereDate('booking_date', '<=', $today);
+            }
+            if ($status) {
+                $query->where('status', $status);
             }
             if ($branchId = $request->query('branch_id')) {
                 $query->where('branch_id', $branchId);
