@@ -38,13 +38,19 @@ class BusinessTypeController extends Controller
      */
     public function create()
     {
-        // Get all child categories (subcategories), regardless of associations
+        // Get product subcategories, regardless of associations
         $productCategories = Category::whereNotNull('parent_id')
+            ->where(function ($query) {
+                $query->where('type', 'product')
+                    ->orWhereNull('type');
+            })
             ->with('parent')
             ->orderBy('name')
             ->get();
 
+        // Get service subcategories, regardless of associations
         $serviceCategories = Category::whereNotNull('parent_id')
+            ->where('type', 'service')
             ->with('parent')
             ->orderBy('name')
             ->get();
@@ -96,13 +102,19 @@ class BusinessTypeController extends Controller
      */
     public function edit(BusinessType $businessType)
     {
-        // Get all child categories (subcategories), regardless of associations
+        // Get product subcategories, regardless of associations
         $productCategories = Category::whereNotNull('parent_id')
+            ->where(function ($query) {
+                $query->where('type', 'product')
+                    ->orWhereNull('type');
+            })
             ->with('parent')
             ->orderBy('name')
             ->get();
 
+        // Get service subcategories, regardless of associations
         $serviceCategories = Category::whereNotNull('parent_id')
+            ->where('type', 'service')
             ->with('parent')
             ->orderBy('name')
             ->get();
