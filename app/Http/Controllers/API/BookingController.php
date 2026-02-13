@@ -304,6 +304,7 @@ class BookingController extends Controller
             }
 
             $dateFrom = $request->query('date_from');
+            $dateField = $request->query('date_field');
             $status = $request->query('status');
             $today = now()->toDateString();
 
@@ -334,8 +335,12 @@ class BookingController extends Controller
             }
 
             if ($dateFrom) {
-                $query->whereDate('booking_date', '>=', $dateFrom)
-                      ->whereDate('booking_date', '<=', $today);
+                $dateColumn = 'booking_date';
+                if ($dateField === 'created_at' && Schema::hasColumn('bookings', 'created_at')) {
+                    $dateColumn = 'created_at';
+                }
+                $query->whereDate($dateColumn, '>=', $dateFrom)
+                      ->whereDate($dateColumn, '<=', $today);
             }
             if ($status) {
                 $query->where('status', $status);
@@ -344,7 +349,11 @@ class BookingController extends Controller
                 $query->where('branch_id', $branchId);
             }
 
-            $bookings = $query->orderBy('booking_date', 'desc')
+            $orderColumn = 'booking_date';
+            if (($dateField === 'created_at') && Schema::hasColumn('bookings', 'created_at')) {
+                $orderColumn = 'created_at';
+            }
+            $bookings = $query->orderBy($orderColumn, 'desc')
                 ->orderBy('booking_time', 'desc')
                 ->paginate(15);
 
