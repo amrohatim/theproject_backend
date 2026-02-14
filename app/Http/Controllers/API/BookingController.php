@@ -448,13 +448,24 @@ class BookingController extends Controller
                 $query->where('branch_id', $branchId);
             }
 
+            $priceColumn = null;
+            if (Schema::hasColumn('bookings', 'price')) {
+                $priceColumn = 'bookings.price';
+            } elseif (Schema::hasColumn('bookings', 'amount')) {
+                $priceColumn = 'bookings.amount';
+            }
+            $hasPaymentStatus = Schema::hasColumn('bookings', 'payment_status');
+            $incomeSelect = ($priceColumn && $hasPaymentStatus)
+                ? "SUM(CASE WHEN bookings.payment_status = 'paid' THEN {$priceColumn} ELSE 0 END) as income"
+                : '0 as income';
+
             $top = $query->join('services', 'bookings.service_id', '=', 'services.id')
                 ->selectRaw(
                     "services.name as service_name,
                      services.view_count as view_count,
                      services.rating as average_rating,
                      COUNT(*) as total,
-                     SUM(CASE WHEN bookings.payment_status = 'paid' THEN bookings.price ELSE 0 END) as income"
+                     {$incomeSelect}"
                 )
                 ->groupBy('services.name', 'services.view_count', 'services.rating')
                 ->orderByDesc('total')
