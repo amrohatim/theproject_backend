@@ -458,12 +458,7 @@ class ProviderController extends Controller
                     COUNT(DISTINCT pp.id) as product_count
                 FROM categories child_cats
                 INNER JOIN categories parent_cats ON child_cats.parent_id = parent_cats.id
-                LEFT JOIN provider_products pp ON (
-                    pp.category_id = child_cats.id
-                    OR (pp.product_id IS NOT NULL AND EXISTS (
-                        SELECT 1 FROM products p WHERE p.id = pp.product_id AND p.category_id = child_cats.id
-                    ))
-                )
+                LEFT JOIN provider_products pp ON pp.category_id = child_cats.id
                 WHERE child_cats.is_active = 1
                 AND child_cats.parent_id IS NOT NULL
                 AND pp.id IS NOT NULL
