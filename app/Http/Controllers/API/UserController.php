@@ -5,6 +5,7 @@ namespace App\Http\Controllers\API;
 use App\Http\Controllers\Controller;
 use App\Models\User;
 use App\Models\UserLocation;
+use App\Helpers\ImageHelper;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
@@ -219,6 +220,32 @@ class UserController extends Controller
         return response()->json([
             'success' => true,
             'user' => $user,
+        ]);
+    }
+
+    /**
+     * Get role-specific images (company/merchant/provider logos) for the authenticated user.
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function roleImages()
+    {
+        $user = User::with(['company', 'merchant', 'provider'])->findOrFail(Auth::id());
+
+        $companyLogo = $user->company ? $user->company->logo : null;
+        $merchantLogo = $user->merchant ? $user->merchant->logo : null;
+        $providerLogo = $user->provider ? ImageHelper::getFullImageUrl($user->provider->logo) : null;
+        $profileImage = $user->profile_image ? ImageHelper::getFullImageUrl($user->profile_image) : null;
+
+        return response()->json([
+            'success' => true,
+            'role' => $user->role,
+            'images' => [
+                'company_logo' => $companyLogo,
+                'merchant_logo' => $merchantLogo,
+                'provider_logo' => $providerLogo,
+                'profile_image' => $profileImage,
+            ],
         ]);
     }
 

@@ -269,6 +269,7 @@ Route::middleware('auth:sanctum')->group(function () {
     // Auth routes
     Route::post('/logout', [AuthController::class, 'logout']);
     Route::get('/user', [UserController::class, 'profile']);
+    Route::get('/user/role-images', [UserController::class, 'roleImages']);
     Route::put('/profile', [UserController::class, 'updateProfile']);
 
     Route::get('/provider-wishlist', [ProviderWishlistController::class, 'index']);
