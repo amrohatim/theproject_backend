@@ -459,15 +459,31 @@ class BookingController extends Controller
                 ? "SUM(CASE WHEN bookings.payment_status = 'paid' THEN {$priceColumn} ELSE 0 END) as income"
                 : '0 as income';
 
+            $hasViewCount = Schema::hasColumn('services', 'view_count');
+            $hasRating = Schema::hasColumn('services', 'rating');
+            $viewCountSelect = $hasViewCount
+                ? 'services.view_count as view_count'
+                : '0 as view_count';
+            $ratingSelect = $hasRating
+                ? 'services.rating as average_rating'
+                : '0 as average_rating';
+            $groupBy = ['services.name'];
+            if ($hasViewCount) {
+                $groupBy[] = 'services.view_count';
+            }
+            if ($hasRating) {
+                $groupBy[] = 'services.rating';
+            }
+
             $top = $query->join('services', 'bookings.service_id', '=', 'services.id')
                 ->selectRaw(
                     "services.name as service_name,
-                     services.view_count as view_count,
-                     services.rating as average_rating,
+                     {$viewCountSelect},
+                     {$ratingSelect},
                      COUNT(*) as total,
                      {$incomeSelect}"
                 )
-                ->groupBy('services.name', 'services.view_count', 'services.rating')
+                ->groupBy($groupBy)
                 ->orderByDesc('total')
                 ->limit(5)
                 ->get();
