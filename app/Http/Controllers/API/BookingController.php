@@ -280,6 +280,58 @@ class BookingController extends Controller
     }
 
     /**
+     * Vendor bookings income for date range (paid only).
+     *
+     * GET /vendor/incomes/bookings?date_from=YYYY-MM-DD&date_to=YYYY-MM-DD
+     */
+    public function vendorBookingsIncome(Request $request)
+    {
+        $user = Auth::user();
+
+        if (!$user || !$user->isVendor()) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Unauthorized',
+            ], 403);
+        }
+
+        [$dateFrom, $dateTo, $validationError] = $this->validateIncomeDateRange($request);
+        if ($validationError) {
+            return $validationError;
+        }
+
+        try {
+            $branchId = $request->query('branch_id');
+            $totalIncome = $this->calculateVendorBookingsIncome(
+                $user->id,
+                $dateFrom->toDateString(),
+                $dateTo->toDateString(),
+                $branchId
+            );
+
+            return response()->json([
+                'success' => true,
+                'data' => [
+                    'total_income_paid' => $totalIncome,
+                    'currency' => 'AED',
+                    'date_from' => $dateFrom->toDateString(),
+                    'date_to' => $dateTo->toDateString(),
+                ],
+            ]);
+        } catch (\Throwable $e) {
+            Log::error('Vendor bookings income failed', [
+                'user_id' => $user?->id,
+                'error' => $e->getMessage(),
+            ]);
+
+            return response()->json([
+                'success' => false,
+                'message' => 'Server Error',
+            ], 500);
+        }
+    }
+
+    /**
      * Vendor bookings list for all company branches.
      *
      * GET /vendor/bookings/list?date_from=YYYY-MM-DD
@@ -386,6 +438,94 @@ class BookingController extends Controller
                 'message' => 'Server Error',
             ], 500);
         }
+    }
+
+    private function validateIncomeDateRange(Request $request): array
+    {
+        $validator = Validator::make($request->all(), [
+            'date_from' => 'required|date_format:Y-m-d',
+            'date_to' => 'required|date_format:Y-m-d',
+        ]);
+
+        if ($validator->fails()) {
+            return [
+                null,
+                null,
+                response()->json([
+                    'success' => false,
+                    'message' => $validator->errors()->first(),
+                ], 422),
+            ];
+        }
+
+        $dateFrom = Carbon::parse($request->query('date_from'))->startOfDay();
+        $dateTo = Carbon::parse($request->query('date_to'))->endOfDay();
+
+        if ($dateFrom->gt($dateTo)) {
+            return [
+                null,
+                null,
+                response()->json([
+                    'success' => false,
+                    'message' => 'date_from must be before or equal to date_to',
+                ], 422),
+            ];
+        }
+
+        return [$dateFrom, $dateTo, null];
+    }
+
+    private function calculateVendorBookingsIncome(
+        int $userId,
+        string $dateFrom,
+        string $dateTo,
+        ?int $branchId = null
+    ): float {
+        $branchIds = Branch::whereHas('company', function ($query) use ($userId) {
+            $query->where('user_id', $userId);
+        })->pluck('id');
+
+        if ($branchIds->isEmpty()) {
+            return 0.0;
+        }
+
+        if (!Schema::hasTable('bookings')) {
+            return 0.0;
+        }
+
+        $dateColumn = Schema::hasColumn('bookings', 'created_at')
+            ? 'created_at'
+            : (Schema::hasColumn('bookings', 'booking_date') ? 'booking_date' : null);
+
+        if ($dateColumn === null) {
+            return 0.0;
+        }
+
+        $hasPaymentStatus = Schema::hasColumn('bookings', 'payment_status');
+        $priceColumn = null;
+        if (Schema::hasColumn('bookings', 'price')) {
+            $priceColumn = 'price';
+        } elseif (Schema::hasColumn('bookings', 'amount')) {
+            $priceColumn = 'amount';
+        }
+
+        if (!$hasPaymentStatus || !$priceColumn) {
+            return 0.0;
+        }
+
+        $query = Booking::whereIn('branch_id', $branchIds)
+            ->whereDate($dateColumn, '>=', $dateFrom)
+            ->whereDate($dateColumn, '<=', $dateTo);
+
+        if ($branchId) {
+            $query->where('branch_id', $branchId);
+        }
+
+        $sum = $query
+            ->selectRaw("COALESCE(SUM(CASE WHEN payment_status = 'paid' THEN {$priceColumn} ELSE 0 END), 0) as total_income_paid")
+            ->value('total_income_paid');
+
+        return (double) ($sum ?? 0.0);
     }
 
     /**

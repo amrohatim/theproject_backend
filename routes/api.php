@@ -392,6 +392,7 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::get('/vendor/bookings/analytics', [BookingController::class, 'vendorAnalytics']);
     Route::get('/vendor/bookings/list', [BookingController::class, 'vendorBookingsList']);
     Route::get('/vendor/bookings/top-services', [BookingController::class, 'vendorTopServices']);
+    Route::get('/vendor/incomes/bookings', [BookingController::class, 'vendorBookingsIncome']);
     Route::get('/vendor/order-items/top-products', [OrderController::class, 'vendorTopProducts']);
 
     // Order routes
@@ -402,6 +403,8 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::post('/track-shipment', [OrderController::class, 'trackShipment']);
     Route::get('/vendor/orders/analytics', [OrderController::class, 'vendorAnalytics']);
     Route::get('/vendor/order-items/list', [OrderController::class, 'vendorOrderItemsList']);
+    Route::get('/vendor/incomes/orders', [OrderController::class, 'vendorOrdersIncome']);
+    Route::get('/vendor/incomes/total', [OrderController::class, 'vendorTotalIncome']);
 
     // Checkout routes
     Route::post('/checkout', [CheckoutController::class, 'placeOrder']);

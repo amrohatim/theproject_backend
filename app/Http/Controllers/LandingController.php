@@ -39,7 +39,7 @@ class LandingController extends Controller
         // Determine the appropriate redirect URL for the "Get Started" button
         $getStartedUrl = $this->getGetStartedUrl($isAuthenticated, $userRole);
 
-        return view('landing', compact(
+        return view('gogo', compact(
             'totalProducts',
             'totalVendors',
             'totalCustomers',
