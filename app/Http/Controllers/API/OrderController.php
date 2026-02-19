@@ -425,6 +425,8 @@ class OrderController extends Controller
             $transformed = $items->getCollection()->map(function (OrderItem $item) {
                 $order = $item->order;
                 return [
+                    'product_id' => (int) $item->product_id,
+                    'order_id' => (int) $item->order_id,
                     'order_number' => $order?->order_number,
                     'product_name' => optional($item->product)->name,
                     'price' => (float) $item->total,
@@ -432,6 +434,7 @@ class OrderController extends Controller
                     'total' => (float) $item->total,
                     'branch_name' => $item->branch_name,
                     'payment_status' => $order?->payment_status,
+                    'order_status' => $order?->status,
                     'status' => $item->status ?? $order?->status,
                     'quantity' => (int) $item->quantity,
                     'date' => optional($order?->created_at)->toDateString(),
