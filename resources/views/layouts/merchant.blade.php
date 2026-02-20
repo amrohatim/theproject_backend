@@ -9,7 +9,7 @@ $direction = $isRtl ? 'rtl' : 'ltr';
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="csrf-token" content="{{ csrf_token() }}">
-    <title>@yield('title', 'Merchant Dashboard') | Dala3Chic</title>
+    <title>@yield('title', 'Merchant Dashboard') | glowlabs</title>
 
     <!-- Access Control Meta Tags -->
     @if(session('show_access_modal'))

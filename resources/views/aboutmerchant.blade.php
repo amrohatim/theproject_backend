@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>About | Merchant - Dala3Chic Merchant</title>
+    <title>About | Merchant - glowlabs Merchant</title>
     <link href="https://fonts.googleapis.com/css2?family=Jersey+15&display=swap" rel="stylesheet">
    
     <style>
@@ -207,7 +207,7 @@
             box-shadow: none;
         }
 
-        /* Top Right - Dala3Chic Description */
+        /* Top Right - glowlabs Description */
         .hero-top-right {
             background: #f59e0b;
             display: flex;
@@ -1210,10 +1210,10 @@
                          
                      </div>
 
-                     <!-- Top Right: Dala3Chic Merchant Description -->
+                     <!-- Top Right: glowlabs Merchant Description -->
                      <div class="hero-grid-item hero-top-right">
                         <div class="black-circle">
-                            <h1 class="merchant-title">Dala3Chic Merchant</h1>
+                            <h1 class="merchant-title">glowlabs Merchant</h1>
                             <p class="merchant-description">
                                 Join our Merchant community and start your journey with us, access a wide range of customers across the <strong style="color:#feb538; font-weight:300">United Arab Emirates. </strong> <br> Harness the power of marketing with our ready to go Dashboard and App.
                             </p>
@@ -1755,7 +1755,7 @@
     <!-- Footer -->
     <footer class="footer">
         <div class="container">
-            <p>&copy; 2025 by Dala3Chic. All rights reserved.</p>
+            <p>&copy; 2025 by glowlabs. All rights reserved.</p>
         </div>
     </footer>
 

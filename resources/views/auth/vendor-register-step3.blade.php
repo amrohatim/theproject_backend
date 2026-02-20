@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="description" content="Vendor Registration Step 3 - Company Information">
     <meta name="robots" content="noindex, nofollow">
-    <title>Vendor Registration - Step 3 | Dala3Chic</title>
+    <title>Vendor Registration - Step 3 | glowlabs</title>
     
     <!-- Fonts -->
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">

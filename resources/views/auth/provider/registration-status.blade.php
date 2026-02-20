@@ -3,10 +3,10 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="description" content="Provider Registration Status - Dala3Chic">
+    <meta name="description" content="Provider Registration Status - glowlabs">
     <meta name="robots" content="noindex, nofollow">
 
-    <title>Registration Status - Provider - Dala3Chic</title>
+    <title>Registration Status - Provider - glowlabs</title>
 
     <!-- Preconnect to external domains -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -90,7 +90,7 @@
         <div class="max-w-2xl w-full space-y-8">
             <!-- Header -->
             <div class="text-center">
-                <img src="{{ asset('assets/logo.png') }}" alt="Dala3Chic Logo" class="mx-auto w-20 h-20 object-contain rounded-2xl mb-6">
+                <img src="{{ asset('assets/logo.png') }}" alt="glowlabs Logo" class="mx-auto w-20 h-20 object-contain rounded-2xl mb-6">
                 <h1 class="text-3xl font-bold text-gray-900 mb-2">
                     Provider Registration Status
                 </h1>
@@ -280,7 +280,7 @@
                 <div class="mt-8 text-center">
                     <p class="text-gray-600 mb-4">Need help or have questions about your registration?</p>
                     <div class="flex justify-center space-x-4">
-                        <a href="mailto:support@dala3chic.com"
+                        <a href="mailto:support@glowlabs.ae"
                            class="inline-flex items-center px-4 py-2 bg-gray-600 text-white rounded-lg hover:bg-gray-700 transition-colors duration-200">
                             <i class="fas fa-envelope mr-2"></i>
                             Email Support

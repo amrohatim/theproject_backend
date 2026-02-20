@@ -3,10 +3,10 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="description" content="Provider License Upload - Dala3Chic Registration">
+    <meta name="description" content="Provider License Upload - glowlabs Registration">
     <meta name="robots" content="noindex, nofollow">
 
-    <title>License Upload - Provider Registration - Dala3Chic</title>
+    <title>License Upload - Provider Registration - glowlabs</title>
 
     <!-- Preconnect to external domains -->
     <link rel="preconnect" href="https://fonts.googleapis.com">

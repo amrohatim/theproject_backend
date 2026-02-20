@@ -40,10 +40,10 @@ class LicenseApproved extends Mailable implements ShouldQueue
     public function envelope(): Envelope
     {
         $subject = match($this->licenseType) {
-            'vendor' => 'Your Dala3Chic Vendor Registration Has Been Approved!',
-            'merchant' => 'Your Dala3Chic Merchant Registration Has Been Approved!',
-            'provider' => 'Your Dala3Chic Provider Registration Has Been Approved!',
-            default => 'Your Dala3Chic Registration Has Been Approved!'
+            'vendor' => 'Your glowlabs Vendor Registration Has Been Approved!',
+            'merchant' => 'Your glowlabs Merchant Registration Has Been Approved!',
+            'provider' => 'Your glowlabs Provider Registration Has Been Approved!',
+            default => 'Your glowlabs Registration Has Been Approved!'
         };
 
         return new Envelope(
@@ -156,6 +156,6 @@ class LicenseApproved extends Mailable implements ShouldQueue
     private function getDefaultMessage(): string
     {
         $type = ucfirst($this->licenseType);
-        return "Hello {$this->getUserName()},\n\nWe are thrilled to inform you that your Dala3Chic {$this->licenseType} registration has been approved! You are now officially part of the Dala3Chic marketplace.\n\nYou can access your dashboard and manage your account at: {$this->dashboardUrl}\n\nBest regards,\nDala3Chic Team";
+        return "Hello {$this->getUserName()},\n\nWe are thrilled to inform you that your glowlabs {$this->licenseType} registration has been approved! You are now officially part of the glowlabs marketplace.\n\nYou can access your dashboard and manage your account at: {$this->dashboardUrl}\n\nBest regards,\nglowlabs Team";
     }
 }

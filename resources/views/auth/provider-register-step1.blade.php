@@ -251,7 +251,7 @@
         <div class="hidden lg:flex lg:w-1/2 text-white p-12 flex-col justify-top" style="background: linear-gradient(135deg, #8b5cf6 0%, #7c3aed 100%);">
             <div class="max-w-md mx-auto space-y-8">
                 <div class="text-center">
-                    <h1 class="text-3xl font-bold mb-8">Dala3Chic</h1>
+                    <h1 class="text-3xl font-bold mb-8">glowlabs</h1>
                 </div>
 
                 <!-- Main Heading -->

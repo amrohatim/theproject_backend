@@ -34,8 +34,8 @@ class RegistrationApproved extends Mailable implements ShouldQueue
     public function envelope(): Envelope
     {
         $subject = $this->userType === 'vendor'
-            ? 'Your Vendor Registration Has Been Approved! - Dala3Chic'
-            : 'Your Provider Registration Has Been Approved! - Dala3Chic';
+            ? 'Your Vendor Registration Has Been Approved! - glowlabs'
+            : 'Your Provider Registration Has Been Approved! - glowlabs';
 
         return new Envelope(
             subject: $subject,

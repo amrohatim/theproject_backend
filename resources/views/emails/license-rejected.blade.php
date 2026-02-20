@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>License Rejected - Dala3Chic</title>
+    <title>License Rejected - glowlabs</title>
     <style>
         body {
             font-family: 'Arial', sans-serif;
@@ -200,8 +200,8 @@
                 $messageData['body'] = str_replace('[User Name]', $user->name, $messageData['body']);
             } else {
                 // Fallback content
-                $messageData['title'] = 'Your Dala3Chic Registration Has Been Rejected';
-                $messageData['body'] = "Hello {$user->name},\n\nWe regret to inform you that your Dala3Chic registration has been rejected. We have reviewed your application and found that it does not meet our requirements. Please review our guidelines and reapply once you have made the necessary improvements.";
+                $messageData['title'] = 'Your glowlabs Registration Has Been Rejected';
+                $messageData['body'] = "Hello {$user->name},\n\nWe regret to inform you that your glowlabs registration has been rejected. We have reviewed your application and found that it does not meet our requirements. Please review our guidelines and reapply once you have made the necessary improvements.";
                 $messageData['call_to_action'] = 'Please review our guidelines and reapply once you have made the necessary improvements.';
             }
         @endphp
@@ -212,7 +212,7 @@
         <div class="message-content {{ app()->getLocale() === 'ar' ? 'rtl' : '' }}">
             Hello {{$user->name}},.
        <br>
-       <p class="text-[#000000de]">We regret to inform you that your Dala3Chic registration has been rejected</p>
+       <p class="text-[#000000de]">We regret to inform you that your glowlabs registration has been rejected</p>
        <br>
        <p class="text-[#000000de]"> We have reviewed your application and found that it does not meet our requirements. Please review our guidelines and reapply once you have made the necessary improvements.</p>
         </div>
@@ -237,18 +237,18 @@
         <div style="margin-top: 30px;">
             <p>{{ __('If you have any questions about this decision or need assistance, our support team is here to help:') }}</p>
             <ul>
-                <li><strong>{{ __('Email:') }}</strong> support@dala3chic.com</li>
+                <li><strong>{{ __('Email:') }}</strong> support@glowlabs.ae</li>
                 <li><strong>{{ __('Phone:') }}</strong> +971-xxx-xxxx</li>
-                <li><strong>{{ __('Help Center:') }}</strong> <a href="https://help.dala3chic.com">help.dala3chic.com</a></li>
+                <li><strong>{{ __('Help Center:') }}</strong> <a href="https://help.glowlabs.ae">help.glowlabs.ae</a></li>
             </ul>
         </div>
 
         <p>{{ __('Best regards,') }}<br>
-        {{ __('The Dala3Chic Team') }}</p>
+        {{ __('The glowlabs Team') }}</p>
 
         <!-- Footer -->
         <div class="footer">
-            <p>© {{ date('Y') }} Dala3Chic. {{ __('All rights reserved.') }}</p>
+            <p>© {{ date('Y') }} glowlabs. {{ __('All rights reserved.') }}</p>
             <p>{{ __('This email was sent to :email.', ['email' => $user->email]) }}</p>
         </div>
     </div>

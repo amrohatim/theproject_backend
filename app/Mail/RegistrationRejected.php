@@ -34,8 +34,8 @@ class RegistrationRejected extends Mailable implements ShouldQueue
     public function envelope(): Envelope
     {
         $subject = $this->userType === 'vendor'
-            ? 'Update on Your Vendor Registration - Dala3Chic'
-            : 'Update on Your Provider Registration - Dala3Chic';
+            ? 'Update on Your Vendor Registration - glowlabs'
+            : 'Update on Your Provider Registration - glowlabs';
 
         return new Envelope(
             subject: $subject,

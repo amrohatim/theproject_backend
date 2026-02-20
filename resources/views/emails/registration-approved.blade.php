@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Registration Approved - Dala3Chic</title>
+    <title>Registration Approved - glowlabs</title>
     <style>
         body {
             font-family: 'Arial', sans-serif;
@@ -153,7 +153,7 @@
 
         <!-- Celebration Banner -->
         <div class="celebration-banner {{ $userType === 'provider' ? 'provider-banner' : 'vendor-banner' }}">
-            🎉 Welcome to the Dala3Chic {{ ucfirst($userType) }} Community! 🎉
+            🎉 Welcome to the glowlabs {{ ucfirst($userType) }} Community! 🎉
         </div>
 
         <!-- Greeting -->
@@ -165,7 +165,7 @@
             @elseif($userType === 'provider')
                 service provider registration
             @endif
-            has been <strong>approved</strong>! You are now officially part of the Dala3Chic marketplace.
+            has been <strong>approved</strong>! You are now officially part of the glowlabs marketplace.
         </p>
 
         <!-- What's Next -->
@@ -243,9 +243,9 @@
         <p>If you have any questions or need assistance getting started, our support team is here to help:</p>
 
         <ul>
-            <li><strong>Email:</strong> support@dala3chic.com</li>
+            <li><strong>Email:</strong> support@glowlabs.ae</li>
             <li><strong>Phone:</strong> +971-xxx-xxxx</li>
-            <li><strong>Help Center:</strong> <a href="https://help.dala3chic.com">help.dala3chic.com</a></li>
+            <li><strong>Help Center:</strong> <a href="https://help.glowlabs.ae">help.glowlabs.ae</a></li>
         </ul>
 
         <p>We're thrilled to have you as part of our growing marketplace community. Together, we'll create amazing experiences for customers across the UAE.</p>
@@ -253,11 +253,11 @@
         <p>Welcome aboard!</p>
 
         <p>Best regards,<br>
-        The Dala3Chic Team</p>
+        The glowlabs Team</p>
 
         <!-- Footer -->
         <div class="footer">
-            <p>© {{ date('Y') }} Dala3Chic. All rights reserved.</p>
+            <p>© {{ date('Y') }} glowlabs. All rights reserved.</p>
             <p>This email was sent to {{ $user->email }}.</p>
         </div>
     </div>

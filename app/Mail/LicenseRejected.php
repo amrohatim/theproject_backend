@@ -39,10 +39,10 @@ class LicenseRejected extends Mailable
     public function envelope(): Envelope
     {
         $subject = match($this->licenseType) {
-            'vendor' => 'Your Dala3Chic Vendor Registration Has Been Rejected',
-            'merchant' => 'Your Dala3Chic Merchant Registration Has Been Rejected',
-            'provider' => 'Your Dala3Chic Provider Registration Has Been Rejected',
-            default => 'Your Dala3Chic Registration Has Been Rejected'
+            'vendor' => 'Your glowlabs Vendor Registration Has Been Rejected',
+            'merchant' => 'Your glowlabs Merchant Registration Has Been Rejected',
+            'provider' => 'Your glowlabs Provider Registration Has Been Rejected',
+            default => 'Your glowlabs Registration Has Been Rejected'
         };
 
         return new Envelope(
@@ -106,8 +106,8 @@ class LicenseRejected extends Mailable
         if (!file_exists($templatePath)) {
             // Fallback to default content
             return [
-                'title' => 'Your Dala3Chic Registration Has Been Rejected',
-                'body' => "Hello {$this->getUserName()},\n\nWe regret to inform you that your Dala3Chic registration has been rejected. We have reviewed your application and found that it does not meet our requirements. Please review our guidelines and reapply once you have made the necessary improvements.",
+                'title' => 'Your glowlabs Registration Has Been Rejected',
+                'body' => "Hello {$this->getUserName()},\n\nWe regret to inform you that your glowlabs registration has been rejected. We have reviewed your application and found that it does not meet our requirements. Please review our guidelines and reapply once you have made the necessary improvements.",
                 'call_to_action' => 'Please review our guidelines and reapply once you have made the necessary improvements.'
             ];
         }

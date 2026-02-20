@@ -394,9 +394,9 @@
             <div class="flex justify-between items-center h-16">
                 <div class="flex items-center">
                     <div class="w-10 h-7 bg-transparent flex items-center justify-center">
-                        <img src="{{ asset('assets/logo.png') }}" alt="Dala3Chic Logo" class="w-20 h-10 object-cover rounded-lg">
+                        <img src="{{ asset('assets/logo.png') }}" alt="glowlabs Logo" class="w-20 h-10 object-cover rounded-lg">
                     </div>
-                    <span class="ml-3 text-gray-800 font-bold text-xl">Dala3Chic</span>
+                    <span class="ml-3 text-gray-800 font-bold text-xl">glowlabs</span>
                 </div>
 
                 <div class="hidden md:flex items-center space-x-8">

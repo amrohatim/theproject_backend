@@ -34,10 +34,10 @@ class EmailVerification extends Mailable implements ShouldQueue
     public function envelope(): Envelope
     {
         $subject = match($this->userType) {
-            'vendor' => 'Verify Your Vendor Account - Dala3Chic',
-            'provider' => 'Verify Your Provider Account - Dala3Chic',
-            'merchant' => 'Verify Your Merchant Account - Dala3Chic',
-            default => 'Verify Your Email Address - Dala3Chic'
+            'vendor' => 'Verify Your Vendor Account - glowlabs',
+            'provider' => 'Verify Your Provider Account - glowlabs',
+            'merchant' => 'Verify Your Merchant Account - glowlabs',
+            default => 'Verify Your Email Address - glowlabs'
         };
 
         return new Envelope(

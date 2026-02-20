@@ -4,7 +4,7 @@ echo "=== CHECKING USER AND PRODUCTS ===\n\n";
 
 // Direct database connection using the same credentials from .env
 try {
-    $pdo = new PDO("mysql:host=127.0.0.1;dbname=tower;charset=utf8mb4", "dalachic", "Fifafifa2021");
+    $pdo = new PDO("mysql:host=127.0.0.1;dbname=tower;charset=utf8mb4", "glowlabs", "Fifafifa2021");
     $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
     
     echo "✅ Database connected successfully\n\n";

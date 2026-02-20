@@ -3,10 +3,10 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="description" content="Register as a Vendor on Dala3Chic - Join our marketplace as a retail seller">
+    <meta name="description" content="Register as a Vendor on glowlabs - Join our marketplace as a retail seller">
     <meta name="robots" content="noindex, nofollow">
 
-    <title>Vendor Registration - Dala3Chic</title>
+    <title>Vendor Registration - glowlabs</title>
 
     <!-- Preconnect to external domains for performance -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -381,7 +381,7 @@
                 <i class="fas fa-store"></i>
             </div>
             <h1 class="welcome-text">Join as Vendor</h1>
-            <p class="subtitle">Start selling on Dala3Chic marketplace</p>
+            <p class="subtitle">Start selling on glowlabs marketplace</p>
         </div>
 
         <!-- Registration Form -->

@@ -3,10 +3,10 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="description" content="Vendor License Upload - Dala3Chic Registration">
+    <meta name="description" content="Vendor License Upload - glowlabs Registration">
     <meta name="robots" content="noindex, nofollow">
 
-    <title>License Upload - Vendor Registration - Dala3Chic</title>
+    <title>License Upload - Vendor Registration - glowlabs</title>
 
     <!-- Preconnect to external domains -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -56,7 +56,7 @@
         <div class="max-w-md w-full space-y-8">
             <!-- Header -->
             <div class="text-center">
-                <img src="{{ asset('assets/logo.png') }}" alt="Dala3Chic Logo" class="mx-auto w-20 h-20 object-contain rounded-2xl mb-6">
+                <img src="{{ asset('assets/logo.png') }}" alt="glowlabs Logo" class="mx-auto w-20 h-20 object-contain rounded-2xl mb-6">
                 <h1 class="text-3xl font-bold text-gray-900 mb-2">
                     License Upload
                 </h1>

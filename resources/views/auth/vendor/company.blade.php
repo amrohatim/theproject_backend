@@ -3,10 +3,10 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="description" content="Vendor Company Registration - Dala3Chic">
+    <meta name="description" content="Vendor Company Registration - glowlabs">
     <meta name="robots" content="noindex, nofollow">
 
-    <title>Company Information - Vendor Registration - Dala3Chic</title>
+    <title>Company Information - Vendor Registration - glowlabs</title>
 
     <!-- Preconnect to external domains -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -76,7 +76,7 @@
         <div class="max-w-2xl w-full space-y-8">
             <!-- Header -->
             <div class="text-center">
-                <img src="{{ asset('assets/logo.png') }}" alt="Dala3Chic Logo" class="mx-auto w-20 h-20 object-contain rounded-2xl mb-6">
+                <img src="{{ asset('assets/logo.png') }}" alt="glowlabs Logo" class="mx-auto w-20 h-20 object-contain rounded-2xl mb-6">
                 <h1 class="text-3xl font-bold text-gray-900 mb-2">
                     Company Information
                 </h1>

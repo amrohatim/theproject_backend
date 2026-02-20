@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Email Verification - Dala3Chic</title>
+    <title>Email Verification - glowlabs</title>
     <style>
         body {
             font-family: 'Arial', sans-serif;
@@ -147,13 +147,13 @@
             <h1>Email Verification</h1>
             <p class="subtitle">
                 @if($userType === 'vendor')
-                    Welcome to Dala3Chic Vendor Platform
+                    Welcome to glowlabs Vendor Platform
                 @elseif($userType === 'provider')
-                    Welcome to Dala3Chic Provider Platform
+                    Welcome to glowlabs Provider Platform
                 @elseif($userType === 'merchant')
-                    Welcome to Dala3Chic Merchant Platform
+                    Welcome to glowlabs Merchant Platform
                 @else
-                    Welcome to Dala3Chic
+                    Welcome to glowlabs
                 @endif
             </p>
         </div>
@@ -169,7 +169,7 @@
             @elseif($userType === 'merchant')
                 as a merchant
             @endif
-            with Dala3Chic! To complete your registration, please verify your email address.
+            with glowlabs! To complete your registration, please verify your email address.
         </p>
 
         <!-- Verification Code -->
@@ -214,11 +214,11 @@
         <p>If you have any questions or need assistance, please don't hesitate to contact our support team.</p>
 
         <p>Best regards,<br>
-        The Dala3Chic Team</p>
+        The glowlabs Team</p>
 
         <!-- Footer -->
         <div class="footer">
-            <p>© {{ date('Y') }} Dala3Chic. All rights reserved.</p>
+            <p>© {{ date('Y') }} glowlabs. All rights reserved.</p>
             <p>This email was sent to {{ $user->email }}. If you didn't request this verification, please ignore this email.</p>
         </div>
     </div>

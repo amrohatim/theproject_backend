@@ -106,7 +106,7 @@
 <body>
     <div class="email-container">
         <div class="header">
-            <div class="logo">Dala3Chic</div>
+            <div class="logo">glowlabs</div>
             <div class="success-icon">✅</div>
             <div class="title">Branch License Approved!</div>
         </div>
@@ -176,8 +176,8 @@
         </div>
 
         <div class="footer">
-            <p>Thank you for choosing Dala3Chic!</p>
-            <p><strong>The Dala3Chic Team</strong></p>
+            <p>Thank you for choosing glowlabs!</p>
+            <p><strong>The glowlabs Team</strong></p>
             <p style="font-size: 12px; color: #999;">
                 This is an automated message. Please do not reply to this email.
             </p>

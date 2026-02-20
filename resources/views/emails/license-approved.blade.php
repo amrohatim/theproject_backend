@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>License Approved - Dala3Chic</title>
+    <title>License Approved - glowlabs</title>
     <style>
         body {
             font-family: 'Arial', sans-serif;
@@ -193,7 +193,7 @@
 
         <!-- Celebration Banner -->
         <div class="celebration-banner {{ $licenseType }}-banner">
-             {{ __('Welcome to the Dala3Chic :type Community!', ['type' => ucfirst($licenseType)]) }} 
+             {{ __('Welcome to the glowlabs :type Community!', ['type' => ucfirst($licenseType)]) }} 
         </div>
 
         @php
@@ -229,7 +229,7 @@
             // Fallback message if parsing fails
             if (empty($messageBody)) {
                 $type = ucfirst($licenseType);
-                $messageBody = "Hello {$user->name},\n\nWe are thrilled to inform you that your Dala3Chic {$licenseType} registration has been approved! You are now officially part of the Dala3Chic marketplace.\n\nYou can access your dashboard and manage your account using your email and password at: https://dala3chic.com/login";
+                $messageBody = "Hello {$user->name},\n\nWe are thrilled to inform you that your glowlabs {$licenseType} registration has been approved! You are now officially part of the glowlabs marketplace.\n\nYou can access your dashboard and manage your account using your email and password at: https://glowlabs.ae/login";
             }
         @endphp
 
@@ -240,7 +240,7 @@
 
         <!-- Dashboard Button -->
         <div style="text-align: center;">
-            <a href="https://dala3chic.com/login"
+            <a href="https://glowlabs.ae/login"
                class="button {{ $licenseType }}-button">
                 {{ __('Access Your Dashboard') }}
             </a>
@@ -258,18 +258,18 @@
         <div style="margin-top: 30px;">
             <p>{{ __('If you have any questions or need assistance, our support team is here to help:') }}</p>
             <ul>
-                <li><strong>{{ __('Email:') }}</strong> support@dala3chic.com</li>
+                <li><strong>{{ __('Email:') }}</strong> support@glowlabs.ae</li>
                 <li><strong>{{ __('Phone:') }}</strong> +971-xxx-xxxx</li>
-                <li><strong>{{ __('Help Center:') }}</strong> <a href="https://help.dala3chic.com">help.dala3chic.com</a></li>
+                <li><strong>{{ __('Help Center:') }}</strong> <a href="https://help.glowlabs.ae">help.glowlabs.ae</a></li>
             </ul>
         </div>
 
         <p>{{ __('Best regards,') }}<br>
-        {{ __('The Dala3Chic Team') }}</p>
+        {{ __('The glowlabs Team') }}</p>
 
         <!-- Footer -->
         <div class="footer">
-            <p>© {{ date('Y') }} Dala3Chic. {{ __('All rights reserved.') }}</p>
+            <p>© {{ date('Y') }} glowlabs. {{ __('All rights reserved.') }}</p>
             <p>{{ __('This email was sent to :email.', ['email' => $user->email]) }}</p>
         </div>
     </div>

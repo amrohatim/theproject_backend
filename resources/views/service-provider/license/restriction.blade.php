@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>{{ __('service_provider.store_access_restricted') }} - Dala3Chic</title>
+    <title>{{ __('service_provider.store_access_restricted') }} - glowlabs</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <style>
@@ -22,7 +22,7 @@
         <div class="max-w-2xl w-full space-y-8">
             <!-- Header -->
             <div class="text-center">
-                <img src="{{ asset('assets/logo.png') }}" alt="Dala3Chic Logo" class="mx-auto w-20 h-20 object-contain rounded-2xl mb-6">
+                <img src="{{ asset('assets/logo.png') }}" alt="glowlabs Logo" class="mx-auto w-20 h-20 object-contain rounded-2xl mb-6">
                 <h1 class="text-3xl font-bold text-gray-900 mb-2">
                     {{ __('service_provider.service_provider_access') }}
                 </h1>
@@ -95,7 +95,7 @@
                         {{ __('service_provider.service_provider_support_message') }}
                     </p>
                     <div class="flex flex-col sm:flex-row gap-3">
-                        <a href="mailto:support@dala3chic.com" 
+                        <a href="mailto:support@glowlabs.ae" 
                            class="inline-flex items-center px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors duration-200">
                             <i class="fas fa-envelope mr-2"></i>
                             {{ __('service_provider.email_support') }}

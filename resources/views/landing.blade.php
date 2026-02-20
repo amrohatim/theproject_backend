@@ -14,7 +14,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="description" content="Your premier marketplace for products and services from trusted vendors worldwide">
     <meta name="keywords" content="marketplace, e-commerce, products, services, vendors, shopping">
-    <meta name="author" content="Dala3Chic">
+    <meta name="author" content="glowlabs">
     <meta name="csrf-token" content="{{ csrf_token() }}">
 
     <title>{{ __('messages.dala3chic') }} - {{ __('messages.hero_title') }}</title>
@@ -49,7 +49,7 @@
     {
         "@@context": "https://schema.org",
         "@@type": "WebSite",
-        "name": "Dala3Chic",
+        "name": "glowlabs",
         "description": "Your premier marketplace for products and services",
         "url": "{{ url('/') }}"
     }
@@ -354,7 +354,7 @@
                 <!-- Logo -->
                 <div class="flex-shrink-0">
                     <a href="/" class="flex items-center">
-                        <div class="text-2xl font-bold bg-gradient-to-r from-blue-600 to-blue-800 bg-clip-text">Dala3Chic</div>
+                        <div class="text-2xl font-bold bg-gradient-to-r from-blue-600 to-blue-800 bg-clip-text">glowlabs</div>
                     </a>
                 </div>
 
@@ -463,7 +463,7 @@
                 <!-- Main Headline -->
                 <h1 class="text-4xl md:text-6xl lg:text-7xl font-bold text-white mb-6 animate-fade-in-up">
                     <span class="block animate-slide-in-left">{{ __('messages.your_premier') }}</span>
-                    <span class="block  bg-clip-text  animate-pulse-glow">Dala3Chic</span>
+                    <span class="block  bg-clip-text  animate-pulse-glow">glowlabs</span>
                     <span class="block animate-slide-in-right">{{ __('messages.experience') }}</span>
                 </h1>
 
@@ -530,7 +530,7 @@
                 <div class="relative max-w-5xl mx-auto animate-fade-in-up animation-delay-1100">
                     <div class="bg-white/10 backdrop-blur-lg rounded-3xl shadow-2xl p-8 transform rotate-2 hover:rotate-0 transition-all duration-500 border border-white/20 hover:shadow-3xl">
                         <div class="bg-gradient-to-br from-white/20 to-white/10 rounded-2xl overflow-hidden backdrop-blur-sm">
-                            <img src="{{ asset('assets/main2.avif') }}" alt="Dala3Chic Marketplace Illustration" class="w-full h-auto object-contain transform hover:scale-105 transition-transform duration-500" />
+                            <img src="{{ asset('assets/main2.avif') }}" alt="glowlabs Marketplace Illustration" class="w-full h-auto object-contain transform hover:scale-105 transition-transform duration-500" />
                         </div>
                     </div>
                     <!-- Floating elements -->
@@ -843,7 +843,7 @@
                 <!-- Right Content - Demo Image -->
                 <div class="relative">
                     <div class="bg-white rounded-2xl shadow-2xl overflow-hidden border border-gray-200">
-                        <img src="{{ asset('assets/vendordash.webp') }}" alt="Dala3Chic Vendor Dashboard" class="w-full h-auto" />
+                        <img src="{{ asset('assets/vendordash.webp') }}" alt="glowlabs Vendor Dashboard" class="w-full h-auto" />
                     </div>
 
                     <!-- Floating Status Cards -->
@@ -934,7 +934,7 @@
                 <!-- Company Info -->
                 <div class="lg:col-span-1">
                     <div class="flex items-center mb-6">
-                        <div class="text-3xl font-bold bg-gradient-to-r from-blue-400 to-blue-600 bg-clip-text text-transparent">Dala3Chic</div>
+                        <div class="text-3xl font-bold bg-gradient-to-r from-blue-400 to-blue-600 bg-clip-text text-transparent">glowlabs</div>
                     </div>
                     <p class="text-blue-100 mb-6 leading-relaxed">
                         {{ __('messages.footer_description') }}
@@ -1003,7 +1003,7 @@
             <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
                 <div class="flex flex-col md:flex-row justify-between items-center space-y-4 md:space-y-0">
                     <div class="text-blue-100 text-sm">
-                        &copy; {{ date('Y') }} Dala3Chic. {{ __('messages.all_rights_reserved') }}
+                        &copy; {{ date('Y') }} glowlabs. {{ __('messages.all_rights_reserved') }}
                     </div>
                     <div class="flex space-x-6 text-sm">
                         <a href="#" class="text-blue-100 hover:text-white transition-colors">{{ __('messages.privacy_policy') }}</a>

@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="csrf-token" content="{{ csrf_token() }}">
-    <title>Merchant Registration - Dala3Chic</title>
+    <title>Merchant Registration - glowlabs</title>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
     <style>
         * {
@@ -372,7 +372,7 @@
                 <i class="fas fa-store"></i>
             </div>
             <h1 class="welcome-text">Join as Merchant</h1>
-            <p class="subtitle">Start your individual business on Dala3Chic marketplace</p>
+            <p class="subtitle">Start your individual business on glowlabs marketplace</p>
         </div>
 
         <!-- Registration Form -->

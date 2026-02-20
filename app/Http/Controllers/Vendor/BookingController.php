@@ -255,7 +255,7 @@ class BookingController extends Controller
             try {
                 CustomerNotification::create([
                     'notification_type' => CustomerNotification::TYPE_BOOKING,
-                    'sender_name' => optional($booking->branch)->name ?? 'Dala3Chic',
+                    'sender_name' => optional($booking->branch)->name ?? 'glowlabs',
                     'message' => $messageStatus,
                     'status' => $booking->status,
                     'is_opened' => false,
@@ -279,7 +279,7 @@ class BookingController extends Controller
             if ($tokens->isNotEmpty()) {
                 try {
                     $fcmService = app(FcmHttpV1::class);
-                    $title = 'Dala3Chic';
+                    $title = 'glowlabs';
                     $data = [
                         'booking_id' => (string) $booking->id,
                         'status' => (string) $booking->status,

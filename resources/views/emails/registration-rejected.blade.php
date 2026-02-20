@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Registration Update - Dala3Chic</title>
+    <title>Registration Update - glowlabs</title>
     <style>
         body {
             font-family: 'Arial', sans-serif;
@@ -108,7 +108,7 @@
         <!-- Greeting -->
         <p>Hello {{ $user->name }},</p>
 
-        <p>Thank you for your interest in joining Dala3Chic as a
+        <p>Thank you for your interest in joining glowlabs as a
             @if($userType === 'vendor')
                 vendor
             @elseif($userType === 'provider')
@@ -129,7 +129,7 @@
 
         <!-- What This Means -->
         <h3 style="color: #2d3748;">What This Means</h3>
-        <p>This decision doesn't necessarily mean you cannot join Dala3Chic in the future. We encourage you to:</p>
+        <p>This decision doesn't necessarily mean you cannot join glowlabs in the future. We encourage you to:</p>
 
         <ul>
             <li>Review our
@@ -150,7 +150,7 @@
                 <li>Contact our support team if you need clarification on this decision</li>
                 <li>Review our requirements and make necessary improvements</li>
                 <li>You may reapply after addressing the concerns</li>
-                <li>Consider alternative ways to work with Dala3Chic</li>
+                <li>Consider alternative ways to work with glowlabs</li>
             </ol>
         </div>
 
@@ -160,15 +160,15 @@
             <p>Our support team is here to help you understand this decision and guide you on potential next steps:</p>
 
             <ul style="margin-bottom: 0;">
-                <li><strong>Email:</strong> support@dala3chic.com</li>
+                <li><strong>Email:</strong> support@glowlabs.ae</li>
                 <li><strong>Phone:</strong> +971-xxx-xxxx</li>
-                <li><strong>Help Center:</strong> <a href="https://help.dala3chic.com">help.dala3chic.com</a></li>
+                <li><strong>Help Center:</strong> <a href="https://help.glowlabs.ae">help.glowlabs.ae</a></li>
             </ul>
         </div>
 
         <!-- Contact Support Button -->
         <div style="text-align: center;">
-            <a href="mailto:support@dala3chic.com?subject=Registration Decision Inquiry - {{ $user->name }}"
+            <a href="mailto:support@glowlabs.ae?subject=Registration Decision Inquiry - {{ $user->name }}"
                class="button">
                 Contact Support Team
             </a>
@@ -195,14 +195,14 @@
             @endif
         </ul>
 
-        <p>We appreciate your interest in Dala3Chic and hope to potentially work together in the future.</p>
+        <p>We appreciate your interest in glowlabs and hope to potentially work together in the future.</p>
 
         <p>Best regards,<br>
-        The Dala3Chic Team</p>
+        The glowlabs Team</p>
 
         <!-- Footer -->
         <div class="footer">
-            <p>© {{ date('Y') }} Dala3Chic. All rights reserved.</p>
+            <p>© {{ date('Y') }} glowlabs. All rights reserved.</p>
             <p>This email was sent to {{ $user->email }}.</p>
         </div>
     </div>

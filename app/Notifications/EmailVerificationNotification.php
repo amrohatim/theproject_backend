@@ -40,7 +40,7 @@ class EmailVerificationNotification extends Notification implements ShouldQueue
      */
     public function toMail(object $notifiable): MailMessage
     {
-        $appName = config('app.name', 'Dala3Chic');
+        $appName = config('app.name', 'glowlabs');
 
         // Customize message based on type
         switch ($this->type) {

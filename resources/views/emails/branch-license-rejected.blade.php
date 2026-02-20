@@ -113,7 +113,7 @@
 <body>
     <div class="email-container">
         <div class="header">
-            <div class="logo">Dala3Chic</div>
+            <div class="logo">glowlabs</div>
             <div class="warning-icon">⚠️</div>
             <div class="title">Branch License Rejected</div>
         </div>
@@ -183,8 +183,8 @@
         </div>
 
         <div class="footer">
-            <p>We appreciate your interest in joining Dala3Chic!</p>
-            <p><strong>The Dala3Chic Team</strong></p>
+            <p>We appreciate your interest in joining glowlabs!</p>
+            <p><strong>The glowlabs Team</strong></p>
             <p style="font-size: 12px; color: #999;">
                 This is an automated message. Please do not reply to this email.
             </p>

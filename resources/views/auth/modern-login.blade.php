@@ -10,7 +10,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="description" content="Login to your Dala3Chic account - Access your dashboard, orders, and more">
+    <meta name="description" content="Login to your glowlabs account - Access your dashboard, orders, and more">
     <meta name="robots" content="noindex, nofollow">
 
     <title>{{ __('messages.sign_in') }} - {{ __('messages.dala3chic') }}</title>
@@ -46,7 +46,7 @@
         <div class="auth-branding">
             <div class="scroll-reveal animate-fade-in-left">
                 
-                    <img src="{{ asset('assets/logo.png') }}" alt="Dala3Chic Logo" style="width: 150px; height: 150px;  object-fit: contain; border-radius: 14px;">
+                    <img src="{{ asset('assets/logo.png') }}" alt="glowlabs Logo" style="width: 150px; height: 150px;  object-fit: contain; border-radius: 14px;">
                
                 
                 <h1 class="auth-brand-title">

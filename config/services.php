@@ -79,7 +79,7 @@ return [
     ],
 
     'mailgun' => [
-        'domain' => env('MAILGUN_DOMAIN', 'www.dala3chic.com'),
+        'domain' => env('MAILGUN_DOMAIN', 'www.glowlabs.ae'),
         'secret' => env('MAILGUN_SECRET', 'c849b1292f390404b598f60aca06c703-a1dad75f-b9d83449'),
         'endpoint' => env('MAILGUN_ENDPOINT', 'api.mailgun.net'),
         'scheme' => 'https',
