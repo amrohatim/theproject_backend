@@ -79,8 +79,8 @@ class LandingController extends Controller
             case 'products_manager':
                 return route('products-manager.dashboard');
             default:
-                // Regular customers go to home page (could be changed to a customer dashboard if available)
-                return url('/');
+                // Unknown roles fall back to registration choice.
+                return route('register');
         }
     }
 }

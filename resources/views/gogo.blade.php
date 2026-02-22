@@ -149,8 +149,8 @@
       <div class="flex items-center gap-3">
         <x-language-switcher />
         <div class="hidden items-center gap-4 md:flex">
-          <a href="/login" class="login-cta text-sm text-gray-500">{{ __('messages.login') }}</a>
-          <a href="/register" class="rounded-full bg-brand-pink px-5 py-2 text-sm text-white transition-opacity hover:opacity-90">{{ __('messages.signup') }}</a>
+          <a href="{{ $isAuthenticated ? $getStartedUrl : route('login') }}" class="login-cta text-sm text-gray-500">{{ __('messages.login') }}</a>
+          <a href="{{ route('register') }}" class="rounded-full bg-brand-pink px-5 py-2 text-sm text-white transition-opacity hover:opacity-90">{{ __('messages.signup') }}</a>
         </div>
         <button class="md:hidden" onclick="document.getElementById('mobile-menu').classList.toggle('hidden')">
           <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="4" x2="20" y1="12" y2="12"/><line x1="4" x2="20" y1="6" y2="6"/><line x1="4" x2="20" y1="18" y2="18"/></svg>
@@ -167,8 +167,8 @@
         <a href="#" class="text-sm text-gray-500 hover:text-brand-dark">{{ __('messages.about_us') }}</a>
       </nav>
       <div class="flex items-center gap-4 pt-2">
-        <a href="/login" class="login-cta text-sm text-gray-500">{{ __('messages.login') }}</a>
-        <a href="#" class="rounded-full bg-brand-pink px-5 py-2 text-sm text-white">{{ __('messages.signup') }}</a>
+        <a href="{{ $isAuthenticated ? $getStartedUrl : route('login') }}" class="login-cta text-sm text-gray-500">{{ __('messages.login') }}</a>
+        <a href="{{ route('register') }}" class="rounded-full bg-brand-pink px-5 py-2 text-sm text-white">{{ __('messages.signup') }}</a>
       </div>
     </div>
   </header>
@@ -185,7 +185,12 @@
             {{ __('messages.gogo_hero_description') }}
           </p>
           <div class="mt-8 flex items-center gap-6">
-            <a href="/register" class="rounded-full bg-brand-pink px-8 py-3 text-sm font-medium text-white transition-opacity hover:opacity-90">{{ __('messages.gogo_start_now') }}</a>
+            <a
+              href="{{ $isAuthenticated ? $getStartedUrl : route('register') }}"
+              class="rounded-full bg-brand-pink px-8 py-3 text-sm font-medium text-white transition-opacity hover:opacity-90"
+            >
+              {{ $isAuthenticated ? __('messages.go_to_dashboard') : __('messages.gogo_start_now') }}
+            </a>
             <div class="demo-menu-wrap" id="demo-menu-wrap">
               <button type="button" id="demo-trigger" class="demo-trigger flex items-center gap-2 text-sm font-medium text-brand-dark" aria-haspopup="true" aria-expanded="false">
                 <span class="flex h-10 w-10 items-center justify-center rounded-full border border-gray-200">

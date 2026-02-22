@@ -3,6 +3,7 @@
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Auth;
 use App\Http\Controllers\Admin\DashboardController as AdminDashboardController;
+use App\Http\Controllers\Admin\MaintenanceSettingsController;
 use App\Http\Controllers\Admin\SizeCategoryController;
 use App\Http\Controllers\Vendor\DashboardController as VendorDashboardController;
 use App\Http\Controllers\Vendor\JobController as VendorJobController;
@@ -529,9 +530,11 @@ Route::get('/test-vendor-registration', function () {
 });
 
 // Registration routes
-Route::middleware(['web', 'guest'])->group(function () {
-    Route::get('/register', [RegistrationController::class, 'showRegistrationChoice'])->name('register');
+Route::get('/register', [RegistrationController::class, 'showRegistrationChoice'])
+    ->middleware('web')
+    ->name('register');
 
+Route::middleware(['web', 'guest'])->group(function () {
     // Vendor Registration - Vue.js Version
     Route::get('/register/vendor', function () {
         return view('vendor-registration-vue');
@@ -1339,9 +1342,8 @@ Route::prefix('admin')->name('admin.')->middleware(['auth', \App\Http\Middleware
     Route::get('/settings/commission', function () {
         return view('admin.settings.commission');
     })->name('settings.commission');
-    Route::get('/settings/maintenance', function () {
-        return view('admin.settings.maintenance');
-    })->name('settings.maintenance');
+    Route::get('/settings/maintenance', [MaintenanceSettingsController::class, 'index'])->name('settings.maintenance');
+    Route::post('/settings/maintenance', [MaintenanceSettingsController::class, 'upsert'])->name('settings.maintenance.upsert');
 
     // Image testing route
     Route::get('/image/test', [\App\Http\Controllers\ImageTestController::class, 'index'])->name('image.test');

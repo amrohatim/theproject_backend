@@ -10,9 +10,9 @@
         <p class="mt-1 text-gray-600 dark:text-gray-400">Manage system settings and configurations</p>
     </div>
 
-    <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
         <!-- General Settings -->
-        <div class="bg-white dark:bg-gray-800 rounded-lg shadow p-6 border border-gray-200 dark:border-gray-700">
+        {{-- <div class="bg-white dark:bg-gray-800 rounded-lg shadow p-6 border border-gray-200 dark:border-gray-700">
             <div class="flex items-center mb-4">
                 <div class="rounded-md bg-indigo-100 dark:bg-indigo-900 p-3 mr-4">
                     <i class="fas fa-cog text-indigo-600 dark:text-indigo-400"></i>
@@ -23,7 +23,7 @@
             <a href="{{ route('admin.settings.general') }}" class="inline-flex items-center px-4 py-2 bg-indigo-600 border border-transparent rounded-md font-semibold text-xs text-white uppercase tracking-widest hover:bg-indigo-700 active:bg-indigo-900 focus:outline-none focus:border-indigo-900 focus:ring ring-indigo-300 disabled:opacity-25 transition ease-in-out duration-150">
                 Manage
             </a>
-        </div>
+        </div> --}}
 
         <!-- Payment Settings -->
         <div class="bg-white dark:bg-gray-800 rounded-lg shadow p-6 border border-gray-200 dark:border-gray-700">
@@ -40,7 +40,7 @@
         </div>
 
         <!-- Email Settings -->
-        <div class="bg-white dark:bg-gray-800 rounded-lg shadow p-6 border border-gray-200 dark:border-gray-700">
+        {{-- <div class="bg-white dark:bg-gray-800 rounded-lg shadow p-6 border border-gray-200 dark:border-gray-700">
             <div class="flex items-center mb-4">
                 <div class="rounded-md bg-blue-100 dark:bg-blue-900 p-3 mr-4">
                     <i class="fas fa-envelope text-blue-600 dark:text-blue-400"></i>
@@ -51,7 +51,7 @@
             <a href="{{ route('admin.settings.email') }}" class="inline-flex items-center px-4 py-2 bg-blue-600 border border-transparent rounded-md font-semibold text-xs text-white uppercase tracking-widest hover:bg-blue-700 active:bg-blue-900 focus:outline-none focus:border-blue-900 focus:ring ring-blue-300 disabled:opacity-25 transition ease-in-out duration-150">
                 Manage
             </a>
-        </div>
+        </div> --}}
 
         <!-- User Roles & Permissions -->
         <div class="bg-white dark:bg-gray-800 rounded-lg shadow p-6 border border-gray-200 dark:border-gray-700">
