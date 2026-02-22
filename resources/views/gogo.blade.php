@@ -60,6 +60,77 @@
     .login-cta:hover::after {
       transform: scaleX(1);
     }
+    .demo-menu-wrap {
+      position: relative;
+      display: inline-flex;
+      align-items: center;
+    }
+    .demo-trigger {
+      transition: color .25s ease, transform .25s ease;
+    }
+    .demo-trigger:hover {
+      color: #d9657a;
+      transform: translateY(-1px);
+    }
+    .demo-menu-panel {
+      position: absolute;
+      top: calc(100% + 12px);
+      left: 0;
+      z-index: 60;
+      width: min(92vw, 360px);
+      border: 1px solid #f1f5f9;
+      border-radius: 14px;
+      background: #fff;
+      box-shadow: 0 18px 40px rgba(30, 37, 54, 0.15);
+      padding: 10px;
+      opacity: 0;
+      transform: translateY(10px);
+      pointer-events: none;
+      transition: opacity .2s ease, transform .2s ease;
+    }
+    .demo-menu-wrap.is-open .demo-menu-panel {
+      opacity: 1;
+      transform: translateY(0);
+      pointer-events: auto;
+    }
+    .demo-menu-card {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 8px;
+      border-radius: 12px;
+      text-decoration: none;
+      color: #1e2536;
+      transition: transform .2s ease, background-color .2s ease;
+    }
+    .demo-menu-card + .demo-menu-card {
+      margin-top: 6px;
+    }
+    .demo-menu-card:hover {
+      background: #fdf0ee;
+      transform: translateY(-1px);
+    }
+    .demo-menu-thumb {
+      width: 56px;
+      height: 56px;
+      border-radius: 10px;
+      object-fit: cover;
+      flex-shrink: 0;
+    }
+    .demo-menu-title {
+      display: block;
+      font-size: 13px;
+      font-weight: 700;
+      color: #1e2536;
+      line-height: 1.2;
+    }
+    .demo-menu-subtitle {
+      display: block;
+      margin-top: 3px;
+      font-size: 12px;
+      color: #64748b;
+      line-height: 1.2;
+    }
   </style>
 </head>
 <body class="bg-white antialiased">
@@ -114,20 +185,38 @@
             {{ __('messages.gogo_hero_description') }}
           </p>
           <div class="mt-8 flex items-center gap-6">
-            <button class="rounded-full bg-brand-pink px-8 py-3 text-sm font-medium text-white transition-opacity hover:opacity-90">{{ __('messages.gogo_start_now') }}</button>
-            <button class="flex items-center gap-2 text-sm font-medium text-brand-dark">
-              <span class="flex h-10 w-10 items-center justify-center rounded-full border border-gray-200">
-                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="currentColor" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="6 3 20 12 6 21 6 3"/></svg>
-              </span>
-              {{ __('messages.gogo_view_demo') }}
-            </button>
+            <a href="/register" class="rounded-full bg-brand-pink px-8 py-3 text-sm font-medium text-white transition-opacity hover:opacity-90">{{ __('messages.gogo_start_now') }}</a>
+            <div class="demo-menu-wrap" id="demo-menu-wrap">
+              <button type="button" id="demo-trigger" class="demo-trigger flex items-center gap-2 text-sm font-medium text-brand-dark" aria-haspopup="true" aria-expanded="false">
+                <span class="flex h-10 w-10 items-center justify-center rounded-full border border-gray-200">
+                  <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="currentColor" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="6 3 20 12 6 21 6 3"/></svg>
+                </span>
+                {{ __('messages.gogo_view_demo') }}
+              </button>
+              <div class="demo-menu-panel" id="demo-menu-panel" role="menu" aria-label="Demo pages">
+                <a href="{{ route('aboutmerchant') }}" class="demo-menu-card" role="menuitem">
+                  <img src="{{ asset('assets/medium-shot-smiley-woman-sewing-with-machine.avif') }}" alt="Merchant Hero" class="demo-menu-thumb" />
+                  <span>
+                    <span class="demo-menu-title">{{ __('messages.merchant') }}</span>
+                    <span class="demo-menu-subtitle">{{ __('messages.aboutmerchantdemo') }}</span>
+                  </span>
+                </a>
+                <a href="{{ route('aboutvendor') }}" class="demo-menu-card" role="menuitem">
+                  <img src="{{ asset('assets/vendoreps.png') }}" alt="Vendor Hero" class="demo-menu-thumb" />
+                  <span>
+                    <span class="demo-menu-title">{{ __('messages.company') }}</span>
+                    <span class="demo-menu-subtitle">{{ __('messages.aboutcompanydemo') }}</span>
+                  </span>
+                </a>
+              </div>
+            </div>
           </div>
         </div>
         <div class="relative">
           <div class="absolute -right-10 -top-10 h-[500px] w-[500px] rounded-full bg-brand-pink-bg opacity-60 blur-3xl"></div>
           <div class="relative z-10">
             <div class="relative mx-auto w-full max-w-md">
-              <div class="absolute -left-4 top-4 z-20 rounded-xl bg-white p-3 shadow-lg">
+              <div class="absolute -left-10 top-4 z-20 rounded-xl bg-white p-3 shadow-lg">
                 <div class="flex items-center gap-2">
                   <div class="flex h-8 w-8 items-center justify-center rounded-lg bg-gray-100 text-xs font-bold text-brand-dark">45</div>
                   <div class="h-1.5 w-12 rounded-full bg-gray-200"></div>
@@ -139,7 +228,7 @@
               <div class="absolute -right-2 bottom-24 z-20 rounded-xl bg-white px-4 py-2 shadow-lg">
                 <span class="text-sm font-semibold text-brand-dark">245.00 AED</span>
               </div>
-              <div class="absolute -right-8 top-8 z-20 h-16 w-24 rounded-xl bg-[#2D1B69] shadow-lg"></div>
+              <div class="absolute -left-10 bottom-8 z-20 h-16 w-48 rounded-xl bg-[#F8D5D0] pt-5 text-center font-serif font-semibold text-pink-900 shadow-lg">{{ __('messages.gogo_emirates_wide') }}</div>
             </div>
           </div>
         </div>
@@ -540,6 +629,92 @@
         btnMonthly.className = 'rounded-full px-5 py-2 text-sm font-medium text-gray-500';
       }
     }
+
+    (function setupDemoMenu() {
+      const wrap = document.getElementById('demo-menu-wrap');
+      const trigger = document.getElementById('demo-trigger');
+      const panel = document.getElementById('demo-menu-panel');
+      if (!wrap || !trigger || !panel) return;
+
+      const hoverEnabled = window.matchMedia('(hover: hover) and (pointer: fine)').matches;
+      let closeTimer = null;
+
+      const cancelClose = () => {
+        if (closeTimer) {
+          clearTimeout(closeTimer);
+          closeTimer = null;
+        }
+      };
+
+      const openMenu = () => {
+        cancelClose();
+        wrap.classList.add('is-open');
+        trigger.setAttribute('aria-expanded', 'true');
+      };
+
+      const closeMenu = () => {
+        cancelClose();
+        wrap.classList.remove('is-open');
+        trigger.setAttribute('aria-expanded', 'false');
+      };
+
+      const scheduleClose = () => {
+        cancelClose();
+        closeTimer = setTimeout(() => {
+          closeMenu();
+        }, 180);
+      };
+
+      const toggleMenu = () => {
+        if (wrap.classList.contains('is-open')) {
+          closeMenu();
+        } else {
+          openMenu();
+        }
+      };
+
+      trigger.addEventListener('click', function (event) {
+        if (hoverEnabled) return;
+        event.preventDefault();
+        toggleMenu();
+      });
+
+      trigger.addEventListener('keydown', function (event) {
+        if (event.key === 'Enter' || event.key === ' ') {
+          event.preventDefault();
+          toggleMenu();
+        }
+      });
+
+      if (hoverEnabled) {
+        wrap.addEventListener('mouseenter', openMenu);
+        wrap.addEventListener('mouseleave', scheduleClose);
+        panel.addEventListener('mouseenter', cancelClose);
+        panel.addEventListener('mouseleave', scheduleClose);
+      }
+
+      wrap.addEventListener('focusin', openMenu);
+      wrap.addEventListener('focusout', function () {
+        setTimeout(() => {
+          if (!wrap.contains(document.activeElement)) {
+            scheduleClose();
+          }
+        }, 0);
+      });
+
+      document.addEventListener('click', function (event) {
+        if (!wrap.contains(event.target)) {
+          closeMenu();
+        }
+      });
+
+      document.addEventListener('keydown', function (event) {
+        if (event.key === 'Escape') {
+          closeMenu();
+          trigger.focus();
+        }
+      });
+    })();
   </script>
 </body>
 </html>

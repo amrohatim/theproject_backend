@@ -277,6 +277,10 @@ return [
     'go_to_vendor_dashboard' => 'Go to Vendor Dashboard',
     'go_to_provider_dashboard' => 'Go to Provider Dashboard',
     'continue_shopping' => 'Continue Shopping',
+    'aboutmerchantdemo'=>  'About merchant demo' ,
+    'aboutcompanydemo'=>  'About company demo' ,
+
+
 
     // Stats Section
     'happy_customers' => 'Happy Customers',
@@ -1544,9 +1548,9 @@ return [
     'merchant' => 'Merchant',
     'provider' => 'Provider',
     'gogo_title' => 'glowlabs - Increase Your Productivity',
-    'gogo_meta_description' => 'Let\'s make your work more organized and easy with the Dala Dashboard and its latest daily work-management features.',
+    'gogo_meta_description' => 'Let\'s make your work more organized and easy with the glowlabs Dashboard and its latest daily work-management features.',
     'gogo_hero_title' => 'We\'re here to<br />Increase your<br />Productivity',
-    'gogo_hero_description' => 'Let\'s make your work more organized and easy using the Dala Dashboard with many of the latest features in managing work every day.',
+    'gogo_hero_description' => 'Let\'s make your work more organized and easy using the glowlabs Dashboard with many of the latest features in managing work every day.',
     'gogo_start_now' => 'Start Now',
     'gogo_view_demo' => 'View Demo',
     'gogo_alt_professional_businesswoman' => 'Professional businesswoman',
@@ -1559,7 +1563,7 @@ return [
     'gogo_city_fujairah' => 'Fujairah',
     'gogo_city_ras_al_khaimah' => 'Ras Al Khaimah',
     'gogo_support_title' => 'How we support our partners<br />all over the Emirates',
-    'gogo_support_description' => 'Offering an integrated SaaS platform that empowers female merchants and service providers to manage their businesses, services, and orders from one smart dashboard.',
+    'gogo_support_description' => 'Offering an integrated SaaS platform that empowers female merchants and companies to manage their businesses, services, and orders from one smart dashboard.',
     'gogo_trustpilots' => 'Trustpilots',
     'gogo_clutchanlytica' => 'Clutchanlytica',
     'gogo_business_operations_hub' => 'Business Operations Hub',
@@ -1636,4 +1640,5 @@ return [
     'gogo_beta_test' => 'Beta test',
     'gogo_pricing_product' => 'Pricing product',
     'gogo_copyright' => '© 2022 Biccas Inc. Copyright and rights reserved',
+    'gogo_emirates_wide' => 'Emirates Wide',
 ];
