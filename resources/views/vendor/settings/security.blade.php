@@ -30,6 +30,12 @@
         </div>
     @endif
 
+    @if($sessionDriver !== 'database')
+        <div class="bg-yellow-100 border border-yellow-400 text-yellow-800 px-4 py-3 rounded mb-6" role="alert">
+            <span class="block sm:inline">Session listing and revocation are available only when `SESSION_DRIVER=database`.</span>
+        </div>
+    @endif
+
     <!-- Change Password -->
     <div class="bg-white dark:bg-gray-800 rounded-lg shadow p-6 border border-gray-200 dark:border-gray-700 mb-6">
         <h3 class="text-lg font-medium text-gray-900 dark:text-white mb-4">{{ __('vendor.change_password') }}</h3>
@@ -136,32 +142,55 @@
                     </tr>
                 </thead>
                 <tbody class="bg-white dark:bg-gray-800 divide-y divide-gray-200 dark:divide-gray-700">
-                    <tr>
-                        <td class="px-6 py-4 whitespace-nowrap">
-                            <div class="flex items-center">
-                                <i class="fas fa-desktop text-gray-400 mr-2"></i>
-                                <div class="text-sm font-medium text-gray-900 dark:text-white">Windows - Chrome</div>
-                            </div>
-                            <div class="text-xs text-gray-500 dark:text-gray-400">Current device</div>
-                        </td>
-                        <td class="px-6 py-4 whitespace-nowrap">
-                            <div class="text-sm text-gray-900 dark:text-white">192.168.1.1</div>
-                        </td>
-                        <td class="px-6 py-4 whitespace-nowrap">
-                            <div class="text-sm text-gray-900 dark:text-white">Now</div>
-                        </td>
-                        <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
-                            <span class="text-gray-400 dark:text-gray-500">This device</span>
-                        </td>
-                    </tr>
+                    @forelse($activeSessions as $activeSession)
+                        <tr>
+                            <td class="px-6 py-4 whitespace-nowrap">
+                                <div class="flex items-center">
+                                    <i class="fas {{ $activeSession->device_icon }} text-gray-400 mr-2"></i>
+                                    <div class="text-sm font-medium text-gray-900 dark:text-white">{{ $activeSession->device_label }}</div>
+                                </div>
+                                <div class="text-xs text-gray-500 dark:text-gray-400">
+                                    {{ $activeSession->is_current ? 'Current device' : 'Other device' }}
+                                </div>
+                            </td>
+                            <td class="px-6 py-4 whitespace-nowrap">
+                                <div class="text-sm text-gray-900 dark:text-white">{{ $activeSession->ip_address }}</div>
+                            </td>
+                            <td class="px-6 py-4 whitespace-nowrap">
+                                <div class="text-sm text-gray-900 dark:text-white">
+                                    {{ $activeSession->is_current ? 'Now' : $activeSession->last_activity_human }}
+                                </div>
+                            </td>
+                            <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
+                                @if($activeSession->is_current)
+                                    <span class="text-gray-400 dark:text-gray-500">This device</span>
+                                @else
+                                    <span class="text-green-600 dark:text-green-400">Active</span>
+                                @endif
+                            </td>
+                        </tr>
+                    @empty
+                        <tr>
+                            <td colspan="4" class="px-6 py-6 text-center text-sm text-gray-500 dark:text-gray-400">
+                                No active sessions found.
+                            </td>
+                        </tr>
+                    @endforelse
                 </tbody>
             </table>
         </div>
         
         <div class="mt-4">
-            <button type="button" class="inline-flex items-center px-4 py-2 bg-red-600 border border-transparent rounded-md font-semibold text-xs text-white uppercase tracking-widest hover:bg-red-700 active:bg-red-900 focus:outline-none focus:border-red-900 focus:ring ring-red-300 disabled:opacity-25 transition ease-in-out duration-150">
-                <i class="fas fa-sign-out-alt mr-2"></i> Log Out Other Sessions
-            </button>
+            <form method="POST" action="{{ route('vendor.settings.security.sessions.logout-others') }}">
+                @csrf
+                <button
+                    type="submit"
+                    class="inline-flex items-center px-4 py-2 bg-red-600 border border-transparent rounded-md font-semibold text-xs text-white uppercase tracking-widest hover:bg-red-700 active:bg-red-900 focus:outline-none focus:border-red-900 focus:ring ring-red-300 disabled:opacity-25 transition ease-in-out duration-150"
+                    {{ $sessionDriver !== 'database' || $activeSessions->count() <= 1 ? 'disabled' : '' }}
+                >
+                    <i class="fas fa-sign-out-alt mr-2"></i> Log Out Other Sessions
+                </button>
+            </form>
         </div>
     </div>
 

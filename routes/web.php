@@ -2126,10 +2126,9 @@ Route::prefix('vendor')->name('vendor.')->middleware(['auth', \App\Http\Middlewa
         return view('vendor.settings.profile');
     })->name('settings.profile');
     Route::put('/settings/profile', [VendorSettingsController::class, 'updateProfile'])->name('settings.profile.update');
-    Route::get('/settings/security', function () {
-        return view('vendor.settings.security');
-    })->name('settings.security');
+    Route::get('/settings/security', [VendorSettingsController::class, 'security'])->name('settings.security');
     Route::put('/settings/security', [VendorSettingsController::class, 'updatePassword'])->name('settings.security.update');
+    Route::post('/settings/security/sessions/logout-others', [VendorSettingsController::class, 'logoutOtherSessions'])->name('settings.security.sessions.logout-others');
     Route::get('/settings/notifications', function () {
         return view('vendor.settings.notifications');
     })->name('settings.notifications');
