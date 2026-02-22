@@ -10,9 +10,9 @@
         <p class="mt-1 text-gray-600 dark:text-gray-400">{{ __('vendor.manage_account_settings_preferences') }}</p>
     </div>
 
-    <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
         <!-- Profile Settings -->
-        <div class="bg-white dark:bg-gray-800 rounded-lg shadow p-6 border border-gray-200 dark:border-gray-700">
+        {{-- <div class="bg-white dark:bg-gray-800 rounded-lg shadow p-6 border border-gray-200 dark:border-gray-700">
             <div class="flex items-center mb-4">
                 <div class="rounded-md bg-indigo-100 dark:bg-indigo-900 p-3 {{ app()->getLocale() === 'ar' ? 'ml-4' : 'mr-4' }}">
                     <i class="fas fa-user text-indigo-600 dark:text-indigo-400"></i>
@@ -23,12 +23,12 @@
             <a href="{{ route('vendor.settings.profile') }}" class="inline-flex items-center px-4 py-2 bg-indigo-600 border border-transparent rounded-md font-semibold text-xs text-white uppercase tracking-widest hover:bg-indigo-700 active:bg-indigo-900 focus:outline-none focus:border-indigo-900 focus:ring ring-indigo-300 disabled:opacity-25 transition ease-in-out duration-150">
                 {{ __('vendor.manage') }}
             </a>
-        </div>
+        </div> --}}
 
         <!-- Security Settings -->
         <div class="bg-white dark:bg-gray-800 rounded-lg shadow p-6 border border-gray-200 dark:border-gray-700">
-            <div class="flex items-center mb-4">
-                <div class="rounded-md bg-green-100 dark:bg-green-900 p-3 {{ app()->getLocale() === 'ar' ? 'ml-4' : 'mr-4' }}">
+            <div class="flex items-center gap-4 mb-4">
+                <div class="rounded-md bg-green-100 dark:bg-green-900 p-3">
                     <i class="fas fa-lock text-green-600 dark:text-green-400"></i>
                 </div>
                 <h3 class="text-lg font-medium text-gray-900 dark:text-white">{{ __('vendor.security_settings') }}</h3>
@@ -41,8 +41,8 @@
 
         <!-- Service Provider Management -->
         <div class="bg-white dark:bg-gray-800 rounded-lg shadow p-6 border border-gray-200 dark:border-gray-700">
-            <div class="flex items-center mb-4">
-                <div class="rounded-md bg-[#53D2DC]/10 dark:bg-[#53D2DC]/10 p-3 {{ app()->getLocale() === 'ar' ? 'ml-4' : 'mr-4' }}">
+            <div class="flex items-center gap-4 mb-4">
+                <div class="rounded-md bg-[#53D2DC]/10 dark:bg-[#53D2DC]/10 p-3">
                     <i class="fas fa-users text-[#53D2DC] dark:text-[#53D2DC]-400"></i>
                 </div>
                 <h3 class="text-lg font-medium text-gray-900 dark:text-white">{{ __('vendor.service_providers') }}</h3>
@@ -55,8 +55,8 @@
 
         <!-- Payment Settings -->
         <div class="bg-white dark:bg-gray-800 rounded-lg shadow p-6 border border-gray-200 dark:border-gray-700">
-            <div class="flex items-center mb-4">
-                <div class="rounded-md bg-purple-100 dark:bg-purple-900 p-3 {{ app()->getLocale() === 'ar' ? 'ml-4' : 'mr-4' }}">
+            <div class="flex items-center gap-4 mb-4">
+                <div class="rounded-md bg-purple-100 dark:bg-purple-900 p-3">
                     <i class="fas fa-credit-card text-purple-600 dark:text-purple-400"></i>
                 </div>
                 <h3 class="text-lg font-medium text-gray-900 dark:text-white">{{ __('vendor.payment_settings') }}</h3>
@@ -68,7 +68,7 @@
         </div>
 
         <!-- Business Hours -->
-        <div class="bg-white dark:bg-gray-800 rounded-lg shadow p-6 border border-gray-200 dark:border-gray-700">
+        {{-- <div class="bg-white dark:bg-gray-800 rounded-lg shadow p-6 border border-gray-200 dark:border-gray-700">
             <div class="flex items-center mb-4">
                 <div class="rounded-md bg-yellow-100 dark:bg-yellow-900 p-3 {{ app()->getLocale() === 'ar' ? 'ml-4' : 'mr-4' }}">
                     <i class="fas fa-clock text-yellow-600 dark:text-yellow-400"></i>
@@ -79,12 +79,12 @@
             <a href="{{ route('vendor.settings.hours') }}" class="inline-flex items-center px-4 py-2 bg-yellow-600 border border-transparent rounded-md font-semibold text-xs text-white uppercase tracking-widest hover:bg-yellow-700 active:bg-yellow-900 focus:outline-none focus:border-yellow-900 focus:ring ring-yellow-300 disabled:opacity-25 transition ease-in-out duration-150">
                 {{ __('vendor.manage') }}
             </a>
-        </div>
+        </div> --}}
 
         <!-- Products Manager Management -->
         <div class="bg-white dark:bg-gray-800 rounded-lg shadow p-6 border border-gray-200 dark:border-gray-700">
-            <div class="flex items-center mb-4">
-                <div class="rounded-md bg-orange-100 dark:bg-orange-900 p-3 {{ app()->getLocale() === 'ar' ? 'ml-4' : 'mr-4' }}">
+            <div class="flex items-center gap-4 mb-4">
+                <div class="rounded-md bg-orange-100 dark:bg-orange-900 p-3">
                     <i class="fas fa-box text-orange-600 dark:text-orange-400"></i>
                 </div>
                 <h3 class="text-lg font-medium text-gray-900 dark:text-white">{{ __('vendor.products_managers') }}</h3>
@@ -135,7 +135,7 @@
         <p class="text-sm text-gray-500 dark:text-gray-400 mb-4">{{ __('vendor.danger_zone_description') }}</p>
 
         <div class="space-y-4">
-            <div class="flex items-center justify-between p-4 bg-red-50 dark:bg-red-900/20 rounded-md">
+            <div class="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between p-4 bg-red-50 dark:bg-red-900/20 rounded-md">
                 <div>
                     <h4 class="text-sm font-medium text-red-800 dark:text-red-300">{{ __('vendor.deactivate_account') }}</h4>
                     <p class="text-xs text-red-600 dark:text-red-400">{{ __('vendor.deactivate_account_description') }}</p>
@@ -145,7 +145,7 @@
                 </button>
             </div>
 
-            <div class="flex items-center justify-between p-4 bg-red-50 dark:bg-red-900/20 rounded-md">
+            <div class="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between p-4 bg-red-50 dark:bg-red-900/20 rounded-md">
                 <div>
                     <h4 class="text-sm font-medium text-red-800 dark:text-red-300">{{ __('vendor.delete_account') }}</h4>
                     <p class="text-xs text-red-600 dark:text-red-400">{{ __('vendor.delete_account_description') }}</p>

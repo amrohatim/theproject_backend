@@ -12,10 +12,10 @@
         </div>
         <div class="mt-4 md:mt-0 flex space-x-3 {{ app()->getLocale() === 'ar' ? 'rtl:space-x-reverse' : '' }}">
             <a href="{{ route('vendor.settings') }}" class="inline-flex items-center px-4 py-2 bg-gray-600 border border-transparent rounded-md font-semibold text-xs text-white uppercase tracking-widest hover:bg-gray-700 active:bg-gray-900 focus:outline-none focus:border-gray-900 focus:ring ring-gray-300 disabled:opacity-25 transition ease-in-out duration-150">
-                <i class="fas fa-arrow-left {{ app()->getLocale() === 'ar' ? 'ml-2 rtl:rotate-180' : 'mr-2' }}"></i> {{ __('vendor.back_to_settings') }}
+                <i class="fas {{ app()->getLocale() === 'ar' ? 'fa-arrow-right ml-2' : 'fa-arrow-left mr-2' }} px-2"></i> {{ __('vendor.back_to_settings') }}
             </a>
             <a href="{{ route('vendor.settings.service-providers.create') }}" class="inline-flex items-center px-4 py-2 border border-transparent rounded-md font-semibold text-xs text-white uppercase tracking-widest focus:outline-none disabled:opacity-25 transition ease-in-out duration-150" style="background-color: #53D2DC; border-color: #53D2DC;" onmouseover="this.style.backgroundColor='#42B8C2'" onmouseout="this.style.backgroundColor='#53D2DC'" onfocus="this.style.boxShadow='0 0 0 3px rgba(83, 210, 220, 0.3)'" onblur="this.style.boxShadow='none'">
-                <i class="fas fa-plus {{ app()->getLocale() === 'ar' ? 'ml-2' : 'mr-2' }}"></i> {{ __('vendor.add_service_provider') }}
+                <i class="fas {{ app()->getLocale() === 'ar' ? 'fa-arrow-right ml-2' : 'fa-arrow-left mr-2' }} px-2"></i> {{ __('vendor.add_service_provider') }}
             </a>
         </div>
     </div>

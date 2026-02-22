@@ -12,7 +12,7 @@
         </div>
         <div class="mt-4 md:mt-0">
             <a href="{{ route('vendor.settings') }}" class="inline-flex items-center px-4 py-2 bg-gray-600 border border-transparent rounded-md font-semibold text-xs text-white uppercase tracking-widest hover:bg-gray-700 active:bg-gray-900 focus:outline-none focus:border-gray-900 focus:ring ring-gray-300 disabled:opacity-25 transition ease-in-out duration-150">
-                <i class="fas fa-arrow-left {{ app()->getLocale() === 'ar' ? 'ml-2' : 'mr-2' }}"></i> {{ __('vendor.back_to_settings') }}
+                <i class="fas {{ app()->getLocale() === 'ar' ? 'fa-arrow-right ml-2' : 'fa-arrow-left mr-2' }} px-2"></i> {{ __('vendor.back_to_settings') }}
             </a>
         </div>
     </div>
@@ -32,7 +32,7 @@
 
     @if($sessionDriver !== 'database')
         <div class="bg-yellow-100 border border-yellow-400 text-yellow-800 px-4 py-3 rounded mb-6" role="alert">
-            <span class="block sm:inline">Session listing and revocation are available only when `SESSION_DRIVER=database`.</span>
+            <span class="block sm:inline">{{ __('vendor.session_listing_requires_database') }}</span>
         </div>
     @endif
 
@@ -48,7 +48,7 @@
                 <div>
                     <label for="current_password" class="block text-sm font-medium text-gray-700 dark:text-gray-300">{{ __('vendor.current_password') }}</label>
                     <div class="relative mt-1">
-                        <input type="password" name="current_password" id="current_password" class="focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-white rounded-md {{ app()->getLocale() === 'ar' ? 'pl-10' : 'pr-10' }}">
+                        <input type="password" name="current_password" id="current_password" class="focus:ring-indigo-500 p-2 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-white rounded-md {{ app()->getLocale() === 'ar' ? 'pl-10' : 'pr-10' }}">
                         <button type="button" class="absolute inset-y-0 {{ app()->getLocale() === 'ar' ? 'left-0 pl-3' : 'right-0 pr-3' }} flex items-center" onclick="togglePasswordVisibility('current_password')">
                             <i id="current_password_icon" class="fas fa-eye text-gray-400 hover:text-gray-600 dark:hover:text-gray-300 cursor-pointer"></i>
                         </button>
@@ -62,7 +62,7 @@
                 <div>
                     <label for="password" class="block text-sm font-medium text-gray-700 dark:text-gray-300">{{ __('vendor.new_password') }}</label>
                     <div class="relative mt-1">
-                        <input type="password" name="password" id="password" class="focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-white rounded-md {{ app()->getLocale() === 'ar' ? 'pl-10' : 'pr-10' }}">
+                        <input type="password" name="password" id="password" class="p-2 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-white rounded-md {{ app()->getLocale() === 'ar' ? 'pl-10' : 'pr-10' }}">
                         <button type="button" class="absolute inset-y-0 {{ app()->getLocale() === 'ar' ? 'left-0 pl-3' : 'right-0 pr-3' }} flex items-center" onclick="togglePasswordVisibility('password')">
                             <i id="password_icon" class="fas fa-eye text-gray-400 hover:text-gray-600 dark:hover:text-gray-300 cursor-pointer"></i>
                         </button>
@@ -76,7 +76,7 @@
                 <div>
                     <label for="password_confirmation" class="block text-sm font-medium text-gray-700 dark:text-gray-300">{{ __('vendor.confirm_password') }}</label>
                     <div class="relative mt-1">
-                        <input type="password" name="password_confirmation" id="password_confirmation" class="focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-white rounded-md {{ app()->getLocale() === 'ar' ? 'pl-10' : 'pr-10' }}">
+                        <input type="password" name="password_confirmation" id="password_confirmation" class="p-2 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-white rounded-md {{ app()->getLocale() === 'ar' ? 'pl-10' : 'pr-10' }}">
                         <button type="button" class="absolute inset-y-0 {{ app()->getLocale() === 'ar' ? 'left-0 pl-3' : 'right-0 pr-3' }} flex items-center" onclick="togglePasswordVisibility('password_confirmation')">
                             <i id="password_confirmation_icon" class="fas fa-eye text-gray-400 hover:text-gray-600 dark:hover:text-gray-300 cursor-pointer"></i>
                         </button>
@@ -92,7 +92,7 @@
         </form>
     </div>
 
-    <!-- Two-Factor Authentication -->
+    {{-- <!-- Two-Factor Authentication -->
     <div class="bg-white dark:bg-gray-800 rounded-lg shadow p-6 border border-gray-200 dark:border-gray-700 mb-6">
         <h3 class="text-lg font-medium text-gray-900 dark:text-white mb-4">Two-Factor Authentication</h3>
         <p class="text-sm text-gray-500 dark:text-gray-400 mb-4">Add an extra layer of security to your account by enabling two-factor authentication.</p>
@@ -124,21 +124,21 @@
                 <i class="fas fa-shield-alt mr-2"></i> Enable Two-Factor Authentication
             </button>
         </div>
-    </div>
+    </div> --}}
 
     <!-- Login Sessions -->
     <div class="bg-white dark:bg-gray-800 rounded-lg shadow p-6 border border-gray-200 dark:border-gray-700 mb-6">
-        <h3 class="text-lg font-medium text-gray-900 dark:text-white mb-4">Login Sessions</h3>
-        <p class="text-sm text-gray-500 dark:text-gray-400 mb-4">Manage and log out your active sessions on other browsers and devices.</p>
+        <h3 class="text-lg font-medium text-gray-900 dark:text-white mb-4">{{ __('vendor.login_sessions') }}</h3>
+        <p class="text-sm text-gray-500 dark:text-gray-400 mb-4">{{ __('vendor.manage_and_logout_other_sessions') }}</p>
         
         <div class="overflow-x-auto">
             <table class="min-w-full divide-y divide-gray-200 dark:divide-gray-700">
                 <thead class="bg-gray-50 dark:bg-gray-700">
                     <tr>
-                        <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">Device</th>
-                        <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">IP Address</th>
-                        <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">Last Activity</th>
-                        <th scope="col" class="px-6 py-3 text-right text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">Action</th>
+                        <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">{{ __('vendor.device') }}</th>
+                        <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">{{ __('vendor.ip_address') }}</th>
+                        <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">{{ __('vendor.last_activity') }}</th>
+                        <th scope="col" class="px-6 py-3 text-right text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">{{ __('vendor.action') }}</th>
                     </tr>
                 </thead>
                 <tbody class="bg-white dark:bg-gray-800 divide-y divide-gray-200 dark:divide-gray-700">
@@ -150,7 +150,7 @@
                                     <div class="text-sm font-medium text-gray-900 dark:text-white">{{ $activeSession->device_label }}</div>
                                 </div>
                                 <div class="text-xs text-gray-500 dark:text-gray-400">
-                                    {{ $activeSession->is_current ? 'Current device' : 'Other device' }}
+                                    {{ $activeSession->is_current ? __('vendor.current_device') : __('vendor.other_device') }}
                                 </div>
                             </td>
                             <td class="px-6 py-4 whitespace-nowrap">
@@ -158,21 +158,21 @@
                             </td>
                             <td class="px-6 py-4 whitespace-nowrap">
                                 <div class="text-sm text-gray-900 dark:text-white">
-                                    {{ $activeSession->is_current ? 'Now' : $activeSession->last_activity_human }}
+                                    {{ $activeSession->is_current ? __('vendor.now') : $activeSession->last_activity_human }}
                                 </div>
                             </td>
                             <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
                                 @if($activeSession->is_current)
-                                    <span class="text-gray-400 dark:text-gray-500">This device</span>
+                                    <span class="text-gray-400 dark:text-gray-500">{{ __('vendor.this_device') }}</span>
                                 @else
-                                    <span class="text-green-600 dark:text-green-400">Active</span>
+                                    <span class="text-green-600 dark:text-green-400">{{ __('vendor.active') }}</span>
                                 @endif
                             </td>
                         </tr>
                     @empty
                         <tr>
                             <td colspan="4" class="px-6 py-6 text-center text-sm text-gray-500 dark:text-gray-400">
-                                No active sessions found.
+                                {{ __('vendor.no_active_sessions_found') }}
                             </td>
                         </tr>
                     @endforelse
@@ -188,13 +188,13 @@
                     class="inline-flex items-center px-4 py-2 bg-red-600 border border-transparent rounded-md font-semibold text-xs text-white uppercase tracking-widest hover:bg-red-700 active:bg-red-900 focus:outline-none focus:border-red-900 focus:ring ring-red-300 disabled:opacity-25 transition ease-in-out duration-150"
                     {{ $sessionDriver !== 'database' || $activeSessions->count() <= 1 ? 'disabled' : '' }}
                 >
-                    <i class="fas fa-sign-out-alt mr-2"></i> Log Out Other Sessions
+                    <i class="fas fa-sign-out-alt mr-2"></i> {{ __('vendor.log_out_other_sessions') }}
                 </button>
             </form>
         </div>
     </div>
 
-    <!-- API Tokens -->
+    {{-- <!-- API Tokens -->
     <div class="bg-white dark:bg-gray-800 rounded-lg shadow p-6 border border-gray-200 dark:border-gray-700">
         <h3 class="text-lg font-medium text-gray-900 dark:text-white mb-4">API Tokens</h3>
         <p class="text-sm text-gray-500 dark:text-gray-400 mb-4">Create and manage API tokens to interact with our API.</p>
@@ -208,7 +208,7 @@
         <div class="bg-gray-50 dark:bg-gray-700 p-4 rounded-md text-center">
             <p class="text-sm text-gray-500 dark:text-gray-400">No API tokens have been created yet.</p>
         </div>
-    </div>
+    </div> --}}
 </div>
 
 <script>
