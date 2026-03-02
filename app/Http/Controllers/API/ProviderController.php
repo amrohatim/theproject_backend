@@ -508,6 +508,7 @@ class ProviderController extends Controller
                 return [
                     'id' => $parent->id,
                     'name' => $parent->name,
+                    'category_name_arabic' => $parent->category_name_arabic,
                     'description' => $parent->description,
                     'image' => $parent->image,
                     'parent_id' => $parent->parent_id,
