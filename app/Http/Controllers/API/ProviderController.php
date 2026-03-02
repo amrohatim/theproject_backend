@@ -445,6 +445,7 @@ class ProviderController extends Controller
                 SELECT DISTINCT
                     child_cats.id,
                     child_cats.name,
+                    child_cats.category_name_arabic,
                     child_cats.description,
                     child_cats.image,
                     child_cats.parent_id,
@@ -455,6 +456,7 @@ class ProviderController extends Controller
                     child_cats.purchase_count,
                     child_cats.trending_score,
                     parent_cats.name as parent_name,
+                    parent_cats.category_name_arabic as parent_name_arabic,
                     COUNT(DISTINCT pp.id) as product_count
                 FROM categories child_cats
                 INNER JOIN categories parent_cats ON child_cats.parent_id = parent_cats.id
@@ -462,9 +464,9 @@ class ProviderController extends Controller
                 WHERE child_cats.is_active = 1
                 AND child_cats.parent_id IS NOT NULL
                 AND pp.id IS NOT NULL
-                GROUP BY child_cats.id, child_cats.name, child_cats.description, child_cats.image,
+                GROUP BY child_cats.id, child_cats.name, child_cats.category_name_arabic, child_cats.description, child_cats.image,
                          child_cats.parent_id, child_cats.is_active, child_cats.type, child_cats.icon,
-                         child_cats.view_count, child_cats.purchase_count, child_cats.trending_score, parent_cats.name
+                         child_cats.view_count, child_cats.purchase_count, child_cats.trending_score, parent_cats.name, parent_cats.category_name_arabic
                 HAVING product_count > 0
                 ORDER BY parent_cats.name, child_cats.name
             ");
@@ -487,6 +489,7 @@ class ProviderController extends Controller
                     return [
                         'id' => $child->id,
                         'name' => $child->name,
+                        'category_name_arabic' => $child->category_name_arabic,
                         'description' => $child->description,
                         'image' => $child->image,
                         'parent_id' => $child->parent_id,
@@ -498,6 +501,7 @@ class ProviderController extends Controller
                         'trending_score' => $child->trending_score ?? 0,
                         'product_count' => $child->product_count,
                         'parent_name' => $child->parent_name, // Include parent name for backward compatibility
+                        'parent_name_arabic' => $child->parent_name_arabic,
                     ];
                 })->toArray();
 
