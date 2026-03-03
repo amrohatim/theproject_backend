@@ -79,7 +79,7 @@
     <!-- Search and filters -->
     <div class="bg-white dark:bg-gray-800 rounded-lg shadow mb-6 p-4 border border-gray-200 dark:border-gray-700">
         <form action="{{ route('vendor.services.index') }}" method="GET" class="space-y-4">
-            <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div>
                     <label for="search" class="block text-sm font-medium text-gray-700 dark:text-gray-300">{{ __('messages.search') }}</label>
                     <div class="mt-1 relative rounded-md shadow-sm">
@@ -108,18 +108,6 @@
                         @endforeach
                     </select>
                 </div>
-
-                <div>
-                    <label for="branch" class="block text-sm font-medium text-gray-700 dark:text-gray-300">{{ __('messages.branch') }}</label>
-                    <select id="branch" name="branch" class="mt-1 block w-full pl-3 pr-10 py-2 text-base border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-white focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm rounded-md">
-                        <option value="">{{ __('messages.all_branches') }}</option>
-                        @foreach($branches as $branch)
-                            <option value="{{ $branch->id }}" {{ request('branch') == $branch->id ? 'selected' : '' }}>
-                                {{ $branch->name }}
-                            </option>
-                        @endforeach
-                    </select>
-                </div>
             </div>
 
             <div class="flex justify-end">
@@ -128,6 +116,33 @@
                 </button>
             </div>
         </form>
+    </div>
+
+    @php
+        $tabBaseQuery = request()->except(['branch', 'page']);
+        $activeBranch = (string) request('branch', '');
+    @endphp
+
+    <div class="mb-6">
+        <div class="overflow-x-auto">
+            <nav class="inline-flex min-w-full whitespace-nowrap border-b border-gray-200 dark:border-gray-700">
+                <a
+                    href="{{ route('vendor.services.index', $tabBaseQuery) }}"
+                    class="border-b-2 px-4 py-3 text-sm font-medium transition-colors {{ $activeBranch === '' ? 'border-indigo-500 text-indigo-600 dark:border-indigo-400 dark:text-indigo-400' : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300 dark:text-gray-400 dark:hover:text-gray-300' }}"
+                >
+                    {{ __('messages.services') }}
+                </a>
+
+                @foreach($branches as $branch)
+                    <a
+                        href="{{ route('vendor.services.index', array_merge($tabBaseQuery, ['branch' => $branch->id])) }}"
+                        class="border-b-2 px-4 py-3 text-sm font-medium transition-colors {{ $activeBranch === (string) $branch->id ? 'border-indigo-500 text-indigo-600 dark:border-indigo-400 dark:text-indigo-400' : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300 dark:text-gray-400 dark:hover:text-gray-300' }}"
+                    >
+                        {{ $branch->name }}
+                    </a>
+                @endforeach
+            </nav>
+        </div>
     </div>
 
     <!-- Services list -->
