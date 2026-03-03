@@ -1096,9 +1096,23 @@
                 const allowedIds = (businessTypeCategoryMap[businessType] || []).map(function(id) {
                     return Number(id);
                 });
-                const hasFilter = Array.isArray(allowedIds) && allowedIds.length > 0;
+                const hasBusinessTypeConfig = Object.prototype.hasOwnProperty.call(businessTypeCategoryMap, businessType);
+                const showNoCategories = hasBusinessTypeConfig && allowedIds.length === 0;
+                const hasFilter = hasBusinessTypeConfig && allowedIds.length > 0;
 
                 if (!branchSelect.value) {
+                    categorySelect.value = '';
+                    categorySelect.disabled = true;
+                    categorySelect.querySelectorAll('option[data-category-id]').forEach(function(option) {
+                        option.hidden = true;
+                    });
+                    categorySelect.querySelectorAll('optgroup').forEach(function(group) {
+                        group.hidden = true;
+                    });
+                    return;
+                }
+
+                if (showNoCategories) {
                     categorySelect.value = '';
                     categorySelect.disabled = true;
                     categorySelect.querySelectorAll('option[data-category-id]').forEach(function(option) {
