@@ -1,22 +1,15 @@
 <template>
-  <div class="language-switch-container">
-    <div class="language-switch">
-      <!-- English Button -->
+  <div :class="containerClass">
+    <div :class="switchClass">
       <button
         type="button"
-        class="language-button"
-        :class="[
-          currentLanguage === 'en'
-            ? (isProductsManagerContext ? 'active-pm' : 'active-vendor')
-            : 'inactive'
-        ]"
+        :class="buttonClass('en')"
         @click="switchLanguage('en')"
       >
-        <span class="language-text">English</span>
+        <span class="language-text">{{ useServiceStyle ? 'EN' : 'English' }}</span>
       </button>
 
-      <!-- Language Icon -->
-      <div class="language-icon">
+      <div v-if="!useServiceStyle" class="language-icon">
         <svg width="28" height="28" viewBox="0 0 28 28" fill="none" xmlns="http://www.w3.org/2000/svg">
           <rect width="28" height="28" fill="url(#pattern0_620_15)"/>
           <defs>
@@ -28,25 +21,19 @@
         </svg>
       </div>
 
-      <!-- Arabic Button -->
       <button
         type="button"
-        class="language-button"
-        :class="[
-          currentLanguage === 'ar'
-            ? (isProductsManagerContext ? 'active-pm' : 'active-vendor')
-            : 'inactive'
-        ]"
+        :class="buttonClass('ar')"
         @click="switchLanguage('ar')"
       >
-        <span class="language-text">Arabic</span>
+        <span class="language-text">{{ useServiceStyle ? 'AR' : 'Arabic' }}</span>
       </button>
     </div>
   </div>
 </template>
 
 <script>
-import { ref, computed } from 'vue'
+import { computed } from 'vue'
 
 export default {
   name: 'LanguageSwitch',
@@ -58,6 +45,10 @@ export default {
     userRole: {
       type: String,
       default: 'vendor'
+    },
+    variant: {
+      type: String,
+      default: 'default'
     }
   },
   emits: ['update:modelValue', 'language-changed'],
@@ -71,6 +62,29 @@ export default {
       return props.userRole === 'products_manager' || window.location.pathname.includes('/products-manager/')
     })
 
+    const useServiceStyle = computed(() => props.variant === 'service-form')
+
+    const containerClass = computed(() => {
+      return useServiceStyle.value ? 'lang-toggle-wrapper' : 'language-switch-container'
+    })
+
+    const switchClass = computed(() => {
+      return useServiceStyle.value ? 'lang-toggle' : 'language-switch'
+    })
+
+    const buttonClass = (language) => {
+      if (useServiceStyle.value) {
+        return ['lang-toggle-button', { active: currentLanguage.value === language }]
+      }
+
+      return [
+        'language-button',
+        currentLanguage.value === language
+          ? (isProductsManagerContext.value ? 'active-pm' : 'active-vendor')
+          : 'inactive'
+      ]
+    }
+
     const switchLanguage = (language) => {
       if (language !== currentLanguage.value) {
         currentLanguage.value = language
@@ -81,6 +95,10 @@ export default {
     return {
       currentLanguage,
       isProductsManagerContext,
+      useServiceStyle,
+      containerClass,
+      switchClass,
+      buttonClass,
       switchLanguage
     }
   }
@@ -88,6 +106,38 @@ export default {
 </script>
 
 <style scoped>
+.lang-toggle-wrapper {
+  margin-bottom: 1rem;
+}
+
+.lang-toggle {
+  display: inline-flex;
+  gap: 0.5rem;
+  padding: 0.25rem;
+  border: 1px solid #e5e7eb;
+  border-radius: 9999px;
+  background: #ffffff;
+}
+
+.lang-toggle-button {
+  border: none;
+  background: transparent;
+  color: #6b7280;
+  font-size: 0.75rem;
+  font-weight: 600;
+  padding: 0.35rem 0.9rem;
+  border-radius: 9999px;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  cursor: pointer;
+}
+
+.lang-toggle-button.active {
+  background: #f3f4f6;
+  color: #111827;
+}
+
 .language-switch-container {
   display: flex;
   justify-content: center;
@@ -148,5 +198,25 @@ export default {
 
 .language-text {
   font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+}
+
+:global(.dark) .lang-toggle {
+  border-color: #4b5563;
+  background: #1f2937;
+}
+
+:global(.dark) .lang-toggle-button {
+  color: #d1d5db;
+}
+
+:global(.dark) .lang-toggle-button.active {
+  background: #374151;
+  color: #f9fafb;
+}
+
+@media (max-width: 640px) {
+  .lang-toggle-button {
+    min-height: 2.25rem;
+  }
 }
 </style>
