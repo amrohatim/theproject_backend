@@ -300,48 +300,6 @@ class ServiceController extends Controller
             ->orderBy('name')
             ->get();
 
-        $branchBusinessType = strtolower(trim((string) ($service->branch?->business_type)));
-        if ($branchBusinessType && isset($businessTypeCategoryMap[$branchBusinessType])) {
-            $allowedCategoryIds = $businessTypeCategoryMap[$branchBusinessType];
-            $parentCategories->each(function ($parent) use ($allowedCategoryIds) {
-                $parent->setRelation(
-                    'children',
-                    $parent->children->whereIn('id', $allowedCategoryIds)->values()
-                );
-            });
-            $parentCategories = $parentCategories->filter(function ($parent) {
-                return $parent->children->isNotEmpty();
-            })->values();
-        }
-
-        if ($parentCategories->isEmpty() && $branchBusinessType && isset($businessTypeCategoryMap[$branchBusinessType])) {
-            $allowedCategoryIds = $businessTypeCategoryMap[$branchBusinessType];
-            if (!empty($allowedCategoryIds)) {
-                $parentIds = Category::whereIn('id', $allowedCategoryIds)
-                    ->pluck('parent_id')
-                    ->filter()
-                    ->unique()
-                    ->values();
-
-                $parentCategories = Category::whereIn('id', $parentIds)
-                    ->with(['children' => function($query) {
-                        $query->orderBy('name');
-                    }])
-                    ->orderBy('name')
-                    ->get();
-
-                $parentCategories->each(function ($parent) use ($allowedCategoryIds) {
-                    $parent->setRelation(
-                        'children',
-                        $parent->children->whereIn('id', $allowedCategoryIds)->values()
-                    );
-                });
-                $parentCategories = $parentCategories->filter(function ($parent) {
-                    return $parent->children->isNotEmpty();
-                })->values();
-            }
-        }
-
         // Get branches that belong to the vendor's company and have active licenses
         $branches = Branch::whereHas('company', function ($query) {
             $query->where('user_id', Auth::id());
