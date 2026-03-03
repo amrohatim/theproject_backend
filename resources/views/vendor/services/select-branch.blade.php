@@ -38,9 +38,9 @@
                                 <p class="mt-1 text-sm text-gray-600 dark:text-gray-300">{{ $branch->business_type }}</p>
                             @endif
                         </div>
-                        <span class="inline-flex h-10 w-10 items-center justify-center rounded-full bg-indigo-100 text-indigo-600 dark:bg-indigo-900/50 dark:text-indigo-300">
+                        <span class="inline-flex h-20 w-20 items-center justify-center overflow-hidden rounded-full bg-indigo-100 text-indigo-600 dark:bg-indigo-900/50 dark:text-indigo-300">
                             @if($branch->branch_image)
-                                <img src="{{ $branch->branch_image }}" alt="{{ $branch->name }} Logo" class="h-6 w-6 object-contain">
+                                <img src="{{ $branch->branch_image }}" alt="{{ $branch->name }} Logo" class="h-full w-full rounded-full object-cover">
                             @else
                                 <i class="fas fa-store"></i>
                             @endif
