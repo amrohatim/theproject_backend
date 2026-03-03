@@ -2076,6 +2076,7 @@ Route::prefix('vendor')->name('vendor.')->middleware(['auth', \App\Http\Middlewa
     Route::post('/api/sizes/delete', [\App\Http\Controllers\Vendor\ProductColorSizeController::class, 'deleteSize'])->name('api.sizes.delete');
 
     // Services
+    Route::get('/services/select-branch', [\App\Http\Controllers\Vendor\ServiceController::class, 'selectBranch'])->name('services.select-branch');
     Route::resource('services', \App\Http\Controllers\Vendor\ServiceController::class);
 
     // Orders

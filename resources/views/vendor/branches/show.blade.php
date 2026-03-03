@@ -212,7 +212,7 @@
     <div class="bg-white dark:bg-gray-800 rounded-lg shadow overflow-hidden border border-gray-200 dark:border-gray-700">
         <div class="px-6 py-5 border-b border-gray-200 dark:border-gray-700 flex justify-between items-center">
             <h3 class="text-lg font-medium text-gray-900 dark:text-white">{{ __('messages.services') }}</h3>
-            <a href="{{ route('vendor.services.create') }}" class="inline-flex items-center px-3 py-1 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
+            <a href="{{ route('vendor.services.select-branch') }}" class="inline-flex items-center px-3 py-1 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
                 <i class="fas fa-plus mr-1"></i> {{ __('messages.add_service') }}
             </a>
         </div>
@@ -244,7 +244,7 @@
             @else
                 <div class="text-center py-6">
                     <p class="text-gray-500 dark:text-gray-400">{{ __('messages.no_services_found_for_this_branch') }}</p>
-                    <a href="{{ route('vendor.services.create') }}" class="mt-2 inline-flex items-center px-4 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
+                    <a href="{{ route('vendor.services.select-branch') }}" class="mt-2 inline-flex items-center px-4 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
                         <i class="fas fa-plus mr-2"></i> {{ __('messages.add_your_first_service') }}
                     </a>
                 </div>

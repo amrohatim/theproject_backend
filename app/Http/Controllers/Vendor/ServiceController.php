@@ -17,6 +17,13 @@ use Illuminate\Support\Facades\Storage;
 
 class ServiceController extends Controller
 {
+    private function getVendorActiveBranches()
+    {
+        return Branch::whereHas('company', function ($query) {
+            $query->where('user_id', Auth::id());
+        })->withActiveLicense()->orderBy('name')->get();
+    }
+
     /**
      * Build a map of business type name => allowed service category IDs.
      */
@@ -85,9 +92,24 @@ class ServiceController extends Controller
     }
 
     /**
+     * Display the branch selection page before creating a service.
+     */
+    public function selectBranch()
+    {
+        $branches = $this->getVendorActiveBranches();
+
+        if ($branches->isEmpty()) {
+            return redirect()->route('vendor.branches.create')
+                ->with('warning', 'You need to create a branch before adding services. Please create a branch first.');
+        }
+
+        return view('vendor.services.select-branch', compact('branches'));
+    }
+
+    /**
      * Show the form for creating a new resource.
      */
-    public function create()
+    public function create(Request $request)
     {
         $businessTypeCategoryMap = $this->getBusinessTypeServiceCategoryMap();
 
@@ -134,9 +156,7 @@ class ServiceController extends Controller
         }
 
         // Get branches that belong to the vendor's company and have active licenses
-        $branches = Branch::whereHas('company', function ($query) {
-            $query->where('user_id', Auth::id());
-        })->withActiveLicense()->orderBy('name')->get();
+        $branches = $this->getVendorActiveBranches();
 
         // Check if the vendor has any branches
         if ($branches->isEmpty()) {
@@ -150,7 +170,14 @@ class ServiceController extends Controller
                 ->with('warning', 'No service categories found. Please contact the administrator.');
         }
 
-        return view('vendor.services.create', compact('parentCategories', 'branches', 'businessTypeCategoryMap'));
+        $requestedBranchId = $request->query('branch_id');
+        $initialBranchId = null;
+
+        if ($requestedBranchId !== null && $branches->contains('id', (int) $requestedBranchId)) {
+            $initialBranchId = (int) $requestedBranchId;
+        }
+
+        return view('vendor.services.create', compact('parentCategories', 'branches', 'businessTypeCategoryMap', 'initialBranchId'));
     }
 
     /**

@@ -70,7 +70,7 @@
             <p class="mt-1 text-gray-600 dark:text-gray-400">{{ __('messages.manage_your_services') }}</p>
         </div>
         <div class="mt-4 md:mt-0">
-            <a href="{{ route('vendor.services.create') }}" class="inline-flex items-center px-4 py-2 bg-indigo-600 border border-transparent rounded-md font-semibold text-xs text-white uppercase tracking-widest hover:bg-indigo-700 active:bg-indigo-900 focus:outline-none focus:border-indigo-900 focus:ring ring-indigo-300 disabled:opacity-25 transition ease-in-out duration-150">
+            <a href="{{ route('vendor.services.select-branch') }}" class="inline-flex items-center px-4 py-2 bg-indigo-600 border border-transparent rounded-md font-semibold text-xs text-white uppercase tracking-widest hover:bg-indigo-700 active:bg-indigo-900 focus:outline-none focus:border-indigo-900 focus:ring ring-indigo-300 disabled:opacity-25 transition ease-in-out duration-150">
                 <i class="fas fa-plus mr-2"></i> {{ __('messages.add_service') }}
             </a>
         </div>
@@ -159,7 +159,7 @@
                 <div class="text-center py-12 px-4">
                     <i class="fas fa-concierge-bell text-gray-300 dark:text-gray-600 text-5xl mb-4"></i>
                     <p class="text-sm text-gray-500 dark:text-gray-400">{{ __('messages.no_services_found') }}</p>
-                    <a href="{{ route('vendor.services.create') }}" class="mt-3 inline-flex items-center px-4 py-2 bg-indigo-600 border border-transparent rounded-md font-semibold text-xs text-white uppercase tracking-widest hover:bg-indigo-700 active:bg-indigo-900 focus:outline-none focus:border-indigo-900 focus:ring ring-indigo-300 disabled:opacity-25 transition ease-in-out duration-150">
+                    <a href="{{ route('vendor.services.select-branch') }}" class="mt-3 inline-flex items-center px-4 py-2 bg-indigo-600 border border-transparent rounded-md font-semibold text-xs text-white uppercase tracking-widest hover:bg-indigo-700 active:bg-indigo-900 focus:outline-none focus:border-indigo-900 focus:ring ring-indigo-300 disabled:opacity-25 transition ease-in-out duration-150">
                         <i class="fas fa-plus mr-2"></i> {{ __('messages.add_service') }}
                     </a>
                 </div>
@@ -240,7 +240,7 @@
                             <div class="flex flex-col items-center justify-center py-4">
                                 <i class="fas fa-concierge-bell text-gray-300 dark:text-gray-600 text-5xl mb-4"></i>
                                 <p>{{ __('messages.no_services_found') }}</p>
-                                <a href="{{ route('vendor.services.create') }}" class="mt-2 inline-flex items-center px-4 py-2 bg-indigo-600 border border-transparent rounded-md font-semibold text-xs text-white uppercase tracking-widest hover:bg-indigo-700 active:bg-indigo-900 focus:outline-none focus:border-indigo-900 focus:ring ring-indigo-300 disabled:opacity-25 transition ease-in-out duration-150">
+                                <a href="{{ route('vendor.services.select-branch') }}" class="mt-2 inline-flex items-center px-4 py-2 bg-indigo-600 border border-transparent rounded-md font-semibold text-xs text-white uppercase tracking-widest hover:bg-indigo-700 active:bg-indigo-900 focus:outline-none focus:border-indigo-900 focus:ring ring-indigo-300 disabled:opacity-25 transition ease-in-out duration-150">
                                     <i class="fas fa-plus mr-2"></i> {{ __('messages.add_service') }}
                                 </a>
                             </div>

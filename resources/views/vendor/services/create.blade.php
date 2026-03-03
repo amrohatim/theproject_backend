@@ -20,6 +20,8 @@
                 return [$normalizedName => $cleanIds];
             })
             ->toArray();
+
+    $selectedBranchId = old('branch_id', $initialBranchId ?? null);
 @endphp
 
 @section('styles')
@@ -525,7 +527,7 @@
                         <select id="branch_id" name="branch_id" class="form-select" required>
                             <option value="">{{ __('messages.select_branch') }}</option>
                             @foreach($branches ?? [] as $branch)
-                                <option value="{{ $branch->id }}" data-business-type="{{ $branch->business_type }}" {{ old('branch_id') == $branch->id ? 'selected' : '' }}>{{ $branch->name }}</option>
+                                <option value="{{ $branch->id }}" data-business-type="{{ $branch->business_type }}" {{ (string) $selectedBranchId === (string) $branch->id ? 'selected' : '' }}>{{ $branch->name }}</option>
                             @endforeach
                         </select>
                         @error('branch_id')
