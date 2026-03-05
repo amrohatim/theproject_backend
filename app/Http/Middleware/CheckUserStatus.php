@@ -60,14 +60,14 @@ class CheckUserStatus
                 if ($request->expectsJson()) {
                     return response()->json([
                         'success' => false,
-                        'message' => 'Your account has been deactivated. Please contact support.',
+                        'message' => __('messages.account_deactivated_contact_support'),
                         'status' => 'inactive',
                     ], 403);
                 }
 
                 // For web requests, redirect to login with error
                 Auth::logout();
-                return redirect()->route('login')->with('error', 'Your account has been deactivated. Please contact support.');
+                return redirect()->route('login')->with('error', __('messages.account_deactivated_contact_support'));
             }
         }
 

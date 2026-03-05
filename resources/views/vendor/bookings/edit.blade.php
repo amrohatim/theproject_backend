@@ -4,6 +4,21 @@
 @section('page-title', 'Edit Booking')
 
 @section('content')
+@php
+    $bookingStartDateTime = null;
+
+    if ($booking->booking_date) {
+        $datePart = $booking->booking_date instanceof \Carbon\Carbon
+            ? $booking->booking_date->format('Y-m-d')
+            : \Carbon\Carbon::parse($booking->booking_date)->format('Y-m-d');
+
+        $timePart = $booking->booking_time
+            ? \Carbon\Carbon::parse($booking->booking_time)->format('H:i:s')
+            : '00:00:00';
+
+        $bookingStartDateTime = \Carbon\Carbon::parse("{$datePart} {$timePart}", config('app.timezone', 'UTC'));
+    }
+@endphp
 <div class="container mx-auto">
     <div class="mb-6 flex flex-col md:flex-row md:items-center md:justify-between">
         <div>
@@ -37,15 +52,14 @@
                         <p class="mt-1 text-sm text-red-600 dark:text-red-400">{{ $message }}</p>
                     @enderror
                 </div>
-                
                 <!-- Notes -->
-                <div class="md:col-span-2">
+                {{-- <div class="md:col-span-2">
                     <label for="notes" class="block text-sm font-medium text-gray-700 dark:text-gray-300">{{ __('messages.notes') }}</label>
-                    <textarea id="notes" name="notes" rows="4" class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-white rounded-md" placeholder="{{ __('messages.add_notes_placeholder') }}">{{ old('notes', $booking->notes) }}</textarea>
+                    <textarea id="notes" name="notes" rows="4" class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-white rounded-md">{{ old('notes', $booking->notes) }}</textarea>
                     @error('notes')
                         <p class="mt-1 text-sm text-red-600 dark:text-red-400">{{ $message }}</p>
                     @enderror
-                </div>
+                </div> --}}
             </div>
             
             <div class="mt-6 flex justify-end">
@@ -54,6 +68,28 @@
                 </button>
             </div>
         </form>
+    </div>
+
+    <!-- CountDown -->
+    <div class="bg-white dark:bg-gray-800 rounded-lg shadow mb-6 mt-6 border border-gray-200 dark:border-gray-700">
+        <div class="px-6 py-4 border-b border-gray-200 dark:border-gray-700">
+            <h3 class="text-lg font-medium text-gray-900 dark:text-white">{{ __('messages.countdown') }}</h3>
+        </div>
+        <div class="p-6">
+            @if($bookingStartDateTime)
+                <p class="text-sm text-gray-700 dark:text-gray-300">
+                    {{ __('messages.service_countdown') }}
+                    <span id="booking-countdown" data-target="{{ $bookingStartDateTime->toIso8601String() }}" class="ml-1 inline-flex items-center space-x-1">
+                        <span id="booking-countdown-days" class="font-semibold text-gray-900 dark:text-white">--</span>
+                        <span id="booking-countdown-days-label" class="text-gray-700 dark:text-gray-300">days</span>
+                        <span class="text-gray-700 dark:text-gray-300">and</span>
+                        <span id="booking-countdown-clock" class="font-semibold text-gray-900 dark:text-white">--:--:--</span>
+                    </span>
+                </p>
+            @else
+                <p class="text-sm text-gray-700 dark:text-gray-300">The service start time is not available.</p>
+            @endif
+        </div>
     </div>
 
     <!-- Booking Details (Read-only) -->
@@ -98,7 +134,7 @@
                         </div>
                         <div>
                             <span class="text-sm text-gray-500 dark:text-gray-400">{{ __('messages.price') }}:</span>
-                            <p class="text-sm text-gray-900 dark:text-white">${{ number_format($booking->price, 2) }}</p>
+                            <p class="text-sm text-gray-900 dark:text-white">{{ number_format($booking->price, 2) }} {{ __('messages.aed') }}</p>
                         </div>
                     </div>
                 </div>
@@ -135,4 +171,78 @@
         </div>
     </div>
 </div>
+
+@push('scripts')
+<script>
+    function initCountdown() {
+        const countdownContainer = document.getElementById('booking-countdown');
+
+        if (!countdownContainer) {
+            return;
+        }
+
+        const targetIsoString = countdownContainer.getAttribute('data-target');
+        const daysElement = document.getElementById('booking-countdown-days');
+        const daysLabelElement = document.getElementById('booking-countdown-days-label');
+        const clockElement = document.getElementById('booking-countdown-clock');
+
+        if (!targetIsoString || !daysElement || !clockElement || !daysLabelElement) {
+            if (daysElement) {
+                daysElement.textContent = '--';
+            }
+            if (clockElement) {
+                clockElement.textContent = '--:--:--';
+            }
+            return;
+        }
+
+        const targetDate = new Date(targetIsoString);
+
+        if (Number.isNaN(targetDate.getTime())) {
+            daysElement.textContent = '--';
+            clockElement.textContent = '--:--:--';
+            return;
+        }
+
+        let countdownIntervalId = null;
+
+        const updateView = (days, hours, minutes, seconds) => {
+            daysElement.textContent = String(days);
+            daysLabelElement.textContent = days === 1 ? 'day' : 'days';
+            clockElement.textContent = `${String(hours).padStart(2, '0')}:${String(minutes).padStart(2, '0')}:${String(seconds).padStart(2, '0')}`;
+        };
+
+        const renderCountdown = () => {
+            const now = new Date();
+            const diffMs = targetDate.getTime() - now.getTime();
+
+            if (diffMs <= 0) {
+                updateView(0, 0, 0, 0);
+
+                if (countdownIntervalId) {
+                    clearInterval(countdownIntervalId);
+                    countdownIntervalId = null;
+                }
+
+                return;
+            }
+
+            const totalSeconds = Math.floor(diffMs / 1000);
+            const days = Math.floor(totalSeconds / 86400);
+            const hours = Math.floor((totalSeconds % 86400) / 3600);
+            const minutes = Math.floor((totalSeconds % 3600) / 60);
+            const seconds = totalSeconds % 60;
+
+            updateView(days, hours, minutes, seconds);
+        };
+
+        renderCountdown();
+        countdownIntervalId = setInterval(renderCountdown, 1000);
+    }
+
+    document.addEventListener('DOMContentLoaded', function() {
+        initCountdown();
+    });
+</script>
+@endpush
 @endsection

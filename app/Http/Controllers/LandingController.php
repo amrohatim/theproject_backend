@@ -32,9 +32,10 @@ class LandingController extends Controller
         // );
         $satisfactionRate = 99;
 
-        // Check authentication status and user role for conditional button behavior
-        $isAuthenticated = Auth::check();
-        $userRole = $isAuthenticated ? Auth::user()->role : null;
+        // Only active users are treated as dashboard-eligible on the landing page.
+        $authUser = Auth::user();
+        $isAuthenticated = $authUser && $authUser->status === 'active';
+        $userRole = $isAuthenticated ? $authUser->role : null;
 
         // Determine the appropriate redirect URL for the "Get Started" button
         $getStartedUrl = $this->getGetStartedUrl($isAuthenticated, $userRole);

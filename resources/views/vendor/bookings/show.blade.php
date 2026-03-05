@@ -209,7 +209,7 @@
                     <h4 class="text-lg font-medium text-gray-900 dark:text-white">{{ $booking->service->name ?? __('messages.unknown_service') }}</h4>
                     <p class="text-sm text-gray-500 dark:text-gray-400">{{ $booking->service->description ?? __('messages.no_description_available') }}</p>
                     <div class="mt-2 flex items-center">
-                        <span class="text-sm font-medium text-gray-900 dark:text-white mr-4">${{ number_format($booking->price, 2) }}</span>
+                        <span class="text-sm font-medium text-gray-900 dark:text-white mr-4">{{ number_format($booking->price, 2) }} {{ __('messages.aed') }}</span>
                         <span class="text-sm text-gray-500 dark:text-gray-400">{{ $booking->duration ?? 0 }} {{ __('messages.minutes') }}</span>
                     </div>
                 </div>
@@ -220,12 +220,12 @@
     <!-- CountDown -->
     <div class="bg-white dark:bg-gray-800 rounded-lg shadow mb-6 border border-gray-200 dark:border-gray-700">
         <div class="px-6 py-4 border-b border-gray-200 dark:border-gray-700">
-            <h3 class="text-lg font-medium text-gray-900 dark:text-white">CountDown</h3>
+            <h3 class="text-lg font-medium text-gray-900 dark:text-white">{{ __('messages.countdown') }}</h3>
         </div>
         <div class="p-6">
             @if($bookingStartDateTime)
                 <p class="text-sm text-gray-700 dark:text-gray-300">
-                    The service should start after
+                    {{ __('messages.service_countdown') }}
                     <span id="booking-countdown" data-target="{{ $bookingStartDateTime->toIso8601String() }}" class="ml-1 inline-flex items-center space-x-1">
                         <span id="booking-countdown-days" class="font-semibold text-gray-900 dark:text-white">--</span>
                         <span id="booking-countdown-days-label" class="text-gray-700 dark:text-gray-300">days</span>

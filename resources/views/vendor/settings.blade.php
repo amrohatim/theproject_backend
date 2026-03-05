@@ -130,7 +130,7 @@
     </div>
 
     <!-- Danger Zone -->
-    <div class="mt-8 bg-white dark:bg-gray-800 rounded-lg shadow p-6 border border-red-200 dark:border-red-700">
+    {{-- <div class="mt-8 bg-white dark:bg-gray-800 rounded-lg shadow p-6 border border-red-200 dark:border-red-700">
         <h3 class="text-lg font-medium text-red-600 dark:text-red-400 mb-4">{{ __('vendor.danger_zone') }}</h3>
         <p class="text-sm text-gray-500 dark:text-gray-400 mb-4">{{ __('vendor.danger_zone_description') }}</p>
 
@@ -143,9 +143,9 @@
                 <button type="button" onclick="confirmDeactivate()" class="inline-flex items-center px-3 py-1.5 border border-red-300 dark:border-red-700 rounded-md text-xs font-medium text-red-700 dark:text-red-300 bg-white dark:bg-gray-800 hover:bg-red-50 dark:hover:bg-red-900/30 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500">
                     {{ __('vendor.deactivate') }}
                 </button>
-            </div>
+            </div> --}}
 
-            <div class="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between p-4 bg-red-50 dark:bg-red-900/20 rounded-md">
+            {{-- <div class="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between p-4 bg-red-50 dark:bg-red-900/20 rounded-md">
                 <div>
                     <h4 class="text-sm font-medium text-red-800 dark:text-red-300">{{ __('vendor.delete_account') }}</h4>
                     <p class="text-xs text-red-600 dark:text-red-400">{{ __('vendor.delete_account_description') }}</p>
@@ -153,7 +153,7 @@
                 <button type="button" onclick="confirmDelete()" class="inline-flex items-center px-3 py-1.5 border border-red-300 dark:border-red-700 rounded-md text-xs font-medium text-red-700 dark:text-red-300 bg-white dark:bg-gray-800 hover:bg-red-50 dark:hover:bg-red-900/30 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500">
                     {{ __('vendor.delete') }}
                 </button>
-            </div>
+            </div> --}}
         </div>
     </div>
 </div>

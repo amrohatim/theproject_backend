@@ -235,6 +235,18 @@ Route::post('/login', function (\Illuminate\Http\Request $request) {
         ]);
     }
 
+    // Block inactive users from authenticating so they can switch accounts immediately.
+    if ($user->status === 'inactive') {
+        \Illuminate\Support\Facades\Log::warning('Login blocked - inactive user', [
+            'email' => $credentials['email'],
+            'user_id' => $user->id,
+        ]);
+
+        return back()->withErrors([
+            'email' => __('messages.account_deactivated_contact_support'),
+        ]);
+    }
+
     // Debug information
     \Illuminate\Support\Facades\Log::info('Login attempt', [
         'email' => $credentials['email'],

@@ -23,6 +23,13 @@ class ProviderMiddleware
 
         $user = Auth::user();
 
+        if ($user->status === 'inactive') {
+            Auth::logout();
+            $request->session()->invalidate();
+            $request->session()->regenerateToken();
+            return redirect()->route('login')->with('error', __('messages.account_deactivated_contact_support'));
+        }
+
         // Check if user is a provider
         if ($user->role !== 'provider') {
             return redirect('/')->with('error', 'You do not have provider access.');

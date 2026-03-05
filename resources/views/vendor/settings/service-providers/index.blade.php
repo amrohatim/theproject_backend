@@ -4,6 +4,9 @@
 @section('page-title', __('vendor.service_providers_management'))
 
 @section('content')
+@php
+    $isRtl = app()->getLocale() === 'ar';
+@endphp
 <div class="container mx-auto">
     <div class="mb-6 flex flex-col md:flex-row md:items-center md:justify-between">
         <div>
@@ -46,22 +49,22 @@
                 <table class="min-w-full divide-y divide-gray-200 dark:divide-gray-700">
                     <thead class="bg-gray-50 dark:bg-gray-700">
                         <tr>
-                            <th scope="col" class="px-6 py-3 {{ app()->getLocale() === 'ar' ? 'text-right' : 'text-left' }} text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">
+                            <th scope="col" class="px-6 py-3 {{ $isRtl ? 'text-right' : 'text-left' }} text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">
                                 {{ __('vendor.name_and_email') }}
                             </th>
-                            <th scope="col" class="px-6 py-3 {{ app()->getLocale() === 'ar' ? 'text-right' : 'text-left' }} text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">
+                            <th scope="col" class="px-6 py-3 {{ $isRtl ? 'text-right' : 'text-left' }} text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">
                                 {{ __('vendor.related_branches') }}
                             </th>
-                            <th scope="col" class="px-6 py-3 {{ app()->getLocale() === 'ar' ? 'text-right' : 'text-left' }} text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">
+                            <th scope="col" class="px-6 py-3 {{ $isRtl ? 'text-right' : 'text-left' }} text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">
                                 {{ __('vendor.number_of_services') }}
                             </th>
-                            <th scope="col" class="px-6 py-3 {{ app()->getLocale() === 'ar' ? 'text-right' : 'text-left' }} text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">
+                            <th scope="col" class="px-6 py-3 {{ $isRtl ? 'text-right' : 'text-left' }} text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">
                                 {{ __('vendor.status') }}
                             </th>
-                            <th scope="col" class="px-6 py-3 {{ app()->getLocale() === 'ar' ? 'text-right' : 'text-left' }} text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">
+                            <th scope="col" class="px-6 py-3 {{ $isRtl ? 'text-right' : 'text-left' }} text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">
                                 {{ __('vendor.creation_date') }}
                             </th>
-                            <th scope="col" class="px-6 py-3 {{ app()->getLocale() === 'ar' ? 'text-left' : 'text-right' }} text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">
+                            <th scope="col" class="px-6 py-3 {{ $isRtl ? 'text-left' : 'text-right' }} text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">
                                 {{ __('vendor.actions') }}
                             </th>
                         </tr>
@@ -69,14 +72,14 @@
                     <tbody class="bg-white dark:bg-gray-800 divide-y divide-gray-200 dark:divide-gray-700">
                         @foreach($serviceProviders as $serviceProvider)
                             <tr>
-                                <td class="px-6 py-4 whitespace-nowrap">
-                                    <div class="flex items-center">
+                                <td class="px-6 py-4 whitespace-nowrap {{ $isRtl ? 'text-right' : 'text-left' }}">
+                                    <div class="flex items-center {{ $isRtl ? 'flex-row-reverse' : '' }}">
                                         <div class="flex-shrink-0 h-10 w-10">
                                             <div class="h-10 w-10 rounded-full flex items-center justify-center" style="background-color: rgba(83, 210, 220, 0.1);">
                                                 <i class="fas fa-user" style="color: #53D2DC;"></i>
                                             </div>
                                         </div>
-                                        <div class="ml-4">
+                                        <div class="{{ $isRtl ? 'mr-4' : 'ml-4' }}">
                                             <div class="text-sm font-medium text-gray-900 dark:text-white">
                                                 {{ $serviceProvider->user->name }}
                                             </div>
@@ -86,7 +89,7 @@
                                         </div>
                                     </div>
                                 </td>
-                                <td class="px-6 py-4">
+                                <td class="px-6 py-4 {{ $isRtl ? 'text-right' : 'text-left' }}">
                                     <div class="text-sm text-gray-900 dark:text-white">
                                         @if($serviceProvider->branch_ids && count($serviceProvider->branch_ids) > 0)
                                             @php
@@ -99,14 +102,14 @@
                                         @endif
                                     </div>
                                 </td>
-                                <td class="px-6 py-4 whitespace-nowrap">
+                                <td class="px-6 py-4 whitespace-nowrap {{ $isRtl ? 'text-right' : 'text-left' }}">
                                     <div class="text-sm text-gray-900 dark:text-white">
                                         <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium" style="background-color: rgba(83, 210, 220, 0.1); color: #2D7A82;">
                                             {{ trans_choice('vendor.services_count', $serviceProvider->number_of_services, ['count' => $serviceProvider->number_of_services]) }}
                                         </span>
                                     </div>
                                 </td>
-                                <td class="px-6 py-4 whitespace-nowrap">
+                                <td class="px-6 py-4 whitespace-nowrap {{ $isRtl ? 'text-right' : 'text-left' }}">
                                     @if($serviceProvider->user->status === 'active')
                                         <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-200">
                                             {{ __('vendor.active') }}
@@ -117,11 +120,11 @@
                                         </span>
                                     @endif
                                 </td>
-                                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500 dark:text-gray-400">
+                                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500 dark:text-gray-400 {{ $isRtl ? 'text-right' : 'text-left' }}">
                                     {{ $serviceProvider->created_at->format('M d, Y') }}
                                 </td>
-                                <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
-                                    <div class="flex items-center justify-end space-x-2">
+                                <td class="px-6 py-4 whitespace-nowrap {{ $isRtl ? 'text-left' : 'text-right' }} text-sm font-medium">
+                                    <div class="flex items-center {{ $isRtl ? 'justify-start space-x-reverse' : 'justify-end' }} space-x-2">
                                         <a href="{{ route('vendor.settings.service-providers.show', $serviceProvider) }}" class="text-indigo-600 hover:text-indigo-900 dark:text-indigo-400 dark:hover:text-indigo-300">
                                             <i class="fas fa-eye"></i>
                                         </a>

@@ -106,7 +106,7 @@
         <div class="flex flex-col md:flex-row md:items-end space-y-4 md:space-y-0 md:space-x-4">
             <div class="flex-grow">
                 <label for="status" class="block text-sm font-medium text-gray-700 dark:text-gray-300">{{ __('messages.update_status') }}</label>
-                <select name="status" id="status" class="mt-1 block w-full pl-3 pr-10 py-2 text-base border-gray-300 dark:border-gray-700 dark:bg-gray-800 dark:text-gray-300 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm rounded-md">
+                <select name="status" id="status" class="mt-1 block w-48 pl-3 pr-10 py-2 text-base border-gray-300 dark:border-gray-700 dark:bg-gray-800 dark:text-gray-300 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm rounded-md">
                     <option value="">{{ __('messages.select_status') }}</option>
                     <option value="processing">{{ __('messages.processing') }}</option>
                     <option value="shipped">{{ __('messages.shipped') }}</option>

@@ -32,6 +32,14 @@ class RedirectIfAuthenticated
                     'request_url' => $request->url(),
                 ]);
 
+                if ($user->status === 'inactive') {
+                    Auth::guard($guard)->logout();
+                    $request->session()->invalidate();
+                    $request->session()->regenerateToken();
+
+                    return redirect()->route('login')->with('error', __('messages.account_deactivated_contact_support'));
+                }
+
                 if ($user->role === 'admin') {
                     \Illuminate\Support\Facades\Log::info('🔄 Redirecting to admin dashboard');
                     return redirect()->route('admin.dashboard');
