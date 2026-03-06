@@ -30,6 +30,7 @@ return [
     'height' => 'الارتفاع',
     'tags' => 'العلامات',
     'enter_tags' => 'أدخل العلامات (مفصولة بفواصل)',
+    'select_branch_first' => 'يرجى اختيار الفرع أولاً',
     
     // Color Variants
     'color_variant' => 'متغير اللون',

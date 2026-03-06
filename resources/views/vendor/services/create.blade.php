@@ -463,7 +463,7 @@
         <form action="{{ route('vendor.services.store') }}" method="POST" enctype="multipart/form-data">
             @csrf
 
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <div class="grid grid-cols-1 md:grid-cols-1 gap-6 {{ app()->getLocale() == 'ar' ? 'md:pl-[35rem]' : 'md:pr-[35rem]' }}">
                 <!-- Basic Information -->
                 <div class="space-y-4">
                     <h3 class="text-lg font-medium text-gray-900 dark:text-white">{{ __('messages.basic_information') }}</h3>
@@ -498,6 +498,19 @@
                             @enderror
                         </div>
                     </div>
+                  <!-- Branch -->
+                    <div class="form-input-container has-label">
+                        <label for="branch_id" class="form-label">{{ __('messages.branch') }} <span class="text-red-500">*</span></label>
+                        <select id="branch_id" name="branch_id" class="form-select" required>
+                            <option value="">{{ __('messages.select_branch') }}</option>
+                            @foreach($branches ?? [] as $branch)
+                                <option value="{{ $branch->id }}" data-business-type="{{ $branch->business_type }}" {{ (string) $selectedBranchId === (string) $branch->id ? 'selected' : '' }}>{{ $branch->name }}</option>
+                            @endforeach
+                        </select>
+                        @error('branch_id')
+                            <p class="mt-1 text-sm text-red-600 dark:text-red-400">{{ $message }}</p>
+                        @enderror
+                    </div>
 
                     <!-- Category -->
                     <div class="form-input-container has-label">
@@ -521,20 +534,7 @@
                         @enderror
                     </div>
 
-                    <!-- Branch -->
-                    <div class="form-input-container has-label">
-                        <label for="branch_id" class="form-label">{{ __('messages.branch') }} <span class="text-red-500">*</span></label>
-                        <select id="branch_id" name="branch_id" class="form-select" required>
-                            <option value="">{{ __('messages.select_branch') }}</option>
-                            @foreach($branches ?? [] as $branch)
-                                <option value="{{ $branch->id }}" data-business-type="{{ $branch->business_type }}" {{ (string) $selectedBranchId === (string) $branch->id ? 'selected' : '' }}>{{ $branch->name }}</option>
-                            @endforeach
-                        </select>
-                        @error('branch_id')
-                            <p class="mt-1 text-sm text-red-600 dark:text-red-400">{{ $message }}</p>
-                        @enderror
-                    </div>
-
+                    
                     <!-- Service Description (Bilingual) -->
                     <div class="form-input-container has-label">
                         <label class="form-label">{{ __('messages.description') }}</label>

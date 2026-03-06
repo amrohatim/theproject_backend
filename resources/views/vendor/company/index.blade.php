@@ -289,14 +289,14 @@ document.addEventListener('DOMContentLoaded', function() {
     <!-- Company Information -->
     <div class="bg-white dark:bg-gray-800 rounded-lg shadow mb-6 border border-gray-200 dark:border-gray-700">
         <div class="md:grid md:grid-cols-3 md:gap-6">
-            <div class="md:col-span-1 p-6 border-r border-gray-200 dark:border-gray-700">
+            {{-- <div class="md:col-span-1 p-6 border-r border-gray-200 dark:border-gray-700">
                 <div class="px-4 sm:px-0">
                     <h3 class="text-lg font-medium leading-6 text-gray-900 dark:text-white">{{ __('messages.company_information') }}</h3>
                     <p class="mt-1 text-gray-600 dark:text-gray-400">
                         {{ __('messages.company_info_description') }}
                     </p>
                 </div>
-            </div>
+            </div> --}}
             <div class="mt-5 md:mt-0 md:col-span-2 p-6">
                 <form action="{{ route('vendor.company.update') }}" method="POST" enctype="multipart/form-data">
                     @csrf
@@ -462,7 +462,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
     <!-- Address Information -->
     <div class="bg-white dark:bg-gray-800 rounded-lg shadow mb-6 border border-gray-200 dark:border-gray-700">
-        <div class="md:grid md:grid-cols-3 md:gap-6">
+        <div class="md:coils-1 md:grid-cols-1 md:gap-6">
             <div class="md:col-span-1 p-6 border-r border-gray-200 dark:border-gray-700">
                 <div class="px-4 sm:px-0">
                     <h3 class="text-lg font-medium leading-6 text-gray-900 dark:text-white">{{ __('messages.address_information') }}</h3>
@@ -479,7 +479,7 @@ document.addEventListener('DOMContentLoaded', function() {
                         <div class="col-span-6">
                             <div class="form-input-container">
                                 <label for="address" class="form-label">{{ __('messages.street_address') }}</label>
-                                <input type="text" name="address" id="address" value="{{ $company->address ?? old('address') }}" class="form-input @error('address') error @enderror" placeholder="{{ __('messages.street_address_placeholder') }}">
+                                <input type="text" name="address" id="address" value="{{ $company->address ?? old('address') }}" class="form-input  @error('address') error @enderror" placeholder="{{ __('messages.street_address_placeholder') }}">
                                 <div class="validation-icon"></div>
                                 @error('address')
                                     <div class="error-message">{{ $message }}</div>

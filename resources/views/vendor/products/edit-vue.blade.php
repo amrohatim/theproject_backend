@@ -240,6 +240,7 @@
         'vendor.branch_selection_required ': '{{ __('vendor.branch_selection_required') }}',
         'vendor.price_must_be_greater_than_zero ': '{{ __('vendor.price_must_be_greater_than_zero') }}',
         'vendor.color_variants_required': '{{ __('vendor.color_variants_required') }}',
+        'vendor.select_branch_first': '{{ __('vendor.select_branch_first') }}',
 
         // Color and variant information
         'vendor.color_variant': '{{ __('vendor.color_variant') }}',

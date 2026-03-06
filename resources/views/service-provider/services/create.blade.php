@@ -422,7 +422,7 @@
         <form action="{{ route('service-provider.services.store') }}" method="POST" enctype="multipart/form-data">
             @csrf
 
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <div class="grid grid-cols-1 md:grid-cols-1 gap-6 {{ app()->getLocale() == 'ar' ? 'md:pl-[35rem]' : 'md:pr-[35rem]' }}">
                 <!-- Basic Information -->
                 <div class="space-y-4">
                     <h3 class="text-lg font-medium text-gray-900 dark:text-white">{{ __('messages.basic_information') }}</h3>

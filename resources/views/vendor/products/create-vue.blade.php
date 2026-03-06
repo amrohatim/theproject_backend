@@ -303,6 +303,7 @@
         'vendor.currently_allocated' => __('vendor.currently_allocated'),
         'vendor.sku' => __('vendor.sku'),
         'vendor.enter_sku' => __('vendor.enter_sku'),
+        'vendor.select_branch_first' => __('vendor.select_branch_first'),
 
         // Colors and variants
         'vendor.colors' => __('vendor.colors'),

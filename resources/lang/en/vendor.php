@@ -585,6 +585,7 @@ return [
     'no_branches_assigned' => 'No branches assigned',
     'save_service_provider' => 'Save Service Provider',
     'update_service_provider' => 'Update Service Provider',
+    'select_branch_first' => 'Please select a branch first',
 
     // Form specific translations
     'back_to_service_providers' => 'Back to Service Providers',

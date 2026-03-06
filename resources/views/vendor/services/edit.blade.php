@@ -404,7 +404,7 @@
             @csrf
             @method('PUT')
 
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <div class="grid grid-cols-1 md:grid-cols-1 gap-6 {{ app()->getLocale() == 'ar' ? 'md:pl-[35rem]' : 'md:pr-[35rem]' }}">
                 <!-- Basic Information -->
                 <div class="space-y-4">
                     <h3 class="text-lg font-medium text-gray-900 dark:text-white">{{ __('messages.basic_information') }}</h3>
@@ -414,7 +414,7 @@
                         <label class="form-label">{{ __('messages.service_name') }} <span class="text-red-500">*</span></label>
 
                         <!-- Language Switcher for Service Name -->
-                        <div class="lang-toggle" data-lang-toggle="service_name">
+                        <div class="lang-toggle mb-4" data-lang-toggle="service_name">
                             <button type="button" class="active" data-lang="en">EN</button>
                             <button type="button" data-lang="ar">AR</button>
                         </div>
@@ -482,7 +482,7 @@
                         <p class="text-xs text-gray-500 dark:text-gray-400 mb-2">{{ __('messages.description_optional_both_or_none') }}</p>
 
                         <!-- Language Switcher for Description -->
-                        <div class="lang-toggle" data-lang-toggle="service_description">
+                        <div class="lang-toggle mb-4" data-lang-toggle="service_description">
                             <button type="button" class="active" data-lang="en">EN</button>
                             <button type="button" data-lang="ar">AR</button>
                         </div>

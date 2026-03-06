@@ -61,7 +61,7 @@
               </div>
             </div>
 
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <div class="grid grid-cols-1 md:grid-cols-1 gap-6" :class="isRTL ? 'md:pl-[35rem]' : 'md:pr-[35rem]'">
               <!-- Product Name with Language Switch -->
               <div>
                 <label for="name" class="block vue-text-sm mb-2">
@@ -100,6 +100,36 @@
                   <div v-if="errors.product_name_arabic" class="text-red-500 text-sm mt-1">{{ errors.product_name_arabic }}</div>
                 </div>
               </div>
+               <!-- Branch -->
+              <div>
+                <label for="branch_id" class="block vue-text-sm mb-2">
+                  {{ $t('vendor.branch') }} <span class="text-red-500">*</span>
+                </label>
+                <select
+                  v-model="productData.branch_id"
+                  class="vue-form-control"
+                  :class="{ 'border-red-500': errors.branch_id }"
+                  required
+                >
+                  <option value="">{{ branches.length === 0 ? $t('vendor.no_branches_available') : $t('vendor.select_branch') }}</option>
+                  <option
+                    v-for="branch in branches"
+                    :key="branch.id"
+                    :value="branch.id"
+                  >
+                    {{ branch.name }}
+                  </option>
+                </select>
+                <div v-if="errors.branch_id" class="text-red-500 text-sm mt-1">{{ errors.branch_id }}</div>
+                <div v-else-if="branches.length === 0" class="text-amber-600 text-sm mt-1">
+                  <i class="fas fa-exclamation-triangle mr-1"></i>
+                  {{ $t('vendor.need_create_branch_first') }} <a href="/vendor/branches/create" class="text-blue-600 hover:underline">{{ $t('vendor.create_branch') }}</a>
+                </div>
+                <div v-else-if="branches.length === 1" class="text-green-600 text-sm mt-1">
+                  <i class="fas fa-check-circle mr-1"></i>
+                  {{ $t('vendor.branch_automatically_selected') }}
+                </div>
+              </div>
 
               <!-- Category -->
               <div>
@@ -130,36 +160,7 @@
                 </div>
               </div>
 
-              <!-- Branch -->
-              <div>
-                <label for="branch_id" class="block vue-text-sm mb-2">
-                  {{ $t('vendor.branch') }} <span class="text-red-500">*</span>
-                </label>
-                <select
-                  v-model="productData.branch_id"
-                  class="vue-form-control"
-                  :class="{ 'border-red-500': errors.branch_id }"
-                  required
-                >
-                  <option value="">{{ branches.length === 0 ? $t('vendor.no_branches_available') : $t('vendor.select_branch') }}</option>
-                  <option
-                    v-for="branch in branches"
-                    :key="branch.id"
-                    :value="branch.id"
-                  >
-                    {{ branch.name }}
-                  </option>
-                </select>
-                <div v-if="errors.branch_id" class="text-red-500 text-sm mt-1">{{ errors.branch_id }}</div>
-                <div v-else-if="branches.length === 0" class="text-amber-600 text-sm mt-1">
-                  <i class="fas fa-exclamation-triangle mr-1"></i>
-                  {{ $t('vendor.need_create_branch_first') }} <a href="/vendor/branches/create" class="text-blue-600 hover:underline">{{ $t('vendor.create_branch') }}</a>
-                </div>
-                <div v-else-if="branches.length === 1" class="text-green-600 text-sm mt-1">
-                  <i class="fas fa-check-circle mr-1"></i>
-                  {{ $t('vendor.branch_automatically_selected') }}
-                </div>
-              </div>
+             
 
               <!-- Price -->
               <div>
@@ -1225,7 +1226,7 @@ export default {
 
 .vue-form-control {
   width: 100%;
-  padding: 0.5rem 0.75rem;
+  padding: 1rem 0.75rem;
   border: 1px solid #d1d5db;
   border-radius: 0.375rem;
   background-color: #ffffff;

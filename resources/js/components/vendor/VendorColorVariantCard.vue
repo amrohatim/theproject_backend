@@ -110,7 +110,7 @@
                   <input type="color"
                          :value="color.color_code || '#000000'"
                          @input="updateColor('color_code', $event.target.value)"
-                         class="w-14 h-12 p-1 border-2 border-blue-200 rounded-md shadow-sm hover:border-blue-400 focus:border-blue-500 focus:ring-2 focus:ring-blue-200 transition-all duration-200 cursor-pointer">
+                         class="w-14 h-12 p-1 border-2  border-blue-200 rounded-md shadow-sm hover:border-blue-400 focus:border-blue-500 focus:ring-2 focus:ring-blue-200 transition-all duration-200 cursor-pointer">
                   <div class="absolute -bottom-1 -right-1 w-4 h-4 bg-blue-500 rounded-full flex items-center justify-center">
                     <i class="fas fa-eye-dropper text-white text-xs"></i>
                   </div>
@@ -140,7 +140,7 @@
                      @keypress="$event.key.match(/[0-9.]/) === null && $event.preventDefault()"
                      @paste="e => { e.preventDefault(); const text = e.clipboardData.getData('text'); if(text.match(/^[0-9.]*$/)) e.target.value = text; }"
                      placeholder="0.00"
-                     :class="userRole === 'vendor' ? 'vue-form-control-vendor' : 'vue-form-control-pm'">
+                     :class="userRole === 'vendor' ? 'vue-form-control-vendor rounded-lg p-3' : 'vue-form-control-pm rounded-lg p-3'">
             </div>
 
             <div class="space-y-2">
@@ -163,7 +163,7 @@
                        placeholder="0"
                        class="vue-form-control transition-all duration-200"
                        :class="[
-                         userRole === 'vendor' ? 'vue-form-control-vendor' : 'vue-form-control-pm',
+                         userRole === 'vendor' ? 'vue-form-control-vendor rounded-lg p-3' : 'vue-form-control-pm rounded-lg p-3',
                          isStockExceeded ? 'border-red-500 bg-red-50' : '',
                          stockCorrectionApplied ? 'border-green-500 bg-green-50' : ''
                        ]"
@@ -200,7 +200,7 @@
                    @keypress="$event.key.match(/[0-9]/) === null && $event.preventDefault()"
                    min="0"
                    placeholder="0"
-                   :class="userRole === 'vendor' ? 'vue-form-control-vendor' : 'vue-form-control-pm'">
+                   :class="userRole === 'vendor' ? 'vue-form-control-vendor rounded-lg p-3' : 'vue-form-control-pm rounded-lg p-3'">
           </div>
         </div>
 
