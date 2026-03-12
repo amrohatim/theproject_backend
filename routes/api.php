@@ -338,6 +338,8 @@ Route::middleware('auth:sanctum')->group(function () {
     // Job applications
     Route::get('/jobs/{job}/application-status', [JobApplicationController::class, 'status']);
     Route::post('/jobs/{job}/apply', [JobApplicationController::class, 'apply']);
+    Route::get('/jobs/citizens/{job}/application-status', [JobApplicationController::class, 'statusCitizens']);
+    Route::post('/jobs/citizens/{job}/apply', [JobApplicationController::class, 'applyCitizens']);
 
     // Provider routes - specific routes first to avoid conflicts
     Route::get('/providers/categories-with-products', [ProviderController::class, 'getCategoriesWithProducts']);
