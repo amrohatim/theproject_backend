@@ -1453,11 +1453,13 @@ Route::prefix('vendor')->name('vendor.')->middleware(['auth', \App\Http\Middlewa
     Route::get('/jobs', [VendorJobController::class, 'index'])->name('jobs.index');
     Route::get('/citizens-jobs', [VendorJobController::class, 'citizensIndex'])->name('citizens-jobs.index');
     Route::get('/citizens-jobs/create', [VendorJobController::class, 'citizensCreate'])->name('citizens-jobs.create');
+    Route::get('/citizens-jobs/{job}', [VendorJobController::class, 'citizensShow'])->name('citizens-jobs.show');
     Route::post('/citizens-jobs', [VendorJobController::class, 'citizensStore'])->name('citizens-jobs.store');
     Route::get('/citizens-jobs/{job}/applicants', [VendorJobController::class, 'citizensApplicants'])->name('citizens-jobs.applicants');
     Route::get('/citizens-jobs/applications/{application}/cv', [VendorJobController::class, 'citizensApplicantCv'])->name('citizens-jobs.applicants.cv');
     Route::get('/citizens-jobs/applications/{application}/passport', [VendorJobController::class, 'citizensApplicantPassport'])->name('citizens-jobs.applicants.passport');
     Route::delete('/citizens-jobs/applications/{application}', [VendorJobController::class, 'destroyCitizensApplication'])->name('citizens-jobs.applicants.destroy');
+    Route::delete('/citizens-jobs/{job}', [VendorJobController::class, 'destroyCitizensJob'])->name('citizens-jobs.destroy');
     Route::get('/jobs/create', [VendorJobController::class, 'create'])->name('jobs.create');
     Route::get('/jobs/{job}', [VendorJobController::class, 'show'])->name('jobs.show');
     Route::post('/jobs', [VendorJobController::class, 'store'])->name('jobs.store');

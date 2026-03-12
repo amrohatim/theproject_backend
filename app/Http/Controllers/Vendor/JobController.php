@@ -47,6 +47,15 @@ class JobController extends Controller
         return view('vendor.citizens-jobs.create');
     }
 
+    public function citizensShow(JobPostCitizen $job)
+    {
+        if ($job->owner_id !== Auth::id()) {
+            abort(403);
+        }
+
+        return view('vendor.citizens-jobs.show', compact('job'));
+    }
+
     public function citizensStore(Request $request)
     {
         $validated = $request->validate([
@@ -146,6 +155,17 @@ class JobController extends Controller
         $job->delete();
 
         return redirect()->route('vendor.jobs.index')->with('success', 'Job deleted successfully.');
+    }
+
+    public function destroyCitizensJob(JobPostCitizen $job)
+    {
+        if ($job->owner_id !== Auth::id()) {
+            abort(403);
+        }
+
+        $job->delete();
+
+        return redirect()->route('vendor.citizens-jobs.index')->with('success', 'Citizens job deleted successfully.');
     }
 
     public function applicants(JobPost $job)
