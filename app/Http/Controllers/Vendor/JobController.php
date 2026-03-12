@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Vendor;
 
 use App\Http\Controllers\Controller;
 use App\Models\Category;
+use App\Models\CustomerAppliedCitizensJob;
 use App\Models\CustomerAppliedJob;
 use App\Models\JobPost;
 use App\Models\JobPostCitizen;
@@ -160,6 +161,19 @@ class JobController extends Controller
         return view('vendor.jobs.applicants', compact('job', 'applications'));
     }
 
+    public function citizensApplicants(JobPostCitizen $job)
+    {
+        if ($job->owner_id !== Auth::id()) {
+            abort(403);
+        }
+
+        $applications = CustomerAppliedCitizensJob::where('job_citizens_id', $job->id)
+            ->latest()
+            ->get();
+
+        return view('vendor.citizens-jobs.applicants', compact('job', 'applications'));
+    }
+
     public function applicantCv(CustomerAppliedJob $application)
     {
         $job = JobPost::findOrFail($application->job_id);
@@ -214,6 +228,100 @@ class JobController extends Controller
 
         return redirect()
             ->route('vendor.jobs.applicants', $job->id)
+            ->with('success', 'Application deleted successfully.');
+    }
+
+    public function citizensApplicantCv(CustomerAppliedCitizensJob $application)
+    {
+        $job = JobPostCitizen::findOrFail($application->job_citizens_id);
+
+        if ($job->owner_id !== Auth::id()) {
+            abort(403);
+        }
+
+        $path = $application->user_cv;
+        if (filter_var($path, FILTER_VALIDATE_URL)) {
+            $path = (string) parse_url($path, PHP_URL_PATH);
+        }
+
+        $path = ltrim($path, '/');
+        if (str_starts_with($path, 'storage/')) {
+            $path = substr($path, strlen('storage/'));
+        }
+
+        if (!$path || !Storage::disk('public')->exists($path)) {
+            abort(404);
+        }
+
+        return Storage::disk('public')->response($path);
+    }
+
+    public function citizensApplicantPassport(CustomerAppliedCitizensJob $application)
+    {
+        $job = JobPostCitizen::findOrFail($application->job_citizens_id);
+
+        if ($job->owner_id !== Auth::id()) {
+            abort(403);
+        }
+
+        $path = $application->password_image;
+        if (filter_var($path, FILTER_VALIDATE_URL)) {
+            $path = (string) parse_url($path, PHP_URL_PATH);
+        }
+
+        $path = ltrim($path, '/');
+        if (str_starts_with($path, 'storage/')) {
+            $path = substr($path, strlen('storage/'));
+        }
+
+        if (!$path || !Storage::disk('public')->exists($path)) {
+            abort(404);
+        }
+
+        return Storage::disk('public')->response($path);
+    }
+
+    public function destroyCitizensApplication(CustomerAppliedCitizensJob $application)
+    {
+        $job = JobPostCitizen::findOrFail($application->job_citizens_id);
+
+        if ($job->owner_id !== Auth::id()) {
+            abort(403);
+        }
+
+        $cvPath = $application->user_cv;
+        if (filter_var($cvPath, FILTER_VALIDATE_URL)) {
+            $cvPath = (string) parse_url($cvPath, PHP_URL_PATH);
+        }
+        $cvPath = ltrim($cvPath, '/');
+        if (str_starts_with($cvPath, 'storage/')) {
+            $cvPath = substr($cvPath, strlen('storage/'));
+        }
+
+        if ($cvPath && Storage::disk('public')->exists($cvPath)) {
+            Storage::disk('public')->delete($cvPath);
+        }
+
+        $passportPath = $application->password_image;
+        if (filter_var($passportPath, FILTER_VALIDATE_URL)) {
+            $passportPath = (string) parse_url($passportPath, PHP_URL_PATH);
+        }
+        $passportPath = ltrim($passportPath, '/');
+        if (str_starts_with($passportPath, 'storage/')) {
+            $passportPath = substr($passportPath, strlen('storage/'));
+        }
+
+        if ($passportPath && Storage::disk('public')->exists($passportPath)) {
+            Storage::disk('public')->delete($passportPath);
+        }
+
+        $application->delete();
+        if ($job->number_of_applications > 0) {
+            $job->decrement('number_of_applications');
+        }
+
+        return redirect()
+            ->route('vendor.citizens-jobs.applicants', $job->id)
             ->with('success', 'Application deleted successfully.');
     }
 }

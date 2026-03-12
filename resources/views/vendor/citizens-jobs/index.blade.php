@@ -41,6 +41,7 @@
                         <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">حضوري</th>
                         <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">الموقع</th>
                         <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">عدد المتقدمين</th>
+                        <th class="px-6 py-3 text-right text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">الإجراءات</th>
                     </tr>
                 </thead>
                 <tbody class="bg-white dark:bg-gray-800 divide-y divide-gray-200 dark:divide-gray-700">
@@ -69,10 +70,15 @@
                             <td class="px-6 py-4 whitespace-nowrap">
                                 <div class="text-sm text-gray-500 dark:text-gray-400">{{ $job->number_of_applications }}</div>
                             </td>
+                            <td class="px-6 py-4 whitespace-nowrap text-right">
+                                <a href="{{ route('vendor.citizens-jobs.applicants', $job->id) }}" class="inline-flex items-center px-3 py-1 text-xs font-semibold text-blue-700 bg-blue-100 rounded-md hover:bg-blue-200">
+                                    عرض المتقدمين
+                                </a>
+                            </td>
                         </tr>
                     @empty
                         <tr>
-                            <td colspan="6" class="px-6 py-10 text-center text-sm text-gray-500 dark:text-gray-400">
+                            <td colspan="7" class="px-6 py-10 text-center text-sm text-gray-500 dark:text-gray-400">
                                 <div class="flex flex-col items-center justify-center">
                                     <i class="fas fa-briefcase text-gray-300 dark:text-gray-600 text-5xl mb-4"></i>
                                     <p>لا توجد وظائف مواطنات.</p>
