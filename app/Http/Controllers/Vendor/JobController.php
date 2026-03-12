@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Models\Category;
 use App\Models\CustomerAppliedJob;
 use App\Models\JobPost;
+use App\Models\JobPostCitizen;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
@@ -29,6 +30,53 @@ class JobController extends Controller
             ->paginate(10);
 
         return view('vendor.jobs.index', compact('jobs'));
+    }
+
+    public function citizensIndex()
+    {
+        $jobs = JobPostCitizen::where('owner_id', Auth::id())
+            ->latest()
+            ->paginate(10);
+
+        return view('vendor.citizens-jobs.index', compact('jobs'));
+    }
+
+    public function citizensCreate()
+    {
+        return view('vendor.citizens-jobs.create');
+    }
+
+    public function citizensStore(Request $request)
+    {
+        $validated = $request->validate([
+            'title' => 'required|string|max:255',
+            'description' => 'required|string',
+            'salary' => 'required|integer|min:0',
+            'nice_to_have' => 'required|string',
+            'phone_number' => 'nullable|string|max:255',
+            'email' => 'nullable|email|max:255',
+            'deadline' => 'required|date',
+            'type' => 'required|string|max:255',
+            'onsite' => 'nullable|boolean',
+            'location' => 'required|string|max:255',
+        ]);
+
+        JobPostCitizen::create([
+            'owner_id' => Auth::id(),
+            'title' => $validated['title'],
+            'description' => $validated['description'],
+            'salary' => $validated['salary'],
+            'nice_to_have' => $validated['nice_to_have'],
+            'phone_number' => $validated['phone_number'] ?? null,
+            'email' => $validated['email'] ?? null,
+            'deadline' => $validated['deadline'],
+            'type' => $validated['type'],
+            'number_of_applications' => 0,
+            'onsite' => $request->boolean('onsite'),
+            'location' => $validated['location'],
+        ]);
+
+        return redirect()->route('vendor.citizens-jobs.index')->with('success', 'Citizens job posted successfully.');
     }
 
     public function show(JobPost $job)

@@ -167,6 +167,7 @@ Route::get('/categories/{id}', [CategoryController::class, 'show']);
 Route::get('/featured/products', [ProductController::class, 'getFeatured']);
 Route::get('/featured/services', [ServiceController::class, 'featured']);
 Route::get('/jobs/featured', [ApiJobController::class, 'featured']);
+Route::get('/jobs/citizens/featured', [ApiJobController::class, 'featuredCitizens']);
 
 // Public filter routes (no authentication required) - for guest filtering
 Route::post('/search/filter', [\App\Http\Controllers\API\SearchController::class, 'filter']);

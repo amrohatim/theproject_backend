@@ -1451,6 +1451,9 @@ Route::prefix('vendor')->name('vendor.')->middleware(['auth', \App\Http\Middlewa
 
     // Jobs
     Route::get('/jobs', [VendorJobController::class, 'index'])->name('jobs.index');
+    Route::get('/citizens-jobs', [VendorJobController::class, 'citizensIndex'])->name('citizens-jobs.index');
+    Route::get('/citizens-jobs/create', [VendorJobController::class, 'citizensCreate'])->name('citizens-jobs.create');
+    Route::post('/citizens-jobs', [VendorJobController::class, 'citizensStore'])->name('citizens-jobs.store');
     Route::get('/jobs/create', [VendorJobController::class, 'create'])->name('jobs.create');
     Route::get('/jobs/{job}', [VendorJobController::class, 'show'])->name('jobs.show');
     Route::post('/jobs', [VendorJobController::class, 'store'])->name('jobs.store');
