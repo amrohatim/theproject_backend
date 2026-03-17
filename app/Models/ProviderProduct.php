@@ -120,8 +120,8 @@ class ProviderProduct extends Model
     {
         // First check if the status column exists in the provider_products table
         if (Schema::hasColumn('provider_products', 'status')) {
-            // If it exists, use it
-            return $query->where('status', 'active');
+            // If it exists, approved is the publishable status.
+            return $query->where('status', 'approved');
         } else if (Schema::hasColumn('provider_products', 'is_active')) {
             // If is_active exists, use it
             return $query->where('is_active', true);
