@@ -175,6 +175,7 @@ class ProviderController extends Controller
 
             // Get all provider products from the provider_products table
             $query = ProviderProduct::query()
+                ->approved()
                 ->with(['category']);
 
             // Apply filters if needed
@@ -240,6 +241,7 @@ class ProviderController extends Controller
             // Get provider products for this provider
             $query = ProviderProduct::query()
                 ->where('provider_id', $providerId)
+                ->approved()
                 // Temporarily disable the is_active filter to show all provider products
                 // ->where('is_active', true)
                 ->with(['category']);
@@ -312,6 +314,7 @@ class ProviderController extends Controller
             // Get provider products for this category and subcategories if requested
             $query = ProviderProduct::query()
                 ->whereIn('category_id', $categoryIds)
+                ->approved()
                 // Temporarily disable the is_active filter to show all provider products
                 // ->where('is_active', true)
                 ->with(['category']);
@@ -442,6 +445,9 @@ class ProviderController extends Controller
     {
         try {
             Log::info('Getting categories with provider products...');
+            $approvedStatusCondition = \Illuminate\Support\Facades\Schema::hasColumn('provider_products', 'status')
+                ? " AND pp.status = 'approved' "
+                : '';
 
             // First, get all subcategories that have provider products
             $subcategoriesWithProducts = DB::select("
@@ -466,6 +472,7 @@ class ProviderController extends Controller
                 LEFT JOIN provider_products pp ON pp.category_id = child_cats.id
                 WHERE child_cats.is_active = 1
                 AND child_cats.parent_id IS NOT NULL
+                {$approvedStatusCondition}
                 AND pp.id IS NOT NULL
                 GROUP BY child_cats.id, child_cats.name, child_cats.category_name_arabic, child_cats.description, child_cats.image,
                          child_cats.parent_id, child_cats.is_active, child_cats.type, child_cats.icon,

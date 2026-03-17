@@ -151,6 +151,7 @@ class MerchantController extends Controller
 
             $query = Product::with(['category', 'colors', 'sizes'])
                 ->where('merchant_id', $id)
+                ->approved()
                 ->where('is_available', true);
 
             // Filter by category if provided
@@ -220,6 +221,7 @@ class MerchantController extends Controller
             // Query services directly by merchant_id (which references user_id)
             $query = Service::with(['category'])
                 ->where('merchant_id', $merchant->user_id)
+                ->approved()
                 ->where('is_available', true);
 
             // Debug logging

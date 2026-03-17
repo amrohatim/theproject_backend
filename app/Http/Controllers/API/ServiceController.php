@@ -35,7 +35,7 @@ class ServiceController extends Controller
      */
     public function index(Request $request)
     {
-        $query = Service::with(['branch', 'category']);
+        $query = Service::with(['branch', 'category'])->approved();
 
         // Apply filters
         if ($request->has('branch_id')) {
@@ -110,6 +110,7 @@ class ServiceController extends Controller
         $includeServices = $request->boolean('include_services', true);
 
         $categoryIds = Service::query()
+            ->approved()
             ->where('branch_id', $branchId)
             ->whereNotNull('category_id')
             ->distinct()
@@ -173,6 +174,7 @@ class ServiceController extends Controller
         }
 
         $query = Service::with(['branch', 'category'])
+            ->approved()
             ->where('branch_id', $branchId);
 
         $includeSubcategories = $request->boolean('include_subcategories', true);
@@ -202,7 +204,9 @@ class ServiceController extends Controller
      */
     public function show($id)
     {
-        $service = Service::with(['branch', 'category', 'reviews.user'])->findOrFail($id);
+        $service = Service::with(['branch', 'category', 'reviews.user'])
+            ->approved()
+            ->findOrFail($id);
 
         $service = $this->transformService($service);
 
@@ -231,7 +235,7 @@ class ServiceController extends Controller
         $limit = (int) $request->input('limit', 10);
 
         $services = Service::with(['branch', 'category'])
-            ->where('is_available', true)
+            ->approvedAndAvailable()
             ->where('trending_score', '>', 0)
             ->orderByDesc('trending_score')
             ->take($limit)
@@ -239,7 +243,7 @@ class ServiceController extends Controller
 
         if ($services->isEmpty()) {
             $services = Service::with(['branch', 'category'])
-                ->where('is_available', true)
+                ->approvedAndAvailable()
                 ->orderByDesc('order_count')
                 ->orderByDesc('view_count')
                 ->orderByDesc('rating')
@@ -346,6 +350,7 @@ class ServiceController extends Controller
         $limit = $request->input('limit', 10);
 
         $services = Service::with(['branch', 'category'])
+            ->approved()
             ->where('featured', true)
             ->where('is_available', true)
             ->orderBy('created_at', 'desc')
@@ -405,7 +410,9 @@ class ServiceController extends Controller
         $limit = $request->input('limit', 10);
 
         // Get services with active deals using the ServiceDealService
-        $services = $this->serviceDealService->getServicesWithActiveDeals($limit);
+        $services = $this->serviceDealService->getServicesWithActiveDeals($limit)
+            ->filter(fn ($service) => $service->status === 'approved')
+            ->values();
 
         // Add branch_name, deal, and availability information to each service
         $services->transform(fn ($service) => $this->transformService($service));
@@ -414,6 +421,17 @@ class ServiceController extends Controller
             'success' => true,
             'services' => $services,
         ]);
+    }
+
+    /**
+     * Route alias for services with active deals.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @return \Illuminate\Http\Response
+     */
+    public function getServicesWithDeals(Request $request)
+    {
+        return $this->servicesWithDeals($request);
     }
 
     /**

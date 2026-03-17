@@ -22,7 +22,7 @@
                         <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
                             <i class="fas fa-search text-gray-400"></i>
                         </div>
-                        <input type="text" name="search" id="search" class="focus:ring-indigo-500 focus:border-indigo-500 block w-full pl-10 sm:text-sm border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-white rounded-md" placeholder="Search services...">
+                        <input type="text" name="search" id="search" value="{{ request('search') }}" class="focus:ring-indigo-500 focus:border-indigo-500 block w-full pl-10 sm:text-sm border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-white rounded-md" placeholder="Search services...">
                     </div>
                 </div>
 
@@ -50,8 +50,9 @@
                     <label for="status" class="block text-sm font-medium text-gray-700 dark:text-gray-300">Status</label>
                     <select id="status" name="status" class="mt-1 block w-full pl-3 pr-10 py-2 text-base border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-white focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm rounded-md">
                         <option value="">All Status</option>
-                        <option value="available">Available</option>
-                        <option value="unavailable">Unavailable</option>
+                        <option value="pending" {{ request('status') === 'pending' ? 'selected' : '' }}>Pending</option>
+                        <option value="approved" {{ request('status') === 'approved' ? 'selected' : '' }}>Approved</option>
+                        <option value="rejected" {{ request('status') === 'rejected' ? 'selected' : '' }}>Rejected</option>
                     </select>
                 </div>
 
@@ -59,8 +60,8 @@
                     <label for="featured" class="block text-sm font-medium text-gray-700 dark:text-gray-300">Featured</label>
                     <select id="featured" name="featured" class="mt-1 block w-full pl-3 pr-10 py-2 text-base border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-white focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm rounded-md">
                         <option value="">All Services</option>
-                        <option value="1">Featured Only</option>
-                        <option value="0">Not Featured</option>
+                        <option value="1" {{ request('featured') === '1' ? 'selected' : '' }}>Featured Only</option>
+                        <option value="0" {{ request('featured') === '0' ? 'selected' : '' }}>Not Featured</option>
                     </select>
                 </div>
             </div>
@@ -125,10 +126,18 @@
                             <div class="text-sm text-gray-500 dark:text-gray-400">{{ $service->duration }} min</div>
                         </td>
                         <td class="px-6 py-4 whitespace-nowrap">
+                            @php
+                                $status = $service->status ?? 'pending';
+                                $statusClasses = match($status) {
+                                    'approved' => 'bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-200',
+                                    'rejected' => 'bg-red-100 text-red-800 dark:bg-red-900 dark:text-red-200',
+                                    'pending' => 'bg-yellow-100 text-yellow-800 dark:bg-yellow-900 dark:text-yellow-200',
+                                    default => 'bg-gray-100 text-gray-800 dark:bg-gray-700 dark:text-gray-300',
+                                };
+                            @endphp
                             <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full
-                                @if($service->is_available) bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-200
-                                @else bg-red-100 text-red-800 dark:bg-red-900 dark:text-red-200 @endif">
-                                {{ $service->is_available ? 'Available' : 'Unavailable' }}
+                                {{ $statusClasses }}">
+                                {{ ucfirst($status) }}
                             </span>
                         </td>
                         <td class="px-6 py-4 whitespace-nowrap">
@@ -139,9 +148,7 @@
                             </span>
                         </td>
                         <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
-                            <a href="{{ route('admin.services.show', $service->id) }}" class="text-blue-600 dark:text-blue-400 hover:text-blue-900 dark:hover:text-blue-300 mr-3">
-                                <i class="fas fa-eye"></i>
-                            </a>
+                            
                             <a href="{{ route('admin.services.edit', $service->id) }}" class="text-indigo-600 dark:text-indigo-400 hover:text-indigo-900 dark:hover:text-indigo-300 mr-3">
                                 <i class="fas fa-edit"></i>
                             </a>

@@ -616,6 +616,7 @@ class BookingController extends Controller
             }
 
             $top = $query->join('services', 'bookings.service_id', '=', 'services.id')
+                ->where('services.status', 'approved')
                 ->selectRaw(
                     "services.name as service_name,
                      {$viewCountSelect},

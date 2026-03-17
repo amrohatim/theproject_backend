@@ -43,6 +43,11 @@
         <i class="fas fa-shopping-bag mr-3"></i>
         Products
     </a>
+
+    <a href="{{ route('admin.provider-products.index') }}" class="sidebar-item flex items-center px-4 py-2 text-sm font-medium rounded-md {{ request()->routeIs('admin.provider-products.*') ? 'sidebar-active' : 'text-gray-700 dark:text-gray-300' }}">
+        <i class="fas fa-boxes mr-3"></i>
+        Provider Products
+    </a>
     
     <a href="{{ route('admin.providers.index') }}" class="sidebar-item flex items-center px-4 py-2 text-sm font-medium rounded-md {{ request()->routeIs('admin.providers.*') ? 'sidebar-active' : 'text-gray-700 dark:text-gray-300' }}">
         <i class="fas fa-user-tie mr-3"></i>

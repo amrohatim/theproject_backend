@@ -412,6 +412,7 @@ class BusinessTypeController extends Controller
             if ($merchantOnly) {
                 // Filter for products with merchant_id NOT NULL and branch_id IS NULL
                 $query = Product::with(['category'])
+                    ->approved()
                     ->whereNotNull('merchant_id')
                     ->whereNull('branch_id')
                     ->where('is_available', true);
@@ -425,6 +426,7 @@ class BusinessTypeController extends Controller
             } else {
                 // Original logic for branch products
                 $query = Product::with(['branch', 'branch.company', 'category'])
+                    ->approved()
                     ->whereHas('branch', function ($q) {
                         $q->where('status', 'active');
                     });
@@ -510,6 +512,7 @@ class BusinessTypeController extends Controller
             if ($merchantOnly) {
                 // Filter for services with merchant_id NOT NULL and branch_id IS NULL
                 $query = Service::with(['category'])
+                    ->approved()
                     ->whereNotNull('merchant_id')
                     ->whereNull('branch_id')
                     ->where('is_available', true);
@@ -524,6 +527,7 @@ class BusinessTypeController extends Controller
             } else {
                 // Original logic for branch services
                 $query = Service::with(['branch', 'branch.company', 'category'])
+                    ->approved()
                     ->whereHas('branch', function ($q) {
                         $q->where('status', 'active');
                     });

@@ -26,6 +26,7 @@ class ProviderProduct extends Model
         'min_order',
         'sku',
         'category_id',
+        'status',
         'is_active',
         'image',
         'rating',
@@ -134,6 +135,21 @@ class ProviderProduct extends Model
                   });
             });
         }
+    }
+
+    /**
+     * Get approved provider products.
+     *
+     * @param \Illuminate\Database\Eloquent\Builder $query
+     * @return \Illuminate\Database\Eloquent\Builder
+     */
+    public function scopeApproved($query)
+    {
+        if (Schema::hasColumn('provider_products', 'status')) {
+            return $query->where('status', 'approved');
+        }
+
+        return $query;
     }
 
     /**

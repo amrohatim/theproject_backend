@@ -148,8 +148,89 @@
                 <!-- Page title -->
                 <h1 class="text-lg font-semibold">@yield('page-title', 'Dashboard')</h1>
 
-                <!-- User dropdown -->
-                <div class="relative">
+                <!-- User area -->
+                <div class="flex items-center gap-3">
+                    @if(auth()->user() && auth()->user()->role === 'vendor')
+                        <div class="relative group">
+                            <a
+                                href="{{ route('vendor.notifications.index') }}"
+                                class="relative inline-flex h-9 w-9 items-center justify-center rounded-full text-gray-600 hover:text-indigo-600 hover:bg-gray-100 dark:text-gray-300 dark:hover:text-indigo-400 dark:hover:bg-gray-700 transition-colors"
+                                aria-label="Vendor notifications"
+                            >
+                                <i class="fas fa-bell"></i>
+                                @if(($vendorUnreadCount ?? 0) > 0)
+                                    <span class="absolute -top-1 -right-1 inline-flex min-w-[1.05rem] h-[1.05rem] items-center justify-center rounded-full bg-red-500 px-1 text-[10px] font-semibold leading-none text-white">
+                                        {{ $vendorUnreadCount > 99 ? '99+' : $vendorUnreadCount }}
+                                    </span>
+                                @endif
+                            </a>
+
+                            <div class="hidden group-hover:block group-focus-within:block absolute right-0 top-10 z-50 w-80 rounded-lg border border-gray-200 bg-white shadow-lg dark:border-gray-700 dark:bg-gray-800">
+                                <div class="flex items-center justify-between border-b border-gray-200 px-4 py-2 dark:border-gray-700">
+                                    <h3 class="text-sm font-semibold text-gray-800 dark:text-gray-100">{{ __('messages.notifications') }}</h3>
+                                    <span class="text-xs text-gray-500 dark:text-gray-400">{{ __('messages.latest') }} 10</span>
+                                </div>
+                                <div class="max-h-80 overflow-y-auto">
+                                    @forelse(($vendorNotificationPreview ?? collect()) as $notification)
+                                        <div class="border-b border-gray-100 px-4 py-3 last:border-b-0 dark:border-gray-700">
+                                            <p class="text-sm text-gray-700 dark:text-gray-200">
+                                                {{ app()->getLocale() === 'ar' ? $notification->message_arabic : $notification->message }}
+                                            </p>
+                                            <p class="mt-1 text-xs text-gray-500 dark:text-gray-400">{{ $notification->created_at?->diffForHumans() }}</p>
+                                        </div>
+                                    @empty
+                                        <div class="px-4 py-6 text-center text-sm text-gray-500 dark:text-gray-400">
+                                            {{ __('messages.no_notifications') }}
+                                        </div>
+                                    @endforelse
+                                </div>
+                                <a href="{{ route('vendor.notifications.index') }}" class="block border-t border-gray-200 px-4 py-2 text-center text-sm font-medium text-indigo-600 hover:bg-gray-50 dark:border-gray-700 dark:text-indigo-400 dark:hover:bg-gray-700">
+                                    {{ __('messages.view_all') }}
+                                </a>
+                            </div>
+                        </div>
+                    @endif
+                    @if(auth()->user() && auth()->user()->role === 'provider')
+                        <div class="relative group">
+                            <a
+                                href="{{ route('provider.notifications.index') }}"
+                                class="relative inline-flex h-9 w-9 items-center justify-center rounded-full text-gray-600 hover:text-indigo-600 hover:bg-gray-100 dark:text-gray-300 dark:hover:text-indigo-400 dark:hover:bg-gray-700 transition-colors"
+                                aria-label="Provider notifications"
+                            >
+                                <i class="fas fa-bell"></i>
+                                @if(($providerUnreadCount ?? 0) > 0)
+                                    <span class="absolute -top-1 -right-1 inline-flex min-w-[1.05rem] h-[1.05rem] items-center justify-center rounded-full bg-red-500 px-1 text-[10px] font-semibold leading-none text-white">
+                                        {{ $providerUnreadCount > 99 ? '99+' : $providerUnreadCount }}
+                                    </span>
+                                @endif
+                            </a>
+
+                            <div class="hidden group-hover:block group-focus-within:block absolute right-0 top-10 z-50 w-80 rounded-lg border border-gray-200 bg-white shadow-lg dark:border-gray-700 dark:bg-gray-800">
+                                <div class="flex items-center justify-between border-b border-gray-200 px-4 py-2 dark:border-gray-700">
+                                    <h3 class="text-sm font-semibold text-gray-800 dark:text-gray-100">{{ __('messages.notifications') }}</h3>
+                                    <span class="text-xs text-gray-500 dark:text-gray-400">{{ __('messages.latest') }} 10</span>
+                                </div>
+                                <div class="max-h-80 overflow-y-auto">
+                                    @forelse(($providerNotificationPreview ?? collect()) as $notification)
+                                        <div class="border-b border-gray-100 px-4 py-3 last:border-b-0 dark:border-gray-700">
+                                            <p class="text-sm text-gray-700 dark:text-gray-200">
+                                                {{ app()->getLocale() === 'ar' ? $notification->message_arabic : $notification->message }}
+                                            </p>
+                                            <p class="mt-1 text-xs text-gray-500 dark:text-gray-400">{{ $notification->created_at?->diffForHumans() }}</p>
+                                        </div>
+                                    @empty
+                                        <div class="px-4 py-6 text-center text-sm text-gray-500 dark:text-gray-400">
+                                            {{ __('messages.no_notifications') }}
+                                        </div>
+                                    @endforelse
+                                </div>
+                                <a href="{{ route('provider.notifications.index') }}" class="block border-t border-gray-200 px-4 py-2 text-center text-sm font-medium text-indigo-600 hover:bg-gray-50 dark:border-gray-700 dark:text-indigo-400 dark:hover:bg-gray-700">
+                                    {{ __('messages.view_all') }}
+                                </a>
+                            </div>
+                        </div>
+                    @endif
+
                     <button type="button" class="flex items-center text-sm focus:outline-none">
                         <span class="mr-2 text-gray-700 dark:text-gray-300">{{ auth()->user()->name ?? 'Admin User' }}</span>
                         <div class="w-8 h-8 rounded-full bg-indigo-500 flex items-center justify-center text-white">

@@ -33,6 +33,7 @@ class Service extends Model
         'order_count',
         'trending_score',
         'last_trending_calculation',
+        'status',
         'is_available',
         'home_service',
         'available_days',
@@ -235,6 +236,28 @@ class Service extends Model
     public function scopeFilterByAvailability($query, $available = true)
     {
         return $query->where('is_available', $available);
+    }
+
+    /**
+     * Scope a query to only approved services.
+     *
+     * @param  \Illuminate\Database\Eloquent\Builder  $query
+     * @return \Illuminate\Database\Eloquent\Builder
+     */
+    public function scopeApproved($query)
+    {
+        return $query->where('status', 'approved');
+    }
+
+    /**
+     * Scope a query to only approved and available services.
+     *
+     * @param  \Illuminate\Database\Eloquent\Builder  $query
+     * @return \Illuminate\Database\Eloquent\Builder
+     */
+    public function scopeApprovedAndAvailable($query)
+    {
+        return $query->approved()->where('is_available', true);
     }
 
     /**

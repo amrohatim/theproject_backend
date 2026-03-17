@@ -1048,8 +1048,33 @@ Route::prefix('admin')->name('admin.')->middleware(['auth', \App\Http\Middleware
     })->name('branches.destroy');
 
     // Products
-    Route::get('/products', function () {
-        $products = \App\Models\Product::with(['branch.company', 'category'])->orderBy('created_at', 'desc')->paginate(10);
+    Route::get('/products', function (Illuminate\Http\Request $request) {
+        $query = \App\Models\Product::with(['branch.company', 'category']);
+
+        if ($request->filled('search')) {
+            $search = trim((string) $request->search);
+            $query->where('name', 'like', '%' . $search . '%');
+        }
+
+        if ($request->filled('category_id')) {
+            $query->where('category_id', $request->category_id);
+        }
+
+        if ($request->filled('company_id')) {
+            $query->whereHas('branch', function ($branchQuery) use ($request) {
+                $branchQuery->where('company_id', $request->company_id);
+            });
+        }
+
+        if ($request->filled('status')) {
+            $query->where('status', $request->status);
+        }
+
+        if ($request->filled('featured')) {
+            $query->where('featured', $request->featured === '1');
+        }
+
+        $products = $query->orderBy('created_at', 'desc')->paginate(10)->withQueryString();
         $categories = \App\Models\Category::orderBy('name')->get();
         $companies = \App\Models\Company::orderBy('name')->get();
         return view('admin.products.index', compact('products', 'categories', 'companies'));
@@ -1097,60 +1122,112 @@ Route::prefix('admin')->name('admin.')->middleware(['auth', \App\Http\Middleware
         return view('admin.products.show', compact('product'));
     })->name('products.show');
     Route::get('/products/{id}/edit', function ($id) {
-        $product = \App\Models\Product::findOrFail($id);
-        // Get product categories with their children
-        $parentCategories = \App\Models\Category::where('type', 'product')
-            ->whereNull('parent_id')
-            ->with(['children' => function($query) {
-                $query->orderBy('name');
-            }])
-            ->orderBy('name')
-            ->get();
-        $branches = \App\Models\Branch::with('company')->orderBy('name')->get();
-        return view('admin.products.edit', compact('product', 'parentCategories', 'branches'));
+        $product = \App\Models\Product::with([
+            'category',
+            'branch.company',
+            'colors',
+            'specifications',
+        ])->findOrFail($id);
+
+        return view('admin.products.edit', compact('product'));
     })->name('products.edit');
     Route::put('/products/{id}', function (Illuminate\Http\Request $request, $id) {
         $product = \App\Models\Product::findOrFail($id);
+        $oldStatus = $product->status;
 
         $validated = $request->validate([
-            'name' => 'required|string|max:255',
-            'category_id' => 'required|exists:categories,id',
-            'branch_id' => 'required|exists:branches,id',
-            'price' => 'required|numeric|min:0',
-            'original_price' => 'nullable|numeric|min:0',
-            'stock' => 'required|integer|min:0',
-            'description' => 'nullable|string',
-            'image' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
-            'is_available' => 'sometimes|boolean',
             'featured' => 'sometimes|boolean',
+            'status' => 'required|in:approved,rejected',
         ]);
 
-        $validated['is_available'] = $request->has('is_available');
-        $validated['featured'] = $request->has('featured');
+        $product->update([
+            'featured' => $request->boolean('featured'),
+            'status' => $validated['status'],
+        ]);
 
-        if ($request->hasFile('image')) {
-            // Delete old image if exists
-            if ($product->image && file_exists(public_path($product->image))) {
-                unlink(public_path($product->image));
+        if ($oldStatus !== $validated['status']) {
+            $recipientType = null;
+            $recipientId = null;
+
+            if (!empty($product->merchant_id)) {
+                $recipientType = \App\Models\VendorNotification::RECIPIENT_MERCHANT;
+                $recipientId = $product->merchant_id;
+            } else {
+                $product->loadMissing('branch');
+                if ($product->branch && !empty($product->branch->company_id)) {
+                    $recipientType = \App\Models\VendorNotification::RECIPIENT_VENDOR;
+                    $recipientId = $product->branch->company_id;
+                }
             }
 
-            $image = $request->file('image');
-            $imageName = time() . '_' . $image->getClientOriginalName();
-            $image->move(public_path('images/products'), $imageName);
-            $validated['image'] = '/images/products/' . $imageName;
-        }
+            if ($recipientType && $recipientId) {
+                $isApproved = $validated['status'] === 'approved';
+                $productArabicName = $product->product_name_arabic ?: $product->name;
 
-        $product->update($validated);
+                \App\Models\VendorNotification::create([
+                    'notification_type' => \App\Models\VendorNotification::TYPE_PRODUCT,
+                    'sender_name' => 'admin',
+                    'message' => $isApproved
+                        ? "Your product '{$product->name}' has been approved."
+                        : "Your product '{$product->name}' has been rejected.",
+                    'message_arabic' => $isApproved
+                        ? "تمت الموافقة على المنتج '{$productArabicName}'."
+                        : "تم رفض المنتج '{$productArabicName}'.",
+                    'is_opened' => false,
+                    'recipient_type' => $recipientType,
+                    'recipient_id' => $recipientId,
+                    'product_id' => $product->id,
+                    'provider_product_id' => null,
+                    'service_id' => null,
+                    'order_item_id' => null,
+                    'booking_id' => null,
+                ]);
+            } else {
+                \Log::warning('Skipped product status notification due to unresolved recipient ownership.', [
+                    'product_id' => $product->id,
+                    'merchant_id' => $product->merchant_id,
+                    'branch_id' => $product->branch_id,
+                ]);
+            }
+        }
 
         return redirect()->route('admin.products.index')->with('success', 'Product updated successfully');
     })->name('products.update');
     Route::delete('/products/{id}', function ($id) {
         try {
             $product = \App\Models\Product::findOrFail($id);
+            $product->loadMissing('colors');
 
-            // Delete legacy image if exists (old format)
-            if ($product->image && file_exists(public_path($product->image))) {
-                unlink(public_path($product->image));
+            // Explicit legacy file cleanup for both main image and color images.
+            // The model deleting event still handles canonical cleanup + DB cascading.
+            $deleteLegacyFile = function (?string $rawPath): void {
+                if (empty($rawPath)) {
+                    return;
+                }
+
+                $rawPath = trim($rawPath);
+                $urlPath = parse_url($rawPath, PHP_URL_PATH) ?: $rawPath;
+                $normalized = ltrim((string) $urlPath, '/');
+
+                $relativePublicPath = preg_replace('#^public/#', '', $normalized);
+                $relativeStoragePath = preg_replace('#^storage/#', '', $normalized);
+
+                $candidatePaths = array_unique(array_filter([
+                    public_path($relativePublicPath),
+                    public_path('storage/' . $relativeStoragePath),
+                    storage_path('app/public/' . $relativeStoragePath),
+                ]));
+
+                foreach ($candidatePaths as $filePath) {
+                    if (is_file($filePath)) {
+                        @unlink($filePath);
+                    }
+                }
+            };
+
+            $deleteLegacyFile($product->getRawImagePath());
+            foreach ($product->colors as $color) {
+                $deleteLegacyFile($color->getRawImagePath());
             }
 
             // The Product model's deleting event will handle cascading deletion
@@ -1171,6 +1248,135 @@ Route::prefix('admin')->name('admin.')->middleware(['auth', \App\Http\Middleware
         }
     })->name('products.destroy');
 
+    // Provider Products
+    Route::get('/provider-products', function (Illuminate\Http\Request $request) {
+        $query = \App\Models\ProviderProduct::with(['provider.user', 'category']);
+
+        if ($request->filled('search')) {
+            $search = trim((string) $request->search);
+            $query->where(function ($q) use ($search) {
+                $q->where('product_name', 'like', '%' . $search . '%')
+                    ->orWhere('product_name_arabic', 'like', '%' . $search . '%')
+                    ->orWhere('sku', 'like', '%' . $search . '%');
+            });
+        }
+
+        if ($request->filled('provider_id')) {
+            $query->where('provider_id', $request->provider_id);
+        }
+
+        if ($request->filled('category_id')) {
+            $query->where('category_id', $request->category_id);
+        }
+
+        if ($request->filled('status')) {
+            if (in_array($request->status, ['approved', 'rejected', 'pending'], true)) {
+                $query->where('status', $request->status);
+            } elseif ($request->status === 'active') {
+                $query->where('is_active', true);
+            } elseif ($request->status === 'inactive') {
+                $query->where('is_active', false);
+            }
+        }
+
+        $providerProducts = $query->orderBy('created_at', 'desc')->paginate(15)->withQueryString();
+        $providers = \App\Models\Provider::orderBy('business_name')->get();
+        $categories = \App\Models\Category::orderBy('name')->get();
+
+        return view('admin.provider-products.index', compact('providerProducts', 'providers', 'categories'));
+    })->name('provider-products.index');
+    Route::get('/provider-products/{id}/edit', function ($id) {
+        $providerProduct = \App\Models\ProviderProduct::with(['provider.user', 'category'])
+            ->findOrFail($id);
+
+        return view('admin.provider-products.edit', compact('providerProduct'));
+    })->name('provider-products.edit');
+    Route::put('/provider-products/{id}', function (Illuminate\Http\Request $request, $id) {
+        $providerProduct = \App\Models\ProviderProduct::findOrFail($id);
+        $oldStatus = $providerProduct->status;
+
+        $validated = $request->validate([
+            'status' => 'required|in:approved,rejected',
+        ]);
+
+        $providerProduct->update([
+            'status' => $validated['status'],
+        ]);
+
+        if ($oldStatus !== $validated['status'] && $providerProduct->provider_id) {
+            $isApproved = $validated['status'] === 'approved';
+            $productArabicName = $providerProduct->product_name_arabic ?: $providerProduct->product_name;
+
+            \App\Models\VendorNotification::create([
+                'notification_type' => \App\Models\VendorNotification::TYPE_PRODUCT,
+                'sender_name' => 'admin',
+                'message' => $isApproved
+                    ? "Your provider product '{$providerProduct->product_name}' has been approved."
+                    : "Your provider product '{$providerProduct->product_name}' has been rejected.",
+                'message_arabic' => $isApproved
+                    ? "تمت الموافقة على منتج مقدم الخدمة '{$productArabicName}'."
+                    : "تم رفض منتج مقدم الخدمة '{$productArabicName}'.",
+                'is_opened' => false,
+                'recipient_type' => \App\Models\VendorNotification::RECIPIENT_PROVIDER,
+                'recipient_id' => $providerProduct->provider_id,
+                'product_id' => null,
+                'provider_product_id' => $providerProduct->id,
+                'service_id' => null,
+                'order_item_id' => null,
+                'booking_id' => null,
+            ]);
+        }
+
+        return redirect()->route('admin.provider-products.index')->with('success', 'Provider product status updated successfully');
+    })->name('provider-products.update');
+    Route::delete('/provider-products/{id}', function ($id) {
+        try {
+            $providerProduct = \App\Models\ProviderProduct::findOrFail($id);
+            $rawImagePath = $providerProduct->getRawImagePath();
+
+            // Explicit cleanup to ensure image is removed from disk storage.
+            if (!empty($rawImagePath)) {
+                try {
+                    $webpService = new \App\Services\WebPImageService();
+                    $webpService->deleteImage($rawImagePath);
+                } catch (\Throwable $e) {
+                    \Log::warning('Failed deleting provider product image via WebPImageService', [
+                        'provider_product_id' => $providerProduct->id,
+                        'image_path' => $rawImagePath,
+                        'error' => $e->getMessage(),
+                    ]);
+
+                    // Fallback manual deletion for legacy/non-WebP paths.
+                    $normalized = ltrim((string) $rawImagePath, '/');
+                    $fallbackPaths = [
+                        public_path($normalized),
+                        public_path('storage/' . str_replace('storage/', '', $normalized)),
+                        storage_path('app/public/' . str_replace('storage/', '', $normalized)),
+                    ];
+
+                    foreach ($fallbackPaths as $path) {
+                        if (is_string($path) && file_exists($path)) {
+                            @unlink($path);
+                        }
+                    }
+                }
+            }
+
+            $providerProduct->delete();
+
+            return redirect()->route('admin.provider-products.index')
+                ->with('success', 'Provider product deleted successfully');
+        } catch (\Throwable $e) {
+            \Log::error('Error deleting provider product from admin', [
+                'provider_product_id' => $id,
+                'error' => $e->getMessage(),
+            ]);
+
+            return redirect()->route('admin.provider-products.index')
+                ->with('error', 'Failed to delete provider product: ' . $e->getMessage());
+        }
+    })->name('provider-products.destroy');
+
     // Providers
     Route::get('/providers', [\App\Http\Controllers\Admin\ProviderController::class, 'index'])->name('providers.index');
     Route::get('/providers/create', [\App\Http\Controllers\Admin\ProviderController::class, 'create'])->name('providers.create');
@@ -1181,8 +1387,33 @@ Route::prefix('admin')->name('admin.')->middleware(['auth', \App\Http\Middleware
     Route::delete('/providers/{id}', [\App\Http\Controllers\Admin\ProviderController::class, 'destroy'])->name('providers.destroy');
 
     // Services
-    Route::get('/services', function () {
-        $services = \App\Models\Service::with(['branch.company', 'category'])->orderBy('created_at', 'desc')->paginate(10);
+    Route::get('/services', function (Illuminate\Http\Request $request) {
+        $query = \App\Models\Service::with(['branch.company', 'category']);
+
+        if ($request->filled('search')) {
+            $search = trim((string) $request->search);
+            $query->where('name', 'like', '%' . $search . '%');
+        }
+
+        if ($request->filled('category_id')) {
+            $query->where('category_id', $request->category_id);
+        }
+
+        if ($request->filled('company_id')) {
+            $query->whereHas('branch', function ($branchQuery) use ($request) {
+                $branchQuery->where('company_id', $request->company_id);
+            });
+        }
+
+        if ($request->filled('status')) {
+            $query->where('status', $request->status);
+        }
+
+        if ($request->filled('featured')) {
+            $query->where('featured', $request->featured === '1');
+        }
+
+        $services = $query->orderBy('created_at', 'desc')->paginate(10)->withQueryString();
         $categories = \App\Models\Category::orderBy('name')->get();
         $companies = \App\Models\Company::orderBy('name')->get();
         return view('admin.services.index', compact('services', 'categories', 'companies'));
@@ -1229,49 +1460,26 @@ Route::prefix('admin')->name('admin.')->middleware(['auth', \App\Http\Middleware
         return view('admin.services.show', compact('service'));
     })->name('services.show');
     Route::get('/services/{id}/edit', function ($id) {
-        $service = \App\Models\Service::findOrFail($id);
-        // Get service categories with their children
-        $parentCategories = \App\Models\Category::where('type', 'service')
-            ->whereNull('parent_id')
-            ->with(['children' => function($query) {
-                $query->orderBy('name');
-            }])
-            ->orderBy('name')
-            ->get();
-        $branches = \App\Models\Branch::with('company')->orderBy('name')->get();
-        return view('admin.services.edit', compact('service', 'parentCategories', 'branches'));
+        $service = \App\Models\Service::with([
+            'category',
+            'branch.company',
+            'serviceImages',
+        ])->findOrFail($id);
+
+        return view('admin.services.edit', compact('service'));
     })->name('services.edit');
     Route::put('/services/{id}', function (Illuminate\Http\Request $request, $id) {
         $service = \App\Models\Service::findOrFail($id);
 
         $validated = $request->validate([
-            'name' => 'required|string|max:255',
-            'category_id' => 'required|exists:categories,id',
-            'branch_id' => 'required|exists:branches,id',
-            'price' => 'required|numeric|min:0',
-            'duration' => 'required|integer|min:1',
-            'description' => 'nullable|string',
-            'image' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
-            'is_available' => 'sometimes|boolean',
             'featured' => 'sometimes|boolean',
+            'status' => 'required|in:approved,rejected',
         ]);
 
-        $validated['is_available'] = $request->has('is_available');
-        $validated['featured'] = $request->has('featured');
-
-        if ($request->hasFile('image')) {
-            // Delete old image if exists
-            if ($service->image && file_exists(public_path($service->image))) {
-                unlink(public_path($service->image));
-            }
-
-            $image = $request->file('image');
-            $imageName = time() . '_' . $image->getClientOriginalName();
-            $image->move(public_path('images/services'), $imageName);
-            $validated['image'] = '/images/services/' . $imageName;
-        }
-
-        $service->update($validated);
+        $service->update([
+            'featured' => $request->boolean('featured'),
+            'status' => $validated['status'],
+        ]);
 
         return redirect()->route('admin.services.index')->with('success', 'Service updated successfully');
     })->name('services.update');
@@ -1436,6 +1644,7 @@ Route::prefix('admin')->name('admin.')->middleware(['auth', \App\Http\Middleware
 // Vendor routes
 Route::prefix('vendor')->name('vendor.')->middleware(['auth', \App\Http\Middleware\VendorMiddleware::class])->group(function () {
     Route::get('/dashboard', [VendorDashboardController::class, 'index'])->name('dashboard');
+    Route::get('/notifications', [\App\Http\Controllers\Vendor\NotificationController::class, 'index'])->name('notifications.index');
 
     // Subscription
     Route::get('/subscription', [\App\Http\Controllers\Vendor\VendorSubscriptionController::class, 'index'])->name('subscription.index');
@@ -2233,6 +2442,7 @@ Route::prefix('vendor')->name('vendor.')->middleware(['auth', \App\Http\Middlewa
 Route::middleware(['auth', \App\Http\Middleware\ServiceProviderMiddleware::class])->prefix('service-provider')->name('service-provider.')->group(function () {
     // Dashboard
     Route::get('/dashboard', [\App\Http\Controllers\ServiceProvider\DashboardController::class, 'index'])->name('dashboard');
+    Route::get('/notifications', [\App\Http\Controllers\ServiceProvider\NotificationController::class, 'index'])->name('notifications.index');
     Route::get('/dashboard/stats', [\App\Http\Controllers\ServiceProvider\DashboardController::class, 'getStats'])->name('dashboard.stats');
     Route::get('/dashboard/activity', [\App\Http\Controllers\ServiceProvider\DashboardController::class, 'getRecentActivity'])->name('dashboard.activity');
 
@@ -2261,6 +2471,7 @@ Route::middleware(['auth', \App\Http\Middleware\ServiceProviderMiddleware::class
 Route::middleware(['auth', \App\Http\Middleware\ProductsManagerMiddleware::class])->prefix('products-manager')->name('products-manager.')->group(function () {
     // Dashboard
     Route::get('/dashboard', [\App\Http\Controllers\ProductsManager\DashboardController::class, 'index'])->name('dashboard');
+    Route::get('/notifications', [\App\Http\Controllers\ProductsManager\NotificationController::class, 'index'])->name('notifications.index');
     Route::get('/dashboard/stats', [\App\Http\Controllers\ProductsManager\DashboardController::class, 'getStats'])->name('dashboard.stats');
     Route::get('/dashboard/activity', [\App\Http\Controllers\ProductsManager\DashboardController::class, 'getRecentActivity'])->name('dashboard.activity');
 
@@ -2333,6 +2544,7 @@ Route::middleware(['auth', \App\Http\Middleware\ProductsManagerMiddleware::class
 Route::prefix('provider')->name('provider.')->middleware(['auth', \App\Http\Middleware\ProviderMiddleware::class])->group(function () {
     // Dashboard
     Route::get('/dashboard', [App\Http\Controllers\Provider\DashboardController::class, 'index'])->name('dashboard');
+    Route::get('/notifications', [App\Http\Controllers\Provider\NotificationController::class, 'index'])->name('notifications.index');
 
     // Locations
     Route::get('/locations', [App\Http\Controllers\Provider\LocationController::class, 'index'])->name('locations.index');
@@ -2412,6 +2624,7 @@ Route::prefix('merchant')->name('merchant.')->middleware(['auth', \App\Http\Midd
     // Dashboard
     Route::get('/dashboard', [App\Http\Controllers\Merchant\DashboardController::class, 'index'])->name('dashboard');
     Route::get('/dashboard/stats', [App\Http\Controllers\Merchant\DashboardController::class, 'getStats'])->name('dashboard.stats');
+    Route::get('/notifications', [App\Http\Controllers\Merchant\NotificationController::class, 'index'])->name('notifications.index');
 
     // Global Search APIs
     Route::get('/dashboard/search', [App\Http\Controllers\Merchant\DashboardController::class, 'globalSearch'])->name('dashboard.search');

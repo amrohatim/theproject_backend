@@ -77,7 +77,7 @@
     </div>
 
     <!-- Branch Products -->
-    <div class="bg-white dark:bg-gray-800 rounded-lg shadow mb-6 border border-gray-200 dark:border-gray-700">
+    {{-- <div class="bg-white dark:bg-gray-800 rounded-lg shadow mb-6 border border-gray-200 dark:border-gray-700">
         <div class="p-6">
             <div class="flex items-center justify-between mb-4">
                 <h3 class="text-lg font-medium text-gray-900 dark:text-white">Products</h3>
@@ -149,10 +149,10 @@
                 </table>
             </div>
         </div>
-    </div>
+    </div> --}}
 
     <!-- Branch Services -->
-    <div class="bg-white dark:bg-gray-800 rounded-lg shadow mb-6 border border-gray-200 dark:border-gray-700">
+    {{-- <div class="bg-white dark:bg-gray-800 rounded-lg shadow mb-6 border border-gray-200 dark:border-gray-700">
         <div class="p-6">
             <div class="flex items-center justify-between mb-4">
                 <h3 class="text-lg font-medium text-gray-900 dark:text-white">Services</h3>
@@ -224,6 +224,6 @@
                 </table>
             </div>
         </div>
-    </div>
+    </div> --}}
 </div>
 @endsection

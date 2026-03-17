@@ -36,6 +36,7 @@ class Product extends Model
         'trending_score',
         'last_trending_calculation',
         'is_available',
+        'status',
         'is_multi_branch',
         'display_order',
         'is_merchant',
@@ -392,6 +393,28 @@ class Product extends Model
     public function scopeFilterByAvailability($query, $available = true)
     {
         return $query->where('is_available', $available);
+    }
+
+    /**
+     * Scope a query to only approved products.
+     *
+     * @param  \Illuminate\Database\Eloquent\Builder  $query
+     * @return \Illuminate\Database\Eloquent\Builder
+     */
+    public function scopeApproved($query)
+    {
+        return $query->where('status', 'approved');
+    }
+
+    /**
+     * Scope a query to only approved and available products.
+     *
+     * @param  \Illuminate\Database\Eloquent\Builder  $query
+     * @return \Illuminate\Database\Eloquent\Builder
+     */
+    public function scopeApprovedAndAvailable($query)
+    {
+        return $query->approved()->where('is_available', true);
     }
 
     /**

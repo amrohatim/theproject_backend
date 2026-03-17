@@ -146,10 +146,44 @@
                             <h1 class="text-2xl font-semibold text-gray-900 dark:text-white">@yield('page-title', __('service_provider.dashboard'))</h1>
                         </div>
                         <div class="flex items-center space-x-4">
-                            <!-- Notifications -->
-                            <button class="p-2 text-gray-400 hover:text-gray-500 dark:hover:text-gray-300">
-                                <i class="fas fa-bell"></i>
-                            </button>
+                            <div class="relative group">
+                                <a
+                                    href="{{ route('service-provider.notifications.index') }}"
+                                    class="relative inline-flex h-9 w-9 items-center justify-center rounded-full text-gray-600 hover:text-[#53D2DC] hover:bg-blue-50 dark:text-gray-300 dark:hover:text-[#53D2DC] dark:hover:bg-gray-700 transition-colors"
+                                    aria-label="Service provider notifications"
+                                >
+                                    <i class="fas fa-bell"></i>
+                                    @if(($serviceProviderUnreadCount ?? 0) > 0)
+                                        <span class="absolute -top-1 -right-1 inline-flex min-w-[1.05rem] h-[1.05rem] items-center justify-center rounded-full bg-red-500 px-1 text-[10px] font-semibold leading-none text-white">
+                                            {{ $serviceProviderUnreadCount > 99 ? '99+' : $serviceProviderUnreadCount }}
+                                        </span>
+                                    @endif
+                                </a>
+
+                                <div class="hidden group-hover:block group-focus-within:block absolute right-0 top-10 z-50 w-80 rounded-lg border border-gray-200 bg-white shadow-lg dark:border-gray-700 dark:bg-gray-800">
+                                    <div class="flex items-center justify-between border-b border-gray-200 px-4 py-2 dark:border-gray-700">
+                                        <h3 class="text-sm font-semibold text-gray-800 dark:text-gray-100">{{ __('messages.notifications') }}</h3>
+                                        <span class="text-xs text-gray-500 dark:text-gray-400">{{ __('messages.latest') }} 10</span>
+                                    </div>
+                                    <div class="max-h-80 overflow-y-auto">
+                                        @forelse(($serviceProviderNotificationPreview ?? collect()) as $notification)
+                                            <div class="border-b border-gray-100 px-4 py-3 last:border-b-0 dark:border-gray-700">
+                                                <p class="text-sm text-gray-700 dark:text-gray-200">
+                                                    {{ app()->getLocale() === 'ar' ? $notification->message_arabic : $notification->message }}
+                                                </p>
+                                                <p class="mt-1 text-xs text-gray-500 dark:text-gray-400">{{ $notification->created_at?->diffForHumans() }}</p>
+                                            </div>
+                                        @empty
+                                            <div class="px-4 py-6 text-center text-sm text-gray-500 dark:text-gray-400">
+                                                {{ __('messages.no_notifications') }}
+                                            </div>
+                                        @endforelse
+                                    </div>
+                                    <a href="{{ route('service-provider.notifications.index') }}" class="block border-t border-gray-200 px-4 py-2 text-center text-sm font-medium text-[#53D2DC] hover:bg-gray-50 dark:border-gray-700 dark:text-[#53D2DC] dark:hover:bg-gray-700">
+                                        {{ __('messages.view_all') }}
+                                    </a>
+                                </div>
+                            </div>
 
                             <!-- User Menu -->
                             <div class="relative">

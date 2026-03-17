@@ -1,4 +1,4 @@
-@extends('layouts.dashboard')
+{{-- @extends('layouts.dashboard')
 
 @section('title', 'Edit Company')
 @section('page-title', 'Edit Company')
@@ -161,4 +161,4 @@
         </form>
     </div>
 </div>
-@endsection
+@endsection --}}

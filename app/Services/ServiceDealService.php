@@ -179,7 +179,7 @@ class ServiceDealService
                 // Get all services from this vendor
                 $services = Service::whereHas('branch.company', function ($query) use ($deal) {
                     $query->where('user_id', $deal->user_id);
-                })->get();
+                })->approved()->get();
             }
 
             // Deal applies to specific services or both products and services
@@ -189,7 +189,7 @@ class ServiceDealService
                     : $deal->service_ids;
 
                 if (!empty($serviceIds)) {
-                    $services = Service::whereIn('id', $serviceIds)->get();
+                    $services = Service::whereIn('id', $serviceIds)->approved()->get();
                 }
             }
 

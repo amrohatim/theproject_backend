@@ -696,7 +696,7 @@ $direction = $isRtl ? 'rtl' : 'ltr';
                                 {{ __('merchant.jobs') }}
                             </a>
                         </li>
-                        <li class="nav-item">
+                        {{-- <li class="nav-item">
                             <a href="{{ route('merchant.customers.index') }}" class="nav-link {{ request()->routeIs('merchant.customers.*') ? 'active' : '' }}">
                                 <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" width="20" height="20">
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197m13.5-9a2.5 2.5 0 11-5 0 2.5 2.5 0 015 0z"></path>
@@ -711,7 +711,7 @@ $direction = $isRtl ? 'rtl' : 'ltr';
                                 </svg>
                                 {{ __('merchant.reports') }}
                             </a>
-                        </li>
+                        </li> --}}
                     </ul>
                 </div>
 
@@ -810,11 +810,48 @@ $direction = $isRtl ? 'rtl' : 'ltr';
                         <h1 class="page-title">@yield('header', 'Dashboard')</h1>
                     </div>
                     <div class="header-right">
-                        <button class="header-action-btn">
-                            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" width="24" height="24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 17h5l-5 5v-5zM9 7H4l5-5v5z"></path>
-                            </svg>
-                        </button>
+                        <div class="relative group">
+                            <a
+                                href="{{ route('merchant.notifications.index') }}"
+                                class="relative header-action-btn"
+                                aria-label="Merchant notifications"
+                            >
+                                <i class="fas fa-bell"></i>
+                                @if(($merchantUnreadCount ?? 0) > 0)
+                                    <span class="absolute -top-1 -right-1 inline-flex min-w-[1.05rem] h-[1.05rem] items-center justify-center rounded-full bg-red-500 px-1 text-[10px] font-semibold leading-none text-white">
+                                        {{ $merchantUnreadCount > 99 ? '99+' : $merchantUnreadCount }}
+                                    </span>
+                                @endif
+                            </a>
+
+                            <div class="hidden group-hover:block group-focus-within:block absolute right-0 top-10 z-50 w-80 rounded-lg border border-gray-200 bg-white shadow-lg">
+                                <div class="flex items-center justify-between border-b border-gray-200 px-4 py-2">
+                                    <h3 class="text-sm font-semibold text-gray-800">{{ __('messages.notifications') }}</h3>
+                                    <span class="text-xs text-gray-500">{{ __('messages.latest') }} 10</span>
+                                </div>
+                                <div class="max-h-80 overflow-y-auto">
+                                    @forelse(($merchantNotificationPreview ?? collect()) as $notification)
+                                        <div class="border-b border-gray-100 px-4 py-3 last:border-b-0">
+                                            <p class="text-sm text-gray-700">
+                                                {{ app()->getLocale() === 'ar' ? $notification->message_arabic : $notification->message }}
+                                            </p>
+                                            <p class="mt-1 text-xs text-gray-500">{{ $notification->created_at?->diffForHumans() }}</p>
+                                        </div>
+                                    @empty
+                                        <div class="px-4 py-6 text-center text-sm text-gray-500">
+                                            {{ __('messages.no_notifications') }}
+                                        </div>
+                                    @endforelse
+                                </div>
+                                <a href="{{ route('merchant.notifications.index') }}" class="block border-t border-gray-200 px-4 py-2 text-center text-sm font-medium text-indigo-600 hover:bg-gray-50">
+                                    {{ __('merchant.view_all') }}
+                                </a>
+                            </div>
+                        </div>
+
+                        <span class="text-sm font-medium text-gray-700 hidden sm:inline">
+                            {{ auth()->user()->name }}
+                        </span>
                         <div class="user-avatar">
                             {{ strtoupper(substr(auth()->user()->name, 0, 2)) }}
                         </div>

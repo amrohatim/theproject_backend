@@ -25,7 +25,9 @@ class GeneralWishlistServiceController extends Controller
             ]);
         }
 
-        $services = Service::whereIn('id', $serviceIds)->get();
+        $services = Service::whereIn('id', $serviceIds)
+            ->approved()
+            ->get();
 
         return response()->json([
             'success' => true,

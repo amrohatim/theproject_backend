@@ -256,6 +256,7 @@ class DealController extends Controller
                 : $deal->product_ids;
 
             $products = Product::whereIn('id', $productIds)
+                ->approved()
                 ->where('is_available', true)
                 ->with(['branch', 'category', 'colors', 'sizes'])
                 ->get();
@@ -307,6 +308,7 @@ class DealController extends Controller
                 : $deal->service_ids;
 
             $services = Service::whereIn('id', $serviceIds)
+                ->approved()
                 ->where('is_available', true)
                 ->with(['branch', 'category'])
                 ->get();

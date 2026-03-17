@@ -52,7 +52,7 @@ class ProductController extends Controller
 
         // Primary: products with a positive trending score
         $products = Product::with(['branch', 'category'])
-            ->where('is_available', true)
+            ->approvedAndAvailable()
             ->where('trending_score', '>', 0)
             ->orderByDesc('trending_score')
             ->take($limit)
@@ -61,7 +61,7 @@ class ProductController extends Controller
         // Fallback: if no scores, use order_count/view_count/rating
         if ($products->isEmpty()) {
             $products = Product::with(['branch', 'category'])
-                ->where('is_available', true)
+                ->approvedAndAvailable()
                 ->orderByDesc('order_count')
                 ->orderByDesc('view_count')
                 ->orderByDesc('rating')
@@ -96,7 +96,7 @@ class ProductController extends Controller
             'sizes',
             'colorSizes.color',
             'colorSizes.size'
-        ]);
+        ])->approved();
 
         // Apply filters
         if ($request->has('branch_id')) {
@@ -236,6 +236,7 @@ class ProductController extends Controller
         $includeProducts = $request->boolean('include_products', true);
 
         $categoryIds = Product::query()
+            ->approved()
             ->where('branch_id', $branchId)
             ->whereNotNull('category_id')
             ->distinct()
@@ -305,7 +306,7 @@ class ProductController extends Controller
             'sizes',
             'colorSizes.color',
             'colorSizes.size'
-        ])
+        ])->approved()
             ->where('branch_id', $branchId);
 
         $includeSubcategories = $request->boolean('include_subcategories', true);
@@ -380,7 +381,14 @@ class ProductController extends Controller
             'specifications',
             'colorSizes.color',
             'colorSizes.size'
-        ])->findOrFail($id);
+        ])->approved()->where('id', $id)->first();
+
+        if (!$product) {
+            return response()->json([
+                'success' => true,
+                'product' => null,
+            ]);
+        }
 
         // Track unique product view with duplicate prevention
         try {
@@ -625,6 +633,7 @@ class ProductController extends Controller
             'colorSizes.color',
             'colorSizes.size'
         ])
+            ->approved()
             ->where('featured', true)
             ->where('is_available', true)
             ->orderBy('created_at', 'desc')
@@ -755,8 +764,16 @@ class ProductController extends Controller
     public function checkStockAvailability(Request $request, $id)
     {
         try {
-            $product = Product::findOrFail($id);
             $quantity = $request->input('quantity', 1);
+            $product = Product::approved()->where('id', $id)->first();
+            if (!$product) {
+                return response()->json([
+                    'success' => true,
+                    'available' => false,
+                    'quantity' => 0,
+                    'requested_quantity' => $quantity,
+                ]);
+            }
             $colorId = $request->input('color_id');
             $sizeId = $request->input('size_id');
 
@@ -815,7 +832,13 @@ class ProductController extends Controller
     public function getAvailableStock(Request $request, $id)
     {
         try {
-            $product = Product::findOrFail($id);
+            $product = Product::approved()->where('id', $id)->first();
+            if (!$product) {
+                return response()->json([
+                    'success' => true,
+                    'stock' => 0,
+                ]);
+            }
             $colorId = $request->input('color_id');
             $sizeId = $request->input('size_id');
 
@@ -872,7 +895,16 @@ class ProductController extends Controller
                 'colors',
                 'colorSizes.color',
                 'colorSizes.size'
-            ])->findOrFail($id);
+            ])->approved()->where('id', $id)->first();
+
+            if (!$product) {
+                return response()->json([
+                    'success' => true,
+                    'general_stock' => 0,
+                    'color_variations' => [],
+                    'color_size_combinations' => [],
+                ]);
+            }
 
             // General product stock
             $stockInfo = [
@@ -942,7 +974,16 @@ class ProductController extends Controller
                 'sizes',
                 'colorSizes.color',
                 'colorSizes.size'
-            ])->findOrFail($id);
+            ])->approved()->where('id', $id)->first();
+
+            if (!$product) {
+                return response()->json([
+                    'success' => true,
+                    'colors' => [],
+                    'sizes' => [],
+                    'color_size_combinations' => [],
+                ]);
+            }
 
             $options = [
                 'success' => true,

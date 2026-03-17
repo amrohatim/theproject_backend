@@ -117,9 +117,9 @@
                             <a href="{{ route('admin.companies.show', $company->id) }}" class="text-blue-600 dark:text-blue-400 hover:text-blue-900 dark:hover:text-blue-300 mr-3">
                                 <i class="fas fa-eye"></i>
                             </a>
-                            <a href="{{ route('admin.companies.edit', $company->id) }}" class="text-indigo-600 dark:text-indigo-400 hover:text-indigo-900 dark:hover:text-indigo-300 mr-3">
+                            {{-- <a href="{{ route('admin.companies.edit', $company->id) }}" class="text-indigo-600 dark:text-indigo-400 hover:text-indigo-900 dark:hover:text-indigo-300 mr-3">
                                 <i class="fas fa-edit"></i>
-                            </a>
+                            </a> --}}
                             <form action="{{ route('admin.companies.destroy', $company->id) }}" method="POST" class="inline">
                                 @csrf
                                 @method('DELETE')

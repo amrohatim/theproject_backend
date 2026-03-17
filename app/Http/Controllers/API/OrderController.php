@@ -506,6 +506,7 @@ class OrderController extends Controller
             $topQuery = OrderItem::join('orders', 'order_items.order_id', '=', 'orders.id')
                 ->leftJoin('products', 'order_items.product_id', '=', 'products.id')
                 ->where('order_items.vendor_id', $companyId)
+                ->where('products.status', 'approved')
                 ->whereBetween('orders.created_at', [$start, $end]);
             if ($branchId && Schema::hasColumn('order_items', 'branch_id')) {
                 $topQuery->where('order_items.branch_id', $branchId);

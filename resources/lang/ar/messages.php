@@ -118,6 +118,8 @@ return [
     'language' => 'اللغة',
     'theme' => 'المظهر',
     'notifications' => 'الإشعارات',
+    'no_notifications' => 'لا توجد إشعارات بعد',
+    'view_all' => 'عرض الكل',
     'messages' => 'الرسائل',
     'alerts' => 'التنبيهات',
     'news' => 'الأخبار',
