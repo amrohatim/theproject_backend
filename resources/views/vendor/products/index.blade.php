@@ -247,10 +247,14 @@
                             <div class="text-sm text-gray-500 dark:text-gray-400">{{ $product->stock }}</div>
                         </td>
                         <td class="px-6 py-4 whitespace-nowrap" data-label="{{ __('messages.status') }}">
+                            @php
+                                $productStatus = $product->status ?? 'pending';
+                            @endphp
                             <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full
-                                @if($product->is_available) bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-200
-                                @else bg-red-100 text-red-800 dark:bg-red-900 dark:text-red-200 @endif">
-                                {{ $product->is_available ? __('messages.available') : __('messages.out_of_stock') }}
+                                @if($productStatus === 'approved') bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-200
+                                @elseif($productStatus === 'rejected') bg-red-100 text-red-800 dark:bg-red-900 dark:text-red-200
+                                @else bg-yellow-100 text-yellow-800 dark:bg-yellow-900 dark:text-yellow-200 @endif">
+                                {{ ucfirst($productStatus) }}
                             </span>
                         </td>
                         <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium" data-label="{{ __('messages.actions') }}">

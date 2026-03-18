@@ -215,10 +215,14 @@
                             <div class="text-sm text-gray-500 dark:text-gray-400">{{ $service->duration }} {{ __('messages.min') }}</div>
                         </td>
                         <td class="px-6 py-4 whitespace-nowrap" data-label="{{ __('messages.status') }}">
+                            @php
+                                $serviceStatus = $service->status ?? 'pending';
+                            @endphp
                             <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full
-                                @if($service->is_available) bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-200
-                                @else bg-red-100 text-red-800 dark:bg-red-900 dark:text-red-200 @endif">
-                                {{ $service->is_available ? __('messages.available') : __('messages.unavailable') }}
+                                @if($serviceStatus === 'approved') bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-200
+                                @elseif($serviceStatus === 'rejected') bg-red-100 text-red-800 dark:bg-red-900 dark:text-red-200
+                                @else bg-yellow-100 text-yellow-800 dark:bg-yellow-900 dark:text-yellow-200 @endif">
+                                {{ ucfirst($serviceStatus) }}
                             </span>
                         </td>
                         <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium" data-label="{{ __('messages.actions') }}">

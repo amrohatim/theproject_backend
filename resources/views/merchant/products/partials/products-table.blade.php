@@ -114,17 +114,23 @@
                     @endif
                 </td>
                 <td class="px-6 py-4">
-                    @if($product->is_available)
-                        <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-green-100 text-green-800">
-                            <span class="w-1.5 h-1.5 rounded-full bg-green-400 mr-1.5"></span>
-                            {{ __('merchant.available') }}
-                        </span>
-                    @else
-                        <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-red-100 text-red-800">
-                            <span class="w-1.5 h-1.5 rounded-full bg-red-400 mr-1.5"></span>
-                            {{ __('merchant.unavailable') }}
-                        </span>
-                    @endif
+                    @php
+                        $productStatus = $product->status ?? 'pending';
+                        $statusLabel = __('messages.' . $productStatus);
+                        if ($statusLabel === 'messages.' . $productStatus) {
+                            $statusLabel = ucfirst($productStatus);
+                        }
+                    @endphp
+                    <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium
+                        @if($productStatus === 'approved') bg-green-100 text-green-800
+                        @elseif($productStatus === 'rejected') bg-red-100 text-red-800
+                        @else bg-yellow-100 text-yellow-800 @endif">
+                        <span class="w-1.5 h-1.5 rounded-full mr-1.5
+                            @if($productStatus === 'approved') bg-green-400
+                            @elseif($productStatus === 'rejected') bg-red-400
+                            @else bg-yellow-400 @endif"></span>
+                        {{ $statusLabel }}
+                    </span>
                 </td>
                 <td class="px-6 py-4 text-sm text-gray-500">
                     {{ $product->created_at->format('M d, Y') }}

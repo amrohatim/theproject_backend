@@ -137,15 +137,15 @@
                                     @endif
                                 </td>
                                 <td class="px-6 py-4 md:whitespace-nowrap" data-label="{{ __('products_manager.status') }}">
-                                    @if($product->is_available)
-                                        <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-200">
-                                            {{ __('products_manager.active') }}
-                                        </span>
-                                    @else
-                                        <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-gray-100 text-gray-800 dark:bg-gray-900 dark:text-gray-200">
-                                            {{ __('products_manager.inactive') }}
-                                        </span>
-                                    @endif
+                                    @php
+                                        $productStatus = $product->status ?? 'pending';
+                                    @endphp
+                                    <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium
+                                        @if($productStatus === 'approved') bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-200
+                                        @elseif($productStatus === 'rejected') bg-red-100 text-red-800 dark:bg-red-900 dark:text-red-200
+                                        @else bg-yellow-100 text-yellow-800 dark:bg-yellow-900 dark:text-yellow-200 @endif">
+                                        {{ ucfirst($productStatus) }}
+                                    </span>
                                 </td>
                                 <td class="px-6 py-4 md:whitespace-nowrap text-right text-sm font-medium" data-label="{{ __('products_manager.actions') }}">
                                     <div class="flex items-center justify-end space-x-2">

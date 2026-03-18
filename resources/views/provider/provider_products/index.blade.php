@@ -109,8 +109,9 @@ document.addEventListener('DOMContentLoaded', function() {
                     <label for="status" class="block text-sm font-medium text-gray-700 dark:text-gray-300">{{ __('provider.status') }}</label>
                     <select id="status" name="status" class="mt-1 block w-full pl-3 pr-10 py-2 text-base border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-white focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm rounded-md">
                         <option value="">{{ __('messages.all_status') ?? 'All Status' }}</option>
-                        <option value="1" {{ request('status') === '1' ? 'selected' : '' }}>{{ __('provider.active') }}</option>
-                        <option value="0" {{ request('status') === '0' ? 'selected' : '' }}>{{ __('provider.inactive') }}</option>
+                        <option value="pending" {{ request('status') === 'pending' ? 'selected' : '' }}>{{ __('messages.pending') }}</option>
+                        <option value="approved" {{ request('status') === 'approved' ? 'selected' : '' }}>{{ __('messages.approved') }}</option>
+                        <option value="rejected" {{ request('status') === 'rejected' ? 'selected' : '' }}>{{ __('messages.rejected') }}</option>
                     </select>
                 </div>
             </div>
@@ -172,10 +173,14 @@ document.addEventListener('DOMContentLoaded', function() {
                             <div class="text-sm text-gray-500 dark:text-gray-400">{{ $item->stock }} {{ __('provider.units') ?? 'units' }}</div>
                         </td>
                         <td class="px-6 py-4 whitespace-nowrap" data-label="{{ __('provider.status') }}">
+                            @php
+                                $productStatus = $item->status ?? 'pending';
+                            @endphp
                             <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full
-                                @if($item->is_active) bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-200
-                                @else bg-gray-100 text-gray-800 dark:bg-gray-900 dark:text-gray-200 @endif">
-                                {{ $item->is_active ? __('provider.active') : __('provider.inactive') }}
+                                @if($productStatus === 'approved') bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-200
+                                @elseif($productStatus === 'rejected') bg-red-100 text-red-800 dark:bg-red-900 dark:text-red-200
+                                @else bg-yellow-100 text-yellow-800 dark:bg-yellow-900 dark:text-yellow-200 @endif">
+                                {{ ucfirst($productStatus) }}
                             </span>
                         </td>
                         <td class="px-6 py-4 whitespace-nowrap" data-label="{{ __('provider.added_date') }}">
@@ -245,10 +250,14 @@ document.addEventListener('DOMContentLoaded', function() {
                         </div>
                         <div>
                             <div class="text-xs uppercase tracking-wider text-gray-400 dark:text-gray-500">{{ __('provider.status') }}</div>
+                            @php
+                                $productStatus = $item->status ?? 'pending';
+                            @endphp
                             <span class="inline-flex mt-1 px-2 text-xs leading-5 font-semibold rounded-full
-                                @if($item->is_active) bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-200
-                                @else bg-gray-100 text-gray-800 dark:bg-gray-900 dark:text-gray-200 @endif">
-                                {{ $item->is_active ? __('provider.active') : __('provider.inactive') }}
+                                @if($productStatus === 'approved') bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-200
+                                @elseif($productStatus === 'rejected') bg-red-100 text-red-800 dark:bg-red-900 dark:text-red-200
+                                @else bg-yellow-100 text-yellow-800 dark:bg-yellow-900 dark:text-yellow-200 @endif">
+                                {{ ucfirst($productStatus) }}
                             </span>
                         </div>
                         <div>

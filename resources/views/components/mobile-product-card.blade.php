@@ -4,6 +4,7 @@
     $deleteUrl = $deleteUrl ?? null;
     $deleteConfirm = $deleteConfirm ?? __('merchant.delete_product_confirm');
     $editButtonClass = $editButtonClass ?? 'bg-blue-500 hover:bg-blue-600';
+    $productStatus = $product->status ?? null;
 @endphp
 
 <div class="bg-white border border-gray-200 rounded-[8px] shadow-sm">
@@ -47,12 +48,21 @@
                         @endif
                     </div>
                     <div class="flex flex-col gap-2">
-                        <div class="flex items-center gap-2 text-[11px] font-medium {{ $product->is_available ? 'text-emerald-500' : 'text-gray-400' }}">
-                            <svg class="h-3 w-3" viewBox="0 0 20 20" fill="currentColor">
-                                <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-7.5 7.5a1 1 0 01-1.414 0l-3.5-3.5a1 1 0 011.414-1.414l2.793 2.793 6.793-6.793a1 1 0 011.414 0z" clip-rule="evenodd" />
-                            </svg>
-                            {{ $product->is_available ? __('merchant.available') : __('merchant.unavailable') }}
-                        </div>
+                        @if($productStatus)
+                            <div class="flex items-center gap-2 text-[11px] font-medium {{ $productStatus === 'approved' ? 'text-emerald-500' : ($productStatus === 'rejected' ? 'text-red-500' : 'text-amber-500') }}">
+                                <svg class="h-3 w-3" viewBox="0 0 20 20" fill="currentColor">
+                                    <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-7.5 7.5a1 1 0 01-1.414 0l-3.5-3.5a1 1 0 011.414-1.414l2.793 2.793 6.793-6.793a1 1 0 011.414 0z" clip-rule="evenodd" />
+                                </svg>
+                                {{ ucfirst($productStatus) }}
+                            </div>
+                        @else
+                            <div class="flex items-center gap-2 text-[11px] font-medium {{ $product->is_available ? 'text-emerald-500' : 'text-gray-400' }}">
+                                <svg class="h-3 w-3" viewBox="0 0 20 20" fill="currentColor">
+                                    <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-7.5 7.5a1 1 0 01-1.414 0l-3.5-3.5a1 1 0 011.414-1.414l2.793 2.793 6.793-6.793a1 1 0 011.414 0z" clip-rule="evenodd" />
+                                </svg>
+                                {{ $product->is_available ? __('merchant.available') : __('merchant.unavailable') }}
+                            </div>
+                        @endif
                         <div class="text-[11px] text-gray-400">
                             {{ __('merchant.date_created') }}
                         </div>

@@ -50,8 +50,8 @@ class ProviderProductController extends Controller
             });
         }
 
-        if ($request->filled('status')) {
-            $providerProductsQuery->where('is_active', $request->status == '1');
+        if ($request->filled('status') && in_array($request->status, ['pending', 'approved', 'rejected'], true)) {
+            $providerProductsQuery->where('status', $request->status);
         }
 
         $providerProducts = $providerProductsQuery->paginate(10);

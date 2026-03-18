@@ -68,10 +68,8 @@ class ProductController extends Controller
         // Apply status filter
         if ($request->filled('status')) {
             $status = $request->get('status');
-            if ($status === 'active') {
-                $query->where('is_available', true);
-            } elseif ($status === 'inactive') {
-                $query->where('is_available', false);
+            if (in_array($status, ['pending', 'approved', 'rejected'], true)) {
+                $query->where('products.status', $status);
             }
             // 'all' doesn't add any filter
         }
@@ -137,8 +135,8 @@ class ProductController extends Controller
                 $query->orderBy('products.stock', $sortDirection);
                 break;
             case 'status':
-                // Use indexed is_available column
-                $query->orderBy('products.is_available', $sortDirection);
+                // Sort by workflow status
+                $query->orderBy('products.status', $sortDirection);
                 break;
             case 'created_at':
             default:
@@ -157,10 +155,8 @@ class ProductController extends Controller
 
         if ($request->filled('status')) {
             $status = $request->get('status');
-            if ($status === 'active') {
-                $query->where('is_available', true);
-            } elseif ($status === 'inactive') {
-                $query->where('is_available', false);
+            if (in_array($status, ['pending', 'approved', 'rejected'], true)) {
+                $query->where('products.status', $status);
             }
         }
 
@@ -1067,8 +1063,9 @@ class ProductController extends Controller
                     ['value' => 'out_of_stock', 'label' => 'Out of Stock (0)']
                 ],
                 'statuses' => [
-                    ['value' => 'active', 'label' => 'Active'],
-                    ['value' => 'inactive', 'label' => 'Inactive']
+                    ['value' => 'pending', 'label' => 'Pending'],
+                    ['value' => 'approved', 'label' => 'Approved'],
+                    ['value' => 'rejected', 'label' => 'Rejected']
                 ]
             ]
         ]);

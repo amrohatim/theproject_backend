@@ -57,17 +57,22 @@
                             {{ $service->duration }} min
                         </td>
                         <td class="px-4 py-3" data-label="{{ __('service_provider.status') }}">
-                            @if($service->is_available)
-                                <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-200">
+                            @php
+                                $serviceStatus = $service->status ?? 'pending';
+                            @endphp
+                            <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium
+                                @if($serviceStatus === 'approved') bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-200
+                                @elseif($serviceStatus === 'rejected') bg-red-100 text-red-800 dark:bg-red-900 dark:text-red-200
+                                @else bg-yellow-100 text-yellow-800 dark:bg-yellow-900 dark:text-yellow-200 @endif">
+                                @if($serviceStatus === 'approved')
                                     <i class="fas fa-check-circle mr-1"></i>
-                                    {{ __('service_provider.available') }}
-                                </span>
-                            @else
-                                <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-red-100 text-red-800 dark:bg-red-900 dark:text-red-200">
+                                @elseif($serviceStatus === 'rejected')
                                     <i class="fas fa-times-circle mr-1"></i>
-                                    {{ __('service_provider.unavailable') }}
-                                </span>
-                            @endif
+                                @else
+                                    <i class="fas fa-clock mr-1"></i>
+                                @endif
+                                {{ ucfirst($serviceStatus) }}
+                            </span>
                         </td>
                         <td class="px-4 py-3 text-right" data-label="{{ __('service_provider.actions') }}">
                             <div class="flex items-center justify-end space-x-2">
