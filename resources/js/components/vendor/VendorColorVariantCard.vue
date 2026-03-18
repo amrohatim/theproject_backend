@@ -1,23 +1,26 @@
 <template>
   <div class="vue-card vendor-color-variant-card transition-all duration-200"
-       :class= "{ 'ring-2 border-primary-200': isDefault, 'rtl': isRTL } "
-       :style="isDefault ? { '--tw-ring-color': 'var(--primary-blue)' } : {}">
-    <div class="p-6 border-b" style="border-color: var(--gray-200);">
+       :class="{ 'is-default': isDefault, 'rtl': isRTL }">
+    <div class="p-4 sm:p-5 border-b border-gray-200 dark:border-gray-700">
       <div class="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
         <div class="flex items-center gap-3">
-          <div class="w-6 h-6 rounded-full border-2 border-white shadow-sm"
+          <div class="w-5 h-5 rounded-full border border-white shadow-sm"
                :style="{ backgroundColor: color.color_code || '#000000' }"></div>
-          <h4 class="vue-text-lg">
+          <h4 class="vue-text-lg flex items-center">
             {{ $t('vendor.color_variant') }} {{ index + 1 }}
             <span v-if="isDefault"
                   :class="isRTL ? 'mr-2' : 'ml-2'"
-                  class="inline-flex items-center px-2 py-1 text-xs font-medium rounded"
-                  style="background-color: var(--gray-100); color: var(--primary-blue-hover);">
+                  class="inline-flex items-center px-2 py-0.5 text-xs font-medium rounded-full default-badge">
               <i :class="isRTL ? 'ml-1' : 'mr-1'" class="fas fa-star w-3 h-3"></i>
               {{ $t('vendor.default') }}
             </span>
           </h4>
         </div>
+      </div>
+    </div>
+
+    <div class="p-4 sm:p-5 space-y-5">
+      <div class="sticky-card-actions">
         <div class="flex flex-wrap items-center gap-2">
           <button v-if="!isDefault"
                   type="button"
@@ -27,17 +30,14 @@
             <i :class="isRTL ? 'ml-2' : 'mr-2'" class="fas fa-star"></i>
             {{ $t('vendor.set_as_default') }}
           </button>
-          <button type="button" 
-                  class="remove-item p-2 text-red-600 hover:text-red-700 hover:bg-red-50 rounded-lg transition-colors"
+          <button type="button"
+                  class="remove-item p-2 text-red-600 hover:text-red-700 hover:bg-red-50 dark:hover:bg-red-900/30 rounded-md transition-colors"
                   @click="$emit('remove', index)">
             <i class="fas fa-trash w-4 h-4"></i>
           </button>
         </div>
       </div>
-    </div>
-
-    <div class="p-6 space-y-6">
-        <div class="grid lg:grid-cols-2 gap-6">
+      <div class="grid lg:grid-cols-2 gap-5">
         <!-- Color Details -->
         <div class="space-y-4">
           <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
@@ -101,26 +101,20 @@
             </div>
 
             <div class="space-y-2">
-              <label class="block vue-text-sm font-medium">
-                <i :class="isRTL ? 'ml-2' : 'mr-2'" class="fas fa-palette w-4 h-4 text-blue-500"></i>
-                {{ $t('vendor.color_code') }}
-              </label>
+              <label class="block vue-text-sm">{{ $t('vendor.color_code') }}</label>
               <div class="flex gap-3">
-                <div class="relative">
+                <div class="relative shrink-0">
                   <input type="color"
                          :value="color.color_code || '#000000'"
                          @input="updateColor('color_code', $event.target.value)"
-                         class="w-14 h-12 p-1 border-2  border-blue-200 rounded-md shadow-sm hover:border-blue-400 focus:border-blue-500 focus:ring-2 focus:ring-blue-200 transition-all duration-200 cursor-pointer">
-                  <div class="absolute -bottom-1 -right-1 w-4 h-4 bg-blue-500 rounded-full flex items-center justify-center">
-                    <i class="fas fa-eye-dropper text-white text-xs"></i>
-                  </div>
+                         class="minimal-color-input">
                 </div>
-                <div class="flex-1 relative">
+                <div class="flex-1">
                   <input type="text"
                          :value="color.color_code"
                          @input="updateColor('color_code', $event.target.value)"
                          placeholder="#FF0000"
-                         class="vue-form-control  text-sm font-mono tracking-wider"
+                         class="vue-form-control text-sm font-mono tracking-wider"
                          :class="userRole === 'vendor' ? 'vue-form-control-vendor' : 'vue-form-control-pm'"
                          pattern="^#[0-9A-Fa-f]{6}$"
                          title="Enter a valid hex color code (e.g., #FF0000)">
@@ -168,7 +162,7 @@
                          stockCorrectionApplied ? 'border-green-500 bg-green-50' : ''
                        ]"
                        ref="stockInput">
-                <div v-if="showStockCorrection" class="absolute top-full left-0 right-0 mt-1 p-2 bg-amber-50 border border-amber-200 rounded text-xs text-amber-700 animate-fade-in">
+                <div v-if="showStockCorrection" class="absolute top-full left-0 right-0 mt-1 p-2 bg-amber-50 border border-amber-200 rounded-md text-xs text-amber-700 animate-fade-in">
                   {{ stockCorrectionMessage }}
                 </div>
               </div>
@@ -212,7 +206,7 @@
             </label>
 
             <!-- Image Preview Container -->
-            <div class="image-preview-container"
+            <div class="image-preview-container compact-image-frame"
                  :class="{ 'has-image': color.image }"
                  :style="{
                    '--image-preview-hover-border': userRole === 'vendor' ? '#3b82f6' : '#f59e0b',
@@ -220,11 +214,11 @@
                      ? 'linear-gradient(135deg, rgba(59, 130, 246, 0.05) 0%, rgba(14, 165, 233, 0.05) 100%)'
                      : 'linear-gradient(135deg, rgba(245, 158, 11, 0.05) 0%, rgba(249, 115, 22, 0.05) 100%)'
                  }"
-                 style="width: 300px; height: 400px; border: 2px dashed #d1d5db; border-radius: 8px; background-color: #f9fafb; display: flex; align-items: center; justify-content: center; overflow: hidden; position: relative;">
+                 style="border: 1px dashed #d1d5db; display: flex; align-items: center; justify-content: center; overflow: hidden; position: relative;">
               <img v-if="imagePreviewUrl"
                    :src="imagePreviewUrl"
                    class="image-preview"
-                   style="width: 100%; height: 100%; object-fit: cover; border-radius: 6px;"
+                   style="width: 100%; height: 100%; object-fit: cover;"
                    alt="Image Preview">
               <div v-else class="image-placeholder text-center">
                 <i class="fas fa-image text-gray-400 text-4xl mb-2"></i>
@@ -235,14 +229,14 @@
 
             <input type="file"
                    @change="handleImageUpload"
-                   class="modern-file-input block w-full text-sm text-gray-600 file:mr-4 file:py-3 file:px-6 file:rounded-xl file:border-0 file:text-sm file:font-semibold file:bg-gradient-to-r file:transition-all file:duration-200 file:shadow-sm hover:file:shadow-md file:cursor-pointer"
+                   class="modern-file-input block w-full text-sm text-gray-600 file:mr-3 file:py-2 file:px-4 file:rounded-md   file:text-sm file:font-medium file:bg-white file:transition-all file:duration-150 file:cursor-pointer"
                    :class="userRole === 'vendor'
-                     ? 'file:from-blue-50 file:to-sky-50 file:text-blue-700 hover:file:from-blue-100 hover:file:to-sky-100'
-                     : 'file:from-amber-50 file:to-orange-50 file:text-amber-700 hover:file:from-amber-100 hover:file:to-orange-100'"
+                     ? 'file:border-gray-200   file:text-gray-700 hover:file:bg-blue-50'
+                     : 'file:border-gray-200 file:text-gray-700 hover:file:bg-orange-50'"
                    accept="image/*"
-                   style="max-width: 300px;">
+                   style="max-width: 240px;">
 
-            <p class="mt-1 text-xs text-gray-500" style="max-width: 300px;">
+            <p class="mt-1 text-xs text-gray-500" style="max-width: 240px;">
               {{ $t('vendor.image_format_info') }}
             </p>
 
@@ -779,116 +773,111 @@ export default {
 </script>
 
 <style scoped>
-/* Modern Color Selection Container */
+.vendor-color-variant-card {
+  border: 1px solid #e5e7eb;
+  border-radius: 0.75rem;
+  background: #ffffff;
+  box-shadow: 0 1px 2px rgba(15, 23, 42, 0.04);
+}
+
+.vendor-color-variant-card.is-default {
+  border-color: #bfdbfe;
+}
+
+.default-badge {
+  background: #eff6ff;
+  color: #1d4ed8;
+}
+
+.sticky-card-actions {
+  position: sticky;
+  top: 0.5rem;
+  z-index: 10;
+  background: rgba(255, 255, 255, 0.92);
+  backdrop-filter: blur(4px);
+  border: 1px solid #e5e7eb;
+  border-radius: 0.625rem;
+  padding: 0.5rem;
+}
+
+.vue-text-lg {
+  font-size: 1rem;
+  font-weight: 600;
+  color: #111827;
+}
+
+.vue-text-sm {
+  font-size: 0.875rem;
+  font-weight: 500;
+  color: #374151;
+}
+
+.vue-form-control {
+  width: 100%;
+  min-height: 2.625rem;
+  padding: 0.625rem 0.75rem;
+  border: 1px solid #d4d4d8;
+  border-radius: 0.5rem;
+  background: #ffffff;
+  color: #111827;
+  font-size: 0.875rem;
+  line-height: 1.35;
+  transition: border-color 0.16s ease, box-shadow 0.16s ease, background-color 0.16s ease;
+}
+
+.vue-form-control-vendor:focus,
+.color-search-input-vendor:focus,
+.selected-color-display-vendor.active {
+  outline: none;
+  border-color: #3b82f6;
+  box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.12);
+}
+
+.vue-form-control-pm:focus,
+.color-search-input-pm:focus,
+.selected-color-display-pm.active {
+  outline: none;
+  border-color: #f59e0b;
+  box-shadow: 0 0 0 3px rgba(245, 158, 11, 0.12);
+}
+
 .color-selection-container {
   position: relative;
 }
 
-.selected-color-display {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  padding: 0.875rem 1rem;
-  border: 2px solid #e5e7eb;
-  border-radius: 0.75rem;
-  background-color: #ffffff;
-  cursor: pointer;
-  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
-  box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
-}
-
-.selected-color-display:hover {
-  border-color: #f59e0b;
-  box-shadow: 0 2px 4px 0 rgba(0, 0, 0, 0.06);
-  transform: translateY(-1px);
-}
-
-/* Vendor Color Display (Blue Theme) */
-.selected-color-display-vendor {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  padding: 0.875rem 1rem;
-  border: 2px solid #e5e7eb;
-  border-radius: 0.75rem;
-  background-color: #ffffff;
-  cursor: pointer;
-  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
-  box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
-}
-
-.selected-color-display-vendor:hover {
-  border-color: #3b82f6;
-  box-shadow: 0 2px 4px 0 rgba(0, 0, 0, 0.06);
-  transform: translateY(-1px);
-}
-
-.selected-color-display-vendor.active {
-  border-color: #3b82f6;
-  box-shadow: 0 0 0 4px rgba(59, 130, 246, 0.1), 0 4px 6px -1px rgba(0, 0, 0, 0.1);
-  transform: translateY(-1px);
-}
-
-/* Products Manager Color Display (Orange Theme) */
+.selected-color-display-vendor,
 .selected-color-display-pm {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: 0.875rem 1rem;
-  border: 2px solid #e5e7eb;
-  border-radius: 0.75rem;
-  background-color: #ffffff;
+  padding: 0.625rem 0.75rem;
+  border: 1px solid #d4d4d8;
+  border-radius: 0.5rem;
+  background: #ffffff;
   cursor: pointer;
-  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
-  box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+  transition: border-color 0.16s ease, box-shadow 0.16s ease;
+}
+
+.selected-color-display-vendor:hover {
+  border-color: #60a5fa;
 }
 
 .selected-color-display-pm:hover {
-  border-color: #f59e0b;
-  box-shadow: 0 2px 4px 0 rgba(0, 0, 0, 0.06);
-  transform: translateY(-1px);
-}
-
-.selected-color-display-pm.active {
-  border-color: #f59e0b;
-  box-shadow: 0 0 0 4px rgba(245, 158, 11, 0.1), 0 4px 6px -1px rgba(0, 0, 0, 0.1);
-  transform: translateY(-1px);
+  border-color: #fbbf24;
 }
 
 .selected-color-preview {
   display: flex;
   align-items: center;
-  gap: 0.75rem;
+  gap: 0.625rem;
 }
 
 .color-swatch {
-  width: 2.5rem;
-  height: 2.5rem;
-  border-radius: 50%;
-  border: 3px solid #ffffff;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15), inset 0 1px 2px rgba(0, 0, 0, 0.1);
+  width: 1.75rem;
+  height: 1.75rem;
+  border-radius: 9999px;
+  border: 1px solid #e5e7eb;
   flex-shrink: 0;
-  margin-bottom: 0.25rem;
-  transition: all 0.2s ease;
-}
-
-.color-option:hover .color-swatch {
-  transform: scale(1.1);
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2), inset 0 1px 2px rgba(0, 0, 0, 0.1);
-}
-
-.color-option .color-name {
-  font-size: 0.8125rem;
-  font-weight: 600;
-  color: #374151;
-  line-height: 1.2;
-}
-
-.color-option .color-code {
-  font-size: 0.6875rem;
-  color: #6b7280;
-  font-family: 'SF Mono', 'Monaco', 'Inconsolata', 'Fira Code', monospace;
-  font-weight: 500;
 }
 
 .color-info {
@@ -898,395 +887,177 @@ export default {
 }
 
 .color-name {
-  font-size: 0.9375rem;
-  font-weight: 600;
-  color: #1f2937;
-  letter-spacing: -0.01em;
+  font-size: 0.875rem;
+  font-weight: 500;
+  color: #111827;
 }
 
 .color-code {
-  font-size: 0.8125rem;
+  font-size: 0.75rem;
   color: #6b7280;
-  font-family: 'SF Mono', 'Monaco', 'Inconsolata', 'Fira Code', monospace;
-  font-weight: 500;
+  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
 }
 
 .dropdown-arrow {
-  transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
   color: #9ca3af;
+  transition: transform 0.2s ease;
 }
 
-.selected-color-display-vendor .dropdown-arrow.rotated {
+.dropdown-arrow.rotated {
   transform: rotate(180deg);
-  color: #3b82f6;
 }
 
-.selected-color-display-pm .dropdown-arrow.rotated {
-  transform: rotate(180deg);
-  color: #f59e0b;
-}
-
-/* Enhanced Color Dropdown */
 .color-dropdown {
   position: absolute;
-  top: calc(100% + 0.5rem);
+  top: calc(100% + 0.375rem);
   left: 0;
-  right: 0;
   z-index: 50;
-  background-color: #ffffff;
-  border: 2px solid #e5e7eb;
-  border-radius: 1rem;
-  box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
-  max-height: 450px;
-  overflow: hidden;
-  min-width: 520px;
+  min-width: 480px;
+  max-width: 560px;
   width: max-content;
-  animation: dropdownSlideIn 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-}
-
-@keyframes dropdownSlideIn {
-  from {
-    opacity: 0;
-    transform: translateY(-10px);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
+  background: #ffffff;
+  border: 1px solid #e5e7eb;
+  border-radius: 0.75rem;
+  box-shadow: 0 14px 28px rgba(15, 23, 42, 0.14);
+  overflow: hidden;
+  animation: fade-in 0.18s ease-out;
 }
 
 .color-search {
-  padding: 1rem;
-  border-bottom: 2px solid #f3f4f6;
-  background: linear-gradient(to bottom, #ffffff, #f9fafb);
+  padding: 0.75rem;
+  border-bottom: 1px solid #f1f5f9;
 }
 
-/* Vendor Color Search Input (Blue Theme) */
-.color-search-input-vendor {
-  width: 100%;
-  padding: 0.75rem 1rem;
-  border: 2px solid #e5e7eb;
-  border-radius: 0.75rem;
-  font-size: 0.9375rem;
-  font-weight: 500;
-  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
-  box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
-}
-
-.color-search-input-vendor:focus {
-  outline: none;
-  border-color: #3b82f6;
-  box-shadow: 0 0 0 4px rgba(59, 130, 246, 0.1), 0 2px 4px 0 rgba(0, 0, 0, 0.06);
-}
-
-.color-search-input-vendor::placeholder {
-  color: #9ca3af;
-  font-weight: 400;
-}
-
-/* Products Manager Color Search Input (Orange Theme) */
+.color-search-input-vendor,
 .color-search-input-pm {
   width: 100%;
-  padding: 0.75rem 1rem;
-  border: 2px solid #e5e7eb;
-  border-radius: 0.75rem;
-  font-size: 0.9375rem;
-  font-weight: 500;
-  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
-  box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+  min-height: 2.5rem;
+  padding: 0.5rem 0.75rem;
+  border: 1px solid #d4d4d8;
+  border-radius: 0.5rem;
+  background: #ffffff;
+  color: #111827;
+  font-size: 0.875rem;
 }
 
-.color-search-input-pm:focus {
-  outline: none;
-  border-color: #f59e0b;
-  box-shadow: 0 0 0 4px rgba(245, 158, 11, 0.1), 0 2px 4px 0 rgba(0, 0, 0, 0.06);
-}
-
-.color-search-input-pm::placeholder {
-  color: #9ca3af;
-  font-weight: 400;
-}
-
-/* Vendor Color Grid (Blue Theme) */
-.color-grid-vendor {
-  padding: 1rem;
-  display: grid;
-  grid-template-columns: repeat(4, 1fr);
-  gap: 0.75rem;
-  max-height: 350px;
-  overflow-y: auto;
-  background-color: #fafafa;
-}
-
-.color-grid-vendor::-webkit-scrollbar {
-  width: 8px;
-}
-
-.color-grid-vendor::-webkit-scrollbar-track {
-  background: #f3f4f6;
-  border-radius: 4px;
-}
-
-.color-grid-vendor::-webkit-scrollbar-thumb {
-  background: #d1d5db;
-  border-radius: 4px;
-}
-
-.color-grid-vendor::-webkit-scrollbar-thumb:hover {
-  background: #9ca3af;
-}
-
-.color-option-vendor {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 0.625rem;
-  padding: 1rem 0.75rem;
-  border-radius: 0.75rem;
-  cursor: pointer;
-  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
-  border: 2px solid transparent;
-  text-align: center;
-  background-color: #ffffff;
-}
-
-.color-option-vendor:hover {
-  background-color: #dbeafe;
-  border-color: #60a5fa;
-  transform: translateY(-2px);
-  box-shadow: 0 4px 12px rgba(96, 165, 250, 0.3);
-}
-
-.color-option-vendor.selected {
-  background: linear-gradient(135deg, #dbeafe 0%, #bfdbfe 100%);
-  border-color: #3b82f6;
-  box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.2), 0 4px 12px rgba(59, 130, 246, 0.3);
-  transform: translateY(-2px);
-}
-
-/* Products Manager Color Grid (Orange Theme) */
+.color-grid-vendor,
 .color-grid-pm {
-  padding: 1rem;
+  padding: 0.75rem;
   display: grid;
-  grid-template-columns: repeat(4, 1fr);
-  gap: 0.75rem;
-  max-height: 350px;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 0.5rem;
+  max-height: 280px;
   overflow-y: auto;
-  background-color: #fafafa;
+  background: #fafafa;
 }
 
-.color-grid-pm::-webkit-scrollbar {
-  width: 8px;
-}
-
-.color-grid-pm::-webkit-scrollbar-track {
-  background: #f3f4f6;
-  border-radius: 4px;
-}
-
-.color-grid-pm::-webkit-scrollbar-thumb {
-  background: #d1d5db;
-  border-radius: 4px;
-}
-
-.color-grid-pm::-webkit-scrollbar-thumb:hover {
-  background: #9ca3af;
-}
-
+.color-option-vendor,
 .color-option-pm {
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 0.625rem;
-  padding: 1rem 0.75rem;
-  border-radius: 0.75rem;
+  gap: 0.5rem;
+  padding: 0.625rem 0.5rem;
+  border: 1px solid transparent;
+  border-radius: 0.5rem;
+  background: #ffffff;
   cursor: pointer;
-  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
-  border: 2px solid transparent;
+  transition: border-color 0.14s ease, background-color 0.14s ease;
   text-align: center;
-  background-color: #ffffff;
+}
+
+.color-option-vendor:hover {
+  border-color: #93c5fd;
+  background: #eff6ff;
 }
 
 .color-option-pm:hover {
-  background-color: #fef3c7;
-  border-color: #fbbf24;
-  transform: translateY(-2px);
-  box-shadow: 0 4px 12px rgba(251, 191, 36, 0.3);
+  border-color: #fcd34d;
+  background: #fffbeb;
+}
+
+.color-option-vendor.selected {
+  border-color: #3b82f6;
+  background: #eff6ff;
 }
 
 .color-option-pm.selected {
-  background: linear-gradient(135deg, #fef3c7 0%, #fde68a 100%);
   border-color: #f59e0b;
-  box-shadow: 0 0 0 3px rgba(245, 158, 11, 0.2), 0 4px 12px rgba(245, 158, 11, 0.3);
-  transform: translateY(-2px);
+  background: #fffbeb;
 }
 
-.color-details {
-  display: flex;
-  flex-direction: column;
+.minimal-color-input {
+  width: 2.75rem;
+  height: 2.5rem;
+  padding: 0.125rem;
+  border: 1px solid #d4d4d8;
+  border-radius: 0.5rem;
+  background: #ffffff;
+  cursor: pointer;
 }
 
-/* Enhanced Image Upload Container */
+.compact-image-frame {
+  width: 100%;
+  max-width: 240px;
+  height: 220px;
+  border-radius: 0.625rem;
+  background: #f8fafc;
+}
+
 .image-preview-container {
-  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-  box-shadow: 0 2px 4px 0 rgba(0, 0, 0, 0.06);
   position: relative;
-  overflow: hidden;
-}
-
-.image-preview-container::before {
-  content: '';
-  position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  background: var(--image-preview-hover-gradient, linear-gradient(135deg, rgba(245, 158, 11, 0.05) 0%, rgba(249, 115, 22, 0.05) 100%));
-  opacity: 0;
-  transition: opacity 0.3s ease;
-  pointer-events: none;
-}
-
-.image-preview-container:hover::before {
-  opacity: 1;
+  transition: border-color 0.16s ease, box-shadow 0.16s ease;
 }
 
 .image-preview-container:hover {
-  box-shadow: 0 8px 16px -2px rgba(0, 0, 0, 0.1), 0 4px 8px -2px rgba(0, 0, 0, 0.06);
-  transform: translateY(-2px);
-  border-color: var(--image-preview-hover-border, #f59e0b) !important;
+  border-color: var(--image-preview-hover-border, #3b82f6) !important;
 }
 
 .image-preview-container.has-image {
-  border-color: #10b981 !important;
-  background: linear-gradient(135deg, #f0fdf4 0%, #dcfce7 100%);
-  box-shadow: 0 4px 12px -1px rgba(16, 185, 129, 0.2), 0 2px 6px -1px rgba(16, 185, 129, 0.1);
+  border-style: solid !important;
 }
 
-.image-preview-container.has-image::before {
-  background: linear-gradient(135deg, rgba(16, 185, 129, 0.05) 0%, rgba(5, 150, 105, 0.05) 100%);
+.modern-file-input {
+  cursor: pointer;
 }
 
-.image-placeholder {
-  animation: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
-}
-
-@keyframes pulse {
-  0%, 100% {
-    opacity: 1;
-  }
-  50% {
-    opacity: 0.7;
-  }
-}
-
-/* Modern Button Styles - Orange Theme for Products Manager */
-.vue-btn-blue-solid {
-  background: linear-gradient(135deg, #f59e0b 0%, #f97316 100%);
+.vue-btn-blue-solid,
+.vue-btn-blue-solid-vendor {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  padding: 0.5rem 0.875rem;
+  border-radius: 0.5rem;
+  border: 1px solid transparent;
+  font-size: 0.875rem;
+  font-weight: 500;
   color: #ffffff;
-  outline: none;
-  padding: 0.75rem 1.25rem;
-  border-radius: 0.75rem;
-  font-size: 0.9375rem;
-  font-weight: 600;
-  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
-  box-shadow: 0 2px 4px 0 rgba(245, 158, 11, 0.2);
-  letter-spacing: -0.01em;
-}
-
-.vue-btn-blue-solid:hover {
-  background: linear-gradient(135deg, #f97316 0%, #ea580c 100%);
-  box-shadow: 0 6px 16px 0 rgba(245, 158, 11, 0.4);
-  transform: translateY(-2px);
-}
-
-.vue-btn-blue-solid:active {
-  transform: translateY(0);
-  box-shadow: 0 2px 4px 0 rgba(245, 158, 11, 0.2);
+  transition: background-color 0.15s ease, border-color 0.15s ease;
 }
 
 .vue-btn-blue-solid-vendor {
-  background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%);
-  color: #ffffff;
-  border: 2px solid transparent !important;
-  outline: none;
-  padding: 0.75rem 1.25rem;
-  border-radius: 0.75rem;
-  font-size: 0.9375rem;
-  font-weight: 600;
-  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
-  box-shadow: 0 2px 4px 0 rgba(59, 130, 246, 0.2);
-  letter-spacing: -0.01em;
+  background: #2563eb;
+  border-color: #2563eb;
 }
 
 .vue-btn-blue-solid-vendor:hover {
-  background: linear-gradient(135deg, #2563eb 0%, #1d4ed8 100%);
-  box-shadow: 0 6px 16px 0 rgba(59, 130, 246, 0.4);
-  transform: translateY(-2px);
+  background: #1d4ed8;
+  border-color: #1d4ed8;
 }
 
-.vue-btn-blue-solid-vendor:active {
-  transform: translateY(0);
-  box-shadow: 0 2px 4px 0 rgba(59, 130, 246, 0.2);
+.vue-btn-blue-solid {
+  background: #f59e0b;
+  border-color: #f59e0b;
 }
 
-.vue-btn-blue-solid:focus,
-.vue-btn-blue-solid:focus-visible,
-.vue-btn-blue-solid-vendor:focus,
-.vue-btn-blue-solid-vendor:focus-visible {
-  outline: none;
-  box-shadow: none;
+.vue-btn-blue-solid:hover {
+  background: #d97706;
+  border-color: #d97706;
 }
 
-
-
-/* RTL Support */
 .rtl {
   direction: rtl;
-}
-
-.rtl .flex {
-  flex-direction: row-reverse;
-}
-
-.rtl .text-left {
-  text-align: right;
-}
-
-.rtl .text-right {
-  text-align: left;
-}
-
-.rtl .float-left {
-  float: right;
-}
-
-.rtl .float-right {
-  float: left;
-}
-
-.rtl .border-l {
-  border-left: none;
-  border-right: 1px solid;
-}
-
-.rtl .border-r {
-  border-right: none;
-  border-left: 1px solid;
-}
-
-.rtl .rounded-l {
-  border-top-left-radius: 0;
-  border-bottom-left-radius: 0;
-  border-top-right-radius: 0.375rem;
-  border-bottom-right-radius: 0.375rem;
-}
-
-.rtl .rounded-r {
-  border-top-right-radius: 0;
-  border-bottom-right-radius: 0;
-  border-top-left-radius: 0.375rem;
-  border-bottom-left-radius: 0.375rem;
 }
 
 .rtl input[type="text"],
@@ -1300,9 +1071,8 @@ export default {
   right: 0;
 }
 
-/* Mobile responsiveness */
 @media (max-width: 640px) {
-  .vendor-color-variant-card .color-dropdown {
+  .color-dropdown {
     min-width: 0;
     width: 100%;
     max-width: 100%;
@@ -1310,34 +1080,64 @@ export default {
     right: 0;
   }
 
-  .vendor-color-variant-card .color-grid-vendor,
-  .vendor-color-variant-card .color-grid-pm {
-    grid-template-columns: repeat(2, 1fr);
+  .color-grid-vendor,
+  .color-grid-pm {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
   }
 
-  .vendor-color-variant-card .image-preview-container {
-    width: 100% !important;
-    height: 260px !important;
+  .compact-image-frame {
+    max-width: 100%;
+    height: 220px;
   }
 
-  .vendor-color-variant-card .modern-file-input {
+  .modern-file-input {
     max-width: 100% !important;
   }
 }
 
-/* Dark mode support */
 @media (prefers-color-scheme: dark) {
-  .selected-color-display {
-    background-color: #374151;
-    border-color: #4b5563;
+  .vendor-color-variant-card {
+    background: #1f2937;
+    border-color: #374151;
+    box-shadow: none;
   }
 
+  .vendor-color-variant-card.is-default {
+    border-color: #3b82f6;
+  }
+
+  .sticky-card-actions {
+    background: rgba(31, 41, 55, 0.92);
+    border-color: #374151;
+  }
+
+  .vue-text-lg,
   .color-name {
     color: #f9fafb;
   }
 
+  .vue-text-sm,
+  .color-code {
+    color: #d1d5db;
+  }
+
+  .default-badge {
+    background: rgba(30, 58, 138, 0.35);
+    color: #bfdbfe;
+  }
+
+  .vue-form-control,
+  .selected-color-display-vendor,
+  .selected-color-display-pm,
+  .color-search-input-vendor,
+  .color-search-input-pm {
+    background: #111827;
+    border-color: #4b5563;
+    color: #f9fafb;
+  }
+
   .color-dropdown {
-    background-color: #1f2937;
+    background: #111827;
     border-color: #374151;
   }
 
@@ -1345,55 +1145,36 @@ export default {
     border-color: #374151;
   }
 
-  .color-search-input-vendor,
-  .color-search-input-pm {
-    background-color: #374151;
-    border-color: #4b5563;
-    color: #f9fafb;
+  .color-grid-vendor,
+  .color-grid-pm {
+    background: #111827;
   }
 
-  .color-option:hover {
-    background-color: #374151;
+  .color-option-vendor,
+  .color-option-pm {
+    background: #1f2937;
   }
 
-  .color-option.selected {
-    background-color: #1e3a8a;
-    border-color: #3b82f6;
+  .color-option-vendor:hover,
+  .color-option-vendor.selected {
+    background: rgba(37, 99, 235, 0.2);
   }
 
-  .image-preview-container.has-image {
-    border-color: #10b981 !important;
-    background-color: #064e3b !important;
+  .color-option-pm:hover,
+  .color-option-pm.selected {
+    background: rgba(245, 158, 11, 0.2);
+  }
+
+  .compact-image-frame {
+    background: #111827;
+    border-color: #4b5563 !important;
   }
 }
 
-/* Modern File Input Styling */
-.modern-file-input {
-  cursor: pointer;
-  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
-}
-
-.modern-file-input:hover {
-  transform: translateY(-1px);
-}
-
-/* Enhanced Card Styling */
-.vue-card.color-item {
-  background: linear-gradient(to bottom, #ffffff, #fafafa);
-  border: 2px solid #e5e7eb;
-  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-}
-
-.vue-card.color-item:hover {
-  border-color: #f59e0b;
-  box-shadow: 0 12px 24px -4px rgba(245, 158, 11, 0.15), 0 8px 16px -4px rgba(0, 0, 0, 0.1);
-}
-
-/* Stock validation animations */
 @keyframes fade-in {
   from {
     opacity: 0;
-    transform: translateY(-10px);
+    transform: translateY(-8px);
   }
   to {
     opacity: 1;
@@ -1402,39 +1183,6 @@ export default {
 }
 
 .animate-fade-in {
-  animation: fade-in 0.3s ease-out;
-}
-
-/* Loading and Success States */
-@keyframes shimmer {
-  0% {
-    background-position: -1000px 0;
-  }
-  100% {
-    background-position: 1000px 0;
-  }
-}
-
-.loading-shimmer {
-  animation: shimmer 2s infinite linear;
-  background: linear-gradient(to right, #f3f4f6 0%, #e5e7eb 20%, #f3f4f6 40%, #f3f4f6 100%);
-  background-size: 1000px 100%;
-}
-
-/* Success Checkmark Animation */
-@keyframes checkmark {
-  0% {
-    transform: scale(0) rotate(45deg);
-  }
-  50% {
-    transform: scale(1.2) rotate(45deg);
-  }
-  100% {
-    transform: scale(1) rotate(45deg);
-  }
-}
-
-.success-checkmark {
-  animation: checkmark 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+  animation: fade-in 0.22s ease-out;
 }
 </style>
