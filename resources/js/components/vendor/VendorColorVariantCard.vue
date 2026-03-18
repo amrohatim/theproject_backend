@@ -223,16 +223,13 @@
               <div v-else class="image-placeholder text-center">
                 <i class="fas fa-image text-gray-400 text-4xl mb-2"></i>
                 <p class="text-gray-500 text-sm">{{ $t('vendor.no_image_selected') }}</p>
-                <p class="text-gray-400 text-xs">{{ $t('vendor.image_preview_size') }}</p>
+                <p class="text-gray-400 text-xs mx-8">{{ $t('vendor.image_preview_size') }}</p>
               </div>
             </div>
 
             <input type="file"
                    @change="handleImageUpload"
-                   class="modern-file-input block w-full text-sm text-gray-600 file:mr-3 file:py-2 file:px-4 file:rounded-md   file:text-sm file:font-medium file:bg-white file:transition-all file:duration-150 file:cursor-pointer"
-                   :class="userRole === 'vendor'
-                     ? 'file:border-gray-200   file:text-gray-700 hover:file:bg-blue-50'
-                     : 'file:border-gray-200 file:text-gray-700 hover:file:bg-orange-50'"
+                   class="modern-file-input block w-full text-sm text-gray-600 file:mr-3 file:py-2 file:px-4 file:rounded-md file:border file:border-gray-300 file:text-sm file:font-medium file:bg-white file:text-gray-700 file:transition-all file:duration-150 file:cursor-pointer hover:file:bg-gray-50"
                    accept="image/*"
                    style="max-width: 240px;">
 
