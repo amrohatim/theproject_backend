@@ -27,7 +27,7 @@
           </div>
           <div class="w-full sm:w-auto">
             <a :href="backUrl" class="inline-flex w-full items-center justify-center px-4 py-3 sm:py-2 bg-gray-600 border border-transparent rounded-md font-semibold text-xs text-white uppercase tracking-widest hover:bg-gray-700 active:bg-gray-900 focus:outline-none focus:border-gray-900 focus:ring ring-gray-300 disabled:opacity-25 transition ease-in-out duration-150">
-              <i class="fas fa-arrow-left" :class="isRTL ? 'ml-2' : 'mr-2'"></i> {{ $t('vendor.back_to_products') }}
+              <i :class="['fas', isRTL ? 'fa-arrow-right' : 'fa-arrow-left', isRTL ? 'mx-2' : 'mr-2']"></i> {{ $t('vendor.back_to_products') }}
             </a>
           </div>
         </div>
@@ -433,7 +433,7 @@
   box-shadow: 0 2px 4px 0 var(--theme-shadow);" :class="userRole === 'vendor' ? 'bg-blue-400 hover:bg-blue-500' : 'bg-orange-400 hover:bg-orange-500'"
               >
                 {{ $t('vendor.next') }}
-                <i class="fas fa-arrow-right" :class="isRTL ? 'mr-2' : 'ml-2'"></i>
+                <i :class="['fas', isRTL ? 'fa-arrow-left' : 'fa-arrow-right', isRTL ? 'mx-2' : 'ml-2']"></i>
               </button>
               <button
                 v-else

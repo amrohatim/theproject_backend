@@ -439,7 +439,19 @@
                             @enderror
                         </div>
                     </div>
-
+                    <!-- Branch -->
+                    <div class="form-input-container has-label">
+                        <label for="branch_id" class="form-label">{{ __('messages.branch') }} <span class="text-red-500">*</span></label>
+                        <select id="branch_id" name="branch_id" class="form-select" required>
+                            <option value="">{{ __('messages.select_branch') }}</option>
+                            @foreach($branches ?? [] as $branch)
+                                <option value="{{ $branch->id }}" data-business-type="{{ $branch->business_type }}" {{ old('branch_id', $service->branch_id) == $branch->id ? 'selected' : '' }}>{{ $branch->name }}</option>
+                            @endforeach
+                        </select>
+                        @error('branch_id')
+                            <span class="field-error-message">{{ $message }}</span>
+                        @enderror
+                    </div>
                     <!-- Category -->
                     <div class="form-input-container has-label">
                         <label for="category_id" class="form-label">{{ __('messages.category') }} <span class="text-red-500">*</span></label>
@@ -462,19 +474,7 @@
                         @enderror
                     </div>
 
-                    <!-- Branch -->
-                    <div class="form-input-container has-label">
-                        <label for="branch_id" class="form-label">{{ __('messages.branch') }} <span class="text-red-500">*</span></label>
-                        <select id="branch_id" name="branch_id" class="form-select" required>
-                            <option value="">{{ __('messages.select_branch') }}</option>
-                            @foreach($branches ?? [] as $branch)
-                                <option value="{{ $branch->id }}" data-business-type="{{ $branch->business_type }}" {{ old('branch_id', $service->branch_id) == $branch->id ? 'selected' : '' }}>{{ $branch->name }}</option>
-                            @endforeach
-                        </select>
-                        @error('branch_id')
-                            <span class="field-error-message">{{ $message }}</span>
-                        @enderror
-                    </div>
+                    
 
                     <!-- Service Description (Bilingual) -->
                     <div class="form-input-container has-label">
