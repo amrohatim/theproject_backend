@@ -2,8 +2,8 @@
   <div class="vue-card color-item transition-all duration-200"
        :class="{ 'ring-2 border-primary-200': isDefault }"
        :style="isDefault ? { '--tw-ring-color': 'var(--primary-blue)' } : {}">
-    <div class="p-6 border-b" style="border-color: var(--gray-200);">
-      <div class="flex items-center justify-between">
+    <div class="p-4 sm:p-6 border-b" style="border-color: var(--gray-200);">
+      <div class="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
         <div class="flex items-center gap-3">
           <div class="w-6 h-6 rounded-full border-2 border-white shadow-sm"
                :style="{ backgroundColor: color.color_code || '#000000' }"></div>
@@ -17,7 +17,7 @@
             </span>
           </h4>
         </div>
-        <div class="flex items-center gap-2">
+        <div class="flex items-center gap-2 self-end sm:self-auto">
           <button v-if="!isDefault"
                   type="button"
                   class="vue-btn-blue-solid text-sm font-medium"
@@ -34,11 +34,11 @@
       </div>
     </div>
 
-    <div class="p-6 space-y-6">
+    <div class="p-4 sm:p-6 space-y-6">
       <div class="grid lg:grid-cols-2 gap-6">
         <!-- Color Details -->
         <div class="space-y-4">
-          <div class="grid grid-cols-2 gap-4">
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
             <div class="space-y-2">
               <label class="block vue-text-sm">
                 {{ t.color_name }} <span class="text-red-500">*</span>
@@ -133,7 +133,7 @@
             </div>
           </div>
 
-          <div class="grid grid-cols-3 gap-4">
+          <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
             <div class="space-y-2">
               <div class="flex items-center justify-between">
                 <label class="block vue-text-sm font-medium">
@@ -237,7 +237,7 @@
             {{ t.product_image }} <span class="text-red-500">*</span>
           </label>
           <div class="relative">
-            <div class="aspect-[3/4] w-1/3 h-3/4 bg-slate-400 border-2 border-dashed border-slate-300 rounded-lg overflow-hidden hover:border-primary-400 transition-colors image-preview-container"
+            <div class="aspect-[3/4] w-full max-w-[240px] sm:max-w-[280px] md:w-1/3 bg-slate-400 border-2 border-dashed border-slate-300 rounded-lg overflow-hidden hover:border-primary-400 transition-colors image-preview-container"
                  :class="{ 'has-image': hasImage }"
                  @click="triggerFileInput"
                  @dragover.prevent
@@ -1043,11 +1043,15 @@ export default {
 
 @media (max-width: 768px) {
   .color-grid {
-    grid-template-columns: repeat(3, 1fr);
+    grid-template-columns: repeat(2, minmax(0, 1fr));
   }
 
   .color-dropdown {
-    min-width: 280px;
+    min-width: 0;
+    width: 100%;
+    max-width: 100%;
+    left: 0;
+    right: 0;
   }
 }
 
@@ -1148,7 +1152,7 @@ export default {
 /* Responsive adjustments */
 @media (max-width: 640px) {
   .color-grid {
-    grid-template-columns: 1fr;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
   }
 }
 </style>

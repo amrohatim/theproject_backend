@@ -1,8 +1,8 @@
 <template>
   <div class="vue-card vendor-color-variant-card transition-all duration-200"
        :class="{ 'is-default': isDefault, 'rtl': isRTL }">
-    <div class="p-4 sm:p-5 border-b border-gray-200 dark:border-gray-700">
-      <div class="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+    <div class="p-3 sm:p-5 border-b border-gray-200 dark:border-gray-700">
+      <div class="flex flex-col gap-2 sm:gap-3 sm:flex-row sm:items-center sm:justify-between">
         <div class="flex items-center gap-3">
           <div class="w-5 h-5 rounded-full border border-white shadow-sm"
                :style="{ backgroundColor: color.color_code || '#000000' }"></div>
@@ -19,28 +19,28 @@
       </div>
     </div>
 
-    <div class="p-4 sm:p-5 space-y-5">
+    <div class="p-3 sm:p-5 space-y-4 sm:space-y-5">
       <div class="sticky-card-actions">
-        <div class="flex flex-wrap items-center gap-2">
+        <div class="flex flex-col sm:flex-row sm:flex-wrap items-stretch sm:items-center gap-2">
           <button v-if="!isDefault"
                   type="button"
-                  class="text-sm font-medium"
+                  class="text-sm font-medium w-full sm:w-auto"
                   :class="userRole === 'vendor' ? 'vue-btn-blue-solid-vendor' : 'vue-btn-blue-solid'"
                   @click="$emit('set-default', index)">
             <i :class="isRTL ? 'ml-2' : 'mr-2'" class="fas fa-star"></i>
             {{ $t('vendor.set_as_default') }}
           </button>
           <button type="button"
-                  class="remove-item p-2 text-red-600 hover:text-red-700 hover:bg-red-50 dark:hover:bg-red-900/30 rounded-md transition-colors"
+                  class="remove-item p-2 sm:p-2.5 text-red-600 hover:text-red-700 hover:bg-red-50 dark:hover:bg-red-900/30 rounded-md transition-colors self-end sm:self-auto"
                   @click="$emit('remove', index)">
             <i class="fas fa-trash w-4 h-4"></i>
           </button>
         </div>
       </div>
-      <div class="grid lg:grid-cols-2 gap-5">
+      <div class="grid grid-cols-1 lg:grid-cols-2 gap-4 sm:gap-5">
         <!-- Color Details -->
         <div class="space-y-4">
-          <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4">
             <div class="space-y-2">
               <label class="block vue-text-sm">
                 {{ $t('vendor.color_name') }} <span class="text-red-500">*</span>
@@ -124,7 +124,7 @@
             </div>
           </div>
 
-          <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4">
             <div class="space-y-2">
               <label class="block vue-text-sm">{{ $t('vendor.price_adjustment') }}</label>
               <input type="number"
@@ -229,11 +229,11 @@
 
             <input type="file"
                    @change="handleImageUpload"
-                   class="modern-file-input block w-full text-sm text-gray-600 file:mr-3 file:py-2 file:px-4 file:rounded-md file:border file:border-gray-300 file:text-sm file:font-medium file:bg-white file:text-gray-700 file:transition-all file:duration-150 file:cursor-pointer hover:file:bg-gray-50"
+                   class="modern-file-input block w-full sm:w-auto text-sm text-gray-600 file:mr-3 file:py-2 file:px-4 file:rounded-md file:border file:border-gray-300 file:text-sm file:font-medium file:bg-white file:text-gray-700 file:transition-all file:duration-150 file:cursor-pointer hover:file:bg-gray-50"
                    accept="image/*"
                    style="max-width: 240px;">
 
-            <p class="mt-1 text-xs text-gray-500" style="max-width: 240px;">
+            <p class="mt-1 text-xs text-gray-500 w-full sm:w-auto" style="max-width: 240px;">
               {{ $t('vendor.image_format_info') }}
             </p>
 
@@ -243,7 +243,7 @@
             </div>
 
             <!-- Default Color Checkbox -->
-            <div class="mt-4">
+            <div class="mt-3 sm:mt-4">
               <label class="block vue-text-sm mb-2">{{ $t('vendor.default_color') }}</label>
               <div class="flex items-start">
                 <input type="checkbox"
@@ -269,13 +269,13 @@
           @sizes-updated="handleSizesUpdated"
           @save-color-first="handleSaveColorFirst"
         />
-        <div v-else-if="!color.name || !color.stock" class="text-center py-8" style="border-top: 1px solid var(--gray-200); margin-top: 1.5rem; padding-top: 1.5rem;">
+        <div v-else-if="!color.name || !color.stock" class="text-center py-6 sm:py-8 mt-4 sm:mt-6 pt-4 sm:pt-6" style="border-top: 1px solid var(--gray-200);">
           <i class="fas fa-info-circle w-6 h-6 mb-2" style="color: var(--gray-400);"></i>
           <p class="text-sm" style="color: var(--gray-600);">
             {{ $t('vendor.set_color_name_stock_for_sizes') }}
           </p>
         </div>
-        <div v-else class="text-center py-8" style="border-top: 1px solid var(--gray-200); margin-top: 1.5rem; padding-top: 1.5rem;">
+        <div v-else class="text-center py-6 sm:py-8 mt-4 sm:mt-6 pt-4 sm:pt-6" style="border-top: 1px solid var(--gray-200);">
           <i class="fas fa-info-circle w-6 h-6 mb-2" style="color: var(--gray-400);"></i>
           <p class="text-sm" style="color: var(--gray-600);">
             {{ $t('vendor.save_color_first_for_sizes') }}
@@ -1069,6 +1069,22 @@ export default {
 }
 
 @media (max-width: 640px) {
+  .sticky-card-actions {
+    position: static;
+    top: auto;
+    z-index: auto;
+    padding: 0.4375rem;
+  }
+
+  .vue-text-lg {
+    font-size: 0.9375rem;
+  }
+
+  .selected-color-display-vendor,
+  .selected-color-display-pm {
+    padding: 0.5625rem 0.6875rem;
+  }
+
   .color-dropdown {
     min-width: 0;
     width: 100%;
@@ -1084,11 +1100,26 @@ export default {
 
   .compact-image-frame {
     max-width: 100%;
-    height: 220px;
+    height: 176px;
   }
 
   .modern-file-input {
     max-width: 100% !important;
+  }
+
+  .remove-item {
+    min-width: 2.25rem;
+    min-height: 2.25rem;
+  }
+
+  .image-placeholder i {
+    font-size: 1.75rem !important;
+    margin-bottom: 0.375rem;
+  }
+
+  .image-placeholder p {
+    margin-left: 1rem !important;
+    margin-right: 1rem !important;
   }
 }
 
