@@ -17,11 +17,44 @@ use Illuminate\Support\Facades\Storage;
 
 class ServiceController extends Controller
 {
+    private const BUSINESS_TYPE_NOT_ALLOWED_MESSAGE_EN = 'This Business Type is not allowed to create services.';
+    private const BUSINESS_TYPE_NOT_ALLOWED_MESSAGE_AR = 'نوع النشاط هذا غير مسموح له بإنشاء خدمات.';
+
     private function getVendorActiveBranches()
     {
         return Branch::whereHas('company', function ($query) {
             $query->where('user_id', Auth::id());
         })->withActiveLicense()->orderBy('name')->get();
+    }
+
+    /**
+     * Determine whether a branch business type is allowed to create services.
+     * Returns false when branch/company business type exists but has no configured service categories.
+     */
+    private function canBranchCreateServices(Branch $branch, array $businessTypeCategoryMap): bool
+    {
+        $rawBusinessType = $branch->business_type ?: optional($branch->company)->business_type;
+        $normalizedBusinessType = strtolower(trim((string) $rawBusinessType));
+
+        // If no business type is defined on branch/company, keep existing behavior.
+        if ($normalizedBusinessType === '') {
+            return true;
+        }
+
+        // If business type exists but is not configured, treat it as disallowed.
+        if (!array_key_exists($normalizedBusinessType, $businessTypeCategoryMap)) {
+            return false;
+        }
+
+        $allowedCategories = $businessTypeCategoryMap[$normalizedBusinessType];
+        return is_array($allowedCategories) && !empty($allowedCategories);
+    }
+
+    private function getBusinessTypeNotAllowedMessage(): string
+    {
+        return app()->getLocale() === 'ar'
+            ? self::BUSINESS_TYPE_NOT_ALLOWED_MESSAGE_AR
+            : self::BUSINESS_TYPE_NOT_ALLOWED_MESSAGE_EN;
     }
 
     /**
@@ -174,6 +207,12 @@ class ServiceController extends Controller
         $initialBranchId = null;
 
         if ($requestedBranchId !== null && $branches->contains('id', (int) $requestedBranchId)) {
+            $selectedBranch = $branches->firstWhere('id', (int) $requestedBranchId);
+            if ($selectedBranch && !$this->canBranchCreateServices($selectedBranch, $businessTypeCategoryMap)) {
+                return redirect()->route('vendor.services.select-branch')
+                    ->with('warning', $this->getBusinessTypeNotAllowedMessage());
+            }
+
             $initialBranchId = (int) $requestedBranchId;
         }
 
@@ -238,6 +277,13 @@ class ServiceController extends Controller
 
         if (!$companyBelongsToUser) {
             return redirect()->back()->with('error', 'You do not have permission to add services to this branch.');
+        }
+
+        $businessTypeCategoryMap = $this->getBusinessTypeServiceCategoryMap();
+        if (!$this->canBranchCreateServices($branch, $businessTypeCategoryMap)) {
+            return redirect()->back()
+                ->with('warning', $this->getBusinessTypeNotAllowedMessage())
+                ->withInput();
         }
 
         $data = $request->except('image');
