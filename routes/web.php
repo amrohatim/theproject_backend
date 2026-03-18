@@ -1470,6 +1470,7 @@ Route::prefix('admin')->name('admin.')->middleware(['auth', \App\Http\Middleware
     })->name('services.edit');
     Route::put('/services/{id}', function (Illuminate\Http\Request $request, $id) {
         $service = \App\Models\Service::findOrFail($id);
+        $oldStatus = $service->status;
 
         $validated = $request->validate([
             'featured' => 'sometimes|boolean',
@@ -1480,6 +1481,58 @@ Route::prefix('admin')->name('admin.')->middleware(['auth', \App\Http\Middleware
             'featured' => $request->boolean('featured'),
             'status' => $validated['status'],
         ]);
+
+        if ($oldStatus !== $validated['status']) {
+            $recipientType = null;
+            $recipientId = null;
+
+            if (!empty($service->merchant_id)) {
+                $merchant = \App\Models\Merchant::where('user_id', $service->merchant_id)->first();
+
+                if ($merchant) {
+                    $recipientType = \App\Models\VendorNotification::RECIPIENT_MERCHANT;
+                    $recipientId = $merchant->id;
+                }
+            }
+
+            if (!$recipientType || !$recipientId) {
+                $service->loadMissing('branch');
+                if ($service->branch && !empty($service->branch->company_id)) {
+                    $recipientType = \App\Models\VendorNotification::RECIPIENT_VENDOR;
+                    $recipientId = $service->branch->company_id;
+                }
+            }
+
+            if ($recipientType && $recipientId) {
+                $isApproved = $validated['status'] === 'approved';
+                $serviceArabicName = $service->service_name_arabic ?: $service->name;
+
+                \App\Models\VendorNotification::create([
+                    'notification_type' => \App\Models\VendorNotification::TYPE_SERVICE,
+                    'sender_name' => 'admin',
+                    'message' => $isApproved
+                        ? "Your service '{$service->name}' has been approved."
+                        : "Your service '{$service->name}' has been rejected.",
+                    'message_arabic' => $isApproved
+                        ? "تمت الموافقة على الخدمة '{$serviceArabicName}'."
+                        : "تم رفض الخدمة '{$serviceArabicName}'.",
+                    'is_opened' => false,
+                    'recipient_type' => $recipientType,
+                    'recipient_id' => $recipientId,
+                    'product_id' => null,
+                    'provider_product_id' => null,
+                    'service_id' => $service->id,
+                    'order_item_id' => null,
+                    'booking_id' => null,
+                ]);
+            } else {
+                \Log::warning('Skipped service status notification due to unresolved recipient ownership.', [
+                    'service_id' => $service->id,
+                    'merchant_id' => $service->merchant_id,
+                    'branch_id' => $service->branch_id,
+                ]);
+            }
+        }
 
         return redirect()->route('admin.services.index')->with('success', 'Service updated successfully');
     })->name('services.update');
