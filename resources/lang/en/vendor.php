@@ -78,7 +78,7 @@ return [
     'is_available' => 'Is Available',
     'product_available' => 'Product is available for sale',
     'available_for_purchase' => 'Available for purchase',
-    'pricing_and_inventory' => 'Pricing & Inventory',
+    'pricing_and_inventory' => 'Pricing and Inventory',
     'current_price' => 'Current Price',
     'product_colors' => 'Product Colors',
     'add_color_variants_with_images' => 'Add color variants with images for your product',

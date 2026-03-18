@@ -9,24 +9,24 @@
     </div>
 
     <!-- Main Content -->
-    <div v-else class="w-full px-0 sm:container sm:mx-auto sm:px-6 lg:px-8">
+    <div v-else class="w-full px-0 sm:container sm:mx-auto sm:px-6 lg:px-8 max-w-6xl">
       <!-- Header -->
-      <div class="mb-6 px-4 sm:px-0">
+      <div class="mb-5 px-4 sm:px-0">
         <div class="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
           <div class="text-center sm:text-left">
-            <h2 class="text-xl sm:text-2xl font-bold text-gray-800 dark:text-white">{{ $t('vendor.edit_product') }}</h2>
-            <p class="mt-1 text-sm sm:text-base text-gray-600 dark:text-gray-400">{{ $t('vendor.update_product_information') }}</p>
+            <h2 class="text-xl sm:text-2xl font-semibold text-gray-900 dark:text-white">{{ $t('vendor.edit_product') }}</h2>
+            <p class="mt-1 text-sm text-gray-500 dark:text-gray-400">{{ $t('vendor.update_product_information') }}</p>
           </div>
           <div class="flex w-full flex-col gap-2 sm:w-auto sm:flex-row sm:items-center sm:justify-end">
-            <a :href="backUrl" class="inline-flex w-full items-center justify-center px-4 py-3 sm:py-2 bg-gray-600 border border-transparent rounded-md font-semibold text-xs text-white uppercase tracking-widest hover:bg-gray-700 active:bg-gray-900 focus:outline-none focus:border-gray-900 focus:ring ring-gray-300 disabled:opacity-25 transition ease-in-out duration-150 sm:w-auto">
+            <a :href="backUrl" class="inline-flex w-full items-center justify-center px-4 py-2.5 border border-gray-300 dark:border-gray-600 rounded-md text-sm font-medium text-gray-700 dark:text-gray-200 bg-white dark:bg-gray-800 hover:bg-gray-50 dark:hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-gray-300 transition sm:w-auto">
               <i class="fas fa-arrow-left" :class="isRTL ? 'ml-2' : 'mr-2'"></i> {{ $t('vendor.back_to_products') }}
             </a>
             <button
               type="button"
-              class="inline-flex w-full items-center justify-center px-4 py-3 sm:py-2 border border-transparent rounded-md font-semibold text-xs text-white uppercase tracking-widest focus:outline-none focus:ring disabled:opacity-25 transition ease-in-out duration-150 sm:w-auto"
+              class="inline-flex w-full items-center justify-center px-4 py-2.5 border border-transparent rounded-md text-sm font-medium text-white focus:outline-none focus:ring-2 disabled:opacity-25 transition sm:w-auto"
               :class="isProductsManagerContext
-                ? 'bg-orange-400 hover:bg-orange-500 active:bg-orange-600 focus:border-orange-500 ring-orange-300'
-                : 'bg-blue-600 hover:bg-blue-700 active:bg-blue-900 focus:border-blue-900 ring-blue-300'"
+                ? 'bg-orange-500 hover:bg-orange-600 ring-orange-200'
+                : 'bg-blue-600 hover:bg-blue-700 ring-blue-200'"
               @click="saveProduct"
               :disabled="saving"
             >
@@ -38,30 +38,25 @@
       </div>
 
       <!-- Stock Progress Indicator -->
-      <div class="border rounded-lg p-4 mb-6"
-           :class="isProductsManagerContext
-             ? 'bg-orange-50 dark:bg-orange-900/20 border-orange-200 dark:border-orange-800'
-             : 'bg-blue-50 dark:bg-blue-900/20 border-blue-200 dark:border-blue-800'">
+      <div class="rounded-lg border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 p-4 mb-6">
         <div class="flex items-center justify-between mb-2">
-          <span class="text-sm font-medium"
-                :class="isProductsManagerContext ? 'text-orange-700 dark:text-orange-300' : 'text-blue-700 dark:text-blue-300'">
+          <span class="text-sm font-medium text-gray-700 dark:text-gray-300">
             {{ $t('vendor.stock_allocation_progress') }}
           </span>
-          <span class="text-sm"
-                :class="isProductsManagerContext ? 'text-orange-600 dark:text-orange-400' : 'text-blue-600 dark:text-blue-400'">
+          <span class="text-sm text-gray-500 dark:text-gray-400">
             <span>{{ totalAllocatedStock }}</span> / {{ productData.stock }} {{ $t('vendor.units_allocated') }}
           </span>
         </div>
         <div class="w-full bg-gray-200 dark:bg-gray-700 rounded-full h-2">
           <div class="h-2 rounded-full transition-all duration-300"
-               :class="isProductsManagerContext ? 'bg-orange-600' : 'bg-blue-600'"
+               :class="isProductsManagerContext ? 'bg-orange-500' : 'bg-blue-500'"
                :style="{ width: stockProgressPercentage + '%' }">
           </div>
         </div>
-        <div v-if="isStockOverAllocated" class="mt-3 p-3 bg-yellow-50 dark:bg-yellow-900/20 border border-yellow-200 dark:border-yellow-800 rounded-lg">
+        <div v-if="isStockOverAllocated" class="mt-3 rounded-md border border-amber-200 dark:border-amber-800 bg-amber-50/80 dark:bg-amber-900/20 p-3">
           <div class="flex items-center gap-2">
             <i class="fas fa-exclamation-triangle text-yellow-600 dark:text-yellow-400"></i>
-            <p class="text-yellow-800 dark:text-yellow-200 text-sm">
+            <p class="text-amber-800 dark:text-amber-200 text-sm">
               {{ $t('vendor.stock_over_allocated_message') }}
             </p>
           </div>
@@ -69,37 +64,36 @@
       </div>
 
       <!-- Tab Navigation -->
-      <div class="bg-white dark:bg-gray-800 rounded-lg shadow border border-gray-200 dark:border-gray-700 mb-6">
+      <div class="bg-white dark:bg-gray-800 rounded-lg border border-gray-200 dark:border-gray-700 mb-6">
         <div class="border-b border-gray-200 dark:border-gray-700">
-          <nav class="-mb-px flex flex-nowrap gap-4 overflow-x-auto px-4 sm:gap-8 sm:px-6" aria-label="Tabs">
+          <nav class="-mb-px flex flex-nowrap gap-6 overflow-x-auto px-4 sm:px-6" aria-label="Tabs">
             <button
               v-for="tab in tabs"
               :key="tab.id"
               @click="activeTab = tab.id"
               :class="getTabClasses(tab.id)"
-              class="whitespace-nowrap py-4 px-1 border-b-2 font-medium text-sm transition-colors duration-200"
+              class="whitespace-nowrap py-3.5 px-0.5 border-b-2 font-medium text-sm transition-colors duration-200"
             >
-              <i :class="[tab.icon, isRTL ? 'ml-2' : 'mr-2']"></i>
+              <i :class="[tab.icon, isRTL ? 'ml-2' : 'mr-2', 'text-xs opacity-70']"></i>
               {{ tab.label }}
             </button>
           </nav>
         </div>
 
         <!-- Tab Content -->
-        <div class="p-4 sm:p-6">
+        <div class="p-4 sm:p-5">
 
           <!-- Basic Information Tab -->
-          <div v-show="activeTab === 'basic'" class="vue-tab-content space-y-6">
-            <div class="grid lg:grid-cols-2 gap-6">
+          <div v-show="activeTab === 'basic'" class="vue-tab-content space-y-5">
+            <div class="grid lg:grid-cols-2 gap-5">
               <!-- Product Details Card -->
               <div class="vue-card">
-                <div class="p-6 border-b" style="border-color: var(--gray-200);">
-                  <h3 class="flex items-center gap-2 vue-text-lg">
-                    <i class="fas fa-box w-5 h-5" style="color: var(--gray-600);"></i>
+                <div class="p-5 border-b border-gray-100 dark:border-gray-700">
+                  <h3 class="vue-text-lg">
                     {{ $t('vendor.product_details') }}
                   </h3>
                 </div>
-                <div class="p-6 space-y-4">
+                <div class="p-5 space-y-5">
                   <div class="space-y-2">
                     <label for="name" class="block vue-text-sm">
                       {{ $t('vendor.product_name') }} <span class="text-red-500">*</span>
@@ -227,13 +221,12 @@
 
               <!-- Pricing & Inventory Card -->
               <div class="vue-card">
-                <div class="p-6 border-b" style="border-color: var(--gray-200);">
-                  <h3 class="flex items-center gap-2 vue-text-lg">
-                    <i class="fas fa-dollar-sign w-5 h-5" style="color: var(--gray-600);"></i>
+                <div class="p-5 border-b border-gray-100 dark:border-gray-700">
+                  <h3 class="vue-text-lg">
                     {{ $t('vendor.pricing_and_inventory') }}
                   </h3>
                 </div>
-                <div class="p-6 space-y-4">
+                <div class="p-5 space-y-5">
                   <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
                     <div class="space-y-2">
                       <label for="price" class="block vue-text-sm">
@@ -327,14 +320,12 @@
                   </div>
 
                   <!-- Sale Badge -->
-                  <div v-if="showSaleBadge" class="p-3 rounded-lg"
-                       style="background-color: var(--primary-blue-light); border: 1px solid var(--gray-200);">
+                  <div v-if="showSaleBadge" class="p-3 rounded-md border border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-900/40">
                     <div class="flex items-center gap-2">
-                      <span class="px-2 py-1 text-xs font-medium rounded"
-                            style="background-color: var(--gray-100); color: var(--primary-blue-hover);">
+                      <span class="px-2 py-1 text-xs font-medium rounded bg-white dark:bg-gray-800 text-gray-700 dark:text-gray-300 border border-gray-200 dark:border-gray-700">
                         {{ $t('vendor.sale') }}
                       </span>
-                      <span class="text-sm" style="color: var(--primary-blue);">
+                      <span class="text-sm text-gray-700 dark:text-gray-300">
                         {{ salePercentage }}% {{ $t('vendor.off') }}
                       </span>
                     </div>
@@ -349,14 +340,14 @@
             <div class="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
               <div>
                 <h3 class="vue-text-lg">{{ $t('vendor.product_colors') }}</h3>
-                <p class="text-sm" style="color: var(--gray-600);">{{ $t('vendor.add_color_variants_with_images') }}</p>
+                <p class="text-sm text-gray-500 dark:text-gray-400">{{ $t('vendor.add_color_variants_with_images') }}</p>
               </div>
               <button
                 type="button"
                 class="vue-btn w-full justify-center sm:w-auto"
                 :class="isProductsManagerContext
-                  ? 'bg-orange-400 hover:bg-orange-500 border-orange-300 text-white'
-                  : 'bg-blue-600 hover:bg-blue-700 border-blue-600 text-white'"
+                  ? 'bg-orange-500 hover:bg-orange-600 text-white'
+                  : 'bg-blue-600 hover:bg-blue-700 text-white'"
                 @click="addNewColor"
               >
                 <i class="fas fa-plus w-4 h-4"></i>
@@ -365,19 +356,19 @@
             </div>
 
             <!-- Empty State for Colors -->
-            <div v-if="productData.colors.length === 0" class="vue-card" style="border: 2px dashed var(--gray-300);">
+            <div v-if="productData.colors.length === 0" class="vue-card border-dashed">
               <div class="flex flex-col items-center justify-center py-12">
                 <i class="fas fa-palette w-12 h-12 mb-4" style="color: var(--gray-400);"></i>
                 <h3 class="vue-text-lg mb-2">{{ $t('vendor.no_colors_added_yet') }}</h3>
-                <p class="text-center mb-4" style="color: var(--gray-600);">
+                <p class="text-center mb-4 text-gray-500 dark:text-gray-400">
                   {{ $t('vendor.add_at_least_one_color_variant') }}
                 </p>
                 <button
                   type="button"
                   class="vue-btn w-full justify-center sm:w-auto"
                   :class="isProductsManagerContext
-                    ? 'bg-orange-400 hover:bg-orange-500 border-orange-300 text-white'
-                    : 'bg-blue-600 hover:bg-blue-700 border-blue-600 text-white'"
+                    ? 'bg-orange-500 hover:bg-orange-600 text-white'
+                    : 'bg-blue-600 hover:bg-blue-700 text-white'"
                   @click="addNewColor"
                 >
                   <i class="fas fa-plus w-4 h-4"></i>
@@ -416,14 +407,14 @@
             <div class="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
               <div>
                 <h3 class="vue-text-lg">{{ $t('vendor.product_specifications') }}</h3>
-                <p class="text-sm" style="color: var(--gray-600);">{{ $t('vendor.add_detailed_specifications') }}</p>
+                <p class="text-sm text-gray-500 dark:text-gray-400">{{ $t('vendor.add_detailed_specifications') }}</p>
               </div>
               <button
                 type="button"
                 class="vue-btn w-full justify-center sm:w-auto"
                 :class="isProductsManagerContext
-                  ? 'bg-orange-400 hover:bg-orange-500 border-orange-300 text-white'
-                  : 'bg-blue-600 hover:bg-blue-700 border-blue-600 text-white'"
+                  ? 'bg-orange-500 hover:bg-orange-600 text-white'
+                  : 'bg-blue-600 hover:bg-blue-700 text-white'"
                 @click="addNewSpecification"
               >
                 <i class="fas fa-plus w-4 h-4"></i>
@@ -432,20 +423,20 @@
             </div>
 
             <div class="vue-card">
-              <div class="p-6">
+              <div class="p-5">
                 <div class="space-y-4">
                   <div v-if="productData.specifications.length === 0" class="text-center py-8">
                     <i class="fas fa-file-text w-12 h-12 mx-auto mb-4" style="color: var(--gray-400);"></i>
                     <h3 class="vue-text-lg mb-2">{{ $t('vendor.no_specifications_added_yet') }}</h3>
-                    <p class="mb-4" style="color: var(--gray-600);">
+                    <p class="mb-4 text-gray-500 dark:text-gray-400">
                       {{ $t('vendor.add_technical_specifications') }}
                     </p>
                     <button
                       type="button"
                       class="vue-btn"
                       :class="isProductsManagerContext
-                        ? 'bg-orange-400 hover:bg-orange-500 border-orange-300 text-white'
-                        : 'bg-blue-600 hover:bg-blue-700 border-blue-600 text-white'"
+                        ? 'bg-orange-500 hover:bg-orange-600 text-white'
+                        : 'bg-blue-600 hover:bg-blue-700 text-white'"
                       @click="addNewSpecification"
                     >
                       <i class="fas fa-plus w-4 h-4"></i>
@@ -646,9 +637,9 @@ export default {
     // Methods
     const getTabClasses = (tabId) => {
       if (activeTab.value === tabId) {
-        return 'text-indigo-600 border-indigo-500'
+        return 'text-gray-900 dark:text-white border-blue-600'
       }
-      return 'text-gray-500 border-transparent hover:text-gray-700 hover:border-gray-300'
+      return 'text-gray-500 dark:text-gray-400 border-transparent hover:text-gray-700 dark:hover:text-gray-200 hover:border-gray-300 dark:hover:border-gray-500'
     }
 
     const fetchProductData = async () => {
@@ -1296,43 +1287,46 @@ export default {
 </script>
 
 <style scoped>
-/* Vue component specific styles */
 .vendor-product-edit-app {
   min-height: 100vh;
+  color: #111827;
 }
 
 .vue-tab-content {
   min-height: 400px;
-  padding: 1.5rem;
+  padding: 0.25rem;
 }
 
 .vue-text-lg {
   font-size: 1.125rem;
   font-weight: 600;
-  color: #1f2937;
+  color: #111827;
 }
 
 .vue-text-sm {
   font-size: 0.875rem;
   font-weight: 500;
   color: #374151;
+  letter-spacing: 0.01em;
 }
 
 .vue-form-control {
   width: 100%;
-  padding: 0.5rem 0.75rem;
-  border: 1px solid #d1d5db;
-  border-radius: 0.375rem;
+  min-height: 2.75rem;
+  padding: 0.625rem 0.875rem;
+  border: 1px solid #d4d4d8;
+  border-radius: 0.5rem;
   background-color: #ffffff;
-  color: #1f2937;
+  color: #111827;
   font-size: 0.875rem;
-  transition: border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
+  line-height: 1.4;
+  transition: border-color 0.16s ease, box-shadow 0.16s ease, background-color 0.16s ease;
 }
 
 .vue-form-control:focus {
   outline: none;
-  border-color: #6366f1;
-  box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.1);
+  border-color: #2563eb;
+  box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.12);
 }
 
 .vue-form-control::placeholder {
@@ -1340,79 +1334,53 @@ export default {
 }
 
 .total-stock-readonly {
-  background-color: var(--gray-100);
-  color: var(--gray-600);
+  background-color: #f3f4f6;
+  color: #6b7280;
   cursor: default;
   caret-color: transparent;
 }
 
 .total-stock-readonly:focus {
   outline: none;
-  border-color: #d1d5db;
+  border-color: #d4d4d8;
   box-shadow: none;
 }
 
-/* Modern buttons */
 .vue-btn {
   display: inline-flex;
   align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
   padding: 0.5rem 1rem;
-  border-radius: 0.375rem;
+  border-radius: 0.5rem;
   font-size: 0.875rem;
   font-weight: 500;
   text-decoration: none;
-  transition: all 0.15s ease-in-out;
+  line-height: 1.2;
+  transition: background-color 0.15s ease, border-color 0.15s ease, color 0.15s ease, box-shadow 0.15s ease;
   cursor: pointer;
-  border: 1px solid transparent;
+  border: 1px solid #d4d4d8;
+  background: #ffffff;
+  color: #111827;
 }
 
 .vue-btn:disabled {
-  opacity: 0.5;
+  opacity: 0.55;
   cursor: not-allowed;
-}
-
-.vue-btn-primary {
-  background-color: #6366f1;
-  color: #ffffff;
-  border-color: #6366f1;
-}
-
-.vue-btn-primary:hover:not(:disabled) {
-  background-color: #5b21b6;
-  border-color: #5b21b6;
-}
-
-.vue-btn-secondary {
-  background-color: #6b7280;
-  color: #ffffff;
-  border-color: #6b7280;
-}
-
-.vue-btn-secondary:hover:not(:disabled) {
-  background-color: #4b5563;
-  border-color: #4b5563;
-}
-
-.vue-btn-success {
-  background-color: #10b981;
-  color: #ffffff;
-  border-color: #10b981;
-}
-
-.vue-btn-success:hover:not(:disabled) {
-  background-color: #059669;
-  border-color: #059669;
 }
 
 .vue-card {
   background-color: #ffffff;
   border: 1px solid #e5e7eb;
-  border-radius: 0.5rem;
-  box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px 0 rgba(0, 0, 0, 0.06);
+  border-radius: 0.75rem;
+  box-shadow: 0 1px 2px rgba(15, 23, 42, 0.04);
 }
 
-/* Dark mode support */
 @media (prefers-color-scheme: dark) {
+  .vendor-product-edit-app {
+    color: #e5e7eb;
+  }
+
   .vue-text-lg {
     color: #f9fafb;
   }
@@ -1422,23 +1390,34 @@ export default {
   }
 
   .vue-form-control {
-    background-color: #374151;
-    border-color: #4b5563;
+    background-color: #111827;
+    border-color: #374151;
     color: #f9fafb;
   }
 
   .vue-form-control:focus {
-    border-color: #6366f1;
-    box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.1);
+    border-color: #60a5fa;
+    box-shadow: 0 0 0 3px rgba(96, 165, 250, 0.16);
+  }
+
+  .total-stock-readonly {
+    background-color: #1f2937;
+    color: #9ca3af;
+  }
+
+  .vue-btn {
+    background: #111827;
+    color: #e5e7eb;
+    border-color: #374151;
   }
 
   .vue-card {
     background-color: #1f2937;
     border-color: #374151;
+    box-shadow: none;
   }
 }
 
-/* Animation classes */
 .fade-enter-active, .fade-leave-active {
   transition: opacity 0.3s;
 }
@@ -1462,14 +1441,13 @@ export default {
   transform: translateX(-10px);
 }
 
-/* Responsive adjustments */
 @media (max-width: 768px) {
   .vue-app-container {
     padding: 1rem;
   }
 
   .vue-tab-content {
-    padding: 0;
+    padding: 0.125rem;
     background: transparent;
     border-radius: 0;
   }
