@@ -411,7 +411,7 @@
 
         <!-- Tab Navigation Footer -->
         <div class="border-t border-gray-200 dark:border-gray-700 px-3 sm:px-6 py-3 sm:py-4">
-          <div class="flex flex-col gap-4 sm:flex-row sm:justify-between">
+          <div class="flex flex-row gap-4 items-center sm:flex-row sm:justify-between">
             <button
               v-if="activeTab !== 'basic'"
               type="button"
