@@ -19,14 +19,14 @@
     <!-- Main Content -->
     <div v-else class="w-full px-0 sm:container sm:mx-auto sm:px-6 lg:px-8">
       <!-- Header -->
-      <div class="mb-6 px-4 sm:px-0">
-        <div class="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
+      <div class="mb-4 px-3 sm:mb-6 sm:px-0">
+        <div class="flex flex-col gap-3 sm:gap-4 sm:flex-row sm:items-center sm:justify-between">
           <div class="text-center sm:text-left">
             <h2 class="text-xl sm:text-2xl font-bold text-gray-800 dark:text-white">{{ $t('vendor.create_new_product') }}</h2>
             <p class="mt-1 text-sm sm:text-base text-gray-600 dark:text-gray-400">{{ $t('vendor.add_new_product_inventory') }}</p>
           </div>
           <div class="w-full sm:w-auto">
-            <a :href="backUrl" class="inline-flex w-full items-center justify-center px-4 py-3 sm:py-2 bg-gray-600 border border-transparent rounded-md font-semibold text-xs text-white uppercase tracking-widest hover:bg-gray-700 active:bg-gray-900 focus:outline-none focus:border-gray-900 focus:ring ring-gray-300 disabled:opacity-25 transition ease-in-out duration-150">
+            <a :href="backUrl" class="inline-flex w-full items-center justify-center px-4 py-2.5 sm:py-2 bg-gray-600 border border-transparent rounded-md font-semibold text-xs text-white uppercase tracking-widest hover:bg-gray-700 active:bg-gray-900 focus:outline-none focus:border-gray-900 focus:ring ring-gray-300 disabled:opacity-25 transition ease-in-out duration-150">
               <i :class="['fas', isRTL ? 'fa-arrow-right' : 'fa-arrow-left', isRTL ? 'mx-2' : 'mr-2']"></i> {{ $t('vendor.back_to_products') }}
             </a>
           </div>
@@ -36,13 +36,13 @@
       <!-- Tab Navigation -->
       <div class="bg-white dark:bg-gray-800 rounded-lg shadow border border-gray-200 dark:border-gray-700 mb-6">
         <div class="border-b border-gray-200 dark:border-gray-700">
-          <nav class="-mb-px flex flex-nowrap gap-4 overflow-x-auto px-4 sm:gap-8 sm:px-6" aria-label="Tabs">
+          <nav class="-mb-px flex flex-nowrap gap-3 overflow-x-auto px-3 sm:px-6 sm:gap-8" aria-label="Tabs">
             <button
               v-for="tab in tabs"
               :key="tab.id"
               @click="activeTab = tab.id"
               :class="getTabClasses(tab.id)"
-              class="whitespace-nowrap py-4 px-1 border-b-2 font-medium text-sm transition-colors duration-200"
+              class="whitespace-nowrap py-3 sm:py-4 px-1 border-b-2 font-medium text-sm transition-colors duration-200"
             >
               <i :class="[tab.icon, isRTL ? 'ml-2' : 'mr-2']"></i>
               {{ tab.label }}
@@ -51,9 +51,9 @@
         </div>
 
         <!-- Tab Content -->
-        <div class="p-4 sm:p-6">
+        <div class="p-3 sm:p-6">
           <!-- Basic Information Tab -->
-          <div v-show="activeTab === 'basic'" class="vue-tab-content space-y-6">
+          <div v-show="activeTab === 'basic'" class="vue-tab-content space-y-5 sm:space-y-6">
             <div class="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
               <div>
                 <h3 class="vue-text-lg">{{ $t('vendor.product_details') }}</h3>
@@ -61,7 +61,7 @@
               </div>
             </div>
 
-            <div class="grid grid-cols-1 md:grid-cols-1 gap-6" :class="isRTL ? 'md:pl-[35rem]' : 'md:pr-[35rem]'">
+            <div class="grid grid-cols-1 md:grid-cols-1 gap-4 sm:gap-6" :class="isRTL ? 'md:pl-[35rem]' : 'md:pr-[35rem]'">
               <!-- Product Name with Language Switch -->
               <div>
                 <label for="name" class="block vue-text-sm mb-2">
@@ -271,7 +271,7 @@
                   class="focus:ring-indigo-500 h-4 w-4 text-indigo-600 border-gray-300 rounded"
                 />
               </div>
-              <div class="ml-3 text-sm">
+              <div class="text-sm" :class="isRTL ? 'mr-3' : 'ml-3'">
                 <label class="font-medium text-gray-700 dark:text-gray-300">{{ $t('vendor.product_available_sale') }}</label>
                   <p class="text-gray-500 dark:text-gray-400">{{ $t('vendor.uncheck_if_not_available') }}</p>
               </div>
@@ -279,7 +279,7 @@
           </div>
 
           <!-- Colors & Images Tab -->
-          <div v-show="activeTab === 'colors'" class="vue-tab-content space-y-6">
+          <div v-show="activeTab === 'colors'" class="vue-tab-content space-y-5 sm:space-y-6">
             <div class="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
               <div>
                 <h3 class="vue-text-lg">{{ $t('vendor.colors_and_images') }}</h3>
@@ -287,7 +287,7 @@
               </div>
               <button type="button" @click="addNewColor" style="color: #ffffff;
   border-color: transparent;
-  box-shadow: 0 2px 4px 0 var(--theme-shadow);" class="vue-btn w-full justify-center sm:w-auto" :class="userRole === 'vendor' ? 'bg-blue-400 hover:bg-blue-500' : 'bg-orange-400 hover:bg-orange-500'">
+  box-shadow: 0 2px 4px 0 var(--theme-shadow);" class="vue-btn w-48 justify-center sm:w-auto" :class="userRole === 'vendor' ? 'bg-blue-400 hover:bg-blue-500' : 'bg-orange-400 hover:bg-orange-500'">
                 <i class="fas fa-plus w-4 h-4"></i>
                 {{ $t('vendor.add_color') }}
               </button>
@@ -317,13 +317,13 @@
             </div>
 
             <!-- Empty State -->
-            <div v-else class="text-center py-12 border-2 border-dashed border-gray-300 rounded-lg">
-              <i class="fas fa-palette text-gray-400 text-4xl mb-4"></i>
-              <h3 class="text-lg font-medium text-gray-900 mb-2">{{ $t('vendor.no_colors_added_yet') }}</h3>
-              <p class="text-gray-500 mb-4">{{ $t('vendor.add_color_variants_appealing') }}</p>
+            <div v-else class="text-center py-8 sm:py-12 px-3 border-2 border-dashed border-gray-300 rounded-lg">
+              <i class="fas fa-palette text-gray-400 text-3xl sm:text-4xl mb-3 sm:mb-4"></i>
+              <h3 class="text-base sm:text-lg font-medium text-gray-900 mb-2">{{ $t('vendor.no_colors_added_yet') }}</h3>
+              <p class="text-sm sm:text-base text-gray-500 mb-4">{{ $t('vendor.add_color_variants_appealing') }}</p>
               <button type="button" @click="addNewColor" style="color: #ffffff;
   border-color: transparent;
-  box-shadow: 0 2px 4px 0 var(--theme-shadow);" class="vue-btn w-full justify-center sm:w-auto" :class="userRole === 'vendor' ? 'bg-blue-400 hover:bg-blue-500' : 'bg-orange-400 hover:bg-orange-500'">
+  box-shadow: 0 2px 4px 0 var(--theme-shadow);" class="vue-btn w-48 justify-center sm:w-auto" :class="userRole === 'vendor' ? 'bg-blue-400 hover:bg-blue-500' : 'bg-orange-400 hover:bg-orange-500'">
                 <i class="fas fa-plus mr-2"></i>
                 {{ $t('vendor.add_first_color') }}
               </button>
@@ -367,7 +367,7 @@
           </div>
 
           <!-- Specifications Tab -->
-          <div v-show="activeTab === 'specifications'" class="vue-tab-content space-y-6">
+          <div v-show="activeTab === 'specifications'" class="vue-tab-content space-y-5 sm:space-y-6">
             <div class="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
               <div>
                 <h3 class="vue-text-lg">{{ $t('vendor.product_specifications') }}</h3>
@@ -375,7 +375,7 @@
               </div>
               <button type="button" @click="addNewSpecification" style="color: #ffffff;
   border-color: transparent;
-  box-shadow: 0 2px 4px 0 var(--theme-shadow);" class="vue-btn w-full justify-center sm:w-auto" :class="userRole === 'vendor' ? 'bg-blue-400 hover:bg-blue-500' : 'bg-orange-400 hover:bg-orange-500'">
+  box-shadow: 0 2px 4px 0 var(--theme-shadow);" class="vue-btn w-48 justify-center sm:w-auto" :class="userRole === 'vendor' ? 'bg-blue-400 hover:bg-blue-500' : 'bg-orange-400 hover:bg-orange-500'">
                 <i class="fas fa-plus w-4 h-4"></i>
                 {{ $t('vendor.add_specification') }}
               </button>
@@ -395,11 +395,11 @@
             </div>
 
             <!-- Empty State -->
-            <div v-else class="text-center py-12 border-2 border-dashed border-gray-300 rounded-lg">
-              <i class="fas fa-file-text text-gray-400 text-4xl mb-4"></i>
-              <h3 class="text-lg font-medium text-gray-900 mb-2">{{ $t('vendor.no_specifications_added_yet') }}</h3>
-              <p class="text-gray-500 mb-4">{{ $t('vendor.add_specifications_detailed_info') }}</p>
-              <button type="button" @click="addNewSpecification" class="vue-btn w-full justify-center sm:w-auto" style="color: #ffffff;
+            <div v-else class="text-center py-8 sm:py-12 px-3 border-2 border-dashed border-gray-300 rounded-lg">
+              <i class="fas fa-file-text text-gray-400 text-3xl sm:text-4xl mb-3 sm:mb-4"></i>
+              <h3 class="text-base sm:text-lg font-medium text-gray-900 mb-2">{{ $t('vendor.no_specifications_added_yet') }}</h3>
+              <p class="text-sm sm:text-base text-gray-500 mb-4">{{ $t('vendor.add_specifications_detailed_info') }}</p>
+              <button type="button" @click="addNewSpecification" class="vue-btn w-48 justify-center sm:w-auto" style="color: #ffffff;
   border-color: transparent;
   box-shadow: 0 2px 4px 0 var(--theme-shadow);" :class="userRole === 'vendor' ? 'bg-blue-400 hover:bg-blue-500' : 'bg-orange-400 hover:bg-orange-500'">
                 <i class="fas fa-plus mr-2"></i>
@@ -410,25 +410,25 @@
         </div>
 
         <!-- Tab Navigation Footer -->
-        <div class="border-t border-gray-200 dark:border-gray-700 px-6 py-4">
+        <div class="border-t border-gray-200 dark:border-gray-700 px-3 sm:px-6 py-3 sm:py-4">
           <div class="flex flex-col gap-4 sm:flex-row sm:justify-between">
             <button
               v-if="activeTab !== 'basic'"
               type="button"
               @click="previousTab"
-              class="vue-btn vue-btn-secondary w-full justify-center sm:w-auto"
+              class="vue-btn vue-btn-secondary w-48 justify-center sm:w-auto"
             >
-              <i class="fas fa-arrow-left" :class="isRTL ? 'ml-2' : 'mr-2'"></i>
+              <i :class="['fas', isRTL ? 'fa-arrow-right' : 'fa-arrow-left', isRTL ? 'mx-2' : 'ml-2']"></i>
               {{ $t('vendor.previous') }}
             </button>
             <div v-else></div>
 
-            <div class="flex flex-col gap-3 sm:flex-row sm:items-center sm:space-x-3">
+            <div class="flex flex-col  gap-3 sm:flex-row sm:items-center  sm:space-x-3">
               <button
                 v-if="activeTab !== 'specifications'"
                 type="button"
                 @click="nextTab"
-                class="vue-btn w-full justify-center sm:w-auto" style="color: #ffffff;
+                class="vue-btn w-48 justify-center  sm:w-auto" style="color: #ffffff;
   border-color: transparent;
   box-shadow: 0 2px 4px 0 var(--theme-shadow);" :class="userRole === 'vendor' ? 'bg-blue-400 hover:bg-blue-500' : 'bg-orange-400 hover:bg-orange-500'"
               >
@@ -440,10 +440,10 @@
                 type="button"
                 @click="saveProduct"
                 :disabled="saving"
-                class="vue-btn vue-btn-success w-full justify-center sm:w-auto"
+                class="vue-btn vue-btn-success w-48 justify-center sm:w-auto"
               >
                 <i v-if="saving" class="fas fa-spinner fa-spin" :class="isRTL ? 'ml-2' : 'mr-2'"></i>
-                <i v-else class="fas fa-save" :class="isRTL ? 'ml-2' : 'mr-2'"></i>
+                <i v-else class="fas fa-save" :class="isRTL ? 'mx-2' : 'mr-2'"></i>
                 {{ saving ? $t('vendor.saving') : $t('vendor.save_product') }}
               </button>
             </div>
@@ -1440,6 +1440,26 @@ export default {
 
 .vendor-product-create-app.rtl .justify-between {
   flex-direction: row-reverse;
+}
+
+@media (max-width: 640px) {
+  .vue-tab-content {
+    min-height: auto;
+  }
+
+  .vue-text-lg {
+    font-size: 1rem;
+  }
+
+  .vue-form-control {
+    padding: 0.75rem 0.6875rem;
+    font-size: 0.875rem;
+  }
+
+  .vue-btn {
+    min-height: 2.5rem;
+    justify-content: center;
+  }
 }
 
 </style>
