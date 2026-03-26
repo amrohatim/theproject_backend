@@ -3,8 +3,8 @@
 /* CSS Custom Properties for Enhanced Filters */
 :root {
     /* Enhanced Filter Colors */
-    --filter-primary: #1E5EFF;
-    --filter-primary-hover: #1a52e6;
+    --filter-primary: #A46BC1;
+    --filter-primary-hover: #75468d;
     --filter-primary-light: rgba(30, 94, 255, 0.1);
     --filter-primary-glow: rgba(30, 94, 255, 0.3);
     --filter-success: #3ba55d;

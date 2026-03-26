@@ -45,7 +45,7 @@
     .form-input:focus, .form-input.active,
     .form-select:focus, .form-select.active,
     .form-textarea:focus, .form-textarea.active {
-        border-color: #3B82F6;
+        border-color: var(--primary);
         box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
         background-color: #FFFFFF;
     }
@@ -131,7 +131,7 @@
     .dark .form-select:focus, .dark .form-select.active,
     .dark .form-textarea:focus, .dark .form-textarea.active {
         background-color: #374151;
-        border-color: #3B82F6;
+        border-color: var(--primary);
     }
 
     .dark .form-input.filled, .dark .form-select.filled, .dark .form-textarea.filled {
@@ -313,7 +313,7 @@ document.addEventListener('DOMContentLoaded', function() {
                             </div>
                         </div>
 
-                        <div class="col-span-6 sm:col-span-3">
+                        {{-- <div class="col-span-6 sm:col-span-3">
                             <div class="form-input-container">
                                 <label for="business_type" class="form-label">{{ __('messages.business_type') }}</label>
                                 <select id="business_type" name="business_type" class="form-select @error('business_type') error @enderror" required>
@@ -330,11 +330,11 @@ document.addEventListener('DOMContentLoaded', function() {
                                     <div class="error-message">{{ $message }}</div>
                                 @enderror
                             </div>
-                        </div>
+                        </div> --}}
 
                         {{-- <div class="col-span-6 sm:col-span-3">
                             <label for="registration_number" class="block text-sm font-medium text-gray-700 dark:text-gray-300">{{ __('messages.registration_number') }}</label>
-                            <input type="text" name="registration_number" id="registration_number" value="{{ $company->registration_number ?? old('registration_number') }}" class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-white rounded-md">
+                            <input type="text" name="registration_number" id="registration_number" value="{{ $company->registration_number ?? old('registration_number') }}" class="mt-1 focus:ring-[var(--primary)] focus:border-[var(--primary)] block w-full shadow-sm sm:text-sm border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-white rounded-md">
                         </div> --}}
 
                         <div class="col-span-6 sm:col-span-4">
@@ -372,7 +372,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
                         <div class="col-span-6 sm:col-span-3">
                             <label for="can_deliver" class="block text-sm font-medium text-gray-700 dark:text-gray-300">{{ __('messages.delivery_capability') }}</label>
-                            <select id="can_deliver" name="can_deliver" class="mt-1 block w-full py-2 px-3 border border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-white bg-white rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
+                            <select id="can_deliver" name="can_deliver" class="mt-1 block w-full py-2 px-3 border border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-white bg-white rounded-md shadow-sm focus:outline-none focus:ring-[var(--primary)] focus:border-[var(--primary)] sm:text-sm">
                                 <option value="1" {{ ($company->can_deliver ?? old('can_deliver', '1')) == '1' || ($company->can_deliver ?? old('can_deliver', true)) === true ? 'selected' : '' }}>{{ __('messages.yes_we_can_handle_our_own_deliveries') }}</option>
                                 <option value="0" {{ ($company->can_deliver ?? old('can_deliver')) == '0' || ($company->can_deliver ?? old('can_deliver')) === false ? 'selected' : '' }}>{{ __('messages.no_we_need_a_third_party_delivery_service') }}</option>
                             </select>
@@ -435,7 +435,7 @@ document.addEventListener('DOMContentLoaded', function() {
                                                 <path d="M28 8H12a4 4 0 00-4 4v20m32-12v8m0 0v8a4 4 0 01-4 4H12a4 4 0 01-4-4v-4m32-4l-3.172-3.172a4 4 0 00-5.656 0L28 28M8 32l9.172-9.172a4 4 0 015.656 0L28 28m0 0l4 4m4-24h8m-4-4v8m-12 4h.02" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
                                             </svg>
                                             <div class="flex text-sm text-gray-600 dark:text-gray-400">
-                                                <label for="logo" class="relative cursor-pointer bg-white dark:bg-gray-700 rounded-md font-medium text-indigo-600 dark:text-indigo-400 hover:text-indigo-500 dark:hover:text-indigo-300 focus-within:outline-none focus-within:ring-2 focus-within:ring-offset-2 focus-within:ring-indigo-500">
+                                                <label for="logo" class="relative cursor-pointer bg-white dark:bg-gray-700 rounded-md font-medium text-[var(--primary)] dark:text-[var(--primary)] hover:text-[var(--primary)] dark:hover:text-[var(--primary)] focus-within:outline-none focus-within:ring-2 focus-within:ring-offset-2 focus-within:ring-[var(--primary)]">
                                                     <span>{{ __('messages.upload_file') }}</span>
                                                     <input id="logo" name="logo" type="file" class="sr-only" onchange="showFileName(this)">
                                                 </label>
@@ -451,7 +451,7 @@ document.addEventListener('DOMContentLoaded', function() {
                         </div>
                     </div>
                     <div class="mt-6 flex justify-end">
-                        <button type="submit" class="inline-flex items-center px-4 py-2 bg-indigo-600 border border-transparent rounded-md font-semibold text-xs text-white uppercase tracking-widest hover:bg-indigo-700 active:bg-indigo-900 focus:outline-none focus:border-indigo-900 focus:ring ring-indigo-300 disabled:opacity-25 transition ease-in-out duration-150">
+                        <button type="submit" class="inline-flex items-center px-4 py-2 bg-[var(--primary)] border border-transparent rounded-md font-semibold text-xs text-white uppercase tracking-widest hover:bg-[var(--primary)] active:bg-[var(--primary)] focus:outline-none focus:border-[var(--primary)] focus:ring ring-[var(--primary)] disabled:opacity-25 transition ease-in-out duration-150">
                             <i class="fas fa-save mr-2"></i> {{ __('messages.save_company_info') }}
                         </button>
                     </div>
@@ -511,12 +511,12 @@ document.addEventListener('DOMContentLoaded', function() {
 
                         {{-- <div class="col-span-6 sm:col-span-3 lg:col-span-2">
                             <label for="postal_code" class="block text-sm font-medium text-gray-700 dark:text-gray-300">{{ __('messages.zip_postal_code') }}</label>
-                            <input type="text" name="postal_code" id="postal_code" value="{{ $company->zip_code ?? old('postal_code') }}" class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-white rounded-md">
+                            <input type="text" name="postal_code" id="postal_code" value="{{ $company->zip_code ?? old('postal_code') }}" class="mt-1 focus:ring-[var(--primary)] focus:border-[var(--primary)] block w-full shadow-sm sm:text-sm border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-white rounded-md">
                         </div> --}}
 
                         {{-- <div class="col-span-6 sm:col-span-3">
                             <label for="country" class="block text-sm font-medium text-gray-700 dark:text-gray-300">{{ __('messages.country') }}</label>
-                            <select id="country" name="country" class="mt-1 block w-full py-2 px-3 border border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-white bg-white rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
+                            <select id="country" name="country" class="mt-1 block w-full py-2 px-3 border border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-white bg-white rounded-md shadow-sm focus:outline-none focus:ring-[var(--primary)] focus:border-[var(--primary)] sm:text-sm">
                                 <option value="">Select Country</option>
                                 <option value="US" {{ ($company->country ?? old('country')) == 'US' ? 'selected' : '' }}>United States</option>
                                 <option value="CA" {{ ($company->country ?? old('country')) == 'CA' ? 'selected' : '' }}>Canada</option>
@@ -527,7 +527,7 @@ document.addEventListener('DOMContentLoaded', function() {
                         </div> --}}
                     </div>
                     <div class="mt-6 flex justify-end">
-                        <button type="submit" class="inline-flex items-center px-4 py-2 bg-indigo-600 border border-transparent rounded-md font-semibold text-xs text-white uppercase tracking-widest hover:bg-indigo-700 active:bg-indigo-900 focus:outline-none focus:border-indigo-900 focus:ring ring-indigo-300 disabled:opacity-25 transition ease-in-out duration-150">
+                        <button type="submit" class="inline-flex items-center px-4 py-2 bg-[var(--primary)] border border-transparent rounded-md font-semibold text-xs text-white uppercase tracking-widest hover:bg-[var(--primary)] active:bg-[var(--primary)] focus:outline-none focus:border-[var(--primary)] focus:ring ring-[var(--primary)] disabled:opacity-25 transition ease-in-out duration-150">
                             <i class="fas fa-save mr-2"></i> {{ __('messages.save_address_info') }}
                         </button>
                     </div>

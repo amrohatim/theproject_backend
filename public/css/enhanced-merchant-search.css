@@ -3,8 +3,8 @@
 /* CSS Custom Properties for Enhanced Search */
 :root {
     /* Enhanced Search Colors */
-    --search-primary: #1E5EFF;
-    --search-primary-hover: #1a52e6;
+    --search-primary: #A46BC1;
+    --search-primary-hover: #75468d;
     --search-primary-light: rgba(30, 94, 255, 0.1);
     --search-primary-glow: rgba(30, 94, 255, 0.3);
     --search-success: #3ba55d;
@@ -12,7 +12,7 @@
     --search-error: #ed4245;
     
     /* Enhanced Gradients */
-    --search-gradient: linear-gradient(135deg, var(--search-primary) 0%, #4facfe 100%);
+    --search-gradient: linear-gradient(135deg, var(--search-primary) 0%, #75468d 100%);
     --search-glass-bg: rgba(255, 255, 255, 0.95);
     --search-glass-border: rgba(255, 255, 255, 0.2);
     

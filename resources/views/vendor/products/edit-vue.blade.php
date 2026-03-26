@@ -52,8 +52,8 @@
 
     .vue-form-control:focus {
         outline: none;
-        border-color: #6366f1;
-        box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.1);
+        border-color: var(--primary);
+        box-shadow: 0 0 0 3px rgba(189, 99, 241, 0.1);
     }
 
     .vue-btn {
@@ -75,14 +75,14 @@
     }
 
     .vue-btn-primary {
-        background-color: #6366f1;
+        background-color: var(--primary);
         color: #ffffff;
-        border-color: #6366f1;
+        border-color: var(--primary);
     }
 
     .vue-btn-primary:hover:not(:disabled) {
-        background-color: #5b21b6;
-        border-color: #5b21b6;
+        background-color: var(--primary-hover);
+        border-color: var(--primary-hover);
     }
 
     .vue-btn-secondary {
@@ -136,7 +136,7 @@
         }
 
         .vue-form-control:focus {
-            border-color: #6366f1;
+            border-color: var(--primary);
             box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.1);
         }
 

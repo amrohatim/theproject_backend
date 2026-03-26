@@ -52,7 +52,7 @@
     width: 64px;
     height: 64px;
     margin: 0 auto 16px;
-    background: linear-gradient(135deg, #f59e0b, #d97706);
+    background: linear-gradient(135deg, #A46BC1, #A46BC1);
     border-radius: 50%;
     display: flex;
     align-items: center;
@@ -322,6 +322,6 @@
 /* Focus styles for accessibility */
 .access-control-modal .btn:focus,
 .access-control-modal .modal-close:focus {
-    outline: 2px solid #f59e0b;
+    outline: 2px solid #A46BC1;
     outline-offset: 2px;
 }

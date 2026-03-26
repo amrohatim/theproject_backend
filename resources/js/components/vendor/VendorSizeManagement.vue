@@ -7,10 +7,8 @@
       </div>
       <button
         type="button"
-        class="vue-btn"
-        :class="isProductsManagerContext
-          ? 'bg-orange-400 hover:bg-orange-500 border-orange-300 text-white'
-          : 'bg-blue-600 hover:bg-blue-700 border-blue-600 text-white'"
+        class="vue-btn text-white bg-[var(--primary)] hover:bg-[var(--primary-hover)]"
+       
         @click="showAddSizeModal = true"
       >
         <i class="fas fa-plus w-4 h-4"></i>
@@ -20,24 +18,24 @@
 
     <!-- Stock Allocation Summary -->
     <div v-if="colorStock > 0"
-         class="mb-6 p-4 border rounded-lg"
-         :class="isProductsManagerContext ? 'bg-orange-50 border-orange-200' : 'bg-blue-50 border-blue-200'">
+         class="mb-6 p-4 border  rounded-lg"
+         >
       <div class="flex items-center justify-between mb-2">
-        <span class="text-sm font-medium"
-              :class="isProductsManagerContext ? 'text-orange-900' : 'text-blue-900'">
+        <span class="text-sm text-[var(--primary)] font-medium"
+            >
           {{ $t('vendor.stock_allocation_for_color') }}
         </span>
-        <span class="text-sm"
-              :class="isProductsManagerContext ? 'text-orange-700' : 'text-blue-700'">
+        <span class="text-sm text-[var(--primary)]"
+              >
           {{ totalSizeStock }} / {{ colorStock }} {{ $t('vendor.allocated') }}
         </span>
       </div>
-      <div class="w-full rounded-full h-2"
-           :class="isProductsManagerContext ? 'bg-orange-200' : 'bg-blue-200'">
+      <div class="w-full bg-[var(--primary-light)] rounded-full h-2"
+           >
         <div class="h-2 rounded-full transition-all duration-300"
              :style="{ width: Math.min((totalSizeStock / colorStock) * 100, 100) + '%' }"
              :class="[
-               isProductsManagerContext ? 'bg-orange-600' : 'bg-blue-600',
+                'bg-[var(--primary)]',
                { 'bg-red-600': totalSizeStock > colorStock }
              ]"></div>
       </div>
@@ -77,8 +75,8 @@
             <div class="flex items-center gap-2 justify-end">
               <button type="button"
                       @click="editSize(index)"
-                      class="text-sm"
-                      :class="isProductsManagerContext ? 'text-orange-600 hover:text-orange-700' : 'text-blue-600 hover:text-blue-700'">
+                      class="text-sm 'text-[var(--primary)] hover:text-[var(--primary-hover)]'"
+                      >
                 <i class="fas fa-edit"></i>
               </button>
               <button type="button" 
@@ -314,10 +312,8 @@
         <div class="flex items-center gap-3 mt-6">
           <button
             type="button"
-            class="vue-btn flex-1"
-            :class="isProductsManagerContext
-              ? 'bg-orange-400 hover:bg-orange-500 border-orange-300 text-white'
-              : 'bg-blue-600 hover:bg-blue-700 border-blue-600 text-white'"
+            class="vue-btn flex-1 bg-[var(--primary)] hover:bg-[var(--primary-hover)] border-purple-300 text-white"
+            
             @click="addSize"
             :disabled="saving"
           >
@@ -1123,8 +1119,8 @@ export default {
 
 .vue-form-control-enhanced-blue:focus {
   outline: none;
-  border-color: #3b82f6;
-  box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+  border-color: var(--primary);
+  box-shadow: 0 0 0 3px rgba(146, 59, 246, 0.1);
 }
 
 .enhanced-input-group {
@@ -1159,7 +1155,7 @@ export default {
 }
 
 .allocated-stock {
-  color: #3b82f6;
+  color: var(--primary);
   font-weight: 500;
 }
 
@@ -1182,14 +1178,14 @@ export default {
 }
 
 .vue-btn-primary {
-  background-color: #3b82f6;
+  background-color: var(--primary);
   color: #ffffff;
-  border-color: #3b82f6;
+  border-color: var(--primary);
 }
 
 .vue-btn-primary:hover:not(:disabled) {
-  background-color: #2563eb;
-  border-color: #2563eb;
+  background-color: var(--primary-hover);
+  border-color: var(--primary);
 }
 
 .vue-btn-secondary {
@@ -1268,7 +1264,7 @@ export default {
   }
 
   .vue-form-control-enhanced-blue:focus {
-    border-color: #3b82f6;
+    border-color: var(--primary);
     box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
   }
 

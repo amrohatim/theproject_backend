@@ -341,7 +341,7 @@
                 </a>
                 <a href="{{ route('vendor.citizens-jobs.index') }}" class="{{ request()->routeIs('vendor.citizens-jobs.*') ? 'active' : '' }}">
                     <i class="fas fa-users"></i>
-                    Citizens jobs
+                   {{ __('messages.citizens_jobs') }}
                 </a>
                 <a href="{{ route('vendor.orders.index') }}" class="{{ request()->routeIs('vendor.orders.index') ? 'active' : '' }}">
                     <i class="fas fa-shopping-cart"></i>

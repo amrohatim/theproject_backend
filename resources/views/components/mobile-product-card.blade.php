@@ -3,7 +3,7 @@
     $editUrl = $editUrl ?? null;
     $deleteUrl = $deleteUrl ?? null;
     $deleteConfirm = $deleteConfirm ?? __('merchant.delete_product_confirm');
-    $editButtonClass = $editButtonClass ?? 'bg-blue-500 hover:bg-blue-600';
+    $editButtonClass = $editButtonClass ?? 'bg-[var(--primary)] hover:bg-[var(--primary-hover)]';
     $productStatus = $product->status ?? null;
 @endphp
 

@@ -1,5 +1,5 @@
 <nav class="mt-5 space-y-1">
-    <a href="{{ route('vendor.dashboard') }}" class="sidebar-item flex items-center px-4 py-2 text-sm font-medium rounded-md {{ request()->routeIs('vendor.dashboard') ? 'sidebar-active' : 'text-gray-700 dark:text-gray-300' }}">
+    <a href="{{ route('vendor.dashboard') }}" class="sidebar-item  flex items-center px-4 py-2 text-sm font-medium rounded-md {{ request()->routeIs('vendor.dashboard') ? 'sidebar-active' : 'text-gray-700 dark:text-gray-300' }}">
         <i class="fas fa-tachometer-alt mr-3"></i>
         {{ __('messages.dashboard') }}
     </a>
@@ -36,7 +36,8 @@
 
     <a href="{{ route('vendor.citizens-jobs.index') }}" class="sidebar-item flex items-center px-4 py-2 text-sm font-medium rounded-md {{ request()->routeIs('vendor.citizens-jobs.*') ? 'sidebar-active' : 'text-gray-700 dark:text-gray-300' }}">
         <i class="fas fa-users mr-3"></i>
-        Citizens jobs
+                           {{ __('messages.citizens_jobs') }}
+
     </a>
 
     <a href="{{ route('vendor.orders.index') }}" class="sidebar-item flex items-center px-4 py-2 text-sm font-medium rounded-md {{ request()->routeIs('vendor.orders.index') || (request()->routeIs('vendor.orders.*') && !request()->routeIs('vendor.orders.pending')) ? 'sidebar-active' : 'text-gray-700 dark:text-gray-300' }}">

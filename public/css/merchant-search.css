@@ -20,7 +20,7 @@
 .merchant-search-input:focus {
     outline: none;
     border-color: var(--discord-primary);
-    box-shadow: 0 0 0 2px rgba(30, 94, 255, 0.2);
+    box-shadow: 0 0 0 2px rgba(173, 30, 255, 0.2);
 }
 
 .merchant-search-input::placeholder {

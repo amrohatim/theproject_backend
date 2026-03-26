@@ -15,7 +15,7 @@
 .btn-modern-primary {
     @extend .btn-modern-base;
     @apply px-4 py-2 text-white;
-    background: #3b82f6;
+    background: #A46BC1;
     @apply border border-transparent;
     @apply rounded-lg;
     @apply shadow-sm hover:shadow-md;
@@ -27,7 +27,7 @@
 }
 
 .btn-modern-primary:hover {
-    box-shadow: 0 4px 8px -2px rgba(59, 130, 246, 0.3), 0 2px 4px -2px rgba(59, 130, 246, 0.2);
+    box-shadow: 0 4px 8px -2px rgba(209, 59, 246, 0.3), 0 2px 4px -2px rgba(187, 59, 246, 0.2);
 }
 
 .btn-modern-primary:disabled {
@@ -246,7 +246,7 @@
 /* Create Deal Button - Special styling for primary actions */
 .btn-create-deal {
     @apply inline-flex items-center justify-center px-8 py-3 text-sm font-semibold text-white;
-    background:  #3b82f6;
+    background:  #A46BC1;
     @apply border border-transparent rounded-xl;
     box-shadow: 0 4px 14px 0 rgba(5, 150, 105, 0.35), 0 2px 4px 0 rgba(0, 0, 0, 0.1);
     @apply transition-all duration-300 ease-out;

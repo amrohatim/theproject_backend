@@ -209,10 +209,10 @@
             <div class="image-preview-container compact-image-frame"
                  :class="{ 'has-image': color.image }"
                  :style="{
-                   '--image-preview-hover-border': userRole === 'vendor' ? '#3b82f6' : '#f59e0b',
+                   '--image-preview-hover-border': userRole === 'vendor' ? 'var(--primary)' : 'var(--primary)',
                    '--image-preview-hover-gradient': userRole === 'vendor'
-                     ? 'linear-gradient(135deg, rgba(59, 130, 246, 0.05) 0%, rgba(14, 165, 233, 0.05) 100%)'
-                     : 'linear-gradient(135deg, rgba(245, 158, 11, 0.05) 0%, rgba(249, 115, 22, 0.05) 100%)'
+                     ? 'var(--primary-hover)'
+                     : 'var(--primary-hover)'
                  }"
                  style="border: 1px dashed #d1d5db; display: flex; align-items: center; justify-content: center; overflow: hidden; position: relative;">
               <img v-if="imagePreviewUrl"
@@ -778,12 +778,12 @@ export default {
 }
 
 .vendor-color-variant-card.is-default {
-  border-color: #bfdbfe;
+  border-color: var(--primary-light);
 }
 
 .default-badge {
   background: #eff6ff;
-  color: #1d4ed8;
+  color: var(--primary);
 }
 
 .sticky-card-actions {
@@ -826,16 +826,16 @@ export default {
 .color-search-input-vendor:focus,
 .selected-color-display-vendor.active {
   outline: none;
-  border-color: #3b82f6;
-  box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.12);
+  border-color: var(--primary);
+  box-shadow: 0 0 0 3px rgba(156, 59, 246, 0.12);
 }
 
 .vue-form-control-pm:focus,
 .color-search-input-pm:focus,
 .selected-color-display-pm.active {
   outline: none;
-  border-color: #f59e0b;
-  box-shadow: 0 0 0 3px rgba(245, 158, 11, 0.12);
+  border-color: var(--primary);
+  box-shadow: 0 0 0 3px rgba(156, 59, 246, 0.12);
 }
 
 .color-selection-container {
@@ -856,11 +856,11 @@ export default {
 }
 
 .selected-color-display-vendor:hover {
-  border-color: #60a5fa;
+  border-color: var(--primary);
 }
 
 .selected-color-display-pm:hover {
-  border-color: #fbbf24;
+  border-color: var(--primary);
 }
 
 .selected-color-preview {
@@ -964,23 +964,23 @@ export default {
 }
 
 .color-option-vendor:hover {
-  border-color: #93c5fd;
-  background: #eff6ff;
+  border-color: var(--primary-light);
+  background: #f7efff;
 }
 
 .color-option-pm:hover {
-  border-color: #fcd34d;
-  background: #fffbeb;
+  border-color: var(--primary-light);
+  background: #f7efff;
 }
 
 .color-option-vendor.selected {
-  border-color: #3b82f6;
-  background: #eff6ff;
+  border-color: var(--primary);
+  background: #f8efff;
 }
 
 .color-option-pm.selected {
-  border-color: #f59e0b;
-  background: #fffbeb;
+  border-color: var(--primary);
+  background: #f8efff;
 }
 
 .minimal-color-input {
@@ -1007,7 +1007,7 @@ export default {
 }
 
 .image-preview-container:hover {
-  border-color: var(--image-preview-hover-border, #3b82f6) !important;
+  border-color: var(--image-preview-hover-border, var(--primary)) !important;
 }
 
 .image-preview-container.has-image {
@@ -1034,23 +1034,23 @@ export default {
 }
 
 .vue-btn-blue-solid-vendor {
-  background: #2563eb;
-  border-color: #2563eb;
+  background: var(--primary);
+  border-color: var(--primary-light);
 }
 
 .vue-btn-blue-solid-vendor:hover {
-  background: #1d4ed8;
-  border-color: #1d4ed8;
+  background: var(--primary-hover);
+  border-color: var(--primary-light);
 }
 
 .vue-btn-blue-solid {
-  background: #f59e0b;
-  border-color: #f59e0b;
+  background: var(--primary);
+  border-color: var(--primary-light);
 }
 
 .vue-btn-blue-solid:hover {
-  background: #d97706;
-  border-color: #d97706;
+  background: var(--primary-hover);
+  border-color: var(--primary-light);
 }
 
 .rtl {
@@ -1131,7 +1131,7 @@ export default {
   }
 
   .vendor-color-variant-card.is-default {
-    border-color: #3b82f6;
+    border-color: var(--primary);
   }
 
   .sticky-card-actions {
@@ -1150,8 +1150,8 @@ export default {
   }
 
   .default-badge {
-    background: rgba(30, 58, 138, 0.35);
-    color: #bfdbfe;
+    background: rgba(89, 30, 138, 0.35);
+    color: #eabffe;
   }
 
   .vue-form-control,
@@ -1185,12 +1185,12 @@ export default {
 
   .color-option-vendor:hover,
   .color-option-vendor.selected {
-    background: rgba(37, 99, 235, 0.2);
+    background: rgba(146, 37, 235, 0.2);
   }
 
   .color-option-pm:hover,
   .color-option-pm.selected {
-    background: rgba(245, 158, 11, 0.2);
+    background: rgba(140, 11, 245, 0.2);
   }
 
   .compact-image-frame {

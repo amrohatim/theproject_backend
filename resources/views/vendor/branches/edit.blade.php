@@ -68,7 +68,7 @@
     .form-input:focus,
     .form-textarea:focus,
     .form-select:focus {
-        border-color: #3b82f6;
+        border-color: var(--primary);
         box-shadow: none;
         outline: none;
     }
@@ -79,7 +79,7 @@
     .dark .form-input:focus,
     .dark .form-textarea:focus,
     .dark .form-select:focus {
-        border-color: #3b82f6;
+        border-color: var(--primary);
     }
 
     /* Filled State */
@@ -312,7 +312,7 @@
                     <div class="relative">
                         <input type="text" name="address" id="address" value="{{ old('address', $branch->address) }}" class="form-input modern-input bg-gray-100 dark:bg-gray-600 cursor-not-allowed" readonly required>
                         <div id="address-loading" class="absolute right-3 top-1/2 transform -translate-y-1/2 hidden">
-                            <svg class="animate-spin h-4 w-4 text-indigo-500" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                            <svg class="animate-spin h-4 w-4 text-[var(--primary)]" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
                                 <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
                                 <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
                             </svg>
@@ -367,7 +367,7 @@
                     <div class="bg-gray-50 dark:bg-gray-700 p-4 rounded-md border border-gray-200 dark:border-gray-600">
                         <div class="flex flex-col space-y-4">
                             <div class="flex items-center">
-                                <input type="checkbox" name="use_company_image" id="use_company_image" value="1" class="form-checkbox h-5 w-5 text-indigo-600 dark:text-indigo-400" {{ old('use_company_image', $branch->use_company_image) ? 'checked' : '' }}>
+                                <input type="checkbox" name="use_company_image" id="use_company_image" value="1" class="form-checkbox h-5 w-5 text-[var(--primary)] dark:text-[var(--primary)]" {{ old('use_company_image', $branch->use_company_image) ? 'checked' : '' }}>
                                 <label for="use_company_image" class="ml-2 text-gray-700 dark:text-gray-300">{{ __('messages.use_company_image') }}</label>
                             </div>
 
@@ -385,7 +385,7 @@
 
                                 <label for="branch_image" class="block text-sm font-medium text-gray-700 dark:text-gray-300">{{ $branch->branch_image ? __('messages.change_branch_image') : __('messages.upload_branch_image') }}</label>
                                 <div class="mt-1 flex items-center">
-                                    <input type="file" name="branch_image" id="branch_image" accept="image/jpeg,image/png,image/webp" class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-white rounded-md">
+                                    <input type="file" name="branch_image" id="branch_image" accept="image/jpeg,image/png,image/webp" class="mt-1 focus:ring-[var(--primary)] focus:border-[var(--primary)] block w-full shadow-sm sm:text-sm border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-white rounded-md">
                                 </div>
                                 <p class="mt-1 text-sm text-gray-500 dark:text-gray-400">{{ __('messages.image_upload_requirements') }}</p>
                                 @error('branch_image')
@@ -416,7 +416,7 @@
                             <div class="flex flex-col space-y-2 p-3 bg-white dark:bg-gray-800 rounded-md shadow-sm">
                                 <div class="flex items-center justify-between">
                                     <label class="inline-flex items-center">
-                                        <input type="checkbox" name="days_open[{{ $day }}]" value="1" class="form-checkbox h-5 w-5 text-indigo-600 dark:text-indigo-400" {{ $isOpen ? 'checked' : '' }}>
+                                        <input type="checkbox" name="days_open[{{ $day }}]" value="1" class="form-checkbox h-5 w-5 text-[var(--primary)] dark:text-[var(--primary)]" {{ $isOpen ? 'checked' : '' }}>
                                         <span class="ml-2 text-gray-700 dark:text-gray-300 capitalize">{{ __('messages.' . $day) }}</span>
                                     </label>
                                     <span class="text-xs {{ $isOpen ? 'text-green-500' : 'text-red-500' }} dark:text-gray-400" id="{{ $day }}_status">{{ $isOpen ? __('messages.open') : __('messages.closed') }}</span>
@@ -424,11 +424,11 @@
                                 <div class="grid grid-cols-2 gap-2 mt-2 {{ $isOpen ? '' : 'hidden' }}" id="{{ $day }}_hours">
                                     <div>
                                         <label for="{{ $day }}_open" class="block text-xs font-medium text-gray-700 dark:text-gray-300">{{ __('messages.opening_time') }}</label>
-                                        <input type="time" name="opening_hours[{{ $day }}][open]" id="{{ $day }}_open" value="{{ $openTime }}" class="mt-1 block w-full py-2 px-3 border border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-white bg-white rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
+                                        <input type="time" name="opening_hours[{{ $day }}][open]" id="{{ $day }}_open" value="{{ $openTime }}" class="mt-1 block w-full py-2 px-3 border border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-white bg-white rounded-md shadow-sm focus:outline-none focus:ring-[var(--primary)] focus:border-[var(--primary)] sm:text-sm">
                                     </div>
                                     <div>
                                         <label for="{{ $day }}_close" class="block text-xs font-medium text-gray-700 dark:text-gray-300">{{ __('messages.closing_time') }}</label>
-                                        <input type="time" name="opening_hours[{{ $day }}][close]" id="{{ $day }}_close" value="{{ $closeTime }}" class="mt-1 block w-full py-2 px-3 border border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-white bg-white rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
+                                        <input type="time" name="opening_hours[{{ $day }}][close]" id="{{ $day }}_close" value="{{ $closeTime }}" class="mt-1 block w-full py-2 px-3 border border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-white bg-white rounded-md shadow-sm focus:outline-none focus:ring-[var(--primary)] focus:border-[var(--primary)] sm:text-sm">
                                     </div>
                                 </div>
                             </div>
@@ -439,10 +439,10 @@
 
             <!-- Submit Button for Branch Information -->
             <div class="mt-6 flex items-center justify-end">
-                <a href="{{ route('vendor.branches.show', $branch->id) }}" class="inline-flex items-center px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm text-sm font-medium text-gray-700 dark:text-gray-300 bg-white dark:bg-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 mr-4">
+                <a href="{{ route('vendor.branches.show', $branch->id) }}" class="inline-flex items-center px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm text-sm font-medium text-gray-700 dark:text-gray-300 bg-white dark:bg-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-[var(--primary)] mr-4">
                     {{ __('messages.cancel') }}
                 </a>
-                <button type="submit" class="inline-flex items-center px-4 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
+                <button type="submit" class="inline-flex items-center px-4 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-[var(--primary)] hover:bg-[var(--primary)] focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-[var(--primary)]">
                     {{ __('messages.update_branch_information') }}
                 </button>
             </div>
@@ -524,7 +524,7 @@
                                     <path d="M28 8H12a4 4 0 00-4 4v20m32-12v8m0 0v8a4 4 0 01-4 4H12a4 4 0 01-4-4v-4m32-4l-3.172-3.172a4 4 0 00-5.656 0L28 28M8 32l9.172-9.172a4 4 0 015.656 0L28 28m0 0l4 4m4-24h8m-4-4v8m-12 4h.02" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
                                 </svg>
                                 <div class="flex text-sm text-gray-600 dark:text-gray-400">
-                                    <label for="license_file" class="relative cursor-pointer bg-white dark:bg-gray-800 rounded-md font-medium text-indigo-600 dark:text-indigo-400 hover:text-indigo-500 focus-within:outline-none focus-within:ring-2 focus-within:ring-offset-2 focus-within:ring-indigo-500">
+                                    <label for="license_file" class="relative cursor-pointer bg-white dark:bg-gray-800 rounded-md font-medium text-[var(--primary)] dark:text-[var(--primary)] hover:text-[var(--primary-hover)] focus-within:outline-none focus-within:ring-2 focus-within:ring-offset-2 focus-within:ring-[var(--primary)]">
                                         <span>{{ __('messages.click_to_upload') }}</span>
                                         <input id="license_file" name="license_file" type="file" class="sr-only" accept=".pdf">
                                     </label>
@@ -567,7 +567,7 @@
 
             <!-- Submit Button for License -->
             <div class="mt-6 flex items-center justify-end">
-                <a href="{{ route('vendor.branches.show', $branch->id) }}" class="inline-flex items-center px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm text-sm font-medium text-gray-700 dark:text-gray-300 bg-white dark:bg-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 mr-4">
+                <a href="{{ route('vendor.branches.show', $branch->id) }}" class="inline-flex items-center px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm text-sm font-medium text-gray-700 dark:text-gray-300 bg-white dark:bg-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-[var(--primary)] mr-4">
                     {{ __('messages.cancel') }}
                 </a>
                 <button type="submit" class="inline-flex items-center px-4 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-green-600 hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500">
@@ -1030,17 +1030,17 @@
         // Handle drag and drop
         licenseUploadArea.addEventListener('dragover', function(e) {
             e.preventDefault();
-            licenseUploadArea.classList.add('border-indigo-500', 'bg-indigo-50', 'dark:bg-indigo-900/20');
+            licenseUploadArea.classList.add('border-[var(--primary)]', 'bg-[var(--primary)], 'dark:bg-[var(--primary)]/20');
         });
 
         licenseUploadArea.addEventListener('dragleave', function(e) {
             e.preventDefault();
-            licenseUploadArea.classList.remove('border-indigo-500', 'bg-indigo-50', 'dark:bg-indigo-900/20');
+            licenseUploadArea.classList.remove('border-[var(--primary)]', 'bg-[var(--primary)], 'dark:bg-[var(--primary)]/20');
         });
 
         licenseUploadArea.addEventListener('drop', function(e) {
             e.preventDefault();
-            licenseUploadArea.classList.remove('border-indigo-500', 'bg-indigo-50', 'dark:bg-indigo-900/20');
+            licenseUploadArea.classList.remove('border-[var(--primary)]', 'bg-[var(--primary)], 'dark:bg-[var(--primary)]/20');
 
             const files = e.dataTransfer.files;
             if (files.length > 0) {

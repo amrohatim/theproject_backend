@@ -287,7 +287,7 @@
               </div>
               <button type="button" @click="addNewColor" style="color: #ffffff;
   border-color: transparent;
-  box-shadow: 0 2px 4px 0 var(--theme-shadow);" class="vue-btn w-48 justify-center sm:w-auto" :class="userRole === 'vendor' ? 'bg-blue-400 hover:bg-blue-500' : 'bg-orange-400 hover:bg-orange-500'">
+  " class="vue-btn w-48 justify-center bg-[var(--primary)] hover:bg-[var(--primary-hover)] sm:w-auto">
                 <i class="fas fa-plus w-4 h-4"></i>
                 {{ $t('vendor.add_color') }}
               </button>
@@ -323,7 +323,7 @@
               <p class="text-sm sm:text-base text-gray-500 mb-4">{{ $t('vendor.add_color_variants_appealing') }}</p>
               <button type="button" @click="addNewColor" style="color: #ffffff;
   border-color: transparent;
-  box-shadow: 0 2px 4px 0 var(--theme-shadow);" class="vue-btn w-48 justify-center sm:w-auto" :class="userRole === 'vendor' ? 'bg-blue-400 hover:bg-blue-500' : 'bg-orange-400 hover:bg-orange-500'">
+  " class="vue-btn w-48 justify-center bg-[var(--primary)] hover:bg-[var(--primary-hover)] sm:w-auto">
                 <i class="fas fa-plus mr-2"></i>
                 {{ $t('vendor.add_first_color') }}
               </button>
@@ -375,7 +375,7 @@
               </div>
               <button type="button" @click="addNewSpecification" style="color: #ffffff;
   border-color: transparent;
-  box-shadow: 0 2px 4px 0 var(--theme-shadow);" class="vue-btn w-48 justify-center sm:w-auto" :class="userRole === 'vendor' ? 'bg-blue-400 hover:bg-blue-500' : 'bg-orange-400 hover:bg-orange-500'">
+" class="vue-btn w-48 justify-center bg-[var(--primary)] hover:bg[var(--primary-hover)] sm:w-auto">
                 <i class="fas fa-plus w-4 h-4"></i>
                 {{ $t('vendor.add_specification') }}
               </button>
@@ -399,9 +399,9 @@
               <i class="fas fa-file-text text-gray-400 text-3xl sm:text-4xl mb-3 sm:mb-4"></i>
               <h3 class="text-base sm:text-lg font-medium text-gray-900 mb-2">{{ $t('vendor.no_specifications_added_yet') }}</h3>
               <p class="text-sm sm:text-base text-gray-500 mb-4">{{ $t('vendor.add_specifications_detailed_info') }}</p>
-              <button type="button" @click="addNewSpecification" class="vue-btn w-48 justify-center sm:w-auto" style="color: #ffffff;
+              <button type="button" @click="addNewSpecification" class="vue-btn w-48 justify-center bg-[var(--primary)] hover:bg-[var(--primary-hover)] sm:w-auto" style="color: #ffffff;
   border-color: transparent;
-  box-shadow: 0 2px 4px 0 var(--theme-shadow);" :class="userRole === 'vendor' ? 'bg-blue-400 hover:bg-blue-500' : 'bg-orange-400 hover:bg-orange-500'">
+">
                 <i class="fas fa-plus mr-2"></i>
                 {{ $t('vendor.add_first_specification') }}
               </button>
@@ -428,9 +428,9 @@
                 v-if="activeTab !== 'specifications'"
                 type="button"
                 @click="nextTab"
-                class="vue-btn w-48 justify-center  sm:w-auto" style="color: #ffffff;
+                class="vue-btn w-48 justify-center bg-[var(--primary)] hover:bg-[var(--primary-hover)]  sm:w-auto" style="color: #ffffff;
   border-color: transparent;
-  box-shadow: 0 2px 4px 0 var(--theme-shadow);" :class="userRole === 'vendor' ? 'bg-blue-400 hover:bg-blue-500' : 'bg-orange-400 hover:bg-orange-500'"
+  "
               >
                 {{ $t('vendor.next') }}
                 <i :class="['fas', isRTL ? 'fa-arrow-left' : 'fa-arrow-right', isRTL ? 'mx-2' : 'ml-2']"></i>
@@ -440,7 +440,7 @@
                 type="button"
                 @click="saveProduct"
                 :disabled="saving"
-                class="vue-btn vue-btn-success w-48 justify-center sm:w-auto"
+                class="vue-btn bg-[var(--primary)] text-white hover:bg-[var(--primary-hover)] w-48 justify-center sm:w-auto"
               >
                 <i v-if="saving" class="fas fa-spinner fa-spin" :class="isRTL ? 'ml-2' : 'mr-2'"></i>
                 <i v-else class="fas fa-save" :class="isRTL ? 'mx-2' : 'mr-2'"></i>
@@ -633,23 +633,23 @@ export default {
     const themeColors = computed(() => {
       if (props.userRole === 'products_manager') {
         return {
-          primary: '#f59e0b', // Orange
-          primaryHover: '#f97316',
-          primaryLight: '#fef3c7',
-          primaryDark: '#ea580c',
-          gradient: 'linear-gradient(135deg, #f59e0b 0%, #f97316 100%)',
-          shadow: 'rgba(245, 158, 11, 0.4)',
-          ring: 'rgba(245, 158, 11, 0.1)'
+          primary: 'var(--primary)', // Orange
+          primaryHover: 'var(--primary-hover)',
+          primaryLight: 'var(--primary-light)',
+          primaryDark: 'var(--primary)',
+          gradient: 'linear-gradient(135deg, var(--primary) 0%, var(--primary) 100%)',
+          shadow: 'var(--primary-light)',
+          ring: 'var(--primary)'
         }
       } else {
         return {
-          primary: '#3b82f6', // Blue
-          primaryHover: '#2563eb',
-          primaryLight: '#dbeafe',
-          primaryDark: '#1d4ed8',
-          gradient: 'linear-gradient(135deg, #3b82f6 0%, #2563eb 100%)',
-          shadow: 'rgba(59, 130, 246, 0.4)',
-          ring: 'rgba(59, 130, 246, 0.1)'
+          primary: 'var(--primary)', // Orange
+          primaryHover: 'var(--primary-hover)',
+          primaryLight: 'var(--primary-light)',
+          primaryDark: 'var(--primary)',
+          gradient: 'linear-gradient(135deg, var(--primary) 0%, var(--primary) 100%)',
+          shadow: 'var(--primary-light)',
+          ring: 'var(--primary)'
         }
       }
     })
@@ -1297,14 +1297,14 @@ export default {
 }
 
 .vue-btn-success {
-  background-color: #10b981;
+  background-color: var(--primary);
   color: #ffffff;
-  border-color: #10b981;
+  border-color: var(--primary);
 }
 
 .vue-btn-success:hover:not(:disabled) {
-  background-color: #059669;
-  border-color: #059669;
+  background-color: var(--primary);
+  border-color: var(--primary-hover);
 }
 
 .vue-card {
@@ -1331,7 +1331,7 @@ export default {
   }
 
   .vue-form-control:focus {
-    border-color: #6366f1;
+    border-color: var(--primary);
     box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.1);
   }
 
@@ -1429,13 +1429,13 @@ export default {
 
 /* Dynamic Theme Styles */
 .themed-tab.active-tab {
-  border-color: var(--theme-primary) !important;
-  color: var(--theme-primary) !important;
+  border-color: var(--primary) !important;
+  color: var(--primary) !important;
 }
 
 .themed-tab.active-tab:hover {
-  border-color: var(--theme-primary-hover) !important;
-  color: var(--theme-primary-hover) !important;
+  border-color: var(--primary-hover) !important;
+  color: var(--primary-hover) !important;
 }
 
 .vendor-product-create-app.rtl .justify-between {

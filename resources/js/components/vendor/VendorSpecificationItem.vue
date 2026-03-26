@@ -105,8 +105,8 @@ export default {
 
 .vue-form-control:focus {
   outline: none;
-  border-color: var(--spec-focus-border, #3b82f6);
-  box-shadow: 0 0 0 3px var(--spec-focus-ring, rgba(59, 130, 246, 0.1));
+  border-color: var(--primary);
+  box-shadow: 0 0 0 3px var(--spec-focus-ring, rgba(215, 59, 246, 0.1));
 }
 
 .specification-item {
@@ -165,7 +165,7 @@ export default {
   }
 
   .vue-form-control:focus {
-    border-color: var(--spec-focus-border, #3b82f6);
+    border-color: var(--spec-focus-border, var(--primary));
     box-shadow: 0 0 0 3px var(--spec-focus-ring, rgba(59, 130, 246, 0.1));
   }
 

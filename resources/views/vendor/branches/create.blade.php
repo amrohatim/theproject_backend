@@ -62,15 +62,15 @@
 /* Active State (Focus) */
 .form-input.active, .form-textarea.active, .form-select.active,
 .form-input:focus, .form-textarea:focus, .form-select:focus {
-    border-color: #3B82F6;
+    border-color: var(--primary);
     border-width: 2px;
-    background-color: #FFFFFF;
+    background-color: #A46BC1;
     outline: none;
 }
 
 .dark .form-input.active, .dark .form-textarea.active, .dark .form-select.active,
 .dark .form-input:focus, .dark .form-textarea:focus, .dark .form-select:focus {
-    border-color: #60A5FA;
+    border-color: var(--primary);
     border-width: 2px;
     background-color: #1F2937;
     outline: none;
@@ -206,12 +206,12 @@
 }
 
 .form-file-input:focus {
-    border-color: #3B82F6;
+    border-color: #A46BC1;
     box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
 }
 
 .dark .form-file-input:focus {
-    border-color: #60A5FA;
+    border-color: #af60faff;
     box-shadow: 0 0 0 3px rgba(96, 165, 250, 0.1);
 }
 
@@ -353,7 +353,7 @@
                     <div class="relative">
                         <input type="text" name="address" id="address" value="{{ old('address') }}" class="form-input cursor-not-allowed" readonly required>
                         <div id="address-loading" class="absolute right-3 top-1/2 transform -translate-y-1/2 hidden">
-                            <svg class="animate-spin h-4 w-4 text-indigo-500" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                            <svg class="animate-spin h-4 w-4 text-[var(--primary)]" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
                                 <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
                                 <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
                             </svg>
@@ -426,7 +426,7 @@
                     <div class="bg-gray-50 dark:bg-gray-700 p-4 rounded-md border border-gray-200 dark:border-gray-600">
                         <div class="flex flex-col space-y-4">
                             <div class="flex items-center">
-                                <input type="checkbox" name="use_company_image" id="use_company_image" value="1" class="form-checkbox h-5 w-5 text-indigo-600 dark:text-indigo-400" {{ old('use_company_image', '1') ? 'checked' : '' }}>
+                                <input type="checkbox" name="use_company_image" id="use_company_image" value="1" class="form-checkbox h-5 w-5 text-[var(--primary)] dark:text-[var(--primary)]" {{ old('use_company_image', '1') ? 'checked' : '' }}>
                                 <label for="use_company_image" class="ml-2 text-gray-700 dark:text-gray-300">{{ __('messages.use_company_image') }}</label>
                             </div>
 
@@ -454,7 +454,7 @@
                             <div class="flex flex-col space-y-2 p-3 bg-white dark:bg-gray-800 rounded-md shadow-sm">
                                 <div class="flex items-center justify-between">
                                     <label class="inline-flex items-center">
-                                        <input type="checkbox" name="days_open[{{ $day }}]" value="1" class="form-checkbox h-5 w-5 text-indigo-600 dark:text-indigo-400" checked>
+                                        <input type="checkbox" name="days_open[{{ $day }}]" value="1" class="form-checkbox  h-5 w-5 text-[var(--primary)] dark:text-[var(--primary)]" checked>
                                         <span class="ml-2 text-gray-700 dark:text-gray-300 capitalize">{{ __('messages.' . $day) }}</span>
                                     </label>
                                     <span class="text-xs text-gray-500 dark:text-gray-400" id="{{ $day }}_status">{{ __('messages.open') }}</span>
@@ -522,7 +522,7 @@
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12"></path>
                                 </svg>
                                 <p class="text-gray-600 dark:text-gray-400 mb-2">
-                                    <span class="font-medium text-indigo-600 dark:text-indigo-400 cursor-pointer">{{ __('messages.click_to_upload') }}</span> {{ __('messages.or_drag_and_drop') }}
+                                    <span class="font-medium text-[var(--primary)] dark:text-[var(--primary)] hover:text-[var(--primary-hover)] cursor-pointer">{{ __('messages.click_to_upload') }}</span> {{ __('messages.or_drag_and_drop') }}
                                 </p>
                                 <p class="text-sm text-gray-500 dark:text-gray-400">{{ __('messages.pdf_files_only_max_10mb') }}</p>
                             </div>
@@ -560,10 +560,10 @@
             </div>
 
             <div class="mt-6 flex items-center justify-end">
-                <a href="{{ route('vendor.branches.index') }}" class="inline-flex items-center px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm text-sm font-medium text-gray-700 dark:text-gray-300 bg-white dark:bg-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 mr-4">
+                <a href="{{ route('vendor.branches.index') }}" class="inline-flex items-center px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm text-sm font-medium text-gray-700 dark:text-gray-300 bg-white dark:bg-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-[var(--primary)] mr-4">
                     {{ __('messages.cancel') }}
                 </a>
-                <button type="submit" class="inline-flex items-center px-4 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
+                <button type="submit" class="inline-flex items-center px-4 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-[var(--primary)] hover:bg-[var(--primary)] focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-[var(--primary)]">
                     {{ __('messages.create_branch') }}
                 </button>
             </div>
@@ -973,17 +973,17 @@
 
         licenseUploadArea.addEventListener('dragover', function(e) {
             e.preventDefault();
-            this.classList.add('border-indigo-400', 'bg-indigo-50', 'dark:bg-indigo-900/20');
+            this.classList.add('border-[var(--primary)]', 'bg-[var(--primary)], 'dark:bg-[var(--primary)]/20');
         });
 
         licenseUploadArea.addEventListener('dragleave', function(e) {
             e.preventDefault();
-            this.classList.remove('border-indigo-400', 'bg-indigo-50', 'dark:bg-indigo-900/20');
+            this.classList.remove('border-[var(--primary)]', 'bg-[var(--primary)], 'dark:bg-[var(--primary)]/20');
         });
 
         licenseUploadArea.addEventListener('drop', function(e) {
             e.preventDefault();
-            this.classList.remove('border-indigo-400', 'bg-indigo-50', 'dark:bg-indigo-900/20');
+            this.classList.remove('border-[var(--primary)]', 'bg-[var(--primary)], 'dark:bg-[var(--primary)]/20');
 
             const files = e.dataTransfer.files;
             if (files.length > 0) {

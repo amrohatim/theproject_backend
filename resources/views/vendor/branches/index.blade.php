@@ -24,7 +24,7 @@ use Illuminate\Support\Facades\Storage;
 
         .responsive-table tbody tr {
             margin-bottom: 1rem;
-            border: 1px solid #3b82f6 !important;
+            border: 1px solid var(--primary) !important;
             border-radius: 0.375rem !important;
             overflow: hidden;
             background-color: #ffffff;
@@ -33,7 +33,7 @@ use Illuminate\Support\Facades\Storage;
 
         .dark .responsive-table tbody tr {
             background-color: #1f2937;
-            border-color: #60a5fa !important;
+            border-color: var(--primary) !important;
         }
 
         .responsive-table td {
@@ -74,7 +74,7 @@ use Illuminate\Support\Facades\Storage;
             <p class="mt-1 text-gray-600 dark:text-gray-400">{{ __('messages.manage_your_company_branches') }}</p>
         </div>
         <div class="mt-4 md:mt-0">
-            <a href="{{ route('vendor.branches.create') }}" class="inline-flex items-center px-4 py-2 bg-indigo-600 border border-transparent rounded-md font-semibold text-xs text-white uppercase tracking-widest hover:bg-indigo-700 active:bg-indigo-900 focus:outline-none focus:border-indigo-900 focus:ring ring-indigo-300 disabled:opacity-25 transition ease-in-out duration-150">
+            <a href="{{ route('vendor.branches.create') }}" class="inline-flex items-center px-4 py-2 bg-[var(--primary)] border border-transparent rounded-md font-semibold text-xs text-white uppercase tracking-widest hover:bg-[var(--primary)] active:bg-[var(--primary)] focus:outline-none focus:border-[var(--primary)] focus:ring ring-[var(--primary)] disabled:opacity-25 transition ease-in-out duration-150">
                 <i class="fas fa-plus mr-2"></i> {{ __('messages.add_branch') }}
             </a>
         </div>
@@ -90,14 +90,14 @@ use Illuminate\Support\Facades\Storage;
                         <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
                             <i class="fas fa-search text-gray-400"></i>
                         </div>
-                        <input type="text" name="search" id="search" value="{{ request('search') }}" class="focus:ring-indigo-500 focus:border-indigo-500 block w-full pl-10 sm:text-sm border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-white rounded-md" placeholder="{{ __('messages.search_branches') }}">
+                        <input type="text" name="search" id="search" value="{{ request('search') }}" class="focus:ring-[var(--primary)] focus:border-[var(--primary)] block w-full pl-10 sm:text-sm   dark:bg-gray-700 dark:text-white rounded-md" placeholder="{{ __('messages.search_branches') }}">
                     </div>
                 </div>
 
                 <div>
                     <label for="status" class="block text-sm font-medium text-gray-700 dark:text-gray-300">{{ __('messages.status') }}</label>
-                    <select id="status" name="status" class="mt-1 block w-full pl-3 pr-10 py-2 text-base border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-white focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm rounded-md">
-                        <option value="">{{ __('messages.all_status') }}</option>
+                    <select id="status" name="status" class="mt-1 block w-full pl-3 pr-10 py-2 text-base border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-white focus:outline-none focus:ring-[var(--primary)] focus:border-[var(--primary)] sm:text-sm rounded-md">
+                        <option value="" class=>{{ __('messages.all_status') }}</option>
                         <option value="active" {{ request('status') == 'active' ? 'selected' : '' }}>{{ __('messages.active') }}</option>
                         <option value="inactive" {{ request('status') == 'inactive' ? 'selected' : '' }}>{{ __('messages.inactive') }}</option>
                     </select>
@@ -105,7 +105,7 @@ use Illuminate\Support\Facades\Storage;
 
                 <div>
                     <label for="sort" class="block text-sm font-medium text-gray-700 dark:text-gray-300">{{ __('messages.sort_by') }}</label>
-                    <select id="sort" name="sort" class="mt-1 block w-full pl-3 pr-10 py-2 text-base border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-white focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm rounded-md">
+                    <select id="sort" name="sort" class="mt-1 block w-full pl-3 pr-10 py-2 text-base border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-white focus:outline-none focus:ring-[var(--primary)] focus:border-[var(--primary)] sm:text-sm rounded-md">
                         <option value="newest" {{ request('sort', 'newest') == 'newest' ? 'selected' : '' }}>{{ __('messages.newest_first') }}</option>
                         <option value="oldest" {{ request('sort') == 'oldest' ? 'selected' : '' }}>{{ __('messages.oldest_first') }}</option>
                         <option value="name_asc" {{ request('sort') == 'name_asc' ? 'selected' : '' }}>{{ __('messages.name_a_z') }}</option>
@@ -115,7 +115,7 @@ use Illuminate\Support\Facades\Storage;
             </div>
 
             <div class="flex justify-end">
-                <button type="submit" class="inline-flex items-center px-4 py-2 bg-indigo-600 border border-transparent rounded-md font-semibold text-xs text-white uppercase tracking-widest hover:bg-indigo-700 active:bg-indigo-900 focus:outline-none focus:border-indigo-900 focus:ring ring-indigo-300 disabled:opacity-25 transition ease-in-out duration-150">
+                <button type="submit" class="inline-flex items-center px-4 py-2 bg-[var(--primary)] border border-transparent rounded-md font-semibold text-xs text-white uppercase tracking-widest hover:bg-[var(--primary)] active:bg-[var(--primary)] focus:outline-none focus:border-[var(--primary)] focus:ring ring-[var(--primary)] disabled:opacity-25 transition ease-in-out duration-150">
                     <i class="fas fa-filter mr-2"></i> {{ __('messages.filter') }}
                 </button>
             </div>
@@ -153,8 +153,8 @@ use Illuminate\Support\Facades\Storage;
                                     @if($branchImage)
                                         <img src="{{ $branchImage }}" alt="{{ $branch->name }}" class="h-10 w-10 rounded-md object-cover">
                                     @else
-                                        <div class="h-10 w-10 rounded-md bg-indigo-100 dark:bg-indigo-900 flex items-center justify-center">
-                                            <i class="fas fa-store text-indigo-600 dark:text-indigo-400"></i>
+                                        <div class="h-10 w-10 rounded-md bg-[var(--primary)] dark:bg-[var(--primary)] flex items-center justify-center">
+                                            <i class="fas fa-store text-[var(--primary)] dark:text-[var(--primary)]"></i>
                                         </div>
                                     @endif
                                 </div>
@@ -171,7 +171,7 @@ use Illuminate\Support\Facades\Storage;
                         <td class="px-6 py-4 whitespace-nowrap" data-label="Business Type">
                             <div class="text-sm text-gray-900 dark:text-white">
                                 @if($branch->business_type)
-                                    <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-blue-100 text-blue-800 dark:bg-blue-900 dark:text-blue-200">
+                                    <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-[var(--primary-light)] text-[var(--primary)] dark:bg-[var(--primary-light)] dark:text-[var(--primary)]">
                                         <i class="fas fa-industry mr-1"></i>
                                         {{ $branch->business_type }}
                                     </span>
@@ -225,10 +225,10 @@ use Illuminate\Support\Facades\Storage;
                             </span>
                         </td>
                         <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium" data-label="{{ __('messages.actions') }}">
-                            <a href="{{ route('vendor.branches.show', $branch->id) }}" class="text-blue-600 dark:text-blue-400 hover:text-blue-900 dark:hover:text-blue-300 mr-3" title="{{ __('messages.view') }}">
+                            <a href="{{ route('vendor.branches.show', $branch->id) }}" class="text-[var(--primary)] dark:text-[var(--primary)] hover:text-[var(--primary)] dark:hover:text-[var(--primary)] mr-3" title="{{ __('messages.view') }}">
                                 <i class="fas fa-eye"></i>
                             </a>
-                            <a href="{{ route('vendor.branches.edit', $branch->id) }}" class="text-indigo-600 dark:text-indigo-400 hover:text-indigo-900 dark:hover:text-indigo-300 mr-3" title="{{ __('messages.edit') }}">
+                            <a href="{{ route('vendor.branches.edit', $branch->id) }}" class="text-[var(--primary)] dark:text-[var(--primary)] hover:text-[var(--primary)] dark:hover:text-[var(--primary)] mr-3" title="{{ __('messages.edit') }}">
                                 <i class="fas fa-edit"></i>
                             </a>
                             <form action="{{ route('vendor.branches.destroy', $branch->id) }}" method="POST" class="inline">
@@ -246,7 +246,7 @@ use Illuminate\Support\Facades\Storage;
                             <div class="flex flex-col items-center justify-center py-4">
                                 <i class="fas fa-store text-gray-300 dark:text-gray-600 text-5xl mb-4"></i>
                                 <p>{{ __('messages.no_branches_found') }}</p>
-                                <a href="{{ route('vendor.branches.create') }}" class="mt-2 inline-flex items-center px-4 py-2 bg-indigo-600 border border-transparent rounded-md font-semibold text-xs text-white uppercase tracking-widest hover:bg-indigo-700 active:bg-indigo-900 focus:outline-none focus:border-indigo-900 focus:ring ring-indigo-300 disabled:opacity-25 transition ease-in-out duration-150">
+                                <a href="{{ route('vendor.branches.create') }}" class="mt-2 inline-flex items-center px-4 py-2 bg-[var(--primary)] border border-transparent rounded-md font-semibold text-xs text-white uppercase tracking-widest hover:bg-[var(--primary)] active:bg-[var(--primary)] focus:outline-none focus:border-[var(--primary)] focus:ring ring-[var(--primary)] disabled:opacity-25 transition ease-in-out duration-150">
                                     <i class="fas fa-plus mr-2"></i> {{ __('messages.add_branch') }}
                                 </a>
                             </div>

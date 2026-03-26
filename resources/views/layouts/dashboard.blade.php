@@ -23,6 +23,8 @@
     <link rel="stylesheet" href="{{ asset('css/modern-buttons.css') }}">
     <!-- Global Styles -->
     <link rel="stylesheet" href="{{ asset('css/global-styles.css') }}">
+    <link rel="stylesheet" href="{{ asset('css/global.css') }}">
+
     @if($isDashboardRtl)
     <!-- RTL Styles -->
     <link rel="stylesheet" href="{{ asset('css/rtl.css') }}">
@@ -30,7 +32,7 @@
     <!-- Custom styles -->
     <style>
         .sidebar-active {
-            background-color: #4f46e5;
+            background-color: var(--primary);
             color: white;
         }
         .sidebar-item:hover:not(.sidebar-active) {
@@ -84,7 +86,7 @@
             <div class="flex flex-col h-full">
                 <!-- Sidebar header -->
                 <div class="flex items-center justify-center h-16 px-4 border-b border-gray-200 dark:border-gray-700">
-                    <h1 class="text-xl font-bold text-indigo-600 dark:text-indigo-400">glowlabs</h1>
+                    <h1 class="text-xl font-bold text-[var(--primary)] dark:text-[var(--primary)]">glowlabs</h1>
                 </div>
 
                 <!-- Sidebar content -->
@@ -92,7 +94,7 @@
                     <div class="flex-grow px-4 py-2">
                         <div class="py-4">
                             <div class="flex items-center mb-4">
-                                <div class="w-10 h-10 rounded-full bg-indigo-500 flex items-center justify-center text-white">
+                                <div class="w-10 h-10 rounded-full bg-[var(--primary)] flex items-center justify-center text-white">
                                     <i class="fas fa-user"></i>
                                 </div>
                                 <div class="ml-3">

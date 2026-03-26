@@ -131,7 +131,7 @@
     <div class="bg-white dark:bg-gray-800 rounded-lg shadow mb-8 border border-gray-200 dark:border-gray-700">
         <div class="flex items-center justify-between p-6 border-b border-gray-200 dark:border-gray-700">
             <h3 class="text-lg font-semibold text-gray-800 dark:text-white">{{ __('messages.recent_products') }}</h3>
-            <a href="{{ route('vendor.products.index') }}" class="text-indigo-600 dark:text-indigo-400 hover:text-indigo-800 dark:hover:text-indigo-300 text-sm font-medium">View All</a>
+            <a href="{{ route('vendor.products.index') }}" class="text-[var(--primary)] dark:text-indigo-400 hover:text-indigo-800 dark:hover:text-indigo-300 text-sm font-medium">{{__('messages.view_all')}}</a>
         </div>
         <div class="overflow-x-auto">
             <table class="min-w-full divide-y divide-gray-200 dark:divide-gray-700">
@@ -206,7 +206,7 @@
     <div class="bg-white dark:bg-gray-800 rounded-lg shadow mb-8 border border-gray-200 dark:border-gray-700">
         <div class="flex items-center justify-between p-6 border-b border-gray-200 dark:border-gray-700">
             <h3 class="text-lg font-semibold text-gray-800 dark:text-white">{{ __('messages.recent_services') }}</h3>
-            <a href="{{ route('vendor.services.index') }}" class="text-indigo-600 dark:text-indigo-400 hover:text-indigo-800 dark:hover:text-indigo-300 text-sm font-medium">View All</a>
+            <a href="{{ route('vendor.services.index') }}" class="text-[var(--primary)] dark:text-indigo-400 hover:text-indigo-800 dark:hover:text-indigo-300 text-sm font-medium">{{__('messages.view_all')}}</a>
         </div>
         <div class="overflow-x-auto">
             <table class="min-w-full divide-y divide-gray-200 dark:divide-gray-700">

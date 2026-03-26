@@ -3,7 +3,7 @@
     <!-- Loading State -->
     <div v-if="loading" class="fixed inset-0 bg-white bg-opacity-75 flex items-center justify-center z-50">
       <div class="text-center">
-        <div class="inline-block animate-spin rounded-full h-16 w-16 border-b-2 border-blue-600"></div>
+        <div class="inline-block animate-spin rounded-full h-16 w-16 border-b-2 border-[var(--primary)]"></div>
         <p class="mt-4 text-gray-600 text-lg">{{ $t('vendor.loading') }}</p>
       </div>
     </div>
@@ -26,7 +26,7 @@
               class="inline-flex w-full items-center justify-center px-4 py-2.5 border border-transparent rounded-md text-sm font-medium text-white focus:outline-none focus:ring-2 disabled:opacity-25 transition sm:w-auto"
               :class="isProductsManagerContext
                 ? 'bg-orange-500 hover:bg-orange-600 ring-orange-200'
-                : 'bg-blue-600 hover:bg-blue-700 ring-blue-200'"
+                : 'bg-[var(--primary)] hover:bg-[var(--primary)] ring-[var(--primary)]'"
               @click="saveProduct"
               :disabled="saving"
             >
@@ -49,7 +49,7 @@
         </div>
         <div class="w-full bg-gray-200 dark:bg-gray-700 rounded-full h-2">
           <div class="h-2 rounded-full transition-all duration-300"
-               :class="isProductsManagerContext ? 'bg-orange-500' : 'bg-blue-500'"
+               :class="isProductsManagerContext ? 'bg-orange-500' : 'bg-[var(--primary)]'"
                :style="{ width: stockProgressPercentage + '%' }">
           </div>
         </div>
@@ -313,7 +313,7 @@
                            v-model="productData.is_available"
                            type="checkbox"
                            class="w-4 h-4 bg-gray-100 border-gray-300 rounded"
-                           style="color: var(--primary-blue); --tw-ring-color: var(--primary-blue);">
+                           style="color: var(--primary); --tw-ring-color: var(--primary);">
                     <label for="is_available" class="vue-text-sm">
                       {{ $t('vendor.available_for_purchase') }}
                     </label>
@@ -344,10 +344,8 @@
               </div>
               <button
                 type="button"
-                class="vue-btn w-full justify-center sm:w-auto"
-                :class="isProductsManagerContext
-                  ? 'bg-orange-500 hover:bg-orange-600 text-white'
-                  : 'bg-blue-600 hover:bg-blue-700 text-white'"
+                class="vue-btn w-full justify-center bg-[var(--primary)] hover:bg-[var(--primary-hover)] sm:w-auto"
+               
                 @click="addNewColor"
               >
                 <i class="fas fa-plus w-4 h-4"></i>
@@ -365,10 +363,8 @@
                 </p>
                 <button
                   type="button"
-                  class="vue-btn w-full justify-center sm:w-auto"
-                  :class="isProductsManagerContext
-                    ? 'bg-orange-500 hover:bg-orange-600 text-white'
-                    : 'bg-blue-600 hover:bg-blue-700 text-white'"
+                  class="vue-btn w-full justify-center bg-[var(--primary)] hover:bg-[var(--primary-hover)] sm:w-auto"
+                  
                   @click="addNewColor"
                 >
                   <i class="fas fa-plus w-4 h-4"></i>
@@ -411,10 +407,8 @@
               </div>
               <button
                 type="button"
-                class="vue-btn w-full justify-center sm:w-auto"
-                :class="isProductsManagerContext
-                  ? 'bg-orange-500 hover:bg-orange-600 text-white'
-                  : 'bg-blue-600 hover:bg-blue-700 text-white'"
+                class="vue-btn w-full justify-center bg-[var(--primary)] hover:bg-[var(--primary-hover)] sm:w-auto"
+                
                 @click="addNewSpecification"
               >
                 <i class="fas fa-plus w-4 h-4"></i>
@@ -433,10 +427,8 @@
                     </p>
                     <button
                       type="button"
-                      class="vue-btn"
-                      :class="isProductsManagerContext
-                        ? 'bg-orange-500 hover:bg-orange-600 text-white'
-                        : 'bg-blue-600 hover:bg-blue-700 text-white'"
+                      class="vue-btn bg-[var(--primary)] hover:bg-[var(--primary-hover)]"
+                      
                       @click="addNewSpecification"
                     >
                       <i class="fas fa-plus w-4 h-4"></i>
@@ -472,7 +464,7 @@
         <h3 class="text-lg font-medium text-gray-900 mb-2">{{ $t('vendor.success') }}!</h3>
         <p class="text-sm text-gray-500 mb-6">{{ $t('vendor.product_updated_successfully') }}!</p>
         <button @click="closeSuccessModal"
-                class="w-full bg-blue-500 hover:bg-blue-600 text-white font-medium py-2 px-4 rounded-lg transition-colors">
+                class="w-full bg-[var(--primary)] hover:bg-[var(--primary)] text-white font-medium py-2 px-4 rounded-lg transition-colors">
           {{ $t('vendor.continue') }}
         </button>
       </div>
@@ -637,7 +629,7 @@ export default {
     // Methods
     const getTabClasses = (tabId) => {
       if (activeTab.value === tabId) {
-        return 'text-gray-900 dark:text-white border-blue-600'
+        return 'text-gray-900 dark:text-white border-[var(--primary)]'
       }
       return 'text-gray-500 dark:text-gray-400 border-transparent hover:text-gray-700 dark:hover:text-gray-200 hover:border-gray-300 dark:hover:border-gray-500'
     }
@@ -1325,8 +1317,8 @@ export default {
 
 .vue-form-control:focus {
   outline: none;
-  border-color: #2563eb;
-  box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.12);
+  border-color: var(--primary);
+  box-shadow: 0 0 0 3px rgba(146, 37, 235, 0.12);
 }
 
 .vue-form-control::placeholder {
@@ -1360,10 +1352,15 @@ export default {
   transition: background-color 0.15s ease, border-color 0.15s ease, color 0.15s ease, box-shadow 0.15s ease;
   cursor: pointer;
   border: 1px solid #d4d4d8;
-  background: #ffffff;
-  color: #111827;
+  background: var(--primary);
+  color: #FFFFFF;
+  
 }
+.vue-btn:hover {
+    background: var(--primary-hover);
 
+  
+}
 .vue-btn:disabled {
   opacity: 0.55;
   cursor: not-allowed;
@@ -1396,7 +1393,7 @@ export default {
   }
 
   .vue-form-control:focus {
-    border-color: #60a5fa;
+    border-color: var(--primary);
     box-shadow: 0 0 0 3px rgba(96, 165, 250, 0.16);
   }
 

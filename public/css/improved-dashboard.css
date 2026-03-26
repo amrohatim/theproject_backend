@@ -2,8 +2,8 @@
 
 :root {
     /* Modern color palette */
-    --primary-blue: #4f46e5;
-    --primary-blue-hover: #4338ca;
+    --primary-blue: #A46BC1;
+    --primary-blue-hover: #75468d;
     --primary-blue-light: #eef2ff;
     --secondary-color: #10b981;
     --secondary-color-hover: #059669;
@@ -73,10 +73,10 @@
 }
 
 .stat-card {
-    background: linear-gradient(135deg, #369FFF 0%, #4f46e5 100%);
+    background: linear-gradient(135deg, #A46BC1 0%, #A46BC1 100%);
     border-radius: 20px;
     padding: 0;
-    box-shadow: 0px 10px 30px 0px rgba(54, 159, 255, 0.4);
+    box-shadow: 0px 10px 30px 0px #eacbfaa2;
     display: block;
     transition: all 0.3s ease;
     border: none;
@@ -90,7 +90,7 @@
 
 .stat-card:hover {
     transform: translateY(-4px);
-    box-shadow: 0px 15px 40px 0px rgba(54, 158, 255, 0.884);
+    box-shadow: 0px 15px 40px 0px #eacbfaa2;
 }
 
 .stat-card::before {
@@ -100,7 +100,7 @@
     right: 0;
     width: 135px;
     height: 80px;
-    background: rgba(0, 110, 211, 0.2);
+    background: rgba(127, 0, 211, 0.2);
     border-radius: 0 20px 0 0;
 }
 
@@ -111,7 +111,7 @@
     left: 0;
     width: 80px;
     height: 40px;
-    background: rgba(0, 110, 211, 0.2);
+    background: rgba(144, 0, 211, 0.2);
     border-radius: 20px 0 0 0;
 }
 
@@ -254,12 +254,12 @@
     right: 20px;
     width: 48px;
     height: 48px;
-    background: linear-gradient(135deg, #369FFF 0%, #4f46e5 100%);
+    background: linear-gradient(135deg, #A46BC1 0%, #A46BC1 100%);
     border-radius: 12px;
     display: flex;
     align-items: center;
     justify-content: center;
-    box-shadow: 0px 4px 12px rgba(54, 159, 255, 0.3);
+    box-shadow: 0px 4px 12px rgba(148, 54, 255, 0.3);
 }
 
 .card-icon {

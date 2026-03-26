@@ -14,7 +14,7 @@
 
 /* Add a border to make tab panels more visible for debugging */
 .tab-panel {
-    border: 2px solid #4f46e5;
+    border: 2px solid #A46BC1;
     padding: 20px;
     margin-bottom: 20px;
     border-radius: 8px;
@@ -22,8 +22,8 @@
 
 /* Style for active tab */
 .tab-link.active {
-    border-bottom-color: #4f46e5 !important;
-    color: #4f46e5 !important;
+    border-bottom-color: #A46BC1 !important;
+    color: #A46BC1 !important;
 }
 
 /* Debug styles to make elements more visible */

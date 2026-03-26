@@ -71,6 +71,7 @@ return [
     'delete' => 'Delete',
     'edit' => 'Edit',
     'jobs' => 'Jobs',
+    'citizens_jobs' => 'Citizens Jobs',
     'job_listings' => 'Job Listings',
     'manage_jobs' => 'Manage your job posts',
     'add_job' => 'Add Job',

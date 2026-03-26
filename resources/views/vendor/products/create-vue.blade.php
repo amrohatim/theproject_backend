@@ -63,7 +63,7 @@
 
     .vue-form-control-vendor:focus {
         outline: none;
-        border-color: #3b82f6;
+        border-color: var(--primary);
         box-shadow: 0 0 0 4px rgba(59, 130, 246, 0.1), 0 4px 6px -1px rgba(0, 0, 0, 0.1);
         transform: translateY(-1px);
     }
@@ -94,7 +94,7 @@
 
     .vue-form-control-pm:focus {
         outline: none;
-        border-color: #f59e0b;
+        border-color: var(--primary);
         box-shadow: 0 0 0 4px rgba(245, 158, 11, 0.1), 0 4px 6px -1px rgba(0, 0, 0, 0.1);
         transform: translateY(-1px);
     }
@@ -139,26 +139,26 @@
 
     /* Vendor Primary Button (Blue Theme) */
     .vue-btn-primary-vendor {
-        background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%);
+        background: linear-gradient(135deg, var(--primary) 0%, var(--primary) 100%);
         color: #ffffff;
         border-color: transparent;
     }
 
     .vue-btn-primary-vendor:hover:not(:disabled) {
-        background: linear-gradient(135deg, #2563eb 0%, #1d4ed8 100%);
-        box-shadow: 0 6px 16px 0 rgba(59, 130, 246, 0.4);
+        background: linear-gradient(135deg, var(--primary-hover) 0%, var(--primary-hover) 100%);
+        box-shadow: 0 6px 16px 0 rgba(187, 59, 246, 0.4);
     }
 
     /* Products Manager Primary Button (Orange Theme) */
     .vue-btn-primary-pm {
-        background: linear-gradient(135deg, #f59e0b 0%, #f97316 100%);
+        background: linear-gradient(135deg, var(--primary) 0%, var(--primary) 100%);
         color: #ffffff;
         border-color: transparent;
     }
 
     .vue-btn-primary-pm:hover:not(:disabled) {
-        background: linear-gradient(135deg, #f97316 0%, #ea580c 100%);
-        box-shadow: 0 6px 16px 0 rgba(245, 158, 11, 0.4);
+        background: linear-gradient(135deg, var(--primary-hover) 0%, var(--primary-hover) 100%);
+        box-shadow:  0 6px 16px 0 rgba(187, 59, 246, 0.4);
     }
 
     .vue-btn-secondary {
