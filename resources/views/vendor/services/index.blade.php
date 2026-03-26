@@ -20,7 +20,7 @@
 
         .responsive-table tbody tr {
             margin-bottom: 1rem;
-            border: 1px solid #3b82f6 !important;
+            border: 1px solid #A46BC1 !important;
             border-radius: 0.375rem !important;
             overflow: hidden;
             background-color: #ffffff;
@@ -29,7 +29,7 @@
 
         .dark .responsive-table tbody tr {
             background-color: #1f2937;
-            border-color: #60a5fa !important;
+            border-color: #A46BC1 !important;
         }
 
         .responsive-table td {
@@ -70,7 +70,7 @@
             <p class="mt-1 text-gray-600 dark:text-gray-400">{{ __('messages.manage_your_services') }}</p>
         </div>
         <div class="mt-4 md:mt-0">
-            <a href="{{ route('vendor.services.select-branch') }}" class="inline-flex items-center px-4 py-2 bg-indigo-600 border border-transparent rounded-md font-semibold text-xs text-white uppercase tracking-widest hover:bg-indigo-700 active:bg-indigo-900 focus:outline-none focus:border-indigo-900 focus:ring ring-indigo-300 disabled:opacity-25 transition ease-in-out duration-150">
+            <a href="{{ route('vendor.services.select-branch') }}" class="inline-flex items-center px-4 py-2 bg-[var(--primary)] border border-transparent rounded-md font-semibold text-xs text-white uppercase tracking-widest hover:bg-[var(--primary)] active:bg-[var(--primary)] focus:outline-none focus:border-[var(--primary)] focus:ring ring-[var(--primary)] disabled:opacity-25 transition ease-in-out duration-150">
                 <i class="fas fa-plus mr-2"></i> {{ __('messages.add_service') }}
             </a>
         </div>
@@ -86,13 +86,13 @@
                         <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
                             <i class="fas fa-search text-gray-400"></i>
                         </div>
-                        <input type="text" name="search" id="search" value="{{ request('search') }}" class="focus:ring-indigo-500 focus:border-indigo-500 block w-full pl-10 sm:text-sm border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-white rounded-md" placeholder="{{ __('messages.search_services') }}">
+                        <input type="text" name="search" id="search" value="{{ request('search') }}" class="focus:ring-[var(--primary)] focus:border-[var(--primary)] block w-full pl-10 sm:text-sm border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-white rounded-md" placeholder="{{ __('messages.search_services') }}">
                     </div>
                 </div>
 
                 <div>
                     <label for="category" class="block text-sm font-medium text-gray-700 dark:text-gray-300">{{ __('messages.category') }}</label>
-                    <select id="category" name="category" class="mt-1 block w-full pl-3 pr-10 py-2 text-base border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-white focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm rounded-md">
+                    <select id="category" name="category" class="mt-1 block w-full pl-3 pr-10 py-2 text-base border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-white focus:outline-none focus:ring-[var(--primary)] focus:border-[var(--primary)] sm:text-sm rounded-md">
                         <option value="">{{ __('messages.all_categories') }}</option>
                         @foreach($categories as $category)
                             <option value="{{ $category->id }}" {{ request('category') == $category->id ? 'selected' : '' }}>
@@ -111,7 +111,7 @@
             </div>
 
             <div class="flex justify-end">
-                <button type="submit" class="inline-flex items-center px-4 py-2 bg-indigo-600 border border-transparent rounded-md font-semibold text-xs text-white uppercase tracking-widest hover:bg-indigo-700 active:bg-indigo-900 focus:outline-none focus:border-indigo-900 focus:ring ring-indigo-300 disabled:opacity-25 transition ease-in-out duration-150">
+                <button type="submit" class="inline-flex items-center px-4 py-2 bg-[var(--primary)] border border-transparent rounded-md font-semibold text-xs text-white uppercase tracking-widest hover:bg-[var(--primary)] active:bg-[var(--primary)] focus:outline-none focus:border-[var(--primary)] focus:ring ring-[var(--primary)] disabled:opacity-25 transition ease-in-out duration-150">
                     <i class="fas fa-filter mr-2"></i> {{ __('messages.filter') }}
                 </button>
             </div>
@@ -128,7 +128,7 @@
             <nav class="inline-flex min-w-full whitespace-nowrap border-b border-gray-200 dark:border-gray-700">
                 <a
                     href="{{ route('vendor.services.index', $tabBaseQuery) }}"
-                    class="border-b-2 px-4 py-3 text-sm font-medium transition-colors {{ $activeBranch === '' ? 'border-indigo-500 text-indigo-600 dark:border-indigo-400 dark:text-indigo-400' : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300 dark:text-gray-400 dark:hover:text-gray-300' }}"
+                    class="border-b-2 px-4 py-3 text-sm font-medium transition-colors {{ $activeBranch === '' ? 'border-[var(--primary)] text-[var(--primary)] dark:border-[var(--primary)] dark:text-[var(--primary)]' : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300 dark:text-gray-400 dark:hover:text-gray-300' }}"
                 >
                     {{ __('messages.services') }}
                 </a>
@@ -136,7 +136,7 @@
                 @foreach($branches as $branch)
                     <a
                         href="{{ route('vendor.services.index', array_merge($tabBaseQuery, ['branch' => $branch->id])) }}"
-                        class="border-b-2 px-4 py-3 text-sm font-medium transition-colors {{ $activeBranch === (string) $branch->id ? 'border-indigo-500 text-indigo-600 dark:border-indigo-400 dark:text-indigo-400' : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300 dark:text-gray-400 dark:hover:text-gray-300' }}"
+                        class="border-b-2 px-4 py-3 text-sm font-medium transition-colors {{ $activeBranch === (string) $branch->id ? 'border-[var(--primary)] text-[var(--primary)] dark:border-[var(--primary)] dark:text-[var(--primary)]' : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300 dark:text-gray-400 dark:hover:text-gray-300' }}"
                     >
                         {{ $branch->name }}
                     </a>
@@ -159,7 +159,7 @@
                 <div class="text-center py-12 px-4">
                     <i class="fas fa-concierge-bell text-gray-300 dark:text-gray-600 text-5xl mb-4"></i>
                     <p class="text-sm text-gray-500 dark:text-gray-400">{{ __('messages.no_services_found') }}</p>
-                    <a href="{{ route('vendor.services.select-branch') }}" class="mt-3 inline-flex items-center px-4 py-2 bg-indigo-600 border border-transparent rounded-md font-semibold text-xs text-white uppercase tracking-widest hover:bg-indigo-700 active:bg-indigo-900 focus:outline-none focus:border-indigo-900 focus:ring ring-indigo-300 disabled:opacity-25 transition ease-in-out duration-150">
+                    <a href="{{ route('vendor.services.select-branch') }}" class="mt-3 inline-flex items-center px-4 py-2 bg-[var(--primary)] border border-transparent rounded-md font-semibold text-xs text-white uppercase tracking-widest hover:bg-[var(--primary)] active:bg-[var(--primary)] focus:outline-none focus:border-[var(--primary)] focus:ring ring-[var(--primary)] disabled:opacity-25 transition ease-in-out duration-150">
                         <i class="fas fa-plus mr-2"></i> {{ __('messages.add_service') }}
                     </a>
                 </div>
@@ -226,7 +226,7 @@
                             </span>
                         </td>
                         <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium" data-label="{{ __('messages.actions') }}">
-                            <a href="{{ route('vendor.services.edit', $service->id) }}" class="text-indigo-600 dark:text-indigo-400 hover:text-indigo-900 dark:hover:text-indigo-300 mr-3">
+                            <a href="{{ route('vendor.services.edit', $service->id) }}" class="text-[var(--primary)] dark:text-[var(--primary)] hover:text-[var(--primary)] dark:hover:text-[var(--primary)] mr-3">
                                 <i class="fas fa-edit"></i>
                             </a>
                             <form action="{{ route('vendor.services.destroy', $service->id) }}" method="POST" class="inline">
@@ -244,7 +244,7 @@
                             <div class="flex flex-col items-center justify-center py-4">
                                 <i class="fas fa-concierge-bell text-gray-300 dark:text-gray-600 text-5xl mb-4"></i>
                                 <p>{{ __('messages.no_services_found') }}</p>
-                                <a href="{{ route('vendor.services.select-branch') }}" class="mt-2 inline-flex items-center px-4 py-2 bg-indigo-600 border border-transparent rounded-md font-semibold text-xs text-white uppercase tracking-widest hover:bg-indigo-700 active:bg-indigo-900 focus:outline-none focus:border-indigo-900 focus:ring ring-indigo-300 disabled:opacity-25 transition ease-in-out duration-150">
+                                <a href="{{ route('vendor.services.select-branch') }}" class="mt-2 inline-flex items-center px-4 py-2 bg-[var(--primary)] border border-transparent rounded-md font-semibold text-xs text-white uppercase tracking-widest hover:bg-[var(--primary)] active:bg-[var(--primary)] focus:outline-none focus:border-[var(--primary)] focus:ring ring-[var(--primary)] disabled:opacity-25 transition ease-in-out duration-150">
                                     <i class="fas fa-plus mr-2"></i> {{ __('messages.add_service') }}
                                 </a>
                             </div>

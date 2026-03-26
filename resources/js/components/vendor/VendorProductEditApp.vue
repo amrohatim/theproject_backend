@@ -24,9 +24,7 @@
             <button
               type="button"
               class="inline-flex w-full items-center justify-center px-4 py-2.5 border border-transparent rounded-md text-sm font-medium text-white focus:outline-none focus:ring-2 disabled:opacity-25 transition sm:w-auto"
-              :class="isProductsManagerContext
-                ? 'bg-orange-500 hover:bg-orange-600 ring-orange-200'
-                : 'bg-[var(--primary)] hover:bg-[var(--primary)] ring-[var(--primary)]'"
+              :class="'bg-[var(--primary)] hover:bg-[var(--primary-hover)] ring-[var(--primary-light)]'"
               @click="saveProduct"
               :disabled="saving"
             >
@@ -49,14 +47,18 @@
         </div>
         <div class="w-full bg-gray-200 dark:bg-gray-700 rounded-full h-2">
           <div class="h-2 rounded-full transition-all duration-300"
-               :class="isProductsManagerContext ? 'bg-orange-500' : 'bg-[var(--primary)]'"
+               :class="'bg-[var(--primary)]'"
                :style="{ width: stockProgressPercentage + '%' }">
           </div>
         </div>
-        <div v-if="isStockOverAllocated" class="mt-3 rounded-md border border-amber-200 dark:border-amber-800 bg-amber-50/80 dark:bg-amber-900/20 p-3">
+        <div
+          v-if="isStockOverAllocated"
+          class="mt-3 rounded-md border p-3"
+          style="border-color: var(--primary); background-color: var(--primary-light);"
+        >
           <div class="flex items-center gap-2">
-            <i class="fas fa-exclamation-triangle text-yellow-600 dark:text-yellow-400"></i>
-            <p class="text-amber-800 dark:text-amber-200 text-sm">
+            <i class="fas fa-exclamation-triangle" style="color: var(--primary);"></i>
+            <p class="text-sm" style="color: var(--primary);">
               {{ $t('vendor.stock_over_allocated_message') }}
             </p>
           </div>
@@ -155,7 +157,7 @@
                         </optgroup>
                       </select>
                       <div v-if="errors.category_id" class="text-red-500 text-xs mt-1">{{ errors.category_id }}</div>
-                      <div v-else-if="!productData.branch_id" class="text-amber-600 text-xs mt-1">
+                      <div v-else-if="!productData.branch_id" class="text-xs mt-1" style="color: var(--primary);">
                         {{ $t('vendor.select_branch_first') || 'Select a branch to see available categories.' }}
                       </div>
                     </div>
@@ -464,7 +466,7 @@
         <h3 class="text-lg font-medium text-gray-900 mb-2">{{ $t('vendor.success') }}!</h3>
         <p class="text-sm text-gray-500 mb-6">{{ $t('vendor.product_updated_successfully') }}!</p>
         <button @click="closeSuccessModal"
-                class="w-full bg-[var(--primary)] hover:bg-[var(--primary)] text-white font-medium py-2 px-4 rounded-lg transition-colors">
+                class="w-full bg-[var(--primary)] hover:bg-[var(--primary-hover)] text-white font-medium py-2 px-4 rounded-lg transition-colors">
           {{ $t('vendor.continue') }}
         </button>
       </div>
@@ -514,6 +516,10 @@ export default {
     editDataUrl: {
       type: String,
       default: null
+    },
+    userRole: {
+      type: String,
+      default: 'vendor'
     }
   },
   setup(props) {
@@ -545,7 +551,7 @@ export default {
     const errors = reactive({})
 
     const isProductsManagerContext = computed(() => {
-      return window.location.pathname.includes('/products-manager/')
+      return props.userRole === 'products_manager' || window.location.pathname.includes('/products-manager/')
     })
 
     const productData = reactive({
@@ -1318,7 +1324,7 @@ export default {
 .vue-form-control:focus {
   outline: none;
   border-color: var(--primary);
-  box-shadow: 0 0 0 3px rgba(146, 37, 235, 0.12);
+  box-shadow: 0 0 0 3px var(--primary-light);
 }
 
 .vue-form-control::placeholder {
@@ -1394,7 +1400,7 @@ export default {
 
   .vue-form-control:focus {
     border-color: var(--primary);
-    box-shadow: 0 0 0 3px rgba(96, 165, 250, 0.16);
+    box-shadow: 0 0 0 3px var(--primary-light);
   }
 
   .total-stock-readonly {

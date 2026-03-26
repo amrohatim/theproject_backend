@@ -185,7 +185,8 @@ function initVendorProductEditApp(forceCleanup = false) {
     const app = createApp(VendorProductEditApp, {
         productId: vendorProductEditContainer.dataset.productId,
         backUrl: vendorProductEditContainer.dataset.backUrl || '/vendor/products',
-        editDataUrl: vendorProductEditContainer.dataset.editDataUrl || null
+        editDataUrl: vendorProductEditContainer.dataset.editDataUrl || null,
+        userRole: vendorProductEditContainer.dataset.userRole || 'vendor'
     })
 
     // Add global translation method

@@ -28,6 +28,7 @@
     <link rel="stylesheet" href="{{ asset('css/modern-buttons.css') }}">
     <!-- Global Styles -->
     <link rel="stylesheet" href="{{ asset('css/global-styles.css') }}">
+    <link rel="stylesheet" href="{{ asset('css/global.css') }}">
     <!-- Vue Styles -->
     <link rel="stylesheet" href="{{ asset('css/vue-styles.css') }}">
     @if($isRtl)
@@ -44,7 +45,7 @@
         <div id="pm-sidebar" class="fixed inset-y-0 left-0 z-40 w-64 transform -translate-x-full bg-white shadow-lg transition-transform duration-200 dark:bg-gray-800 md:static md:translate-x-0">
             <div class="flex flex-col h-full">
                 <!-- Logo -->
-                <div class="flex items-center justify-center h-16 px-4 bg-orange-500 dark:bg-orange-600">
+                <div class="flex items-center justify-center h-16 px-4 bg-[var(--primary)] dark:bg-[var(--primary)]">
                     <h1 class="text-xl font-bold text-white">{{__('products_manager.products_manager_role')}}</h1>
                 </div>
 
@@ -53,7 +54,7 @@
                     <div class="flex items-center">
                         <div class="flex-shrink-0">
                             <div class="h-10 w-10 rounded-full bg-purple-100 dark:bg-purple-900 flex items-center justify-center">
-                                <i class="fas fa-user text-orange-600 dark:text-orange-400"></i>
+                                <i class="fas fa-user text-[var(--primary)] dark:text-[var(--primary)]"></i>
                             </div>
                         </div>
                         <div class="ml-3">
@@ -67,35 +68,35 @@
                 <nav class="flex-1 px-4 py-4 space-y-2">
                     <!-- Dashboard -->
                     <a href="{{ route('products-manager.dashboard') }}"
-                       class="flex items-center px-3 py-2 text-sm font-medium rounded-md transition-colors duration-200 {{ request()->routeIs('products-manager.dashboard') ? 'bg-orange-100 text-orange-700 dark:bg-orange-900 dark:text-orange-200 border-r-4 border-orange-500' : 'text-gray-700 hover:bg-orange-50 hover:text-orange-600 dark:text-gray-300 dark:hover:bg-gray-700 dark:hover:text-orange-400' }}">
+                       class="flex items-center px-3 py-2 text-sm font-medium rounded-md transition-colors duration-200 {{ request()->routeIs('products-manager.dashboard') ? 'bg-[var(--primary-light)] text-[var(--primary)] dark:bg-[var(--primary)] dark:text-[var(--primary)] border-r-4 border-[var(--primary)]' : 'text-gray-700 hover:bg-[var(--primary)]hover:text-[var(--primary)] dark:text-gray-300 dark:hover:bg-gray-700 dark:hover:text-[var(--primary)]' }}">
                         <i class="fas fa-tachometer-alt mr-3"></i>
                         {{ __('products_manager.dashboard') }}
                     </a>
 
                     <!-- Products -->
                     <a href="{{ route('products-manager.products.index') }}"
-                       class="flex items-center px-3 py-2 text-sm font-medium rounded-md transition-colors duration-200 {{ request()->routeIs('products-manager.products.*') ? 'bg-orange-100 text-orange-700 dark:bg-orange-900 dark:text-orange-200 border-r-4 border-orange-500' : 'text-gray-700 hover:bg-orange-50 hover:text-orange-600 dark:text-gray-300 dark:hover:bg-gray-700 dark:hover:text-orange-400' }}">
+                       class="flex items-center px-3 py-2 text-sm font-medium rounded-md transition-colors duration-200 {{ request()->routeIs('products-manager.products.*') ? 'bg-[var(--primary-light)] text-[var(--primary)] dark:bg-[var(--primary)] dark:text-[var(--primary)] border-r-4 border-[var(--primary)]' : 'text-gray-700 hover:bg-[var(--primary)]hover:text-[var(--primary)] dark:text-gray-300 dark:hover:bg-gray-700 dark:hover:text-[var(--primary)]' }}">
                         <i class="fas fa-box mr-3"></i>
                         {{ __('products_manager.products') }}
                     </a>
 
                     <!-- All Orders -->
                     <a href="{{ route('products-manager.orders.index') }}"
-                       class="flex items-center px-3 py-2 text-sm font-medium rounded-md transition-colors duration-200 {{ request()->routeIs('products-manager.orders.index') ? 'bg-orange-100 text-orange-700 dark:bg-orange-900 dark:text-orange-200 border-r-4 border-orange-500' : 'text-gray-700 hover:bg-orange-50 hover:text-orange-600 dark:text-gray-300 dark:hover:bg-gray-700 dark:hover:text-orange-400' }}">
+                       class="flex items-center px-3 py-2 text-sm font-medium rounded-md transition-colors duration-200 {{ request()->routeIs('products-manager.orders.index') ? 'bg-[var(--primary-light)] text-[var(--primary)] dark:bg-[var(--primary)] dark:text-[var(--primary)] border-r-4 border-[var(--primary)]' : 'text-gray-700 hover:bg-[var(--primary)]hover:text-[var(--primary)] dark:text-gray-300 dark:hover:bg-gray-700 dark:hover:text-[var(--primary)]' }}">
                         <i class="fas fa-shopping-cart mr-3"></i>
                         {{ __('products_manager.all_orders') }}
                     </a>
 
                     <!-- Pending Orders -->
                     <a href="{{ route('products-manager.orders.pending') }}"
-                       class="flex items-center px-3 py-2 text-sm font-medium rounded-md transition-colors duration-200 {{ request()->routeIs('products-manager.orders.pending') ? 'bg-orange-100 text-orange-700 dark:bg-orange-900 dark:text-orange-200 border-r-4 border-orange-500' : 'text-gray-700 hover:bg-orange-50 hover:text-orange-600 dark:text-gray-300 dark:hover:bg-gray-700 dark:hover:text-orange-400' }}">
+                       class="flex items-center px-3 py-2 text-sm font-medium rounded-md transition-colors duration-200 {{ request()->routeIs('products-manager.orders.pending') ? 'bg-[var(--primary-light)] text-[var(--primary)] dark:bg-[var(--primary)] dark:text-[var(--primary)] border-r-4 border-[var(--primary)]' : 'text-gray-700 hover:bg-[var(--primary)]hover:text-[var(--primary)] dark:text-gray-300 dark:hover:bg-gray-700 dark:hover:text-[var(--primary)]' }}">
                         <i class="fas fa-clock mr-3"></i>
                         {{ __('products_manager.pending_orders') }}
                     </a>
 
                     <!-- Deals -->
                     <a href="{{ route('products-manager.deals.index') }}"
-                       class="flex items-center px-3 py-2 text-sm font-medium rounded-md transition-colors duration-200 {{ request()->routeIs('products-manager.deals.*') ? 'bg-orange-100 text-orange-700 dark:bg-orange-900 dark:text-orange-200 border-r-4 border-orange-500' : 'text-gray-700 hover:bg-orange-50 hover:text-orange-600 dark:text-gray-300 dark:hover:bg-gray-700 dark:hover:text-orange-400' }}">
+                       class="flex items-center px-3 py-2 text-sm font-medium rounded-md transition-colors duration-200 {{ request()->routeIs('products-manager.deals.*') ? 'bg-[var(--primary-light)] text-[var(--primary)] dark:bg-[var(--primary)] dark:text-[var(--primary)] border-r-4 border-[var(--primary)]' : 'text-gray-700 hover:bg-[var(--primary)]hover:text-[var(--primary)] dark:text-gray-300 dark:hover:bg-gray-700 dark:hover:text-[var(--primary)]' }}">
                         <i class="fas fa-percent mr-3"></i>
                         {{ __('products_manager.deals') }}
                     </a>
@@ -119,12 +120,12 @@
 
                         @foreach($supportedLocales as $locale => $details)
                             <a href="{{ url('/language/' . $locale) }}"
-                               class="flex items-center px-3 py-2 text-sm font-medium rounded-md transition-colors duration-200 {{ $locale === $currentLocale ? 'bg-orange-100 text-orange-700 dark:bg-orange-900 dark:text-orange-200 border-r-4 border-orange-500' : 'text-gray-700 hover:bg-orange-50 hover:text-orange-600 dark:text-gray-300 dark:hover:bg-gray-700 dark:hover:text-orange-400' }}"
+                               class="flex items-center px-3 py-2 text-sm font-medium rounded-md transition-colors duration-200 {{ $locale === $currentLocale ? 'bg-[var(--primary-light)] text-[var(--primary)] dark:bg-[var(--primary-light)] dark:text-[var(--primary)] border-r-4 border-[var(--primary)]' : 'text-gray-700 hover:bg-[var(--primary)]hover:text-[var(--primary)] dark:text-gray-300 dark:hover:bg-gray-700 dark:hover:text-[var(--primary)]' }}"
                                onclick="switchLanguage('{{ $locale }}'); return false;">
                                 <span class="text-lg mr-3">{{ $details['flag'] }}</span>
                                 <span>{{ $details['native'] }}</span>
                                 @if($locale === $currentLocale)
-                                    <i class="fas fa-check ml-auto text-orange-600 dark:text-orange-400"></i>
+                                    <i class="fas fa-check ml-auto text-[var(--primary)] dark:text-[var(--primary)]"></i>
                                 @endif
                             </a>
                         @endforeach
@@ -163,7 +164,7 @@
                             <div class="relative group">
                                 <a
                                     href="{{ route('products-manager.notifications.index') }}"
-                                    class="relative inline-flex h-9 w-9 items-center justify-center rounded-full text-gray-600 hover:text-orange-600 hover:bg-orange-50 dark:text-gray-300 dark:hover:text-orange-400 dark:hover:bg-gray-700 transition-colors"
+                                    class="relative inline-flex h-9 w-9 items-center justify-center rounded-full text-gray-600 hover:text-[var(--primary)] hover:bg-[var(--primary)]dark:text-gray-300 dark:hover:text-[var(--primary)] dark:hover:bg-gray-700 transition-colors"
                                     aria-label="Products manager notifications"
                                 >
                                     <i class="fas fa-bell"></i>
@@ -193,7 +194,7 @@
                                             </div>
                                         @endforelse
                                     </div>
-                                    <a href="{{ route('products-manager.notifications.index') }}" class="block border-t border-gray-200 px-4 py-2 text-center text-sm font-medium text-orange-600 hover:bg-gray-50 dark:border-gray-700 dark:text-orange-400 dark:hover:bg-gray-700">
+                                    <a href="{{ route('products-manager.notifications.index') }}" class="block border-t border-gray-200 px-4 py-2 text-center text-sm font-medium text-[var(--primary)] hover:bg-gray-50 dark:border-gray-700 dark:text-[var(--primary)] dark:hover:bg-gray-700">
                                         {{ __('messages.view_all') }}
                                     </a>
                                 </div>
@@ -208,7 +209,7 @@
                 <!-- Loading Indicator -->
                 <div id="ajax-loading-indicator" class="hidden fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
                     <div class="bg-white rounded-lg p-6 flex items-center space-x-3">
-                        <div class="animate-spin rounded-full h-8 w-8 border-b-2 border-orange-500"></div>
+                        <div class="animate-spin rounded-full h-8 w-8 border-b-2 border-[var(--primary)]"></div>
                         <span class="text-gray-700">Loading...</span>
                     </div>
                 </div>
@@ -260,17 +261,50 @@
         </div>
     </div>
 
-    <!-- Orange Theme Styles for Products Manager -->
+    <!-- Products Manager Theme Styles -->
     <style>
-        /* Products Manager Orange Theme */
-        .products-manager-theme .bg-indigo-600 { background-color: #f59e0b !important; }
-        .products-manager-theme .bg-indigo-700 { background-color: #d97706 !important; }
-        .products-manager-theme .bg-indigo-500 { background-color: #f59e0b !important; }
-        .products-manager-theme .text-indigo-600 { color: #f59e0b !important; }
-        .products-manager-theme .text-indigo-700 { color: #d97706 !important; }
-        .products-manager-theme .border-indigo-500 { border-color: #f59e0b !important; }
-        .products-manager-theme .focus\:ring-indigo-500:focus { --tw-ring-color: #f59e0b !important; }
-        .products-manager-theme .focus\:border-indigo-500:focus { border-color: #f59e0b !important; }
+        /* Map old accent utility usage to global tokens */
+        .products-manager-theme .bg-indigo-600,
+        .products-manager-theme .bg-indigo-500,
+        .products-manager-theme .bg-[var(--primary)],
+        .products-manager-theme .bg-[var(--primary)] { background-color: var(--primary) !important; }
+        .products-manager-theme .bg-indigo-700,
+        .products-manager-theme .bg-[var(--primary)] { background-color: var(--primary-hover) !important; }
+        .products-manager-theme .bg-[var(--primary)],
+        .products-manager-theme .bg-[var(--primary)],
+        .products-manager-theme .bg-[var(--primary)]
+        .products-manager-theme .dark\:bg-[var(--primary)],
+        .products-manager-theme .dark\:bg-[var(--primary)]\/20,
+        .products-manager-theme .dark\:bg-[var(--primary)] { background-color: var(--primary-light) !important; }
+
+        .products-manager-theme .text-indigo-600,
+        .products-manager-theme .text-indigo-700,
+        .products-manager-theme .text-[var(--primary)],
+        .products-manager-theme .text-[var(--primary)],
+        .products-manager-theme .text-[var(--primary)],
+        .products-manager-theme .text-[var(--primary)],
+        .products-manager-theme .dark\:text-[var(--primary)],
+        .products-manager-theme .dark\:text-[var(--primary)],
+        .products-manager-theme .dark\:text-[var(--primary)],
+        .products-manager-theme .dark\:text-[var(--primary)] { color: var(--primary) !important; }
+
+        .products-manager-theme .border-indigo-500,
+        .products-manager-theme .border-[var(--primary)],
+        .products-manager-theme .border-[var(--primary)] { border-color: var(--primary) !important; }
+
+        .products-manager-theme .focus\:ring-indigo-500:focus,
+        .products-manager-theme .focus\:ring-[var(--primary)]:focus,
+        .products-manager-theme .focus\:ring-[var(--primary)]:focus { --tw-ring-color: var(--primary-light) !important; }
+        .products-manager-theme .focus\:border-indigo-500:focus,
+        .products-manager-theme .focus\:border-[var(--primary)]:focus,
+        .products-manager-theme .focus\:border-[var(--primary)]:focus { border-color: var(--primary) !important; }
+        .products-manager-theme .hover\:bg-[var(--primary)]hover { background-color: var(--primary-light) !important; }
+        .products-manager-theme .hover\:bg-[var(--primary)]:hover,
+        .products-manager-theme .hover\:bg-[var(--primary)]:hover { background-color: var(--primary-hover) !important; }
+        .products-manager-theme .hover\:text-[var(--primary)]:hover,
+        .products-manager-theme .hover\:text-[var(--primary)]:hover,
+        .products-manager-theme .dark\:hover\:text-[var(--primary)]:hover,
+        .products-manager-theme .dark\:hover\:text-[var(--primary)]:hover { color: var(--primary) !important; }
 
         /* Ensure proper styling for AJAX-loaded content */
         .products-manager-theme .container { max-width: 100% !important; }
@@ -317,11 +351,11 @@
 
             .pm-responsive-table tbody tr {
                 margin-bottom: 1rem;
-                border: 1px solid #f59e0b !important;
+                border: 1px solid var(--primary) !important;
                 border-radius: 0.375rem;
                 overflow: hidden;
                 background-color: #ffffff;
-                box-shadow: 0 0 0 1px #f59e0b !important;
+                box-shadow: 0 0 0 1px var(--primary) !important;
             }
 
             .pm-responsive-table tbody td {
@@ -351,7 +385,7 @@
             }
 
             .dark .pm-responsive-table tbody tr {
-                border-color: #d97706;
+                border-color: var(--primary);
                 background-color: #1f2937;
             }
 
@@ -396,7 +430,7 @@
             }
 
             init() {
-                // Apply orange theme
+                // Apply products manager theme
                 document.body.classList.add('products-manager-theme');
 
                 // Intercept navigation clicks
@@ -623,7 +657,7 @@
                     this.dynamicContent.innerHTML = html;
                 }
 
-                // Apply orange theme to new content
+                // Apply products manager theme to new content
                 this.dynamicContent.classList.add('products-manager-theme');
 
                 // Ensure proper styling for tables and containers
@@ -665,8 +699,8 @@
                 const buttons = this.dynamicContent.querySelectorAll('button, .btn');
                 buttons.forEach(button => {
                     if (button.classList.contains('bg-indigo-600') || button.classList.contains('bg-indigo-500')) {
-                        button.classList.remove('bg-indigo-600', 'bg-indigo-500', 'hover:bg-indigo-700');
-                        button.classList.add('bg-orange-500', 'hover:bg-orange-600');
+                        button.classList.remove('bg-[var(--primary)]', 'hover:bg-[var(--primary)]');
+                        button.classList.add('bg-indigo-600', 'hover:bg-indigo-700');
                     }
                 });
             }

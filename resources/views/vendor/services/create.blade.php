@@ -89,7 +89,7 @@
     .form-input:focus,
     .form-textarea:focus,
     .form-select:focus {
-        border-color: #3b82f6;
+        border-color: var(--primary);
         box-shadow: none;
         outline: none;
     }
@@ -100,7 +100,7 @@
     .dark .form-input:focus,
     .dark .form-textarea:focus,
     .dark .form-select:focus {
-        border-color: #3b82f6;
+        border-color: var(--primary);
     }
 
     /* Filled State */
@@ -285,14 +285,14 @@
 
     /* Day Selection Styling */
     .day-checkbox-container .day-checkbox:checked + .day-label {
-        background-color: #3b82f6;
-        border-color: #3b82f6;
+        background-color: var(--primary);
+        border-color: var(--primary);
         color: white;
     }
 
     .dark .day-checkbox-container .day-checkbox:checked + .day-label {
-        background-color: #3b82f6;
-        border-color: #3b82f6;
+        background-color: var(--primary);
+        border-color: var(--primary);
         color: white;
     }
 
@@ -305,7 +305,7 @@
     }
 
     .day-checkbox-container .day-checkbox:checked + .day-label:hover {
-        background-color: #2563eb;
+        background-color: var(--primary);
     }
 
     /* RTL Support for Days */
@@ -425,14 +425,14 @@
     }
 
     .time-picker-apply {
-        background-color: #3b82f6;
+        background-color: var(--primary);
         color: #ffffff;
     }
 
     .time-picker-cancel:focus,
     .time-picker-apply:focus {
         outline: none;
-        box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.35);
+        box-shadow: 0 0 0 3px rgba(140, 59, 246, 0.35);
     }
 
     .dark .time-picker-cancel {
@@ -666,7 +666,7 @@
                                                class="day-checkbox sr-only"
                                                {{ in_array($dayIndex, old('available_days', [])) ? 'checked' : '' }}>
                                         <label for="day_{{ $dayIndex }}" 
-                                               class="day-label flex items-center justify-center p-3 border-2 border-gray-300 dark:border-gray-600 rounded-lg cursor-pointer transition-all duration-200 hover:border-blue-400 dark:hover:border-blue-500 text-sm font-medium text-gray-700 dark:text-gray-300">
+                                               class="day-label flex items-center justify-center p-3 border-2 border-gray-300 dark:border-gray-600 rounded-lg cursor-pointer transition-all duration-200 hover:border-[var(--primary-light)] dark:hover:border-[var(--primary-light)] text-sm font-medium text-gray-700 dark:text-gray-300">
                                             <span class="day-name-en">{{ $dayNames['en'] }}</span>
                                             <span class="day-name-ar hidden">{{ $dayNames['ar'] }}</span>
                                         </label>
@@ -723,7 +723,7 @@
                                     <img src="#" alt="Image Preview" class="mx-auto h-32 w-auto object-cover rounded-md">
                                 </div>
                                 <div class="flex text-sm text-gray-600 dark:text-gray-400">
-                                    <label for="image" class="relative cursor-pointer bg-white dark:bg-gray-700 rounded-md font-medium text-indigo-600 dark:text-indigo-400 hover:text-indigo-500 dark:hover:text-indigo-300 focus-within:outline-none focus-within:ring-2 focus-within:ring-offset-2 focus-within:ring-indigo-500">
+                                    <label for="image" class="relative cursor-pointer bg-white dark:bg-gray-700 rounded-md font-medium text-[var(--primary)] dark:text-[var(--primary)] hover:text-[var(--primary-hover)] dark:hover:text-[var(--primary-hover)] focus-within:outline-none focus-within:ring-2 focus-within:ring-offset-2 focus-within:ring-indigo-500">
                                         <span>{{ __('messages.upload_file') }}</span>
                                         <input id="image" name="image" type="file" class="sr-only" onchange="previewImage(this)" required>
                                     </label>
@@ -780,7 +780,7 @@
             </div>
 
             <div class="mt-6 flex justify-end">
-                <button type="submit" class="inline-flex items-center px-4 py-2 bg-indigo-600 border border-transparent rounded-md font-semibold text-xs text-white uppercase tracking-widest hover:bg-indigo-700 active:bg-indigo-900 focus:outline-none focus:border-indigo-900 focus:ring ring-indigo-300 disabled:opacity-25 transition ease-in-out duration-150">
+                <button type="submit" class="inline-flex items-center px-4 py-2 bg-[var(--primary)] border border-transparent rounded-md font-semibold text-xs text-white uppercase tracking-widest hover:bg-indigo-700 active:bg-indigo-900 focus:outline-none focus:border-indigo-900 focus:ring ring-indigo-300 disabled:opacity-25 transition ease-in-out duration-150">
                     <i class="fas fa-save mr-2"></i> {{ __('messages.save_service') }}
                 </button>
             </div>

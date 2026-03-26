@@ -121,7 +121,7 @@
                   </option>
                 </select>
                 <div v-if="errors.branch_id" class="text-red-500 text-sm mt-1">{{ errors.branch_id }}</div>
-                <div v-else-if="branches.length === 0" class="text-amber-600 text-sm mt-1">
+                <div v-else-if="branches.length === 0" class="text-sm mt-1" style="color: var(--primary);">
                   <i class="fas fa-exclamation-triangle mr-1"></i>
                   {{ $t('vendor.need_create_branch_first') }} <a href="/vendor/branches/create" class="text-blue-600 hover:underline">{{ $t('vendor.create_branch') }}</a>
                 </div>
@@ -155,7 +155,7 @@
                   </optgroup>
                 </select>
                 <div v-if="errors.category_id" class="text-red-500 text-sm mt-1">{{ errors.category_id }}</div>
-                <div v-else-if="!productData.branch_id" class="text-amber-600 text-xs mt-1">
+                <div v-else-if="!productData.branch_id" class="text-xs mt-1" style="color: var(--primary);">
                   {{ $t('vendor.select_branch_first') || 'Select a branch to see available categories.' }}
                 </div>
               </div>
@@ -268,7 +268,8 @@
                 <input
                   v-model="productData.is_available"
                   type="checkbox"
-                  class="focus:ring-indigo-500 h-4 w-4 text-indigo-600 border-gray-300 rounded"
+                  class="h-4 w-4 border-gray-300 rounded"
+                  style="color: var(--primary); --tw-ring-color: var(--primary);"
                 />
               </div>
               <div class="text-sm" :class="isRTL ? 'mr-3' : 'ml-3'">
@@ -332,23 +333,23 @@
             <!-- Stock Allocation Summary -->
             <div v-if="productData.colors.length > 0 && productData.stock > 0"
                  class="mt-6 p-4 border rounded-lg"
-                 :class="userRole === 'products_manager' ? 'bg-orange-50 border-orange-200' : 'bg-blue-50 border-blue-200'">
+                 :class="userRole === 'products_manager' ? 'bg-[var(--primary-light)] border-[var(--primary)]' : 'bg-blue-50 border-blue-200'">
               <div class="flex items-center justify-between mb-2">
                 <span class="text-sm font-medium"
-                      :class="userRole === 'products_manager' ? 'text-orange-900' : 'text-blue-900'">
+                      :class="userRole === 'products_manager' ? 'text-[var(--primary)]' : 'text-blue-900'">
                   {{ $t('vendor.stock_allocation_progress') }}
                 </span>
               <span class="text-sm"
-                    :class="userRole === 'products_manager' ? 'text-orange-700' : 'text-blue-700'">
+                    :class="userRole === 'products_manager' ? 'text-[var(--primary)]' : 'text-blue-700'">
                 {{ totalAllocatedStock }} / {{ productData.stock }} {{ $t('vendor.allocated_stock') }}
               </span>
               </div>
               <div class="w-full rounded-full h-3"
-                   :class="userRole === 'products_manager' ? 'bg-orange-200' : 'bg-blue-200'">
+                   :class="userRole === 'products_manager' ? 'bg-[var(--primary-light)]' : 'bg-blue-200'">
                 <div class="h-3 rounded-full transition-all duration-300"
                      :style="{ width: stockProgressPercentage + '%' }"
                      :class="[
-                       userRole === 'products_manager' ? 'bg-orange-600' : 'bg-blue-600',
+                       userRole === 'products_manager' ? 'bg-[var(--primary)]' : 'bg-blue-600',
                        { 'bg-red-600': isStockOverAllocated }
                      ]"></div>
               </div>
@@ -357,7 +358,7 @@
               </div>
               <div v-else-if="totalAllocatedStock < productData.stock"
                    class="mt-2 text-xs"
-                   :class="userRole === 'products_manager' ? 'text-amber-600' : 'text-blue-600'">
+                   :class="userRole === 'products_manager' ? 'text-[var(--primary)]' : 'text-blue-600'">
                 💡 {{ productData.stock - totalAllocatedStock }} {{ $t('vendor.remaining_stock') }}
               </div>
               <div v-else class="mt-2 text-xs text-green-600">
@@ -375,7 +376,7 @@
               </div>
               <button type="button" @click="addNewSpecification" style="color: #ffffff;
   border-color: transparent;
-" class="vue-btn w-48 justify-center bg-[var(--primary)] hover:bg[var(--primary-hover)] sm:w-auto">
+" class="vue-btn w-48 justify-center bg-[var(--primary)] hover:bg-[var(--primary-hover)] sm:w-auto">
                 <i class="fas fa-plus w-4 h-4"></i>
                 {{ $t('vendor.add_specification') }}
               </button>
@@ -465,7 +466,7 @@
             <button @click="closeSuccessModal" class="vue-btn vue-btn-secondary">
               {{ $t('vendor.view_products') }}
             </button>
-            <button @click="createAnother" class="vue-btn vue-btn-primary" :style="userRole === 'vendor' ? 'background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%);' : 'background: linear-gradient(135deg, #f59e0b 0%, #f97316 100%);'">
+            <button @click="createAnother" class="vue-btn vue-btn-primary" style="background: linear-gradient(135deg, var(--primary) 0%, var(--primary-hover) 100%);">
               {{ $t('vendor.create_another') }}
             </button>
           </div>
@@ -485,7 +486,7 @@
             {{ errorMessage || $t('vendor.unexpected_error_try_again') }}
           </div>
           <div class="flex justify-center mt-6">
-            <button @click="closeErrorModal" class="vue-btn" :style="userRole === 'vendor' ? 'background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%);' : 'background: linear-gradient(135deg, #f59e0b 0%, #f97316 100%);'">
+            <button @click="closeErrorModal" class="vue-btn" style="background: linear-gradient(135deg, var(--primary) 0%, var(--primary-hover) 100%);">
               {{ $t('vendor.try_again') }}
             </button>
           </div>
@@ -633,7 +634,7 @@ export default {
     const themeColors = computed(() => {
       if (props.userRole === 'products_manager') {
         return {
-          primary: 'var(--primary)', // Orange
+          primary: 'var(--primary)',
           primaryHover: 'var(--primary-hover)',
           primaryLight: 'var(--primary-light)',
           primaryDark: 'var(--primary)',
@@ -643,7 +644,7 @@ export default {
         }
       } else {
         return {
-          primary: 'var(--primary)', // Orange
+          primary: 'var(--primary)',
           primaryHover: 'var(--primary-hover)',
           primaryLight: 'var(--primary-light)',
           primaryDark: 'var(--primary)',
@@ -1238,7 +1239,7 @@ export default {
 .vue-form-control:focus {
   outline: none;
   border-color: var(--theme-primary);
-  box-shadow: 0 0 0 3px var(--theme-ring);
+  box-shadow: 0 0 0 1px var(--theme-ring);
 }
 
 .total-stock-readonly {
@@ -1273,8 +1274,7 @@ export default {
 }
 
 .vue-btn-primary {
- 
-  /* Blue for vendor, Orange for products_manager - controlled by themeColors computed property */
+  /* Role-specific tones are provided through theme variables. */
   color: #ffffff;
   border-color: transparent;
   box-shadow: 0 2px 4px 0 var(--theme-shadow);
@@ -1303,7 +1303,7 @@ export default {
 }
 
 .vue-btn-success:hover:not(:disabled) {
-  background-color: var(--primary);
+  background-color: var(--primary-hover);
   border-color: var(--primary-hover);
 }
 
@@ -1332,7 +1332,7 @@ export default {
 
   .vue-form-control:focus {
     border-color: var(--primary);
-    box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.1);
+    box-shadow: 0 0 0 3px var(--primary-light);
   }
 
   .vue-card {

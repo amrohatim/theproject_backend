@@ -68,7 +68,7 @@
     .form-input:focus,
     .form-textarea:focus,
     .form-select:focus {
-        border-color: #f59e0b;
+        border-color: var(--primary);
         box-shadow: none;
         outline: none;
     }
@@ -79,7 +79,7 @@
     .dark .form-input:focus,
     .dark .form-textarea:focus,
     .dark .form-select:focus {
-        border-color: #f59e0b;
+        border-color: var(--primary);
     }
 
     /* Filled State */
@@ -299,14 +299,14 @@
                 <div class="md:col-span-2 mt-6">
                     <h3 class="text-lg font-medium text-gray-900 dark:text-white mb-4">{{ __('vendor.access_and_permissions') }}</h3>
 
-                    <div class="bg-orange-50 dark:bg-orange-900/20 border border-orange-200 dark:border-orange-800 rounded-lg p-4">
+                    <div class="border rounded-lg p-4" style="background-color: var(--primary-light); border-color: var(--primary);">
                         <div class="flex items-start {{ app()->getLocale() === 'ar' ? 'flex-row-reverse' : '' }}">
                             <div class="flex-shrink-0">
-                                <i class="fas fa-info-circle text-orange-600 dark:text-orange-400 mt-1"></i>
+                                <i class="fas fa-info-circle text-[var(--primary)] mt-1"></i>
                             </div>
                             <div class="{{ app()->getLocale() === 'ar' ? 'mr-3' : 'ml-3' }}">
-                                <h4 class="text-sm font-medium text-orange-800 dark:text-orange-200 {{ app()->getLocale() === 'ar' ? 'text-right' : 'text-left' }}">{{ __('vendor.products_manager_access') }}</h4>
-                                <div class="mt-2 text-sm text-orange-700 dark:text-orange-300 {{ app()->getLocale() === 'ar' ? 'text-right' : 'text-left' }}">
+                                <h4 class="text-sm font-medium text-[var(--primary)] {{ app()->getLocale() === 'ar' ? 'text-right' : 'text-left' }}">{{ __('vendor.products_manager_access') }}</h4>
+                                <div class="mt-2 text-sm text-[var(--primary)] {{ app()->getLocale() === 'ar' ? 'text-right' : 'text-left' }}">
                                     <p>{{ __('vendor.products_managers_have_access') }}</p>
                                     <ul class="mt-2 list-disc {{ app()->getLocale() === 'ar' ? 'list-inside text-right' : 'list-inside' }} space-y-1">
                                         <li>{{ __('vendor.all_company_products_access') }}</li>
@@ -354,7 +354,7 @@
                 <a href="{{ route('vendor.settings.products-managers.index') }}" class="inline-flex items-center px-4 py-2 bg-gray-600 border border-transparent rounded-md font-semibold text-xs text-white uppercase tracking-widest hover:bg-gray-700 active:bg-gray-900 focus:outline-none focus:border-gray-900 focus:ring ring-gray-300 disabled:opacity-25 transition ease-in-out duration-150">
                     {{ __('vendor.cancel') }}
                 </a>
-                <button type="submit" class="inline-flex items-center px-4 py-2 bg-orange-600 border border-transparent rounded-md font-semibold text-xs text-white uppercase tracking-widest hover:bg-orange-700 active:bg-orange-900 focus:outline-none focus:border-orange-900 focus:ring ring-orange-300 disabled:opacity-25 transition ease-in-out duration-150">
+                <button type="submit" class="inline-flex items-center px-4 py-2 bg-[var(--primary)] border border-transparent rounded-md font-semibold text-xs text-white uppercase tracking-widest hover:bg-[var(--primary-hover)] active:bg-[var(--primary-hover)] focus:outline-none focus:border-[var(--primary-hover)] focus:ring ring-[var(--primary-light)] disabled:opacity-25 transition ease-in-out duration-150">
                     <i class="fas fa-save {{ app()->getLocale() === 'ar' ? 'ml-2' : 'mr-2' }}"></i> {{ __('vendor.create_products_manager_button') }}
                 </button>
             </div>

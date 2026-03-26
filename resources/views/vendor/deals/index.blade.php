@@ -60,10 +60,11 @@
             <h2 class="text-2xl font-bold text-gray-800 dark:text-white">{{ __('messages.your_deals') }}</h2>
             <p class="text-gray-600 dark:text-gray-400">{{ __('messages.create_and_manage_special_offers') }}</p>
         </div>
-        <a href="{{ route('vendor.deals.create') }}" class="btn-create-deal flex flex-row items-center justify-center px-3 py-2  rounded-[4px]">
+        <a href="{{ route('vendor.deals.create') }}" class="btn-create-deal flex flex-row items-center justify-center px-3 py-2  gap-2 rounded-[4px]">
             <svg class="w-6 h-6 fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path>
             </svg>
+            <p>{{__('messages.create_deal')}}</p>
           
         </a>
     </div>
@@ -99,7 +100,7 @@
 
                     @if ($deal->promotional_message)
                         <div class="mb-3">
-                            <span class="inline-block px-3 py-1 rounded-full text-sm font-medium bg-blue-100 text-blue-800 dark:bg-blue-800 dark:text-blue-100 {{ app()->getLocale() == 'ar' ? 'text-right' : 'text-left' }}">
+                            <span class="inline-block px-3 py-1 rounded-full text-sm font-medium bg-[var(--primary-light)] text-[var(--primary)] dark:bg-[var(--primary-light)] dark:text-[var(--primary)] {{ app()->getLocale() == 'ar' ? 'text-right' : 'text-left' }}">
                                 <i class="fas fa-bullhorn {{ app()->getLocale() == 'ar' ? 'ml-2' : 'mr-2' }}"></i>
                                 {{ $deal->promotional_message }}
                             </span>

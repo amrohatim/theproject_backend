@@ -7,10 +7,10 @@
 <style>
     /* Orange theme override for Products Manager */
     :root {
-        --pm-orange: #F46C3F;
-        --pm-orange-hover: #e55a2b;
-        --pm-orange-light: #fef3f0;
-        --pm-orange-dark: #d14d26;
+        --pm-orange: var(--primary);
+        --pm-orange-hover: var(--primary-hover);
+        --pm-orange-light: var(--primary-light);
+        --pm-orange-dark: var(--primary-hover);
     }
 
     /* Override blue theme with orange for Products Manager context */
@@ -38,7 +38,7 @@
 
     .vue-form-control:focus {
         border-color: var(--pm-orange) !important;
-        box-shadow: 0 0 0 3px rgba(244, 108, 63, 0.1) !important;
+        box-shadow: 0 0 0 3px var(--primary-light) !important;
     }
 
     /* Override primary blue variables in Vue components */
@@ -131,8 +131,8 @@
 
     .vue-form-control-pm:focus {
         outline: none;
-        border-color: #f59e0b;
-        box-shadow: 0 0 0 4px rgba(245, 158, 11, 0.1), 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+        border-color: var(--primary);
+        box-shadow: 0 0 0 4px var(--primary-light), 0 4px 6px -1px rgba(0, 0, 0, 0.1);
         transform: translateY(-1px);
     }
 
@@ -188,14 +188,14 @@
 
     /* Products Manager Primary Button (Orange Theme) */
     .vue-btn-primary-pm {
-        background: linear-gradient(135deg, #f59e0b 0%, #f97316 100%);
+        background: linear-gradient(135deg, var(--primary) 0%, var(--primary-hover) 100%);
         color: #ffffff;
         border-color: transparent;
     }
 
     .vue-btn-primary-pm:hover:not(:disabled) {
-        background: linear-gradient(135deg, #f97316 0%, #ea580c 100%);
-        box-shadow: 0 6px 16px 0 rgba(245, 158, 11, 0.4);
+        background: linear-gradient(135deg, var(--primary-hover) 0%, var(--primary-hover) 100%);
+        box-shadow: 0 6px 16px 0 var(--primary-light);
     }
 
     /* Tab styles with orange theme */
@@ -261,7 +261,7 @@
 <div class="products-manager-theme">
     <!-- Loading indicator -->
     <div id="loading-indicator" class="flex items-center justify-center py-12" style="display: none;">
-        <div class="spinner-border text-orange-500"></div>
+        <div class="spinner-border text-[var(--primary)]"></div>
         <span class="ml-3 text-gray-600">Loading product edit form...</span>
     </div>
 

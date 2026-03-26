@@ -2,10 +2,10 @@
 <style>
     /* Orange theme override for Products Manager - Ensure consistent styling */
     :root {
-        --pm-orange: #F46C3F;
-        --pm-orange-hover: #e55a2b;
-        --pm-orange-light: #fef3f0;
-        --pm-orange-dark: #d14d26;
+        --pm-orange: var(--primary);
+        --pm-orange-hover: var(--primary-hover);
+        --pm-orange-light: var(--primary-light);
+        --pm-orange-dark: var(--primary-hover);
     }
 
     /* Override blue theme with orange for Products Manager context */
@@ -33,7 +33,7 @@
 
     .vue-form-control:focus {
         border-color: var(--pm-orange) !important;
-        box-shadow: 0 0 0 3px rgba(244, 108, 63, 0.1) !important;
+        box-shadow: 0 0 0 3px var(--primary-light) !important;
     }
 
     /* Override primary blue variables in Vue components */
@@ -126,8 +126,8 @@
 
     .vue-form-control-pm:focus {
         outline: none;
-        border-color: #f59e0b;
-        box-shadow: 0 0 0 4px rgba(245, 158, 11, 0.1), 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+        border-color: var(--primary);
+        box-shadow: 0 0 0 4px var(--primary-light), 0 4px 6px -1px rgba(0, 0, 0, 0.1);
         transform: translateY(-1px);
     }
 
@@ -183,14 +183,14 @@
 
     /* Products Manager Primary Button (Orange Theme) */
     .vue-btn-primary-pm {
-        background: linear-gradient(135deg, #f59e0b 0%, #f97316 100%);
+        background: linear-gradient(135deg, var(--primary) 0%, var(--primary-hover) 100%);
         color: #ffffff;
         border-color: transparent;
     }
 
     .vue-btn-primary-pm:hover:not(:disabled) {
-        background: linear-gradient(135deg, #f97316 0%, #ea580c 100%);
-        box-shadow: 0 6px 16px 0 rgba(245, 158, 11, 0.4);
+        background: linear-gradient(135deg, var(--primary-hover) 0%, var(--primary-hover) 100%);
+        box-shadow: 0 6px 16px 0 var(--primary-light);
     }
 
     /* Tab styles with orange theme */
@@ -255,13 +255,13 @@
     @if(isset($needsBranch) && $needsBranch)
         <!-- Need Branch Message -->
         <div class="text-center py-12">
-            <div class="mx-auto h-16 w-16 rounded-full bg-orange-100 dark:bg-orange-900/20 flex items-center justify-center mb-4">
-                <i class="fas fa-store text-orange-500 text-2xl"></i>
+            <div class="mx-auto h-16 w-16 rounded-full bg-[var(--primary-light)] dark:bg-[var(--primary-light)] flex items-center justify-center mb-4">
+                <i class="fas fa-store text-[var(--primary)] text-2xl"></i>
             </div>
             <h3 class="text-lg font-medium text-gray-900 dark:text-white mb-2">Create a Branch First</h3>
             <p class="text-gray-500 dark:text-gray-400 mb-6">{{ $message ?? 'You need to create a branch before adding products.' }}</p>
             <a href="{{ route('vendor.branches.create') }}" 
-               class="inline-flex items-center px-4 py-2 bg-orange-500 hover:bg-orange-600 text-white rounded-md transition-colors">
+               class="inline-flex items-center px-4 py-2 bg-[var(--primary)] hover:bg-[var(--primary-hover)] text-white rounded-md transition-colors">
                 <i class="fas fa-plus mr-2"></i>
                 Create Branch
             </a>
@@ -269,13 +269,13 @@
     @elseif(isset($needsCategories) && $needsCategories)
         <!-- Need Categories Message -->
         <div class="text-center py-12">
-            <div class="mx-auto h-16 w-16 rounded-full bg-orange-100 dark:bg-orange-900/20 flex items-center justify-center mb-4">
-                <i class="fas fa-tags text-orange-500 text-2xl"></i>
+            <div class="mx-auto h-16 w-16 rounded-full bg-[var(--primary-light)] dark:bg-[var(--primary-light)] flex items-center justify-center mb-4">
+                <i class="fas fa-tags text-[var(--primary)] text-2xl"></i>
             </div>
             <h3 class="text-lg font-medium text-gray-900 dark:text-white mb-2">No Categories Available</h3>
             <p class="text-gray-500 dark:text-gray-400 mb-6">{{ $message ?? 'No product categories found. Please contact the administrator.' }}</p>
             <a href="{{ route('products-manager.products.index') }}" 
-               class="inline-flex items-center px-4 py-2 bg-orange-500 hover:bg-orange-600 text-white rounded-md transition-colors ajax-nav">
+               class="inline-flex items-center px-4 py-2 bg-[var(--primary)] hover:bg-[var(--primary-hover)] text-white rounded-md transition-colors ajax-nav">
                 <i class="fas fa-arrow-left mr-2"></i>
                 Back to Products
             </a>
@@ -299,7 +299,7 @@
         <!-- Loading Indicator -->
         <div id="vue-loading-indicator" class="flex items-center justify-center py-12">
             <div class="bg-white dark:bg-gray-800 rounded-lg p-6 flex items-center space-x-3 shadow-lg">
-                <div class="animate-spin rounded-full h-8 w-8 border-b-2 border-orange-500"></div>
+                <div class="animate-spin rounded-full h-8 w-8 border-b-2 border-[var(--primary)]"></div>
                 <span class="text-gray-700 dark:text-gray-300">Loading product creation form...</span>
             </div>
         </div>
@@ -530,7 +530,8 @@
              data-store-url="{{ route('products-manager.products.store') }}"
              data-session-store-url="{{ route('vendor.products.session.store') }}"
              data-session-get-url="{{ route('vendor.products.session.get') }}"
-             data-session-clear-url="{{ route('vendor.products.session.clear') }}">
+             data-session-clear-url="{{ route('vendor.products.session.clear') }}"
+             data-user-role="products_manager">
         </div>
 
         <!-- Fallback Content (if Vue fails to load) -->
@@ -543,7 +544,7 @@
                     <h3 class="text-lg font-medium text-gray-900 dark:text-white mb-2">Failed to Load Form</h3>
                     <p class="text-gray-500 dark:text-gray-400 mb-6">The product creation form failed to load. Please try refreshing the page.</p>
                     <button onclick="window.location.reload()" 
-                            class="inline-flex items-center px-4 py-2 bg-orange-500 hover:bg-orange-600 text-white rounded-md transition-colors">
+                            class="inline-flex items-center px-4 py-2 bg-[var(--primary)] hover:bg-[var(--primary-hover)] text-white rounded-md transition-colors">
                         <i class="fas fa-refresh mr-2"></i>
                         Refresh Page
                     </button>

@@ -27,18 +27,18 @@
             @foreach($branches as $branch)
                 <a
                     href="{{ route('vendor.services.create', ['branch_id' => $branch->id]) }}"
-                    class="group rounded-xl border border-gray-200 bg-gray-50 p-5 transition hover:border-indigo-400 dark:border-gray-700 dark:bg-gray-900/40 dark:hover:border-indigo-500 dark:hover:bg-gray-700/70"
+                    class="group rounded-xl border border-gray-200 bg-gray-50 p-5 transition hover:border-[var(--primary)] dark:border-gray-700 dark:bg-gray-900/40 dark:hover:border-[var(--primary)] dark:hover:bg-gray-700/70"
                 >
                     <div class="flex items-start justify-between gap-3">
                         <div>
-                            <h4 class="text-base font-semibold text-gray-900 group-hover:text-indigo-700 dark:text-white dark:group-hover:text-indigo-300">
+                            <h4 class="text-base font-semibold text-gray-900 group-hover:text-[var(--primary)] dark:text-white dark:group-hover:text-[var(--primary)]">
                                 {{ $branch->name }}
                             </h4>
                             @if($branch->business_type)
                                 <p class="mt-1 text-sm text-gray-600 dark:text-gray-300">{{ $branch->business_type }}</p>
                             @endif
                         </div>
-                        <span class="inline-flex h-20 w-20 items-center justify-center overflow-hidden rounded-full bg-indigo-100 text-indigo-600 dark:bg-indigo-900/50 dark:text-indigo-300">
+                        <span class="inline-flex h-20 w-20 items-center justify-center overflow-hidden rounded-full bg-[var(--primary)] text-[var(--primary)] dark:bg-[var(--primary)]/50 dark:text-[var(--primary)]">
                             @if($branch->branch_image)
                                 <img src="{{ $branch->branch_image }}" alt="{{ $branch->name }} Logo" class="h-full w-full rounded-full object-cover">
                             @else
@@ -58,7 +58,7 @@
                         </div>
                     @endif
 
-                    <div class="mt-5 inline-flex items-center text-sm font-medium text-indigo-600 dark:text-indigo-300">
+                    <div class="mt-5 inline-flex items-center text-sm font-medium text-[var(--primary)] dark:text-[var(--primary)]">
                         {{ __('messages.continue_to_service_form') }}
                         <i class="fas {{ app()->getLocale() === 'ar' ? 'fa-arrow-left mx-2' : 'fa-arrow-right mx-2' }} text-xs"></i>
                     </div>

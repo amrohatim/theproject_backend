@@ -162,7 +162,11 @@
                          stockCorrectionApplied ? 'border-green-500 bg-green-50' : ''
                        ]"
                        ref="stockInput">
-                <div v-if="showStockCorrection" class="absolute top-full left-0 right-0 mt-1 p-2 bg-amber-50 border border-amber-200 rounded-md text-xs text-amber-700 animate-fade-in">
+                <div
+                  v-if="showStockCorrection"
+                  class="absolute top-full left-0 right-0 mt-1 p-2 rounded-md text-xs animate-fade-in"
+                  style="background-color: var(--primary-light); border: 1px solid var(--primary); color: var(--primary);"
+                >
                   {{ stockCorrectionMessage }}
                 </div>
               </div>

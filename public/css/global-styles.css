@@ -43,7 +43,7 @@
 
 .products-manager-theme .vue-form-control:focus {
     border-color: var(--pm-orange) !important;
-    box-shadow: 0 0 0 3px rgba(244, 108, 63, 0.1) !important;
+    box-shadow: 0 0 0 3px var(--primary-light) !important;
 }
 
 .products-manager-theme .vue-card.ring-2 {

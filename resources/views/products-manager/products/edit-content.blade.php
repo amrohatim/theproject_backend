@@ -19,7 +19,7 @@
             <h3 class="text-lg font-medium text-gray-900 dark:text-white mb-2">Access Denied</h3>
             <p class="text-gray-500 dark:text-gray-400 mb-6">{{ $error }}</p>
             <a href="{{ route('products-manager.products.index') }}" 
-               class="inline-flex w-full items-center justify-center px-4 py-2 bg-orange-500 hover:bg-orange-600 text-white rounded-md transition-colors ajax-nav sm:w-auto">
+               class="inline-flex w-full items-center justify-center px-4 py-2 bg-[var(--primary)] hover:bg-[var(--primary-hover)] text-white rounded-md transition-colors ajax-nav sm:w-auto">
                 <i class="fas fa-arrow-left mr-2"></i>
                 Back to Products
             </a>
@@ -52,7 +52,7 @@
         <!-- Loading Indicator -->
         <div id="vue-loading-indicator" class="flex items-center justify-center py-12">
             <div class="bg-white dark:bg-gray-800 rounded-lg p-6 flex items-center space-x-3 shadow-lg">
-                <div class="animate-spin rounded-full h-8 w-8 border-b-2 border-orange-500"></div>
+                <div class="animate-spin rounded-full h-8 w-8 border-b-2 border-[var(--primary)]"></div>
                 <span class="text-gray-700 dark:text-gray-300">Loading product edit form...</span>
             </div>
         </div>
@@ -267,7 +267,8 @@
              data-update-url="{{ isset($product) ? route('products-manager.products.update', $product) : '' }}"
              data-session-store-url="{{ route('vendor.products.session.store') }}"
              data-session-get-url="{{ route('vendor.products.session.get') }}"
-             data-session-clear-url="{{ route('vendor.products.session.clear') }}">
+             data-session-clear-url="{{ route('vendor.products.session.clear') }}"
+             data-user-role="products_manager">
         </div>
 
         <!-- Fallback Content (if Vue fails to load) -->
@@ -280,7 +281,7 @@
                     <h3 class="text-lg font-medium text-gray-900 dark:text-white mb-2">Failed to Load Form</h3>
                     <p class="text-gray-500 dark:text-gray-400 mb-6">The product edit form failed to load. Please try refreshing the page.</p>
                     <button onclick="window.location.reload()" 
-                            class="inline-flex items-center px-4 py-2 bg-orange-500 hover:bg-orange-600 text-white rounded-md transition-colors">
+                            class="inline-flex items-center px-4 py-2 bg-[var(--primary)] hover:bg-[var(--primary-hover)] text-white rounded-md transition-colors">
                         <i class="fas fa-refresh mr-2"></i>
                         Refresh Page
                     </button>

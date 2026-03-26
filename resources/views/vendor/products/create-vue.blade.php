@@ -73,7 +73,7 @@
         font-weight: 400;
     }
 
-    /* Enhanced Form Controls with Modern Design - Products Manager (Orange Theme) */
+    /* Enhanced Form Controls with Modern Design - Products Manager Theme */
     .vue-form-control-pm {
         width: 100%;
         padding: 0.75rem 1rem;
@@ -95,7 +95,7 @@
     .vue-form-control-pm:focus {
         outline: none;
         border-color: var(--primary);
-        box-shadow: 0 0 0 4px rgba(245, 158, 11, 0.1), 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+        box-shadow: 0 0 0 4px var(--primary-light), 0 4px 6px -1px rgba(0, 0, 0, 0.1);
         transform: translateY(-1px);
     }
 
@@ -149,7 +149,7 @@
         box-shadow: 0 6px 16px 0 rgba(187, 59, 246, 0.4);
     }
 
-    /* Products Manager Primary Button (Orange Theme) */
+    /* Products Manager Primary Button */
     .vue-btn-primary-pm {
         background: linear-gradient(135deg, var(--primary) 0%, var(--primary) 100%);
         color: #ffffff;
