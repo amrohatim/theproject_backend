@@ -59,7 +59,7 @@
         @if($currentSubscription)
         <!-- Active Subscription Card -->
         <div class="subscription-card bg-white dark:bg-gray-800 rounded-xl shadow-lg border border-gray-200 dark:border-gray-700 overflow-hidden">
-            <div class="bg-indigo-500 px-6 py-4">
+            <div class="bg-[var(--primary)] px-6 py-4">
                 <div class="flex items-center justify-between">
                     <div class="flex items-center gap-2">
                         <i class="fas fa-crown text-yellow-300 text-2xl"></i>
@@ -67,12 +67,12 @@
                             <h4 class="text-xl font-bold text-white">
                                 {{ $currentSubscription->subscriptionType->title ?? $currentSubscription->subscriptionType->type_label . ' ' . __('messages.plan') }}
                             </h4>
-                            <p class="text-indigo-100 text-sm">{{ $currentSubscription->subscriptionType->period_label }} {{ __('messages.billing') }}</p>
+                            <p class="text-[var(--primary)] text-sm">{{ $currentSubscription->subscriptionType->period_label }} {{ __('messages.billing') }}</p>
                         </div>
                     </div>
                     <div class="text-right">
                         <div class="text-3xl font-bold text-white">{{ $currentSubscription->subscriptionType->formatted_charge }}</div>
-                        <div class="text-indigo-100 text-sm">{{ __('messages.per') }} {{ $currentSubscription->subscriptionType->period }}</div>
+                        <div class="text-[var(--primary)] text-sm">{{ __('messages.per') }} {{ $currentSubscription->subscriptionType->period }}</div>
                     </div>
                 </div>
             </div>
@@ -122,7 +122,7 @@
                     <div class="flex items-center justify-between">
                         <div class="flex items-start space-x-3 flex-col">
                             <div class="items-center flex flex-row pl-3 gap-2">
-                                 <i class="fas fa-hourglass-half text-indigo-600 dark:text-indigo-400 text-l"></i>
+                                 <i class="fas fa-hourglass-half text-[var(--primary)] dark:text-[var(--primary)] text-l"></i>
                             <p class="text-2xl font-bold  text-gray-900 dark:text-white">{{ $currentSubscription->days_remaining }}</p>
                             </div>
 
@@ -155,10 +155,10 @@
                 
                 <!-- Alert Message -->
                 @if($currentSubscription->subscriptionType->alert_message)
-                <div class="mt-4 bg-indigo-50 dark:bg-indigo-900/20 border border-indigo-200 dark:border-indigo-800 rounded-lg p-4">
+                <div class="mt-4 bg-[var(--primary)]dark:bg-[var(--primary)]/20 border border-[var(--primary)] dark:border-[var(--primary)] rounded-lg p-4">
                     <div class="flex items-start">
-                        <i class="fas fa-info-circle text-indigo-600 dark:text-indigo-400 mt-0.5 mr-3"></i>
-                        <p class="text-sm text-indigo-800 dark:text-indigo-300">{{ $currentSubscription->subscriptionType->alert_message }}</p>
+                        <i class="fas fa-info-circle text-[var(--primary)] dark:text-[var(--primary)] mt-0.5 mr-3"></i>
+                        <p class="text-sm text-[var(--primary)] dark:text-[var(--primary)]">{{ $currentSubscription->subscriptionType->alert_message }}</p>
                     </div>
                 </div>
                 @endif
@@ -173,7 +173,7 @@
                 </div>
                 <h4 class="text-lg font-semibold text-gray-900 dark:text-white mb-2">{{ __('messages.no_active_subscription') }}</h4>
                 <p class="text-sm text-gray-600 dark:text-gray-400 mb-4">{{ __('messages.subscribe_to_continue') }}</p>
-                <button class="inline-flex items-center px-6 py-3 bg-indigo-600 hover:bg-indigo-700 text-white font-medium rounded-lg transition-colors duration-200">
+                <button class="inline-flex items-center px-6 py-3 bg-[var(--primary)] hover:bg-[var(--primary-hover)] text-white font-medium rounded-lg transition-colors duration-200">
                     <i class="fas fa-plus mr-2"></i>
                     {{ __('messages.subscribe_now') }}
                 </button>

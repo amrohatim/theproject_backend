@@ -14,7 +14,7 @@
             <a href="{{ route('vendor.settings.service-providers.index') }}" class="inline-flex items-center px-4 py-2 bg-gray-600 border border-transparent rounded-md font-semibold text-xs text-white uppercase tracking-widest hover:bg-gray-700 active:bg-gray-900 focus:outline-none focus:border-gray-900 focus:ring ring-gray-300 disabled:opacity-25 transition ease-in-out duration-150">
                 <i class="fas fa-arrow-left mr-2"></i> Back to Service Providers
             </a>
-            <a href="{{ route('vendor.settings.service-providers.edit', $serviceProvider) }}" class="inline-flex items-center px-4 py-2 bg-blue-600 border border-transparent rounded-md font-semibold text-xs text-white uppercase tracking-widest hover:bg-blue-700 active:bg-blue-900 focus:outline-none focus:border-blue-900 focus:ring ring-blue-300 disabled:opacity-25 transition ease-in-out duration-150">
+            <a href="{{ route('vendor.settings.service-providers.edit', $serviceProvider) }}" class="inline-flex items-center px-4 py-2 bg-[#53D2DC] border border-transparent rounded-md font-semibold text-xs text-white uppercase tracking-widest hover:bg-[#53D2DC] active:bg-[#53D2DC] focus:outline-none focus:border-[#53D2DC] focus:ring ring-[#53D2DC] disabled:opacity-25 transition ease-in-out duration-150">
                 <i class="fas fa-edit mr-2"></i> Edit
             </a>
         </div>
@@ -78,8 +78,8 @@
                         @foreach($branches as $branch)
                             <div class="flex items-center p-3 bg-gray-50 dark:bg-gray-700 rounded-lg">
                                 <div class="flex-shrink-0">
-                                    <div class="h-8 w-8 rounded-full bg-blue-100 dark:bg-blue-900 flex items-center justify-center">
-                                        <i class="fas fa-store text-blue-600 dark:text-blue-400 text-sm"></i>
+                                    <div class="h-8 w-8 rounded-full bg-[#53D2DC]/10 dark:bg-[#53D2DC]/10 flex items-center justify-center">
+                                        <i class="fas fa-store text-[#53D2DC] dark:text-[#53D2DC] text-sm"></i>
                                     </div>
                                 </div>
                                 <div class="ml-3">

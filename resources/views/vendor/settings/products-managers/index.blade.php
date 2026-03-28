@@ -14,7 +14,7 @@
             <a href="{{ route('vendor.settings') }}" class="inline-flex items-center px-4 py-2 bg-gray-600 border border-transparent rounded-md font-semibold text-xs text-white uppercase tracking-widest hover:bg-gray-700 active:bg-gray-900 focus:outline-none focus:border-gray-900 focus:ring ring-gray-300 disabled:opacity-25 transition ease-in-out duration-150">
                 <i class="fas {{ app()->getLocale() === 'ar' ? 'fa-arrow-right ml-2' : 'fa-arrow-left mr-2' }} px-2"></i> {{ __('vendor.back_to_settings') }}
             </a>
-            <a href="{{ route('vendor.settings.products-managers.create') }}" class="inline-flex items-center px-4 py-2 bg-[var(--primary)] border border-transparent rounded-md font-semibold text-xs text-white uppercase tracking-widest hover:bg-[var(--primary-hover)] active:bg-[var(--primary-hover)] focus:outline-none focus:border-[var(--primary-hover)] focus:ring ring-[var(--primary-light)] disabled:opacity-25 transition ease-in-out duration-150">
+            <a href="{{ route('vendor.settings.products-managers.create') }}" class="inline-flex items-center px-4 py-2 bg-orange-600 border border-transparent rounded-md font-semibold text-xs text-white uppercase tracking-widest hover:bg-orange-700 active:bg-orange-600 focus:outline-none focus:border-orange-600 focus:ring ring-[var(--primary-light)] disabled:opacity-25 transition ease-in-out duration-150">
                 <i class="fas fa-plus {{ app()->getLocale() === 'ar' ? 'ml-2' : 'mr-2' }}"></i> {{ __('vendor.add_products_manager') }}
             </a>
         </div>
@@ -69,8 +69,8 @@
                                 <td class="px-6 py-4 whitespace-nowrap">
                                     <div class="flex items-center">
                                         <div class="flex-shrink-0 h-10 w-10">
-                                            <div class="h-10 w-10 rounded-full flex items-center justify-center" style="background-color: var(--primary-light);">
-                                                <i class="fas fa-user" style="color: var(--primary);"></i>
+                                            <div class="h-10 w-10 rounded-full flex items-center justify-center bg-orange-100">
+                                                <i class="fas fa-user text-orange-500"></i>
                                             </div>
                                         </div>
                                         <div class="ml-4">
@@ -99,7 +99,7 @@
                                 </td>
                                 <td class="px-6 py-4 whitespace-nowrap">
                                     <div class="text-sm text-gray-900 dark:text-white">
-                                        <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium" style="background-color: var(--primary-light); color: var(--primary);">
+                                        <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-orange-100 text-orange-600">
                                             {{ __('vendor.all_company_products') }}
                                         </span>
                                     </div>
@@ -147,7 +147,7 @@
                 <h3 class="mt-2 text-sm font-medium text-gray-900 dark:text-white">{{ __('vendor.no_products_managers') }}</h3>
                 <p class="mt-1 text-sm text-gray-500 dark:text-gray-400">{{ __('vendor.no_products_managers_description') }}</p>
                 <div class="mt-6">
-                    <a href="{{ route('vendor.settings.products-managers.create') }}" class="inline-flex items-center px-4 py-2 bg-[var(--primary)] border border-transparent rounded-md font-semibold text-xs text-white uppercase tracking-widest hover:bg-[var(--primary-hover)] active:bg-[var(--primary-hover)] focus:outline-none focus:border-[var(--primary-hover)] focus:ring ring-[var(--primary-light)] disabled:opacity-25 transition ease-in-out duration-150">
+                    <a href="{{ route('vendor.settings.products-managers.create') }}" class="inline-flex items-center px-4 py-2 bg-orange-600 border border-transparent rounded-md font-semibold text-xs text-white uppercase tracking-widest hover:bg-orange-700 active:bg-orange-600 focus:outline-none focus:border-orange-600 focus:ring ring-[var(--primary-light)] disabled:opacity-25 transition ease-in-out duration-150">
                         <i class="fas fa-plus {{ app()->getLocale() === 'ar' ? 'ml-2' : 'mr-2' }}"></i> {{ __('vendor.add_products_manager') }}
                     </a>
                 </div>

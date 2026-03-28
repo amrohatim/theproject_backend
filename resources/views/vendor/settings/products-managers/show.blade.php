@@ -14,7 +14,7 @@
             <a href="{{ route('vendor.settings.products-managers.index') }}" class="inline-flex items-center px-4 py-2 bg-gray-600 border border-transparent rounded-md font-semibold text-xs text-white uppercase tracking-widest hover:bg-gray-700 active:bg-gray-900 focus:outline-none focus:border-gray-900 focus:ring ring-gray-300 disabled:opacity-25 transition ease-in-out duration-150">
                 <i class="fas fa-arrow-left mr-2"></i> Back to Products Managers
             </a>
-            <a href="{{ route('vendor.settings.products-managers.edit', $productsManager) }}" class="inline-flex items-center px-4 py-2 bg-purple-600 border border-transparent rounded-md font-semibold text-xs text-white uppercase tracking-widest hover:bg-purple-700 active:bg-purple-900 focus:outline-none focus:border-purple-900 focus:ring ring-purple-300 disabled:opacity-25 transition ease-in-out duration-150">
+            <a href="{{ route('vendor.settings.products-managers.edit', $productsManager) }}" class="inline-flex items-center px-4 py-2 bg-orange-600 border border-transparent rounded-md font-semibold text-xs text-white uppercase tracking-widest hover:bg-orange-700 active:bg-orange-900 focus:outline-none focus:border-orange-900 focus:ring ring-orange-300 disabled:opacity-25 transition ease-in-out duration-150">
                 <i class="fas fa-edit mr-2"></i> Edit
             </a>
         </div>
@@ -73,16 +73,16 @@
             <div class="mt-6 bg-white dark:bg-gray-800 rounded-lg shadow p-6 border border-gray-200 dark:border-gray-700">
                 <h3 class="text-lg font-medium text-gray-900 dark:text-white mb-4">Access & Permissions</h3>
                 
-                <div class="bg-purple-50 dark:bg-purple-900/20 border border-purple-200 dark:border-purple-800 rounded-lg p-4">
+                <div class="border  rounded-lg p-4">
                     <div class="flex items-start">
                         <div class="flex-shrink-0">
-                            <div class="h-8 w-8 rounded-full bg-purple-100 dark:bg-purple-900 flex items-center justify-center">
-                                <i class="fas fa-box text-purple-600 dark:text-purple-400 text-sm"></i>
+                            <div class="h-8 w-8 rounded-full flex items-center justify-center">
+                                <i class="fas fa-box  text-sm"></i>
                             </div>
                         </div>
                         <div class="ml-3">
-                            <h4 class="text-sm font-medium text-purple-800 dark:text-purple-200">Full Products Access</h4>
-                            <div class="mt-2 text-sm text-purple-700 dark:text-purple-300">
+                            <h4 class="text-sm font-medium">Full Products Access</h4>
+                            <div class="mt-2 text-sm">
                                 <p>This Products Manager has comprehensive access to:</p>
                                 <ul class="mt-2 list-disc list-inside space-y-1">
                                     <li>All company products across all branches</li>
@@ -104,8 +104,8 @@
                 
                 <div class="flex items-center p-4 bg-gray-50 dark:bg-gray-700 rounded-lg">
                     <div class="flex-shrink-0">
-                        <div class="h-10 w-10 rounded-full bg-indigo-100 dark:bg-indigo-900 flex items-center justify-center">
-                            <i class="fas fa-building text-indigo-600 dark:text-indigo-400"></i>
+                        <div class="h-10 w-10 rounded-full bg-[var(--primary-light)] dark:bg-[var(--primary-light)] flex items-center justify-center">
+                            <i class="fas fa-building text-[var(--primary)] dark:text-[var(--primary)]"></i>
                         </div>
                     </div>
                     <div class="ml-4">
