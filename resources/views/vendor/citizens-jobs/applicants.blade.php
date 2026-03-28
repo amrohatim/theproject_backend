@@ -59,11 +59,11 @@
                             </td>
                             <td class="px-6 py-4 text-right">
                                 <div class="flex items-center justify-end space-x-3">
-                                    @if($application->user_cv)
+                                    {{-- @if($application->user_cv)
                                         <a href="{{ route('vendor.citizens-jobs.applicants.cv', $application->id) }}" target="_blank" rel="noopener" class="inline-flex items-center px-3 py-1 text-xs font-semibold text-green-700 bg-green-100 rounded-md hover:bg-green-200">
                                             {{ $t('عرض السيرة الذاتية', 'Show CV') }}
                                         </a>
-                                    @endif
+                                    @endif --}}
                                     @if($application->password_image)
                                         <a href="{{ route('vendor.citizens-jobs.applicants.passport', $application->id) }}" target="_blank" rel="noopener" class="inline-flex items-center px-3 py-1 text-xs font-semibold text-blue-700 bg-blue-100 rounded-md hover:bg-blue-200">
                                             {{ $t('عرض الجواز', 'Show Passport') }}
