@@ -68,8 +68,8 @@
     }
     
     .tab-button.active {
-        border-bottom-color: #4f46e5;
-        color: #4f46e5;
+        border-bottom-color: var(--primary);
+        color: var(--primary);
         background-color: #f8fafc;
     }
     
@@ -151,9 +151,9 @@
     }
     
     .progress-step.current {
-        background: #3b82f6;
+        background: var(--primary);
         color: white;
-        border-color: #3b82f6;
+        border-color: var(--primary);
         animation: pulse 2s infinite;
     }
     
@@ -171,7 +171,7 @@
     
     /* Bulk Actions */
     .bulk-actions-panel {
-        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        background: linear-gradient(135deg, var(--primary) 0%, var(--primary-hover) 100%);
         color: white;
         border-radius: 0.5rem;
         padding: 1.5rem;
@@ -363,14 +363,14 @@
         </div>
         <div class="mt-4 md:mt-0 flex flex-wrap gap-2">
             @if(isset($allItemsBelongToVendor) && $allItemsBelongToVendor)
-            <a href="{{ route('vendor.orders.edit', $order->id) }}" class="inline-flex items-center px-4 py-2 bg-indigo-600 border border-transparent rounded-md font-semibold text-xs text-white uppercase tracking-widest hover:bg-indigo-700 active:bg-indigo-900 focus:outline-none focus:border-indigo-900 focus:ring ring-indigo-300 disabled:opacity-25 transition ease-in-out duration-150">
+            <a href="{{ route('vendor.orders.edit', $order->id) }}" class="inline-flex items-center px-4 py-2 bg-[var(--primary)] border border-transparent rounded-md font-semibold text-xs text-white uppercase tracking-widest hover:bg-[var(--primary-hover)] active:bg-[var(--primary-hover)] focus:outline-none focus:border-[var(--primary)] focus:ring ring-[var(--primary)] disabled:opacity-25 transition ease-in-out duration-150">
                 <i class="fas fa-edit mr-2"></i> {{ __('messages.edit_order') }}
             </a>
             @endif
             <a href="{{ route('vendor.orders.invoice', $order->id) }}" class="inline-flex items-center px-4 py-2 bg-green-600 border border-transparent rounded-md font-semibold text-xs text-white uppercase tracking-widest hover:bg-green-700 active:bg-green-900 focus:outline-none focus:border-green-900 focus:ring ring-green-300 disabled:opacity-25 transition ease-in-out duration-150">
                 <i class="fas fa-file-invoice mr-2"></i> {{ __('messages.invoice') }}
             </a>
-            <!-- <button onclick="toggleBulkActions()" class="inline-flex items-center px-4 py-2 bg-purple-600 border border-transparent rounded-md font-semibold text-xs text-white uppercase tracking-widest hover:bg-purple-700 active:bg-purple-900 focus:outline-none focus:border-purple-900 focus:ring ring-purple-300 disabled:opacity-25 transition ease-in-out duration-150">
+            <!-- <button onclick="toggleBulkActions()" class="inline-flex items-center px-4 py-2 bg-[var(--primary)] border border-transparent rounded-md font-semibold text-xs text-white uppercase tracking-widest hover:bg-[var(--primary-hover)] active:bg-[var(--primary-hover)] focus:outline-none focus:border-[var(--primary)] focus:ring ring-[var(--primary)] disabled:opacity-25 transition ease-in-out duration-150">
                 <i class="fas fa-tasks mr-2"></i> Bulk Actions
             </button> -->
             <a href="{{ route('vendor.orders.index') }}" class="inline-flex items-center px-4 py-2 bg-gray-600 border border-transparent rounded-md font-semibold text-xs text-white uppercase tracking-widest hover:bg-gray-700 active:bg-gray-900 focus:outline-none focus:border-gray-900 focus:ring ring-gray-300 disabled:opacity-25 transition ease-in-out duration-150">
@@ -424,7 +424,7 @@
                 <input type="text" id="bulkNotes" class="w-full px-3 py-2 border border-gray-300 rounded-md text-gray-900" placeholder="{{ __('messages.add_notes_for_status_update') }}">
             </div>
             <div class="flex items-end">
-                <button onclick="bulkUpdateStatus()" class="w-full px-4 py-2 bg-white text-purple-600 rounded-md font-semibold hover:bg-gray-100 transition">
+                <button onclick="bulkUpdateStatus()" class="w-full px-4 py-2 bg-white text-[var(--primary)] rounded-md font-semibold hover:bg-gray-100 transition">
                     <i class="fas fa-save mr-2"></i>
                     {{ __('messages.update_selected') }}
                 </button>
@@ -576,7 +576,7 @@
                 <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
                     <div>
                         <label for="status" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">{{ __('messages.status') }}</label>
-                        <select id="status" name="status" class="mt-1 block w-full pl-3 pr-10 py-2 text-base border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-white focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm rounded-md">
+                        <select id="status" name="status" class="mt-1 block w-full pl-3 pr-10 py-2 text-base border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-white focus:outline-none focus:ring-[var(--primary)] focus:border-[var(--primary)] sm:text-sm rounded-md">
                             <option value="pending" {{ isset($vendorStatus) && $vendorStatus->status == 'pending' ? 'selected' : '' }}>{{ __('messages.pending') }}</option>
                             <option value="processing" {{ isset($vendorStatus) && $vendorStatus->status == 'processing' ? 'selected' : '' }}>{{ __('messages.processing') }}</option>
                             <option value="shipped" {{ isset($vendorStatus) && $vendorStatus->status == 'shipped' ? 'selected' : '' }}>{{ __('messages.shipped') }}</option>
@@ -587,11 +587,11 @@
 
                     <div>
                         <label for="notes" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">{{ __('messages.notes') }}</label>
-                        <textarea id="notes" name="notes" rows="1" class="shadow-sm focus:ring-indigo-500 focus:border-indigo-500 block w-full sm:text-sm border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-white rounded-md"></textarea>
+                        <textarea id="notes" name="notes" rows="1" class="shadow-sm focus:ring-[var(--primary)] focus:border-[var(--primary)] block w-full sm:text-sm border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-white rounded-md"></textarea>
                     </div>
 
                     <div class="flex items-end">
-                        <button type="submit" class="inline-flex items-center px-4 py-2 bg-indigo-600 border border-transparent rounded-md font-semibold text-xs text-white uppercase tracking-widest hover:bg-indigo-700 active:bg-indigo-900 focus:outline-none focus:border-indigo-900 focus:ring ring-indigo-300 disabled:opacity-25 transition ease-in-out duration-150">
+                        <button type="submit" class="inline-flex items-center px-4 py-2 bg-[var(--primary)] border border-transparent rounded-md font-semibold text-xs text-white uppercase tracking-widest hover:bg-[var(--primary-hover)] active:bg-[var(--primary-hover)] focus:outline-none focus:border-[var(--primary)] focus:ring ring-[var(--primary)] disabled:opacity-25 transition ease-in-out duration-150">
                             {{ __('messages.update_all_your_items') }}
                         </button>
                     </div>
@@ -711,7 +711,7 @@
                                 @endif
                                 
                                 <!-- Expandable Details Button -->
-                                <button onclick="toggleProductDetails('product-details-{{ $item->id }}')" class="text-indigo-600 dark:text-indigo-400 hover:text-indigo-900 dark:hover:text-indigo-300 text-xs flex items-center gap-1">
+                                <button onclick="toggleProductDetails('product-details-{{ $item->id }}')" class="text-[var(--primary)] dark:text-[var(--primary-light)] hover:text-[var(--primary-hover)] dark:hover:text-[var(--primary-light)] text-xs flex items-center gap-1">
                                     <i class="fas fa-info-circle"></i>
                                     View Details
                                 </button>
@@ -749,7 +749,7 @@
                         
                         <!-- Actions -->
                         <td class="px-6 py-4 whitespace-nowrap text-sm font-medium">
-                            <a href="{{ route('vendor.order-items.edit', $item->id) }}" class="text-indigo-600 dark:text-indigo-400 hover:text-indigo-900 dark:hover:text-indigo-300">
+                            <a href="{{ route('vendor.order-items.edit', $item->id) }}" class="text-[var(--primary)] dark:text-[var(--primary-light)] hover:text-[var(--primary-hover)] dark:hover:text-[var(--primary-light)]">
                                 <i class="fas fa-edit mr-1"></i>
                                 Update Status
                             </a>
@@ -847,7 +847,7 @@
                                         <div>
                                             <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">{{ __('messages.add_vendor_note') }}</label>
                                             <textarea class="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-white rounded-md" rows="3" placeholder="{{ __('messages.add_notes_placeholder') }}"></textarea>
-                                            <button class="mt-2 px-4 py-2 bg-indigo-600 text-white rounded-md hover:bg-indigo-700 transition">
+                                            <button class="mt-2 px-4 py-2 bg-[var(--primary)] text-white rounded-md hover:bg-[var(--primary-hover)] transition">
                                                 <i class="fas fa-save mr-2"></i>
                                                 {{ __('messages.save_note') }}
                                             </button>

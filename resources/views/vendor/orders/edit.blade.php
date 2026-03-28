@@ -68,8 +68,8 @@
     }
     
     .tab-button.active {
-        border-bottom-color: #4f46e5;
-        color: #4f46e5;
+        border-bottom-color: var(--primary);
+        color: var(--primary);
         background-color: #f8fafc;
     }
     
@@ -117,7 +117,7 @@
         align-items: center;
         gap: 0.5rem;
         padding: 0.75rem 1rem;
-        background: linear-gradient(135deg, #4f46e5 0%, #7c3aed 100%);
+        background: linear-gradient(135deg, var(--primary) 0%, var(--primary-hover) 100%);
         color: white;
         border-radius: 0.5rem;
         font-size: 1.125rem;
@@ -295,7 +295,7 @@
                 <!-- Order Status -->
                 <div>
                     <label for="status" class="block text-sm font-medium text-gray-700 dark:text-gray-300">Order Status <span class="text-red-500">*</span></label>
-                    <select id="status" name="status" class="mt-1 block w-full py-2 px-3 border border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-white bg-white rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm" required>
+                    <select id="status" name="status" class="mt-1 block w-full py-2 px-3 border border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-white bg-white rounded-md shadow-sm focus:outline-none focus:ring-[var(--primary)] focus:border-[var(--primary)] sm:text-sm" required>
                         <option value="pending" {{ $order->status == 'pending' ? 'selected' : '' }}>Pending</option>
                         <option value="confirmed" {{ $order->status == 'confirmed' ? 'selected' : '' }}>Confirmed</option>
                         <option value="processing" {{ $order->status == 'processing' ? 'selected' : '' }}>Processing</option>
@@ -311,7 +311,7 @@
                 <!-- Notes -->
                 <div>
                     <label for="notes" class="block text-sm font-medium text-gray-700 dark:text-gray-300">Notes</label>
-                    <textarea id="notes" name="notes" rows="3" class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-white rounded-md" placeholder="Add notes about this status update...">{{ $order->notes }}</textarea>
+                    <textarea id="notes" name="notes" rows="3" class="mt-1 focus:ring-[var(--primary)] focus:border-[var(--primary)] block w-full shadow-sm sm:text-sm border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-white rounded-md" placeholder="Add notes about this status update...">{{ $order->notes }}</textarea>
                     @error('notes')
                         <p class="mt-1 text-sm text-red-600 dark:text-red-400">{{ $message }}</p>
                     @enderror
@@ -319,7 +319,7 @@
             </div>
             
             <div class="mt-6 flex justify-end">
-                <button type="submit" class="inline-flex items-center px-4 py-2 bg-indigo-600 border border-transparent rounded-md font-semibold text-xs text-white uppercase tracking-widest hover:bg-indigo-700 active:bg-indigo-900 focus:outline-none focus:border-indigo-900 focus:ring ring-indigo-300 disabled:opacity-25 transition ease-in-out duration-150">
+                <button type="submit" class="inline-flex items-center px-4 py-2 bg-[var(--primary)] border border-transparent rounded-md font-semibold text-xs text-white uppercase tracking-widest hover:bg-[var(--primary-hover)] active:bg-[var(--primary-hover)] focus:outline-none focus:border-[var(--primary)] focus:ring ring-[var(--primary)] disabled:opacity-25 transition ease-in-out duration-150">
                     <i class="fas fa-save mr-2"></i> Update Order
                 </button>
             </div>
@@ -408,7 +408,7 @@
                                 @endif
                                 
                                 <!-- Expandable Details Button -->
-                                <button onclick="toggleProductDetails('product-details-{{ $item->id }}')" class="text-indigo-600 dark:text-indigo-400 hover:text-indigo-900 dark:hover:text-indigo-300 text-sm flex items-center gap-1 mt-2">
+                                <button onclick="toggleProductDetails('product-details-{{ $item->id }}')" class="text-[var(--primary)] dark:text-[var(--primary-light)] hover:text-[var(--primary-hover)] dark:hover:text-[var(--primary-light)] text-sm flex items-center gap-1 mt-2">
                                     <i class="fas fa-info-circle"></i>
                                     View Details
                                 </button>
@@ -455,7 +455,7 @@
                         
                         <!-- Actions -->
                         <td class="px-6 py-4 whitespace-nowrap text-sm font-medium">
-                            <button onclick="updateItemStatus({{ $item->id }})" class="text-indigo-600 dark:text-indigo-400 hover:text-indigo-900 dark:hover:text-indigo-300">
+                            <button onclick="updateItemStatus({{ $item->id }})" class="text-[var(--primary)] dark:text-[var(--primary-light)] hover:text-[var(--primary-hover)] dark:hover:text-[var(--primary-light)]">
                                 <i class="fas fa-save mr-1"></i>
                                 Update
                             </button>
@@ -553,7 +553,7 @@
                                         <div>
                                             <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Add Vendor Note</label>
                                             <textarea class="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-white rounded-md" rows="3" placeholder="Add notes about this item..."></textarea>
-                                            <button class="mt-2 px-4 py-2 bg-indigo-600 text-white rounded-md hover:bg-indigo-700 transition">
+                                            <button class="mt-2 px-4 py-2 bg-[var(--primary)] text-white rounded-md hover:bg-[var(--primary-hover)] transition">
                                                 <i class="fas fa-save mr-2"></i>
                                                 Save Note
                                             </button>

@@ -49,7 +49,7 @@
 
         .responsive-table tbody tr {
             margin-bottom: 1rem;
-            border: 1px solid #3b82f6 !important;
+            border: 1px solid var(--primary) !important;
             border-radius: 0.375rem !important;
             overflow: hidden;
             background-color: #ffffff;
@@ -58,7 +58,7 @@
 
         .dark .responsive-table tbody tr {
             background-color: #1f2937;
-            border-color: #60a5fa !important;
+            border-color: var(--primary-light) !important;
         }
 
         .responsive-table td {
@@ -106,7 +106,7 @@
         <div class="flex flex-col md:flex-row md:items-end space-y-4 md:space-y-0 md:space-x-4">
             <div class="flex-grow">
                 <label for="status" class="block text-sm font-medium text-gray-700 dark:text-gray-300">{{ __('messages.update_status') }}</label>
-                <select name="status" id="status" class="mt-1 block w-48 pl-3 pr-10 py-2 text-base border-gray-300 dark:border-gray-700 dark:bg-gray-800 dark:text-gray-300 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm rounded-md">
+                <select name="status" id="status" class="mt-1 block w-48 pl-3 pr-10 py-2 text-base border-gray-300 dark:border-gray-700 dark:bg-gray-800 dark:text-gray-300 focus:outline-none focus:ring-[var(--primary)] focus:border-[var(--primary)] sm:text-sm rounded-md">
                     <option value="">{{ __('messages.select_status') }}</option>
                     <option value="processing">{{ __('messages.processing') }}</option>
                     <option value="shipped">{{ __('messages.shipped') }}</option>
@@ -116,7 +116,7 @@
             </div>
            
             <div>
-                <button type="submit" class="inline-flex items-center px-4 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 disabled:opacity-50" id="update-status-btn" disabled>
+                <button type="submit" class="inline-flex items-center px-4 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-[var(--primary)] hover:bg-[var(--primary-hover)] focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-[var(--primary)] disabled:opacity-50" id="update-status-btn" disabled>
                     {{ __('messages.update_selected_items') }}
                 </button>
             </div>
@@ -131,7 +131,7 @@
                     <tr>
                         <th scope="col" class="px-6 py-3 text-left">
                             <div class="flex items-center">
-                                <input type="checkbox" id="select-all" class="h-4 w-4 text-indigo-600 focus:ring-indigo-500 border-gray-300 dark:border-gray-700 dark:bg-gray-800 rounded">
+                                <input type="checkbox" id="select-all" class="h-4 w-4 text-[var(--primary)] focus:ring-[var(--primary)] border-gray-300 dark:border-gray-700 dark:bg-gray-800 rounded">
                                 <label for="select-all" class="sr-only">{{ __('messages.select_all') }}</label>
                             </div>
                         </th>
@@ -150,12 +150,12 @@
                     <tr>
                         <td class="px-6 py-4 whitespace-nowrap" data-label="{{ __('messages.select_all') }}">
                             <div class="flex items-center">
-                                <input type="checkbox" name="item_ids[]" form="bulk-actions-form" value="{{ $item->id }}" class="item-checkbox h-4 w-4 text-indigo-600 focus:ring-indigo-500 border-gray-300 dark:border-gray-700 dark:bg-gray-800 rounded">
+                                <input type="checkbox" name="item_ids[]" form="bulk-actions-form" value="{{ $item->id }}" class="item-checkbox h-4 w-4 text-[var(--primary)] focus:ring-[var(--primary)] border-gray-300 dark:border-gray-700 dark:bg-gray-800 rounded">
                             </div>
                         </td>
                         <td class="px-6 py-4 whitespace-nowrap" data-label="{{ __('messages.order_number') }}">
                             <div class="text-sm font-medium text-gray-900 dark:text-white">
-                                <a href="{{ route('vendor.orders.show', $item->order_id) }}" class="hover:text-indigo-600 dark:hover:text-indigo-400">
+                                <a href="{{ route('vendor.orders.show', $item->order_id) }}" class="hover:text-[var(--primary)] dark:hover:text-[var(--primary-light)]">
                                     {{ $item->order->order_number ?? 'N/A' }}
                                 </a>
                             </div>
@@ -200,10 +200,10 @@
                             </span>
                         </td>
                         <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium" data-label="{{ __('messages.actions') }}">
-                            <a href="{{ route('vendor.order-items.edit', $item->id) }}" class="text-indigo-600 dark:text-indigo-400 hover:text-indigo-900 dark:hover:text-indigo-300 mr-3">
+                            <a href="{{ route('vendor.order-items.edit', $item->id) }}" class="text-[var(--primary)] dark:text-[var(--primary-light)] hover:text-[var(--primary-hover)] dark:hover:text-[var(--primary-light)] mr-3">
                                 <i class="fas fa-edit"></i>
                             </a>
-                            <a href="{{ route('vendor.orders.show', $item->order_id) }}" class="text-blue-600 dark:text-blue-400 hover:text-blue-900 dark:hover:text-blue-300">
+                            <a href="{{ route('vendor.orders.show', $item->order_id) }}" class="text-[var(--primary)] dark:text-[var(--primary-light)] hover:text-[var(--primary-hover)] dark:hover:text-[var(--primary-light)]">
                                 <i class="fas fa-eye"></i>
                             </a>
                         </td>

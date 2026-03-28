@@ -41,7 +41,7 @@
                 <!-- Booking Status -->
                 <div>
                     <label for="status" class="block text-sm font-medium text-gray-700 dark:text-gray-300">{{ __('messages.status') }} <span class="text-red-500">*</span></label>
-                    <select id="status" name="status" class="mt-1 block w-full py-2 px-3 border border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-white bg-white rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm" required>
+                    <select id="status" name="status" class="mt-1 block w-full py-2 px-3 border border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-white bg-white rounded-md shadow-sm focus:outline-none focus:ring-[var(--primary)] focus:border-[var(--primary)] sm:text-sm" required>
                         <option value="pending" {{ $booking->status == 'pending' ? 'selected' : '' }}>{{ __('messages.pending') }}</option>
                         <option value="confirmed" {{ $booking->status == 'confirmed' ? 'selected' : '' }}>{{ __('messages.confirmed') }}</option>
                         <option value="completed" {{ $booking->status == 'completed' ? 'selected' : '' }}>{{ __('messages.completed') }}</option>
@@ -55,7 +55,7 @@
                 <!-- Notes -->
                 {{-- <div class="md:col-span-2">
                     <label for="notes" class="block text-sm font-medium text-gray-700 dark:text-gray-300">{{ __('messages.notes') }}</label>
-                    <textarea id="notes" name="notes" rows="4" class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-white rounded-md">{{ old('notes', $booking->notes) }}</textarea>
+                    <textarea id="notes" name="notes" rows="4" class="mt-1 focus:ring-[var(--primary)] focus:border-[var(--primary)] block w-full shadow-sm sm:text-sm border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-white rounded-md">{{ old('notes', $booking->notes) }}</textarea>
                     @error('notes')
                         <p class="mt-1 text-sm text-red-600 dark:text-red-400">{{ $message }}</p>
                     @enderror
@@ -63,7 +63,7 @@
             </div>
             
             <div class="mt-6 flex justify-end">
-                <button type="submit" class="inline-flex items-center px-4 py-2 bg-indigo-600 border border-transparent rounded-md font-semibold text-xs text-white uppercase tracking-widest hover:bg-indigo-700 active:bg-indigo-900 focus:outline-none focus:border-indigo-900 focus:ring ring-indigo-300 disabled:opacity-25 transition ease-in-out duration-150">
+                <button type="submit" class="inline-flex items-center px-4 py-2 bg-[var(--primary)] border border-transparent rounded-md font-semibold text-xs text-white uppercase tracking-widest hover:bg-[var(--primary-hover)] active:bg-[var(--primary-hover)] focus:outline-none focus:border-[var(--primary)] focus:ring ring-[var(--primary)] disabled:opacity-25 transition ease-in-out duration-150">
                     <i class="fas fa-save mr-2"></i> {{ __('messages.update_booking') }}
                 </button>
             </div>

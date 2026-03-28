@@ -20,7 +20,7 @@
 
         .responsive-table tbody tr {
             margin-bottom: 1rem;
-            border: 1px solid #3b82f6 !important;
+            border: 1px solid var(--primary) !important;
             border-radius: 0.375rem !important;
             overflow: hidden;
             background-color: #ffffff;
@@ -29,7 +29,7 @@
 
         .dark .responsive-table tbody tr {
             background-color: #1f2937;
-            border-color: #60a5fa !important;
+            border-color: var(--primary-light) !important;
         }
 
         .responsive-table td {
@@ -86,13 +86,13 @@
                         <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
                             <i class="fas fa-search text-gray-400"></i>
                         </div>
-                        <input type="text" name="search" id="search" class="focus:ring-indigo-500 focus:border-indigo-500 block w-full pl-1 sm:text-xs border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-white rounded-md"  placeholder="{{ __('messages.search_by_order_id_or_customer_name') }}">
+                        <input type="text" name="search" id="search" class="focus:ring-[var(--primary)] focus:border-[var(--primary)] block w-full pl-1 sm:text-xs border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-white rounded-md"  placeholder="{{ __('messages.search_by_order_id_or_customer_name') }}">
                     </div>
                 </div>
 
                 <div>
                     <label for="status" class="block text-sm font-medium text-gray-700 dark:text-gray-300">{{ __('messages.status') }}</label>
-                    <select id="status" name="status" class="mt-1 block w-full pl-3 pr-10 py-2 text-base border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-white focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm rounded-md">
+                    <select id="status" name="status" class="mt-1 block w-full pl-3 pr-10 py-2 text-base border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-white focus:outline-none focus:ring-[var(--primary)] focus:border-[var(--primary)] sm:text-sm rounded-md">
                         <option value="">{{ __('messages.all_status') }}</option>
                         <option value="pending">{{ __('messages.pending') }}</option>
                         <option value="processing">{{ __('messages.processing') }}</option>
@@ -104,7 +104,7 @@
 
                 <div>
                     <label for="branch" class="block text-sm font-medium text-gray-700 dark:text-gray-300">{{ __('messages.branch') }}</label>
-                    <select id="branch" name="branch" class="mt-1 block w-full pl-3 pr-10 py-2 text-base border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-white focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm rounded-md">
+                    <select id="branch" name="branch" class="mt-1 block w-full pl-3 pr-10 py-2 text-base border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-white focus:outline-none focus:ring-[var(--primary)] focus:border-[var(--primary)] sm:text-sm rounded-md">
                         <option value="">{{ __('messages.all_branches') }}</option>
                         @foreach($branches ?? [] as $branch)
                             <option value="{{ $branch->id }}">{{ $branch->name }}</option>
@@ -114,7 +114,7 @@
 
                 <div>
                     <label for="date_range" class="block text-sm font-medium text-gray-700 dark:text-gray-300">{{ __('messages.date_range') }}</label>
-                    <select id="date_range" name="date_range" class="mt-1 block w-full pl-3 pr-10 py-2 text-base border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-white focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm rounded-md">
+                    <select id="date_range" name="date_range" class="mt-1 block w-full pl-3 pr-10 py-2 text-base border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-white focus:outline-none focus:ring-[var(--primary)] focus:border-[var(--primary)] sm:text-sm rounded-md">
                         <option value="">{{ __('messages.all_time') }}</option>
                         <option value="">{{ __('messages.today') }}</option>
                         <option value="">{{ __('messages.yesterday') }}</option>
@@ -127,7 +127,7 @@
             </div>
 
             <div class="flex justify-end">
-                <button type="submit" class="inline-flex items-center px-4 py-2 bg-indigo-600 border border-transparent rounded-md font-semibold text-xs text-white uppercase tracking-widest hover:bg-indigo-700 active:bg-indigo-900 focus:outline-none focus:border-indigo-900 focus:ring ring-indigo-300 disabled:opacity-25 transition ease-in-out duration-150">
+                <button type="submit" class="inline-flex items-center px-4 py-2 bg-[var(--primary)] border border-transparent rounded-md font-semibold text-xs text-white uppercase tracking-widest hover:bg-[var(--primary-hover)] active:bg-[var(--primary-hover)] focus:outline-none focus:border-[var(--primary)] focus:ring ring-[var(--primary)] disabled:opacity-25 transition ease-in-out duration-150">
                     <i class="fas fa-filter mr-2"></i> {{ __('messages.filter') }}
                 </button>
             </div>
@@ -138,8 +138,8 @@
     <div class="grid grid-cols-1 md:grid-cols-4 gap-6 mb-6">
         <div class="bg-white dark:bg-gray-800 rounded-lg shadow p-6 border border-gray-200 dark:border-gray-700">
             <div class="flex items-center">
-                <div class="p-3 rounded-full bg-indigo-100 dark:bg-indigo-900 mr-4">
-                    <i class="fas fa-shopping-cart text-indigo-500 dark:text-indigo-400"></i>
+                <div class="p-3 rounded-full bg-[var(--primary-light)] dark:bg-[var(--primary)]/20 mr-4">
+                    <i class="fas fa-shopping-cart text-[var(--primary)] dark:text-[var(--primary-light)]"></i>
                 </div>
                 <div>
                     <p class="text-sm font-medium text-gray-500 dark:text-gray-400">{{ __('messages.total_orders') }}</p>
@@ -174,8 +174,8 @@
 
         <div class="bg-white dark:bg-gray-800 rounded-lg shadow p-6 border border-gray-200 dark:border-gray-700">
             <div class="flex items-center">
-                <div class="p-3 rounded-full bg-blue-100 dark:bg-blue-900 mr-4">
-                    <i class="fas fa-dollar-sign text-blue-500 dark:text-blue-400"></i>
+                <div class="p-3 rounded-full bg-[var(--primary-light)] dark:bg-[var(--primary)]/20 mr-4">
+                    <i class="fas fa-dollar-sign text-[var(--primary)] dark:text-[var(--primary-light)]"></i>
                 </div>
                 <div>
                     <p class="text-sm font-medium text-gray-500 dark:text-gray-400">{{ __('messages.total_revenue') }}</p>
@@ -242,10 +242,10 @@
                             </span>
                         </td>
                         <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium" data-label="{{ __('messages.actions') }}">
-                            <a href="{{ route('vendor.orders.show', $order->id) }}" class="text-blue-600 dark:text-blue-400 hover:text-blue-900 dark:hover:text-blue-300 mr-3" title="{{ __('messages.view') }}">
+                            <a href="{{ route('vendor.orders.show', $order->id) }}" class="text-[var(--primary)] dark:text-[var(--primary-light)] hover:text-[var(--primary-hover)] dark:hover:text-[var(--primary-light)] mr-3" title="{{ __('messages.view') }}">
                                 <i class="fas fa-eye"></i>
                             </a>
-                            <a href="{{ route('vendor.orders.edit', $order->id) }}" class="text-indigo-600 dark:text-indigo-400 hover:text-indigo-900 dark:hover:text-indigo-300 mr-3" title="{{ __('messages.edit') }}">
+                            <a href="{{ route('vendor.orders.edit', $order->id) }}" class="text-[var(--primary)] dark:text-[var(--primary-light)] hover:text-[var(--primary-hover)] dark:hover:text-[var(--primary-light)] mr-3" title="{{ __('messages.edit') }}">
                                 <i class="fas fa-edit"></i>
                             </a>
                             <a href="{{ route('vendor.orders.invoice', $order->id) }}" class="text-green-600 dark:text-green-400 hover:text-green-900 dark:hover:text-green-300" title="{{ __('messages.invoice') }}">
