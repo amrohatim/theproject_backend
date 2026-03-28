@@ -683,7 +683,7 @@
                                     <img src="#" alt="Image Preview" class="mx-auto h-32 w-auto object-cover rounded-md">
                                 </div>
                                 <div class="flex text-sm text-gray-600 dark:text-gray-400">
-                                    <label for="image" class="relative cursor-pointer bg-white dark:bg-gray-700 rounded-md font-medium text-[var(--primary)] dark:text-[var(--primary)] hover:text-[var(--primary)] dark:hover:text-[var(--primary)] focus-within:outline-none focus-within:ring-2 focus-within:ring-offset-2 focus-within:ring-[var(--primary)]">
+                                    <label for="image" class="relative cursor-pointer bg-white dark:bg-gray-700 rounded-md font-medium text-[var(--primary)] dark:text-[var(--primary)] hover:text-[var(--primary-hover)] dark:hover:text-[var(--primary-hover)] focus-within:outline-none focus-within:ring-2 focus-within:ring-offset-2 focus-within:ring-[var(--primary)]">
                                         <span>{{ __('messages.upload_file') }}</span>
                                         <input id="image" name="image" type="file" class="sr-only" onchange="previewImage(this)">
                                     </label>

@@ -31,7 +31,7 @@
             <p class="mt-1 text-gray-600 dark:text-gray-400">{{ $t('إدارة وظائف المواطنات', 'Manage citizens jobs') }}</p>
         </div>
         <div class="mt-4 md:mt-0 jobs-actions flex md:justify-end">
-            <a href="{{ route('vendor.citizens-jobs.create') }}" class="inline-flex items-center px-4 py-2 bg-indigo-600 border border-transparent rounded-md font-semibold text-xs text-white uppercase tracking-widest hover:bg-indigo-700 active:bg-indigo-900 focus:outline-none focus:border-indigo-900 focus:ring ring-indigo-300 disabled:opacity-25 transition ease-in-out duration-150">
+            <a href="{{ route('vendor.citizens-jobs.create') }}" class="inline-flex items-center px-4 py-2 bg-[var(--primary)] border border-transparent rounded-md font-semibold text-xs text-white uppercase tracking-widest hover:bg-[var(--primary-hover)] active:bg-[var(--primary)] focus:outline-none focus:border-[var(--primary)] focus:ring ring-[var(--primary)] disabled:opacity-25 transition ease-in-out duration-150">
                 <i class="fas fa-plus mr-2"></i> {{ $t('إضافة وظيفة مواطنات', 'Add Citizens Job') }}
             </a>
         </div>
@@ -82,7 +82,7 @@
                                     <a href="{{ route('vendor.citizens-jobs.show', $job->id) }}" class="inline-flex items-center px-3 py-1 text-xs font-semibold text-gray-700 bg-gray-100 rounded-md hover:bg-gray-200">
                                         {{ $t('عرض', 'View') }}
                                     </a>
-                                    <a href="{{ route('vendor.citizens-jobs.applicants', $job->id) }}" class="inline-flex items-center px-3 py-1 text-xs font-semibold text-blue-700 bg-blue-100 rounded-md hover:bg-blue-200">
+                                    <a href="{{ route('vendor.citizens-jobs.applicants', $job->id) }}" class="inline-flex items-center px-3 py-1 text-xs font-semibold text-[var(--primary)] bg-[var(--primary-light)] rounded-md hover:bg-[var(--towhite)]">
                                         {{ $t('عرض المتقدمين', 'View Applicants') }}
                                     </a>
                                     <form method="POST" action="{{ route('vendor.citizens-jobs.destroy', $job->id) }}" onsubmit="return confirm('{{ $t('هل أنت متأكد من حذف هذه الوظيفة؟', 'Are you sure you want to delete this job?') }}');">
@@ -101,7 +101,7 @@
                                 <div class="flex flex-col items-center justify-center">
                                     <i class="fas fa-briefcase text-gray-300 dark:text-gray-600 text-5xl mb-4"></i>
                                     <p>{{ $t('لا توجد وظائف مواطنات.', 'No citizens jobs found.') }}</p>
-                                    <a href="{{ route('vendor.citizens-jobs.create') }}" class="mt-3 inline-flex items-center px-4 py-2 bg-indigo-600 border border-transparent rounded-md font-semibold text-xs text-white uppercase tracking-widest hover:bg-indigo-700 active:bg-indigo-900 focus:outline-none focus:border-indigo-900 focus:ring ring-indigo-300 disabled:opacity-25 transition ease-in-out duration-150">
+                                    <a href="{{ route('vendor.citizens-jobs.create') }}" class="mt-3 inline-flex items-center px-4 py-2 bg-[var(--primary)] border border-transparent rounded-md font-semibold text-xs text-white uppercase tracking-widest hover:bg-[var(--primary-hover)] active:bg-[var(--primary)] focus:outline-none focus:border-[var(--primary)] focus:ring ring-[var(--primary)] disabled:opacity-25 transition ease-in-out duration-150">
                                         <i class="fas fa-plus mr-2"></i> {{ $t('إضافة وظيفة مواطنات', 'Add Citizens Job') }}
                                     </a>
                                 </div>

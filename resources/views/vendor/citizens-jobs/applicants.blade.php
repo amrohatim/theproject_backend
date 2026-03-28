@@ -18,7 +18,7 @@
             <p class="mt-1 text-gray-600 dark:text-gray-400">{{ $job->title }}</p>
         </div>
         <div class="mt-4 md:mt-0">
-            <a href="{{ route('vendor.citizens-jobs.index') }}" class="inline-flex items-center px-4 py-2 bg-indigo-600 border border-transparent rounded-md font-semibold text-xs text-white uppercase tracking-widest hover:bg-indigo-700 active:bg-indigo-900 focus:outline-none focus:border-indigo-900 focus:ring ring-indigo-300 disabled:opacity-25 transition ease-in-out duration-150">
+            <a href="{{ route('vendor.citizens-jobs.index') }}" class="inline-flex items-center px-4 py-2 bg-[var(--primary)] border border-transparent rounded-md font-semibold text-xs text-white uppercase tracking-widest hover:bg-[var(--primary-hover)] active:bg-[var(--primary)] focus:outline-none focus:border-[var(--primary)] focus:ring ring-[var(--primary)] disabled:opacity-25 transition ease-in-out duration-150">
                 {{ $t('رجوع إلى وظائف المواطنات', 'Back to Citizens Jobs') }}
             </a>
         </div>
@@ -27,7 +27,7 @@
     <div class="bg-white dark:bg-gray-800 rounded-lg shadow border border-gray-200 dark:border-gray-700">
         <div class="flex items-center justify-between p-6 border-b border-gray-200 dark:border-gray-700">
             <h3 class="text-lg font-semibold text-gray-900 dark:text-white">{{ $t('المتقدمون', 'Applicants') }}</h3>
-            <span class="px-3 py-1 text-sm bg-blue-100 text-blue-700 rounded-full">{{ $applications->count() }}</span>
+            <span class="px-3 py-1 text-sm bg-[var(--primary-light)] text-[var(--primary)] rounded-full">{{ $applications->count() }}</span>
         </div>
         <div class="overflow-x-auto">
             <table class="min-w-full divide-y divide-gray-200 dark:divide-gray-700">
@@ -65,7 +65,7 @@
                                         </a>
                                     @endif --}}
                                     @if($application->password_image)
-                                        <a href="{{ route('vendor.citizens-jobs.applicants.passport', $application->id) }}" target="_blank" rel="noopener" class="inline-flex items-center px-3 py-1 text-xs font-semibold text-blue-700 bg-blue-100 rounded-md hover:bg-blue-200">
+                                        <a href="{{ route('vendor.citizens-jobs.applicants.passport', $application->id) }}" target="_blank" rel="noopener" class="inline-flex items-center px-3 py-1 text-xs font-semibold text-[var(--primary)] bg-[var(--primary-light)] rounded-md hover:bg-[var(--towhite)]">
                                             {{ $t('عرض الجواز', 'Show Passport') }}
                                         </a>
                                     @endif

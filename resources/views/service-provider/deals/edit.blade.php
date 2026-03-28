@@ -44,11 +44,61 @@
         opacity: 0.5;
         cursor: not-allowed;
     }
+
+    .lang-toggle {
+        display: inline-flex;
+        gap: 0.5rem;
+        padding: 0.25rem;
+        border: 1px solid #e5e7eb;
+        border-radius: 9999px;
+        background: #ffffff;
+    }
+
+    .lang-toggle button {
+        border: none;
+        background: transparent;
+        color: #6b7280;
+        font-size: 0.75rem;
+        font-weight: 600;
+        padding: 0.35rem 0.9rem;
+        border-radius: 9999px;
+        display: inline-flex;
+        align-items: center;
+        gap: 0.35rem;
+        cursor: pointer;
+    }
+
+    .lang-toggle button.active {
+        background: #f3f4f6;
+        color: #111827;
+    }
+
+    .dark .lang-toggle {
+        border-color: #374151;
+        background: #111827;
+    }
+
+    .dark .lang-toggle button {
+        color: #9ca3af;
+    }
+
+    .dark .lang-toggle button.active {
+        background: #1f2937;
+        color: #f9fafb;
+    }
+
+    @media (max-width: 768px) {
+        .service-provider-deals-form .lang-toggle button {
+            padding: 0.5rem 0.8rem;
+            font-size: 0.7rem;
+            min-height: 2.5rem;
+        }
+    }
 </style>
 @endsection
 
 @section('content')
-<div class="container mx-auto">
+<div class="container mx-auto service-provider-deals-form">
     <div class="mb-6">
         <div class="flex items-center justify-between">
             <div>
@@ -78,10 +128,13 @@
                         <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">{{ __('service_provider.title') }} <span class="text-red-500">*</span></label>
 
                         <!-- Language Switcher for Title -->
-                        <x-form-language-switcher field-name="title" />
+                        <div class="lang-toggle mb-4" data-lang-toggle="title">
+                            <button type="button" class="active" data-lang="en">EN</button>
+                            <button type="button" data-lang="ar">AR</button>
+                        </div>
 
                         <!-- English Title -->
-                        <div data-language-field="title" data-language="en" class="mb-3 active-language-field">
+                        <div data-lang-field="title" data-lang="en" class="mb-3 active-language-field">
                             <input type="text" name="title" id="title" value="{{ old('title', $deal->title) }}"
                                    class="mt-1 border-gray-300 border-[1px]  px-2 py-2 block w-full shadow-sm sm:text-sm border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-white rounded-md"
                                    placeholder="{{ __('service_provider.enter_deal_title') }}" required>
@@ -91,7 +144,7 @@
                         </div>
 
                         <!-- Arabic Title -->
-                        <div data-language-field="title" data-language="ar" style="display: none;">
+                        <div data-lang-field="title" data-lang="ar" style="display: none;">
                             <input type="text" name="title_arabic" id="title_arabic" value="{{ old('title_arabic', $deal->title_arabic) }}"
                                    class="mt-1 border-gray-300 border-[1px]  px-2 py-2 block w-full shadow-sm sm:text-sm border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-white rounded-md"
                                    placeholder="{{ __('service_provider.enter_deal_title_arabic') }}" dir="rtl" required>
@@ -126,10 +179,13 @@
                     <p class="text-xs text-gray-500 dark:text-gray-400 mb-2">{{ __('service_provider.description_optional_both_or_none') }}</p>
 
                     <!-- Language Switcher for Description -->
-                    <x-form-language-switcher field-name="description" />
+                    <div class="lang-toggle mb-4" data-lang-toggle="description">
+                        <button type="button" class="active" data-lang="en">EN</button>
+                        <button type="button" data-lang="ar">AR</button>
+                    </div>
 
                     <!-- English Description -->
-                    <div data-language-field="description" data-language="en" class="mb-3 active-language-field">
+                    <div data-lang-field="description" data-lang="en" class="mb-3 active-language-field">
                         <textarea id="description" name="description" rows="3"
                                   class="mt-1 border-gray-300 border-[1px]  px-4 py-2 block w-full shadow-sm sm:text-sm border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-white rounded-md"
                                   placeholder="{{ __('service_provider.enter_deal_description') }}">{{ old('description', $deal->description) }}</textarea>
@@ -139,7 +195,7 @@
                     </div>
 
                     <!-- Arabic Description -->
-                    <div data-language-field="description" data-language="ar" style="display: none;">
+                    <div data-lang-field="description" data-lang="ar" style="display: none;">
                         <textarea id="description_arabic" name="description_arabic" rows="3"
                                   class="mt-1 border-gray-300 border-[1px]  px-4 py-2 block w-full shadow-sm sm:text-sm border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-white rounded-md"
                                   placeholder="{{ __('service_provider.enter_deal_description_arabic') }}" dir="rtl">{{ old('description_arabic', $deal->description_arabic) }}</textarea>
@@ -155,10 +211,13 @@
                     <p class="text-xs text-gray-500 dark:text-gray-400 mb-2">{{ __('service_provider.promotional_message_optional_both_or_none') }}</p>
 
                     <!-- Language Switcher for Promotional Message -->
-                    <x-form-language-switcher field-name="promotional_message" />
+                    <div class="lang-toggle mb-4" data-lang-toggle="promotional_message">
+                        <button type="button" class="active" data-lang="en">EN</button>
+                        <button type="button" data-lang="ar">AR</button>
+                    </div>
 
                     <!-- English Promotional Message -->
-                    <div data-language-field="promotional_message" data-language="en" class="mb-3 active-language-field">
+                    <div data-lang-field="promotional_message" data-lang="en" class="mb-3 active-language-field">
                         <div class="relative">
                             <input type="text" name="promotional_message" id="promotional_message" maxlength="50" value="{{ old('promotional_message', $deal->promotional_message) }}"
                                    class="mt-1 border-gray-300 border-[1px]  px-2 py-2 block w-full shadow-sm sm:text-sm border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-white rounded-md"
@@ -173,7 +232,7 @@
                     </div>
 
                     <!-- Arabic Promotional Message -->
-                    <div data-language-field="promotional_message" data-language="ar" style="display: none;">
+                    <div data-lang-field="promotional_message" data-lang="ar" style="display: none;">
                         <div class="relative">
                             <input type="text" name="promotional_message_arabic" id="promotional_message_arabic" maxlength="50" value="{{ old('promotional_message_arabic', $deal->promotional_message_arabic) }}"
                                    class="mt-1 border-gray-300 border-[1px]  px-2 py-2 block w-full shadow-sm sm:text-sm border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-white rounded-md"
@@ -412,6 +471,8 @@ document.addEventListener('DOMContentLoaded', function() {
         countAr.textContent = `${promoAr.value.length}/50`;
     }
 
+    initLangToggles();
+
     // Service selection functionality
     const serviceCheckboxes = document.querySelectorAll('input[name="service_ids[]"]');
     serviceCheckboxes.forEach(checkbox => {
@@ -504,6 +565,48 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     });
 });
+
+function initLangToggles() {
+    document.querySelectorAll('.lang-toggle').forEach(toggle => {
+        const fieldName = toggle.getAttribute('data-lang-toggle');
+        const buttons = toggle.querySelectorAll('button');
+
+        buttons.forEach(button => {
+            button.addEventListener('click', () => {
+                const lang = button.getAttribute('data-lang');
+
+                buttons.forEach(btn => btn.classList.remove('active'));
+                button.classList.add('active');
+
+                toggleLanguageFields(fieldName, lang);
+                sessionStorage.setItem(`formLanguage_${fieldName}`, lang);
+            });
+        });
+
+        const savedLanguage = sessionStorage.getItem(`formLanguage_${fieldName}`);
+        const defaultLang = savedLanguage || 'en';
+        const defaultButton = toggle.querySelector(`button[data-lang="${defaultLang}"]`);
+        if (defaultButton) {
+            buttons.forEach(btn => btn.classList.remove('active'));
+            defaultButton.classList.add('active');
+        }
+        toggleLanguageFields(fieldName, defaultLang);
+    });
+}
+
+function toggleLanguageFields(fieldName, language) {
+    const allFields = document.querySelectorAll(`[data-lang-field="${fieldName}"]`);
+    allFields.forEach(field => {
+        field.style.display = 'none';
+        field.classList.remove('active-language-field');
+    });
+
+    const targetField = document.querySelector(`[data-lang-field="${fieldName}"][data-lang="${language}"]`);
+    if (targetField) {
+        targetField.style.display = 'block';
+        targetField.classList.add('active-language-field');
+    }
+}
 
 function previewImage(input) {
     const preview = document.getElementById('image-preview');

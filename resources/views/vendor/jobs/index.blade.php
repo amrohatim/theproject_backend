@@ -30,7 +30,7 @@
             <p class="mt-1 text-gray-600 dark:text-gray-400">{{ __('messages.manage_jobs') }}</p>
         </div>
         <div class="mt-4 md:mt-0 jobs-actions flex md:justify-end">
-            <a href="{{ route('vendor.jobs.create') }}" class="inline-flex items-center px-4 py-2 bg-indigo-600 border border-transparent rounded-md font-semibold text-xs text-white uppercase tracking-widest hover:bg-indigo-700 active:bg-indigo-900 focus:outline-none focus:border-indigo-900 focus:ring ring-indigo-300 disabled:opacity-25 transition ease-in-out duration-150">
+            <a href="{{ route('vendor.jobs.create') }}" class="inline-flex items-center px-4 py-2 bg-[var(--primary)] border border-transparent rounded-md font-semibold text-xs text-white uppercase tracking-widest hover:bg-[var(--primary-hover)] active:bg-[var(--primary)] focus:outline-none focus:border-[var(--primary)] focus:ring ring-[var(--primary)] disabled:opacity-25 transition ease-in-out duration-150">
                 <i class="fas fa-plus mr-2"></i> {{ __('messages.add_job') }}
             </a>
         </div>
@@ -104,7 +104,7 @@
                                 <div class="flex flex-col items-center justify-center">
                                     <i class="fas fa-briefcase text-gray-300 dark:text-gray-600 text-5xl mb-4"></i>
                                     <p>{{ __('messages.no_jobs_found') }}</p>
-                                    <a href="{{ route('vendor.jobs.create') }}" class="mt-3 inline-flex items-center px-4 py-2 bg-indigo-600 border border-transparent rounded-md font-semibold text-xs text-white uppercase tracking-widest hover:bg-indigo-700 active:bg-indigo-900 focus:outline-none focus:border-indigo-900 focus:ring ring-indigo-300 disabled:opacity-25 transition ease-in-out duration-150">
+                                    <a href="{{ route('vendor.jobs.create') }}" class="mt-3 inline-flex items-center px-4 py-2 bg-[var(--primary)] border border-transparent rounded-md font-semibold text-xs text-white uppercase tracking-widest hover:bg-[var(--primary)] active:bg-[var(--primary)] focus:outline-none focus:border-[var(--primary)] focus:ring ring-[var(--primary)] disabled:opacity-25 transition ease-in-out duration-150">
                                         <i class="fas fa-plus mr-2"></i> {{ __('messages.add_job') }}
                                     </a>
                                 </div>

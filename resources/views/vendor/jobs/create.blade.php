@@ -76,13 +76,13 @@
                     <input id="location" name="location" type="text" value="{{ old('location') }}" required class="{{ $dir === 'rtl' ? 'px-8' : 'px-4' }} w-full rounded-md border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-gray-100">
                 </div>
                 <div class="flex items-center gap-2 pt-6">
-                    <input type="checkbox" name="onsite" value="1" {{ old('onsite') ? 'checked' : '' }} class="rounded border-gray-300 text-indigo-600 shadow-sm focus:ring-indigo-500">
+                    <input type="checkbox" name="onsite" value="1" {{ old('onsite') ? 'checked' : '' }} class="rounded border-gray-300 text-[var(--primary)] shadow-sm focus:ring-[var(--primary)]">
                     <span class="text-sm text-gray-700 dark:text-gray-300">{{ __('messages.onsite') }}</span>
                 </div>
             </div>
 
             <div class="flex justify-end">
-                <button type="submit" class="px-4 py-2 bg-indigo-600 text-white rounded-md hover:bg-indigo-700">
+                <button type="submit" class="px-4 py-2 bg-[var(--primary)] text-white rounded-md hover:bg-[var(--primary-hover)]">
                     {{ __('messages.save_job') }}
                 </button>
             </div>

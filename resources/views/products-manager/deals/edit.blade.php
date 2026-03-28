@@ -21,23 +21,54 @@
         border-radius: 0.375rem;
         padding: 0.5rem;
     }
-    .language-tab {
-        padding: 0.5rem 1rem;
-        border: 1px solid #e2e8f0;
-        background: #f8fafc;
+    .lang-toggle {
+        display: inline-flex;
+        gap: 0.5rem;
+        padding: 0.25rem;
+        border: 1px solid #e5e7eb;
+        border-radius: 9999px;
+        background: #ffffff;
+    }
+
+    .lang-toggle button {
+        border: none;
+        background: transparent;
+        color: #6b7280;
+        font-size: 0.75rem;
+        font-weight: 600;
+        padding: 0.35rem 0.9rem;
+        border-radius: 9999px;
+        display: inline-flex;
+        align-items: center;
+        gap: 0.35rem;
         cursor: pointer;
-        transition: all 0.2s;
     }
-    .language-tab.active {
-        background: #f59e0b;
-        color: white;
-        border-color: #f59e0b;
+
+    .lang-toggle button.active {
+        background: #f3f4f6;
+        color: #111827;
     }
-    .language-tab:hover {
-        background: #fef3c7;
+
+    .dark .lang-toggle {
+        border-color: #374151;
+        background: #111827;
     }
-    .language-tab.active:hover {
-        background: #d97706;
+
+    .dark .lang-toggle button {
+        color: #9ca3af;
+    }
+
+    .dark .lang-toggle button.active {
+        background: #1f2937;
+        color: #f9fafb;
+    }
+
+    @media (max-width: 768px) {
+        .products-manager-deals-form .lang-toggle button {
+            padding: 0.5rem 0.8rem;
+            font-size: 0.7rem;
+            min-height: 2.5rem;
+        }
     }
     .deal-image-preview {
         width: 100%;
@@ -51,7 +82,7 @@
 @endsection
 
 @section('content')
-<div class="container mx-auto">
+<div class="container mx-auto products-manager-deals-form">
     <div class="bg-white dark:bg-gray-800 rounded-lg shadow p-6">
         <form action="{{ route('products-manager.deals.update', $deal->id) }}" method="POST" enctype="multipart/form-data">
             @csrf
@@ -67,17 +98,13 @@
                         <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2 {{ app()->getLocale() == 'ar' ? 'text-right' : 'text-left' }}">{{ __('products_manager.title') }} <span class="text-red-500">*</span></label>
 
                         <!-- Language Switcher for Title -->
-                        <div class="flex mb-2">
-                            <button type="button" class="language-tab active rounded-l-md" data-language="en" data-field="title">
-                                🇺🇸 English
-                            </button>
-                            <button type="button" class="language-tab rounded-r-md" data-language="ar" data-field="title">
-                                🇸🇦 العربية
-                            </button>
+                        <div class="lang-toggle mb-4" data-lang-toggle="title">
+                            <button type="button" class="active" data-lang="en">EN</button>
+                            <button type="button" data-lang="ar">AR</button>
                         </div>
 
                         <!-- English Title -->
-                        <div data-language-field="title" data-language="en" class="mb-3">
+                        <div data-lang-field="title" data-lang="en" class="mb-3 active-language-field">
                             <input type="text" name="title" id="title" value="{{ old('title', $deal->title) }}"
                                    class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-[#F46C3F] focus:border-[#F46C3F] dark:bg-gray-700 dark:border-gray-600 dark:text-white" 
                                    placeholder="{{ __('products_manager.enter_deal_title') }}" required>
@@ -87,7 +114,7 @@
                         </div>
 
                         <!-- Arabic Title -->
-                        <div data-language-field="title" data-language="ar" class="mb-3" style="display: none;">
+                        <div data-lang-field="title" data-lang="ar" class="mb-3" style="display: none;">
                             <input type="text" name="title_arabic" id="title_arabic" value="{{ old('title_arabic', $deal->title_arabic) }}"
                                    class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-[#F46C3F] focus:border-[#F46C3F] dark:bg-gray-700 dark:border-gray-600 dark:text-white text-right" 
                                    placeholder="{{ __('products_manager.enter_deal_title_arabic') }}" required dir="rtl">
@@ -122,17 +149,13 @@
                     <p class="text-xs text-gray-500 dark:text-gray-400 mb-2 {{ app()->getLocale() == 'ar' ? 'text-right' : 'text-left' }}">{{ __('products_manager.description_optional_both_or_none') }}</p>
 
                     <!-- Language Switcher for Description -->
-                    <div class="flex mb-2">
-                        <button type="button" class="language-tab active rounded-l-md" data-language="en" data-field="description">
-                            🇺🇸 English
-                        </button>
-                        <button type="button" class="language-tab rounded-r-md" data-language="ar" data-field="description">
-                            🇸🇦 العربية
-                        </button>
+                    <div class="lang-toggle mb-4" data-lang-toggle="description">
+                        <button type="button" class="active" data-lang="en">EN</button>
+                        <button type="button" data-lang="ar">AR</button>
                     </div>
 
                     <!-- English Description -->
-                    <div data-language-field="description" data-language="en" class="mb-3">
+                    <div data-lang-field="description" data-lang="en" class="mb-3 active-language-field">
                         <textarea name="description" id="description" rows="4"
                                   class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-[#F46C3F] focus:border-[#F46C3F] dark:bg-gray-700 dark:border-gray-600 dark:text-white"
                                   placeholder="{{ __('products_manager.enter_deal_description') }}">{{ old('description', $deal->description) }}</textarea>
@@ -142,7 +165,7 @@
                     </div>
 
                     <!-- Arabic Description -->
-                    <div data-language-field="description" data-language="ar" class="mb-3" style="display: none;">
+                    <div data-lang-field="description" data-lang="ar" class="mb-3" style="display: none;">
                         <textarea name="description_arabic" id="description_arabic" rows="4"
                                   class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-[#F46C3F] focus:border-[#F46C3F] dark:bg-gray-700 dark:border-gray-600 dark:text-white text-right"
                                   placeholder="{{ __('products_manager.enter_deal_description_arabic') }}" dir="rtl">{{ old('description_arabic', $deal->description_arabic) }}</textarea>
@@ -163,17 +186,13 @@
                     <p class="text-xs text-gray-500 dark:text-gray-400 mb-2 {{ app()->getLocale() == 'ar' ? 'text-right' : 'text-left' }}">{{ __('messages.promotional_message_both_or_none') }}</p>
 
                     <!-- Language Switcher for Promotional Message -->
-                    <div class="flex mb-2">
-                        <button type="button" class="language-tab active rounded-l-md" data-language="en" data-field="promotional_message">
-                            🇺🇸 English
-                        </button>
-                        <button type="button" class="language-tab rounded-r-md" data-language="ar" data-field="promotional_message">
-                            🇸🇦 العربية
-                        </button>
+                    <div class="lang-toggle mb-4" data-lang-toggle="promotional_message">
+                        <button type="button" class="active" data-lang="en">EN</button>
+                        <button type="button" data-lang="ar">AR</button>
                     </div>
 
                     <!-- English Promotional Message -->
-                    <div data-language-field="promotional_message" data-language="en" class="mb-3">
+                    <div data-lang-field="promotional_message" data-lang="en" class="mb-3 active-language-field">
                         <div class="relative">
                             <input type="text" name="promotional_message" id="promotional_message" value="{{ old('promotional_message', $deal->promotional_message) }}"
                                    class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-[#F46C3F] focus:border-[#F46C3F] dark:bg-gray-700 dark:border-gray-600 dark:text-white"
@@ -188,7 +207,7 @@
                     </div>
 
                     <!-- Arabic Promotional Message -->
-                    <div data-language-field="promotional_message" data-language="ar" class="mb-3" style="display: none;">
+                    <div data-lang-field="promotional_message" data-lang="ar" class="mb-3" style="display: none;">
                         <div class="relative">
                             <input type="text" name="promotional_message_arabic" id="promotional_message_arabic" value="{{ old('promotional_message_arabic', $deal->promotional_message_arabic) }}"
                                    class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-[#F46C3F] focus:border-[#F46C3F] dark:bg-gray-700 dark:border-gray-600 dark:text-white text-right"
@@ -366,7 +385,7 @@
         toggleSelectionContainers();
 
         // Initialize language switchers
-        initializeLanguageSwitchers();
+        initLangToggles();
 
         // Initialize bilingual validation
         setupBilingualValidation();
@@ -386,22 +405,46 @@
         }
     }
 
-    function initializeLanguageSwitchers() {
-        document.querySelectorAll('.language-tab').forEach(tab => {
-            tab.addEventListener('click', function() {
-                const field = this.dataset.field;
-                const language = this.dataset.language;
+    function initLangToggles() {
+        document.querySelectorAll('.lang-toggle').forEach(toggle => {
+            const fieldName = toggle.getAttribute('data-lang-toggle');
+            const buttons = toggle.querySelectorAll('button');
 
-                // Update tab states
-                document.querySelectorAll(`[data-field="${field}"]`).forEach(t => t.classList.remove('active'));
-                this.classList.add('active');
+            buttons.forEach(button => {
+                button.addEventListener('click', () => {
+                    const lang = button.getAttribute('data-lang');
 
-                // Show/hide language fields
-                document.querySelectorAll(`[data-language-field="${field}"]`).forEach(fieldDiv => {
-                    fieldDiv.style.display = fieldDiv.dataset.language === language ? 'block' : 'none';
+                    buttons.forEach(btn => btn.classList.remove('active'));
+                    button.classList.add('active');
+
+                    toggleLanguageFields(fieldName, lang);
+                    sessionStorage.setItem(`formLanguage_${fieldName}`, lang);
                 });
             });
+
+            const savedLanguage = sessionStorage.getItem(`formLanguage_${fieldName}`);
+            const defaultLang = savedLanguage || 'en';
+            const defaultButton = toggle.querySelector(`button[data-lang="${defaultLang}"]`);
+            if (defaultButton) {
+                buttons.forEach(btn => btn.classList.remove('active'));
+                defaultButton.classList.add('active');
+            }
+            toggleLanguageFields(fieldName, defaultLang);
         });
+    }
+
+    function toggleLanguageFields(fieldName, language) {
+        const allFields = document.querySelectorAll(`[data-lang-field="${fieldName}"]`);
+        allFields.forEach(field => {
+            field.style.display = 'none';
+            field.classList.remove('active-language-field');
+        });
+
+        const targetField = document.querySelector(`[data-lang-field="${fieldName}"][data-lang="${language}"]`);
+        if (targetField) {
+            targetField.style.display = 'block';
+            targetField.classList.add('active-language-field');
+        }
     }
 
     function validateBilingualField(fieldName, required) {

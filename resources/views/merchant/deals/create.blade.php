@@ -21,11 +21,61 @@
         border-radius: 0.375rem;
         padding: 0.5rem;
     }
+
+    .lang-toggle {
+        display: inline-flex;
+        gap: 0.5rem;
+        padding: 0.25rem;
+        border: 1px solid #e5e7eb;
+        border-radius: 9999px;
+        background: #ffffff;
+    }
+
+    .lang-toggle button {
+        border: none;
+        background: transparent;
+        color: #6b7280;
+        font-size: 0.75rem;
+        font-weight: 600;
+        padding: 0.35rem 0.9rem;
+        border-radius: 9999px;
+        display: inline-flex;
+        align-items: center;
+        gap: 0.35rem;
+        cursor: pointer;
+    }
+
+    .lang-toggle button.active {
+        background: #f3f4f6;
+        color: #111827;
+    }
+
+    .dark .lang-toggle {
+        border-color: #374151;
+        background: #111827;
+    }
+
+    .dark .lang-toggle button {
+        color: #9ca3af;
+    }
+
+    .dark .lang-toggle button.active {
+        background: #1f2937;
+        color: #f9fafb;
+    }
+
+    @media (max-width: 768px) {
+        .merchant-deals-form .lang-toggle button {
+            padding: 0.5rem 0.8rem;
+            font-size: 0.7rem;
+            min-height: 2.5rem;
+        }
+    }
 </style>
 @endsection
 
 @section('content')
-<div class="container mx-auto">
+<div class="container mx-auto merchant-deals-form">
     <div class="bg-white dark:bg-gray-800 rounded-lg shadow p-6">
         <form action="{{ route('merchant.deals.store') }}" method="POST" enctype="multipart/form-data">
             @csrf
@@ -40,10 +90,13 @@
                         <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2 {{ app()->getLocale() == 'ar' ? 'text-right' : 'text-left' }}">{{ __('messages.title') }} <span class="text-red-500">*</span></label>
 
                         <!-- Language Switcher for Title -->
-                        <x-form-language-switcher field-name="title" />
+                        <div class="lang-toggle mb-4" data-lang-toggle="title">
+                            <button type="button" class="active" data-lang="en">EN</button>
+                            <button type="button" data-lang="ar">AR</button>
+                        </div>
 
                         <!-- English Title -->
-                        <div data-language-field="title" data-language="en" class="mb-3">
+                        <div data-lang-field="title" data-lang="en" class="mb-3 active-language-field">
                             <input type="text" name="title" id="title" value="{{ old('title') }}"
                                    class="modern-input px-4 py-2.5 w-full" placeholder="{{ __('messages.enter_deal_title') }}" required>
                             @error('title')
@@ -52,7 +105,7 @@
                         </div>
 
                         <!-- Arabic Title -->
-                        <div data-language-field="title" data-language="ar" class="mb-3" style="display: none;">
+                        <div data-lang-field="title" data-lang="ar" class="mb-3" style="display: none;">
                             <input type="text" name="title_arabic" id="title_arabic" value="{{ old('title_arabic') }}"
                                    class="modern-input px-4 py-2.5 w-full text-right" placeholder="أدخل عنوان الصفقة" required dir="rtl">
                             @error('title_arabic')
@@ -82,10 +135,13 @@
                     <p class="text-xs text-gray-500 dark:text-gray-400 mb-2 {{ app()->getLocale() == 'ar' ? 'text-right' : 'text-left' }}">{{ __('messages.description_optional_both_or_none') }}</p>
 
                     <!-- Language Switcher for Description -->
-                    <x-form-language-switcher field-name="description" />
+                    <div class="lang-toggle mb-4" data-lang-toggle="description">
+                        <button type="button" class="active" data-lang="en">EN</button>
+                        <button type="button" data-lang="ar">AR</button>
+                    </div>
 
                     <!-- English Description -->
-                    <div data-language-field="description" data-language="en" class="mb-3">
+                    <div data-lang-field="description" data-lang="en" class="mb-3 active-language-field">
                         <textarea name="description" id="description" rows="3" class="modern-textarea px-4 py-3 w-full">{{ old('description') }}</textarea>
                         @error('description')
                             <p class="text-red-500 text-sm mt-1">{{ $message }}</p>
@@ -93,7 +149,7 @@
                     </div>
 
                     <!-- Arabic Description -->
-                    <div data-language-field="description" data-language="ar" class="mb-3" style="display: none;">
+                    <div data-lang-field="description" data-lang="ar" class="mb-3" style="display: none;">
                         <textarea name="description_arabic" id="description_arabic" rows="3" class="modern-textarea px-4 py-3 w-full text-right"  dir="rtl">{{ old('description_arabic') }}</textarea>
                         @error('description_arabic')
                             <p class="text-red-500 text-sm mt-1 text-right">{{ $message }}</p>
@@ -111,10 +167,13 @@
                     </label>
 
                     <!-- Language Switcher for Promotional Message -->
-                    <x-form-language-switcher field-name="promotional_message" />
+                    <div class="lang-toggle mb-4" data-lang-toggle="promotional_message">
+                        <button type="button" class="active" data-lang="en">EN</button>
+                        <button type="button" data-lang="ar">AR</button>
+                    </div>
 
                     <!-- English Promotional Message -->
-                    <div data-language-field="promotional_message" data-language="en" class="mb-3">
+                    <div data-lang-field="promotional_message" data-lang="en" class="mb-3 active-language-field">
                         <div class="relative">
                             <input type="text" name="promotional_message" id="promotional_message" value="{{ old('promotional_message') }}"
                                    class="modern-input px-4 py-2.5 w-full" maxlength="50" placeholder="{{ __('messages.promotional_message_placeholder') }}">
@@ -126,7 +185,7 @@
                     </div>
 
                     <!-- Arabic Promotional Message -->
-                    <div data-language-field="promotional_message" data-language="ar" class="mb-3" style="display: none;">
+                    <div data-lang-field="promotional_message" data-lang="ar" class="mb-3" style="display: none;">
                         <div class="relative">
                             <input type="text" name="promotional_message_arabic" id="promotional_message_arabic" value="{{ old('promotional_message_arabic') }}"
                                    class="modern-input px-4 py-2.5 w-full text-right" maxlength="50" placeholder="أدخل الرسالة الترويجية" dir="rtl">
@@ -352,7 +411,50 @@
 
         // Initialize bilingual validation
         setupBilingualValidation();
+        initLangToggles();
     });
+
+    function initLangToggles() {
+        document.querySelectorAll('.lang-toggle').forEach(toggle => {
+            const fieldName = toggle.getAttribute('data-lang-toggle');
+            const buttons = toggle.querySelectorAll('button');
+
+            buttons.forEach(button => {
+                button.addEventListener('click', () => {
+                    const lang = button.getAttribute('data-lang');
+
+                    buttons.forEach(btn => btn.classList.remove('active'));
+                    button.classList.add('active');
+
+                    toggleLanguageFields(fieldName, lang);
+                    sessionStorage.setItem(`formLanguage_${fieldName}`, lang);
+                });
+            });
+
+            const savedLanguage = sessionStorage.getItem(`formLanguage_${fieldName}`);
+            const defaultLang = savedLanguage || 'en';
+            const defaultButton = toggle.querySelector(`button[data-lang="${defaultLang}"]`);
+            if (defaultButton) {
+                buttons.forEach(btn => btn.classList.remove('active'));
+                defaultButton.classList.add('active');
+            }
+            toggleLanguageFields(fieldName, defaultLang);
+        });
+    }
+
+    function toggleLanguageFields(fieldName, language) {
+        const allFields = document.querySelectorAll(`[data-lang-field="${fieldName}"]`);
+        allFields.forEach(field => {
+            field.style.display = 'none';
+            field.classList.remove('active-language-field');
+        });
+
+        const targetField = document.querySelector(`[data-lang-field="${fieldName}"][data-lang="${language}"]`);
+        if (targetField) {
+            targetField.style.display = 'block';
+            targetField.classList.add('active-language-field');
+        }
+    }
 
     function toggleSelectionContainers() {
         const appliesTo = document.querySelector('input[name="applies_to"]:checked').value;
