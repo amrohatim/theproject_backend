@@ -582,6 +582,21 @@ return [
     'save_service_provider' => 'حفظ مقدم الخدمة',
     'update_service_provider' => 'تحديث مقدم الخدمة',
     'need_create_branch_first' => 'يجب عليك إنشاء فرع قبل إضافة  . يرجى إنشاء فرع أولاً.',
+    'service_provider_details' => 'تفاصيل مقدم الخدمة',
+    'created_date' => 'تاريخ الإنشاء',
+    'last_updated' => 'آخر تحديث',
+    'not_provided' => 'غير متوفر',
+    'no_address_provided' => 'لا يوجد عنوان متاح',
+    'no_branch_access' => 'لا يوجد وصول للفروع',
+    'no_branch_access_description' => 'لا يوجد وصول لفروع مخصص لهذا المقدم.',
+    'no_service_access' => 'لا يوجد وصول للخدمات',
+    'no_service_access_description' => 'لا يوجد وصول للخدمات مخصص لهذا المقدم.',
+    'statistics' => 'الإحصائيات',
+    'total_branches' => 'إجمالي الفروع',
+    'total_services' => 'إجمالي الخدمات',
+    'quick_actions' => 'إجراءات سريعة',
+    'suspend' => 'تعليق',
+    'no_branch' => 'بدون فرع',
 
 
     // Form specific translations
@@ -636,4 +651,8 @@ return [
     'user_can_start_managing' => 'يمكن للمستخدم البدء فوراً في إدارة المنتجات والطلبات',
     'create_products_manager_button' => 'إنشاء مدير منتجات',
     'update_products_manager_button' => 'تحديث مدير المنتجات',
+    'full_products_access' => 'وصول كامل للمنتجات',
+    'company' => 'الشركة',
+    'recent_activity' => 'النشاط الأخير',
+    'activity_tracking_coming_soon' => 'تتبع النشاط قريبًا',
 ];
