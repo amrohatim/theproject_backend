@@ -1653,4 +1653,13 @@ return [
     'gogo_pricing_product' => 'Pricing product',
     'gogo_copyright' => '© 2022 Biccas Inc. Copyright and rights reserved',
     'gogo_emirates_wide' => 'Emirates Wide',
+    'modern_login_brand_title' => 'GLOW LABS',
+    'modern_login_brand_subtitle' => 'Made For Every Woman',
+    'modern_login_welcome_back' => 'Welcome Back',
+    'modern_login_subtitle' => 'Enter your email and password to access your account',
+    'modern_login_slide1_top' => "MADE\nFOR EVERY\nWOMAN",
+    'modern_login_slide1_bottom' => 'You can get everything you want if you work hard, trust the process, and stick to the plan.',
+    'modern_login_slide2_top' => "STYLE\nWITH\nCONFIDENCE",
+    'modern_login_slide2_bottom' => 'Stay focused, stay elegant, and keep building the life you deserve every day.',
+    'signing_in' => 'Signing In...',
 ];

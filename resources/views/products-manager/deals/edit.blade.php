@@ -106,7 +106,7 @@
                         <!-- English Title -->
                         <div data-lang-field="title" data-lang="en" class="mb-3 active-language-field">
                             <input type="text" name="title" id="title" value="{{ old('title', $deal->title) }}"
-                                   class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-[#F46C3F] focus:border-[#F46C3F] dark:bg-gray-700 dark:border-gray-600 dark:text-white" 
+                                   class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-[var(--primary)] focus:border-[var(--primary)] dark:bg-gray-700 dark:border-gray-600 dark:text-white" 
                                    placeholder="{{ __('products_manager.enter_deal_title') }}" required>
                             @error('title')
                                 <p class="text-red-500 text-sm mt-1">{{ $message }}</p>
@@ -116,7 +116,7 @@
                         <!-- Arabic Title -->
                         <div data-lang-field="title" data-lang="ar" class="mb-3" style="display: none;">
                             <input type="text" name="title_arabic" id="title_arabic" value="{{ old('title_arabic', $deal->title_arabic) }}"
-                                   class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-[#F46C3F] focus:border-[#F46C3F] dark:bg-gray-700 dark:border-gray-600 dark:text-white text-right" 
+                                   class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-[var(--primary)] focus:border-[var(--primary)] dark:bg-gray-700 dark:border-gray-600 dark:text-white text-right" 
                                    placeholder="{{ __('products_manager.enter_deal_title_arabic') }}" required dir="rtl">
                             @error('title_arabic')
                                 <p class="text-red-500 text-sm mt-1 text-right">{{ $message }}</p>
@@ -129,7 +129,7 @@
                         <label for="discount_percentage" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1 {{ app()->getLocale() == 'ar' ? 'text-right' : 'text-left' }}">{{ __('products_manager.discount_percentage') }} <span class="text-red-500">*</span></label>
                         <div class="relative">
                             <input type="number" name="discount_percentage" id="discount_percentage" value="{{ old('discount_percentage', $deal->discount_percentage) }}" 
-                                   class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-[#F46C3F] focus:border-[#F46C3F] dark:bg-gray-700 dark:border-gray-600 dark:text-white {{ app()->getLocale() == 'ar' ? 'text-right pr-8' : 'text-left pr-8' }}" 
+                                   class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-[var(--primary)] focus:border-[var(--primary)] dark:bg-gray-700 dark:border-gray-600 dark:text-white {{ app()->getLocale() == 'ar' ? 'text-right pr-8' : 'text-left pr-8' }}" 
                                    min="1" max="100" step="0.01" required
                                    onkeypress="return (event.charCode >= 48 && event.charCode <= 57) || event.charCode === 46"
                                    oninput="this.value = this.value.replace(/[^0-9.]/g, ''); if(this.value > 100) this.value = 100;">
@@ -157,7 +157,7 @@
                     <!-- English Description -->
                     <div data-lang-field="description" data-lang="en" class="mb-3 active-language-field">
                         <textarea name="description" id="description" rows="4"
-                                  class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-[#F46C3F] focus:border-[#F46C3F] dark:bg-gray-700 dark:border-gray-600 dark:text-white"
+                                  class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-[var(--primary)] focus:border-[var(--primary)] dark:bg-gray-700 dark:border-gray-600 dark:text-white"
                                   placeholder="{{ __('products_manager.enter_deal_description') }}">{{ old('description', $deal->description) }}</textarea>
                         @error('description')
                             <p class="text-red-500 text-sm mt-1">{{ $message }}</p>
@@ -167,7 +167,7 @@
                     <!-- Arabic Description -->
                     <div data-lang-field="description" data-lang="ar" class="mb-3" style="display: none;">
                         <textarea name="description_arabic" id="description_arabic" rows="4"
-                                  class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-[#F46C3F] focus:border-[#F46C3F] dark:bg-gray-700 dark:border-gray-600 dark:text-white text-right"
+                                  class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-[var(--primary)] focus:border-[var(--primary)] dark:bg-gray-700 dark:border-gray-600 dark:text-white text-right"
                                   placeholder="{{ __('products_manager.enter_deal_description_arabic') }}" dir="rtl">{{ old('description_arabic', $deal->description_arabic) }}</textarea>
                         @error('description_arabic')
                             <p class="text-red-500 text-sm mt-1 text-right">{{ $message }}</p>
@@ -195,7 +195,7 @@
                     <div data-lang-field="promotional_message" data-lang="en" class="mb-3 active-language-field">
                         <div class="relative">
                             <input type="text" name="promotional_message" id="promotional_message" value="{{ old('promotional_message', $deal->promotional_message) }}"
-                                   class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-[#F46C3F] focus:border-[#F46C3F] dark:bg-gray-700 dark:border-gray-600 dark:text-white"
+                                   class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-[var(--primary)] focus:border-[var(--primary)] dark:bg-gray-700 dark:border-gray-600 dark:text-white"
                                    maxlength="50" placeholder="{{ __('messages.promotional_message_placeholder') }}">
                             <div class="absolute right-2 bottom-2 text-xs text-gray-500">
                                 <span id="char-count-en">0</span>/50
@@ -210,7 +210,7 @@
                     <div data-lang-field="promotional_message" data-lang="ar" class="mb-3" style="display: none;">
                         <div class="relative">
                             <input type="text" name="promotional_message_arabic" id="promotional_message_arabic" value="{{ old('promotional_message_arabic', $deal->promotional_message_arabic) }}"
-                                   class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-[#F46C3F] focus:border-[#F46C3F] dark:bg-gray-700 dark:border-gray-600 dark:text-white text-right"
+                                   class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-[var(--primary)] focus:border-[var(--primary)] dark:bg-gray-700 dark:border-gray-600 dark:text-white text-right"
                                    maxlength="50" placeholder="أدخل الرسالة الترويجية" dir="rtl">
                             <div class="absolute left-2 bottom-2 text-xs text-gray-500">
                                 <span id="char-count-ar">0</span>/50
@@ -226,7 +226,7 @@
                 <div class="mt-4">
                     <label for="branch_id" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1 {{ app()->getLocale() == 'ar' ? 'text-right' : 'text-left' }}">{{ __('messages.branch') }} <span class="text-red-500">*</span></label>
                     <select name="branch_id" id="branch_id"
-                            class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-[#F46C3F] focus:border-[#F46C3F] dark:bg-gray-700 dark:border-gray-600 dark:text-white {{ app()->getLocale() == 'ar' ? 'text-right' : 'text-left' }}"
+                            class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-[var(--primary)] focus:border-[var(--primary)] dark:bg-gray-700 dark:border-gray-600 dark:text-white {{ app()->getLocale() == 'ar' ? 'text-right' : 'text-left' }}"
                             required>
                         @foreach($branches as $branch)
                             <option value="{{ $branch->id }}" {{ (string) old('branch_id', $deal->branch_id) === (string) $branch->id ? 'selected' : '' }}>
@@ -245,7 +245,7 @@
                     <div>
                         <label for="start_date" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1 {{ app()->getLocale() == 'ar' ? 'text-right' : 'text-left' }}">{{ __('products_manager.start_date') }} <span class="text-red-500">*</span></label>
                         <input type="text" name="start_date" id="start_date" value="{{ old('start_date', $deal->start_date->format('Y-m-d')) }}" 
-                               class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-[#F46C3F] focus:border-[#F46C3F] dark:bg-gray-700 dark:border-gray-600 dark:text-white datepicker {{ app()->getLocale() == 'ar' ? 'text-right' : 'text-left' }}" required>
+                               class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-[var(--primary)] focus:border-[var(--primary)] dark:bg-gray-700 dark:border-gray-600 dark:text-white datepicker {{ app()->getLocale() == 'ar' ? 'text-right' : 'text-left' }}" required>
                         @error('start_date')
                             <p class="text-red-500 text-sm mt-1 {{ app()->getLocale() == 'ar' ? 'text-right' : 'text-left' }}">{{ $message }}</p>
                         @enderror
@@ -255,7 +255,7 @@
                     <div>
                         <label for="end_date" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1 {{ app()->getLocale() == 'ar' ? 'text-right' : 'text-left' }}">{{ __('products_manager.end_date') }} <span class="text-red-500">*</span></label>
                         <input type="text" name="end_date" id="end_date" value="{{ old('end_date', $deal->end_date->format('Y-m-d')) }}" 
-                               class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-[#F46C3F] focus:border-[#F46C3F] dark:bg-gray-700 dark:border-gray-600 dark:text-white datepicker {{ app()->getLocale() == 'ar' ? 'text-right' : 'text-left' }}" required>
+                               class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-[var(--primary)] focus:border-[var(--primary)] dark:bg-gray-700 dark:border-gray-600 dark:text-white datepicker {{ app()->getLocale() == 'ar' ? 'text-right' : 'text-left' }}" required>
                         @error('end_date')
                             <p class="text-red-500 text-sm mt-1 {{ app()->getLocale() == 'ar' ? 'text-right' : 'text-left' }}">{{ $message }}</p>
                         @enderror
@@ -268,12 +268,12 @@
                     <div class="flex gap-4">
                         <label class="flex items-center">
                             <input type="radio" name="status" value="active" {{ old('status', $deal->status) === 'active' ? 'checked' : '' }} 
-                                   class="mr-2 text-[#F46C3F] focus:ring-[#F46C3F]">
+                                   class="mr-2 text-[var(--primary)] focus:ring-[var(--primary)]">
                             <span class="text-gray-700 dark:text-gray-300">{{ __('products_manager.active') }}</span>
                         </label>
                         <label class="flex items-center">
                             <input type="radio" name="status" value="inactive" {{ old('status', $deal->status) === 'inactive' ? 'checked' : '' }} 
-                                   class="mr-2 text-[#F46C3F] focus:ring-[#F46C3F]">
+                                   class="mr-2 text-[var(--primary)] focus:ring-[var(--primary)]">
                             <span class="text-gray-700 dark:text-gray-300">{{ __('products_manager.inactive') }}</span>
                         </label>
                     </div>
@@ -297,7 +297,7 @@
                 <div>
                     <label for="image" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1 {{ app()->getLocale() == 'ar' ? 'text-right' : 'text-left' }}">{{ __('products_manager.upload_new_image') }}</label>
                     <input type="file" name="image" id="image" accept="image/jpeg,image/png,image/jpg,image/gif,image/svg+xml"
-                           class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-[#F46C3F] focus:border-[#F46C3F] dark:bg-gray-700 dark:border-gray-600 dark:text-white">
+                           class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-[var(--primary)] focus:border-[var(--primary)] dark:bg-gray-700 dark:border-gray-600 dark:text-white">
                     <p class="text-xs text-gray-500 dark:text-gray-400 mt-1 {{ app()->getLocale() == 'ar' ? 'text-right' : 'text-left' }}">{{ __('products_manager.image_requirements_new') }}</p>
                     <div id="image-error" class="text-red-500 text-sm mt-1 hidden {{ app()->getLocale() == 'ar' ? 'text-right' : 'text-left' }}"></div>
                     @error('image')
@@ -336,7 +336,7 @@
                                     <input type="checkbox"
                                            name="product_ids[]"
                                            value="{{ $product->id }}"
-                                           class="mr-2 text-[#F46C3F] focus:ring-[#F46C3F] {{ $isDisabled ? 'cursor-not-allowed' : '' }}"
+                                           class="mr-2 text-[var(--primary)] focus:ring-[var(--primary)] {{ $isDisabled ? 'cursor-not-allowed' : '' }}"
                                            {{ in_array($product->id, old('product_ids', $deal->product_ids ?? [])) ? 'checked' : '' }}
                                            {{ $isDisabled ? 'disabled' : '' }}>
                                     <span class="text-gray-700 dark:text-gray-300 {{ $isDisabled ? 'text-gray-400' : '' }}">
@@ -362,7 +362,7 @@
                 <a href="{{ route('products-manager.deals.index') }}" class="px-4 py-2 bg-gray-300 text-gray-700 rounded-md hover:bg-gray-400 transition-colors duration-200">
                     {{ __('products_manager.cancel') }}
                 </a>
-                <button type="submit" class="px-4 py-2 bg-[#F46C3F] text-white rounded-md hover:opacity-90 transition-opacity duration-200">
+                <button type="submit" class="px-4 py-2 bg-[var(--primary)] text-white rounded-md hover:opacity-90 transition-opacity duration-200">
                     {{ __('products_manager.update_deal') }}
                 </button>
             </div>

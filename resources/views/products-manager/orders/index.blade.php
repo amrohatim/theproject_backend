@@ -11,11 +11,11 @@
             <div class="md:col-span-2">
                 <label class="block text-sm text-gray-600 dark:text-gray-300 mb-1">{{ __('products_manager.search') }}</label>
                 <input type="text" name="search" value="{{ request('search') }}" placeholder="{{ __('products_manager.search_customer_order') }}"
-                    class="w-full rounded-md border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-white focus:ring-0 focus:border-[#F46C3F]" />
+                    class="w-full rounded-md border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-white focus:ring-0 focus:border-[var(--primary)]" />
             </div>
             <div>
                 <label class="block text-sm text-gray-600 dark:text-gray-300 mb-1">{{ __('products_manager.status') }}</label>
-                <select name="status" class="w-full p-2 rounded-md border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-white focus:ring-0 focus:border-[#F46C3F]">
+                <select name="status" class="w-full p-2 rounded-md border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-white focus:ring-0 focus:border-[var(--primary)]">
                     <option value="">{{ __('products_manager.all_statuses') }}</option>
                     <option value="pending" @selected(request('status')=='pending')>{{ __('products_manager.pending') }}</option>
                     <option value="processing" @selected(request('status')=='processing')>{{ __('products_manager.processing') }}</option>
@@ -25,14 +25,14 @@
             </div>
             <div>
                 <label class="block text-sm text-gray-600 dark:text-gray-300 mb-1">{{ __('products_manager.from_date') }}</label>
-                <input type="date" name="date_from" value="{{ request('date_from') }}" class="w-full rounded-md border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-white focus:ring-0 focus:border-[#F46C3F]" />
+                <input type="date" name="date_from" value="{{ request('date_from') }}" class="w-full rounded-md border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-white focus:ring-0 focus:border-[var(--primary)]" />
             </div>
             <div>
                 <label class="block text-sm text-gray-600 dark:text-gray-300 mb-1">{{ __('products_manager.to_date') }}</label>
-                <input type="date" name="date_to" value="{{ request('date_to') }}" class="w-full rounded-md border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-white focus:ring-0 focus:border-[#F46C3F]" />
+                <input type="date" name="date_to" value="{{ request('date_to') }}" class="w-full rounded-md border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-white focus:ring-0 focus:border-[var(--primary)]" />
             </div>
             <div class="flex items-end">
-                <button class="inline-flex items-center px-4 py-2 bg-[#F46C3F] text-white rounded-md hover:opacity-90 active:opacity-80">
+                <button class="inline-flex items-center px-4 py-2 bg-[var(--primary)] text-white rounded-md hover:opacity-90 active:opacity-80">
                     <i class="fas fa-filter mr-2"></i> {{ __('products_manager.filter') }}
                 </button>
             </div>

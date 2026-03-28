@@ -2421,4 +2421,13 @@ return [
     'gogo_pricing_product' => 'تسعير المنتج',
     'gogo_copyright' => '© 2022 Biccas Inc. جميع الحقوق محفوظة',
     'gogo_emirates_wide' => 'على مستوى الإمارات',
+    'modern_login_brand_title' => 'جلو لابس',
+    'modern_login_brand_subtitle' => 'مصمم لكل امرأة',
+    'modern_login_welcome_back' => 'مرحباً بعودتك',
+    'modern_login_subtitle' => 'أدخلي بريدك الإلكتروني وكلمة المرور للوصول إلى حسابك',
+    'modern_login_slide1_top' => "مصمم\nلكل\nامرأة",
+    'modern_login_slide1_bottom' => 'يمكنك الحصول على كل ما تريدينه إذا عملت بجد، وثقت بالعملية، وتمسكت بالخطة.',
+    'modern_login_slide2_top' => "تألقي\nبثقة\nدائماً",
+    'modern_login_slide2_bottom' => 'واصلي التقدم بثقة وأناقة، واصنعي النجاح الذي تستحقينه كل يوم.',
+    'signing_in' => 'جارٍ تسجيل الدخول...',
 ];

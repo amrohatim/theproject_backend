@@ -18,7 +18,7 @@
             @endif
 
             {{-- Current Page --}}
-            <button class="px-3 py-2 text-sm font-medium text-white bg-orange-600 border border-orange-600 rounded-lg">
+            <button class="px-3 py-2 text-sm font-medium text-white bg-[var(--primary)] border border-[var(--primary)] rounded-lg">
                 {{ $products->currentPage() }}
             </button>
 

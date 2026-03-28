@@ -1,8 +1,22 @@
 @php
     use App\Helpers\LanguageHelper;
+
     $currentLocale = LanguageHelper::getCurrentLocale();
     $isRtl = LanguageHelper::isRtl();
     $direction = LanguageHelper::getDirection();
+
+    $loginSlides = [
+        [
+            'image' => asset('assets/banner1.webp'),
+            'top_text' => __('messages.modern_login_slide1_top'),
+            'bottom_text' => __('messages.modern_login_slide1_bottom'),
+        ],
+        [
+            'image' => asset('assets/banner2.webp'),
+            'top_text' => __('messages.modern_login_slide2_top'),
+            'bottom_text' => __('messages.modern_login_slide2_bottom'),
+        ],
+    ];
 @endphp
 
 <!DOCTYPE html>
@@ -12,355 +26,683 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="description" content="Login to your glowlabs account - Access your dashboard, orders, and more">
     <meta name="robots" content="noindex, nofollow">
+    <meta name="csrf-token" content="{{ csrf_token() }}">
 
     <title>{{ __('messages.sign_in') }} - {{ __('messages.dala3chic') }}</title>
-    
-    <!-- Preconnect to external domains -->
+
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link rel="preconnect" href="https://cdnjs.cloudflare.com">
-    
-    <!-- Fonts -->
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
-    
-    <!-- Icons -->
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500&family=Noto+Serif:wght@400&family=Playfair+Display:wght@700&family=Poppins:wght@400;500;600&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    
-    <!-- Tailwind CSS -->
-    <script src="https://cdn.tailwindcss.com"></script>
-    
-    <!-- Custom Styles -->
-    @vite(['resources/css/app.css', 'resources/css/animations.css', 'resources/css/modern-auth.css'])
 
-    <!-- RTL CSS for Arabic -->
-    @if($isRtl)
-        <link href="{{ asset('css/rtl.css') }}" rel="stylesheet">
-    @endif
+    @vite(['resources/css/app.css'])
 
-    <!-- CSRF Token -->
-    <meta name="csrf-token" content="{{ csrf_token() }}">
-</head>
-<body>
-    <div class="auth-container">
-        <!-- Left Side - Branding -->
-        <div class="auth-branding">
-            <div class="scroll-reveal animate-fade-in-left">
-                
-                    <img src="{{ asset('assets/logo.png') }}" alt="glowlabs Logo" style="width: 150px; height: 150px;  object-fit: contain; border-radius: 14px;">
-               
-                
-                <h1 class="auth-brand-title">
-                    {{ __('messages.welcome_back_to') }}
-                    <span class="bg-gradient-to-r from-pink-600 via-violet-400 to-pink-600 bg-clip-text text-white/40 font-bold">
-                        {{ __('messages.dala3chic') }}
-                    </span>
-                </h1>
-
-                <p class="auth-brand-subtitle">
-                    {{ __('messages.access_account_desc') }}
-                </p>
-                
-                <div class="auth-features">
-                    <div class="auth-feature animate-fade-in-up animate-delay-200">
-                        <i class="fas fa-shield-alt"></i>
-                        <span>{{ __('messages.secure_protected') }}</span>
-                    </div>
-                    <div class="auth-feature animate-fade-in-up animate-delay-300">
-                        <i class="fas fa-bolt"></i>
-                        <span>{{ __('messages.lightning_fast') }}</span>
-                    </div>
-                    <div class="auth-feature animate-fade-in-up animate-delay-400">
-                        <i class="fas fa-heart"></i>
-                        <span>{{ __('messages.loved_by_thousands') }}</span>
-                    </div>
-                </div>
-            </div>
-        </div>
-        
-        <!-- Right Side - Login Form -->
-        <div class="auth-form-container">
-            <div class="auth-form-card scroll-reveal animate-fade-in-right">
-                <div class="auth-form-header">
-                    <h2 class="auth-form-title">{{ __('messages.sign_in') }}</h2>
-                    <p class="auth-form-subtitle">{{ __('messages.enter_credentials') }}</p>
-                </div>
-                
-                <!-- Global errors removed - using individual field errors for stable layout -->
-                
-                <!-- Display Success Messages -->
-                @if (session('success'))
-                    <div class="auth-success-message mb-4 p-4 bg-green-50 border border-green-200 rounded-lg">
-                        <i class="fas fa-check-circle"></i>
-                        <span class="ml-2 text-sm">{{ session('success') }}</span>
-                    </div>
-                @endif
-                
-                <form class="auth-form" action="{{ route('login.attempt') }}" method="POST" novalidate>
-                    @csrf
-                    
-                    <!-- Email Field -->
-                    <div class="auth-form-group">
-                        <label for="email" class="auth-form-label">{{ __('messages.email_address') }}</label>
-                        <div class="auth-input-group">
-                            <i class="auth-input-icon fas fa-envelope"></i>
-                            <input
-                                type="email"
-                                id="email"
-                                name="email"
-                                class="auth-form-input @error('email') error @enderror"
-                                placeholder="{{ __('messages.enter_email_address') }}"
-                                value="{{ old('email') }}"
-                                required
-                                autocomplete="email"
-                                autofocus
-                            >
-                        </div>
-                        <!-- Fixed height error container to prevent layout shifts -->
-                        <div class="auth-error-container">
-                            @error('email')
-                                <div class="auth-error-message">
-                                    <i class="fas fa-exclamation-circle"></i>
-                                    {{ $message }}
-                                </div>
-                            @enderror
-                        </div>
-                    </div>
-
-                    <!-- Password Field -->
-                    <div class="auth-form-group">
-                        <label for="password" class="auth-form-label">{{ __('messages.password') }}</label>
-                        <div class="auth-input-group {{ $isRtl ? 'rtl-password-field' : '' }}">
-                            @if($isRtl)
-                                <button type="button" class="auth-password-toggle auth-password-toggle-rtl" tabindex="-1">
-                                    <i class="fas fa-eye"></i>
-                                </button>
-                                <input
-                                    type="password"
-                                    id="password"
-                                    name="password"
-                                    class="auth-form-input auth-form-input-rtl @error('password') error @enderror"
-                                    placeholder="{{ __('messages.enter_password') }}"
-                                    required
-                                    autocomplete="current-password"
-                                >
-                                <i class="auth-input-icon auth-input-icon-rtl fas fa-lock"></i>
-                            @else
-                                <i class="auth-input-icon fas fa-lock"></i>
-                                <input
-                                    type="password"
-                                    id="password"
-                                    name="password"
-                                    class="auth-form-input @error('password') error @enderror"
-                                    placeholder="{{ __('messages.enter_password') }}"
-                                    required
-                                    autocomplete="current-password"
-                                >
-                                <button type="button" class="auth-password-toggle" tabindex="-1">
-                                    <i class="fas fa-eye"></i>
-                                </button>
-                            @endif
-                        </div>
-                        <!-- Fixed height error container to prevent layout shifts -->
-                        <div class="auth-error-container">
-                            @error('password')
-                                <div class="auth-error-message">
-                                    <i class="fas fa-exclamation-circle"></i>
-                                    {{ $message }}
-                                </div>
-                            @enderror
-                        </div>
-                    </div>
-                    
-                    <!-- Remember Me & Forgot Password -->
-                    <div class="flex items-center justify-between">
-                        <div class="auth-checkbox-group">
-                            <input 
-                                type="checkbox" 
-                                id="remember" 
-                                name="remember" 
-                                class="auth-checkbox"
-                                {{ old('remember') ? 'checked' : '' }}
-                            >
-                            <label for="remember" class="auth-checkbox-label">{{ __('messages.remember_me') }}</label>
-                        </div>
-
-                        <a href="{{ route('password.request') }}" class="auth-link text-sm">{{ __('messages.forgot_password') }}</a>
-                    </div>
-                    
-                    <!-- Submit Button -->
-                    <button type="submit" class="auth-submit-btn w-full">
-                        <i class="fas fa-sign-in-alt mr-2"></i>
-                        {{ __('messages.sign_in') }}
-                    </button>
-                </form>
-                
-                <!-- Divider -->
-                <!-- <div class="relative my-6">
-                    <div class="absolute inset-0 flex items-center">
-                        <div class="w-full border-t border-gray-300"></div>
-                    </div>
-                    <div class="relative flex justify-center text-sm">
-                        <span class="px-2 bg-white text-gray-500">Or continue with</span>
-                    </div>
-                </div> -->
-                
-                <!-- Social Login Buttons -->
-                <!-- <div class="grid grid-cols-2 gap-3">
-                    <button type="button" class="flex items-center justify-center px-4 py-2 border border-gray-300 rounded-lg bg-white text-gray-700 hover:bg-gray-50 transition-colors">
-                        <i class="fab fa-google mr-2 text-red-500"></i>
-                        Google
-                    </button>
-                    <button type="button" class="flex items-center justify-center px-4 py-2 border border-gray-300 rounded-lg bg-white text-gray-700 hover:bg-gray-50 transition-colors">
-                        <i class="fab fa-facebook-f mr-2 text-blue-600"></i>
-                        Facebook
-                    </button>
-                </div> -->
-                
-                <!-- Register Link -->
-                <div class="auth-form-footer">
-                    <p class="text-sm text-gray-600">
-                        {{ __('messages.dont_have_account') }}
-                        <a href="{{ route('register') }}" class="auth-link">{{ __('messages.create_one_now') }}</a>
-                    </p>
-                </div>
-            </div>
-        </div>
-    </div>
-    
-    <!-- Back to Home Link -->
-    <div class="fixed top-4 {{ $isRtl ? 'right-4' : 'left-4' }} z-50">
-        <a href="{{ url('/') }}" class="flex items-center gap-2 text-white/80 hover:text-white transition-colors">
-            <i class="fas {{ $isRtl ? 'fa-arrow-right' : 'fa-arrow-left' }}"></i>
-            <span class="hidden sm:inline">{{ __('messages.back_to_home') }}</span>
-        </a>
-    </div>
-    
-    <!-- Scripts -->
-    @vite(['resources/js/app.js', 'resources/js/modern-interactions.js'])
-    
-    <script>
-        document.addEventListener('DOMContentLoaded', function() {
-            // Unified form validation system
-            const form = document.querySelector('.auth-form');
-            const emailInput = document.getElementById('email');
-            const passwordInput = document.getElementById('password');
-            const submitBtn = document.querySelector('.auth-submit-btn');
-
-            // Password toggle functionality
-            const passwordToggle = document.querySelector('.auth-password-toggle');
-            if (passwordToggle) {
-                passwordToggle.addEventListener('click', function() {
-                    const passwordField = document.getElementById('password');
-                    const icon = this.querySelector('i');
-
-                    if (passwordField.type === 'password') {
-                        passwordField.type = 'text';
-                        icon.classList.remove('fa-eye');
-                        icon.classList.add('fa-eye-slash');
-                    } else {
-                        passwordField.type = 'password';
-                        icon.classList.remove('fa-eye-slash');
-                        icon.classList.add('fa-eye');
-                    }
-                });
-            }
-
-            // Form submission with loading state
-            form.addEventListener('submit', function(e) {
-                // Show loading state
-                showLoadingState(submitBtn);
-            });
-
-            function showLoadingState(button) {
-                button.disabled = true;
-                button.innerHTML = `
-                    <span class="auth-loading">
-                        <span class="auth-spinner"></span>
-                        Signing In...
-                    </span>
-                `;
-            }
-
-            // Auto-hide flash messages
-            setTimeout(() => {
-                const flashMessages = document.querySelectorAll('.auth-error-message, .auth-success-message');
-                flashMessages.forEach(message => {
-                    if (message.parentElement.classList.contains('mb-4')) {
-                        message.style.transition = 'opacity 0.5s ease';
-                        message.style.opacity = '0';
-                        setTimeout(() => message.remove(), 500);
-                    }
-                });
-            }, 5000);
-        });
-    </script>
-    
-    <!-- Additional Styles -->
     <style>
-        /* Custom checkbox styling */
-        .auth-checkbox {
+        html,
+        body {
+            margin: 0;
+            padding: 0;
+            height: 100%;
+            overflow: hidden;
+        }
+
+        .modern-login-v2 {
+            height: 100vh;
+            width: 100%;
+            display: flex;
+            background: #ffffff;
+            font-family: 'Poppins', sans-serif;
+            color: #121212;
+            overflow: hidden;
+        }
+
+        .modern-login-v2__form-panel {
+            width: 35%;
+            min-height: 100vh;
+            background: #ffffff;
+            display: flex;
+            justify-content: center;
+            padding: 1px 76px;
+        }
+
+        .modern-login-v2__form-content {
+            width: 448px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 16px;
+        }
+
+        .modern-login-v2__brand {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 8px;
+            margin-top: 80px;
+        }
+
+        .modern-login-v2__brand img {
+            width: 120px;
+            height: 88px;
+            object-fit: contain;
+        }
+
+        .modern-login-v2__brand-title {
+            margin: 0;
+            font-family: 'Playfair Display', serif;
+            font-weight: 700;
+            font-size: 30px;
+            line-height: 1.1;
+            color: #6d3b93;
+            letter-spacing: 0.02em;
+        }
+
+        .modern-login-v2__brand-subtitle {
+            margin: 0;
+            font-family: 'Montserrat', sans-serif;
+            font-weight: 300;
+            font-size: 16px;
+            line-height: 20px;
+            color: #231916;
+        }
+
+        .modern-login-v2__header {
+            width: 100%;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .modern-login-v2__title {
+            margin: 0;
+            font-weight: 400;
+            font-size: 48px;
+            line-height: 56px;
+            letter-spacing: -0.06em;
+            color: #121212;
+            text-align: center;
+        }
+
+        .modern-login-v2__subtitle {
+            margin: 0;
+            font-weight: 400;
+            font-size: 14px;
+            line-height: 20px;
+            color: #3d3d3d;
+            text-align: center;
+        }
+
+        .modern-login-v2__messages {
+            width: 100%;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .modern-login-v2__message {
+            border-radius: 8px;
+            padding: 10px 12px;
+            font-size: 13px;
+            line-height: 18px;
+        }
+
+        .modern-login-v2__message--success {
+            background: #f0fdf4;
+            color: #166534;
+            border: 1px solid #86efac;
+        }
+
+        .modern-login-v2__form {
+            width: 100%;
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+
+        .modern-login-v2__fields {
+            width: 100%;
+            display: flex;
+            flex-direction: column;
+            gap: 14px;
+        }
+
+        .modern-login-v2__field {
+            width: 100%;
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .modern-login-v2__label {
+            font-weight: 500;
+            font-size: 14px;
+            line-height: 20px;
+            color: #121212;
+        }
+
+        .modern-login-v2__input-wrap {
+            position: relative;
+            display: flex;
+            align-items: center;
+        }
+
+        .modern-login-v2__input {
+            width: 100%;
+            height: 52px;
+            border: 1px solid #ededed;
+            background: #ffffff;
+            padding: 16px;
+            padding-inline-end: 44px;
+            font-size: 14px;
+            line-height: 20px;
+            color: #121212;
+            border-radius: 0;
+            outline: none;
+            border-radius:4px;
+        }
+
+        .modern-login-v2__input::placeholder {
+            color: #6b6b6b;
+        }
+
+        .modern-login-v2__input:focus {
+            border-color: #6c3d97;
+        }
+
+        .modern-login-v2__input--error {
+            border-color: #dc2626;
+        }
+
+        .modern-login-v2__password-toggle {
+            position: absolute;
+            top: 50%;
+            inset-inline-end: 14px;
+            transform: translateY(-50%);
+            border: none;
+            background: transparent;
+            color: #5b5b5b;
+            cursor: pointer;
+            padding: 0;
+            line-height: 1;
+        }
+
+        .modern-login-v2__error {
+            min-height: 20px;
+            font-size: 12px;
+            line-height: 18px;
+            color: #dc2626;
+        }
+
+        .modern-login-v2__links {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .modern-login-v2__remember {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            font-size: 14px;
+            line-height: 20px;
+            color: #3d3d3d;
+            cursor: pointer;
+        }
+
+        .modern-login-v2__remember input {
             appearance: none;
             -webkit-appearance: none;
-            -moz-appearance: none;
+            width: 18px;
+            height: 18px;
+            border: 1px solid #cccccc;
+            border-radius: 4px;
+            display: inline-grid;
+            place-content: center;
+            margin: 0;
+            cursor: pointer;
         }
-        
-        /* Loading spinner animation */
-        @keyframes spin {
+
+        .modern-login-v2__remember input:checked {
+            border-color: #6c3d97;
+            background: #6c3d97;
+        }
+
+        .modern-login-v2__remember input:checked::after {
+            content: '';
+            width: 8px;
+            height: 8px;
+            border-radius: 2px;
+            background: #fff;
+        }
+
+        .modern-login-v2__link {
+            font-weight: 500;
+            font-size: 14px;
+            line-height: 20px;
+            color: #3d3d3d;
+            text-decoration: none;
+        }
+
+        .modern-login-v2__link:hover {
+            color: #6c3d97;
+        }
+
+        .modern-login-v2__submit {
+            width: 100%;
+            height: 52px;
+            border: none;
+            background: #6c3d97;
+            color: #ffffff;
+            font-weight: 600;
+            font-size: 16px;
+            line-height: 24px;
+            cursor: pointer;
+            transition: background-color 0.2s ease;
+            border-radius:4px;
+        }
+
+        .modern-login-v2__submit:hover {
+            background: #5f3586;
+        }
+
+        .modern-login-v2__submit:disabled {
+            opacity: 0.75;
+            cursor: not-allowed;
+        }
+
+        .modern-login-v2__register {
+            margin: 0;
+            text-align: center;
+            font-size: 14px;
+            line-height: 28px;
+            color: #3e3e3e;
+        }
+
+        .modern-login-v2__register a {
+            color: #121212;
+            font-weight: 600;
+            text-decoration: none;
+        }
+
+        .modern-login-v2__register a:hover {
+            color: #6c3d97;
+        }
+
+        .modern-login-v2__banner {
+            position: relative;
+            width: 65%;
+            min-height: 100vh;
+            overflow: hidden;
+            background: #000;
+        }
+
+        .modern-login-v2__banner-image {
+            position: absolute;
+            inset: 0;
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            object-position: top;
+            transition: opacity 0.35s ease;
+        }
+
+        .modern-login-v2__banner-gradient {
+            position: absolute;
+            inset-inline: 0;
+            bottom: 0;
+            height: 408px;
+            background: linear-gradient(180deg, rgba(5, 5, 5, 0) 0%, rgba(5, 5, 5, 0.88) 100%);
+            pointer-events: none;
+        }
+
+        .modern-login-v2__banner-top {
+            position: absolute;
+            top: 48px;
+            left: 48px;
+            width: 600px;
+            margin: 0;
+            font-family: 'Noto Serif', serif;
+            font-weight: 400;
+            font-size: 80px;
+            line-height: 130px;
+            letter-spacing: -0.04em;
+            background: linear-gradient(108.91deg, #ffffff 0%, rgba(255, 255, 255, 0.24) 124.45%);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            text-transform: uppercase;
+        }
+
+        .modern-login-v2__banner-bottom {
+            position: absolute;
+            left: 48px;
+            bottom: 54px;
+            width: 381px;
+            margin: 0;
+            font-size: 14px;
+            line-height: 22px;
+            color: rgba(255, 255, 255, 0.72);
+        }
+
+        .modern-login-v2__slider-controls {
+            position: absolute;
+            right: 48px;
+            bottom: 48px;
+            display: flex;
+            gap: 12px;
+        }
+
+        .modern-login-v2__arrow {
+            width: 56px;
+            height: 56px;
+            border-radius: 999px;
+            border: 1px solid rgba(255, 255, 255, 0.24);
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            color: #ffffff;
+            background: transparent;
+            cursor: pointer;
+        }
+
+        .modern-login-v2__arrow:hover {
+            background: rgba(255, 255, 255, 0.12);
+        }
+
+        .modern-login-v2__arrow i {
+            font-size: 18px;
+        }
+
+        .modern-login-v2__back-home {
+            position: fixed;
+            top: 20px;
+            z-index: 10;
+            {{ $isRtl ? 'right: 20px;' : 'left: 20px;' }}
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            color: #3d3d3d;
+            text-decoration: none;
+            font-size: 14px;
+            line-height: 20px;
+        }
+
+        .modern-login-v2__back-home:hover {
+            color: #121212;
+        }
+
+        .modern-login-v2__spinner {
+            width: 16px;
+            height: 16px;
+            border: 2px solid rgba(255, 255, 255, 0.55);
+            border-top-color: #ffffff;
+            border-radius: 50%;
+            display: inline-block;
+            margin-inline-end: 8px;
+            animation: modernLoginSpin 0.9s linear infinite;
+            vertical-align: middle;
+        }
+
+        @keyframes modernLoginSpin {
             from { transform: rotate(0deg); }
             to { transform: rotate(360deg); }
         }
-        
-        .auth-spinner {
-            animation: spin 1s linear infinite;
-        }
-        
-        /* Enhanced focus states - removed transform to prevent layout shifts */
-        .auth-form-input:focus {
-            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1), 0 4px 6px -1px rgba(0, 0, 0, 0.1);
-        }
-        
-        /* Social button hover effects */
-        .grid button:hover {
-            transform: translateY(-1px);
-            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
-        }
-        
-        /* RTL Password Field Styles */
-        .rtl-password-field {
-            direction: rtl;
+
+        [dir="rtl"] .modern-login-v2__links {
+            flex-direction: row-reverse;
         }
 
-        .auth-input-icon-rtl {
-            right: auto !important;
-            left: 1rem !important;
-        }
-
-        .auth-password-toggle-rtl {
-            left: auto !important;
-            right: 1rem !important;
-        }
-
-        .auth-form-input-rtl {
-            padding-left: 3rem !important;
-            padding-right: 3rem !important;
+        [dir="rtl"] .modern-login-v2__input {
             text-align: right;
         }
 
-        /* Mobile responsiveness */
-        @media (max-width: 640px) {
-            .auth-form-card {
-                margin: 1rem;
-                padding: 2rem 1.5rem;
+        [dir="rtl"] .modern-login-v2__banner-top {
+            left: auto;
+            right: 48px;
+            text-align: right;
+        }
+
+        [dir="rtl"] .modern-login-v2__banner-bottom {
+            left: auto;
+            right: 48px;
+            text-align: right;
+        }
+
+        [dir="rtl"] .modern-login-v2__slider-controls {
+            right: auto;
+            left: 48px;
+        }
+
+        @media (max-width: 1200px) {
+            .modern-login-v2__form-panel {
+                width: 100%;
+                padding: 56px 24px;
             }
 
-            .auth-brand-title {
-                font-size: 1.75rem;
+            .modern-login-v2__banner {
+                display: none;
             }
 
-            .auth-features {
-                margin-top: 2rem;
+            .modern-login-v2__form-content {
+                width: 100%;
+                max-width: 448px;
+            }
+
+            .modern-login-v2__title {
+                font-size: 46px;
+                line-height: 52px;
             }
         }
+
+        @media (max-width: 560px) {
+            .modern-login-v2__title {
+                font-size: 40px;
+                line-height: 48px;
+            }
+             .modern-login-v2__brand {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 8px;
+            margin-top: 0px;
+        }
+        }
     </style>
+</head>
+<body>
+    <a href="{{ url('/') }}" class="modern-login-v2__back-home">
+        <i class="fas {{ $isRtl ? 'fa-arrow-right' : 'fa-arrow-left' }}"></i>
+        <span>{{ __('messages.back_to_home') }}</span>
+    </a>
+
+    <main class="modern-login-v2">
+        <section class="modern-login-v2__form-panel" aria-label="Login form">
+            <div class="modern-login-v2__form-content">
+                <div class="modern-login-v2__brand">
+                    <img src="{{ asset('assets/logo.png') }}" alt="Glow Labs">
+                    <h2 class="modern-login-v2__brand-title">Glow Labs</h2>
+                    <p class="modern-login-v2__brand-subtitle">{{ __('messages.modern_login_brand_subtitle') }}</p>
+                </div>
+
+                <div class="modern-login-v2__header">
+                    <h1 class="modern-login-v2__title">{{ __('messages.modern_login_welcome_back') }}</h1>
+                    <p class="modern-login-v2__subtitle">{{ __('messages.modern_login_subtitle') }}</p>
+                </div>
+
+                <div class="modern-login-v2__messages">
+                    @if (session('success'))
+                        <div class="modern-login-v2__message modern-login-v2__message--success">
+                            <i class="fas fa-circle-check" aria-hidden="true"></i>
+                            <span>{{ session('success') }}</span>
+                        </div>
+                    @endif
+                </div>
+
+                <form class="modern-login-v2__form" action="{{ route('login.attempt') }}" method="POST" novalidate>
+                    @csrf
+
+                    <div class="modern-login-v2__fields">
+                        <div class="modern-login-v2__field">
+                            <label for="email" class="modern-login-v2__label">{{ __('messages.email') }}</label>
+                            <div class="modern-login-v2__input-wrap">
+                                <input
+                                    type="email"
+                                    id="email"
+                                    name="email"
+                                    class="modern-login-v2__input @error('email') modern-login-v2__input--error @enderror"
+                                    placeholder="{{ __('messages.enter_email_address') }}"
+                                    value="{{ old('email') }}"
+                                    autocomplete="email"
+                                    required
+                                    autofocus
+                                >
+                            </div>
+                            <div class="modern-login-v2__error">
+                                @error('email')
+                                    {{ $message }}
+                                @enderror
+                            </div>
+                        </div>
+
+                        <div class="modern-login-v2__field">
+                            <label for="password" class="modern-login-v2__label">{{ __('messages.password') }}</label>
+                            <div class="modern-login-v2__input-wrap">
+                                <input
+                                    type="password"
+                                    id="password"
+                                    name="password"
+                                    class="modern-login-v2__input @error('password') modern-login-v2__input--error @enderror"
+                                    placeholder="{{ __('messages.enter_password') }}"
+                                    autocomplete="current-password"
+                                    required
+                                >
+                                <button type="button" class="modern-login-v2__password-toggle" id="passwordToggle" aria-label="Toggle password visibility">
+                                    <i class="fa-regular fa-eye"></i>
+                                </button>
+                            </div>
+                            <div class="modern-login-v2__error">
+                                @error('password')
+                                    {{ $message }}
+                                @enderror
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="modern-login-v2__links">
+                        <label for="remember" class="modern-login-v2__remember">
+                            <input type="checkbox" id="remember" name="remember" {{ old('remember') ? 'checked' : '' }}>
+                            <span>{{ __('messages.remember_me') }}</span>
+                        </label>
+
+                        <a href="{{ route('password.request') }}" class="modern-login-v2__link">{{ __('messages.forgot_password') }}</a>
+                    </div>
+
+                    <button type="submit" class="modern-login-v2__submit" id="submitButton">{{ __('messages.sign_in') }}</button>
+                </form>
+
+                <p class="modern-login-v2__register">
+                    {{ __('messages.dont_have_account') }}
+                    <a href="{{ route('register') }}">{{ __('messages.create_one_now') }}</a>
+                </p>
+            </div>
+        </section>
+
+        <aside class="modern-login-v2__banner" aria-label="Promotional banner">
+            <img id="sliderImage" class="modern-login-v2__banner-image" src="{{ $loginSlides[0]['image'] }}" alt="Promotional banner">
+            <div class="modern-login-v2__banner-gradient"></div>
+
+            <h2 id="sliderTopText" class="modern-login-v2__banner-top">{{ $loginSlides[0]['top_text'] }}</h2>
+            <p id="sliderBottomText" class="modern-login-v2__banner-bottom">{{ $loginSlides[0]['bottom_text'] }}</p>
+
+            <div class="modern-login-v2__slider-controls">
+                <button id="prevSlide" type="button" class="modern-login-v2__arrow" aria-label="Previous slide">
+                   <i class="fas {{ app()->getLocale() === 'ar' ? 'fa-arrow-right' : 'fa-arrow-left' }}"></i> 
+                </button>
+                <button id="nextSlide" type="button" class="modern-login-v2__arrow" aria-label="Next slide">
+                    <i class="fas {{ app()->getLocale() === 'ar' ? 'fa-arrow-left' : 'fa-arrow-right' }}"></i> 
+                </button>
+            </div>
+        </aside>
+    </main>
+
+    @vite(['resources/js/app.js'])
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            const form = document.querySelector('.modern-login-v2__form');
+            const submitButton = document.getElementById('submitButton');
+            const passwordToggle = document.getElementById('passwordToggle');
+            const passwordInput = document.getElementById('password');
+
+            if (passwordToggle && passwordInput) {
+                passwordToggle.addEventListener('click', function () {
+                    const icon = this.querySelector('i');
+                    const reveal = passwordInput.type === 'password';
+                    passwordInput.type = reveal ? 'text' : 'password';
+                    icon.className = reveal ? 'fa-regular fa-eye-slash' : 'fa-regular fa-eye';
+                });
+            }
+
+            if (form && submitButton) {
+                form.addEventListener('submit', function () {
+                    submitButton.disabled = true;
+                    submitButton.innerHTML = `<span class="modern-login-v2__spinner"></span>{{ __('messages.signing_in') }}`;
+                });
+            }
+
+            const slides = @json($loginSlides);
+            const sliderImage = document.getElementById('sliderImage');
+            const sliderTopText = document.getElementById('sliderTopText');
+            const sliderBottomText = document.getElementById('sliderBottomText');
+            const prevSlide = document.getElementById('prevSlide');
+            const nextSlide = document.getElementById('nextSlide');
+            const shouldRunSlider = slides.length > 0 && sliderImage && sliderTopText && sliderBottomText && prevSlide && nextSlide;
+
+            if (!shouldRunSlider) {
+                return;
+            }
+
+            let currentIndex = 0;
+            let timerId = null;
+
+            function renderSlide(index) {
+                currentIndex = (index + slides.length) % slides.length;
+                const activeSlide = slides[currentIndex];
+                sliderImage.style.opacity = '0.25';
+
+                setTimeout(function () {
+                    sliderImage.src = activeSlide.image;
+                    sliderTopText.textContent = activeSlide.top_text;
+                    sliderBottomText.textContent = activeSlide.bottom_text;
+                    sliderImage.style.opacity = '1';
+                }, 120);
+            }
+
+            function restartAutoSlide() {
+                if (timerId) {
+                    clearInterval(timerId);
+                }
+
+                timerId = setInterval(function () {
+                    renderSlide(currentIndex + 1);
+                }, 8000);
+            }
+
+            prevSlide.addEventListener('click', function () {
+                renderSlide(currentIndex - 1);
+                restartAutoSlide();
+            });
+
+            nextSlide.addEventListener('click', function () {
+                renderSlide(currentIndex + 1);
+                restartAutoSlide();
+            });
+
+            restartAutoSlide();
+        });
+    </script>
 </body>
 </html>

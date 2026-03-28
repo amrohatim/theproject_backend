@@ -11,7 +11,7 @@
             <p class="mt-1 text-gray-600 dark:text-gray-400">{{ __('products_manager.manage_products_description') }}</p>
         </div>
         <div class="mt-4 md:mt-0">
-            <a href="{{ route('products-manager.products.create') }}" class="inline-flex w-full items-center justify-center px-4 py-2 bg-orange-500 border border-transparent rounded-md font-semibold text-xs text-white uppercase tracking-widest hover:bg-orange-600 active:bg-orange-700 focus:outline-none focus:border-orange-700 focus:ring ring-orange-300 disabled:opacity-25 transition ease-in-out duration-150 md:w-auto">
+            <a href="{{ route('products-manager.products.create') }}" class="inline-flex w-full items-center justify-center px-4 py-2 bg-[var(--primary)] border border-transparent rounded-md font-semibold text-xs text-white uppercase tracking-widest hover:bg-[var(--primary)] active:bg-[var(--primary)] focus:outline-none focus:border-[var(--primary)] focus:ring ring-[var(--primary)] disabled:opacity-25 transition ease-in-out duration-150 md:w-auto">
                 <i class="fas fa-plus mr-2"></i> {{ __('products_manager.add_product') }}
             </a>
         </div>
@@ -27,13 +27,13 @@
                         <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
                             <i class="fas fa-search text-gray-400"></i>
                         </div>
-                        <input type="text" name="search" id="search" value="{{ request('search') }}" class="focus:ring-orange-500 focus:border-orange-500 block w-full pl-10 sm:text-sm border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-white rounded-md" placeholder="{{ __('products_manager.search_products') }}">
+                        <input type="text" name="search" id="search" value="{{ request('search') }}" class="focus:ring-[var(--primary)] focus:border-[var(--primary)] block w-full pl-10 sm:text-sm border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-white rounded-md" placeholder="{{ __('products_manager.search_products') }}">
                     </div>
                 </div>
 
                 <div>
                     <label for="category" class="block text-sm font-medium text-gray-700 dark:text-gray-300">{{ __('products_manager.category') }}</label>
-                    <select id="category" name="category" class="mt-1 block w-full pl-3 pr-10 py-2 text-base border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-white focus:outline-none focus:ring-orange-500 focus:border-orange-500 sm:text-sm rounded-md">
+                    <select id="category" name="category" class="mt-1 block w-full pl-3 pr-10 py-2 text-base border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-white focus:outline-none focus:ring-[var(--primary)] focus:border-[var(--primary)] sm:text-sm rounded-md">
                         <option value="">{{ __('products_manager.all_categories') }}</option>
                         @foreach(($categories ?? []) as $category)
                             <option value="{{ $category->id }}" {{ request('category') == $category->id ? 'selected' : '' }}>
@@ -52,7 +52,7 @@
 
                 <div>
                     <label for="branch" class="block text-sm font-medium text-gray-700 dark:text-gray-300">{{ __('products_manager.branch') }}</label>
-                    <select id="branch" name="branch" class="mt-1 block w-full pl-3 pr-10 py-2 text-base border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-white focus:outline-none focus:ring-orange-500 focus:border-orange-500 sm:text-sm rounded-md">
+                    <select id="branch" name="branch" class="mt-1 block w-full pl-3 pr-10 py-2 text-base border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-white focus:outline-none focus:ring-[var(--primary)] focus:border-[var(--primary)] sm:text-sm rounded-md">
                         <option value="">{{ __('products_manager.all_branches') }}</option>
                         @foreach(($branches ?? []) as $branch)
                             <option value="{{ $branch->id }}" {{ request('branch') == $branch->id ? 'selected' : '' }}>
@@ -64,7 +64,7 @@
             </div>
 
             <div class="flex justify-end">
-                <button type="submit" class="inline-flex w-full items-center justify-center px-4 py-2 bg-orange-500 border border-transparent rounded-md font-semibold text-xs text-white uppercase tracking-widest hover:bg-orange-600 active:bg-orange-700 focus:outline-none focus:border-orange-700 focus:ring ring-orange-300 disabled:opacity-25 transition ease-in-out duration-150 sm:w-auto">
+                <button type="submit" class="inline-flex w-full items-center justify-center px-4 py-2 bg-[var(--primary)] border border-transparent rounded-md font-semibold text-xs text-white uppercase tracking-widest hover:bg-[var(--primary)] active:bg-[var(--primary)] focus:outline-none focus:border-[var(--primary)] focus:ring ring-[var(--primary)] disabled:opacity-25 transition ease-in-out duration-150 sm:w-auto">
                     <i class="fas fa-filter mr-2"></i> {{ __('products_manager.filter') }}
                 </button>
             </div>
@@ -149,7 +149,7 @@
                                 </td>
                                 <td class="px-6 py-4 md:whitespace-nowrap text-right text-sm font-medium" data-label="{{ __('products_manager.actions') }}">
                                     <div class="flex items-center justify-end space-x-2">
-                                        <a href="{{ route('products-manager.products.edit', $product) }}" class="text-orange-600 hover:text-orange-900 dark:text-orange-400 dark:hover:text-orange-300">
+                                        <a href="{{ route('products-manager.products.edit', $product) }}" class="text-[var(--primary)] hover:text-[var(--primary-hover)] dark:text-[var(--primary)] dark:hover:text-[var(--primary)]">
                                             <i class="fas fa-edit"></i>
                                         </a>
                                         <button onclick="deleteProduct({{ $product->id }})" class="text-red-600 hover:text-red-900 dark:text-red-400 dark:hover:text-red-300">
@@ -167,13 +167,13 @@
             @include('products-manager.products.partials.pagination', ['products' => $products])
         @else
             <div class="p-8 text-center">
-                <div class="mx-auto h-14 w-14 rounded-full bg-orange-100 dark:bg-orange-900 flex items-center justify-center">
-                    <i class="fas fa-box text-orange-600 dark:text-orange-400"></i>
+                <div class="mx-auto h-14 w-14 rounded-full bg-[var(--primary)] dark:bg-[var(--primary)] flex items-center justify-center">
+                    <i class="fas fa-box text-[var(--primary)] dark:text-[var(--primary)]"></i>
                 </div>
                 <h4 class="mt-3 text-gray-900 dark:text-white font-medium">{{ __('products_manager.no_products_found') }}</h4>
                 <p class="text-sm text-gray-500 dark:text-gray-400">{{ __('products_manager.start_adding_products') }}</p>
                 <div class="mt-6">
-                    <a href="{{ route('products-manager.products.create') }}" class="inline-flex items-center px-4 py-2 bg-orange-500 border border-transparent rounded-md font-semibold text-xs text-white uppercase tracking-widest hover:bg-orange-600 active:bg-orange-700 focus:outline-none focus:border-orange-700 focus:ring ring-orange-300 disabled:opacity-25 transition ease-in-out duration-150">
+                    <a href="{{ route('products-manager.products.create') }}" class="inline-flex items-center px-4 py-2 bg-[var(--primary)] border border-transparent rounded-md font-semibold text-xs text-white uppercase tracking-widest hover:bg-[var(--primary)] active:bg-[var(--primary)] focus:outline-none focus:border-[var(--primary)] focus:ring ring-[var(--primary)] disabled:opacity-25 transition ease-in-out duration-150">
                         <i class="fas fa-plus mr-2"></i> {{ __('products_manager.add_first_product') }}
                     </a>
                 </div>

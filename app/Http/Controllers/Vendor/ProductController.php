@@ -356,6 +356,7 @@ class ProductController extends Controller
                 'vendor.specification_value' => __('vendor.specification_value'),
                 'vendor.no_specifications_added_yet' => __('vendor.no_specifications_added_yet'),
                 'vendor.add_first_specification' => __('vendor.add_first_specification'),
+                 'select_branch_first' => __('vendor.select_branch_first'),
 
                 // Legacy keys for backward compatibility
                 'select_category' => __('vendor.select_category'),
