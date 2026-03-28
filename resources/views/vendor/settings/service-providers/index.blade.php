@@ -64,7 +64,7 @@
                             <th scope="col" class="px-6 py-3 {{ $isRtl ? 'text-right' : 'text-left' }} text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">
                                 {{ __('vendor.creation_date') }}
                             </th>
-                            <th scope="col" class="px-6 py-3 {{ $isRtl ? 'text-left' : 'text-right' }} text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">
+                            <th scope="col" class="px-6 py-3 {{ $isRtl ? 'text-right' : 'text-left' }} text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">
                                 {{ __('vendor.actions') }}
                             </th>
                         </tr>
@@ -123,8 +123,8 @@
                                 <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500 dark:text-gray-400 {{ $isRtl ? 'text-right' : 'text-left' }}">
                                     {{ $serviceProvider->created_at->format('M d, Y') }}
                                 </td>
-                                <td class="px-6 py-4 whitespace-nowrap {{ $isRtl ? 'text-left' : 'text-right' }} text-sm font-medium">
-                                    <div class="flex items-center {{ $isRtl ? 'justify-start space-x-reverse' : 'justify-end' }} space-x-2">
+                                <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
+                                    <div class="flex items-center justify-start {{ $isRtl ? 'space-x-reverse' : '' }} space-x-2">
                                         <a href="{{ route('vendor.settings.service-providers.show', $serviceProvider) }}" class="text-indigo-600 hover:text-indigo-900 dark:text-indigo-400 dark:hover:text-indigo-300">
                                             <i class="fas fa-eye"></i>
                                         </a>

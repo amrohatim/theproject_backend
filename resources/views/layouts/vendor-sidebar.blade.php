@@ -81,12 +81,12 @@
     <div class="space-y-1">
         @foreach($supportedLocales as $locale => $details)
             <a href="{{ url('/language/' . $locale) }}"
-               class="flex items-center px-4 py-2 text-sm font-medium rounded-md transition-colors duration-200 {{ $locale === $currentLocale ? 'bg-indigo-100 text-indigo-700 dark:bg-indigo-900 dark:text-indigo-300' : 'text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700' }}"
+               class="flex items-center px-4 py-2 text-sm font-medium rounded-md transition-colors duration-200 {{ $locale === $currentLocale ? 'bg-[var(--towhite)] text-[var(--primary)] dark:bg-[var(--primary-light)] dark:text-[var(--primary)]' : 'text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700' }}"
                onclick="switchLanguageVendor('{{ $locale }}'); return false;">
                 <span class="text-lg mr-3">{{ $details['flag'] }}</span>
                 <span class="flex-1">{{ $details['native'] }}</span>
                 @if($locale === $currentLocale)
-                    <i class="fas fa-check text-indigo-600 dark:text-indigo-400 text-xs ml-auto"></i>
+                    <i class="fas fa-check text-[var(--primary)] dark:text-[var(--primary)] text-xs ml-auto"></i>
                 @endif
             </a>
         @endforeach
