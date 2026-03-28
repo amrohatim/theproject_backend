@@ -17,12 +17,12 @@
     <!-- Language Options -->
     <div class="space-y-1">
         @foreach($supportedLocales as $locale => $details)
-            <button class="flex items-center w-full px-3 py-2 text-sm font-medium rounded-md transition-colors duration-200 language-option-sidebar {{ $locale === $currentLocale ? 'bg-blue-100 text-[#53D2DC] dark:bg-blue-900 dark:text-blue-200' : 'text-gray-700 hover:bg-gray-100 dark:text-gray-300 dark:hover:bg-gray-700' }}"
+            <button class="flex items-center w-full px-3 py-2 text-sm font-medium rounded-md transition-colors duration-200 language-option-sidebar {{ $locale === $currentLocale ? 'bg-[var(--primary-light)] text-[var(--primary)] dark:bg-[var(--primary-light)] dark:text-[var(--primary)]' : 'text-gray-700 hover:bg-gray-100 dark:text-gray-300 dark:hover:bg-gray-700' }}"
                     onclick="switchLanguageSidebar('{{ $locale }}'); return false;">
                 <span class="flag-icon mr-3 text-base">{{ $details['flag'] }}</span>
                 <span class="flex-1 text-left">{{ $details['native'] }}</span>
                 @if($locale === $currentLocale)
-                    <i class="fas fa-check text-[#53D2DC] dark:text-blue-200 text-xs"></i>
+                    <i class="fas fa-check text-[var(--primary)] dark:text-[var(--primary)] text-xs"></i>
                 @endif
             </button>
         @endforeach

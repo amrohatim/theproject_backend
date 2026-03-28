@@ -156,7 +156,7 @@
                         <div class="relative group">
                             <a
                                 href="{{ route('vendor.notifications.index') }}"
-                                class="relative inline-flex h-9 w-9 items-center justify-center rounded-full text-gray-600 hover:text-indigo-600 hover:bg-gray-100 dark:text-gray-300 dark:hover:text-indigo-400 dark:hover:bg-gray-700 transition-colors"
+                                class="relative inline-flex h-9 w-9 items-center justify-center rounded-full text-gray-600 hover:text-[var(--primary)] hover:bg-gray-100 dark:text-gray-300 dark:hover:text-[var(--primary)] dark:hover:bg-gray-700 transition-colors"
                                 aria-label="Vendor notifications"
                             >
                                 <i class="fas fa-bell"></i>
@@ -186,7 +186,7 @@
                                         </div>
                                     @endforelse
                                 </div>
-                                <a href="{{ route('vendor.notifications.index') }}" class="block border-t border-gray-200 px-4 py-2 text-center text-sm font-medium text-indigo-600 hover:bg-gray-50 dark:border-gray-700 dark:text-indigo-400 dark:hover:bg-gray-700">
+                                <a href="{{ route('vendor.notifications.index') }}" class="block border-t border-gray-200 px-4 py-2 text-center text-sm font-medium text-[var(--primary)] hover:bg-gray-50 dark:border-gray-700 dark:text-[var(--primary)] dark:hover:bg-gray-700">
                                     {{ __('messages.view_all') }}
                                 </a>
                             </div>
@@ -196,7 +196,7 @@
                         <div class="relative group">
                             <a
                                 href="{{ route('provider.notifications.index') }}"
-                                class="relative inline-flex h-9 w-9 items-center justify-center rounded-full text-gray-600 hover:text-indigo-600 hover:bg-gray-100 dark:text-gray-300 dark:hover:text-indigo-400 dark:hover:bg-gray-700 transition-colors"
+                                class="relative inline-flex h-9 w-9 items-center justify-center rounded-full text-gray-600 hover:text-[var(--primary)] hover:bg-gray-100 dark:text-gray-300 dark:hover:text-[var(--primary)] dark:hover:bg-gray-700 transition-colors"
                                 aria-label="Provider notifications"
                             >
                                 <i class="fas fa-bell"></i>
@@ -226,7 +226,7 @@
                                         </div>
                                     @endforelse
                                 </div>
-                                <a href="{{ route('provider.notifications.index') }}" class="block border-t border-gray-200 px-4 py-2 text-center text-sm font-medium text-indigo-600 hover:bg-gray-50 dark:border-gray-700 dark:text-indigo-400 dark:hover:bg-gray-700">
+                                <a href="{{ route('provider.notifications.index') }}" class="block border-t border-gray-200 px-4 py-2 text-center text-sm font-medium text-[var(--primary)] hover:bg-gray-50 dark:border-gray-700 dark:text-[var(--primary)] dark:hover:bg-gray-700">
                                     {{ __('messages.view_all') }}
                                 </a>
                             </div>
@@ -235,7 +235,7 @@
 
                     <button type="button" class="flex items-center text-sm focus:outline-none">
                         <span class="mr-2 text-gray-700 dark:text-gray-300">{{ auth()->user()->name ?? 'Admin User' }}</span>
-                        <div class="w-8 h-8 rounded-full bg-indigo-500 flex items-center justify-center text-white">
+                        <div class="w-8 h-8 rounded-full bg-[var(--primary)] flex items-center justify-center text-white">
                             <i class="fas fa-user"></i>
                         </div>
                     </button>

@@ -843,7 +843,7 @@ $direction = $isRtl ? 'rtl' : 'ltr';
                                         </div>
                                     @endforelse
                                 </div>
-                                <a href="{{ route('merchant.notifications.index') }}" class="block border-t border-gray-200 px-4 py-2 text-center text-sm font-medium text-indigo-600 hover:bg-gray-50">
+                                <a href="{{ route('merchant.notifications.index') }}" class="block border-t border-gray-200 px-4 py-2 text-center text-sm font-medium text-[var(--primary)] hover:bg-gray-50">
                                     {{ __('merchant.view_all') }}
                                 </a>
                             </div>

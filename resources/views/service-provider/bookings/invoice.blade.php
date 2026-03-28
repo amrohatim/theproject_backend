@@ -11,7 +11,7 @@
             <p class="mt-1 text-gray-600 dark:text-gray-400">{{ $booking->created_at ? $booking->created_at->format('F d, Y') : 'N/A' }}</p>
         </div>
         <div class="mt-4 md:mt-0 flex space-x-2">
-            <button onclick="window.print()" class="inline-flex items-center px-4 py-2 bg-[#53D2DC] border border-transparent rounded-md font-semibold text-xs text-white uppercase tracking-widest hover:opacity-90 active:opacity-80 focus:outline-none focus:ring ring-[#53D2DC]/30 disabled:opacity-25 transition ease-in-out duration-150">
+            <button onclick="window.print()" class="inline-flex items-center px-4 py-2 bg-[var(--primary)] border border-transparent rounded-md font-semibold text-xs text-white uppercase tracking-widest hover:opacity-90 active:opacity-80 focus:outline-none focus:ring ring-[var(--primary-light)] disabled:opacity-25 transition ease-in-out duration-150">
                 <i class="fas fa-print mr-2"></i> {{ __('messages.print_invoice') }}
             </button>
             <a href="{{ route('service-provider.bookings.show', $booking) }}" class="inline-flex items-center px-4 py-2 bg-gray-600 border border-transparent rounded-md font-semibold text-xs text-white uppercase tracking-widest hover:bg-gray-700 active:bg-gray-900 focus:outline-none focus:border-gray-900 focus:ring ring-gray-300 disabled:opacity-25 transition ease-in-out duration-150">

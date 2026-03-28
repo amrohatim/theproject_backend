@@ -2,6 +2,9 @@
 
 @section('title', __('messages.notifications'))
 @section('page-title', __('messages.notifications'))
+@section('styles')
+    <link rel="stylesheet" href="{{ asset('css/global.css') }}">
+@endsection
 
 @section('content')
 <div class="p-6">
@@ -32,7 +35,7 @@
                                     {{ $notification->sender_name }} · {{ $notification->created_at?->diffForHumans() }}
                                 </p>
                             </div>
-                            <span class="inline-flex rounded-full bg-orange-100 px-2 py-1 text-xs font-medium capitalize text-orange-700 dark:bg-orange-900/40 dark:text-orange-300">
+                            <span class="inline-flex rounded-full bg-[var(--primary-light)] px-2 py-1 text-xs font-medium capitalize text-[var(--primary)] dark:bg-[var(--primary)]/20 dark:text-[var(--primary-light)]">
                                 {{ $notification->notification_type }}
                             </span>
                         </div>

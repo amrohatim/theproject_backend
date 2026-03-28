@@ -8,7 +8,7 @@
     <div class="bg-white dark:bg-gray-800 rounded-lg shadow border border-gray-200 dark:border-gray-700">
         <div class="px-4 py-3 border-b border-gray-200 dark:border-gray-700 flex items-center justify-between">
             <h3 class="text-lg font-medium text-gray-900 dark:text-white">{{ __('service_provider.active_deals') }}</h3>
-            <a href="{{ route('service-provider.deals.create') }}" class="inline-flex items-center px-3 py-2 bg-[#53D2DC] text-white rounded-md hover:bg-[#53D2DC]/90 focus:ring-2 focus:ring-[#53D2DC] focus:ring-offset-2 transition-colors text-sm">
+            <a href="{{ route('service-provider.deals.create') }}" class="inline-flex items-center px-3 py-2 bg-[var(--primary)] text-white rounded-md hover:bg-[var(--primary-hover)] focus:ring-2 focus:ring-[var(--primary)] focus:ring-offset-2 transition-colors text-sm">
                 <i class="fas fa-plus mr-2"></i>{{ __('service_provider.create_deal') }}
             </a>
         </div>
@@ -16,7 +16,7 @@
             @if(($activeDeals ?? collect())->count())
                 <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
                     @foreach($activeDeals as $deal)
-                        <div class="p-4 rounded-lg border border-[#53D2DC]/30 hover:shadow-md transition-shadow">
+                        <div class="p-4 rounded-lg border border-[var(--primary)]/30 hover:shadow-md transition-shadow">
                             <!-- Deal Header -->
                             <div class="flex items-start justify-between mb-3">
                                 <div class="flex-1">
@@ -26,7 +26,7 @@
                                     @endif
                                 </div>
                                 <div class="text-right">
-                                    <span class="text-lg font-bold text-[#53D2DC]">{{ $deal->discount_percentage }}% OFF</span>
+                                    <span class="text-lg font-bold text-[var(--primary)]">{{ $deal->discount_percentage }}% OFF</span>
                                 </div>
                             </div>
 
@@ -44,10 +44,10 @@
 
                             <!-- Promotional Message -->
                             @if($deal->promotional_message)
-                                <div class="mb-3 p-2 bg-[#53D2DC]/10 rounded text-center">
-                                    <p class="text-xs font-medium text-[#53D2DC]">{{ $deal->promotional_message }}</p>
+                                <div class="mb-3 p-2 bg-[var(--primary)]/10 rounded text-center">
+                                    <p class="text-xs font-medium text-[var(--primary)]">{{ $deal->promotional_message }}</p>
                                     @if($deal->promotional_message_arabic)
-                                        <p class="text-xs font-medium text-[#53D2DC] mt-1" dir="rtl">{{ $deal->promotional_message_arabic }}</p>
+                                        <p class="text-xs font-medium text-[var(--primary)] mt-1" dir="rtl">{{ $deal->promotional_message_arabic }}</p>
                                     @endif
                                 </div>
                             @endif
@@ -94,9 +94,9 @@
                             </div>
 
                             <!-- Deal Actions -->
-                            <div class="flex items-center justify-end space-x-2 pt-2 border-t border-[#53D2DC]/20">
+                            <div class="flex items-center justify-end space-x-2 pt-2 border-t border-[var(--primary)]/20">
                                 <a href="{{ route('service-provider.deals.edit', $deal) }}"
-                                   class="inline-flex items-center px-2 py-1 text-xs font-medium text-[#53D2DC] hover:text-[#53D2DC]/80 hover:bg-[#53D2DC]/10 rounded transition-colors">
+                                   class="inline-flex items-center px-2 py-1 text-xs font-medium text-[var(--primary)] hover:text-[var(--primary-hover)] hover:bg-[var(--primary)]/10 rounded transition-colors">
                                     <i class="fas fa-edit mr-1"></i>
                                     {{ __('service_provider.edit') }}
                                 </a>
@@ -114,13 +114,13 @@
                 </div>
             @else
                 <div class="p-8 text-center">
-                    <div class="mx-auto h-14 w-14 rounded-full bg-[#53D2DC]/15 flex items-center justify-center">
-                        <i class="fas fa-percent text-[#53D2DC]"></i>
+                    <div class="mx-auto h-14 w-14 rounded-full bg-[var(--primary)]/15 flex items-center justify-center">
+                        <i class="fas fa-percent text-[var(--primary)]"></i>
                     </div>
                     <h4 class="mt-3 text-gray-900 dark:text-white font-medium">{{ __('service_provider.no_active_deals') }}</h4>
                     <p class="text-sm text-gray-500 dark:text-gray-400">{{ __('service_provider.create_deals_promote') }}</p>
                     <div class="mt-4">
-                        <a href="{{ route('service-provider.deals.create') }}" class="inline-flex items-center px-4 py-2 bg-[#53D2DC] text-white rounded-md hover:bg-[#53D2DC]/90 focus:ring-2 focus:ring-[#53D2DC] focus:ring-offset-2 transition-colors text-sm">
+                        <a href="{{ route('service-provider.deals.create') }}" class="inline-flex items-center px-4 py-2 bg-[var(--primary)] text-white rounded-md hover:bg-[var(--primary-hover)] focus:ring-2 focus:ring-[var(--primary)] focus:ring-offset-2 transition-colors text-sm">
                             <i class="fas fa-plus mr-2"></i>{{ __('service_provider.create_first_deal') }}
                         </a>
                     </div>

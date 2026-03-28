@@ -39,10 +39,10 @@
             <p class="mt-1 text-gray-600 dark:text-gray-400">{{ $booking->created_at ? $booking->created_at->format('F d, Y h:i A') : 'N/A' }}</p>
         </div>
         <div class="mt-4 md:mt-0 flex space-x-2">
-            <a href="{{ route('service-provider.bookings.edit', $booking) }}" class="inline-flex items-center px-4 py-2 bg-[#53D2DC] border border-transparent rounded-md font-semibold text-xs text-white uppercase tracking-widest hover:opacity-90 active:opacity-80 focus:outline-none focus:ring ring-[#53D2DC]/30 disabled:opacity-25 transition ease-in-out duration-150">
+            <a href="{{ route('service-provider.bookings.edit', $booking) }}" class="inline-flex items-center px-4 py-2 bg-[var(--primary)] border border-transparent rounded-md font-semibold text-xs text-white uppercase tracking-widest hover:opacity-90 active:opacity-80 focus:outline-none focus:ring ring-[var(--primary-light)] disabled:opacity-25 transition ease-in-out duration-150">
                 <i class="fas fa-edit mr-2"></i> {{ __('messages.edit_booking') }}
             </a>
-            <a href="{{ route('service-provider.bookings.invoice', $booking) }}" class="inline-flex items-center px-4 py-2 border border-[#53D2DC] text-[#53D2DC] rounded-md font-semibold text-xs uppercase tracking-widest hover:bg-[#53D2DC] hover:text-white transition">
+            <a href="{{ route('service-provider.bookings.invoice', $booking) }}" class="inline-flex items-center px-4 py-2 border border-[var(--primary)] text-[var(--primary)] rounded-md font-semibold text-xs uppercase tracking-widest hover:bg-[var(--primary)] hover:text-white transition">
                 <i class="fas fa-file-invoice mr-2"></i> {{ __('messages.invoice') }}
             </a>
             <a href="{{ route('service-provider.bookings.index') }}" class="inline-flex items-center px-4 py-2 bg-gray-600 border border-transparent rounded-md font-semibold text-xs text-white uppercase tracking-widest hover:bg-gray-700 active:bg-gray-900 focus:outline-none focus:border-gray-900 focus:ring ring-gray-300 disabled:opacity-25 transition ease-in-out duration-150">
@@ -138,7 +138,7 @@
                 <div class="flex flex-col lg:flex-row lg:items-start lg:space-x-6">
                     <div class="flex-1 mb-4 lg:mb-0">
                         <div class="flex items-center mb-3">
-                            <i class="fas fa-home text-blue-500 mr-2"></i>
+                            <i class="fas fa-home text-[var(--primary)] mr-2"></i>
                             <span class="text-sm font-medium text-gray-900 dark:text-white">
                                 {{ __('messages.home_service') }}
                             </span>
@@ -151,7 +151,7 @@
                             </div> --}}
                             @if($customerLocation)
                             <div class="flex items-center space-x-2 mt-2">
-                                <button onclick="copyLocation()" class="inline-flex items-center px-2 py-1 bg-blue-100 hover:bg-blue-200 dark:bg-blue-900 dark:hover:bg-blue-800 text-blue-700 dark:text-blue-300 text-xs font-medium rounded-md transition-colors duration-200">
+                                <button onclick="copyLocation()" class="inline-flex items-center px-2 py-1 bg-[var(--primary-light)] hover:bg-[var(--towhite)] dark:bg-[var(--primary)]/20 dark:hover:bg-[var(--primary)]/30 text-[var(--primary)] dark:text-[var(--primary-light)] text-xs font-medium rounded-md transition-colors duration-200">
                                     <i class="fas fa-copy mr-1"></i>
                                     {{ __('messages.copy_location') }}
                                 </button>
@@ -160,7 +160,7 @@
                                     {{ __('messages.share_location') }}
                                 </button>
                                 @if($customerLatitude && $customerLongitude)
-                                <button onclick="openInMaps()" class="inline-flex items-center px-2 py-1 bg-purple-100 hover:bg-purple-200 dark:bg-purple-900 dark:hover:bg-purple-800 text-purple-700 dark:text-purple-300 text-xs font-medium rounded-md transition-colors duration-200">
+                                <button onclick="openInMaps()" class="inline-flex items-center px-2 py-1 bg-[var(--towhite)] hover:bg-[var(--primary-light)] dark:bg-[var(--primary)]/20 dark:hover:bg-[var(--primary)]/30 text-[var(--primary-hover)] dark:text-[var(--primary-light)] text-xs font-medium rounded-md transition-colors duration-200">
                                     <i class="fas fa-external-link-alt mr-1"></i>
                                     {{ __('messages.open_in_maps') }}
                                 </button>
@@ -382,7 +382,7 @@
         const notification = document.createElement('div');
         notification.className = `fixed top-4 right-4 px-4 py-2 rounded-md text-white z-50 ${
             type === 'success' ? 'bg-green-500' : 
-            type === 'error' ? 'bg-red-500' : 'bg-blue-500'
+            type === 'error' ? 'bg-red-500' : 'bg-[var(--primary)]'
         }`;
         notification.textContent = message;
         

@@ -21,6 +21,7 @@
 
     <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="{{ asset('css/global.css') }}">
 
     @if($isRtl)
     <!-- RTL Styles -->
@@ -62,7 +63,7 @@
         <div id="sp-sidebar" class="fixed inset-y-0 left-0 z-40 w-64 transform -translate-x-full bg-white dark:bg-gray-800 shadow-lg transition-transform duration-200 md:static md:translate-x-0">
             <div class="flex flex-col h-full">
                 <!-- Logo -->
-                <div class="flex items-center justify-center h-16 px-4 bg-[#53D2DC] dark:bg-[#53D2DC]">
+                <div class="flex items-center justify-center h-16 px-4 bg-[var(--primary)] dark:bg-[var(--primary)]">
                     <h1 class="text-xl font-bold text-white">{{ __('service_provider.service_provider') }}</h1>
                 </div>
 
@@ -70,8 +71,8 @@
                 <div class="px-4 py-4 border-b border-gray-200 dark:border-gray-700">
                     <div class="flex items-center">
                         <div class="flex-shrink-0">
-                            <div class="h-10 w-10 rounded-full bg-blue-100 dark:bg-blue-900 flex items-center justify-center">
-                                <i class="fas fa-user text-[#53D2DC] dark:text-blue-400"></i>
+                            <div class="h-10 w-10 rounded-full bg-[var(--primary-light)] dark:bg-[var(--primary)]/20 flex items-center justify-center">
+                                <i class="fas fa-user text-[var(--primary)] dark:text-[var(--primary-light)]"></i>
                             </div>
                         </div>
                         <div class="ml-3">
@@ -85,28 +86,28 @@
                 <nav class="flex-1 px-4 py-4 space-y-2">
                     <!-- Dashboard -->
                     <a href="{{ route('service-provider.dashboard') }}" 
-                       class="flex items-center px-3 py-2 text-sm font-medium rounded-md {{ request()->routeIs('service-provider.dashboard') ? 'bg-blue-100 text-[#53D2DC] dark:bg-blue-900 dark:text-blue-200' : 'text-gray-700 hover:bg-gray-100 dark:text-gray-300 dark:hover:bg-gray-700' }}">
+                       class="flex items-center px-3 py-2 text-sm font-medium rounded-md {{ request()->routeIs('service-provider.dashboard') ? 'bg-[var(--primary-light)] text-[var(--primary)] dark:bg-[var(--primary)]/20 dark:text-[var(--primary-light)]' : 'text-gray-700 hover:bg-gray-100 dark:text-gray-300 dark:hover:bg-gray-700' }}">
                         <i class="fas fa-tachometer-alt mr-3"></i>
                         {{ __('service_provider.dashboard') }}
                     </a>
 
                     <!-- Services -->
                     <a href="{{ route('service-provider.services.index') }}"
-                       class="flex items-center px-3 py-2 text-sm font-medium rounded-md {{ request()->routeIs('service-provider.services.*') ? 'bg-blue-100 text-[#53D2DC] dark:bg-blue-900 dark:text-blue-200' : 'text-gray-700 hover:bg-gray-100 dark:text-gray-300 dark:hover:bg-gray-700' }}">
+                       class="flex items-center px-3 py-2 text-sm font-medium rounded-md {{ request()->routeIs('service-provider.services.*') ? 'bg-[var(--primary-light)] text-[var(--primary)] dark:bg-[var(--primary)]/20 dark:text-[var(--primary-light)]' : 'text-gray-700 hover:bg-gray-100 dark:text-gray-300 dark:hover:bg-gray-700' }}">
                         <i class="fas fa-cog mr-3"></i>
                         {{ __('service_provider.services') }}
                     </a>
 
                     <!-- Bookings -->
                     <a href="{{ route('service-provider.bookings.index') }}"
-                       class="flex items-center px-3 py-2 text-sm font-medium rounded-md {{ request()->routeIs('service-provider.bookings.*') ? 'bg-blue-100 text-[#53D2DC] dark:bg-blue-900 dark:text-blue-200' : 'text-gray-700 hover:bg-gray-100 dark:text-gray-300 dark:hover:bg-gray-700' }}">
+                       class="flex items-center px-3 py-2 text-sm font-medium rounded-md {{ request()->routeIs('service-provider.bookings.*') ? 'bg-[var(--primary-light)] text-[var(--primary)] dark:bg-[var(--primary)]/20 dark:text-[var(--primary-light)]' : 'text-gray-700 hover:bg-gray-100 dark:text-gray-300 dark:hover:bg-gray-700' }}">
                         <i class="fas fa-calendar-check mr-3"></i>
                         {{ __('service_provider.bookings') }}
                     </a>
 
                     <!-- Deals -->
                     <a href="{{ route('service-provider.deals.index') }}"
-                       class="flex items-center px-3 py-2 text-sm font-medium rounded-md {{ request()->routeIs('service-provider.deals.*') ? 'bg-blue-100 text-[#53D2DC] dark:bg-blue-900 dark:text-blue-200' : 'text-gray-700 hover:bg-gray-100 dark:text-gray-300 dark:hover:bg-gray-700' }}">
+                       class="flex items-center px-3 py-2 text-sm font-medium rounded-md {{ request()->routeIs('service-provider.deals.*') ? 'bg-[var(--primary-light)] text-[var(--primary)] dark:bg-[var(--primary)]/20 dark:text-[var(--primary-light)]' : 'text-gray-700 hover:bg-gray-100 dark:text-gray-300 dark:hover:bg-gray-700' }}">
                         <i class="fas fa-percent mr-3"></i>
                         {{ __('service_provider.deals') }}
                     </a>
@@ -149,7 +150,7 @@
                             <div class="relative group">
                                 <a
                                     href="{{ route('service-provider.notifications.index') }}"
-                                    class="relative inline-flex h-9 w-9 items-center justify-center rounded-full text-gray-600 hover:text-[#53D2DC] hover:bg-blue-50 dark:text-gray-300 dark:hover:text-[#53D2DC] dark:hover:bg-gray-700 transition-colors"
+                                    class="relative inline-flex h-9 w-9 items-center justify-center rounded-full text-gray-600 hover:text-[var(--primary)] hover:bg-[var(--primary-light)] dark:text-gray-300 dark:hover:text-[var(--primary-light)] dark:hover:bg-gray-700 transition-colors"
                                     aria-label="Service provider notifications"
                                 >
                                     <i class="fas fa-bell"></i>
@@ -179,7 +180,7 @@
                                             </div>
                                         @endforelse
                                     </div>
-                                    <a href="{{ route('service-provider.notifications.index') }}" class="block border-t border-gray-200 px-4 py-2 text-center text-sm font-medium text-[#53D2DC] hover:bg-gray-50 dark:border-gray-700 dark:text-[#53D2DC] dark:hover:bg-gray-700">
+                                    <a href="{{ route('service-provider.notifications.index') }}" class="block border-t border-gray-200 px-4 py-2 text-center text-sm font-medium text-[var(--primary)] hover:bg-gray-50 dark:border-gray-700 dark:text-[var(--primary)] dark:hover:bg-gray-700">
                                         {{ __('messages.view_all') }}
                                     </a>
                                 </div>
@@ -187,10 +188,10 @@
 
                             <!-- User Menu -->
                             <div class="relative">
-                                <button class="flex items-center text-sm rounded-full focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500" id="user-menu-button">
+                                <button class="flex items-center text-sm rounded-full focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-[var(--primary)]" id="user-menu-button">
                                     <span class="sr-only">Open user menu</span>
-                                    <div class="h-8 w-8 rounded-full bg-blue-100 dark:bg-blue-900 flex items-center justify-center">
-                                        <i class="fas fa-user text-[#53D2DC] dark:text-blue-400 text-sm"></i>
+                                    <div class="h-8 w-8 rounded-full bg-[var(--primary-light)] dark:bg-[var(--primary)]/20 flex items-center justify-center">
+                                        <i class="fas fa-user text-[var(--primary)] dark:text-[var(--primary-light)] text-sm"></i>
                                     </div>
                                     <span class="ml-2 text-gray-700 dark:text-gray-300">{{ Auth::user()->name }}</span>
                                     <i class="fas fa-chevron-down ml-2 text-gray-400"></i>
@@ -232,7 +233,7 @@
                 @endif
 
                 @if(session('info'))
-                    <div class="mb-6 bg-blue-100 border border-blue-400 text-[#53D2DC] px-4 py-3 rounded relative" role="alert">
+                    <div class="mb-6 bg-[var(--primary-light)] border border-[var(--primary)] text-[var(--primary)] px-4 py-3 rounded relative" role="alert">
                         <span class="block sm:inline">{{ session('info') }}</span>
                         <span class="absolute top-0 bottom-0 right-0 px-4 py-3">
                             <i class="fas fa-times cursor-pointer" onclick="this.parentElement.parentElement.style.display='none'"></i>

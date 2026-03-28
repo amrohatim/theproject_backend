@@ -51,7 +51,7 @@
             <p class="mt-1 text-gray-600 dark:text-gray-400">{{ __('messages.view_manage_bookings') }}</p>
         </div>
         <div class="mt-4 md:mt-0">
-            <a href="{{ route('service-provider.bookings.index') }}" class="inline-flex items-center px-4 py-2 bg-[#53D2DC] border border-transparent rounded-md font-semibold text-xs text-white uppercase tracking-widest hover:opacity-90 active:opacity-80 focus:outline-none focus:ring ring-[#53D2DC]/30 disabled:opacity-25 transition ease-in-out duration-150">
+            <a href="{{ route('service-provider.bookings.index') }}" class="inline-flex items-center px-4 py-2 bg-[var(--primary)] border border-transparent rounded-md font-semibold text-xs text-white uppercase tracking-widest hover:opacity-90 active:opacity-80 focus:outline-none focus:ring ring-[var(--primary-light)] disabled:opacity-25 transition ease-in-out duration-150">
                 <i class="fas fa-list mr-2"></i> {{ __('messages.list_view') }}
             </a>
         </div>
@@ -62,7 +62,7 @@
         <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
             <div>
                 <label for="branch_filter" class="block text-sm font-medium text-gray-700 dark:text-gray-300">{{ __('messages.branch') }}</label>
-                <select id="branch_filter" class="mt-1 block w-full pl-3 pr-10 py-2 text-base border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-white focus:outline-none focus:ring-[#53D2DC] focus:border-[#53D2DC] sm:text-sm rounded-md">
+                <select id="branch_filter" class="mt-1 block w-full pl-3 pr-10 py-2 text-base border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-white focus:outline-none focus:ring-[var(--primary)] focus:border-[var(--primary)] sm:text-sm rounded-md">
                     <option value="all">{{ __('messages.all_branches') }}</option>
                     @foreach($branches ?? [] as $branch)
                         <option value="{{ $branch->id }}">{{ $branch->name }}</option>
@@ -71,7 +71,7 @@
             </div>
             <div>
                 <label for="status_filter" class="block text-sm font-medium text-gray-700 dark:text-gray-300">{{ __('messages.status') }}</label>
-                <select id="status_filter" class="mt-1 block w-full pl-3 pr-10 py-2 text-base border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-white focus:outline-none focus:ring-[#53D2DC] focus:border-[#53D2DC] sm:text-sm rounded-md">
+                <select id="status_filter" class="mt-1 block w-full pl-3 pr-10 py-2 text-base border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-white focus:outline-none focus:ring-[var(--primary)] focus:border-[var(--primary)] sm:text-sm rounded-md">
                     <option value="all">{{ __('service_provider.all_status') }}</option>
                     <option value="pending">{{ __('service_provider.booking_status_pending') }}</option>
                     <option value="confirmed">{{ __('service_provider.booking_status_confirmed') }}</option>
@@ -122,10 +122,10 @@
                     </div>
                 </div>
                 <div class="bg-gray-50 dark:bg-gray-700 px-4 py-3 sm:px-6 sm:flex sm:flex-row-reverse">
-                    <a id="modal-view-link" href="#" class="w-full inline-flex justify-center rounded-md border border-transparent shadow-sm px-4 py-2 bg-indigo-600 text-base font-medium text-white hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 sm:ml-3 sm:w-auto sm:text-sm">
+                    <a id="modal-view-link" href="#" class="w-full inline-flex justify-center rounded-md border border-transparent shadow-sm px-4 py-2 bg-[var(--primary)] text-base font-medium text-white hover:bg-[var(--primary-hover)] focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-[var(--primary)] sm:ml-3 sm:w-auto sm:text-sm">
                         {{ __('messages.view_details') }}
                     </a>
-                    <button type="button" id="modal-close" class="mt-3 w-full inline-flex justify-center rounded-md border border-gray-300 dark:border-gray-600 shadow-sm px-4 py-2 bg-white dark:bg-gray-800 text-base font-medium text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 sm:mt-0 sm:ml-3 sm:w-auto sm:text-sm">
+                    <button type="button" id="modal-close" class="mt-3 w-full inline-flex justify-center rounded-md border border-gray-300 dark:border-gray-600 shadow-sm px-4 py-2 bg-white dark:bg-gray-800 text-base font-medium text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-[var(--primary)] sm:mt-0 sm:ml-3 sm:w-auto sm:text-sm">
                         {{ __('messages.close') }}
                     </button>
                 </div>

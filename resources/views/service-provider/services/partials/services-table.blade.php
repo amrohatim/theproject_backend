@@ -32,8 +32,8 @@
                                 @if($service->image)
                                     <img src="{{ $service->image }}" alt="{{ $service->name }}" class="h-10 w-10 rounded-lg object-cover mr-3">
                                 @else
-                                    <div class="h-10 w-10 rounded-lg bg-[#53D2DC]/15 flex items-center justify-center mr-3">
-                                        <i class="fas fa-cog text-[#53D2DC] text-sm"></i>
+                                    <div class="h-10 w-10 rounded-lg bg-[var(--primary)]/15 flex items-center justify-center mr-3">
+                                        <i class="fas fa-cog text-[var(--primary)] text-sm"></i>
                                     </div>
                                 @endif
                                 <div>
@@ -77,12 +77,12 @@
                         <td class="px-4 py-3 text-right" data-label="{{ __('service_provider.actions') }}">
                             <div class="flex items-center justify-end space-x-2">
                                 <a href="{{ route('service-provider.services.show', $service) }}"
-                                   class="inline-flex items-center px-2 py-1 text-xs font-medium text-[#53D2DC] hover:text-[#53D2DC]/80 hover:bg-[#53D2DC]/10 rounded transition-colors">
+                                   class="inline-flex items-center px-2 py-1 text-xs font-medium text-[var(--primary)] hover:text-[var(--primary-hover)] hover:bg-[var(--primary)]/10 rounded transition-colors">
                                     <i class="fas fa-eye mr-1"></i>
                                     {{ __('service_provider.view') }}
                                 </a>
                                 <a href="{{ route('service-provider.services.edit', $service) }}"
-                                   class="inline-flex items-center px-2 py-1 text-xs font-medium text-[#53D2DC] hover:text-[#53D2DC]/80 hover:bg-[#53D2DC]/10 rounded transition-colors">
+                                   class="inline-flex items-center px-2 py-1 text-xs font-medium text-[var(--primary)] hover:text-[var(--primary-hover)] hover:bg-[var(--primary)]/10 rounded transition-colors">
                                     <i class="fas fa-edit mr-1"></i>
                                     {{ __('service_provider.edit') }}
                                 </a>
@@ -100,12 +100,12 @@
     </div>
 @else
     <div class="p-8 text-center">
-        <div class="mx-auto h-14 w-14 rounded-full bg-[#53D2DC]/15 flex items-center justify-center">
-            <i class="fas fa-search text-[#53D2DC]"></i>
+        <div class="mx-auto h-14 w-14 rounded-full bg-[var(--primary)]/15 flex items-center justify-center">
+            <i class="fas fa-search text-[var(--primary)]"></i>
         </div>
         <h4 class="mt-3 text-gray-900 dark:text-white font-medium">{{ __('service_provider.no_services_found') }}</h4>
         <p class="text-sm text-gray-500 dark:text-gray-400">{{ __('service_provider.try_adjusting_filters') }}</p>
-        <button onclick="clearAllFilters()" class="mt-3 inline-flex items-center px-3 py-2 text-sm font-medium text-[#53D2DC] hover:text-[#53D2DC]/80">
+        <button onclick="clearAllFilters()" class="mt-3 inline-flex items-center px-3 py-2 text-sm font-medium text-[var(--primary)] hover:text-[var(--primary-hover)]">
             <i class="fas fa-times mr-2"></i>
             {{ __('service_provider.clear_all_filters') }}
         </button>

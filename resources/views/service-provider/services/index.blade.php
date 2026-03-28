@@ -27,7 +27,7 @@
     }
 
     .sp-filter-input:focus {
-        border-color: #53D2DC;
+        border-color: var(--primary);
         box-shadow: 0 0 0 3px rgba(83, 210, 220, 0.2);
         outline: none;
     }
@@ -47,7 +47,7 @@
 
         .sp-responsive-table tbody tr {
             margin-bottom: 1rem;
-            border: 1px solid #53D2DC !important;
+            border: 1px solid var(--primary) !important;
             border-radius: 0.375rem !important;
             overflow: hidden;
             background-color: #ffffff;
@@ -56,7 +56,7 @@
 
         .dark .sp-responsive-table tbody tr {
             background-color: #1f2937;
-            border-color: #53D2DC !important;
+            border-color: var(--primary) !important;
         }
 
         .sp-responsive-table td {
@@ -98,7 +98,7 @@
             <div class="flex items-center">
                 <h3 class="text-lg font-medium text-gray-900 dark:text-white">{{ __('service_provider.filters') }}</h3>
                 @if($activeFilters > 0)
-                    <span class="ml-2 inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-[#53D2DC] text-white">
+                    <span class="ml-2 inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-[var(--primary)] text-white">
                         {{ __('service_provider.filters_active', ['count' => $activeFilters]) }}
                     </span>
                 @endif
@@ -227,7 +227,7 @@
                     </div>
                     <div class="flex items-center space-x-2">
                         <button type="submit"
-                                class="inline-flex items-center px-4 py-2 bg-[#53D2DC] text-white rounded-md hover:bg-[#53D2DC]/90 focus:ring-2 focus:ring-[#53D2DC] focus:ring-offset-2 transition-colors">
+                                class="inline-flex items-center px-4 py-2 bg-[var(--primary)] text-white rounded-md hover:bg-[var(--primary-hover)] focus:ring-2 focus:ring-[var(--primary)] focus:ring-offset-2 transition-colors">
                             <i class="fas fa-filter mr-2"></i>
                             {{ __('service_provider.apply_filters') }}
                         </button>
@@ -243,11 +243,11 @@
             <div class="flex items-center">
                 <h3 class="text-lg font-medium text-gray-900 dark:text-white">{{ __('service_provider.your_services') }}</h3>
                 <div id="loadingSpinner" class="ml-3 hidden">
-                    <i class="fas fa-spinner fa-spin text-[#53D2DC]"></i>
+                    <i class="fas fa-spinner fa-spin text-[var(--primary)]"></i>
                 </div>
             </div>
             <a href="{{ route('service-provider.services.create') }}"
-               class="inline-flex items-center px-3 py-2 bg-[#53D2DC] text-white rounded-md hover:bg-[#53D2DC]/90 focus:ring-2 focus:ring-[#53D2DC] focus:ring-offset-2 transition-colors text-sm">
+               class="inline-flex items-center px-3 py-2 bg-[var(--primary)] text-white rounded-md hover:bg-[var(--primary-hover)] focus:ring-2 focus:ring-[var(--primary)] focus:ring-offset-2 transition-colors text-sm">
                 <i class="fas fa-plus mr-2"></i>
                 {{ __('service_provider.add_service') }}
             </a>

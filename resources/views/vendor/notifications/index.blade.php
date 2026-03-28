@@ -2,13 +2,16 @@
 
 @section('title', 'Vendor Notifications')
 @section('page-title', __('messages.notifications'))
+@section('styles')
+    <link rel="stylesheet" href="{{ asset('css/global.css') }}">
+@endsection
 
 @section('content')
 <div class="container mx-auto">
     <div class="mb-6 flex items-center justify-between">
         <div>
             <h2 class="text-2xl font-bold text-gray-800 dark:text-white">{{ __('messages.notifications') }}</h2>
-            <p class="mt-1 text-sm text-gray-500 dark:text-gray-400">{{ __('messages.latest') }} {{ $notifications->count() > 0 ? $notifications->first()->created_at?->format('M d, Y') : '' }}</p>
+            <p class="mt-1 text-sm text-[var(--primary)] dark:text-[var(--primary-light)]">{{ __('messages.latest') }} {{ $notifications->count() > 0 ? $notifications->first()->created_at?->format('M d, Y') : '' }}</p>
         </div>
     </div>
 
@@ -35,7 +38,7 @@
                                     {{ $notification->sender_name }} · {{ $notification->created_at?->diffForHumans() }}
                                 </p>
                             </div>
-                            <span class="inline-flex rounded-full bg-indigo-100 px-2 py-1 text-xs font-medium capitalize text-indigo-700 dark:bg-indigo-900/40 dark:text-indigo-300">
+                            <span class="inline-flex rounded-full bg-[var(--primary-light)] px-2 py-1 text-xs font-medium capitalize text-[var(--primary)] dark:bg-[var(--primary)]/20 dark:text-[var(--primary-light)]">
                                 {{ $notification->notification_type }}
                             </span>
                         </div>

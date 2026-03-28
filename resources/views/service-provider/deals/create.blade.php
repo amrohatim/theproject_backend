@@ -30,11 +30,11 @@
     }
     .service-item:hover {
         background-color: #f8fafc;
-        border-color: #53D2DC;
+        border-color: var(--primary);
     }
     .service-item.selected {
-        background-color: #53D2DC10;
-        border-color: #53D2DC;
+        background-color: var(--primary-light);
+        border-color: var(--primary);
     }
     .service-item.has-active-deal {
         background-color: #f9f9f9;
@@ -294,7 +294,7 @@
                                 <img src="#" alt="Image Preview" class="mx-auto h-32 w-auto object-cover rounded-md">
                             </div>
                             <div class="flex text-sm text-gray-600 dark:text-gray-400">
-                                <label for="image" class="relative cursor-pointer bg-white dark:bg-gray-700 rounded-md font-medium text-[#53D2DC] hover:text-[#53D2DC]/80 focus-within:outline-none focus-within:ring-2 focus-within:ring-offset-2 focus-within:ring-[#53D2DC]">
+                                <label for="image" class="relative cursor-pointer bg-white dark:bg-gray-700 rounded-md font-medium text-[var(--primary)] hover:text-[var(--primary-hover)] focus-within:outline-none focus-within:ring-2 focus-within:ring-offset-2 focus-within:ring-[var(--primary)]">
                                     <span>{{ __('service_provider.upload_file') }}</span>
                                     <input id="image" name="image" type="file" class="sr-only" onchange="previewImage(this)">
                                 </label>
@@ -330,11 +330,11 @@
                     <label class="block text-sm font-medium text-gray-700 dark:text-gray-300">{{ __('service_provider.status') }} <span class="text-red-500">*</span></label>
                     <div class="mt-2 space-y-2">
                         <div class="flex items-center">
-                            <input id="status_active" name="status" type="radio" value="active" class="focus:ring-[#53D2DC] h-4 w-4 text-[#53D2DC] border-gray-300 dark:border-gray-600" {{ old('status', 'active') == 'active' ? 'checked' : '' }}>
+                            <input id="status_active" name="status" type="radio" value="active" class="focus:ring-[var(--primary)] h-4 w-4 text-[var(--primary)] border-gray-300 dark:border-gray-600" {{ old('status', 'active') == 'active' ? 'checked' : '' }}>
                             <label for="status_active" class="ml-3 block text-sm font-medium text-gray-700 dark:text-gray-300">{{ __('service_provider.active') }}</label>
                         </div>
                         <div class="flex items-center">
-                            <input id="status_inactive" name="status" type="radio" value="inactive" class="focus:ring-[#53D2DC] h-4 w-4 text-[#53D2DC] border-gray-300 dark:border-gray-600" {{ old('status') == 'inactive' ? 'checked' : '' }}>
+                            <input id="status_inactive" name="status" type="radio" value="inactive" class="focus:ring-[var(--primary)] h-4 w-4 text-[var(--primary)] border-gray-300 dark:border-gray-600" {{ old('status') == 'inactive' ? 'checked' : '' }}>
                             <label for="status_inactive" class="ml-3 block text-sm font-medium text-gray-700 dark:text-gray-300">{{ __('service_provider.inactive') }}</label>
                         </div>
                     </div>
@@ -361,7 +361,7 @@
                             <div class="service-item {{ $hasActiveDeal ? 'has-active-deal' : '' }}">
                                 <div class="flex items-center">
                                     <input id="service_{{ $service->id }}" name="service_ids[]" type="checkbox" value="{{ $service->id }}"
-                                           class="focus:ring-[#53D2DC] h-4 w-4 text-[#53D2DC] border-gray-300 dark:border-gray-600 rounded"
+                                           class="focus:ring-[var(--primary)] h-4 w-4 text-[var(--primary)] border-gray-300 dark:border-gray-600 rounded"
                                            {{ $hasActiveDeal ? 'disabled' : '' }}
                                            {{ in_array($service->id, old('service_ids', [])) ? 'checked' : '' }}>
                                     <label for="service_{{ $service->id }}" class="ml-3 flex-1 {{ $hasActiveDeal ? 'cursor-not-allowed opacity-50' : 'cursor-pointer' }}">
@@ -390,8 +390,8 @@
                     </div>
                 @else
                     <div class="p-8 text-center">
-                        <div class="mx-auto h-14 w-14 rounded-full bg-[#53D2DC]/15 flex items-center justify-center">
-                            <i class="fas fa-cog text-[#53D2DC]"></i>
+                        <div class="mx-auto h-14 w-14 rounded-full bg-[var(--primary)]/15 flex items-center justify-center">
+                            <i class="fas fa-cog text-[var(--primary)]"></i>
                         </div>
                         <h4 class="mt-3 text-gray-900 dark:text-white font-medium">{{ __('service_provider.no_services_available') }}</h4>
                         <p class="text-sm text-gray-500 dark:text-gray-400">{{ __('service_provider.no_services_to_create_deals') }}</p>
@@ -408,7 +408,7 @@
                 <a href="{{ route('service-provider.deals.index') }}" class="inline-flex items-center px-4 py-2 bg-gray-300 border border-transparent rounded-md font-semibold text-xs text-gray-700 uppercase tracking-widest hover:bg-gray-400 active:bg-gray-500 focus:outline-none focus:border-gray-500 focus:ring ring-gray-300 disabled:opacity-25 transition ease-in-out duration-150">
                     {{ __('service_provider.cancel') }}
                 </a>
-                <button type="submit" class="inline-flex items-center px-4 py-2 bg-[#53D2DC] border border-transparent rounded-md font-semibold text-xs text-white uppercase tracking-widest hover:bg-[#53D2DC]/90 active:bg-[#53D2DC]/80 focus:outline-none focus:border-[#53D2DC] focus:ring ring-[#53D2DC]/30 disabled:opacity-25 transition ease-in-out duration-150">
+                <button type="submit" class="inline-flex items-center px-4 py-2 bg-[var(--primary)] border border-transparent rounded-md font-semibold text-xs text-white uppercase tracking-widest hover:bg-[var(--primary-hover)] active:bg-[var(--primary-hover)] focus:outline-none focus:border-[var(--primary)] focus:ring ring-[var(--primary-light)] disabled:opacity-25 transition ease-in-out duration-150">
                     <i class="fas fa-save mr-2"></i> {{ __('service_provider.create_deal') }}
                 </button>
             </div>

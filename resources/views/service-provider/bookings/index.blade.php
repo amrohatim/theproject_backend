@@ -29,7 +29,7 @@
     }
 
     .sp-filter-input:focus {
-        border-color: #53D2DC;
+        border-color: var(--primary);
         box-shadow: 0 0 0 3px rgba(83, 210, 220, 0.2);
         outline: none;
         background-color: #ffffff;
@@ -54,7 +54,7 @@
 
         .sp-responsive-table tbody tr {
             margin-bottom: 1rem;
-            border: 1px solid #53D2DC !important;
+            border: 1px solid var(--primary) !important;
             border-radius: 0.375rem !important;
             overflow: hidden;
             background-color: #ffffff;
@@ -63,7 +63,7 @@
 
         .dark .sp-responsive-table tbody tr {
             background-color: #1f2937;
-            border-color: #53D2DC !important;
+            border-color: var(--primary) !important;
         }
 
         .sp-responsive-table td {
@@ -120,12 +120,12 @@
                     <p class="text-sm text-gray-500 dark:text-gray-400">{{ __('service_provider.bookings_appear_here') }}</p>
                 </div>
                 <div class="flex items-center space-x-3">
-                    <div class="flex items-center px-3 py-1 rounded-full bg-[#53D2DC]/10 text-[#31818A] text-xs font-semibold">
-                        <span class="inline-flex items-center mr-1.5 h-2.5 w-2.5 rounded-full bg-[#53D2DC]"></span>
+                    <div class="flex items-center px-3 py-1 rounded-full bg-[var(--primary)]/10 text-[var(--primary)] text-xs font-semibold">
+                        <span class="inline-flex items-center mr-1.5 h-2.5 w-2.5 rounded-full bg-[var(--primary)]"></span>
                         {{ __('service_provider.total_bookings') ?? 'Total' }}: {{ number_format($totalBookings) }}
                     </div>
                     @if($hasFilters)
-                        <a href="{{ route('service-provider.bookings.index') }}" class="inline-flex items-center px-3 py-1 text-xs font-semibold text-gray-600 dark:text-gray-300 hover:text-[#53D2DC] transition-colors">
+                        <a href="{{ route('service-provider.bookings.index') }}" class="inline-flex items-center px-3 py-1 text-xs font-semibold text-gray-600 dark:text-gray-300 hover:text-[var(--primary)] transition-colors">
                             <i class="fas fa-times-circle mr-1"></i> {{ __('service_provider.clear_all_filters') }}
                         </a>
                     @endif
@@ -136,7 +136,7 @@
             <div class="md:col-span-2">
                 <label class="block text-sm text-gray-600 dark:text-gray-300 mb-1">{{ __('service_provider.search') }}</label>
                 <div class="relative">
-                    <span class="absolute inset-y-0 left-3 flex items-center text-[#53D2DC]">
+                    <span class="absolute inset-y-0 left-3 flex items-center text-[var(--primary)]">
                         <i class="fas fa-search text-sm"></i>
                     </span>
                     <input type="text" name="search" value="{{ request('search') }}" placeholder="{{ __('service_provider.customer_or_service') }}"
@@ -161,7 +161,7 @@
                 <input type="date" name="date_to" value="{{ request('date_to') }}" class="sp-filter-input w-full rounded-lg dark:text-white" />
             </div>
             <div class="flex items-end">
-                <button class="inline-flex items-center px-4 py-2 bg-[#53D2DC] text-white rounded-lg font-semibold shadow-sm hover:opacity-90 active:opacity-80 focus:outline-none focus:ring-4 focus:ring-[#53D2DC]/30 transition">
+                <button class="inline-flex items-center px-4 py-2 bg-[var(--primary)] text-white rounded-lg font-semibold shadow-sm hover:opacity-90 active:opacity-80 focus:outline-none focus:ring-4 focus:ring-[var(--primary-light)] transition">
                     <i class="fas fa-filter mr-2 text-sm"></i> {{ __('service_provider.filter') }}
                 </button>
             </div>
@@ -172,16 +172,16 @@
     <div class="bg-white dark:bg-gray-800 rounded-2xl shadow-sm border border-gray-200 dark:border-gray-700/80 overflow-hidden">
         <div class="px-6 py-4 border-b border-gray-100 dark:border-gray-700/60 flex flex-wrap items-center justify-between gap-3">
             <h3 class="text-lg font-semibold text-gray-900 dark:text-white flex items-center space-x-2">
-                <i class="fas fa-calendar-check text-[#53D2DC]"></i>
+                <i class="fas fa-calendar-check text-[var(--primary)]"></i>
                 <span>{{ __('service_provider.bookings') }}</span>
             </h3>
             <div class="flex items-center gap-3">
                 @if($hasFilters)
-                    <span class="inline-flex items-center px-3 py-1 rounded-full bg-[#53D2DC]/15 text-[#31818A] text-xs font-semibold">
+                    <span class="inline-flex items-center px-3 py-1 rounded-full bg-[var(--primary)]/15 text-[var(--primary)] text-xs font-semibold">
                         <i class="fas fa-filter mr-1"></i> {{ __('service_provider.filters_active', ['count' => $activeFilterCount]) }}
                     </span>
                 @endif
-                <a href="{{ route('service-provider.bookings.calendar') }}" class="inline-flex items-center px-3 py-1.5 border border-[#53D2DC] text-[#53D2DC] rounded-lg text-xs font-semibold uppercase tracking-wide hover:bg-[#53D2DC] hover:text-white transition-colors duration-150">
+                <a href="{{ route('service-provider.bookings.calendar') }}" class="inline-flex items-center px-3 py-1.5 border border-[var(--primary)] text-[var(--primary)] rounded-lg text-xs font-semibold uppercase tracking-wide hover:bg-[var(--primary)] hover:text-white transition-colors duration-150">
                     <i class="fas fa-calendar-alt mr-2 text-xs"></i> {{ __('messages.calendar_view') }}
                 </a>
             </div>
@@ -247,10 +247,10 @@
                             </td>
                             <td class="px-6 py-4 text-right" data-label="{{ __('messages.actions') ?? 'Actions' }}">
                                 <div class="inline-flex flex-wrap gap-2 justify-end">
-                                        <a href="{{ route('service-provider.bookings.show', $booking) }}" class="inline-flex items-center px-3 py-1.5 border border-[#53D2DC] text-[#53D2DC] rounded-lg text-xs font-semibold uppercase tracking-wide hover:bg-[#53D2DC] hover:text-white transition-colors duration-150">
+                                        <a href="{{ route('service-provider.bookings.show', $booking) }}" class="inline-flex items-center px-3 py-1.5 border border-[var(--primary)] text-[var(--primary)] rounded-lg text-xs font-semibold uppercase tracking-wide hover:bg-[var(--primary)] hover:text-white transition-colors duration-150">
                                             <i class="fas fa-eye mr-2 text-xs"></i> {{ __('messages.view_details') }}
                                         </a>
-                                        <a href="{{ route('service-provider.bookings.edit', $booking) }}" class="inline-flex items-center px-3 py-1.5 border border-[#53D2DC] text-[#53D2DC] rounded-lg text-xs font-semibold uppercase tracking-wide hover:bg-[#53D2DC] hover:text-white transition-colors duration-150">
+                                        <a href="{{ route('service-provider.bookings.edit', $booking) }}" class="inline-flex items-center px-3 py-1.5 border border-[var(--primary)] text-[var(--primary)] rounded-lg text-xs font-semibold uppercase tracking-wide hover:bg-[var(--primary)] hover:text-white transition-colors duration-150">
                                             <i class="fas fa-edit mr-2 text-xs"></i> {{ __('messages.edit_booking') }}
                                         </a>
                                     </div>
@@ -263,8 +263,8 @@
             <div class="px-4 py-3 border-t border-gray-200 dark:border-gray-700">{{ $bookings->links() }}</div>
         @else
             <div class="p-8 text-center">
-                <div class="mx-auto h-14 w-14 rounded-full bg-[#53D2DC]/15 flex items-center justify-center">
-                    <i class="fas fa-calendar-check text-[#53D2DC]"></i>
+                <div class="mx-auto h-14 w-14 rounded-full bg-[var(--primary)]/15 flex items-center justify-center">
+                    <i class="fas fa-calendar-check text-[var(--primary)]"></i>
                 </div>
                 <h4 class="mt-3 text-gray-900 dark:text-white font-medium">{{ __('service_provider.no_bookings_found') }}</h4>
                 <p class="text-sm text-gray-500 dark:text-gray-400">{{ __('service_provider.bookings_appear_here') }}</p>

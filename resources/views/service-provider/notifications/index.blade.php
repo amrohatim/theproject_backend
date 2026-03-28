@@ -37,7 +37,7 @@
                                     {{ $notification->sender_name }} · {{ $notification->created_at?->diffForHumans() }}
                                 </p>
                             </div>
-                            <span class="inline-flex rounded-full bg-blue-100 px-2 py-1 text-xs font-medium capitalize text-blue-700 dark:bg-blue-900/40 dark:text-blue-300">
+                            <span class="inline-flex rounded-full bg-[var(--primary-light)] px-2 py-1 text-xs font-medium capitalize text-[var(--primary)] dark:bg-[var(--primary)]/20 dark:text-[var(--primary-light)]">
                                 {{ $notification->notification_type }}
                             </span>
                         </div>
