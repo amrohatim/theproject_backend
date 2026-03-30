@@ -50,14 +50,14 @@
                             <i class="fas fa-camera mr-2"></i> {{ __('provider.change_photo') }}
                         </label>
                         <input type="file" id="profile_image" name="profile_image" class="hidden" accept="image/*">
-                        <div id="file-name" class="mt-2 text-xs text-gray-500 dark:text-gray-400"></div>
+                        <div id="file-name" class="mt-2 px-2 text-xs text-gray-500 dark:text-gray-400"></div>
                     </div>
                 </div>
 
                 <div>
                     <label for="name" class="block text-sm font-medium text-gray-700 dark:text-gray-300">{{ __('provider.full_name') }}</label>
                     <input type="text" id="name" name="name" value="{{ old('name', $user->name) }}" required
-                        class="mt-2 block w-full rounded-md border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-white focus:ring-indigo-500 focus:border-indigo-500">
+                        class="mt-2 block px-2 w-full rounded-md border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-white focus:ring-indigo-500 focus:border-indigo-500">
                     @error('name')
                         <p class="mt-2 text-sm text-red-600">{{ $message }}</p>
                     @enderror
@@ -66,7 +66,7 @@
                 <div>
                     <label for="email" class="block text-sm font-medium text-gray-700 dark:text-gray-300">{{ __('provider.email_address') }}</label>
                     <input type="email" id="email" name="email" value="{{ old('email', $user->email) }}" required
-                        class="mt-2 block w-full rounded-md border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-white focus:ring-indigo-500 focus:border-indigo-500">
+                        class="mt-2 block px-2 w-full rounded-md border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-white focus:ring-indigo-500 focus:border-indigo-500">
                     @error('email')
                         <p class="mt-2 text-sm text-red-600">{{ $message }}</p>
                     @enderror
@@ -75,13 +75,13 @@
                 <div>
                     <label for="phone" class="block text-sm font-medium text-gray-700 dark:text-gray-300">{{ __('provider.phone_number') }}</label>
                     <input type="text" id="phone" name="phone" value="{{ old('phone', $user->phone) }}"
-                        class="mt-2 block w-full rounded-md border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-white focus:ring-indigo-500 focus:border-indigo-500">
+                        class="mt-2 block px-2 w-full rounded-md border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-white focus:ring-indigo-500 focus:border-indigo-500">
                     @error('phone')
                         <p class="mt-2 text-sm text-red-600">{{ $message }}</p>
                     @enderror
                 </div>
 
-                <button type="submit" class="w-full inline-flex items-center justify-center px-4 py-2 bg-indigo-600 border border-transparent rounded-md text-sm font-medium text-white hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
+                <button type="submit" class="w-full inline-flex items-center justify-center px-4 py-2 bg-[var(--primary)] border border-transparent rounded-md text-sm font-medium text-white hover:bg-[var(--primary-hover)] focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
                     <i class="fas fa-save mr-2"></i> {{ __('provider.save_changes') }}
                 </button>
             </form>
@@ -98,7 +98,7 @@
                     <div>
                         <label for="current_password" class="block text-sm font-medium text-gray-700 dark:text-gray-300">{{ __('provider.current_password') }}</label>
                         <input type="password" id="current_password" name="current_password" required
-                            class="mt-2 block w-full rounded-md border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-white focus:ring-indigo-500 focus:border-indigo-500">
+                            class="mt-2 block px-2 w-full rounded-md border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-white focus:ring-indigo-500 focus:border-indigo-500">
                         @error('current_password')
                             <p class="mt-2 text-sm text-red-600">{{ $message }}</p>
                         @enderror
@@ -107,7 +107,7 @@
                     <div>
                         <label for="password" class="block text-sm font-medium text-gray-700 dark:text-gray-300">{{ __('provider.new_password') }}</label>
                         <input type="password" id="password" name="password" required
-                            class="mt-2 block w-full rounded-md border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-white focus:ring-indigo-500 focus:border-indigo-500">
+                            class="mt-2 block px-2 w-full rounded-md border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-white focus:ring-indigo-500 focus:border-indigo-500">
                         @error('password')
                             <p class="mt-2 text-sm text-red-600">{{ $message }}</p>
                         @enderror
@@ -116,10 +116,10 @@
                     <div>
                         <label for="password_confirmation" class="block text-sm font-medium text-gray-700 dark:text-gray-300">{{ __('provider.confirm_new_password') }}</label>
                         <input type="password" id="password_confirmation" name="password_confirmation" required
-                            class="mt-2 block w-full rounded-md border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-white focus:ring-indigo-500 focus:border-indigo-500">
+                            class="mt-2 block px-2 w-full rounded-md border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-white focus:ring-indigo-500 focus:border-indigo-500">
                     </div>
 
-                    <button type="submit" class="w-full inline-flex items-center justify-center px-4 py-2 bg-indigo-600 border border-transparent rounded-md text-sm font-medium text-white hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
+                    <button type="submit" class="w-full inline-flex items-center justify-center px-4 py-2 bg-[var(--primary)] border border-transparent rounded-md text-sm font-medium text-white hover:bg-[var(--primary-hover)] focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
                         <i class="fas fa-key mr-2"></i> {{ __('provider.update_password') }}
                     </button>
                 </form>

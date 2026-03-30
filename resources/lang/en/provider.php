@@ -25,6 +25,8 @@ return [
     'jobs' => 'Jobs',
     'profile' => 'Profile',
     'settings' => 'Settings',
+    'units'=>'units',
+    'unit'=>'unit',
 
     // Statistics Cards
     'total_products' => 'Total Products',

@@ -20,7 +20,7 @@
 
         .responsive-table tbody tr {
             margin-bottom: 1rem;
-            border: 1px solid #3b82f6 !important;
+            border: 1px solid var(--primary) !important;
             border-radius: 0.375rem !important;
             overflow: hidden;
             background-color: #ffffff;
@@ -29,7 +29,7 @@
 
         .dark .responsive-table tbody tr {
             background-color: #1f2937;
-            border-color: #60a5fa !important;
+            border-color: var(--primary) !important;
         }
 
         .responsive-table td {

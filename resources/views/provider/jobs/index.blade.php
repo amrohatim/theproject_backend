@@ -28,7 +28,7 @@
             <p class="mt-1 text-gray-600 dark:text-gray-400">{{ __('messages.manage_jobs') }}</p>
         </div>
         <div class="mt-4 md:mt-0 jobs-actions flex md:justify-end">
-            <a href="{{ route('provider.jobs.create') }}" class="inline-flex items-center px-4 py-2 bg-indigo-600 border border-transparent rounded-md font-semibold text-xs text-white uppercase tracking-widest hover:bg-indigo-700 active:bg-indigo-900 focus:outline-none focus:border-indigo-900 focus:ring ring-indigo-300 disabled:opacity-25 transition ease-in-out duration-150">
+            <a href="{{ route('provider.jobs.create') }}" class="inline-flex items-center px-4 py-2 bg-[var(--primary)] border border-transparent rounded-md font-semibold text-xs text-white uppercase tracking-widest hover:bg-[var(--primary-hover)] active:bg-[var(--primary)] focus:outline-none focus:border-indigo-900 focus:ring ring-indigo-300 disabled:opacity-25 transition ease-in-out duration-150">
                 <i class="fas fa-plus mr-2"></i> {{ __('messages.add_job') }}
             </a>
         </div>
@@ -77,7 +77,7 @@
                                 <div class="text-sm text-gray-500 dark:text-gray-400">{{ $job->number_of_applications }}</div>
                             </td>
                             <td class="px-6 py-4 whitespace-nowrap text-right">
-                                <div class="flex items-center justify-end space-x-3">
+                                <div class="flex items-center justify-end gap-2 space-x-3">
                                     <a href="{{ route('provider.jobs.show', $job->id) }}" class="inline-flex items-center px-3 py-1 text-xs font-semibold text-gray-700 bg-gray-100 rounded-md hover:bg-gray-200">
                                         {{ __('messages.view') ?? 'View' }}
                                     </a>
@@ -102,7 +102,7 @@
                                 <div class="flex flex-col items-center justify-center">
                                     <i class="fas fa-briefcase text-gray-300 dark:text-gray-600 text-5xl mb-4"></i>
                                     <p>{{ __('messages.no_jobs_found') }}</p>
-                                    <a href="{{ route('provider.jobs.create') }}" class="mt-3 inline-flex items-center px-4 py-2 bg-indigo-600 border border-transparent rounded-md font-semibold text-xs text-white uppercase tracking-widest hover:bg-indigo-700 active:bg-indigo-900 focus:outline-none focus:border-indigo-900 focus:ring ring-indigo-300 disabled:opacity-25 transition ease-in-out duration-150">
+                                    <a href="{{ route('provider.jobs.create') }}" class="mt-3 inline-flex items-center px-4 py-2 bg-[var(--primary)] border border-transparent rounded-md font-semibold text-xs text-white uppercase tracking-widest hover:bg-[var(--primary-hover)] active:bg-[var(--primary)] focus:outline-none focus:border-indigo-900 focus:ring ring-indigo-300 disabled:opacity-25 transition ease-in-out duration-150">
                                         <i class="fas fa-plus mr-2"></i> {{ __('messages.add_job') }}
                                     </a>
                                 </div>

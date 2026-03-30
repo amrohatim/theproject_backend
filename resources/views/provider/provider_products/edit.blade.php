@@ -63,7 +63,7 @@
             <a href="{{ route('provider.provider-products.index') }}" class="inline-flex items-center px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-md text-sm font-medium text-gray-700 dark:text-gray-200 bg-white dark:bg-gray-800 hover:bg-gray-50 dark:hover:bg-gray-700">
                 <i class="fas fa-arrow-left mr-2 rtl-flip"></i> {{ __('provider.back_to_inventory') }}
             </a>
-            <button type="submit" form="providerProductForm" class="inline-flex items-center px-4 py-2 bg-indigo-600 border border-transparent rounded-md text-sm font-medium text-white hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
+            <button type="submit" form="providerProductForm" class="inline-flex items-center px-4 py-2 bg-[var(--primary)] border border-transparent rounded-md text-sm font-medium text-white hover:bg-[var(--primary-hover)] focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-[var(--primary)]">
                 <i class="fas fa-save mr-2"></i> {{ __('provider.update_product') }}
             </button>
         </div>
@@ -94,7 +94,7 @@
                             <div class="mt-4" data-lang-field="product_name" data-lang="en" style="display: block;">
                                 <input type="text" id="product_name" name="product_name" value="{{ old('product_name', $providerProduct->product_name) }}" required
                                     placeholder="{{ __('provider.enter_product_name_english') }}"
-                                    class="block w-full rounded-md border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-white focus:ring-indigo-500 focus:border-indigo-500">
+                                    class="block w-full rounded-md border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-white focus:ring-[var(--primary)] focus:border-[var(--primary)]">
                                 @error('product_name')
                                     <p class="mt-2 text-sm text-red-600">{{ $message }}</p>
                                 @enderror
@@ -102,7 +102,7 @@
                             <div class="mt-4" data-lang-field="product_name" data-lang="ar" style="display: none;" dir="rtl">
                                 <input type="text" id="product_name_arabic" name="product_name_arabic" value="{{ old('product_name_arabic', $providerProduct->product_name_arabic) }}" required
                                     placeholder="{{ __('provider.enter_product_name_arabic') }}"
-                                    class="block w-full rounded-md border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-white focus:ring-indigo-500 focus:border-indigo-500">
+                                    class="block w-full rounded-md border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-white focus:ring-[var(--primary)] focus:border-[var(--primary)]">
                                 @error('product_name_arabic')
                                     <p class="mt-2 text-sm text-red-600">{{ $message }}</p>
                                 @enderror
@@ -120,7 +120,7 @@
                             <div class="mt-4" data-lang-field="product_description" data-lang="en" style="display: block;">
                                 <textarea id="description" name="description" rows="5"
                                     
-                                    class="block w-full rounded-md border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-white focus:ring-indigo-500 focus:border-indigo-500 resize-y">{{ old('description', $providerProduct->description) }}</textarea>
+                                    class="block w-full rounded-md border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-white focus:ring-[var(--primary)] focus:border-[var(--primary)] resize-y">{{ old('description', $providerProduct->description) }}</textarea>
                                 @error('description')
                                     <p class="mt-2 text-sm text-red-600">{{ $message }}</p>
                                 @enderror
@@ -128,7 +128,7 @@
                             <div class="mt-4" data-lang-field="product_description" data-lang="ar" style="display: none;" dir="rtl">
                                 <textarea id="product_description_arabic" name="product_description_arabic" rows="5"
                                     
-                                    class="block w-full rounded-md border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-white focus:ring-indigo-500 focus:border-indigo-500 resize-y">{{ old('product_description_arabic', $providerProduct->product_description_arabic) }}</textarea>
+                                    class="block w-full rounded-md border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-white focus:ring-[var(--primary)] focus:border-[var(--primary)] resize-y">{{ old('product_description_arabic', $providerProduct->product_description_arabic) }}</textarea>
                                 @error('product_description_arabic')
                                     <p class="mt-2 text-sm text-red-600">{{ $message }}</p>
                                 @enderror
@@ -147,7 +147,7 @@
                             <div class="mt-2 relative">
                                 <span class="absolute inset-y-0 left-0 pl-3 flex items-center text-gray-400">$</span>
                                 <input type="number" step="0.01" min="0" id="price" name="price" value="{{ old('price', $providerProduct->price) }}" required
-                                    class="block w-full pl-8 rounded-md border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-white focus:ring-indigo-500 focus:border-indigo-500">
+                                    class="block w-full pl-8 rounded-md border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-white focus:ring-[var(--primary)] focus:border-[var(--primary)]">
                             </div>
                             @error('price')
                                 <p class="mt-2 text-sm text-red-600">{{ $message }}</p>
@@ -160,7 +160,7 @@
                             <div class="mt-2 relative">
                                 <span class="absolute inset-y-0 left-0 pl-3 flex items-center text-gray-400">$</span>
                                 <input type="number" step="0.01" min="0" id="original_price" name="original_price" value="{{ old('original_price', $providerProduct->original_price) }}"
-                                    class="block w-full pl-8 rounded-md border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-white focus:ring-indigo-500 focus:border-indigo-500">
+                                    class="block w-full pl-8 rounded-md border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-white focus:ring-[var(--primary)] focus:border-[var(--primary)]">
                             </div>
                             <p class="mt-2 text-xs text-gray-500 dark:text-gray-400">{{ __('provider.original_price_description') }}</p>
                             @error('original_price')
@@ -176,7 +176,7 @@
                         <div>
                             <label for="sku" class="block text-sm font-medium text-gray-700 dark:text-gray-300">{{ __('provider.sku') }}</label>
                             <input type="text" id="sku" name="sku" value="{{ old('sku', $providerProduct->sku) }}"
-                                class="mt-2 block w-full rounded-md border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-white focus:ring-indigo-500 focus:border-indigo-500">
+                                class="mt-2 block w-full rounded-md border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-white focus:ring-[var(--primary)] focus:border-[var(--primary)]">
                             <p class="mt-2 text-xs text-gray-500 dark:text-gray-400">{{ __('provider.sku_help') }}</p>
                             @error('sku')
                                 <p class="mt-2 text-sm text-red-600">{{ $message }}</p>
@@ -187,7 +187,7 @@
                                 {{ __('provider.stock_quantity') }} <span class="text-red-500">*</span>
                             </label>
                             <input type="number" min="0" id="stock" name="stock" value="{{ old('stock', $providerProduct->stock) }}" required
-                                class="mt-2 block w-full rounded-md border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-white focus:ring-indigo-500 focus:border-indigo-500">
+                                class="mt-2 block w-full rounded-md border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-white focus:ring-[var(--primary)] focus:border-[var(--primary)]">
                             @error('stock')
                                 <p class="mt-2 text-sm text-red-600">{{ $message }}</p>
                             @enderror
@@ -197,7 +197,7 @@
                                 {{ __('provider.min_order') }} <span class="text-red-500">*</span>
                             </label>
                             <input type="number" min="1" id="min_order" name="min_order" value="{{ old('min_order', $providerProduct->min_order ?? 1) }}" required
-                                class="mt-2 block w-full rounded-md border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-white focus:ring-indigo-500 focus:border-indigo-500">
+                                class="mt-2 block w-full rounded-md border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-white focus:ring-[var(--primary)] focus:border-[var(--primary)]">
                             <p class="mt-2 text-xs text-gray-500 dark:text-gray-400">{{ __('provider.min_order_help') }}</p>
                             @error('min_order')
                                 <p class="mt-2 text-sm text-red-600">{{ $message }}</p>
@@ -207,7 +207,7 @@
                             <label class="block text-sm font-medium text-gray-700 dark:text-gray-300">{{ __('provider.status') }}</label>
                             <input type="hidden" name="is_active" value="0">
                             <div class="mt-3 flex items-center">
-                                <input class="h-4 w-4 rounded border-gray-300 text-indigo-600 focus:ring-indigo-500" type="checkbox" id="is_active" name="is_active" value="1" {{ old('is_active', $providerProduct->is_active) ? 'checked' : '' }}>
+                                <input class="h-4 w-4 rounded border-gray-300 text-[var(--primary)] focus:ring-[var(--primary)]" type="checkbox" id="is_active" name="is_active" value="1" {{ old('is_active', $providerProduct->is_active) ? 'checked' : '' }}>
                                 <label class="ml-2 text-sm text-gray-700 dark:text-gray-300" for="is_active">{{ __('provider.active') }}</label>
                             </div>
                             @error('is_active')
@@ -240,7 +240,7 @@
                     <h3 class="text-sm font-semibold text-gray-900 dark:text-white uppercase tracking-wide mb-4">{{ __('provider.category') }}</h3>
                     <label for="category_id" class="block text-sm font-medium text-gray-700 dark:text-gray-300">{{ __('provider.select_category') }}</label>
                     <select id="category_id" name="category_id" required
-                        class="mt-2 block w-full rounded-md border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-white focus:ring-indigo-500 focus:border-indigo-500">
+                        class="mt-2 block w-full p-4 rounded-md border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-white focus:ring-[var(--primary)] focus:border-[var(--primary)]">
                         <option value="">{{ __('provider.select_category') }}</option>
                         @foreach($parentCategories as $parentCategory)
                             <optgroup label="{{ $parentCategory->name }}">

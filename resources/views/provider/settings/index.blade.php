@@ -43,7 +43,7 @@
         <!-- Header -->
         <div class="mb-8">
             <div class="flex items-center gap-3 mb-2">
-                {{-- <div class="p-2 bg-blue-100 rounded-lg">
+                {{-- <div class="p-2 bg-[var(--primary) ] rounded-lg">
                     <i data-lucide="settings" class="w-6 h-6 text-blue-600"></i>
                 </div> --}}
                 <h1 class="text-3xl font-bold text-gray-900">{{ __('provider.settings') }}</h1>
@@ -63,13 +63,13 @@
         <div class="mb-8 shadow-sm border-0 bg-white/70 backdrop-blur-sm rounded-xl">
             <div class="p-6">
                 <div class="flex items-center gap-2 mb-2">
-                    <i data-lucide="external-link" class="w-5 h-5 text-blue-600"></i>
+                    <i data-lucide="external-link" class="w-5 h-5 text-[var(--primary)]"></i>
                     <h2 class="text-xl font-semibold">{{ __('provider.quick_links') }}</h2>
                 </div>
                 <p class="text-gray-600 mb-4">{{ __('provider.access_frequently_used_settings') }}</p>
                 <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
                     <!-- Profile -->
-                    <a href="{{ route('provider.profile.index') }}" class="block p-4 rounded-xl border-2 border-dashed border-gray-200 hover:border-blue-300 transition-all duration-200 hover:shadow-md hover:-translate-y-1">
+                    <a href="{{ route('provider.profile.index') }}" class="block p-4 rounded-xl border-2 border-dashed border-gray-200 hover:border-[var(--primary)] transition-all duration-200 hover:shadow-md hover:-translate-y-1">
                         <div class="inline-flex p-3 rounded-lg bg-blue-50 text-blue-600 border border-blue-200 mb-3">
                             <i data-lucide="user" class="w-6 h-6"></i>
                         </div>
@@ -77,7 +77,7 @@
                         <p class="text-sm text-gray-600">{{ __('provider.update_name_email_image') }}</p>
                     </a>
                     <!-- Password -->
-                    <a href="{{ route('provider.profile.index') }}#password-section" class="block p-4 rounded-xl border-2 border-dashed border-gray-200 hover:border-blue-300 transition-all duration-200 hover:shadow-md hover:-translate-y-1">
+                    <a href="{{ route('provider.profile.index') }}#password-section" class="block p-4 rounded-xl border-2 border-dashed border-gray-200 hover:border-[var(--primary)] transition-all duration-200 hover:shadow-md hover:-translate-y-1">
                         <div class="inline-flex p-3 rounded-lg bg-green-50 text-green-600 border border-green-200 mb-3">
                             <i data-lucide="lock" class="w-6 h-6"></i>
                         </div>
@@ -85,7 +85,7 @@
                         <p class="text-sm text-gray-600">{{ __('provider.change_your_password') }}</p>
                     </a>
                     <!-- Locations -->
-                    <a href="{{ route('provider.locations.index') }}" class="block p-4 rounded-xl border-2 border-dashed border-gray-200 hover:border-blue-300 transition-all duration-200 hover:shadow-md hover:-translate-y-1">
+                    <a href="{{ route('provider.locations.index') }}" class="block p-4 rounded-xl border-2 border-dashed border-gray-200 hover:border-[var(--primary)] transition-all duration-200 hover:shadow-md hover:-translate-y-1">
                         <div class="inline-flex p-3 rounded-lg bg-purple-50 text-purple-600 border border-purple-200 mb-3">
                             <i data-lucide="map-pin" class="w-6 h-6"></i>
                         </div>
@@ -93,7 +93,7 @@
                         <p class="text-sm text-gray-600">{{ __('provider.manage_your_locations') }}</p>
                     </a>
                     <!-- License -->
-                    <a href="#license-section" class="block p-4 rounded-xl border-2 border-dashed border-gray-200 hover:border-blue-300 transition-all duration-200 hover:shadow-md hover:-translate-y-1">
+                    <a href="#license-section" class="block p-4 rounded-xl border-2 border-dashed border-gray-200 hover:border-[var(--primary)] transition-all duration-200 hover:shadow-md hover:-translate-y-1">
                         <div class="inline-flex p-3 rounded-lg bg-orange-50 text-orange-600 border border-orange-200 mb-3">
                             <i data-lucide="award" class="w-6 h-6"></i>
                         </div>
@@ -157,7 +157,7 @@
                             </div>
                         </div>
 
-                        <button type="submit" class="flex items-center px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded">
+                        <button type="submit" class="flex items-center px-4 py-2 bg-[var(--primary)] hover:bg-[var(--primary-hover)] text-white rounded">
                             <i data-lucide="save" class="w-4 h-4 mr-2"></i>
                             {{ __('provider.save_delivery_settings') }}
                         </button>
@@ -176,7 +176,7 @@
                 <p class="text-gray-600 mb-6">{{ __('provider.manage_business_license') }}</p>
                 @if($license)
                     <!-- Current License -->
-                    <div class="p-6 bg-gradient-to-r from-blue-50 to-purple-50 rounded-xl border border-blue-100 mb-6">
+                    <div class="p-6  rounded-xl border border-gray-100 mb-6">
                         <h3 class="font-semibold text-gray-900 mb-4 flex items-center gap-2">
                             <i data-lucide="file-text" class="w-4 h-4"></i>
                             {{ __('provider.current_license') }}
@@ -203,7 +203,7 @@
                             </div>
                         </div>
                         @if($license->license_file_path)
-                            <button class="flex items-center px-3 py-1 border border-blue-200 text-blue-700 rounded hover:bg-blue-50" onclick="window.open('{{ route('provider.settings.license.view') }}', '_blank')">
+                            <button class="flex items-center px-3 py-1 border border-[var(--primary)] text-[var(--primary)] rounded hover:bg-[var(--primary-light)] onclick="window.open('{{ route('provider.settings.license.view') }}', '_blank')">
                                 <i data-lucide="file-text" class="w-4 h-4 mr-2"></i>
                                 {{ __('provider.view_license_file') }}
                             </button>

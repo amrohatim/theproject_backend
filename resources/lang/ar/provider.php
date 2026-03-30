@@ -25,6 +25,8 @@ return [
     'jobs' => 'الوظائف',
     'profile' => 'الملف الشخصي',
     'settings' => 'الإعدادات',
+    'units'=>'وحدات',
+    'unit'=> 'وحدة',
 
     // Statistics Cards
     'total_products' => 'إجمالي المنتجات',

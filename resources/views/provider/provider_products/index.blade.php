@@ -20,7 +20,7 @@
 
         .responsive-table tbody tr {
             margin-bottom: 1rem;
-            border: 1px solid #3b82f6 !important;
+            border: 1px solid var(--primary) !important;
             border-radius: 0.375rem !important;
             overflow: hidden;
             background-color: #ffffff;
@@ -29,7 +29,7 @@
 
         .dark .responsive-table tbody tr {
             background-color: #1f2937;
-            border-color: #60a5fa !important;
+            border-color: var(--primary) !important;
         }
 
         .responsive-table td {
@@ -85,7 +85,7 @@ document.addEventListener('DOMContentLoaded', function() {
             <p class="mt-1 text-gray-600 dark:text-gray-400">{{ __('provider.manage_store_products') }}</p>
         </div>
         <div class="mt-4 md:mt-0">
-            <a href="{{ route('provider.provider-products.create') }}" class="inline-flex items-center px-4 py-2 bg-indigo-600 border border-transparent rounded-md font-semibold text-xs text-white uppercase tracking-widest hover:bg-indigo-700 active:bg-indigo-900 focus:outline-none focus:border-indigo-900 focus:ring ring-indigo-300 disabled:opacity-25 transition ease-in-out duration-150">
+            <a href="{{ route('provider.provider-products.create') }}" class="inline-flex items-center px-4 py-2 bg-[var(--primary)] border border-transparent rounded-md font-semibold text-xs text-white uppercase tracking-widest hover:bg-[var(--primary-hover)] active:bg-[var(--primary)] focus:outline-none focus:border-[var(--primary)] focus:ring ring-[var(--primary)] disabled:opacity-25 transition ease-in-out duration-150">
                 <i class="fas fa-plus mr-2"></i> {{ __('provider.add_product') }}
             </a>
         </div>
@@ -101,13 +101,13 @@ document.addEventListener('DOMContentLoaded', function() {
                         <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
                             <i class="fas fa-search text-gray-400"></i>
                         </div>
-                        <input type="text" name="search" id="search" value="{{ request('search') }}" class="focus:ring-indigo-500 focus:border-indigo-500 block w-full pl-10 sm:text-sm border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-white rounded-md" placeholder="{{ __('provider.search_products') }}">
+                        <input type="text" name="search" id="search" value="{{ request('search') }}" class="focus:ring-[var(--primary)] focus:border-[var(--primary)] block w-full px-2 sm:text-sm border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-white rounded-md" placeholder="{{ __('provider.search_products') }}">
                     </div>
                 </div>
 
                 <div>
                     <label for="status" class="block text-sm font-medium text-gray-700 dark:text-gray-300">{{ __('provider.status') }}</label>
-                    <select id="status" name="status" class="mt-1 block w-full pl-3 pr-10 py-2 text-base border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-white focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm rounded-md">
+                    <select id="status" name="status" class="mt-1 block w-full pl-3 pr-10 py-2 text-base border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-white focus:outline-none focus:ring-[var(--primary)] focus:border-[var(--primary)] sm:text-sm rounded-md">
                         <option value="">{{ __('messages.all_status') ?? 'All Status' }}</option>
                         <option value="pending" {{ request('status') === 'pending' ? 'selected' : '' }}>{{ __('messages.pending') }}</option>
                         <option value="approved" {{ request('status') === 'approved' ? 'selected' : '' }}>{{ __('messages.approved') }}</option>
@@ -117,7 +117,7 @@ document.addEventListener('DOMContentLoaded', function() {
             </div>
 
             <div class="flex justify-end">
-                <button type="submit" class="inline-flex items-center px-4 py-2 bg-indigo-600 border border-transparent rounded-md font-semibold text-xs text-white uppercase tracking-widest hover:bg-indigo-700 active:bg-indigo-900 focus:outline-none focus:border-indigo-900 focus:ring ring-indigo-300 disabled:opacity-25 transition ease-in-out duration-150">
+                <button type="submit" class="inline-flex items-center px-4 py-2 bg-[var(--primary)] border border-transparent rounded-md font-semibold text-xs text-white uppercase tracking-widest hover:bg-[var(--primary-hover)] active:bg-[var(--primary)] focus:outline-none focus:border-[var(--primary)] focus:ring ring-[var(--primary)] disabled:opacity-25 transition ease-in-out duration-150">
                     <i class="fas fa-filter mr-2"></i> {{ __('provider.filter') ?? __('messages.filter') }}
                 </button>
             </div>
@@ -170,7 +170,13 @@ document.addEventListener('DOMContentLoaded', function() {
                             @endif
                         </td>
                         <td class="px-6 py-4 whitespace-nowrap" data-label="{{ __('provider.stock') }}">
-                            <div class="text-sm text-gray-500 dark:text-gray-400">{{ $item->stock }} {{ __('provider.units') ?? 'units' }}</div>
+                           @if ($item->stock > 1)
+                          <div class="text-sm text-gray-500 dark:text-gray-400">{{ $item->stock }} {{ __('provider.units') ?? 'units' }}</div>
+
+                           @else
+                             <div class="text-sm text-gray-500 dark:text-gray-400">{{ $item->stock }} {{ __('provider.unit') ?? 'unit' }}</div>
+
+                           @endif
                         </td>
                         <td class="px-6 py-4 whitespace-nowrap" data-label="{{ __('provider.status') }}">
                             @php
@@ -187,7 +193,7 @@ document.addEventListener('DOMContentLoaded', function() {
                             <div class="text-sm text-gray-500 dark:text-gray-400">{{ $item->created_at->format('M d, Y') }}</div>
                         </td>
                         <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium" data-label="{{ __('provider.actions') }}">
-                            <a href="{{ route('provider.provider-products.edit', $item->id) }}" class="text-indigo-600 dark:text-indigo-400 hover:text-indigo-900 dark:hover:text-indigo-300 mr-3" title="{{ __('provider.edit_product') }}">
+                            <a href="{{ route('provider.provider-products.edit', $item->id) }}" class="text-[var(--primary)] dark:text-[var(--primary)] hover:text-[var(--primary-hover)] dark:hover:text-[var(--primary-hover)] mr-3" title="{{ __('provider.edit_product') }}">
                                 <i class="fas fa-edit"></i>
                             </a>
                             <form action="{{ route('provider.provider-products.destroy', $item->id) }}" method="POST" class="inline">
@@ -205,7 +211,7 @@ document.addEventListener('DOMContentLoaded', function() {
                             <div class="flex flex-col items-center justify-center py-4">
                                 <i class="fas fa-shopping-bag text-gray-300 dark:text-gray-600 text-5xl mb-4"></i>
                                 <p>{{ __('provider.no_products_inventory') }}</p>
-                                <a href="{{ route('provider.provider-products.create') }}" class="mt-2 inline-flex items-center px-4 py-2 bg-indigo-600 border border-transparent rounded-md font-semibold text-xs text-white uppercase tracking-widest hover:bg-indigo-700 active:bg-indigo-900 focus:outline-none focus:border-indigo-900 focus:ring ring-indigo-300 disabled:opacity-25 transition ease-in-out duration-150">
+                                <a href="{{ route('provider.provider-products.create') }}" class="mt-2 inline-flex items-center px-4 py-2 bg-[var(--primary)] border border-transparent rounded-md font-semibold text-xs text-white uppercase tracking-widest hover:bg-[var(--primary-hover)] active:bg-[var(--primary)] focus:outline-none focus:border-[var(--primary)] focus:ring ring-[var(--primary)] disabled:opacity-25 transition ease-in-out duration-150">
                                     <i class="fas fa-plus mr-2"></i> {{ __('provider.add_first_product') }}
                                 </a>
                             </div>
@@ -266,7 +272,7 @@ document.addEventListener('DOMContentLoaded', function() {
                         </div>
                     </div>
                     <div class="mt-4 flex justify-end space-x-3">
-                        <a href="{{ route('provider.provider-products.edit', $item->id) }}" class="text-indigo-600 dark:text-indigo-400 hover:text-indigo-900 dark:hover:text-indigo-300" title="{{ __('provider.edit_product') }}">
+                        <a href="{{ route('provider.provider-products.edit', $item->id) }}" class="text-[var(--primary)] dark:text-[var(--primary)] hover:text-[var(--primary-hover)] dark:hover:text-[var(--primary-hover)]" title="{{ __('provider.edit_product') }}">
                             <i class="fas fa-edit"></i>
                         </a>
                         <form action="{{ route('provider.provider-products.destroy', $item->id) }}" method="POST" class="inline">
@@ -282,7 +288,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 <div class="text-center py-12 px-4">
                     <i class="fas fa-shopping-bag text-gray-300 dark:text-gray-600 text-5xl mb-4"></i>
                     <p class="text-sm text-gray-500 dark:text-gray-400">{{ __('provider.no_products_inventory') }}</p>
-                    <a href="{{ route('provider.provider-products.create') }}" class="mt-3 inline-flex items-center px-4 py-2 bg-indigo-600 border border-transparent rounded-md font-semibold text-xs text-white uppercase tracking-widest hover:bg-indigo-700 active:bg-indigo-900 focus:outline-none focus:border-indigo-900 focus:ring ring-indigo-300 disabled:opacity-25 transition ease-in-out duration-150">
+                    <a href="{{ route('provider.provider-products.create') }}" class="mt-3 inline-flex items-center px-4 py-2 bg-[var(--primary)] border border-transparent rounded-md font-semibold text-xs text-white uppercase tracking-widest hover:bg-[var(--primary-hover)] active:bg-[var(--primary)] focus:outline-none focus:border-[var(--primary)] focus:ring ring-[var(--primary)] disabled:opacity-25 transition ease-in-out duration-150">
                         <i class="fas fa-plus mr-2"></i> {{ __('provider.add_first_product') }}
                     </a>
                 </div>

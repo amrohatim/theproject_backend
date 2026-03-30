@@ -29,8 +29,8 @@ $direction = $isRtl ? 'rtl' : 'ltr';
     <style>
         :root {
             /* Light theme color palette */
-            --discord-primary: #5865F2;
-            --discord-primary-hover: #4752c4;
+            --discord-primary: var(--primary);
+            --discord-primary-hover: var(--primary-hover);
             --discord-dark: #fafdfdfd;
             --discord-darker: #ffffff;
             --discord-darkest: #e3e5e8;
@@ -82,12 +82,12 @@ $direction = $isRtl ? 'rtl' : 'ltr';
         }
 
         .server-icon:hover {
-            background-color: var(--discord-primary);
+            background-color: var(--primary);
             border-radius: 16px;
         }
 
         .server-icon.active {
-            background-color: var(--discord-primary);
+            background-color: var(--primary);
             border-radius: 16px;
         }
 
@@ -684,7 +684,7 @@ $direction = $isRtl ? 'rtl' : 'ltr';
                         <span class="channel-icon" style="font-size: 1rem;">{{ $details['flag'] }}</span>
                         <span class="channel-name">{{ $details['native'] }}</span>
                         @if($locale === $currentLocale)
-                            <i class="fas fa-check" style="color: var(--discord-primary); font-size: 0.75rem; margin-left: auto;"></i>
+                            <i class="fas fa-check" style="color: var(--primary); font-size: 0.75rem; margin-left: auto;"></i>
                         @endif
                     </li>
                 @endforeach

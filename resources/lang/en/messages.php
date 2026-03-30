@@ -28,6 +28,7 @@ return [
     'about' => 'About',
     'services' => 'Services',
     'contact' => 'Contact',
+    'back_to_jobs'=> 'back to jobs',
     'faq' => 'FAQ',
     'user_actions' => 'User Actions',
     'login' => 'Login',

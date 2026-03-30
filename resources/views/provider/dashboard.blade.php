@@ -103,7 +103,7 @@
     <div class="bg-white dark:bg-gray-800 rounded-lg shadow mb-8 border border-gray-200 dark:border-gray-700">
         <div class="flex items-center justify-between p-6 border-b border-gray-200 dark:border-gray-700">
             <h3 class="text-lg font-semibold text-gray-800 dark:text-white">{{ __('provider.recent_products') }}</h3>
-            <a href="{{ route('provider.provider-products.index') }}" class="text-indigo-600 dark:text-indigo-400 hover:text-indigo-800 dark:hover:text-indigo-300 text-sm font-medium">{{ __('provider.view_all') }}</a>
+            <a href="{{ route('provider.provider-products.index') }}" class="text-[var(--primary)] dark:text-[var(--primary)] hover:text-[var(--primary-hover)] dark:hover:text-[var(--primary-hover)] text-sm font-medium">{{ __('provider.view_all') }}</a>
         </div>
         <div class="overflow-x-auto">
             <table class="min-w-full divide-y divide-gray-200 dark:divide-gray-700">
@@ -166,7 +166,7 @@
     <div class="bg-white dark:bg-gray-800 rounded-lg shadow mb-8 border border-gray-200 dark:border-gray-700">
         <div class="flex items-center justify-between p-6 border-b border-gray-200 dark:border-gray-700">
             <h3 class="text-lg font-semibold text-gray-800 dark:text-white">{{ __('provider.recent_orders') }}</h3>
-            <a href="{{ route('provider.orders.index') }}" class="text-indigo-600 dark:text-indigo-400 hover:text-indigo-800 dark:hover:text-indigo-300 text-sm font-medium">{{ __('provider.view_all') }}</a>
+            <a href="{{ route('provider.orders.index') }}" class="text-[var(--primary)] dark:text-[var(--primary)] hover:text-[var(--primary-hover)] dark:hover:text-[var(--primary-hover)] text-sm font-medium">{{ __('provider.view_all') }}</a>
         </div>
         <div class="overflow-x-auto">
             <table class="min-w-full divide-y divide-gray-200 dark:divide-gray-700">
@@ -183,7 +183,7 @@
                     @forelse($recentOrders ?? [] as $order)
                     <tr>
                         <td class="px-6 py-4 whitespace-nowrap">
-                            <a href="{{ route('provider.orders.show', $order->id) }}" class="text-indigo-600 dark:text-indigo-400 hover:text-indigo-800 dark:hover:text-indigo-300 text-sm font-medium">
+                            <a href="{{ route('provider.orders.show', $order->id) }}" class="text-[var(--primary)] dark:text-[var(--primary)] hover:text-[var(--primary-hover)] dark:hover:text-[var(--primary-hover)] text-sm font-medium">
                                 {{ $order->order_number }}
                             </a>
                         </td>
@@ -229,7 +229,7 @@
     <div class="bg-white dark:bg-gray-800 rounded-lg shadow mb-8 border border-gray-200 dark:border-gray-700">
         <div class="flex items-center justify-between p-6 border-b border-gray-200 dark:border-gray-700">
             <h3 class="text-lg font-semibold text-gray-800 dark:text-white">{{ __('provider.store_activity') }}</h3>
-            <a href="{{ route('provider.provider-products.create') }}" class="text-indigo-600 dark:text-indigo-400 hover:text-indigo-800 dark:hover:text-indigo-300 text-sm font-medium">
+            <a href="{{ route('provider.provider-products.create') }}" class="text-[var(--primary)] dark:text-[var(--primary)] hover:text-[var(--primary-hover)] dark:hover:text-[var(--primary-hover)] text-sm font-medium">
                 <i class="fas fa-plus mr-1"></i> {{ __('provider.add_new_product') }}
             </a>
         </div>

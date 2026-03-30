@@ -309,6 +309,7 @@ return [
     'unit_price' => 'سعر الوحدة',
     'line_total' => 'الإجمالي للسطر',
     'back_to_orders' => 'العودة إلى الطلبات',
+    'back_to_jobs'=> 'العودة الى الوظائف',
     'print_order' => 'طباعة الطلب',
     'download_invoice' => 'تحميل الفاتورة',
     'send_invoice' => 'إرسال الفاتورة',
