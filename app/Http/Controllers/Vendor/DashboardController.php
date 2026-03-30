@@ -65,6 +65,19 @@ class DashboardController extends Controller
                 ->orderBy('services.created_at', 'desc')
                 ->take(5)
                 ->get();
+
+            // Calculate company profile views as sum of all branch views
+            $profileViews = Branch::where('company_id', $company->id)->sum('view_count');
+
+            // Calculate company average rating from branches (weighted by total_ratings)
+            $branchRatingStats = Branch::where('company_id', $company->id)
+                ->selectRaw('COALESCE(SUM(average_rating * total_ratings), 0) as weighted_rating_sum')
+                ->selectRaw('COALESCE(SUM(total_ratings), 0) as total_ratings_count')
+                ->first();
+
+            $averageRating = ($branchRatingStats && (int) $branchRatingStats->total_ratings_count > 0)
+                ? ((float) $branchRatingStats->weighted_rating_sum / (int) $branchRatingStats->total_ratings_count)
+                : 0;
         } else {
             // If no company, set all counts to 0
             $totalBranches = 0;
@@ -72,6 +85,8 @@ class DashboardController extends Controller
             $totalServices = 0;
             $recentProducts = collect();
             $recentServices = collect();
+            $profileViews = 0;
+            $averageRating = 0;
         }
 
         // For now, we don't have orders and bookings models, so we'll set them to 0
@@ -86,7 +101,9 @@ class DashboardController extends Controller
             'totalOrders',
             'totalBookings',
             'recentProducts',
-            'recentServices'
+            'recentServices',
+            'profileViews',
+            'averageRating'
         ));
     }
 }

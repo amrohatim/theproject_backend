@@ -57,7 +57,7 @@
     @endif
 
     <!-- Stats cards -->
-    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-8">
         <!-- Branches stat -->
         <div class="stat-card bg-white dark:bg-gray-800 rounded-lg shadow p-6 border border-gray-200 dark:border-gray-700">
             <div class="flex items-center justify-between mb-4">
@@ -69,7 +69,7 @@
                     <i class="fas fa-arrow-up text-green-500 text-xs"></i>
                 </div>
             </div>
-            <div>
+            <div>   
                 <h3 class="text-3xl font-bold text-gray-800 dark:text-white">{{ $totalBranches ?? 3 }}</h3>
                 <p class="text-gray-600 dark:text-gray-400 text-sm">{{ __('messages.branches') }}</p>
             </div>
@@ -123,6 +123,32 @@
             <div>
                 <h3 class="text-3xl font-bold text-gray-800 dark:text-white">{{ $totalOrders ?? 24 }}</h3>
                 <p class="text-gray-600 dark:text-gray-400 text-sm">{{ __('messages.orders') }}</p>
+            </div>
+        </div>
+
+        <!-- Profile views stat -->
+        <div class="stat-card bg-white dark:bg-gray-800 rounded-lg shadow p-6 border border-gray-200 dark:border-gray-700">
+            <div class="flex items-center justify-between mb-4">
+                <div class="p-3 rounded-full bg-cyan-100 dark:bg-cyan-900">
+                    <i class="fas fa-eye text-cyan-500 dark:text-cyan-400 text-xl"></i>
+                </div>
+            </div>
+            <div>
+                <h3 class="text-3xl font-bold text-gray-800 dark:text-white">{{ $profileViews ?? 0 }}</h3>
+                <p class="text-gray-600 dark:text-gray-400 text-sm">{{ __('messages.profile_views') }}</p>
+            </div>
+        </div>
+
+        <!-- Average rating stat -->
+        <div class="stat-card bg-white dark:bg-gray-800 rounded-lg shadow p-6 border border-gray-200 dark:border-gray-700">
+            <div class="flex items-center justify-between mb-4">
+                <div class="p-3 rounded-full bg-yellow-100 dark:bg-yellow-900">
+                    <i class="fas fa-star text-yellow-500 dark:text-yellow-400 text-xl"></i>
+                </div>
+            </div>
+            <div>
+                <h3 class="text-3xl font-bold text-gray-800 dark:text-white">{{ number_format($averageRating ?? 0, 1) }}</h3>
+                <p class="text-gray-600 dark:text-gray-400 text-sm">{{ __('messages.average_rating') }}</p>
             </div>
         </div>
     </div>

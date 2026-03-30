@@ -1170,6 +1170,8 @@ return [
     'status_history' => 'Status History',
     'no_specifications_available' => 'No specifications available',
     'no_rating' => 'No rating',
+    'profile_views' => 'Profile Views',
+    'average_rating' => 'Average Rating',
     'category' => 'Category',
     'rating' => 'Rating',
     'description' => 'Description',

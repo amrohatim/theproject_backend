@@ -1974,6 +1974,8 @@ return [
     'vendor_notes' => 'ملاحظات البائع',
     'status_history' => 'تاريخ الحالة',
     'no_specifications_available' => 'لا توجد مواصفات متاحة',
+    'profile_views' => 'مشاهدات الملف الشخصي',
+    'average_rating' => 'متوسط التقييم',
     'category' => 'الفئة',
     'rating' => 'التقييم',
     'no_rating' => 'لا يوجد تقييم',
