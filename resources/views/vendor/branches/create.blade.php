@@ -584,31 +584,45 @@
     };
 
     // Global error handler for script loading
-    function handleGoogleMapsError() {
+    window.handleGoogleMapsError = function() {
         console.error('Failed to load Google Maps API script');
         const mapElement = document.getElementById('map');
         if (mapElement) {
             mapElement.innerHTML = '<div style="padding: 20px; text-align: center; color: red; background: #fee; border: 1px solid #fcc; border-radius: 8px;">Failed to load Google Maps. Please check your internet connection and try again.</div>';
         }
-    }
+    };
 
   
 </script>
-<script src="https://maps.googleapis.com/maps/api/js?key={{ config('googlemaps.api_key') }}&libraries=places&callback=initMap" async defer onerror="handleGoogleMapsError()"></script>
 <script>
     // Google Maps functionality
     let map;
     let marker;
     let searchBox;
 
-    function initMap() {
+    window.initMap = function() {
+        const mapElement = document.getElementById('map');
+        const latElement = document.getElementById('lat');
+        const lngElement = document.getElementById('lng');
+        const searchInput = document.getElementById('pac-input');
+
+        if (!mapElement || !latElement || !lngElement) {
+            console.warn('Map initialization skipped: required map fields are missing.');
+            return;
+        }
+
+        if (typeof google === 'undefined' || !google.maps) {
+            console.error('Google Maps API is unavailable at init time.');
+            return;
+        }
+
         // Default center (Dubai)
-        const defaultLat = parseFloat(document.getElementById('lat').value) || 25.2048;
-        const defaultLng = parseFloat(document.getElementById('lng').value) || 55.2708;
+        const defaultLat = parseFloat(latElement.value) || 25.2048;
+        const defaultLng = parseFloat(lngElement.value) || 55.2708;
         const center = { lat: defaultLat, lng: defaultLng };
 
         // Create the map
-        map = new google.maps.Map(document.getElementById('map'), {
+        map = new google.maps.Map(mapElement, {
             center: center,
             zoom: 12,
             styles: [
@@ -704,8 +718,8 @@
         // Update lat/lng when marker is dragged
         marker.addListener('dragend', function() {
             const position = marker.getPosition();
-            document.getElementById('lat').value = position.lat();
-            document.getElementById('lng').value = position.lng();
+            latElement.value = position.lat();
+            lngElement.value = position.lng();
 
             // Reverse geocode to update address
             reverseGeocode(position);
@@ -714,16 +728,20 @@
         // Add click listener to map
         map.addListener('click', function(event) {
             marker.setPosition(event.latLng);
-            document.getElementById('lat').value = event.latLng.lat();
-            document.getElementById('lng').value = event.latLng.lng();
+            latElement.value = event.latLng.lat();
+            lngElement.value = event.latLng.lng();
 
             // Reverse geocode to update address
             reverseGeocode(event.latLng);
         });
 
         // Initialize search box
-        const input = document.getElementById('pac-input');
-        searchBox = new google.maps.places.SearchBox(input);
+        if (!searchInput) {
+            console.warn('Map search input not found; skipping places search box initialization.');
+            return;
+        }
+
+        searchBox = new google.maps.places.SearchBox(searchInput);
 
         // Bias the SearchBox results towards current map's viewport
         map.addListener('bounds_changed', function() {
@@ -751,9 +769,12 @@
                 marker.setPosition(place.geometry.location);
 
                 // Update form fields
-                document.getElementById('lat').value = place.geometry.location.lat();
-                document.getElementById('lng').value = place.geometry.location.lng();
-                document.getElementById('address').value = place.formatted_address || '';
+                latElement.value = place.geometry.location.lat();
+                lngElement.value = place.geometry.location.lng();
+                const addressElement = document.getElementById('address');
+                if (addressElement) {
+                    addressElement.value = place.formatted_address || '';
+                }
 
                 if (place.geometry.viewport) {
                     bounds.union(place.geometry.viewport);
@@ -763,13 +784,21 @@
             });
             map.fitBounds(bounds);
         });
-    }
+    };
 
     // Reverse geocode a position to get address
     function reverseGeocode(position) {
+        if (typeof google === 'undefined' || !google.maps) {
+            return;
+        }
+
         const geocoder = new google.maps.Geocoder();
         const addressField = document.getElementById('address');
         const loadingIndicator = document.getElementById('address-loading');
+
+        if (!addressField) {
+            return;
+        }
 
         // Show loading indicator
         if (loadingIndicator) {
@@ -973,17 +1002,17 @@
 
         licenseUploadArea.addEventListener('dragover', function(e) {
             e.preventDefault();
-            this.classList.add('border-[var(--primary)]', 'bg-[var(--primary)], 'dark:bg-[var(--primary)]/20');
+            this.classList.add('border-[var(--primary)]', 'bg-[var(--primary)]', 'dark:bg-[var(--primary)]/20');
         });
 
         licenseUploadArea.addEventListener('dragleave', function(e) {
             e.preventDefault();
-            this.classList.remove('border-[var(--primary)]', 'bg-[var(--primary)], 'dark:bg-[var(--primary)]/20');
+            this.classList.remove('border-[var(--primary)]', 'bg-[var(--primary)]', 'dark:bg-[var(--primary)]/20');
         });
 
         licenseUploadArea.addEventListener('drop', function(e) {
             e.preventDefault();
-            this.classList.remove('border-[var(--primary)]', 'bg-[var(--primary)], 'dark:bg-[var(--primary)]/20');
+            this.classList.remove('border-[var(--primary)]', 'bg-[var(--primary)]', 'dark:bg-[var(--primary)]/20');
 
             const files = e.dataTransfer.files;
             if (files.length > 0) {
@@ -1096,4 +1125,5 @@
         }
     });
 </script>
+<script src="https://maps.googleapis.com/maps/api/js?key={{ config('googlemaps.api_key') }}&libraries=places&loading=async&callback=initMap" async defer onerror="handleGoogleMapsError()"></script>
 @endsection
