@@ -89,6 +89,7 @@
                     <!-- Language Switch for Product Name -->
                     <LanguageSwitch
                       v-model="currentLanguage"
+                      variant="service-form"
                       @language-changed="handleLanguageChange"
                     />
 
@@ -159,6 +160,7 @@
                     <!-- Language Switch for Description -->
                     <LanguageSwitch
                       v-model="currentLanguage"
+                      variant="service-form"
                       @language-changed="handleLanguageChange"
                     />
 

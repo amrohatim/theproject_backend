@@ -29,6 +29,9 @@ $direction = $isRtl ? 'rtl' : 'ltr';
     <!-- Google Fonts - For modern dashboard -->
     <link href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
 
+    <!-- Global brand tokens -->
+    <link rel="stylesheet" href="{{ asset('css/global.css') }}">
+
     <!-- Modern Dashboard CSS -->
     <link href="{{ asset('css/modern-merchant-dashboard.css') }}" rel="stylesheet">
     
@@ -40,10 +43,10 @@ $direction = $isRtl ? 'rtl' : 'ltr';
     <!-- Custom styles for modern merchant dashboard -->
     <style>
         :root {
-            /* Modern color palette matching reference design */
-            --primary-blue: #1E5EFF;
-            --primary-blue-hover: #1a52e6;
-            --primary-blue-light: #eff6ff;
+            /* Merchant primary aliases mapped to global brand palette */
+            --primary-blue: var(--primary);
+            --primary-blue-hover: var(--primary-hover);
+            --primary-blue-light: var(--primary-light);
 
             /* Gray scale */
             --gray-50: #f9fafb;
@@ -628,6 +631,9 @@ $direction = $isRtl ? 'rtl' : 'ltr';
     <!-- Temporary CDN Tailwind CSS for testing -->
     <script src="https://cdn.tailwindcss.com"></script>
 
+    <!-- Merchant theme overrides (maps legacy accent utilities to global primary palette) -->
+    <link rel="stylesheet" href="{{ asset('css/merchant-theme-overrides.css') }}">
+
     @yield('styles')
     @stack('styles')
 </head>
@@ -636,7 +642,7 @@ $direction = $isRtl ? 'rtl' : 'ltr';
         <!-- Sidebar -->
         <aside class="sidebar" id="sidebar">
             <div class="sidebar-header">
-                <h1 class="sidebar-brand font-it text-[14px]">Merchant | <span class="text-blue-600">Dashboard</span></h1>
+                <h1 class="sidebar-brand font-it text-[14px]">Merchant | <span class="text-[var(--primary)]">Dashboard</span></h1>
                 <button class="sidebar-close" id="sidebarClose">
                     <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" width="20" height="20">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>

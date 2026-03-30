@@ -56,7 +56,7 @@
                                    name="name"
                                    value="{{ old('name', $user->name) }}"
                                    required
-                                   class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors form-input @error('name') border-red-300 @enderror"
+                                   class="w-full px-4 py-3 border border-gray-300 rounded-lg  transition-colors form-input @error('name') border-red-300 @enderror"
                                    placeholder="{{ __('merchant.enter_full_name') }}">
                             @error('name')
                                 <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
@@ -73,7 +73,7 @@
                                    name="email"
                                    value="{{ old('email', $user->email) }}"
                                    required
-                                   class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors form-input @error('email') border-red-300 @enderror"
+                                   class="w-full px-4 py-3 border border-gray-300 rounded-lg  transition-colors form-input @error('email') border-red-300 @enderror"
                                    placeholder="{{ __('merchant.enter_email_address') }}">
                             @error('email')
                                 <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
@@ -89,7 +89,7 @@
                                    id="phone"
                                    name="phone"
                                    value="{{ old('phone', $user->phone) }}"
-                                   class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors form-input @error('phone') border-red-300 @enderror"
+                                   class="w-full px-4 py-3 border border-gray-300 rounded-lg     transition-colors form-input @error('phone') border-red-300 @enderror"
                                    placeholder="{{ __('merchant.enter_phone_number') }}">
                             @error('phone')
                                 <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
@@ -135,7 +135,7 @@
                             <input type="password"
                                    id="current_password"
                                    name="current_password"
-                                   class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors form-input @error('current_password') border-red-300 @enderror"
+                                   class="w-full px-4 py-3 border border-gray-300 rounded-lg transition-colors form-input @error('current_password') border-red-300 @enderror"
                                    placeholder="{{ __('merchant.enter_current_password') }}">
                             @error('current_password')
                                 <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
@@ -151,7 +151,7 @@
                                 <input type="password"
                                        id="password"
                                        name="password"
-                                       class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors form-input @error('password') border-red-300 @enderror"
+                                       class="w-full px-4 py-3 border border-gray-300 rounded-lg  transition-colors form-input @error('password') border-red-300 @enderror"
                                        placeholder="{{ __('merchant.enter_new_password') }}">
                                 @error('password')
                                     <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
@@ -166,7 +166,7 @@
                                 <input type="password"
                                        id="password_confirmation"
                                        name="password_confirmation"
-                                       class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors form-input"
+                                       class="w-full px-4 py-3 border border-gray-300 rounded-lg  transition-colors form-input"
                                        placeholder="{{ __('merchant.confirm_new_password_placeholder') }}">
                                 @error('password_confirmation')
                                     <p class="mt-1 text-sm text-red-600">{{ $message }}</p>

@@ -37,7 +37,7 @@
 
 .dark .modern-textarea:hover,
 .dark .modern-textarea:focus {
-    border-color: #A46BC1; /* Blue color */
+    border-color: var(--primary);
 }
 
 /* Modern Input Styling */
@@ -76,7 +76,7 @@
 
 .dark .modern-input:hover,
 .dark .modern-input:focus {
-    border-color: #A46BC1; /* Blue color */
+    border-color: var(--primary);
 }
 
 /* Label styling for modern forms */
@@ -141,14 +141,14 @@ input:disabled {
 .input-wrapper.focused::after {
     content: '';
     @apply absolute inset-0 rounded-lg pointer-events-none;
-    box-shadow: 0 0 0 1px rgba(202, 146, 255, 0.3); /* Subtle indigo color */
+    box-shadow: 0 0 0 1px rgba(164, 107, 193, 0.3);
     /* animation: pulse 1.5s cubic-bezier(0.4, 0, 0.6, 1) infinite; */
 }
 
 .input-wrapper.hovered::after {
     content: '';
     @apply absolute inset-0 rounded-lg pointer-events-none;
-    box-shadow: 0 0 0 1px rgba(149, 99, 241, 0.2); /* Subtle indigo color */
+    box-shadow: 0 0 0 1px rgba(164, 107, 193, 0.2);
 }
 
 /* Floating label styling - DISABLED FOR STATIC PLACEHOLDERS */
@@ -178,12 +178,12 @@ input:disabled {
 
 @keyframes input-pulse {
     0% {
-        box-shadow: 0 0 0 0 rgba(177, 99, 241, 0.4); /* Subtle indigo color */
+        box-shadow: 0 0 0 0 rgba(164, 107, 193, 0.4);
     }
     70% {
-        box-shadow: 0 0 0 3px rgba(99, 102, 241, 0); /* Subtle indigo color */
+        box-shadow: 0 0 0 3px rgba(164, 107, 193, 0);
     }
     100% {
-        box-shadow: 0 0 0 0 rgba(99, 102, 241, 0); /* Subtle indigo color */
+        box-shadow: 0 0 0 0 rgba(164, 107, 193, 0);
     }
 }

@@ -862,13 +862,13 @@ export default {
 
 .vue-form-control-enhanced-blue:focus {
   outline: none;
-  border-color: #3b82f6;
-  box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1), 0 1px 3px 0 rgba(0, 0, 0, 0.1);
-  background-color: #eff6ff;
+  border-color: var(--primary);
+  box-shadow: 0 0 0 3px rgba(156, 59, 246, 0.1), 0 1px 3px 0 rgba(0, 0, 0, 0.1);
+  background-color: #ffffff;
 }
 
 .vue-form-control-enhanced-blue:hover {
-  border-color: #3b82f6;
+  border-color: var(--primary);
   box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
 }
 
@@ -878,25 +878,25 @@ export default {
   align-items: center;
   gap: 0.5rem;
   padding: 0.5rem 1rem;
-  background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%);
+  background: linear-gradient(135deg, var(--primary) 0%, var(--primary) 100%);
   color: white;
   border: none;
   border-radius: 0.5rem;
   font-weight: 500;
   cursor: pointer;
   transition: all 0.2s ease;
-  box-shadow: 0 2px 4px rgba(245, 158, 11, 0.2);
+  box-shadow: 0 2px 4px rgba(159, 11, 245, 0.2);
 }
 
 .vue-btn-blue:hover {
-  background: linear-gradient(135deg, #d97706 0%, #b45309 100%);
+  background: linear-gradient(135deg, var(--primary) 0%, var(--primary) 100%);
   transform: translateY(-1px);
-  box-shadow: 0 4px 8px rgba(245, 158, 11, 0.3);
+  box-shadow: 0 4px 8px rgba(190, 11, 245, 0.3);
 }
 
 .vue-btn-blue:active {
   transform: translateY(0);
-  box-shadow: 0 2px 4px rgba(245, 158, 11, 0.2);
+  box-shadow: 0 2px 4px rgba(159, 11, 245, 0.2);
 }
 
 /* Solid Blue Button */
@@ -905,25 +905,25 @@ export default {
   align-items: center;
   gap: 0.5rem;
   padding: 0.5rem 1rem;
-  background: #3b82f6;
+  background: var(--primary);
   color: white;
   border: none;
   border-radius: 0.5rem;
   font-weight: 500;
   cursor: pointer;
   transition: all 0.2s ease;
-  box-shadow: 0 2px 4px rgba(59, 130, 246, 0.2);
+  box-shadow: 0 2px 4px rgba(171, 59, 246, 0.2);
 }
 
 .vue-btn-blue-solid:hover {
-  background: #2563eb;
+  background: var(--primary);
   transform: translateY(-1px);
-  box-shadow: 0 4px 8px rgba(59, 130, 246, 0.3);
+  box-shadow: 0 4px 8px rgba(178, 59, 246, 0.3);
 }
 
 .vue-btn-blue-solid:active {
   transform: translateY(0);
-  box-shadow: 0 2px 4px rgba(59, 130, 246, 0.2);
+  box-shadow: 0 2px 4px rgba(156, 59, 246, 0.2);
 }
 
 /* Color Selection Interface Styles */
@@ -944,13 +944,13 @@ export default {
 }
 
 .selected-color-display:hover {
-  border-color: var(--primary-blue);
-  box-shadow: 0 0 0 2px var(--primary-blue-light);
+  border-color: var(--primary);
+  box-shadow: 0 0 0 2px var(--primary);
 }
 
 .selected-color-display.active {
   border-color: var(--primary-blue);
-  box-shadow: 0 0 0 2px var(--primary-blue-light);
+  box-shadow: 0 0 0 2px var(--primary);
 }
 
 .selected-color-preview {
@@ -1028,8 +1028,8 @@ export default {
 }
 
 .color-search-input:focus {
-  border-color: var(--primary-blue);
-  box-shadow: 0 0 0 2px var(--primary-blue-light);
+  border-color: var(--primary);
+  box-shadow: 0 0 0 2px var(--primary);
 }
 
 .color-grid {
@@ -1068,16 +1068,16 @@ export default {
 }
 
 .color-option:hover {
-  border-color: #3b82f6;
-  background-color: #eff6ff;
+  border-color: var(--primary);
+  background-color: #f9efffd8;
   transform: translateY(-1px);
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
 }
 
 .color-option.selected {
-  border-color: #3b82f6;
-  background-color: #eff6ff;
-  box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.2);
+  border-color: var(--primary);
+  background-color: #feefff;
+  box-shadow: 0 0 0 2px rgba(171, 59, 246, 0.082);
 }
 
 .color-option .color-swatch {

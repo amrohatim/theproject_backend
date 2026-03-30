@@ -8,15 +8,15 @@
 <style>
     /* Vue.js-inspired modern design system with Discord-themed colors */
     :root {
-        /* Discord-themed primary color scheme */
-        --primary-50: #eff6ff;
-        --primary-100: #dbeafe;
-        --primary-200: #bfdbfe;
-        --primary-400: #60a5fa;
-        --primary-500: #1E5EFF;
-        --primary-600: #1a52e6;
-        --primary-700: #1e40af;
-        --primary-800: #1e3a8a;
+        /* Primary color scheme mapped to global brand tokens */
+        --primary-50: var(--primary-light);
+        --primary-100: var(--primary-light);
+        --primary-200: rgba(164, 107, 193, 0.24);
+        --primary-400: rgba(164, 107, 193, 0.54);
+        --primary-500: var(--primary);
+        --primary-600: var(--primary);
+        --primary-700: var(--primary-hover);
+        --primary-800: var(--primary-hover);
 
         /* Slate color scheme */
         --slate-50: #f8fafc;
@@ -85,7 +85,7 @@
     .vue-form-control:focus {
         outline: none;
         border-color: var(--primary-500);
-        box-shadow: 0 0 0 2px rgba(30, 94, 255, 0.2); /* focus:ring-2 focus:ring-primary-500 */
+        box-shadow: 0 0 0 2px rgba(164, 107, 193, 0.2); /* focus:ring-2 focus:ring-primary-500 */
     }
 
     .vue-form-control::placeholder {
@@ -2128,4 +2128,3 @@ document.addEventListener('DOMContentLoaded', function() {
 
 </script>
 @endsection
-

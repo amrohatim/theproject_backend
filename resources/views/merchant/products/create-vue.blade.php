@@ -7,9 +7,9 @@
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/mdbassit/Coloris@latest/dist/coloris.min.css">
 <style>
     :root {
-        --primary-blue: #3b82f6;
-        --primary-blue-hover: #2563eb;
-        --primary-blue-light: #eff6ff;
+        --primary-blue: var(--primary);
+        --primary-blue-hover: var(--primary-hover);
+        --primary-blue-light: var(--primary-light);
         --gray-50: #f9fafb;
         --gray-100: #f3f4f6;
         --gray-200: #e5e7eb;

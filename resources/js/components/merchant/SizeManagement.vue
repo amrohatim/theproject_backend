@@ -210,7 +210,7 @@
                      v-model="size.is_available"
                      type="checkbox"
                      class="w-4 h-4 bg-gray-100 border-gray-300 rounded"
-                     style="color: var(--primary-blue); --tw-ring-color: var(--primary-blue);">
+                     style="color: var(--primary); --tw-ring-color: var(--primary);">
               <label :for="'size-available-' + colorId + '-' + index" class="vue-text-sm">
                 {{ $t('available_for_purchase') }}
               </label>
@@ -1258,8 +1258,8 @@ export default {
 
 .vue-form-control-enhanced-blue:focus {
   outline: none;
-  border-color: #3b82f6;
-  box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.12), 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+  border-color: var(--primary);
+  box-shadow: 0 0 0 3px rgba(193, 59, 246, 0.075), 0 4px 6px -1px rgba(0, 0, 0, 0.1);
   background-color: #fafbff;
   transform: translateY(-1px);
 }
@@ -1277,7 +1277,7 @@ export default {
 .vue-form-control-enhanced-blue:disabled,
 .vue-form-control-enhanced-blue[readonly] {
   background-color: #f9fafb;
-  border-color: #e5e7eb;
+  border-color: #e8e5eb;
   color: #6b7280;
   cursor: not-allowed;
 }
@@ -1304,7 +1304,7 @@ export default {
 
 .enhanced-form-label i {
   margin-right: 0.5rem;
-  color: #3b82f6;
+  color: var(--primary);
   font-size: 1rem;
 }
 
@@ -1368,7 +1368,7 @@ export default {
   padding: 0.5rem 0.75rem;
   background-color: #f8fafc;
   border-radius: 0.5rem;
-  border: 1px solid #e2e8f0;
+  border: 1px solid #eae2f0;
 }
 
 .stock-allocation-info .available-stock {
@@ -1378,7 +1378,7 @@ export default {
 }
 
 .stock-allocation-info .allocated-stock {
-  color: #3b82f6;
+  color: var(--primary);
   font-size: 0.75rem;
   font-weight: 600;
 }
