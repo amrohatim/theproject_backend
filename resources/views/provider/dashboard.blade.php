@@ -241,7 +241,7 @@
                     </div>
                 </div>
                 <div class="text-2xl font-bold text-gray-800 dark:text-white">{{ $totalViews ?? 0 }}</div>
-                <div class="text-sm text-gray-600 dark:text-gray-400">{{ __('provider.product_views') }}</div>
+                <div class="text-sm text-gray-600 dark:text-gray-400">{{ __('provider.profile_views') }}</div>
             </div>
             <div class="stat-card bg-gray-50 dark:bg-gray-900/30 rounded-lg p-4 border border-gray-200 dark:border-gray-700">
                 <div class="flex items-center justify-between mb-3">
@@ -249,8 +249,8 @@
                         <i class="fas fa-shopping-bag text-green-500 dark:text-green-400"></i>
                     </div>
                 </div>
-                <div class="text-2xl font-bold text-gray-800 dark:text-white">{{ $conversionRate ?? 0 }}%</div>
-                <div class="text-sm text-gray-600 dark:text-gray-400">{{ __('provider.conversion_rate') }}</div>
+                <div class="text-2xl font-bold text-gray-800 dark:text-white">{{ $totalProducts ?? 0 }}</div>
+                <div class="text-sm text-gray-600 dark:text-gray-400">{{ __('provider.total_products') }}</div>
             </div>
             <div class="stat-card bg-gray-50 dark:bg-gray-900/30 rounded-lg p-4 border border-gray-200 dark:border-gray-700">
                 <div class="flex items-center justify-between mb-3">

@@ -510,21 +510,21 @@
             </div>
 
             <!-- Location -->
-            <div class="bg-gradient-to-br from-purple-50 to-purple-100 rounded-xl p-6 border border-purple-200">
+            <div class="rounded-xl p-6 border">
                 <div class="flex items-center justify-between mb-4">
-                    <div class="p-3 bg-purple-500 rounded-lg">
+                    <div class="p-3 rounded-lg" style="background:blue;">
                         <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"></path>
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"></path>
                         </svg>
                     </div>
                     <div class="text-right">
-                        <div class="text-lg font-bold text-purple-700">
+                        <div class="text-lg font-bold" style="color:blue;">
                             {{ $merchant->emirate ?? __('merchant.not_set') }}
                         </div>
                     </div>
                 </div>
-                <div class="text-sm font-medium text-purple-700">{{ __('merchant.location') }}</div>
+                <div class="text-sm font-medium" style="color:blue;">{{ __('merchant.location') }}</div>
             </div>
         </div>
 

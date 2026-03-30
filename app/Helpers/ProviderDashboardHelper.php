@@ -3,6 +3,8 @@
 namespace App\Helpers;
 
 use App\Models\Product;
+use App\Models\ProviderRating;
+use App\Models\ViewTracking;
 use Illuminate\Support\Facades\Auth;
 
 class ProviderDashboardHelper
@@ -20,6 +22,8 @@ class ProviderDashboardHelper
         // Get total products
         $totalProducts = Product::where('user_id', $user->id)->count();
         $totalOrders = 0;
+        $totalViews = 0;
+        $avgRating = 0;
 
         // Create provider record if it doesn't exist
         $provider = $user->providerRecord;
@@ -32,6 +36,11 @@ class ProviderDashboardHelper
                 'is_verified' => false
             ]);
         }
+
+        $totalViews = ViewTracking::where('entity_type', 'provider')
+            ->where('entity_id', $provider->id)
+            ->count();
+        $avgRating = (float) (ProviderRating::where('provider_id', $provider->id)->avg('rating') ?? 0);
 
         // Get recent products
         $recentProducts = Product::where('user_id', $user->id)
@@ -70,6 +79,8 @@ class ProviderDashboardHelper
         $data = [
             'totalProducts' => $totalProducts,
             'totalOrders' => $totalOrders,
+            'totalViews' => $totalViews,
+            'avgRating' => $avgRating,
             'recentProducts' => $recentProducts,
             'recentOrders' => $recentOrders
         ];

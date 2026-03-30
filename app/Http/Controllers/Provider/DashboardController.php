@@ -3,7 +3,9 @@
 namespace App\Http\Controllers\Provider;
 
 use App\Http\Controllers\Controller;
+use App\Models\ProviderRating;
 use App\Models\ProviderProduct;
+use App\Models\ViewTracking;
 use Illuminate\Support\Facades\Auth;
 
 class DashboardController extends Controller
@@ -23,10 +25,16 @@ class DashboardController extends Controller
         if (!$provider) {
             // If no provider record, show empty data
             $totalProducts = 0;
+            $totalViews = 0;
+            $avgRating = 0;
             $recentProducts = collect([]);
         } else {
             // Count products in provider's inventory specifically
             $totalProducts = ProviderProduct::where('provider_id', $provider->id)->count();
+            $totalViews = ViewTracking::where('entity_type', 'provider')
+                ->where('entity_id', $provider->id)
+                ->count();
+            $avgRating = (float) (ProviderRating::where('provider_id', $provider->id)->avg('rating') ?? 0);
 
             // Get recent products from provider's inventory
             $recentProducts = ProviderProduct::where('provider_id', $provider->id)
@@ -41,6 +49,8 @@ class DashboardController extends Controller
 
         return view('provider.dashboard', compact(
             'totalProducts',
+            'totalViews',
+            'avgRating',
             'totalOrders',
             'recentProducts',
             'recentOrders'

@@ -58,6 +58,7 @@ return [
     // Activity Overview
     'activity_overview' => 'Activity Overview',
     'store_activity' => 'Store Activity',
+    'profile_views' => 'Profile Views',
     'product_views' => 'Product Views',
     'conversion_rate' => 'Conversion Rate',
     'avg_rating' => 'Avg. Rating',

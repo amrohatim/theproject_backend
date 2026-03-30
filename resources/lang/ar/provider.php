@@ -58,6 +58,7 @@ return [
     // Activity Overview
     'activity_overview' => 'نظرة عامة على النشاط',
     'store_activity' => 'نشاط المتجر',
+    'profile_views' => 'مشاهدات الملف الشخصي',
     'product_views' => 'مشاهدات المنتج',
     'conversion_rate' => 'معدل التحويل',
     'avg_rating' => 'متوسط التقييم',
