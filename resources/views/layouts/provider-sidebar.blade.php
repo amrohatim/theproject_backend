@@ -4,6 +4,11 @@
         {{ __('provider.dashboard') }}
     </a>
 
+    <a href="{{ route('provider.analytics.index') }}" class="sidebar-item flex items-center px-4 py-2 text-sm font-medium rounded-md {{ request()->routeIs('provider.analytics.*') ? 'sidebar-active' : 'text-gray-700 dark:text-gray-300' }}">
+        <i class="fas fa-chart-line mr-3"></i>
+        {{ __('provider.analytics') }}
+    </a>
+
     <a href="{{ route('provider.provider-products.index') }}" class="sidebar-item flex items-center px-4 py-2 text-sm font-medium rounded-md {{ request()->routeIs('provider.provider-products.*') ? 'sidebar-active' : 'text-gray-700 dark:text-gray-300' }}">
         <i class="fas fa-box mr-3"></i>
         {{ __('provider.products') }}

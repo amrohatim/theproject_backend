@@ -2597,6 +2597,7 @@ Route::middleware(['auth', \App\Http\Middleware\ProductsManagerMiddleware::class
 Route::prefix('provider')->name('provider.')->middleware(['auth', \App\Http\Middleware\ProviderMiddleware::class])->group(function () {
     // Dashboard
     Route::get('/dashboard', [App\Http\Controllers\Provider\DashboardController::class, 'index'])->name('dashboard');
+    Route::get('/analytics', [App\Http\Controllers\Provider\AnalyticsController::class, 'index'])->name('analytics.index');
     Route::get('/notifications', [App\Http\Controllers\Provider\NotificationController::class, 'index'])->name('notifications.index');
 
     // Locations
