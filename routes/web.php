@@ -5,6 +5,7 @@ use Illuminate\Support\Facades\Auth;
 use App\Http\Controllers\Admin\DashboardController as AdminDashboardController;
 use App\Http\Controllers\Admin\MaintenanceSettingsController;
 use App\Http\Controllers\Admin\SizeCategoryController;
+use App\Http\Controllers\Vendor\AnalyticsController as VendorAnalyticsController;
 use App\Http\Controllers\Vendor\DashboardController as VendorDashboardController;
 use App\Http\Controllers\Vendor\JobController as VendorJobController;
 use App\Http\Controllers\Vendor\SettingsController as VendorSettingsController;
@@ -1697,6 +1698,7 @@ Route::prefix('admin')->name('admin.')->middleware(['auth', \App\Http\Middleware
 // Vendor routes
 Route::prefix('vendor')->name('vendor.')->middleware(['auth', \App\Http\Middleware\VendorMiddleware::class])->group(function () {
     Route::get('/dashboard', [VendorDashboardController::class, 'index'])->name('dashboard');
+    Route::get('/analytics', [VendorAnalyticsController::class, 'index'])->name('analytics.index');
     Route::get('/notifications', [\App\Http\Controllers\Vendor\NotificationController::class, 'index'])->name('notifications.index');
 
     // Subscription

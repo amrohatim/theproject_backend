@@ -3,6 +3,10 @@
         <i class="fas fa-tachometer-alt mr-3"></i>
         {{ __('messages.dashboard') }}
     </a>
+    <a href="{{ route('vendor.analytics.index') }}" class="sidebar-item flex items-center px-4 py-2 text-sm font-medium rounded-md {{ request()->routeIs('vendor.analytics.*') ? 'sidebar-active' : 'text-gray-700 dark:text-gray-300' }}">
+        <i class="fas fa-chart-line mr-3"></i>
+        {{ __('messages.analytics') }}
+    </a>
 
     <a href="{{ route('vendor.company.index') }}" class="sidebar-item flex items-center px-4 py-2 text-sm font-medium rounded-md {{ request()->routeIs('vendor.company.*') ? 'sidebar-active' : 'text-gray-700 dark:text-gray-300' }}">
         <i class="fas fa-building mr-3"></i>
