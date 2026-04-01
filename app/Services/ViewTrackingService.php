@@ -121,8 +121,8 @@ class ViewTrackingService
 
     /**
      * Check if this view is a duplicate.
-     * For authenticated users: Only allow one view per entity (permanent)
-     * For anonymous users: Use time-based windows to prevent abuse while allowing legitimate views
+     * For authenticated users: Use a time window to avoid "stuck forever" views.
+     * For anonymous users: Use session/IP windows to prevent abuse.
      */
     private function isDuplicateView(
         string $entityType,
@@ -131,16 +131,18 @@ class ViewTrackingService
         ?string $sessionId,
         string $ipAddress
     ): bool {
-        // For authenticated users: Check if THIS specific user has viewed this entity before
-        // This ensures each authenticated user can only increment the view count once per entity
+        // For authenticated users, only treat as duplicate inside the configured window.
+        // This allows a new view after the window passes.
         if ($userId) {
+            $since = Carbon::now()->subHours(self::DUPLICATE_WINDOW_HOURS);
             $isDuplicate = ViewTracking::where('entity_type', $entityType)
                 ->where('entity_id', $entityId)
                 ->where('user_id', $userId)
+                ->where('viewed_at', '>=', $since)
                 ->exists();
 
-            Log::info("Checking duplicate view for authenticated user ID: $userId, Entity: $entityType:$entityId, Result: " .
-                ($isDuplicate ? 'DUPLICATE (user already viewed this entity)' : 'NEW VIEW'));
+            Log::info("Checking duplicate view for authenticated user ID: $userId (" . self::DUPLICATE_WINDOW_HOURS . "h window), Entity: $entityType:$entityId, Result: " .
+                ($isDuplicate ? 'DUPLICATE' : 'NEW VIEW'));
 
             return $isDuplicate;
         }
