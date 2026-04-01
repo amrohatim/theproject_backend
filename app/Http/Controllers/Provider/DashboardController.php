@@ -7,6 +7,7 @@ use App\Models\ProviderRating;
 use App\Models\ProviderProduct;
 use App\Models\ViewTracking;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Schema;
 
 class DashboardController extends Controller
 {
@@ -31,9 +32,15 @@ class DashboardController extends Controller
         } else {
             // Count products in provider's inventory specifically
             $totalProducts = ProviderProduct::where('provider_id', $provider->id)->count();
-            $totalViews = ViewTracking::where('entity_type', 'provider')
-                ->where('entity_id', $provider->id)
-                ->count();
+            $totalViews = (int) ($provider->view_count ?? 0);
+
+            // Fallback for environments where providers.view_count is not migrated yet.
+            if (!Schema::hasColumn('providers', 'view_count')) {
+                $totalViews = ViewTracking::where('entity_type', 'provider')
+                    ->where('entity_id', $provider->id)
+                    ->count();
+            }
+
             $avgRating = (float) (ProviderRating::where('provider_id', $provider->id)->avg('rating') ?? 0);
 
             // Get recent products from provider's inventory
