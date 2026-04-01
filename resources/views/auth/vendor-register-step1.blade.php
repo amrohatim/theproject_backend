@@ -10,6 +10,8 @@
     <!-- Fonts -->
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+            <link rel="stylesheet" href="{{ asset('css/global.css') }}">
+
     
     <!-- CSRF Token -->
     <meta name="csrf-token" content="{{ csrf_token() }}">
@@ -23,7 +25,7 @@
 
         body {
             font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            background: linear-gradient(135deg, var(--primary) 0%, var(--primary) 100%);
             min-height: 100vh;
             display: flex;
             align-items: center;
@@ -72,7 +74,7 @@
         }
 
         .progress-step.active::after {
-            background: #3b82f6;
+            background: var(--primary);
         }
 
         .step-circle {
@@ -91,7 +93,7 @@
         }
 
         .progress-step.active .step-circle {
-            background: #3b82f6;
+            background: var(--primary);
             color: white;
         }
 
@@ -108,7 +110,7 @@
         }
 
         .progress-step.active .step-label {
-            color: #3b82f6;
+            color: var(--primary);
             font-weight: 600;
         }
 
@@ -153,7 +155,7 @@
 
         .form-input:focus {
             outline: none;
-            border-color: #3b82f6;
+            border-color: var(--primary);
             background: white;
             box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
         }
@@ -181,7 +183,7 @@
         .form-button {
             width: 100%;
             padding: 14px;
-            background: linear-gradient(135deg, #3b82f6 0%, #1d4ed8 100%);
+            background: linear-gradient(135deg, var(--primary) 0%, var(--primary) 100%);
             color: white;
             border: none;
             border-radius: 8px;
@@ -193,7 +195,7 @@
         }
 
         .form-button:hover {
-            background: linear-gradient(135deg, #1d4ed8 0%, #1e40af 100%);
+            background: linear-gradient(135deg, var(--primary) 0%, var(--primary) 100%);
             transform: translateY(-1px);
             box-shadow: 0 4px 12px rgba(59, 130, 246, 0.3);
         }

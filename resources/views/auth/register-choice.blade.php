@@ -26,58 +26,53 @@
 
     <!-- Custom Styles -->
     @vite(['resources/css/app.css', 'resources/css/animations.css', 'resources/css/modern-landing.css'])
+       <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="{{ asset('css/global.css') }}">
 
     <style>
+        
         body {
             font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
         }
 
-        /* Modern background image card styles */
+        /* Pricing-style card styles */
         .modern-card {
             position: relative;
             border-radius: 1.5rem;
             overflow: hidden;
-            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+            box-shadow: 0 20px 40px -18px rgba(15, 23, 42, 0.18);
             transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
-            border: 1px solid rgba(255, 255, 255, 0.2);
-            min-height: 500px;
-            background-size: cover;
-            background-position: center;
-            background-repeat: no-repeat;
+            border: 1px solid #e5e7eb;
+            min-height: 560px;
+            background: #ffffff;
         }
 
-        .modern-card:hover {
-            transform: translateY(-8px) scale(1.02);
-            box-shadow: 0 35px 80px -12px rgba(0, 0, 0, 0.35);
+        .modern-card:hover,
+        .modern-card:focus-within {
+            transform: translateY(-8px);
+            border-color: var(--primary);
+            background: var(--primary);
+            box-shadow: 0 35px 70px -20px var(--primary);
         }
 
-        /* Background images for each card type */
-        .vendor-card {
-            background-image: url('{{ asset("assets/vendor.jpg") }}');
-        }
-
-        .provider-card {
-            background-image: url('{{ asset("assets/provider.avif") }}');
-        }
-
-        .merchant-card {
-            background-image: url('{{ asset("assets/merchant.avif") }}');
-        }
-
-        /* Semi-transparent overlay for text readability */
+        /* Keep overlay layer so text stays visually lifted over each card */
         .card-overlay {
             position: absolute;
             top: 0;
             left: 0;
             right: 0;
             bottom: 0;
-            background: linear-gradient(135deg, rgba(0, 0, 0, 0.4) 0%, rgba(0, 0, 0, 0.2) 50%, rgba(0, 0, 0, 0.6) 100%);
+            background: linear-gradient(165deg, rgba(248, 250, 252, 0.85) 0%, rgba(241, 245, 249, 0.4) 55%, rgba(226, 232, 240, 0.85) 100%);
             transition: all 0.3s ease;
             border-radius: 1.5rem;
+            opacity: 0.85;
+            z-index: 1;
         }
 
-        .modern-card:hover .card-overlay {
-            background: linear-gradient(135deg, rgba(0, 0, 0, 0.5) 0%, rgba(0, 0, 0, 0.3) 50%, rgba(0, 0, 0, 0.7) 100%);
+        .modern-card:hover .card-overlay,
+        .modern-card:focus-within .card-overlay {
+            background: linear-gradient(140deg, rgba(255, 255, 255, 0.2) 0%, rgba(217, 101, 122, 0.18) 45%, rgba(30, 37, 54, 0.24) 100%);
+            opacity: 1;
         }
 
         .card-badge {
@@ -96,7 +91,8 @@
             transition: all 0.3s ease;
             z-index: 10;
         }
-         .card-badge-ar {
+
+        .card-badge-ar {
             position: absolute;
             top:  1rem;
             left:  1rem;
@@ -113,9 +109,13 @@
             z-index: 10;
         }
 
-        .modern-card:hover .card-badge {
+        .modern-card:hover .card-badge,
+        .modern-card:focus-within .card-badge,
+        .modern-card:hover .card-badge-ar,
+        .modern-card:focus-within .card-badge-ar {
             transform: scale(1.1) rotate(5deg);
-            box-shadow: 0 12px 35px rgba(0, 0, 0, 0.25);
+            background: rgba(255, 255, 255, 0.25);
+            box-shadow: 0 12px 35px rgba(0, 0, 0, 0.2);
         }
 
         .card-content-modern {
@@ -133,29 +133,52 @@
             font-size: 1.5rem;
             font-weight: 700;
             margin-bottom: 0.5rem;
-            color: #ffffff;
-            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.7);
+            color: #1e2536;
+            transition: color 0.3s ease;
         }
 
         .card-subtitle-modern {
-            color: #f1f5f9;
+            color: #64748b;
             font-size: 0.95rem;
             margin-bottom: 1.5rem;
             line-height: 1.5;
-            text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.7);
+            transition: color 0.3s ease;
+        }
+
+        .card-price-modern {
+            margin-bottom: 1.5rem;
+            position: relative;
+            z-index: 5;
+        }
+
+        .card-price-value {
+            font-size: 2rem;
+            font-weight: 700;
+            color: #1e2536;
+            line-height: 1;
+            transition: color 0.3s ease;
+        }
+
+        .card-price-note {
+            color: #64748b;
+            font-size: 0.85rem;
+            margin-top: 0.35rem;
+            transition: color 0.3s ease;
         }
 
         .feature-list-modern {
             list-style: none;
             padding: 0;
             margin: 0 0 2rem 0;
+            position: relative;
+            z-index: 5;
         }
 
         .feature-item-modern {
             display: flex;
             align-items: center;
             padding: 0.75rem 0;
-            border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+            border-bottom: 1px solid #e2e8f0;
             transition: all 0.3s ease;
         }
 
@@ -165,7 +188,7 @@
 
         .feature-item-modern:hover {
             transform: translateX(4px);
-            background: rgba(255, 255, 255, 0.1);
+            background: rgba(148, 163, 184, 0.15);
             border-radius: 0.5rem;
             padding-left: 0.5rem;
             margin: 0 -0.5rem;
@@ -176,8 +199,7 @@
             height: 1.25rem;
             margin-right: 0.75rem;
             transition: all 0.3s ease;
-            color: #ffffff;
-            text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.7);
+            color: var(--primary);
         }
 
         .feature-item-modern:hover .feature-icon-modern {
@@ -186,15 +208,15 @@
 
         .feature-text-modern {
             font-weight: 500;
-            color: #f1f5f9;
+            color: #1e2536;
             font-size: 0.9rem;
-            text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.7);
+            transition: color 0.3s ease;
         }
 
         .modern-button {
             width: 100%;
             padding: 1rem 2rem;
-            border: none;
+            border: 1px solid #e2e8f0;
             border-radius: 1rem;
             font-weight: 600;
             font-size: 1rem;
@@ -204,6 +226,9 @@
             overflow: hidden;
             text-transform: uppercase;
             letter-spacing: 0.5px;
+            color: #1e2536;
+            background: #ffffff;
+            box-shadow: 0 8px 22px -14px rgba(15, 23, 42, 0.35);
         }
 
         .modern-button::before {
@@ -221,57 +246,71 @@
             left: 100%;
         }
 
-        .vendor-button {
-            background: linear-gradient(135deg, #3b82f6 0%, #1d4ed8 100%);
-            color: white;
-            box-shadow: 0 10px 25px rgba(59, 130, 246, 0.4);
-        }
-
-        .vendor-button:hover {
+        .modern-button:hover {
             transform: translateY(-2px);
-            box-shadow: 0 15px 35px rgba(59, 130, 246, 0.6);
-        }
-
-        .provider-button {
-            background: linear-gradient(135deg, #8b5cf6 0%, #7c3aed 100%);
-            color: white;
-            box-shadow: 0 10px 25px rgba(139, 92, 246, 0.4);
-        }
-
-        .provider-button:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 15px 35px rgba(139, 92, 246, 0.6);
-        }
-
-        .merchant-button {
-            background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%);
-            color: white;
-            box-shadow: 0 10px 25px rgba(245, 158, 11, 0.4);
-        }
-
-        .merchant-button:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 15px 35px rgba(245, 158, 11, 0.6);
+            box-shadow: 0 14px 28px -12px rgba(15, 23, 42, 0.45);
         }
 
         /* Color-coded icons for each card type */
         .vendor-icon {
-            color: #3b82f6;
+            color: var(--primary);
         }
 
         .provider-icon {
-            color: #8b5cf6;
+            color:  var(--primary);
         }
 
         .merchant-icon {
-            color: #f59e0b;
+            color:  var(--primary);
+        }
+
+        .modern-card:hover .card-title-modern,
+        .modern-card:focus-within .card-title-modern,
+        .modern-card:hover .card-subtitle-modern,
+        .modern-card:focus-within .card-subtitle-modern,
+        .modern-card:hover .card-price-value,
+        .modern-card:focus-within .card-price-value,
+        .modern-card:hover .card-price-note,
+        .modern-card:focus-within .card-price-note,
+        .modern-card:hover .feature-text-modern,
+        .modern-card:focus-within .feature-text-modern {
+            color: #ffffff;
+        }
+
+        .modern-card:hover .feature-item-modern,
+        .modern-card:focus-within .feature-item-modern {
+            border-bottom-color: rgba(255, 255, 255, 0.28);
+        }
+
+        .modern-card:hover .feature-item-modern:hover,
+        .modern-card:focus-within .feature-item-modern:hover {
+            background: rgba(255, 255, 255, 0.15);
+        }
+
+        .modern-card:hover .feature-icon-modern,
+        .modern-card:focus-within .feature-icon-modern,
+        .modern-card:hover .vendor-icon,
+        .modern-card:focus-within .vendor-icon,
+        .modern-card:hover .provider-icon,
+        .modern-card:focus-within .provider-icon,
+        .modern-card:hover .merchant-icon,
+        .modern-card:focus-within .merchant-icon {
+            color: #ffffff;
+        }
+
+        .modern-card:hover .modern-button,
+        .modern-card:focus-within .modern-button {
+            background: #ffffff;
+            color: var(--primary);
+            border-color: #ffffff;
+            box-shadow: 0 16px 30px -14px rgba(30, 37, 54, 0.45);
         }
 
         /* Responsive design improvements */
         @media (max-width: 768px) {
             .modern-card {
                 margin-bottom: 2rem;
-                min-height: 450px;
+                min-height: 500px;
             }
 
             .card-content-modern {
@@ -292,7 +331,7 @@
 
         @media (max-width: 640px) {
             .modern-card {
-                min-height: 400px;
+                min-height: 460px;
             }
 
             .card-content-modern {
@@ -307,12 +346,12 @@
 
         /* Accessibility improvements */
         .modern-card:focus-within {
-            outline: 3px solid #3b82f6;
+            outline: 3px solid var(--primary);
             outline-offset: 2px;
         }
 
         .modern-button:focus {
-            outline: 3px solid rgba(59, 130, 246, 0.5);
+            outline: 3px solid var(--primary);
             outline-offset: 2px;
         }
 
@@ -346,9 +385,9 @@
 
         /* Navigation styles for light theme */
         .btn-secondary-light {
-            background: rgba(59, 130, 246, 0.1);
+            background: white;
             backdrop-filter: blur(10px);
-            color: #3b82f6;
+            color: var(--primary);
             padding: 0.75rem 1.5rem;
             border-radius: 12px;
             font-weight: 600;
@@ -356,17 +395,17 @@
             display: inline-flex;
             align-items: center;
             gap: 0.5rem;
-            border: 1px solid rgba(59, 130, 246, 0.2);
+            border: 1px solid var(--primary);
             transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
             cursor: pointer;
         }
 
         .btn-secondary-light:hover {
-            background: rgba(59, 130, 246, 0.2);
+            background: var(--primary-light)/50;
             transform: translateY(-2px);
-            color: #2563eb;
+            color: var(--primary);
             text-decoration: none;
-            box-shadow: 0 10px 25px -5px rgba(59, 130, 246, 0.25);
+            box-shadow: 0 1px 2px -2px var(--primary-light);
         }
 
         /* Mobile menu styles */
@@ -387,14 +426,14 @@
         }
     </style>
 </head>
-<body class="bg-gray-50 font-sans" background="{{ asset('assets/background.avif') }}">
+<body class="bg-gray-50 font-sans">
     <!-- Navigation -->
     <nav class="fixed top-0 left-0 right-0 z-50 bg-white/1 backdrop-blur-md border-b border-gray-200 shadow-sm">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div class="flex justify-between items-center h-16">
                 <div class="flex items-center">
                     <div class="w-10 h-7 bg-transparent flex items-center justify-center">
-                        <img src="{{ asset('assets/logo.png') }}" alt="glowlabs Logo" class="w-20 h-10 object-cover rounded-lg">
+                        <img src="{{ asset('assets/logo.png') }}" alt="glowlabs Logo" class="w-16 h-16 object-cover rounded-lg">
                     </div>
                     <span class="ml-3 text-gray-800 font-bold text-xl">glowlabs</span>
                 </div>
@@ -482,7 +521,7 @@
 
         <main class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
             <!-- Vendor Registration Card -->
-            <div class="modern-card vendor-card cursor-pointer" onclick="selectChoice('vendor')" data-testid="vendor-registration-link">
+            <div class="modern-card cursor-pointer" onclick="selectChoice('vendor')" data-testid="vendor-registration-link" role="button" tabindex="0" onkeydown="if(event.key === 'Enter' || event.key === ' '){ event.preventDefault(); selectChoice('vendor'); }">
                 <!-- Semi-transparent overlay -->
                 <div class="card-overlay"></div>
 
@@ -495,6 +534,10 @@
                 <div class="card-content-modern">
                     <h2 class="card-title-modern">{{ __('messages.vendor_registration') }}</h2>
                     <p class="card-subtitle-modern">{{ __('messages.vendor_registration_desc') }}</p>
+                    <div class="card-price-modern">
+                        <div class="card-price-value">99 AED</div>
+                        <div class="card-price-note">{{ __('messages.gogo_bill_monthly') }}</div>
+                    </div>
 
                     <ul class="feature-list-modern">
                         <li class="feature-item-modern">
@@ -515,14 +558,14 @@
                         </li>
                     </ul>
 
-                    <button class="modern-button vendor-button">
+                    <button class="modern-button">
                         <span>{{ __('messages.register_as_vendor') }}</span>
                     </button>
                 </div>
             </div>
 
             <!-- Provider Registration Card -->
-            <div class="modern-card provider-card cursor-pointer" onclick="selectChoice('provider')" data-testid="provider-registration-link">
+            <div class="modern-card cursor-pointer" onclick="selectChoice('provider')" data-testid="provider-registration-link" role="button" tabindex="0" onkeydown="if(event.key === 'Enter' || event.key === ' '){ event.preventDefault(); selectChoice('provider'); }">
                 <!-- Semi-transparent overlay -->
                 <div class="card-overlay"></div>
 
@@ -535,6 +578,10 @@
                 <div class="card-content-modern">
                     <h2 class="card-title-modern">{{ __('messages.provider_registration') }}</h2>
                     <p class="card-subtitle-modern">{{ __('messages.provider_registration_desc') }}</p>
+                    <div class="card-price-modern">
+                        <div class="card-price-value">99 AED</div>
+                        <div class="card-price-note">{{ __('messages.gogo_bill_monthly') }}</div>
+                    </div>
 
                     <ul class="feature-list-modern">
                         <li class="feature-item-modern">
@@ -555,14 +602,14 @@
                         </li>
                     </ul>
 
-                    <button class="modern-button provider-button">
+                    <button class="modern-button">
                         <span>{{ __('messages.register_as_provider') }}</span>
                     </button>
                 </div>
             </div>
 
             <!-- Merchant Registration Card -->
-            <div class="modern-card merchant-card cursor-pointer" onclick="selectChoice('merchant')" data-testid="merchant-registration-link">
+            <div class="modern-card cursor-pointer" onclick="selectChoice('merchant')" data-testid="merchant-registration-link" role="button" tabindex="0" onkeydown="if(event.key === 'Enter' || event.key === ' '){ event.preventDefault(); selectChoice('merchant'); }">
                 <!-- Semi-transparent overlay -->
                 <div class="card-overlay"></div>
 
@@ -575,6 +622,10 @@
                 <div class="card-content-modern">
                     <h2 class="card-title-modern">{{ __('messages.merchant_registration') }}</h2>
                     <p class="card-subtitle-modern">{{ __('messages.merchant_registration_desc') }}</p>
+                    <div class="card-price-modern">
+                        <div class="card-price-value">99 AED</div>
+                        <div class="card-price-note">{{ __('messages.gogo_bill_monthly') }}</div>
+                    </div>
 
                     <ul class="feature-list-modern">
                         <li class="feature-item-modern">
@@ -595,7 +646,7 @@
                         </li>
                     </ul>
 
-                    <button class="modern-button merchant-button">
+                    <button class="modern-button">
                         <span>{{ __('messages.register_as_merchant') }}</span>
                     </button>
                 </div>

@@ -16,7 +16,7 @@
           v-model="formData.name"
           type="text"
           required
-          class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors"
+          class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[var(--primary)] focus:border-[var(--primary)] transition-colors"
           :placeholder="$t('enter_your_full_name')"
           :disabled="loading"
         />
@@ -35,7 +35,7 @@
           v-model="formData.email"
           type="email"
           required
-          class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors"
+          class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[var(--primary)] focus:border-[var(--primary)] transition-colors"
           :placeholder="$t('enter_your_email_address')"
           :disabled="loading"
         />
@@ -54,7 +54,7 @@
           v-model="formData.phone"
           type="tel"
           required
-          class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors"
+          class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[var(--primary)] focus:border-[var(--primary)] transition-colors"
           :placeholder="$t('enter_your_phone_number')"
           :disabled="loading"
         />
@@ -74,7 +74,7 @@
             v-model="formData.password"
             :type="showPassword ? 'text' : 'password'"
             required
-            class="w-full px-4 py-3 pr-12 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors"
+            class="w-full px-4 py-3 pr-12 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[var(--primary)] focus:border-[var(--primary)] transition-colors"
             :placeholder="$t('create_a_strong_password')"
             :disabled="loading"
           />
@@ -105,7 +105,7 @@
             v-model="formData.password_confirmation"
             :type="showConfirmPassword ? 'text' : 'password'"
             required
-            class="w-full px-4 py-3 pr-12 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors"
+            class="w-full px-4 py-3 pr-12 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[var(--primary)] focus:border-[var(--primary)] transition-colors"
             :placeholder="$t('confirm_your_password')"
             :disabled="loading"
           />
@@ -132,14 +132,14 @@
           v-model="acceptTerms"
           type="checkbox"
           required
-          class="mt-1 h-4 w-4 text-blue-600 border-gray-300 rounded focus:ring-blue-500"
+          class="mt-1 h-4 w-4 text-[var(--primary)] border-gray-300 rounded focus:ring-[var(--primary)]"
           :disabled="loading"
         />
         <label for="terms" class="ml-3 text-sm text-gray-700">
           {{ $t('i_agree_to_the') }} 
-          <a href="#" class="text-blue-600 hover:text-blue-800 underline">{{ $t('terms_and_conditions') }}</a>
+          <a href="#" class="text-[var(--primary)] hover:text-[var(--primary)] underline">{{ $t('terms_and_conditions') }}</a>
           {{ $t('and') }} 
-          <a href="#" class="text-blue-600 hover:text-blue-800 underline">{{ $t('privacy_policy') }}</a>
+          <a href="#" class="text-[var(--primary)] hover:text-[var(--primary)] underline">{{ $t('privacy_policy') }}</a>
           <span class="text-red-500">*</span>
         </label>
       </div>
@@ -149,7 +149,7 @@
         <button
           type="submit"
           :disabled="loading || !isFormValid"
-          class="w-full px-6 py-3 bg-blue-600 text-white rounded-lg font-semibold hover:bg-blue-700 focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+          class="w-full px-6 py-3 bg-[var(--primary)] text-white rounded-lg font-semibold hover:bg-[var(--primary)] focus:ring-2 focus:ring-[var(--primary)] focus:ring-offset-2 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
         >
           <span v-if="loading" class="flex items-center justify-center">
             <i class="fas fa-spinner fa-spin mr-2"></i>
