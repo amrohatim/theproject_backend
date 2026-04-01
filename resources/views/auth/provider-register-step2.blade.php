@@ -7,28 +7,7 @@
     <meta name="robots" content="noindex, nofollow">
     <title>{{ __('messages.data3chic_provider_registration') }}</title>
     <script src="https://cdn.tailwindcss.com"></script>
-    <script>
-        tailwind.config = {
-            theme: {
-                extend: {
-                    colors: {
-                        purple: {
-                            50: '#faf5ff',
-                            100: '#f3e8ff',
-                            200: '#e9d5ff',
-                            300: '#d8b4fe',
-                            400: '#c084fc',
-                            500: '#a855f7',
-                            600: '#9333ea',
-                            700: '#7c3aed',
-                            800: '#6b21a8',
-                            900: '#581c87'
-                        }
-                    }
-                }
-            }
-        }
-    </script>
+    <link rel="stylesheet" href="{{ asset('css/global.css') }}">
 
     <!-- Fonts -->
     @if(app()->getLocale() == 'ar')
@@ -58,7 +37,7 @@
         }
         .step-circle:hover {
             transform: scale(1.05);
-            box-shadow: 0 4px 12px rgba(139, 92, 246, 0.3);
+            box-shadow: 0 4px 12px var(--primary-light);
         }
         .step-circle.completed {
             animation: checkmark-bounce 0.6s ease-in-out;
@@ -69,10 +48,10 @@
             100% { transform: scale(1); }
         }
         .step-circle.clickable:hover {
-            background-color: rgba(139, 92, 246, 0.1);
+            background-color: var(--towhite);
         }
         .step-circle:focus {
-            outline: 2px solid #8b5cf6;
+            outline: 2px solid var(--primary);
             outline-offset: 2px;
         }
         .modal {
@@ -135,7 +114,7 @@
         }
 
         .progress-step.active::after {
-            background: #8b5cf6;
+            background: var(--primary);
         }
 
         .progress-step.completed::after {
@@ -159,7 +138,7 @@
         }
 
         .progress-step.active .step-circle {
-            background: #8b5cf6;
+            background: var(--primary);
             color: white;
         }
 
@@ -176,7 +155,7 @@
         }
 
         .progress-step.active .step-label {
-            color: #8b5cf6;
+            color: var(--primary);
             font-weight: 600;
         }
 
@@ -202,7 +181,7 @@
 <body class="min-h-screen bg-gray-50">
     <div class="min-h-screen flex">
         <!-- Left Side - Marketing Content -->
-        <div class="hidden lg:flex lg:w-1/2 text-white p-12 flex-col justify-top" style="background: linear-gradient(135deg, #8b5cf6 0%, #7c3aed 100%);">
+        <div class="hidden lg:flex lg:w-1/2 text-white p-12 flex-col justify-top" style="background: linear-gradient(135deg, var(--primary) 0%, var(--primary-hover) 100%);">
             <div class="max-w-md mx-auto space-y-8">
                 <div class="text-center">
                     <h1 class="text-3xl font-bold mb-8">glowlabs</h1>
@@ -213,7 +192,7 @@
                     <h2 class="text-4xl font-bold leading-tight">
                         {{ __('messages.email_verification') }}
                     </h2>
-                    <p class="text-purple-100 text-lg">
+                    <p class="text-white/90 text-lg">
                         {{ __('messages.email_verification_description') }}
                     </p>
                 </div>
@@ -222,37 +201,37 @@
                 <div class="space-y-6 mt-12">
                     <div class="flex items-start space-x-4">
                         <div class="flex-shrink-0">
-                            <svg class="w-6 h-6 text-purple-200" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <svg class="w-6 h-6 text-white/80" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 4.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"></path>
                             </svg>
                         </div>
                         <div>
                             <h3 class="font-semibold text-lg mb-1">{{ __('messages.secure_verification') }}</h3>
-                            <p class="text-purple-100 text-sm">{{ __('messages.secure_verification_description') }}</p>
+                            <p class="text-white/90 text-sm">{{ __('messages.secure_verification_description') }}</p>
                         </div>
                     </div>
 
                     <div class="flex items-start space-x-4">
                         <div class="flex-shrink-0">
-                            <svg class="w-6 h-6 text-purple-200" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <svg class="w-6 h-6 text-white/80" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"></path>
                             </svg>
                         </div>
                         <div>
                             <h3 class="font-semibold text-lg mb-1">{{ __('messages.quick_process') }}</h3>
-                            <p class="text-purple-100 text-sm">{{ __('messages.quick_process_description') }}</p>
+                            <p class="text-white/90 text-sm">{{ __('messages.quick_process_description') }}</p>
                         </div>
                     </div>
 
                     <div class="flex items-start space-x-4">
                         <div class="flex-shrink-0">
-                            <svg class="w-6 h-6 text-purple-200" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <svg class="w-6 h-6 text-white/80" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
                             </svg>
                         </div>
                         <div>
                             <h3 class="font-semibold text-lg mb-1">{{ __('messages.almost_done') }}</h3>
-                            <p class="text-purple-100 text-sm">{{ __('messages.halfway_through_registration') }}</p>
+                            <p class="text-white/90 text-sm">{{ __('messages.halfway_through_registration') }}</p>
                         </div>
                     </div>
                 </div>
@@ -289,17 +268,17 @@
 
                 <!-- Back Link -->
                 <div class="mb-4">
-                    <a href="/register/provider/step1" class="text-purple-600 hover:text-purple-700 transition-colors duration-300 text-sm font-medium">
+                    <a href="/register/provider/step1" class="text-[var(--primary)] hover:text-[var(--primary-hover)] transition-colors duration-300 text-sm font-medium">
                         <i class="fas fa-arrow-{{ app()->getLocale() == 'ar' ? 'right' : 'left' }} {{ app()->getLocale() == 'ar' ? 'ml-2' : 'mr-2' }}"></i>
                         {{ __('messages.back_to_provider_info') }}
                     </a>
                 </div>
 
                 <!-- Email Verification Section -->
-                <div class="bg-purple-50 border border-purple-200 rounded-lg p-6 mb-6">
+                <div class="bg-[var(--towhite)] border border-[var(--primary-light)] rounded-lg p-6 mb-6">
                     <div class="flex items-center justify-between mb-4">
                         <div class="flex items-center">
-                            <i class="fas fa-envelope text-purple-600 {{ app()->getLocale() == 'ar' ? 'ml-2' : 'mr-2' }}"></i>
+                            <i class="fas fa-envelope text-[var(--primary)] {{ app()->getLocale() == 'ar' ? 'ml-2' : 'mr-2' }}"></i>
                             <span class="font-medium text-gray-900">{{ __('messages.email_verification') }}</span>
                         </div>
                         <span class="px-2 py-1 bg-yellow-100 text-yellow-800 text-xs font-medium rounded-full" id="emailStatus">{{ __('messages.pending') }}</span>
@@ -317,7 +296,7 @@
                         <div class="relative">
                             <input id="verification_code" name="verification_code" type="text"
                                    placeholder="{{ __('messages.enter_6_digit_code') }}" required maxlength="6"
-                                   class="w-full pl-10 pr-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent text-center text-lg font-mono tracking-widest">
+                                   class="w-full pl-10 pr-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-[var(--primary)] focus:border-transparent text-center text-lg font-mono tracking-widest">
                             <svg class="absolute left-3 top-1/2 transform -translate-y-1/2 w-4 h-4 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"></path>
                             </svg>
@@ -327,7 +306,7 @@
                     </div>
 
                     <!-- Verify Button -->
-                    <button type="submit" id="verifyCodeBtn" class="w-full text-white py-3 px-4 rounded-md font-semibold transition-all duration-300 transform hover:scale-105 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:ring-offset-2" style="background: linear-gradient(135deg, #8b5cf6 0%, #7c3aed 100%);">
+                    <button type="submit" id="verifyCodeBtn" class="w-full text-white py-3 px-4 rounded-md font-semibold transition-all duration-300 transform hover:scale-105 focus:outline-none focus:ring-2 focus:ring-[var(--primary)] focus:ring-offset-2" style="background: linear-gradient(135deg, var(--primary) 0%, var(--primary-hover) 100%);">
                         <span class="loading hidden">
                             <i class="fas fa-spinner fa-spin {{ app()->getLocale() == 'ar' ? 'ml-2' : 'mr-2' }}"></i>
                         </span>
@@ -339,14 +318,14 @@
                 <div class="text-center mt-4">
                     <p class="text-gray-600 text-sm">
                         {{ __('messages.didnt_receive_code') }}
-                        <button type="button" id="resendCodeBtn" class="text-purple-600 hover:text-purple-700 font-medium underline">
+                        <button type="button" id="resendCodeBtn" class="text-[var(--primary)] hover:text-[var(--primary-hover)] font-medium underline">
                             {{ __('messages.resend_code') }}
                         </button>
                     </p>
                 </div>
 
                 <!-- Continue Button (hidden until email verification complete) -->
-                <button type="button" id="continueBtn" class="w-full text-white py-3 px-4 rounded-md font-semibold transition-all duration-300 transform hover:scale-105 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:ring-offset-2 hidden" style="background: linear-gradient(135deg, #8b5cf6 0%, #7c3aed 100%);">
+                <button type="button" id="continueBtn" class="w-full text-white py-3 px-4 rounded-md font-semibold transition-all duration-300 transform hover:scale-105 focus:outline-none focus:ring-2 focus:ring-[var(--primary)] focus:ring-offset-2 hidden" style="background: linear-gradient(135deg, var(--primary) 0%, var(--primary-hover) 100%);">
                     {{ __('messages.continue_to_phone_verification') }}
                     <i class="fas fa-arrow-{{ app()->getLocale() == 'ar' ? 'left' : 'right' }} {{ app()->getLocale() == 'ar' ? 'mr-2' : 'ml-2' }}"></i>
                 </button>

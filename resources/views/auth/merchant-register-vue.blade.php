@@ -11,28 +11,7 @@
     <meta name="csrf-token" content="{{ csrf_token() }}">
     <title>Data3Chic - {{ __('messages.merchant_registration') }}</title>
     <script src="https://cdn.tailwindcss.com"></script>
-    <script>
-        tailwind.config = {
-            theme: {
-                extend: {
-                    colors: {
-                        amber: {
-                            50: '#fffbeb',
-                            100: '#fef3c7',
-                            200: '#fde68a',
-                            300: '#fcd34d',
-                            400: '#fbbf24',
-                            500: '#f59e0b',
-                            600: '#d97706',
-                            700: '#b45309',
-                            800: '#92400e',
-                            900: '#78350f'
-                        }
-                    }
-                }
-            }
-        }
-    </script>
+    <link rel="stylesheet" href="{{ asset('css/global.css') }}">
     <style>
         .step-content {
             display: none;
@@ -49,7 +28,7 @@
         }
         .step-circle:hover {
             transform: scale(1.05);
-            box-shadow: 0 4px 12px rgba(245, 158, 11, 0.3);
+            box-shadow: 0 4px 12px var(--primary-light);
         }
         .step-circle.completed {
             animation: checkmark-bounce 0.6s ease-in-out;
@@ -60,17 +39,17 @@
             100% { transform: scale(1); }
         }
         .step-circle.clickable:hover {
-            background-color: rgba(245, 158, 11, 0.1);
+            background-color: var(--primary-light);
         }
         .step-circle:focus {
-            outline: 2px solid #f59e0b;
+            outline: 2px solid var(--primary);
             outline-offset: 2px;
         }
         .upload-area {
             transition: border-color 0.3s ease;
         }
         .upload-area:hover {
-            border-color: #f59e0b;
+            border-color: var(--primary);
         }
         .modal {
             display: none;

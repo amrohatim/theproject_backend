@@ -318,13 +318,13 @@ export default {
 
 .license-upload-step .form-input:focus {
   outline: none !important;
-  border-color: #f59e0b !important;
-  box-shadow: 0 0 0 3px rgba(245, 158, 11, 0.1) !important;
+  border-color: var(--primary) !important;
+  box-shadow: 0 0 0 3px rgba(164, 107, 193, 0.1) !important;
   transform: none !important;
 }
 
 .license-upload-step .form-input:hover {
-  border-color: #f59e0b !important;
+  border-color: var(--primary) !important;
   background: white !important;
   transform: none !important;
 }
@@ -337,7 +337,7 @@ export default {
 .license-upload-step .form-button {
   width: 100%;
   padding: 12px 24px;
-  background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%);
+  background: linear-gradient(135deg, var(--primary) 0%, var(--primary-hover) 100%);
   color: white;
   border: none;
   border-radius: 8px;
@@ -352,9 +352,9 @@ export default {
 }
 
 .license-upload-step .form-button:hover:not(:disabled) {
-  background: linear-gradient(135deg, #d97706 0%, #b45309 100%);
+  background: linear-gradient(135deg, var(--primary-hover) 0%, var(--primary-hover) 100%);
   transform: translateY(-1px);
-  box-shadow: 0 4px 12px rgba(245, 158, 11, 0.3);
+  box-shadow: 0 4px 12px rgba(164, 107, 193, 0.3);
 }
 
 .license-upload-step .form-button:disabled {
@@ -378,7 +378,7 @@ export default {
 .upload-icon {
   width: 80px;
   height: 80px;
-  background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%);
+  background: linear-gradient(135deg, var(--primary) 0%, var(--primary-hover) 100%);
   border-radius: 50%;
   display: flex;
   align-items: center;
@@ -411,13 +411,13 @@ export default {
 }
 
 .file-upload-area:hover {
-  border-color: #f59e0b;
-  background: rgba(245, 158, 11, 0.05);
+  border-color: var(--primary);
+  background: rgba(164, 107, 193, 0.05);
 }
 
 .file-upload-area.drag-over {
-  border-color: #f59e0b;
-  background: rgba(245, 158, 11, 0.1);
+  border-color: var(--primary);
+  background: rgba(164, 107, 193, 0.1);
 }
 
 .file-upload-area.has-file {
@@ -448,7 +448,7 @@ export default {
 
 .upload-icon-large {
   font-size: 3rem;
-  color: #f59e0b;
+  color: var(--primary);
   margin-bottom: 1rem;
 }
 
@@ -512,8 +512,8 @@ export default {
 
 .form-textarea:focus {
   outline: none;
-  border-color: #f59e0b;
-  box-shadow: 0 0 0 3px rgba(245, 158, 11, 0.1);
+  border-color: var(--primary);
+  box-shadow: 0 0 0 3px rgba(164, 107, 193, 0.1);
 }
 
 .info-section {
@@ -537,7 +537,7 @@ export default {
 
 .info-item i {
   margin-right: 0.75rem;
-  color: #f59e0b;
+  color: var(--primary);
   width: 16px;
 }
 

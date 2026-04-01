@@ -11,6 +11,7 @@
     <meta name="csrf-token" content="{{ csrf_token() }}">
     <title>Data3Chic - {{ __('messages.vendor_registration') }}</title>
     <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="{{ asset('css/global.css') }}">
     <script>
         tailwind.config = {
             theme: {
@@ -49,7 +50,7 @@
         }
         .step-circle:hover {
             transform: scale(1.05);
-            box-shadow: 0 4px 12px rgba(59, 130, 246, 0.3);
+            box-shadow: 0 4px 12px rgba(164, 107, 193, 0.3);
         }
         .step-circle.completed {
             animation: checkmark-bounce 0.6s ease-in-out;
@@ -60,17 +61,17 @@
             100% { transform: scale(1); }
         }
         .step-circle.clickable:hover {
-            background-color: rgba(59, 130, 246, 0.1);
+            background-color: rgba(164, 107, 193, 0.12);
         }
         .step-circle:focus {
-            outline: 2px solid #3b82f6;
+            outline: 2px solid var(--primary);
             outline-offset: 2px;
         }
         .upload-area {
             transition: border-color 0.3s ease;
         }
         .upload-area:hover {
-            border-color: #3b82f6;
+            border-color: var(--primary);
         }
         .modal {
             display: none;
@@ -164,10 +165,10 @@
             border-color: #6b7280;
         }
 
-        .logo-upload-area.border-blue-400,
-        .license-upload-area.border-blue-400 {
-            border-color: #60a5fa !important;
-            background-color: #eff6ff !important;
+        .logo-upload-area.is-drag-active,
+        .license-upload-area.is-drag-active {
+            border-color: var(--primary) !important;
+            background-color: var(--primary-light) !important;
         }
     </style>
 
@@ -315,7 +316,7 @@
 <body class="min-h-screen bg-gray-50 {{ $isRtl ? 'rtl' : '' }}">
     <div class="min-h-screen flex">
         <!-- Left Side - Marketing Content -->
-        <div class="hidden lg:flex lg:w-1/2 bg-gradient-to-br from-blue-600 via-blue-700 to-blue-800 text-white p-12 flex-col justify-center">
+        <div class="hidden lg:flex lg:w-1/2 bg-gradient-to-br from-[var(--primary)] via-[var(--primary)] to-[var(--primary-hover)] text-white p-12 flex-col justify-center">
             <div class="max-w-md mx-auto space-y-8">
                 <!-- Logo -->
                 <div class="text-center">
@@ -327,7 +328,7 @@
                     <h2 class="text-4xl font-bold leading-tight">
                         {{ __('messages.vendor_registration') }}
                     </h2>
-                    <p class="text-blue-100 text-lg">
+                    <p class="text-[var(--towhite)] text-lg">
                         {{ __('messages.vendor_registration_desc') }}
                     </p>
                 </div>
@@ -336,38 +337,38 @@
                 <div class="space-y-6 mt-12">
                     <div class="flex items-start space-x-4">
                         <div class="flex-shrink-0">
-                            <svg class="w-6 h-6 text-blue-200" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <svg class="w-6 h-6 text-[var(--primary-light)]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"></path>
                             </svg>
                         </div>
                         <div>
                             <h3 class="font-semibold text-lg mb-1">{{ __('messages.grow_your_sales') }}</h3>
-                            <p class="text-blue-100 text-sm">{{ __('messages.grow_your_sales_desc') }}</p>
+                            <p class="text-[var(--towhite)] text-sm">{{ __('messages.grow_your_sales_desc') }}</p>
                         </div>
                     </div>
 
                     <div class="flex items-start space-x-4">
                         <div class="flex-shrink-0">
-                            <svg class="w-6 h-6 text-blue-200" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <svg class="w-6 h-6 text-[var(--primary-light)]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"></path>
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path>
                             </svg>
                         </div>
                         <div>
                             <h3 class="font-semibold text-lg mb-1">{{ __('messages.powerful_tools') }}</h3>
-                            <p class="text-blue-100 text-sm">{{ __('messages.powerful_tools_desc') }}</p>
+                            <p class="text-[var(--towhite)] text-sm">{{ __('messages.powerful_tools_desc') }}</p>
                         </div>
                     </div>
 
                     <div class="flex items-start space-x-4">
                         <div class="flex-shrink-0">
-                            <svg class="w-6 h-6 text-blue-200" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <svg class="w-6 h-6 text-[var(--primary-light)]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M18.364 5.636l-3.536 3.536m0 5.656l3.536 3.536M9.172 9.172L5.636 5.636m3.536 9.192L5.636 18.364M21 12a9 9 0 11-18 0 9 9 0 0118 0zm-5 0a4 4 0 11-8 0 4 4 0 018 0z"></path>
                             </svg>
                         </div>
                         <div>
                             <h3 class="font-semibold text-lg mb-1">{{ __('messages.dedicated_support') }}</h3>
-                            <p class="text-blue-100 text-sm">{{ __('messages.dedicated_support_desc') }}</p>
+                            <p class="text-[var(--towhite)] text-sm">{{ __('messages.dedicated_support_desc') }}</p>
                         </div>
                     </div>
                 </div>
@@ -388,7 +389,7 @@
                     <div class="hidden md:flex items-center justify-between" id="desktop-progress">
                         <div class="flex items-center">
                             <div class="flex flex-col items-center group">
-                                <div class="step-circle w-12 h-12 rounded-full flex items-center justify-center text-sm font-semibold border-2 bg-blue-100 border-blue-600 text-blue-600"
+                                <div class="step-circle w-12 h-12 rounded-full flex items-center justify-center text-sm font-semibold border-2 bg-[var(--primary-light)] border-[var(--primary)] text-[var(--primary)]"
                                      data-step="1"
                                      tabindex="0"
                                      role="button"
@@ -397,7 +398,7 @@
                                     1F
                                 </div>
                                 <div class="mt-3 text-center">
-                                    <div class="text-xs font-semibold text-blue-600">{{ __('messages.personal_info') }}</div>
+                                    <div class="text-xs font-semibold text-[var(--primary)]">{{ __('messages.personal_info') }}</div>
                                 </div>
                             </div>
                             <div class="progress-line flex-1 h-1 mx-4 bg-gray-300 rounded-full"></div>
@@ -456,11 +457,11 @@
                     <!-- Mobile Progress Indicator -->
                     <div class="md:hidden">
                         <div class="flex items-center justify-between mb-4">
-                            <span class="text-sm font-semibold text-blue-600" id="mobile-step">Step 1 of 4</span>
+                            <span class="text-sm font-semibold text-[var(--primary)]" id="mobile-step">Step 1 of 4</span>
                             <span class="text-xs text-gray-500" id="mobile-progress">20% Complete</span>
                         </div>
                         <div class="w-full bg-gray-200 rounded-full h-3 mb-4 shadow-inner">
-                            <div class="h-3 rounded-full transition-all duration-500 ease-out shadow-sm" id="progress-bar" style="width: 20%; background: linear-gradient(135deg, #3b82f6 0%, #1d4ed8 100%);"></div>
+                            <div class="h-3 rounded-full transition-all duration-500 ease-out shadow-sm" id="progress-bar" style="width: 20%; background: linear-gradient(135deg, var(--primary) 0%, var(--primary-hover) 100%);"></div>
                         </div>
                         <div class="text-center">
                             <h3 class="text-base font-semibold text-gray-900" id="mobile-title">{{ __('messages.personal_info') }}</h3>
@@ -469,7 +470,7 @@
 
                         <!-- Mobile Step Dots -->
                         <div class="flex justify-center mt-4 space-x-2" id="mobile-dots">
-                            <div class="w-2 h-2 rounded-full bg-blue-600 transition-all duration-300" data-mobile-step="1"></div>
+                            <div class="w-2 h-2 rounded-full bg-[var(--primary)] transition-all duration-300" data-mobile-step="1"></div>
                             <div class="w-2 h-2 rounded-full bg-gray-300 transition-all duration-300" data-mobile-step="2"></div>
                             <div class="w-2 h-2 rounded-full bg-gray-300 transition-all duration-300" data-mobile-step="3"></div>
                             <div class="w-2 h-2 rounded-full bg-gray-300 transition-all duration-300" data-mobile-step="4"></div>
@@ -485,7 +486,7 @@
                             <div class="space-y-2">
                                 <label for="fullName" class="text-sm font-medium text-gray-700" id="fullNameLabel">{{ __('messages.full_name') }}</label>
                                 <div class="relative">
-                                    <input id="fullName" name="name" type="text" placeholder="{{ __('messages.enter_full_name') }}" class="w-full pl-10 pr-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent">
+                                    <input id="fullName" name="name" type="text" placeholder="{{ __('messages.enter_full_name') }}" class="w-full pl-10 pr-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-[var(--primary)] focus:border-transparent">
                                     <svg class="absolute left-3 top-1/2 transform -translate-y-1/2 w-4 h-4 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"></path>
                                     </svg>
@@ -495,7 +496,7 @@
                             <div class="space-y-2">
                                 <label for="email" class="text-sm font-medium text-gray-700" id="emailLabel">{{ __('messages.email_address') }}</label>
                                 <div class="relative">
-                                    <input id="email" name="email" type="email" placeholder="{{ __('messages.enter_email_address') }}" class="w-full pl-10 pr-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent">
+                                    <input id="email" name="email" type="email" placeholder="{{ __('messages.enter_email_address') }}" class="w-full pl-10 pr-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-[var(--primary)] focus:border-transparent">
                                     <svg class="absolute left-3 top-1/2 transform -translate-y-1/2 w-4 h-4 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 4.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"></path>
                                     </svg>
@@ -508,14 +509,14 @@
                                     <div class="absolute left-3 top-1/2 transform -translate-y-1/2 flex items-center">
                                         <span class="text-sm text-gray-600 mr-2">🇦🇪 +971</span>
                                     </div>
-                                    <input id="phone" name="phone" type="tel" placeholder="{{ __('messages.enter_phone_number') }}" maxlength="9" class="w-full pl-20 pr-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent">
+                                    <input id="phone" name="phone" type="tel" placeholder="{{ __('messages.enter_phone_number') }}" maxlength="9" class="w-full pl-20 pr-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-[var(--primary)] focus:border-transparent">
                                 </div>
                             </div>
 
                             <div class="space-y-2">
                                 <label for="password" class="text-sm font-medium text-gray-700" id="passwordLabel">{{ __('messages.password') }}</label>
                                 <div class="relative">
-                                    <input id="password" name="password" type="password" placeholder="{{ __('messages.enter_password') }}" class="w-full pl-10 pr-10 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent">
+                                    <input id="password" name="password" type="password" placeholder="{{ __('messages.enter_password') }}" class="w-full pl-10 pr-10 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-[var(--primary)] focus:border-transparent">
                                     <svg class="absolute left-3 top-1/2 transform -translate-y-1/2 w-4 h-4 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"></path>
                                     </svg>
@@ -528,7 +529,7 @@
 
                             <div class="space-y-2">
                                 <label for="confirmPassword" class="text-sm font-medium text-gray-700" id="confirmPasswordLabel">{{ __('messages.confirm_password') }}</label>
-                                <input id="confirmPassword" name="password_confirmation" type="password" placeholder="{{ __('messages.enter_confirm_password') }}" class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent">
+                                <input id="confirmPassword" name="password_confirmation" type="password" placeholder="{{ __('messages.enter_confirm_password') }}" class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-[var(--primary)] focus:border-transparent">
                             </div>
                         </div>
                     </div>
@@ -536,8 +537,8 @@
                     <!-- Step 2: Email Verification -->
                     <div class="step-content" id="step-2">
                         <div class="space-y-4 text-center">
-                            <div class="bg-blue-50 p-6 rounded-lg">
-                                <svg class="w-12 h-12 text-blue-600 mx-auto mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <div class="bg-[var(--primary-light)] p-6 rounded-lg">
+                                <svg class="w-12 h-12 text-[var(--primary)] mx-auto mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 4.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"></path>
                                 </svg>
                                 <h3 class="text-lg font-semibold text-gray-900 mb-2">{{ __('messages.verify_email') }}</h3>
@@ -548,10 +549,10 @@
 
                             <div class="space-y-2">
                                 <label for="verificationCode" class="text-sm font-medium text-gray-700">{{ __('messages.verification_code') }}</label>
-                                <input id="verificationCode" name="verification_code" type="text" placeholder="{{ __('messages.enter_verification_code') }}" maxlength="6" class="w-full px-3 py-2 border border-gray-300 rounded-md text-center text-lg tracking-widest focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent">
+                                <input id="verificationCode" name="verification_code" type="text" placeholder="{{ __('messages.enter_verification_code') }}" maxlength="6" class="w-full px-3 py-2 border border-gray-300 rounded-md text-center text-lg tracking-widest focus:outline-none focus:ring-2 focus:ring-[var(--primary)] focus:border-transparent">
                             </div>
 
-                            <button type="button" id="resend-email-btn" class="text-blue-600 border border-blue-600 hover:bg-blue-50 bg-transparent px-4 py-2 rounded-md font-medium">
+                            <button type="button" id="resend-email-btn" class="text-[var(--primary)] border border-[var(--primary)] hover:bg-[var(--primary-light)] bg-transparent px-4 py-2 rounded-md font-medium">
                                 {{ __('messages.resend_code') }}
                             </button>
                         </div>
@@ -560,8 +561,8 @@
                     <!-- Step 3: Phone Verification -->
                     <div class="step-content" id="step-3">
                         <div class="space-y-4">
-                            <div class="bg-blue-50 p-4 rounded-lg text-center">
-                                <svg class="w-8 h-8 text-blue-600 mx-auto mb-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <div class="bg-[var(--primary-light)] p-4 rounded-lg text-center">
+                                <svg class="w-8 h-8 text-[var(--primary)] mx-auto mb-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z"></path>
                                 </svg>
                                 <p class="text-sm text-gray-600">{{ __('messages.verification_code_sent_phone') }}</p>
@@ -569,10 +570,10 @@
 
                             <div class="space-y-2">
                                 <label for="phoneCode" class="text-sm font-medium text-gray-700">{{ __('messages.sms_verification_code') }}</label>
-                                <input id="phoneCode" name="otp_code" type="text" placeholder="{{ __('messages.enter_sms_code') }}" maxlength="6" class="w-full px-3 py-2 border border-gray-300 rounded-md text-center focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent">
+                                <input id="phoneCode" name="otp_code" type="text" placeholder="{{ __('messages.enter_sms_code') }}" maxlength="6" class="w-full px-3 py-2 border border-gray-300 rounded-md text-center focus:outline-none focus:ring-2 focus:ring-[var(--primary)] focus:border-transparent">
                             </div>
 
-                            <button type="button" id="resend-sms-btn" class="w-full text-blue-600 border border-blue-600 hover:bg-blue-50 bg-transparent px-4 py-2 rounded-md font-medium">
+                            <button type="button" id="resend-sms-btn" class="w-full text-[var(--primary)] border border-[var(--primary)] hover:bg-[var(--primary-light)] bg-transparent px-4 py-2 rounded-md font-medium">
                                 {{ __('messages.resend_sms_code') }}
                             </button>
                         </div>
@@ -584,7 +585,7 @@
                             <div class="space-y-2">
                                 <label for="businessName" class="text-sm font-medium text-gray-700">{{ __('messages.business_name') }}</label>
                                 <div class="relative">
-                                    <input id="businessName" name="company_name" type="text" placeholder="{{ __('messages.enter_business_name') }}" class="w-full pl-10 pr-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent">
+                                    <input id="businessName" name="company_name" type="text" placeholder="{{ __('messages.enter_business_name') }}" class="w-full pl-10 pr-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-[var(--primary)] focus:border-transparent">
                                     <svg class="absolute left-3 top-1/2 transform -translate-y-1/2 w-4 h-4 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"></path>
                                     </svg>
@@ -594,7 +595,7 @@
                             <div class="space-y-2">
                                 <label for="companyEmail" class="text-sm font-medium text-gray-700">{{ __('messages.company_email') }}</label>
                                 <div class="relative">
-                                    <input id="companyEmail" name="company_email" type="email" placeholder="{{ __('messages.enter_company_email') }}" class="w-full pl-10 pr-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent">
+                                    <input id="companyEmail" name="company_email" type="email" placeholder="{{ __('messages.enter_company_email') }}" class="w-full pl-10 pr-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-[var(--primary)] focus:border-transparent">
                                     <svg class="absolute left-3 top-1/2 transform -translate-y-1/2 w-4 h-4 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 4.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"></path>
                                     </svg>
@@ -608,7 +609,7 @@
                                         <div class="absolute left-3 top-1/2 transform -translate-y-1/2 flex items-center">
                                             <span class="text-sm text-gray-600 mr-2">🇦🇪 +971</span>
                                         </div>
-                                        <input id="primaryContact" name="contact_number_1" type="tel" placeholder="{{ __('messages.enter_phone_number') }}" maxlength="9" class="w-full pl-20 pr-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent">
+                                        <input id="primaryContact" name="contact_number_1" type="tel" placeholder="{{ __('messages.enter_phone_number') }}" maxlength="9" class="w-full pl-20 pr-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-[var(--primary)] focus:border-transparent">
                                     </div>
                                 </div>
 
@@ -618,7 +619,7 @@
                                         <div class="absolute left-3 top-1/2 transform -translate-y-1/2 flex items-center">
                                             <span class="text-sm text-gray-600 mr-2">🇦🇪 +971</span>
                                         </div>
-                                        <input id="secondaryContact" name="contact_number_2" type="tel" placeholder="{{ __('messages.enter_phone_number') }}" maxlength="9" class="w-full pl-20 pr-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent">
+                                        <input id="secondaryContact" name="contact_number_2" type="tel" placeholder="{{ __('messages.enter_phone_number') }}" maxlength="9" class="w-full pl-20 pr-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-[var(--primary)] focus:border-transparent">
                                     </div>
                                 </div>
                             </div>
@@ -626,7 +627,7 @@
                             <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                                 <div class="space-y-2">
                                     <label for="emirate" class="text-sm font-medium text-gray-700">{{ __('messages.emirate') }}</label>
-                                    <select id="emirate" name="emirate" class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent">
+                                    <select id="emirate" name="emirate" class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-[var(--primary)] focus:border-transparent">
                                         <option value="">{{ __('messages.select_emirate') }}</option>
                                         <option value="Abu Dhabi">{{ __('messages.abu_dhabi') }}</option>
                                         <option value="Dubai">{{ __('messages.dubai') }}</option>
@@ -640,13 +641,13 @@
 
                                 <div class="space-y-2">
                                     <label for="city" class="text-sm font-medium text-gray-700">{{ __('messages.city') }}</label>
-                                    <input id="city" name="city" type="text" placeholder="{{ __('messages.enter_city_name') }}" class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent">
+                                    <input id="city" name="city" type="text" placeholder="{{ __('messages.enter_city_name') }}" class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-[var(--primary)] focus:border-transparent">
                                 </div>
                             </div>
 
                             <div class="space-y-2">
                                 <label for="address" class="text-sm font-medium text-gray-700">{{ __('messages.address') }}</label>
-                                <textarea id="address" name="address" rows="3" placeholder="{{ __('messages.enter_business_address') }}" class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"></textarea>
+                                <textarea id="address" name="address" rows="3" placeholder="{{ __('messages.enter_business_address') }}" class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-[var(--primary)] focus:border-transparent"></textarea>
                             </div>
 
                             <div class="space-y-2">
@@ -657,7 +658,7 @@
                                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"></path>
                                         </svg>
                                         <p class="text-gray-600 mb-2">
-                                            <span class="font-medium text-blue-600 cursor-pointer">{{ __('messages.click_to_upload') }}</span> {{ __('messages.or_drag_and_drop') }}
+                                            <span class="font-medium text-[var(--primary)] cursor-pointer">{{ __('messages.click_to_upload') }}</span> {{ __('messages.or_drag_and_drop') }}
                                         </p>
                                         <p class="text-sm text-gray-500">{{ __('messages.upload_company_logo_info') }}</p>
                                     </div>
@@ -679,7 +680,7 @@
                             {{ __('messages.previous') }}
                         </button>
 
-                        <button type="button" id="next-btn" class="px-6 py-2 text-white rounded-md font-medium flex items-center {{ app()->getLocale() == 'ar' ? 'space-x-reverse' : 'space-x-2' }}" style="background: linear-gradient(135deg, #3b82f6 0%, #1d4ed8 100%); box-shadow: 0 4px 12px rgba(59, 130, 246, 0.3);" onmouseover="this.style.transform='translateY(-1px)'; this.style.boxShadow='0 6px 16px rgba(59, 130, 246, 0.4)'" onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow='0 4px 12px rgba(59, 130, 246, 0.3)'">
+                        <button type="button" id="next-btn" class="px-6 py-2 text-white rounded-md font-medium flex items-center {{ app()->getLocale() == 'ar' ? 'space-x-reverse' : 'space-x-2' }}" style="background: linear-gradient(135deg, var(--primary) 0%, var(--primary-hover) 100%); box-shadow: 0 4px 12px rgba(164, 107, 193, 0.3);" onmouseover="this.style.transform='translateY(-1px)'; this.style.boxShadow='0 6px 16px rgba(164, 107, 193, 0.4)'" onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow='0 4px 12px rgba(164, 107, 193, 0.3)'">
                             <span id="next-btn-text">{{ __('messages.next') }}</span>
                             <span id="next-btn-loading" class="loading hidden"></span>
                             <svg id="next-btn-arrow" class="w-4 h-4 {{ app()->getLocale() == 'ar' ? 'rtl-arrow' : '' }}" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -692,14 +693,14 @@
                 <div class="text-center">
                     <p class="text-sm text-gray-600">
                         {{ __('messages.already_have_account') }}
-                        <a href="/login" class="text-blue-600 hover:text-blue-700 font-medium">{{ __('messages.log_in') }}</a>
+                        <a href="/login" class="text-[var(--primary)] hover:text-[var(--primary-hover)] font-medium">{{ __('messages.log_in') }}</a>
                     </p>
                 </div>
             </div>
         </div>
 
         <!-- Mobile Header for smaller screens -->
-        <div class="lg:hidden absolute top-0 left-0 right-0 text-white p-4 text-center" style="background: linear-gradient(135deg, #3b82f6 0%, #1d4ed8 100%);">
+        <div class="lg:hidden absolute top-0 left-0 right-0 text-white p-4 text-center" style="background: linear-gradient(135deg, var(--primary) 0%, var(--primary-hover) 100%);">
             <h1 class="text-xl font-bold">Data3Chic</h1>
         </div>
     </div>
@@ -718,7 +719,7 @@
                 <button id="error-modal-close" class="px-4 py-2 bg-gray-300 text-gray-700 rounded-md hover:bg-gray-400">
                     {{ __('messages.close') }}
                 </button>
-                <button id="error-modal-login" class="px-4 py-2 text-white rounded-md hidden" style="background: linear-gradient(135deg, #3b82f6 0%, #1d4ed8 100%);" onmouseover="this.style.opacity='0.9'" onmouseout="this.style.opacity='1'">
+                <button id="error-modal-login" class="px-4 py-2 text-white rounded-md hidden" style="background: linear-gradient(135deg, var(--primary) 0%, var(--primary-hover) 100%);" onmouseover="this.style.opacity='0.9'" onmouseout="this.style.opacity='1'">
                     {{ __('messages.go_to_login') }}
                 </button>
             </div>
@@ -734,7 +735,7 @@
                 </svg>
                 <h3 class="text-lg font-semibold text-gray-900 mb-2">{{ __('messages.registration_complete') }}</h3>
                 <p class="text-gray-600 mb-4">{{ __('messages.registration_success_message') }}</p>
-                <button onclick="window.location.href='/login'" class="px-6 py-2 text-white rounded-md" style="background: linear-gradient(135deg, #3b82f6 0%, #1d4ed8 100%);" onmouseover="this.style.opacity='0.9'" onmouseout="this.style.opacity='1'">
+                <button onclick="window.location.href='/login'" class="px-6 py-2 text-white rounded-md" style="background: linear-gradient(135deg, var(--primary) 0%, var(--primary-hover) 100%);" onmouseover="this.style.opacity='0.9'" onmouseout="this.style.opacity='1'">
                     {{ __('messages.go_to_login') }}
                 </button>
             </div>
@@ -950,21 +951,32 @@
 
                 // Remove existing classes and add base classes
                 circle.className = 'step-circle w-12 h-12 rounded-full flex items-center justify-center text-sm font-semibold border-2 transition-all duration-300';
+                circle.style.background = '';
+                circle.style.borderColor = '';
+                circle.style.color = '';
+                circle.style.boxShadow = '';
 
                 if (isCompleted) {
                     // Completed step
                     circle.className += ' text-white completed clickable';
-                    circle.style.background = 'linear-gradient(135deg, #3b82f6 0%, #1d4ed8 100%)';
-                    circle.style.borderColor = '#3b82f6';
+                    circle.style.background = 'linear-gradient(135deg, var(--primary) 0%, var(--primary-hover) 100%)';
+                    circle.style.borderColor = 'var(--primary)';
+                    circle.style.color = '#ffffff';
                     circle.innerHTML = '<svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>';
-                    labels[index].className = 'text-xs font-semibold text-blue-600';
+                    labels[index].className = 'text-xs font-semibold';
+                    labels[index].style.color = 'var(--primary)';
                     circle.style.cursor = 'pointer';
                     circle.setAttribute('aria-disabled', 'false');
                 } else if (isCurrent) {
                     // Current step
-                    circle.className += ' bg-blue-100 border-blue-600 text-blue-600 ring-4 ring-blue-200';
+                    circle.className += ' ring-4';
+                    circle.style.background = 'var(--primary-light)';
+                    circle.style.borderColor = 'var(--primary)';
+                    circle.style.color = 'var(--primary)';
+                    circle.style.boxShadow = '0 0 0 4px var(--primary-light)';
                     circle.textContent = stepNumber;
-                    labels[index].className = 'text-xs font-semibold text-blue-600';
+                    labels[index].className = 'text-xs font-semibold';
+                    labels[index].style.color = 'var(--primary)';
                     circle.style.cursor = 'default';
                     circle.setAttribute('aria-disabled', 'true');
                 } else {
@@ -972,6 +984,7 @@
                     circle.className += ' bg-gray-100 border-gray-300 text-gray-400';
                     circle.textContent = stepNumber;
                     labels[index].className = 'text-xs font-semibold text-gray-400';
+                    labels[index].style.color = '';
                     circle.style.cursor = 'not-allowed';
                     circle.setAttribute('aria-disabled', 'true');
                 }
@@ -985,7 +998,7 @@
             lines.forEach((line, index) => {
                 if (index + 1 < currentStep) {
                     line.className = 'progress-line flex-1 h-1 mx-4 rounded-full transition-all duration-500';
-                    line.style.background = 'linear-gradient(135deg, #3b82f6 0%, #1d4ed8 100%)';
+                    line.style.background = 'linear-gradient(135deg, var(--primary) 0%, var(--primary-hover) 100%)';
                 } else {
                     line.className = 'progress-line flex-1 h-1 mx-4 bg-gray-300 rounded-full transition-all duration-500';
                     line.style.background = '';
@@ -1005,11 +1018,17 @@
             mobileDots.forEach((dot, index) => {
                 const stepNumber = index + 1;
                 if (stepNumber < currentStep) {
-                    dot.className = 'w-2 h-2 rounded-full bg-blue-600 transition-all duration-300';
+                    dot.className = 'w-2 h-2 rounded-full transition-all duration-300';
+                    dot.style.backgroundColor = 'var(--primary)';
+                    dot.style.boxShadow = 'none';
                 } else if (stepNumber === currentStep) {
-                    dot.className = 'w-3 h-3 rounded-full bg-blue-600 transition-all duration-300 ring-2 ring-blue-200';
+                    dot.className = 'w-3 h-3 rounded-full transition-all duration-300';
+                    dot.style.backgroundColor = 'var(--primary)';
+                    dot.style.boxShadow = '0 0 0 2px var(--primary-light)';
                 } else {
                     dot.className = 'w-2 h-2 rounded-full bg-gray-300 transition-all duration-300';
+                    dot.style.backgroundColor = '';
+                    dot.style.boxShadow = 'none';
                 }
             });
         }
@@ -1477,17 +1496,17 @@
 
         logoUploadArea.addEventListener('dragover', function(e) {
             e.preventDefault();
-            this.classList.add('border-blue-400', 'bg-blue-50');
+            this.classList.add('is-drag-active');
         });
 
         logoUploadArea.addEventListener('dragleave', function(e) {
             e.preventDefault();
-            this.classList.remove('border-blue-400', 'bg-blue-50');
+            this.classList.remove('is-drag-active');
         });
 
         logoUploadArea.addEventListener('drop', function(e) {
             e.preventDefault();
-            this.classList.remove('border-blue-400', 'bg-blue-50');
+            this.classList.remove('is-drag-active');
 
             const files = e.dataTransfer.files;
             if (files.length > 0) {

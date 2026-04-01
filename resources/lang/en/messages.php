@@ -213,6 +213,7 @@ return [
     'size' => 'Size',
     'color_name' => 'Color Name',
     'size_name' => 'Size Name',
+    'click_to_change'=>'click to change',
     'product_image' => 'Product Image',
     'product_images' => 'Product Images',
     'no_image' => 'No Image',

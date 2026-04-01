@@ -1251,13 +1251,13 @@ export default {
 
 .form-input:focus {
   outline: none !important;
-  border-color: #f59e0b !important;
-  box-shadow: 0 0 0 3px rgba(245, 158, 11, 0.1) !important;
+  border-color: var(--primary) !important;
+  box-shadow: 0 0 0 3px rgba(164, 107, 193, 0.1) !important;
   transform: none !important;
 }
 
 .form-input:hover {
-  border-color: #f59e0b !important;
+  border-color: var(--primary) !important;
   background: white !important;
   transform: none !important;
 }
@@ -1317,13 +1317,13 @@ select.form-input:focus {
 }
 
 .file-upload-label:hover {
-  border-color: #667eea;
-  background: rgba(102, 126, 234, 0.05);
+  border-color: var(--primary);
+  background: rgba(164, 107, 193, 0.05);
 }
 
 .file-upload-label i {
   margin-right: 0.5rem;
-  color: #667eea;
+  color: var(--primary);
 }
 
 .phone-input-container {
@@ -1336,8 +1336,8 @@ select.form-input:focus {
 }
 
 .phone-input-container:focus-within {
-  border-color: #f59e0b;
-  box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+  border-color: var(--primary);
+  box-shadow: 0 0 0 3px rgba(164, 107, 193, 0.1);
 }
 
 .phone-input-container.error {
@@ -1432,7 +1432,7 @@ select.form-input:focus {
   width: 20px;
   height: 20px;
   border: 2px solid #e5e7eb;
-  border-top: 2px solid #3b82f6;
+  border-top: 2px solid var(--primary);
   border-radius: 50%;
   animation: spin 1s linear infinite;
   margin-right: 10px;
@@ -1518,7 +1518,7 @@ select.form-input:focus {
 .form-button {
   width: 100%;
   padding: 15px 20px;
-  background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%);
+  background: linear-gradient(135deg, var(--primary) 0%, var(--primary-hover) 100%);
   color: white;
   border: none;
   border-radius: 8px;
@@ -1531,7 +1531,7 @@ select.form-input:focus {
 
 .form-button:hover:not(:disabled) {
   transform: translateY(-2px);
-  box-shadow: 0 8px 20px rgba(245, 158, 11, 0.3);
+  box-shadow: 0 8px 20px rgba(164, 107, 193, 0.3);
 }
 
 .form-button:disabled {
@@ -1577,10 +1577,10 @@ select.form-input:focus {
 .map-instructions {
   margin-top: 10px;
   padding: 12px;
-  background-color: #f0f9ff;
-  border: 1px solid #bae6fd;
+  background-color: var(--towhite);
+  border: 1px solid var(--primary-light);
   border-radius: 6px;
-  color: #0369a1;
+  color: var(--primary-hover);
   font-size: 0.9rem;
   display: flex;
   align-items: center;
@@ -1588,17 +1588,17 @@ select.form-input:focus {
 
 .map-instructions i {
   margin-right: 8px;
-  color: #0284c7;
+  color: var(--primary);
   flex-shrink: 0;
 }
 
 .selected-address {
   margin-top: 10px;
   padding: 12px;
-  background-color: #f0fdf4;
-  border: 1px solid #bbf7d0;
+  background-color: var(--towhite);
+  border: 1px solid var(--primary-light);
   border-radius: 6px;
-  color: #166534;
+  color: var(--primary-hover);
   font-size: 0.9rem;
   display: flex;
   align-items: flex-start;
@@ -1606,7 +1606,7 @@ select.form-input:focus {
 
 .selected-address i {
   margin-right: 8px;
-  color: #16a34a;
+  color: var(--primary);
   flex-shrink: 0;
   margin-top: 2px;
 }
@@ -1646,7 +1646,7 @@ select.form-input:focus {
   width: 40px;
   height: 40px;
   border: 4px solid #e5e7eb;
-  border-top: 4px solid #3b82f6;
+  border-top: 4px solid var(--primary);
   border-radius: 50%;
   animation: spin 1s linear infinite;
   margin-bottom: 16px;
@@ -1750,14 +1750,14 @@ select.form-input:focus {
   height: 40px;
   margin: 0 auto;
   border-radius: 50%;
-  box-shadow: 0 0 0 2px #f59e0b;
+  box-shadow: 0 0 0 2px var(--primary);
   padding: 11px 10px 2px;
   margin-bottom: 2em;
-  background-color: #fef3c7;
+  background-color: var(--towhite);
 }
 
 .modal-image i {
-  color: #f59e0b;
+  color: var(--primary);
   font-size: 18px;
 }
 
@@ -1807,19 +1807,19 @@ select.form-input:focus {
 .js-validation-close {
   font-size: 1.25em;
   font-weight: bold;
-  background-color: #f59e0b;
+  background-color: var(--primary);
   border: none;
   padding: 0.5em 1em;
   color: #fff;
-  box-shadow: 0 0 0 2px #f59e0b inset;
+  box-shadow: 0 0 0 2px var(--primary) inset;
   border-radius: 0.25em;
   cursor: pointer;
   transition: background 0.4s ease, color 0.4s ease;
 }
 
 .js-validation-close:hover {
-  box-shadow: 0 0 0 2px #f59e0b inset;
-  color: #f59e0b;
+  box-shadow: 0 0 0 2px var(--primary) inset;
+  color: var(--primary);
   background-color: transparent;
 }
 

@@ -10,12 +10,12 @@
 
     <form @submit.prevent="handleSubmit" class="space-y-6">
       <!-- Email Display -->
-      <div class="bg-blue-50 border border-blue-200 rounded-lg p-4">
+      <div class="bg-[var(--primary-light)] border border-[var(--primary)] rounded-lg p-4">
         <div class="flex items-center">
-          <i class="fas fa-envelope text-blue-500 mr-3"></i>
+          <i class="fas fa-envelope text-[var(--primary)] mr-3"></i>
           <div>
-            <p class="text-sm font-medium text-blue-900">{{ $t('verification_email_sent_to') }}:</p>
-            <p class="text-blue-700">{{ email }}</p>
+            <p class="text-sm font-medium text-[var(--primary-hover)]">{{ $t('verification_email_sent_to') }}:</p>
+            <p class="text-[var(--primary-hover)]">{{ email }}</p>
           </div>
         </div>
       </div>
@@ -34,7 +34,7 @@
               v-model="verificationCode[index]"
               type="text"
               maxlength="1"
-              class="w-12 h-12 text-center text-xl font-bold border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors"
+              class="w-12 h-12 text-center text-xl font-bold border border-gray-300 rounded-lg focus:ring-2 focus:ring-[var(--primary)] focus:border-[var(--primary)] transition-colors"
               :disabled="loading"
               @input="handleDigitInput(index, $event)"
               @keydown="handleKeyDown(index, $event)"
@@ -58,7 +58,7 @@
           type="button"
           @click="handleResend"
           :disabled="loading || resendLoading"
-          class="text-blue-600 hover:text-blue-800 text-sm font-medium underline disabled:opacity-50 disabled:cursor-not-allowed"
+          class="text-[var(--primary)] hover:text-[var(--primary-hover)] text-sm font-medium underline disabled:opacity-50 disabled:cursor-not-allowed"
         >
           <span v-if="resendLoading">
             <i class="fas fa-spinner fa-spin mr-1"></i>
@@ -76,7 +76,7 @@
         <button
           type="submit"
           :disabled="loading || !isCodeComplete"
-          class="w-full px-6 py-3 bg-blue-600 text-white rounded-lg font-semibold hover:bg-blue-700 focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+          class="w-full px-6 py-3 bg-[var(--primary)] text-white rounded-lg font-semibold hover:bg-[var(--primary-hover)] focus:ring-2 focus:ring-[var(--primary)] focus:ring-offset-2 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
         >
           <span v-if="loading" class="flex items-center justify-center">
             <i class="fas fa-spinner fa-spin mr-2"></i>
@@ -96,7 +96,7 @@
           type="button"
           @click="handleResend"
           :disabled="loading || resendLoading || timeLeft > 0"
-          class="text-blue-600 hover:text-blue-800 underline disabled:opacity-50 disabled:cursor-not-allowed"
+          class="text-[var(--primary)] hover:text-[var(--primary-hover)] underline disabled:opacity-50 disabled:cursor-not-allowed"
         >
           {{ $t('request_a_new_code') }}
         </button>

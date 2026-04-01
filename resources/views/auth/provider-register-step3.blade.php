@@ -7,28 +7,7 @@
     <meta name="robots" content="noindex, nofollow">
     <title>{{ __('messages.data3chic_provider_registration') }}</title>
     <script src="https://cdn.tailwindcss.com"></script>
-    <script>
-        tailwind.config = {
-            theme: {
-                extend: {
-                    colors: {
-                        purple: {
-                            50: '#faf5ff',
-                            100: '#f3e8ff',
-                            200: '#e9d5ff',
-                            300: '#d8b4fe',
-                            400: '#c084fc',
-                            500: '#a855f7',
-                            600: '#9333ea',
-                            700: '#7c3aed',
-                            800: '#6b21a8',
-                            900: '#581c87'
-                        }
-                    }
-                }
-            }
-        }
-    </script>
+    <link rel="stylesheet" href="{{ asset('css/global.css') }}">
 
     <!-- Fonts -->
     @if(app()->getLocale() == 'ar')
@@ -88,7 +67,7 @@
         }
 
         .progress-step.active::after {
-            background: #8b5cf6;
+            background: var(--primary);
         }
 
         .progress-step.completed::after {
@@ -112,7 +91,7 @@
         }
 
         .progress-step.active .step-circle {
-            background: #8b5cf6;
+            background: var(--primary);
             color: white;
         }
 
@@ -129,7 +108,7 @@
         }
 
         .progress-step.active .step-label {
-            color: #8b5cf6;
+            color: var(--primary);
             font-weight: 600;
         }
 
@@ -155,7 +134,7 @@
 <body class="min-h-screen bg-gray-50">
     <div class="min-h-screen flex">
         <!-- Left Side - Marketing Content -->
-        <div class="hidden lg:flex lg:w-1/2 text-white p-12 flex-col justify-top" style="background: linear-gradient(135deg, #8b5cf6 0%, #7c3aed 100%);">
+        <div class="hidden lg:flex lg:w-1/2 text-white p-12 flex-col justify-top" style="background: linear-gradient(135deg, var(--primary) 0%, var(--primary-hover) 100%);">
             <div class="max-w-md mx-auto space-y-8">
                 <div class="text-center">
                     <h1 class="text-3xl font-bold mb-8">Data3Chic</h1>
@@ -166,7 +145,7 @@
                     <h2 class="text-4xl font-bold leading-tight">
                         {{ __('messages.license_upload') }}
                     </h2>
-                    <p class="text-purple-100 text-lg">
+                    <p class="text-white/90 text-lg">
                         {{ __('messages.license_upload_description') }}
                     </p>
                 </div>
@@ -175,37 +154,37 @@
                 <div class="space-y-6 mt-12">
                     <div class="flex items-start space-x-4">
                         <div class="flex-shrink-0">
-                            <svg class="w-6 h-6 text-purple-200" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <svg class="w-6 h-6 text-white/80" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
                             </svg>
                         </div>
                         <div>
                             <h3 class="font-semibold text-lg mb-1">{{ __('messages.secure_upload') }}</h3>
-                            <p class="text-purple-100 text-sm">{{ __('messages.secure_upload_description') }}</p>
+                            <p class="text-white/90 text-sm">{{ __('messages.secure_upload_description') }}</p>
                         </div>
                     </div>
 
                     <div class="flex items-start space-x-4">
                         <div class="flex-shrink-0">
-                            <svg class="w-6 h-6 text-purple-200" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <svg class="w-6 h-6 text-white/80" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
                             </svg>
                         </div>
                         <div>
                             <h3 class="font-semibold text-lg mb-1">{{ __('messages.quick_verification') }}</h3>
-                            <p class="text-purple-100 text-sm">{{ __('messages.quick_verification_description') }}</p>
+                            <p class="text-white/90 text-sm">{{ __('messages.quick_verification_description') }}</p>
                         </div>
                     </div>
 
                     <div class="flex items-start space-x-4">
                         <div class="flex-shrink-0">
-                            <svg class="w-6 h-6 text-purple-200" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <svg class="w-6 h-6 text-white/80" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"></path>
                             </svg>
                         </div>
                         <div>
                             <h3 class="font-semibold text-lg mb-1">{{ __('messages.start_selling') }}</h3>
-                            <p class="text-purple-100 text-sm">{{ __('messages.start_selling_description') }}</p>
+                            <p class="text-white/90 text-sm">{{ __('messages.start_selling_description') }}</p>
                         </div>
                     </div>
                 </div>
@@ -242,7 +221,7 @@
 
                 <!-- Back Link -->
                 <div class="mb-4">
-                    <a href="/register/provider/phone-verification" class="text-purple-600 hover:text-purple-700 transition-colors duration-300 text-sm font-medium">
+                    <a href="/register/provider/phone-verification" class="text-[var(--primary)] hover:text-[var(--primary-hover)] transition-colors duration-300 text-sm font-medium">
                         <i class="fas fa-arrow-{{ app()->getLocale() == 'ar' ? 'right' : 'left' }} {{ app()->getLocale() == 'ar' ? 'ml-2' : 'mr-2' }}"></i>
                         {{ __('messages.back_to_phone_verification') }}
                     </a>
@@ -251,7 +230,7 @@
                 <!-- License Information Card -->
                 <div class="rounded-lg p-6 mb-6">
                     <div class="flex items-center mb-4">
-                        <i class="fas fa-info-circle text-purple-600 {{ app()->getLocale() == 'ar' ? 'ml-2' : 'mr-2' }}"></i>
+                        <i class="fas fa-info-circle text-[var(--primary)] {{ app()->getLocale() == 'ar' ? 'ml-2' : 'mr-2' }}"></i>
                         <h3 class="font-semibold text-gray-900">{{ __('messages.license_information') }}</h3>
                     </div>
                     <p class="text-gray-600 text-sm">
@@ -283,7 +262,7 @@
                         <label for="license_start_date" class="text-sm font-medium text-gray-700">{{ __('messages.license_start_date') }}</label>
                         <div class="relative">
                             <input id="license_start_date" name="license_start_date" type="date" required
-                                   class="w-full pl-10 pr-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent">
+                                   class="w-full pl-10 pr-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-[var(--primary)] focus:border-transparent">
                             <svg class="absolute left-3 top-1/2 transform -translate-y-1/2 w-4 h-4 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path>
                             </svg>
@@ -295,7 +274,7 @@
                         <label for="license_expiry_date" class="text-sm font-medium text-gray-700">{{ __('messages.license_expiry_date') }}</label>
                         <div class="relative">
                             <input id="license_expiry_date" name="license_expiry_date" type="date" required
-                                   class="w-full pl-10 pr-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent">
+                                   class="w-full pl-10 pr-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-[var(--primary)] focus:border-transparent">
                             <svg class="absolute left-3 top-1/2 transform -translate-y-1/2 w-4 h-4 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path>
                             </svg>
@@ -307,7 +286,7 @@
                         <label for="license_file" class="text-sm font-medium text-gray-700">{{ __('messages.business_license_document') }}</label>
                         <div class="relative">
                             <input type="file" id="license_file" name="license_file" accept=".pdf" required class="hidden">
-                            <label for="license_file" id="file-upload-label" class="flex flex-col items-center justify-center w-full h-32 border-2 border-gray-300 border-dashed rounded-lg cursor-pointer bg-gray-50 hover:bg-purple-50 hover:border-purple-300 transition-colors">
+                            <label for="license_file" id="file-upload-label" class="flex flex-col items-center justify-center w-full h-32 border-2 border-gray-300 border-dashed rounded-lg cursor-pointer bg-gray-50 hover:bg-[var(--towhite)] hover:border-[var(--primary)] transition-colors">
                                 <div class="flex flex-col items-center justify-center pt-5 pb-6">
                                     <i class="fas fa-file-pdf text-4xl text-gray-400 mb-3"></i>
                                     <p class="mb-2 text-sm text-gray-500">
@@ -320,7 +299,7 @@
                     </div>
 
                     <!-- Submit Button -->
-                    <button type="submit" id="submitBtn" class="w-full text-white py-3 px-4 rounded-md font-semibold transition-all duration-300 transform hover:scale-105 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:ring-offset-2" style="background: linear-gradient(135deg, #8b5cf6 0%, #7c3aed 100%);">
+                    <button type="submit" id="submitBtn" class="w-full text-white py-3 px-4 rounded-md font-semibold transition-all duration-300 transform hover:scale-105 focus:outline-none focus:ring-2 focus:ring-[var(--primary)] focus:ring-offset-2" style="background: linear-gradient(135deg, var(--primary) 0%, var(--primary-hover) 100%);">
                         <span class="loading hidden">
                             <i class="fas fa-spinner fa-spin mr-2"></i>
                         </span>
@@ -363,7 +342,7 @@
                         <p class="text-xs text-green-500">{{ __('messages.file_selected_successfully') }}</p>
                     </div>
                 `;
-                label.classList.remove('border-gray-300', 'bg-gray-50', 'hover:bg-purple-50', 'hover:border-purple-300');
+                label.classList.remove('border-gray-300', 'bg-gray-50', 'hover:bg-[var(--towhite)]', 'hover:border-[var(--primary)]');
                 label.classList.add('border-green-300', 'bg-green-50');
             }
         });

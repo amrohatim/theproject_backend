@@ -1,6 +1,6 @@
 <template>
   <div>
-b    <div class="mb-6">
+    <div class="mb-6">
       <h2 class="text-2xl font-bold text-gray-900 mb-2">{{ $t('phone_verification') }}</h2>
       <p class="text-gray-600">
         {{ $t('well_send_otp_code_to') }} <strong>{{ phone }}</strong> {{ $t('to_verify_your_phone_number') }}.
@@ -9,12 +9,12 @@ b    <div class="mb-6">
 
     <!-- Step 1: Send OTP -->
     <div v-if="!otpSent" class="space-y-6">
-      <div class="bg-blue-50 border border-blue-200 rounded-lg p-4">
+      <div class="bg-[var(--primary-light)] border border-[var(--primary)] rounded-lg p-4">
         <div class="flex items-center">
-          <i class="fas fa-mobile-alt text-blue-500 mr-3"></i>
+          <i class="fas fa-mobile-alt text-[var(--primary)] mr-3"></i>
           <div>
-            <p class="text-sm font-medium text-blue-900">{{ $t('phone_number_to_verify') }}:</p>
-            <p class="text-blue-700">{{ phone }}</p>
+            <p class="text-sm font-medium text-[var(--primary-hover)]">{{ $t('phone_number_to_verify') }}:</p>
+            <p class="text-[var(--primary-hover)]">{{ phone }}</p>
           </div>
         </div>
       </div>
@@ -22,7 +22,7 @@ b    <div class="mb-6">
       <button
         @click="sendOtp"
         :disabled="loading"
-        class="w-full px-6 py-3 bg-blue-600 text-white rounded-lg font-semibold hover:bg-blue-700 focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+        class="w-full px-6 py-3 bg-[var(--primary)] text-white rounded-lg font-semibold hover:bg-[var(--primary-hover)] focus:ring-2 focus:ring-[var(--primary)] focus:ring-offset-2 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
       >
         <span v-if="loading" class="flex items-center justify-center">
           <i class="fas fa-spinner fa-spin mr-2"></i>
@@ -37,12 +37,12 @@ b    <div class="mb-6">
 
     <!-- Step 2: Verify OTP -->
     <div v-else class="space-y-6">
-      <div class="bg-green-50 border border-green-200 rounded-lg p-4">
+      <div class="bg-[var(--towhite)] border border-[var(--primary-light)] rounded-lg p-4">
         <div class="flex items-center">
-          <i class="fas fa-check-circle text-green-500 mr-3"></i>
+          <i class="fas fa-check-circle text-[var(--primary)] mr-3"></i>
           <div>
-            <p class="text-sm font-medium text-green-900">{{ $t('otp_sent_successfully') }}!</p>
-            <p class="text-green-700">{{ $t('check_your_phone_for_verification_code') }}</p>
+            <p class="text-sm font-medium text-[var(--primary-hover)]">{{ $t('otp_sent_successfully') }}!</p>
+            <p class="text-[var(--primary-hover)]">{{ $t('check_your_phone_for_verification_code') }}</p>
           </div>
         </div>
       </div>
@@ -62,7 +62,7 @@ b    <div class="mb-6">
                 v-model="otpCode[index]"
                 type="text"
                 maxlength="1"
-                class="w-12 h-12 text-center text-xl font-bold border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors"
+                class="w-12 h-12 text-center text-xl font-bold border border-gray-300 rounded-lg focus:ring-2 focus:ring-[var(--primary)] focus:border-[var(--primary)] transition-colors"
                 :disabled="loading"
                 @input="handleOtpInput(index, $event)"
                 @keydown="handleKeyDown(index, $event)"
@@ -86,7 +86,7 @@ b    <div class="mb-6">
             type="button"
             @click="handleResend"
             :disabled="loading || resendLoading"
-            class="text-blue-600 hover:text-blue-800 text-sm font-medium underline disabled:opacity-50 disabled:cursor-not-allowed"
+            class="text-[var(--primary)] hover:text-[var(--primary-hover)] text-sm font-medium underline disabled:opacity-50 disabled:cursor-not-allowed"
           >
             <span v-if="resendLoading">
               <i class="fas fa-spinner fa-spin mr-1"></i>
@@ -103,7 +103,7 @@ b    <div class="mb-6">
         <button
           type="submit"
           :disabled="loading || !isOtpComplete"
-          class="w-full px-6 py-3 bg-blue-600 text-white rounded-lg font-semibold hover:bg-blue-700 focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+          class="w-full px-6 py-3 bg-[var(--primary)] text-white rounded-lg font-semibold hover:bg-[var(--primary-hover)] focus:ring-2 focus:ring-[var(--primary)] focus:ring-offset-2 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
         >
           <span v-if="loading" class="flex items-center justify-center">
             <i class="fas fa-spinner fa-spin mr-2"></i>
@@ -123,7 +123,7 @@ b    <div class="mb-6">
           type="button"
           @click="handleResend"
           :disabled="loading || resendLoading || timeLeft > 0"
-          class="text-blue-600 hover:text-blue-800 underline disabled:opacity-50 disabled:cursor-not-allowed"
+          class="text-[var(--primary)] hover:text-[var(--primary-hover)] underline disabled:opacity-50 disabled:cursor-not-allowed"
         >
           {{ $t('try_sending_again') }}
         </button>

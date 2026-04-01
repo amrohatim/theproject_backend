@@ -11,28 +11,7 @@
     <meta name="csrf-token" content="{{ csrf_token() }}">
     <title>Data3Chic - {{ __('messages.provider_registration') }}</title>
     <script src="https://cdn.tailwindcss.com"></script>
-    <script>
-        tailwind.config = {
-            theme: {
-                extend: {
-                    colors: {
-                        purple: {
-                            50: '#faf5ff',
-                            100: '#f3e8ff',
-                            200: '#e9d5ff',
-                            300: '#d8b4fe',
-                            400: '#c084fc',
-                            500: '#a855f7',
-                            600: '#9333ea',
-                            700: '#7c3aed',
-                            800: '#6b21a8',
-                            900: '#581c87'
-                        }
-                    }
-                }
-            }
-        }
-    </script>
+    <link rel="stylesheet" href="{{ asset('css/global.css') }}">
 
     <!-- Fonts -->
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
@@ -54,7 +33,7 @@
         }
         .step-circle:hover {
             transform: scale(1.05);
-            box-shadow: 0 4px 12px rgba(139, 92, 246, 0.3);
+            box-shadow: 0 4px 12px var(--primary-light);
         }
         .step-circle.completed {
             animation: checkmark-bounce 0.6s ease-in-out;
@@ -65,10 +44,10 @@
             100% { transform: scale(1); }
         }
         .step-circle.clickable:hover {
-            background-color: rgba(139, 92, 246, 0.1);
+            background-color: var(--towhite);
         }
         .step-circle:focus {
-            outline: 2px solid #8b5cf6;
+            outline: 2px solid var(--primary);
             outline-offset: 2px;
         }
         .modal {
@@ -131,7 +110,7 @@
         }
 
         .progress-step.active::after {
-            background: #8b5cf6;
+            background: var(--primary);
         }
 
         .progress-step.completed::after {
@@ -155,7 +134,7 @@
         }
 
         .progress-step.active .step-circle {
-            background: #8b5cf6;
+            background: var(--primary);
             color: white;
         }
 
@@ -172,7 +151,7 @@
         }
 
         .progress-step.active .step-label {
-            color: #8b5cf6;
+            color: var(--primary);
             font-weight: 600;
         }
 
@@ -248,7 +227,7 @@
 <body class="min-h-screen bg-gray-50 {{ $isRtl ? 'rtl' : '' }}">
     <div class="min-h-screen flex">
         <!-- Left Side - Marketing Content -->
-        <div class="hidden lg:flex lg:w-1/2 text-white p-12 flex-col justify-top" style="background: linear-gradient(135deg, #8b5cf6 0%, #7c3aed 100%);">
+        <div class="hidden lg:flex lg:w-1/2 text-white p-12 flex-col justify-top" style="background: linear-gradient(135deg, var(--primary) 0%, var(--primary-hover) 100%);">
             <div class="max-w-md mx-auto space-y-8">
                 <div class="text-center">
                     <h1 class="text-3xl font-bold mb-8">glowlabs</h1>
@@ -259,7 +238,7 @@
                     <h2 class="text-4xl font-bold leading-tight">
                         {{ __('messages.provider_registration') }}
                     </h2>
-                    <p class="text-purple-100 text-lg">
+                    <p class="text-white/90 text-lg">
                         {{ __('messages.provider_registration_desc') }}
                     </p>
                 </div>
@@ -268,37 +247,37 @@
                 <div class="space-y-6 mt-12">
                     <div class="flex items-start space-x-4">
                         <div class="flex-shrink-0">
-                            <svg class="w-6 h-6 text-purple-200" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <svg class="w-6 h-6 text-white/80" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"></path>
                             </svg>
                         </div>
                         <div>
                             <h3 class="font-semibold text-lg mb-1">{{ __('messages.grow_your_business_title') }}</h3>
-                            <p class="text-purple-100 text-sm">{{ __('messages.grow_your_business_desc') }}</p>
+                            <p class="text-white/90 text-sm">{{ __('messages.grow_your_business_desc') }}</p>
                         </div>
                     </div>
 
                     <div class="flex items-start space-x-4">
                         <div class="flex-shrink-0">
-                            <svg class="w-6 h-6 text-purple-200" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <svg class="w-6 h-6 text-white/80" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
                             </svg>
                         </div>
                         <div>
                             <h3 class="font-semibold text-lg mb-1">{{ __('messages.professional_tools_title') }}</h3>
-                            <p class="text-purple-100 text-sm">{{ __('messages.professional_tools_desc') }}</p>
+                            <p class="text-white/90 text-sm">{{ __('messages.professional_tools_desc') }}</p>
                         </div>
                     </div>
 
                     <div class="flex items-start space-x-4">
                         <div class="flex-shrink-0">
-                            <svg class="w-6 h-6 text-purple-200" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <svg class="w-6 h-6 text-white/80" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M18.364 5.636l-3.536 3.536m0 5.656l3.536 3.536M9.172 9.172L5.636 5.636m3.536 9.192L5.636 18.364M21 12a9 9 0 11-18 0 9 9 0 0118 0zm-5 0a4 4 0 11-8 0 4 4 0 018 0z"></path>
                             </svg>
                         </div>
                         <div>
                             <h3 class="font-semibold text-lg mb-1">{{ __('messages.dedicated_support_title') }}</h3>
-                            <p class="text-purple-100 text-sm">{{ __('messages.dedicated_support_desc') }}</p>
+                            <p class="text-white/90 text-sm">{{ __('messages.dedicated_support_desc') }}</p>
                         </div>
                     </div>
                 </div>
@@ -335,7 +314,7 @@
 
                 <!-- Back Link -->
                 <div class="mb-4">
-                    <a href="{{ route('register') }}" class="text-purple-600 hover:text-purple-700 transition-colors duration-300 text-sm font-medium">
+                    <a href="{{ route('register') }}" class="text-[var(--primary)] hover:text-[var(--primary-hover)] transition-colors duration-300 text-sm font-medium">
                         <i class="fas fa-arrow-{{ app()->getLocale() == 'ar' ? 'right' : 'left' }} {{ app()->getLocale() == 'ar' ? 'ml-2' : 'mr-2' }}"></i>
                         {{ __('messages.back_to_registration_options') }}
                     </a>
@@ -347,7 +326,7 @@
                     <div class="space-y-2">
                         <label for="name" class="text-sm font-medium text-gray-700">{{ __('messages.full_name') }}</label>
                         <div class="relative">
-                            <input id="name" name="name" type="text" placeholder="{{ __('messages.enter_full_name') }}" value="{{ old('name') }}" required class="w-full pl-10 pr-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent">
+                            <input id="name" name="name" type="text" placeholder="{{ __('messages.enter_full_name') }}" value="{{ old('name') }}" required class="w-full pl-10 pr-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-[var(--primary)] focus:border-transparent">
                             <svg class="absolute left-3 top-1/2 transform -translate-y-1/2 w-4 h-4 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"></path>
                             </svg>
@@ -358,7 +337,7 @@
                     <div class="space-y-2">
                         <label for="email" class="text-sm font-medium text-gray-700">{{ __('messages.email_address') }}</label>
                         <div class="relative">
-                            <input id="email" name="email" type="email" placeholder="{{ __('messages.enter_email_address') }}" value="{{ old('email') }}" required class="w-full pl-10 pr-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent">
+                            <input id="email" name="email" type="email" placeholder="{{ __('messages.enter_email_address') }}" value="{{ old('email') }}" required class="w-full pl-10 pr-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-[var(--primary)] focus:border-transparent">
                             <svg class="absolute left-3 top-1/2 transform -translate-y-1/2 w-4 h-4 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 4.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"></path>
                             </svg>
@@ -368,7 +347,7 @@
                     <!-- Phone Field -->
                     <div class="space-y-2">
                         <label for="phone" class="text-sm font-medium text-gray-700">{{ __('messages.phone_number') }}</label>
-                        <div class="flex border border-gray-300 rounded-md focus-within:ring-2 focus-within:ring-purple-500 focus-within:border-transparent" style="direction: ltr; flex-direction: row;">
+                        <div class="flex border border-gray-300 rounded-md focus-within:ring-2 focus-within:ring-[var(--primary)] focus-within:border-transparent" style="direction: ltr; flex-direction: row;">
                             <div class="flex items-center px-3 bg-gray-50 border-r border-gray-300 rounded-l-md" dir="ltr" style="direction: ltr; flex-direction: row;">
                                 <img src="data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMjQiIGhlaWdodD0iMTgiIHZpZXdCb3g9IjAgMCAyNCAxOCIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KPHJlY3Qgd2lkdGg9IjYiIGhlaWdodD0iMTgiIGZpbGw9IiNGRjAwMDAiLz4KPHJlY3QgeD0iNiIgd2lkdGg9IjE4IiBoZWlnaHQ9IjYiIGZpbGw9IiMwMDczMkYiLz4KPHJlY3QgeD0iNiIgeT0iNiIgd2lkdGg9IjE4IiBoZWlnaHQ9IjYiIGZpbGw9IiNGRkZGRkYiLz4KPHJlY3QgeD0iNiIgeT0iMTIiIHdpZHRoPSIxOCIgaGVpZ2h0PSI2IiBmaWxsPSIjMDAwMDAwIi8+Cjwvc3ZnPg==" alt="UAE Flag" class="w-5 h-4 mr-2">
                                 <span class="text-sm font-medium text-gray-700">+971</span>
@@ -381,7 +360,7 @@
                     <div class="space-y-2">
                         <label for="password" class="text-sm font-medium text-gray-700">{{ __('messages.password') }}</label>
                         <div class="relative">
-                            <input id="password" name="password" type="password" placeholder="{{ __('messages.create_strong_password') }}" required class="w-full pl-10 pr-10 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent">
+                            <input id="password" name="password" type="password" placeholder="{{ __('messages.create_strong_password') }}" required class="w-full pl-10 pr-10 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-[var(--primary)] focus:border-transparent">
                             <button type="button" class="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600" onclick="togglePasswordVisibility('password', this)" aria-label="Toggle password visibility">
                                 <i class="fas fa-eye"></i>
                             </button>
@@ -392,7 +371,7 @@
                     <div class="space-y-2">
                         <label for="password_confirmation" class="text-sm font-medium text-gray-700">{{ __('messages.confirm_password') }}</label>
                         <div class="relative">
-                            <input id="password_confirmation" name="password_confirmation" type="password" placeholder="{{ __('messages.confirm_your_password') }}" required class="w-full pl-10 pr-10 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent">
+                            <input id="password_confirmation" name="password_confirmation" type="password" placeholder="{{ __('messages.confirm_your_password') }}" required class="w-full pl-10 pr-10 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-[var(--primary)] focus:border-transparent">
                             <button type="button" class="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600" onclick="togglePasswordVisibility('password_confirmation', this)" aria-label="Toggle password visibility">
                                 <i class="fas fa-eye"></i>
                             </button>
@@ -403,7 +382,7 @@
                     <div class="space-y-2">
                         <label for="business_name" class="text-sm font-medium text-gray-700">{{ __('messages.business_name') }}</label>
                         <div class="relative">
-                            <input id="business_name" name="business_name" type="text" placeholder="{{ __('messages.enter_business_name') }}" value="{{ old('business_name') }}" class="w-full pl-10 pr-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent">
+                            <input id="business_name" name="business_name" type="text" placeholder="{{ __('messages.enter_business_name') }}" value="{{ old('business_name') }}" class="w-full pl-10 pr-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-[var(--primary)] focus:border-transparent">
                             <svg class="absolute left-3 top-1/2 transform -translate-y-1/2 w-4 h-4 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"></path>
                             </svg>
@@ -413,7 +392,7 @@
                     <!-- Provider Logo Upload Field -->
                     <div class="space-y-2">
                         <label for="logo" class="text-sm font-medium text-gray-700">{{ __('messages.company_logo_optional') }}</label>
-                        <div class="logo-upload-container border-2 border-dashed border-gray-300 rounded-md p-6 text-center hover:border-purple-500 transition-colors duration-300 cursor-pointer" id="logoUploadContainer">
+                        <div class="logo-upload-container border-2 border-dashed border-gray-300 rounded-md p-6 text-center hover:border-[var(--primary)] transition-colors duration-300 cursor-pointer" id="logoUploadContainer">
                             <!-- Upload Placeholder -->
                             <div class="upload-placeholder" id="logoUploadPlaceholder">
                                 <svg class="mx-auto h-12 w-12 text-gray-400 mb-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -426,7 +405,7 @@
                             <div class="image-preview hidden" id="logoImagePreview">
                                 <img class="mx-auto max-h-32 rounded-md mb-3" id="logoPreviewImg" alt="Logo preview">
                                 <div class="flex justify-center space-x-2">
-                                    <button type="button" class="text-sm text-purple-600 hover:text-purple-700" onclick="changeLogo()">Change</button>
+                                    <button type="button" class="text-sm text-[var(--primary)] hover:text-[var(--primary-hover)]" onclick="changeLogo()">Change</button>
                                     <button type="button" class="text-sm text-red-600 hover:text-red-700" onclick="removeLogo()">Remove</button>
                                 </div>
                             </div>
@@ -437,7 +416,7 @@
                     <!-- Description Field -->
                     <div class="space-y-2">
                         <label for="description" class="text-sm font-medium text-gray-700">{{ __('messages.description_optional') }}</label>
-                        <textarea id="description" name="description" rows="3" placeholder="{{ __('messages.describe_your_business') }}" class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent">{{ old('description') }}</textarea>
+                        <textarea id="description" name="description" rows="3" placeholder="{{ __('messages.describe_your_business') }}" class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-[var(--primary)] focus:border-transparent">{{ old('description') }}</textarea>
                     </div>
 
                     <!-- Delivery Capability & Emirates Fee Options -->
@@ -448,7 +427,7 @@
                             <!-- Delivery Capability Toggle -->
                             <div class="space-y-3">
                                 <label class="flex items-center">
-                                    <input type="checkbox" id="delivery_capability" name="delivery_capability" value="1" class="rounded border-gray-300 text-purple-600 focus:ring-purple-500">
+                                    <input type="checkbox" id="delivery_capability" name="delivery_capability" value="1" class="rounded border-gray-300 text-[var(--primary)] focus:ring-[var(--primary)]">
                                     <span class="ml-2 text-sm font-medium text-gray-700">{{ __('messages.i_provide_delivery_services') }}</span>
                                 </label>
                             </div>
@@ -460,12 +439,12 @@
                                     <!-- Abu Dhabi -->
                                     <div class="emirate-option">
                                         <label class="flex items-center mb-2">
-                                            <input type="checkbox" class="emirate-checkbox rounded border-gray-300 text-purple-600 focus:ring-purple-500" data-emirate="abu_dhabi">
+                                            <input type="checkbox" class="emirate-checkbox rounded border-gray-300 text-[var(--primary)] focus:ring-[var(--primary)]" data-emirate="abu_dhabi">
                                             <span class="ml-2 text-sm font-medium text-gray-700">{{ __('messages.abu_dhabi') }}</span>
                                         </label>
                                         <div class="fee-input-container hidden">
                                             <div class="relative">
-                                                <input type="number" step="1" min="0" placeholder="0" class="w-full pl-20 pr-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent" data-fee-input="abu_dhabi" oninput="this.value = this.value.replace(/[^0-9]/g, '');">
+                                                <input type="number" step="1" min="0" placeholder="0" class="w-full pl-20 pr-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-[var(--primary)] focus:border-transparent" data-fee-input="abu_dhabi" oninput="this.value = this.value.replace(/[^0-9]/g, '');">
                                                 <span class="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-500 text-sm">{{ __('messages.aed') }}</span>
                                             </div>
                                         </div>
@@ -474,12 +453,12 @@
                                     <!-- Dubai -->
                                     <div class="emirate-option">
                                         <label class="flex items-center mb-2">
-                                            <input type="checkbox" class="emirate-checkbox rounded border-gray-300 text-purple-600 focus:ring-purple-500" data-emirate="dubai">
+                                            <input type="checkbox" class="emirate-checkbox rounded border-gray-300 text-[var(--primary)] focus:ring-[var(--primary)]" data-emirate="dubai">
                                             <span class="ml-2 text-sm font-medium text-gray-700">{{ __('messages.dubai') }}</span>
                                         </label>
                                         <div class="fee-input-container hidden">
                                             <div class="relative">
-                                                <input type="number" step="1" min="0" placeholder="0" class="w-full pl-20 pr-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent" data-fee-input="dubai" oninput="this.value = this.value.replace(/[^0-9]/g, '');">
+                                                <input type="number" step="1" min="0" placeholder="0" class="w-full pl-20 pr-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-[var(--primary)] focus:border-transparent" data-fee-input="dubai" oninput="this.value = this.value.replace(/[^0-9]/g, '');">
                                                 <span class="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-500 text-sm">{{ __('messages.aed') }}</span>
                                             </div>
                                         </div>
@@ -488,12 +467,12 @@
                                     <!-- Sharjah -->
                                     <div class="emirate-option">
                                         <label class="flex items-center mb-2">
-                                            <input type="checkbox" class="emirate-checkbox rounded border-gray-300 text-purple-600 focus:ring-purple-500" data-emirate="sharjah">
+                                            <input type="checkbox" class="emirate-checkbox rounded border-gray-300 text-[var(--primary)] focus:ring-[var(--primary)]" data-emirate="sharjah">
                                             <span class="ml-2 text-sm font-medium text-gray-700">{{ __('messages.sharjah') }}</span>
                                         </label>
                                         <div class="fee-input-container hidden">
                                             <div class="relative">
-                                                <input type="number" step="1" min="0" placeholder="0" class="w-full pl-20 pr-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent" data-fee-input="sharjah" oninput="this.value = this.value.replace(/[^0-9]/g, '');">
+                                                <input type="number" step="1" min="0" placeholder="0" class="w-full pl-20 pr-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-[var(--primary)] focus:border-transparent" data-fee-input="sharjah" oninput="this.value = this.value.replace(/[^0-9]/g, '');">
                                                 <span class="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-500 text-sm">{{ __('messages.aed') }}</span>
                                             </div>
                                         </div>
@@ -502,12 +481,12 @@
                                     <!-- Ajman -->
                                     <div class="emirate-option">
                                         <label class="flex items-center mb-2">
-                                            <input type="checkbox" class="emirate-checkbox rounded border-gray-300 text-purple-600 focus:ring-purple-500" data-emirate="ajman">
+                                            <input type="checkbox" class="emirate-checkbox rounded border-gray-300 text-[var(--primary)] focus:ring-[var(--primary)]" data-emirate="ajman">
                                             <span class="ml-2 text-sm font-medium text-gray-700">{{ __('messages.ajman') }}</span>
                                         </label>
                                         <div class="fee-input-container hidden">
                                             <div class="relative">
-                                                <input type="number" step="1" min="0" placeholder="0" class="w-full pl-20 pr-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent" data-fee-input="ajman" oninput="this.value = this.value.replace(/[^0-9]/g, '');">
+                                                <input type="number" step="1" min="0" placeholder="0" class="w-full pl-20 pr-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-[var(--primary)] focus:border-transparent" data-fee-input="ajman" oninput="this.value = this.value.replace(/[^0-9]/g, '');">
                                                 <span class="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-500 text-sm">{{ __('messages.aed') }}</span>
                                             </div>
                                         </div>
@@ -516,12 +495,12 @@
                                     <!-- Umm Al Quwain -->
                                     <div class="emirate-option">
                                         <label class="flex items-center mb-2">
-                                            <input type="checkbox" class="emirate-checkbox rounded border-gray-300 text-purple-600 focus:ring-purple-500" data-emirate="uaq">
+                                            <input type="checkbox" class="emirate-checkbox rounded border-gray-300 text-[var(--primary)] focus:ring-[var(--primary)]" data-emirate="uaq">
                                             <span class="ml-2 text-sm font-medium text-gray-700">{{ __('messages.umm_al_quwain') }}</span>
                                         </label>
                                         <div class="fee-input-container hidden">
                                             <div class="relative">
-                                                <input type="number" step="1" min="0" placeholder="0" class="w-full pl-20 pr-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent" data-fee-input="uaq" oninput="this.value = this.value.replace(/[^0-9]/g, '');">
+                                                <input type="number" step="1" min="0" placeholder="0" class="w-full pl-20 pr-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-[var(--primary)] focus:border-transparent" data-fee-input="uaq" oninput="this.value = this.value.replace(/[^0-9]/g, '');">
                                                 <span class="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-500 text-sm">{{ __('messages.aed') }}</span>
                                             </div>
                                         </div>
@@ -530,12 +509,12 @@
                                     <!-- Ras Al Khaimah -->
                                     <div class="emirate-option">
                                         <label class="flex items-center mb-2">
-                                            <input type="checkbox" class="emirate-checkbox rounded border-gray-300 text-purple-600 focus:ring-purple-500" data-emirate="rak">
+                                            <input type="checkbox" class="emirate-checkbox rounded border-gray-300 text-[var(--primary)] focus:ring-[var(--primary)]" data-emirate="rak">
                                             <span class="ml-2 text-sm font-medium text-gray-700">{{ __('messages.ras_al_khaimah') }}</span>
                                         </label>
                                         <div class="fee-input-container hidden">
                                             <div class="relative">
-                                                <input type="number" step="1" min="0" placeholder="0" class="w-full pl-20 pr-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent" data-fee-input="rak" oninput="this.value = this.value.replace(/[^0-9]/g, '');">
+                                                <input type="number" step="1" min="0" placeholder="0" class="w-full pl-20 pr-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-[var(--primary)] focus:border-transparent" data-fee-input="rak" oninput="this.value = this.value.replace(/[^0-9]/g, '');">
                                                 <span class="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-500  text-sm">{{ __('messages.aed') }}</span>
                                             </div>
                                         </div>
@@ -544,12 +523,12 @@
                                     <!-- Fujairah -->
                                     <div class="emirate-option">
                                         <label class="flex items-center mb-2">
-                                            <input type="checkbox" class="emirate-checkbox rounded border-gray-300 text-purple-600 focus:ring-purple-500" data-emirate="fujairah">
+                                            <input type="checkbox" class="emirate-checkbox rounded border-gray-300 text-[var(--primary)] focus:ring-[var(--primary)]" data-emirate="fujairah">
                                             <span class="ml-2 text-sm font-medium text-gray-700">{{ __('messages.fujairah') }}</span>
                                         </label>
                                         <div class="fee-input-container hidden">
                                             <div class="relative">
-                                                <input type="number" step="1" min="0" placeholder="0" class="w-full pl-20 pr-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent" data-fee-input="fujairah" oninput="this.value = this.value.replace(/[^0-9]/g, '');">
+                                                <input type="number" step="1" min="0" placeholder="0" class="w-full pl-20 pr-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-[var(--primary)] focus:border-transparent" data-fee-input="fujairah" oninput="this.value = this.value.replace(/[^0-9]/g, '');">
                                                 <span class="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-500 text-sm">{{ __('messages.aed') }}</span>
                                             </div>
                                         </div>
@@ -561,7 +540,7 @@
                     </div>
 
                     <!-- Submit Button -->
-                    <button type="submit" class="w-full text-white py-3 px-4 rounded-md font-semibold transition-all duration-300 transform hover:scale-105 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:ring-offset-2" style="background: linear-gradient(135deg, #8b5cf6 0%, #7c3aed 100%);">
+                    <button type="submit" class="w-full text-white py-3 px-4 rounded-md font-semibold transition-all duration-300 transform hover:scale-105 focus:outline-none focus:ring-2 focus:ring-[var(--primary)] focus:ring-offset-2" style="background: linear-gradient(135deg, var(--primary) 0%, var(--primary-hover) 100%);">
                         {{ __('messages.continue_to_email_verification') }}
                         @if ($isRtl)
                             <i class="fas fa-arrow-left ml-2"></i>
@@ -591,7 +570,7 @@
                     <button id="closeValidationModal" class="px-4 py-2 bg-red-500 text-white text-base font-medium rounded-md w-full shadow-sm hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-red-300">
                         {{ __('messages.close') }}
                     </button>
-                    <button id="loginButton" class="mt-2 px-4 py-2 bg-blue-500 text-white text-base font-medium rounded-md w-full shadow-sm hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-300 hidden">
+                    <button id="loginButton" class="mt-2 px-4 py-2 bg-[var(--primary)] text-white text-base font-medium rounded-md w-full shadow-sm hover:bg-[var(--primary-hover)] focus:outline-none focus:ring-2 focus:ring-[var(--primary-light)] hidden">
                         {{ __('messages.go_to_login') }}
                     </button>
                 </div>
@@ -617,17 +596,17 @@
         // Drag and drop for logo
         logoUploadContainer.addEventListener('dragover', function(e) {
             e.preventDefault();
-            this.classList.add('border-purple-500', 'bg-purple-50');
+            this.classList.add('border-[var(--primary)]', 'bg-[var(--towhite)]');
         });
 
         logoUploadContainer.addEventListener('dragleave', function(e) {
             e.preventDefault();
-            this.classList.remove('border-purple-500', 'bg-purple-50');
+            this.classList.remove('border-[var(--primary)]', 'bg-[var(--towhite)]');
         });
 
         logoUploadContainer.addEventListener('drop', function(e) {
             e.preventDefault();
-            this.classList.remove('border-purple-500', 'bg-purple-50');
+            this.classList.remove('border-[var(--primary)]', 'bg-[var(--towhite)]');
 
             const files = e.dataTransfer.files;
             if (files.length > 0) {

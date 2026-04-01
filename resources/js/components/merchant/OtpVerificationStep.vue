@@ -207,7 +207,7 @@ export default {
 .verification-icon {
   width: 80px;
   height: 80px;
-  background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%);
+  background: linear-gradient(135deg, var(--primary) 0%, var(--primary-hover) 100%);
   border-radius: 50%;
   display: flex;
   align-items: center;
@@ -265,8 +265,8 @@ export default {
 
 .otp-digit-input:focus {
   outline: none;
-  border-color: #f59e0b;
-  box-shadow: 0 0 0 3px rgba(245, 158, 11, 0.1);
+  border-color: var(--primary);
+  box-shadow: 0 0 0 3px rgba(164, 107, 193, 0.1);
 }
 
 .otp-digit-input.error {
@@ -288,7 +288,7 @@ export default {
 .resend-button {
   background: none;
   border: none;
-  color: #f59e0b;
+  color: var(--primary);
   font-weight: 600;
   cursor: pointer;
   text-decoration: underline;
@@ -296,7 +296,7 @@ export default {
 }
 
 .resend-button:hover:not(:disabled) {
-  color: #5a67d8;
+  color: var(--primary-hover);
 }
 
 .resend-button:disabled {
@@ -319,7 +319,7 @@ export default {
 
 .help-item i {
   margin-right: 0.75rem;
-  color: #f59e0b;
+  color: var(--primary);
   width: 16px;
 }
 

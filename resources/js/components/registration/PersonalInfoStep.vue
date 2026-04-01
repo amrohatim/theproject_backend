@@ -149,7 +149,7 @@
         <button
           type="submit"
           :disabled="loading || !isFormValid"
-          class="w-full px-6 py-3 bg-[var(--primary)] text-white rounded-lg font-semibold hover:bg-[var(--primary)] focus:ring-2 focus:ring-[var(--primary)] focus:ring-offset-2 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+          class="w-full px-6 py-3 bg-[var(--primary)] text-white rounded-lg font-semibold hover:bg-[var(--primary-hover)] focus:ring-2 focus:ring-[var(--primary)] focus:ring-offset-2 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
         >
           <span v-if="loading" class="flex items-center justify-center">
             <i class="fas fa-spinner fa-spin mr-2"></i>

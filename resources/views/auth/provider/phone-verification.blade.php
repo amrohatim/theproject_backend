@@ -7,28 +7,7 @@
     <meta name="robots" content="noindex, nofollow">
     <title>{{ __('messages.data3chic_provider_registration') }}</title>
     <script src="https://cdn.tailwindcss.com"></script>
-    <script>
-        tailwind.config = {
-            theme: {
-                extend: {
-                    colors: {
-                        purple: {
-                            50: '#faf5ff',
-                            100: '#f3e8ff',
-                            200: '#e9d5ff',
-                            300: '#d8b4fe',
-                            400: '#c084fc',
-                            500: '#a855f7',
-                            600: '#9333ea',
-                            700: '#7c3aed',
-                            800: '#6b21a8',
-                            900: '#581c87'
-                        }
-                    }
-                }
-            }
-        }
-    </script>
+    <link rel="stylesheet" href="{{ asset('css/global.css') }}">
 
     <!-- Fonts -->
     @if(app()->getLocale() == 'ar')
@@ -88,7 +67,7 @@
         }
 
         .progress-step.active::after {
-            background: #8b5cf6;
+            background: var(--primary);
         }
 
         .progress-step.completed::after {
@@ -112,7 +91,7 @@
         }
 
         .progress-step.active .step-circle {
-            background: #8b5cf6;
+            background: var(--primary);
             color: white;
         }
 
@@ -129,7 +108,7 @@
         }
 
         .progress-step.active .step-label {
-            color: #8b5cf6;
+            color: var(--primary);
             font-weight: 600;
         }
 
@@ -155,7 +134,7 @@
 <body class="min-h-screen bg-gray-50">
     <div class="min-h-screen flex">
         <!-- Left Side - Marketing Content -->
-        <div class="hidden lg:flex lg:w-1/2 text-white p-12 flex-col justify-top" style="background: linear-gradient(135deg, #8b5cf6 0%, #7c3aed 100%);">
+        <div class="hidden lg:flex lg:w-1/2 text-white p-12 flex-col justify-top" style="background: linear-gradient(135deg, var(--primary) 0%, var(--primary-hover) 100%);">
             <div class="max-w-md mx-auto space-y-8">
                 <div class="text-center">
                     <h1 class="text-3xl font-bold mb-8">glowlabs</h1>
@@ -166,7 +145,7 @@
                     <h2 class="text-4xl font-bold leading-tight">
                         {{ __('messages.verification') }} {{ __('messages.phone') }}
                     </h2>
-                    <p class="text-purple-100 text-lg">
+                    <p class="text-white/90 text-lg">
                         {{ __('messages.phone_verification_description') }}
                     </p>
                 </div>
@@ -175,37 +154,37 @@
                 <div class="space-y-6 mt-12">
                     <div class="flex items-start space-x-4">
                         <div class="flex-shrink-0">
-                            <svg class="w-6 h-6 text-purple-200" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <svg class="w-6 h-6 text-white/80" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z"></path>
                             </svg>
                         </div>
                         <div>
                             <h3 class="font-semibold text-lg mb-1">{{ __('messages.sms_verification') }}</h3>
-                            <p class="text-purple-100 text-sm">{{ __('messages.secure_verification_code_sent_directly_to_your_phone') }}</p>
+                            <p class="text-white/90 text-sm">{{ __('messages.secure_verification_code_sent_directly_to_your_phone') }}</p>
                         </div>
                     </div>
 
                     <div class="flex items-start space-x-4">
                         <div class="flex-shrink-0">
-                            <svg class="w-6 h-6 text-purple-200" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <svg class="w-6 h-6 text-white/80" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"></path>
                             </svg>
                         </div>
                         <div>
                             <h3 class="font-semibold text-lg mb-1">{{ __('messages.account_security') }}</h3>
-                            <p class="text-purple-100 text-sm">{{ __('messages.account_security_description') }}</p>
+                            <p class="text-white/90 text-sm">{{ __('messages.account_security_description') }}</p>
                         </div>
                     </div>
 
                     <div class="flex items-start space-x-4">
                         <div class="flex-shrink-0">
-                            <svg class="w-6 h-6 text-purple-200" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <svg class="w-6 h-6 text-white/80" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
                             </svg>
                         </div>
                         <div>
                             <h3 class="font-semibold text-lg mb-1">{{ __('messages.almost_complete') }}</h3>
-                            <p class="text-purple-100 text-sm">{{ __('messages.just_one_more_step_to_complete_your_registration') }}</p>
+                            <p class="text-white/90 text-sm">{{ __('messages.just_one_more_step_to_complete_your_registration') }}</p>
                         </div>
                     </div>
                 </div>
@@ -242,7 +221,7 @@
 
                 <!-- Back Link -->
                 <div class="mb-4">
-                    <a href="/register/provider/step2" class="text-purple-600 hover:text-purple-700 transition-colors duration-300 text-sm font-medium">
+                    <a href="/register/provider/step2" class="text-[var(--primary)] hover:text-[var(--primary-hover)] transition-colors duration-300 text-sm font-medium">
                         <i class="fas fa-arrow-{{ app()->getLocale() == 'ar' ? 'right' : 'left' }} {{ app()->getLocale() == 'ar' ? 'ml-2' : 'mr-2' }}"></i>
                         {{ __('messages.back_to_email_verification') }}
                     </a>
@@ -252,16 +231,16 @@
                 <div id="alert-container" class="hidden mb-4"></div>
 
                 <!-- Phone Verification Section -->
-                <div class="bg-purple-50 border border-purple-200 rounded-lg p-6 mb-6">
+                <div class="bg-[var(--towhite)] border border-[var(--primary-light)] rounded-lg p-6 mb-6">
                     <div class="text-center">
-                        <div class="w-16 h-16 bg-purple-100 rounded-full flex items-center justify-center mx-auto mb-4">
-                            <i class="fas fa-mobile-alt text-purple-600 text-2xl"></i>
+                        <div class="w-16 h-16 bg-[var(--primary-light)] rounded-full flex items-center justify-center mx-auto mb-4">
+                            <i class="fas fa-mobile-alt text-[var(--primary)] text-2xl"></i>
                         </div>
                         <h3 class="font-semibold text-gray-900 mb-2">{{ __('messages.check_your_phone') }}</h3>
                         <p class="text-gray-600 text-sm mb-4">
                             {{ __('messages.phone_verification_send_description') }}
                         </p>
-                        <div class="font-semibold text-purple-600 mb-4" id="phone-display">{{ $phoneNumber ?? 'Your Phone' }}</div>
+                        <div class="font-semibold text-[var(--primary)] mb-4" id="phone-display">{{ $phoneNumber ?? 'Your Phone' }}</div>
                         <p class="text-gray-600 text-sm">
                             {{ __('messages.enter_6_digit_code_continue') }}
                         </p>
@@ -270,7 +249,7 @@
 
                 <!-- Send OTP Section -->
                 <div id="send-otp-section">
-                    <button type="button" onclick="sendPhoneOTP()" id="send-otp-btn" class="w-full text-white py-3 px-4 rounded-md font-semibold transition-all duration-300 transform hover:scale-105 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:ring-offset-2" style="background: linear-gradient(135deg, #8b5cf6 0%, #7c3aed 100%);">
+                    <button type="button" onclick="sendPhoneOTP()" id="send-otp-btn" class="w-full text-white py-3 px-4 rounded-md font-semibold transition-all duration-300 transform hover:scale-105 focus:outline-none focus:ring-2 focus:ring-[var(--primary)] focus:ring-offset-2" style="background: linear-gradient(135deg, var(--primary) 0%, var(--primary-hover) 100%);">
                         <span class="loading hidden">
                             <i class="fas fa-spinner fa-spin mr-2"></i>
                         </span>
@@ -287,7 +266,7 @@
                         <div class="relative">
                             <input id="otp_code" name="otp_code" type="text"
                                    placeholder="{{ __('messages.enter_6_digit_code') }}" required maxlength="6"
-                                   class="w-full pl-10 pr-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent text-center text-lg font-mono tracking-widest">
+                                   class="w-full pl-10 pr-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-[var(--primary)] focus:border-transparent text-center text-lg font-mono tracking-widest">
                             <svg class="absolute left-3 top-1/2 transform -translate-y-1/2 w-4 h-4 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"></path>
                             </svg>
@@ -295,7 +274,7 @@
                     </div>
 
                     <!-- Verify Button -->
-                    <button type="button" onclick="verifyPhoneOTP()" id="verify-otp-btn" class="w-full text-white py-3 px-4 rounded-md font-semibold transition-all duration-300 transform hover:scale-105 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:ring-offset-2" style="background: linear-gradient(135deg, #8b5cf6 0%, #7c3aed 100%);">
+                    <button type="button" onclick="verifyPhoneOTP()" id="verify-otp-btn" class="w-full text-white py-3 px-4 rounded-md font-semibold transition-all duration-300 transform hover:scale-105 focus:outline-none focus:ring-2 focus:ring-[var(--primary)] focus:ring-offset-2" style="background: linear-gradient(135deg, var(--primary) 0%, var(--primary-hover) 100%);">
                         <span class="loading hidden">
                             <i class="fas fa-spinner fa-spin mr-2"></i>
                         </span>
@@ -306,7 +285,7 @@
                     <!-- Resend Section -->
                     <div class="text-center">
                         <p class="text-gray-600 text-sm mb-2">{{ __('messages.didnt_receive_code') }}</p>
-                        <button type="button" onclick="resendPhoneOTP()" id="resend-otp-btn" class="text-purple-600 hover:text-purple-700 font-medium underline">
+                        <button type="button" onclick="resendPhoneOTP()" id="resend-otp-btn" class="text-[var(--primary)] hover:text-[var(--primary-hover)] font-medium underline">
                             <span class="loading hidden">
                                 <i class="fas fa-spinner fa-spin mr-2"></i>
                             </span>
