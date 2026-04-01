@@ -570,7 +570,7 @@
                     <button id="closeValidationModal" class="px-4 py-2 bg-red-500 text-white text-base font-medium rounded-md w-full shadow-sm hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-red-300">
                         {{ __('messages.close') }}
                     </button>
-                    <button id="loginButton" class="mt-2 px-4 py-2 bg-[var(--primary)] text-white text-base font-medium rounded-md w-full shadow-sm hover:bg-[var(--primary-hover)] focus:outline-none focus:ring-2 focus:ring-[var(--primary-light)] hidden">
+                    <button id="loginButton" class="mt-2 px-4 py-2 bg-blue-500 text-white text-base font-medium rounded-md w-full shadow-sm hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-300 hidden">
                         {{ __('messages.go_to_login') }}
                     </button>
                 </div>

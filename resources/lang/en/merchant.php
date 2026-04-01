@@ -2,9 +2,9 @@
 
 return [
     // Dashboard
-    'dashboard' => 'Merchant Dashboard',
+    'dashboard' => 'Trader Dashboard',
     'welcome_back' => 'Welcome back, :name!',
-    'dashboard_subtitle' => 'Here\'s what\'s happening with your merchant business',
+    'dashboard_subtitle' => 'Here\'s what\'s happening with your trader business',
     'add_product' => 'Add Product',
     'add_service' => 'Add Service',
     'search_placeholder' => 'Search across all your products and services...',
@@ -65,7 +65,7 @@ return [
 
     // Account Summary
     'account_summary' => 'Account Summary',
-    'merchant_score' => 'Merchant Score',
+    'merchant_score' => 'Trader Score',
     'account_status' => 'Account Status',
     'license_status' => 'License Status',
     'location' => 'Location',
@@ -79,7 +79,7 @@ return [
 
     // Account Verification
     'account_verification_pending' => 'Account Verification Pending',
-    'verification_pending_message' => 'Your merchant account is pending admin verification. You can still manage your products and services, but some features may be limited until verification is complete.',
+    'verification_pending_message' => 'Your trader account is pending admin verification. You can still manage your products and services, but some features may be limited until verification is complete.',
 
     // Days
     'days' => 'days',
@@ -125,14 +125,14 @@ return [
     'account_information' => 'Account Information',
     'account_information_subtitle' => 'Your account details and verification status',
     'account_type' => 'Account Type',
-    'merchant' => 'Merchant',
+    'merchant' => 'Trader',
     'member_since' => 'Member Since',
     'email_status' => 'Email Status',
     'last_updated' => 'Last Updated: :date',
     'verified' => 'Verified',
     'not_verified' => 'Not Verified',
     'phone_status' => 'Phone Status',
-    'merchant_status' => 'Merchant Status',
+    'merchant_status' => 'Trader Status',
     'not_available' => 'Not Available',
     'pending' => 'Pending',
     'na' => 'N/A',
@@ -268,7 +268,7 @@ return [
     'license_required_message_expired' => 'Your license has expired. Please upload a new license to continue adding services.',
     'license_required_message_rejected' => 'Your license was rejected. Please upload a new license to continue adding services.',
     'license_required_message_default' => 'Your license is outdated. Please upgrade your license to add products or services.',
-    'license_required_message_no_merchant' => 'Please complete your merchant profile setup.',
+    'license_required_message_no_merchant' => 'Please complete your trader profile setup.',
     'upload_license' => 'Upload License',
     'search_services_placeholder' => 'Search services by name, description, category...',
     'filters' => 'Filters',
@@ -308,7 +308,7 @@ return [
     
     // Services Create Page
     'add_new_service_title' => 'Add New Service',
-    'create_new_service_description' => 'Create a new service for your merchant store',
+    'create_new_service_description' => 'Create a new service for your trader store',
     'back_to_services' => 'Back to Services',
     'service_information' => 'Service Information',
     'service_image' => 'Service Image',
@@ -387,7 +387,7 @@ return [
     'active_products' => 'Active Products',
     'inactive_products' => 'Inactive Products',
     'total_stock' => 'Total Stock',
-    'complete_merchant_profile' => 'Please complete your merchant profile and upload a license to add products.',
+    'complete_merchant_profile' => 'Please complete your trader profile and upload a license to add products.',
 
     // Products Create Page
     'create_new_product' => 'Create New Product',

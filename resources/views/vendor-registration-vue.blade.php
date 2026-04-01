@@ -320,7 +320,7 @@
             <div class="max-w-md mx-auto space-y-8">
                 <!-- Logo -->
                 <div class="text-center">
-                    <h1 class="text-3xl font-bold mb-8">Data3Chic</h1>
+                    <h1 class="text-3xl font-bold mb-8">Glow Labs</h1>
                 </div>
 
                 <!-- Main Heading -->

@@ -134,7 +134,7 @@
 <body class="min-h-screen bg-gray-50">
     <div class="min-h-screen flex">
         <!-- Left Side - Marketing Content -->
-        <div class="hidden lg:flex lg:w-1/2 text-white p-12 flex-col justify-top" style="background: linear-gradient(135deg, var(--primary) 0%, var(--primary-hover) 100%);">
+        <div class="hidden lg:flex lg:w-1/2 text-white p-12 flex-col justify-center" style="background: linear-gradient(135deg, var(--primary) 0%, var(--primary-hover) 100%);">
             <div class="max-w-md mx-auto space-y-8">
                 <div class="text-center">
                     <h1 class="text-3xl font-bold mb-8">glowlabs</h1>
