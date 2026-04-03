@@ -500,13 +500,15 @@
         @media (max-width: 560px) {
             .modern-login-v2__title {
                 font-size: 40px;
-                line-height: 48px;
+                line-height: 0px;
+                visibility:hidden;
             }
              .modern-login-v2__brand {
             display: flex;
             flex-direction: column;
+        
             align-items: center;
-            gap: 8px;
+            gap: 0px;
             margin-top: 0px;
         }
         }
