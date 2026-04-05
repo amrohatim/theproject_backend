@@ -2,16 +2,15 @@
   <div class="min-h-screen bg-gray-50">
     <div class="min-h-screen flex">
       <!-- Left Side - Marketing Content -->
-      <div class="hidden lg:flex lg:w-1/2 text-white p-12 flex-col justify-top"
-           style="background: linear-gradient(135deg, var(--primary) 0%, var(--primary-hover) 100%);">
-        <div class="max-w-md mx-auto space-y-8">
+      <div class="hidden lg:flex lg:w-1/2 text-white p-12 flex-col justify-top bg-[url('/assets/traderBanner.webp')] bg-cover bg-top">
+        <div class="max-w-md  space-y-8">
           <!-- Logo -->
-          <div class="text-center">
-            <h1 class="text-3xl font-bold mb-8">Data3Chic</h1>
+          <div>
+            <h1 class="text-3xl font-bold mb-8">Glowlabs</h1>
           </div>
 
           <!-- Main Heading -->
-          <div class="text-center space-y-4">
+          <div class="space-y-4">
             <h2 class="text-4xl font-bold leading-tight">
               {{ $t('join_our_merchant_community') }}
             </h2>
@@ -296,7 +295,7 @@
       <!-- Mobile Header for smaller screens -->
       <div class="lg:hidden absolute top-0 left-0 right-0 text-white p-4 text-center"
            style="background: linear-gradient(135deg, var(--primary) 0%, var(--primary-hover) 100%);">
-        <h1 class="text-xl font-bold">Data3Chic</h1>
+        <h1 class="text-xl font-bold">Glowlabs</h1>
       </div>
     </div>
   </div>

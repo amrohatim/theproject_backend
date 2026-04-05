@@ -6,7 +6,7 @@
         <div class="max-w-md mx-auto space-y-8">
           <!-- Logo -->
           <div class="text-center">
-            <h1 class="text-3xl font-bold mb-8">Data3Chic</h1>
+            <h1 class="text-3xl font-bold mb-8">Glowlabs</h1>
           </div>
 
           <!-- Main Heading -->
@@ -283,7 +283,7 @@
 
       <!-- Mobile Header for smaller screens -->
       <div class="lg:hidden absolute top-0 left-0 right-0 text-white p-4 text-center" style="background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%);">
-        <h1 class="text-xl font-bold">Data3Chic</h1>
+        <h1 class="text-xl font-bold">Glowlabs</h1>
       </div>
     </div>
   </div>

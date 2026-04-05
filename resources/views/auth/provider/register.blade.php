@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="csrf-token" content="{{ csrf_token() }}">
-    <title>Data3Chic - Provider Registration</title>
+    <title>Glowlabs - Provider Registration</title>
 
     <!-- Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -111,7 +111,7 @@
             <div class="max-w-md mx-auto space-y-8">
                 <!-- Logo -->
                 <div class="text-center">
-                    <h1 class="text-3xl font-bold mb-8">Data3Chic</h1>
+                    <h1 class="text-3xl font-bold mb-8">Glowlabs</h1>
                 </div>
 
                 <!-- Main Heading -->

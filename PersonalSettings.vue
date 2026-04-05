@@ -7,9 +7,9 @@
         <div class="flex items-center justify-center h-16 px-4 border-b border-gray-200">
           <div class="flex items-center space-x-2">
             <div class="w-8 h-8 bg-blue-600 rounded-lg flex items-center justify-center">
-              <span class="text-white font-bold text-sm">D3</span>
+              <span class="text-white font-bold text-sm">GL</span>
             </div>
-            <span class="text-xl font-bold text-gray-900">Data3Chic</span>
+            <span class="text-xl font-bold text-gray-900">Glowlabs</span>
           </div>
         </div>
         

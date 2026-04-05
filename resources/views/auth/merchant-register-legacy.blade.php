@@ -15,7 +15,7 @@
 
         body {
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            background: url('{{ asset('assets/traderBanner.webp') }}') center/cover no-repeat;
             min-height: 100vh;
             display: flex;
             align-items: center;
@@ -36,7 +36,7 @@
         }
 
         .logo-section {
-            background: linear-gradient(135deg, #ff6b6b 0%, #ee5a24 100%);
+            background: url('{{ asset('assets/traderBanner.webp') }}') center/cover no-repeat;
             color: white;
             padding: 60px 40px;
             display: flex;

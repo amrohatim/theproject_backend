@@ -9,7 +9,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="csrf-token" content="{{ csrf_token() }}">
-    <title>Data3Chic - {{ __('messages.vendor_registration') }}</title>
+    <title>Glowlabs - {{ __('messages.vendor_registration') }}</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="{{ asset('css/global.css') }}">
     <script>
@@ -316,59 +316,59 @@
 <body class="min-h-screen bg-gray-50 {{ $isRtl ? 'rtl' : '' }}">
     <div class="min-h-screen flex">
         <!-- Left Side - Marketing Content -->
-        <div class="hidden lg:flex lg:w-1/2 bg-gradient-to-br from-[var(--primary)] via-[var(--primary)] to-[var(--primary-hover)] text-white p-12 flex-col justify-center">
-            <div class="max-w-md mx-auto space-y-8">
+        <div class="hidden lg:flex lg:w-1/2 text-white p-12 flex-col items-start justify-start bg-[url('/assets/vendorBanner.webp')] bg-cover {{ $isRtl ? 'bg-[-300px_0px]' : 'bg-[-60px_0px]' }}">
+            <div class="max-w-md space-y-8">
                 <!-- Logo -->
-                <div class="text-center">
+                <div>
                     <h1 class="text-3xl font-bold mb-8">Glow Labs</h1>
                 </div>
 
                 <!-- Main Heading -->
-                <div class="text-center space-y-4">
+                <div class="space-y-4">
                     <h2 class="text-4xl font-bold leading-tight">
                         {{ __('messages.vendor_registration') }}
                     </h2>
-                    <p class="text-[var(--towhite)] text-lg">
+                    <p class="text-white text-lg">
                         {{ __('messages.vendor_registration_desc') }}
                     </p>
                 </div>
 
                 <!-- Features -->
-                <div class="space-y-6 mt-12">
+                <div class="space-y-6 mt-12 font-bold">
                     <div class="flex items-start space-x-4">
                         <div class="flex-shrink-0">
-                            <svg class="w-6 h-6 text-[var(--primary-light)]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"></path>
                             </svg>
                         </div>
                         <div>
-                            <h3 class="font-semibold text-lg mb-1">{{ __('messages.grow_your_sales') }}</h3>
-                            <p class="text-[var(--towhite)] text-sm">{{ __('messages.grow_your_sales_desc') }}</p>
+                            <h3 class="font-semibold  font-serif text-lg mb-1">{{ __('messages.grow_your_sales') }}</h3>
+                            <p class="text-white text-sm">{{ __('messages.grow_your_sales_desc') }}</p>
                         </div>
                     </div>
 
                     <div class="flex items-start space-x-4">
                         <div class="flex-shrink-0">
-                            <svg class="w-6 h-6 text-[var(--primary-light)]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"></path>
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path>
                             </svg>
                         </div>
                         <div>
                             <h3 class="font-semibold text-lg mb-1">{{ __('messages.powerful_tools') }}</h3>
-                            <p class="text-[var(--towhite)] text-sm">{{ __('messages.powerful_tools_desc') }}</p>
+                            <p class="text-white text-sm">{{ __('messages.powerful_tools_desc') }}</p>
                         </div>
                     </div>
 
                     <div class="flex items-start space-x-4">
                         <div class="flex-shrink-0">
-                            <svg class="w-6 h-6 text-[var(--primary-light)]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M18.364 5.636l-3.536 3.536m0 5.656l3.536 3.536M9.172 9.172L5.636 5.636m3.536 9.192L5.636 18.364M21 12a9 9 0 11-18 0 9 9 0 0118 0zm-5 0a4 4 0 11-8 0 4 4 0 018 0z"></path>
                             </svg>
                         </div>
                         <div>
                             <h3 class="font-semibold text-lg mb-1">{{ __('messages.dedicated_support') }}</h3>
-                            <p class="text-[var(--towhite)] text-sm">{{ __('messages.dedicated_support_desc') }}</p>
+                            <p class="text-white text-sm">{{ __('messages.dedicated_support_desc') }}</p>
                         </div>
                     </div>
                 </div>
@@ -389,7 +389,7 @@
                     <div class="hidden md:flex items-center justify-between" id="desktop-progress">
                         <div class="flex items-center">
                             <div class="flex flex-col items-center group">
-                                <div class="step-circle w-12 h-12 rounded-full flex items-center justify-center text-sm font-semibold border-2 bg-[var(--primary-light)] border-[var(--primary)] text-[var(--primary)]"
+                                <div class="step-circle w-12 h-12 rounded-full flex items-center justify-center text-sm font-semibold border-2 bg-white border-[var(--primary)] text-[var(--primary)]"
                                      data-step="1"
                                      tabindex="0"
                                      role="button"
@@ -537,7 +537,7 @@
                     <!-- Step 2: Email Verification -->
                     <div class="step-content" id="step-2">
                         <div class="space-y-4 text-center">
-                            <div class="bg-[var(--primary-light)] p-6 rounded-lg">
+                            <div class="bg-white p-6 rounded-lg">
                                 <svg class="w-12 h-12 text-[var(--primary)] mx-auto mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 4.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"></path>
                                 </svg>
@@ -552,7 +552,7 @@
                                 <input id="verificationCode" name="verification_code" type="text" placeholder="{{ __('messages.enter_verification_code') }}" maxlength="6" class="w-full px-3 py-2 border border-gray-300 rounded-md text-center text-lg tracking-widest focus:outline-none focus:ring-2 focus:ring-[var(--primary)] focus:border-transparent">
                             </div>
 
-                            <button type="button" id="resend-email-btn" class="text-[var(--primary)] border border-[var(--primary)] hover:bg-[var(--primary-light)] bg-transparent px-4 py-2 rounded-md font-medium">
+                            <button type="button" id="resend-email-btn" class="text-[var(--primary)] border border-[var(--primary)] hover:bg-white bg-transparent px-4 py-2 rounded-md font-medium">
                                 {{ __('messages.resend_code') }}
                             </button>
                         </div>
@@ -561,7 +561,7 @@
                     <!-- Step 3: Phone Verification -->
                     <div class="step-content" id="step-3">
                         <div class="space-y-4">
-                            <div class="bg-[var(--primary-light)] p-4 rounded-lg text-center">
+                            <div class="bg-white p-4 rounded-lg text-center">
                                 <svg class="w-8 h-8 text-[var(--primary)] mx-auto mb-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z"></path>
                                 </svg>
@@ -573,7 +573,7 @@
                                 <input id="phoneCode" name="otp_code" type="text" placeholder="{{ __('messages.enter_sms_code') }}" maxlength="6" class="w-full px-3 py-2 border border-gray-300 rounded-md text-center focus:outline-none focus:ring-2 focus:ring-[var(--primary)] focus:border-transparent">
                             </div>
 
-                            <button type="button" id="resend-sms-btn" class="w-full text-[var(--primary)] border border-[var(--primary)] hover:bg-[var(--primary-light)] bg-transparent px-4 py-2 rounded-md font-medium">
+                            <button type="button" id="resend-sms-btn" class="w-full text-[var(--primary)] border border-[var(--primary)] hover:bg-white bg-transparent px-4 py-2 rounded-md font-medium">
                                 {{ __('messages.resend_sms_code') }}
                             </button>
                         </div>
@@ -701,7 +701,7 @@
 
         <!-- Mobile Header for smaller screens -->
         <div class="lg:hidden absolute top-0 left-0 right-0 text-white p-4 text-center" style="background: linear-gradient(135deg, var(--primary) 0%, var(--primary-hover) 100%);">
-            <h1 class="text-xl font-bold">Data3Chic</h1>
+            <h1 class="text-xl font-bold">Glowlabs</h1>
         </div>
     </div>
 
