@@ -640,6 +640,20 @@ export default {
       return 'text-gray-500 dark:text-gray-400 border-transparent hover:text-gray-700 dark:hover:text-gray-200 hover:border-gray-300 dark:hover:border-gray-500'
     }
 
+    const getScrollableAncestor = (element) => {
+      let current = element?.parentElement || null
+      while (current) {
+        const style = window.getComputedStyle(current)
+        const overflowY = style.overflowY || style.overflow
+        const canScroll = /(auto|scroll)/.test(overflowY)
+        if (canScroll && current.scrollHeight > current.clientHeight) {
+          return current
+        }
+        current = current.parentElement
+      }
+      return null
+    }
+
     const fetchProductData = async () => {
       try {
         loading.value = true
@@ -948,7 +962,8 @@ export default {
     }
 
     // Color management methods
-    const addNewColor = () => {
+    const addNewColor = async () => {
+      const hadColorsBefore = productData.colors.length > 0
       const newColor = {
         id: null,
         name: '',
@@ -963,6 +978,18 @@ export default {
         sizes: [] // Initialize empty sizes array
       }
       productData.colors.push(newColor)
+
+      if (hadColorsBefore) {
+        await nextTick()
+        const appRoot = document.getElementById('vendor-product-edit-app')
+        const scrollContainer = getScrollableAncestor(appRoot)
+
+        if (scrollContainer) {
+          scrollContainer.scrollTo({ top: scrollContainer.scrollHeight, behavior: 'smooth' })
+        } else {
+          window.scrollTo({ top: document.documentElement.scrollHeight, behavior: 'smooth' })
+        }
+      }
     }
 
     const updateColor = (index, field, value) => {

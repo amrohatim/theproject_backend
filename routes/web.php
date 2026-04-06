@@ -18,7 +18,8 @@ use App\Models\Category;
 // Include payment routes
 require __DIR__.'/payment.php';
 
-Route::get('/', [LandingController::class, 'index']);
+Route::get('/', [LandingController::class, 'index'])->name('home');
+Route::get('/faq', [LandingController::class, 'faq'])->name('faq');
 
 // Test route for Vendor login - removed after successful testing
 

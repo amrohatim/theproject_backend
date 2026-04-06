@@ -123,7 +123,7 @@
                 <div v-if="errors.branch_id" class="text-red-500 text-sm mt-1">{{ errors.branch_id }}</div>
                 <div v-else-if="branches.length === 0" class="text-sm mt-1" style="color: var(--primary);">
                   <i class="fas fa-exclamation-triangle mr-1"></i>
-                  {{ $t('vendor.need_create_branch_first') }} <a href="/vendor/branches/create" class="text-blue-600 hover:underline">{{ $t('vendor.create_branch') }}</a>
+                  {{ $t('vendor.need_create_branch_first') }} <a href="/vendor/branches/create" class="text-[var(--primary)] hover:underline">{{ $t('vendor.create_branch') }}</a>
                 </div>
                 <div v-else-if="branches.length === 1" class="text-green-600 text-sm mt-1">
                   <i class="fas fa-check-circle mr-1"></i>
@@ -333,23 +333,23 @@
             <!-- Stock Allocation Summary -->
             <div v-if="productData.colors.length > 0 && productData.stock > 0"
                  class="mt-6 p-4 border rounded-lg"
-                 :class="userRole === 'products_manager' ? 'bg-[var(--primary-light)] border-[var(--primary)]' : 'bg-blue-50 border-blue-200'">
+                 :class="userRole === 'products_manager' ? 'border-white' : 'border-white'">
               <div class="flex items-center justify-between mb-2">
                 <span class="text-sm font-medium"
-                      :class="userRole === 'products_manager' ? 'text-[var(--primary)]' : 'text-blue-900'">
+                      :class="userRole === 'products_manager' ? 'text-[var(--primary)]' : 'text-[var(--primary)]'">
                   {{ $t('vendor.stock_allocation_progress') }}
                 </span>
               <span class="text-sm"
-                    :class="userRole === 'products_manager' ? 'text-[var(--primary)]' : 'text-blue-700'">
+                    :class="userRole === 'products_manager' ? 'text-[var(--primary)]' : 'text-[var(--primary)]'">
                 {{ totalAllocatedStock }} / {{ productData.stock }} {{ $t('vendor.allocated_stock') }}
               </span>
               </div>
               <div class="w-full rounded-full h-3"
-                   :class="userRole === 'products_manager' ? 'bg-[var(--primary-light)]' : 'bg-blue-200'">
+                   :class="userRole === 'products_manager' ? 'bg-[var(--primary-light)]' : 'bg-[var(--primary-light)]'">
                 <div class="h-3 rounded-full transition-all duration-300"
                      :style="{ width: stockProgressPercentage + '%' }"
                      :class="[
-                       userRole === 'products_manager' ? 'bg-[var(--primary)]' : 'bg-blue-600',
+                       userRole === 'products_manager' ? 'bg-[var(--primary)]' : 'bg-[var(--primary)]',
                        { 'bg-red-600': isStockOverAllocated }
                      ]"></div>
               </div>
@@ -358,7 +358,7 @@
               </div>
               <div v-else-if="totalAllocatedStock < productData.stock"
                    class="mt-2 text-xs"
-                   :class="userRole === 'products_manager' ? 'text-[var(--primary)]' : 'text-blue-600'">
+                   :class="userRole === 'products_manager' ? 'text-[var(--primary)]' : 'text-[var(--primary)]'">
                 💡 {{ productData.stock - totalAllocatedStock }} {{ $t('vendor.remaining_stock') }}
               </div>
               <div v-else class="mt-2 text-xs text-green-600">
@@ -497,7 +497,7 @@
 </template>
 
 <script>
-import { ref, reactive, computed, watch, onMounted } from 'vue'
+import { ref, reactive, computed, watch, onMounted, nextTick } from 'vue'
 import VendorColorVariantCard from './VendorColorVariantCard.vue'
 import VendorSpecificationItem from './VendorSpecificationItem.vue'
 import LanguageSwitch from '../common/LanguageSwitch.vue'
@@ -979,8 +979,23 @@ export default {
       }
     }
 
+    const getScrollableAncestor = (element) => {
+      let current = element?.parentElement || null
+      while (current) {
+        const style = window.getComputedStyle(current)
+        const overflowY = style.overflowY || style.overflow
+        const canScroll = /(auto|scroll)/.test(overflowY)
+        if (canScroll && current.scrollHeight > current.clientHeight) {
+          return current
+        }
+        current = current.parentElement
+      }
+      return null
+    }
+
     // Color management methods
-    const addNewColor = () => {
+    const addNewColor = async () => {
+      const hadColorsBefore = productData.colors.length > 0
       const newColor = {
         name: '',
         name_arabic: '',
@@ -992,6 +1007,18 @@ export default {
         image: null
       }
       productData.colors.push(newColor)
+
+      if (hadColorsBefore) {
+        await nextTick()
+        const appRoot = document.getElementById('vendor-product-create-app')
+        const scrollContainer = getScrollableAncestor(appRoot)
+
+        if (scrollContainer) {
+          scrollContainer.scrollTo({ top: scrollContainer.scrollHeight, behavior: 'smooth' })
+        } else {
+          window.scrollTo({ top: document.documentElement.scrollHeight, behavior: 'smooth' })
+        }
+      }
     }
 
     const updateColor = (index, field, value) => {

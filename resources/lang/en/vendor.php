@@ -152,7 +152,7 @@ return [
     'unit' => 'unit',
     'available' => 'Available',
     'stock_quantity' => 'Stock Quantity',
-    'click_add_size_to_start_managing' => 'Click "Add Size" to start managing sizes for this color',
+    'click_add_size_to_start_managing' => 'Click Add Size to start managing sizes for this color',
     'allocated_stock' => 'units allocated',
     'all_stock_allocated' => 'All stock has been allocated to colors',
     'remaining_stock' => 'units remaining',
@@ -170,7 +170,6 @@ return [
     'save' => 'Save',
     'saving' => 'Saving...',
     'no_sizes_added_yet' => 'No sizes added yet',
-    'click_add_size_to_start_managing' => 'Click "Add Size" to start managing sizes for this color',
     'edit' => 'Edit',
     'delete' => 'Delete',
 

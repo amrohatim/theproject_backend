@@ -52,6 +52,25 @@ class LandingController extends Controller
     }
 
     /**
+     * Display the public FAQ page with the same auth-aware header context as landing.
+     *
+     * @return \Illuminate\View\View
+     */
+    public function faq()
+    {
+        $authUser = Auth::user();
+        $isAuthenticated = $authUser && $authUser->status === 'active';
+        $userRole = $isAuthenticated ? $authUser->role : null;
+        $getStartedUrl = $this->getGetStartedUrl($isAuthenticated, $userRole);
+
+        return view('faq', compact(
+            'isAuthenticated',
+            'userRole',
+            'getStartedUrl'
+        ));
+    }
+
+    /**
      * Determine the appropriate URL for the "Get Started" button based on user authentication and role.
      *
      * @param bool $isAuthenticated

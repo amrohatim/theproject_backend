@@ -138,11 +138,13 @@
   <!-- NAVBAR -->
   <header class="w-full bg-white">
     <div class="mx-auto flex max-w-7xl items-center justify-between px-6 py-4">
-      <a href="/" class="font-serif text-2xl text-brand-dark">{{ config('app.name') }}</a>
+      <div class="flex flex-row items-center justifiy-center  gap-2">
+        <img src="{{ asset('assets/logo.png') }}" width="40" height="40">
+      <p class="font-serif text-2xl text-brand-dark">{{ config('app.name') }}</p>
+      </div>
       <nav class="hidden items-center gap-8 md:flex">
-        <a href="#" class="text-sm text-gray-500 transition-colors hover:text-brand-dark">{{ __('messages.home') }}</a>
-        <a href="#" class="text-sm text-gray-500 transition-colors hover:text-brand-dark">{{ __('messages.product') }}</a>
-        <a href="#" class="text-sm text-gray-500 transition-colors hover:text-brand-dark">{{ __('messages.faq') }}</a>
+        <a href="{{ route('home') }}" class="text-sm text-gray-500 transition-colors hover:text-brand-dark">{{ __('messages.home') }}</a>
+        <a href="{{ route('faq') }}" class="text-sm text-gray-500 transition-colors hover:text-brand-dark">{{ __('messages.faq') }}</a>
         <a href="#" class="text-sm text-gray-500 transition-colors hover:text-brand-dark">{{ __('messages.blog') }}</a>
         <a href="#" class="text-sm text-gray-500 transition-colors hover:text-brand-dark">{{ __('messages.about_us') }}</a>
       </nav>
@@ -160,9 +162,8 @@
     <!-- Mobile Menu -->
     <div id="mobile-menu" class="hidden border-t border-gray-100 px-6 pb-4 md:hidden">
       <nav class="flex flex-col gap-3 py-3">
-        <a href="#" class="text-sm text-gray-500 hover:text-brand-dark">{{ __('messages.home') }}</a>
-        <a href="#" class="text-sm text-gray-500 hover:text-brand-dark">{{ __('messages.product') }}</a>
-        <a href="#" class="text-sm text-gray-500 hover:text-brand-dark">{{ __('messages.faq') }}</a>
+        <a href="{{ route('home') }}" class="text-sm text-gray-500 hover:text-brand-dark">{{ __('messages.home') }}</a>
+        <a href="{{ route('faq') }}" class="text-sm text-gray-500 hover:text-brand-dark">{{ __('messages.faq') }}</a>
         <a href="#" class="text-sm text-gray-500 hover:text-brand-dark">{{ __('messages.blog') }}</a>
         <a href="#" class="text-sm text-gray-500 hover:text-brand-dark">{{ __('messages.about_us') }}</a>
       </nav>

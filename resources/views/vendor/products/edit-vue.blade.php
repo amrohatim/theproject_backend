@@ -214,6 +214,7 @@
         'vendor.display_order_note': '{{ __('vendor.display_order_note') }}',
         'vendor.unit': '{{ __('vendor.unit') }}',
         'vendor.stock_allocation_exceeds_limit': '{{ __('vendor.stock_allocation_exceeds_limit') }}',
+        'vendor.set_color_name_stock_for_sizes' : '{{ __('vendor.set_color_name_stock_for_sizes') }}',
         // Basic product information
         'vendor.product_name': '{{ __('vendor.product_name') }}',
         'vendor.enter_product_name': '{{ __('vendor.enter_product_name') }}',
