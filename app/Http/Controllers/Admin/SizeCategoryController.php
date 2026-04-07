@@ -37,9 +37,46 @@ class SizeCategoryController extends Controller
             }
         }
 
+        if ($request->filled('linked')) {
+            if ($request->linked === 'yes') {
+                $query->has('categories');
+            } elseif ($request->linked === 'no') {
+                $query->doesntHave('categories');
+            }
+        }
+
+        if ($request->filled('has_sizes')) {
+            if ($request->has_sizes === 'yes') {
+                $query->has('standardizedSizes');
+            } elseif ($request->has_sizes === 'no') {
+                $query->doesntHave('standardizedSizes');
+            }
+        }
+
+        $sort = $request->input('sort', 'display_order_asc');
+        switch ($sort) {
+            case 'display_order_desc':
+                $query->orderByDesc('display_order')->orderBy('name');
+                break;
+            case 'name_asc':
+                $query->orderBy('name');
+                break;
+            case 'name_desc':
+                $query->orderByDesc('name');
+                break;
+            case 'latest':
+                $query->latest();
+                break;
+            case 'oldest':
+                $query->oldest();
+                break;
+            case 'display_order_asc':
+            default:
+                $query->orderBy('display_order')->orderBy('name');
+                break;
+        }
+
         $sizeCategories = $query
-            ->orderBy('display_order')
-            ->orderBy('name')
             ->paginate(10)
             ->appends($request->query());
 

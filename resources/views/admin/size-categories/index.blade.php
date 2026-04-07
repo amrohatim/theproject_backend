@@ -31,37 +31,67 @@
     <!-- Search and filters -->
     <div class="bg-white dark:bg-gray-800 rounded-lg shadow mb-6 p-4 border border-gray-200 dark:border-gray-700">
         <form action="{{ route('admin.size-categories.index') }}" method="GET" class="space-y-4">
-            <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+            <div class="grid grid-cols-1 md:grid-cols-5 gap-4">
                 <div>
                     <label for="search" class="block text-sm font-medium text-gray-700 dark:text-gray-300">Search</label>
                     <div class="mt-1 relative rounded-md shadow-sm">
                         <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
                             <i class="fas fa-search text-gray-400"></i>
                         </div>
-                        <input type="text" name="search" id="search" value="{{ request('search') }}" class="focus:ring-indigo-500 focus:border-indigo-500 block w-full pl-10 sm:text-sm border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-white rounded-md" placeholder="Search name or display name...">
+                        <input type="text" name="search" id="search" value="{{ request('search') }}" class="focus:ring-indigo-500 focus:border-indigo-500 block w-full px-2 sm:text-sm border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-white rounded-md" placeholder="Search name or display name...">
                     </div>
                 </div>
 
-                <div>
+                {{-- <div>
                     <label for="status" class="block text-sm font-medium text-gray-700 dark:text-gray-300">Status</label>
                     <select id="status" name="status" class="mt-1 block w-full pl-3 pr-10 py-2 text-base border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-white focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm rounded-md">
                         <option value="">All</option>
                         <option value="active" {{ request('status') === 'active' ? 'selected' : '' }}>Active</option>
                         <option value="inactive" {{ request('status') === 'inactive' ? 'selected' : '' }}>Inactive</option>
                     </select>
+                </div> --}}
+{{-- 
+                <div>
+                    <label for="linked" class="block text-sm font-medium text-gray-700 dark:text-gray-300">Linked Categories</label>
+                    <select id="linked" name="linked" class="mt-1 block w-full pl-3 pr-10 py-2 text-base border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-white focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm rounded-md">
+                        <option value="">All</option>
+                        <option value="yes" {{ request('linked') === 'yes' ? 'selected' : '' }}>Linked Only</option>
+                        <option value="no" {{ request('linked') === 'no' ? 'selected' : '' }}>Unlinked Only</option>
+                    </select>
+                </div> --}}
+
+                <div>
+                    <label for="has_sizes" class="block text-sm font-medium text-gray-700 dark:text-gray-300">Sizes</label>
+                    <select id="has_sizes" name="has_sizes" class="mt-1 block w-full pl-3 pr-10 py-2 text-base border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-white focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm rounded-md">
+                        <option value="">All</option>
+                        <option value="yes" {{ request('has_sizes') === 'yes' ? 'selected' : '' }}>Has Sizes</option>
+                        <option value="no" {{ request('has_sizes') === 'no' ? 'selected' : '' }}>No Sizes</option>
+                    </select>
                 </div>
 
-                <div class="flex items-end">
-                    <div class="space-x-2">
-                        <button type="submit" class="inline-flex items-center px-4 py-2 bg-indigo-600 border border-transparent rounded-md font-semibold text-xs text-white uppercase tracking-widest hover:bg-indigo-700 active:bg-indigo-900 focus:outline-none focus:border-indigo-900 focus:ring ring-indigo-300 disabled:opacity-25 transition ease-in-out duration-150">
-                            <i class="fas fa-filter mr-2"></i> Filter
-                        </button>
-                        @if(request()->hasAny(['search', 'status']))
-                        <a href="{{ route('admin.size-categories.index') }}" class="inline-flex items-center px-4 py-2 bg-gray-600 border border-transparent rounded-md font-semibold text-xs text-white uppercase tracking-widest hover:bg-gray-700 active:bg-gray-900 focus:outline-none focus:border-gray-900 focus:ring ring-gray-300 disabled:opacity-25 transition ease-in-out duration-150">
-                            <i class="fas fa-times mr-2"></i> Clear
-                        </a>
-                        @endif
-                    </div>
+                <div>
+                    <label for="sort" class="block text-sm font-medium text-gray-700 dark:text-gray-300">Sort By</label>
+                    <select id="sort" name="sort" class="mt-1 block w-full pl-3 pr-10 py-2 text-base border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-white focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm rounded-md">
+                        <option value="display_order_asc" {{ request('sort', 'display_order_asc') === 'display_order_asc' ? 'selected' : '' }}>Order (Low to High)</option>
+                        <option value="display_order_desc" {{ request('sort') === 'display_order_desc' ? 'selected' : '' }}>Order (High to Low)</option>
+                        <option value="name_asc" {{ request('sort') === 'name_asc' ? 'selected' : '' }}>Name (A-Z)</option>
+                        <option value="name_desc" {{ request('sort') === 'name_desc' ? 'selected' : '' }}>Name (Z-A)</option>
+                        <option value="latest" {{ request('sort') === 'latest' ? 'selected' : '' }}>Newest</option>
+                        <option value="oldest" {{ request('sort') === 'oldest' ? 'selected' : '' }}>Oldest</option>
+                    </select>
+                </div>
+            </div>
+
+            <div class="flex justify-end">
+                <div class="space-x-2">
+                    <button type="submit" class="inline-flex items-center px-4 py-2 bg-indigo-600 border border-transparent rounded-md font-semibold text-xs text-white uppercase tracking-widest hover:bg-indigo-700 active:bg-indigo-900 focus:outline-none focus:border-indigo-900 focus:ring ring-indigo-300 disabled:opacity-25 transition ease-in-out duration-150">
+                        <i class="fas fa-filter mr-2"></i> Filter
+                    </button>
+                    @if(request()->hasAny(['search', 'status', 'linked', 'has_sizes']) || request('sort', 'display_order_asc') !== 'display_order_asc')
+                    <a href="{{ route('admin.size-categories.index') }}" class="inline-flex items-center px-4 py-2 bg-gray-600 border border-transparent rounded-md font-semibold text-xs text-white uppercase tracking-widest hover:bg-gray-700 active:bg-gray-900 focus:outline-none focus:border-gray-900 focus:ring ring-gray-300 disabled:opacity-25 transition ease-in-out duration-150">
+                        <i class="fas fa-times mr-2"></i> Clear
+                    </a>
+                    @endif
                 </div>
             </div>
         </form>

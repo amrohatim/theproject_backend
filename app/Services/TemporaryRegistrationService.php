@@ -62,6 +62,9 @@ class TemporaryRegistrationService
     {
         $cacheKey = "temp_registration_{$registrationToken}";
         Cache::forget($cacheKey);
+        Cache::forget("temp_email_verification_{$registrationToken}");
+        Cache::forget("temp_phone_verification_{$registrationToken}");
+        Cache::forget("temp_phone_verified_{$registrationToken}");
         
         Log::info("Temporary registration removed", [
             'token' => $registrationToken,
@@ -239,6 +242,41 @@ class TemporaryRegistrationService
         Cache::forget($cacheKey);
 
         Log::info("Phone verification request ID removed", [
+            'token' => $registrationToken,
+        ]);
+    }
+
+    /**
+     * Mark phone as verified for temporary registration.
+     */
+    public function storePhoneVerifiedStatus(string $registrationToken): void
+    {
+        $cacheKey = "temp_phone_verified_{$registrationToken}";
+        Cache::put($cacheKey, true, Carbon::now()->addHours(24));
+
+        Log::info("Phone marked as verified for temporary registration", [
+            'token' => $registrationToken,
+        ]);
+    }
+
+    /**
+     * Check if phone is verified for temporary registration.
+     */
+    public function isPhoneVerified(string $registrationToken): bool
+    {
+        $cacheKey = "temp_phone_verified_{$registrationToken}";
+        return Cache::get($cacheKey, false) === true;
+    }
+
+    /**
+     * Remove phone verified status for temporary registration.
+     */
+    public function removePhoneVerifiedStatus(string $registrationToken): void
+    {
+        $cacheKey = "temp_phone_verified_{$registrationToken}";
+        Cache::forget($cacheKey);
+
+        Log::info("Phone verified status removed", [
             'token' => $registrationToken,
         ]);
     }

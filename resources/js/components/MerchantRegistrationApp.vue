@@ -217,7 +217,6 @@
           <OtpVerificationStep
             v-if="currentStep === 3"
             :phone="formData.merchantInfo.phone"
-            :user-id="userId"
             :loading="loading"
             @submit="handleOtpVerification"
             @resend="resendOtpVerification"
@@ -226,7 +225,7 @@
 
           <LicenseUploadStep
             v-if="currentStep === 4"
-            :user-id="userId"
+            :registration-token="registrationToken"
             :loading="loading"
             @submit="handleLicenseUpload"
             ref="licenseUploadStep"
@@ -325,7 +324,6 @@ export default {
       error: null,
       success: null,
       registrationToken: null,
-      userId: null,
       otpRequestId: null,
       steps: [
         { name: 'business_info' },
@@ -435,7 +433,6 @@ export default {
         );
         
         if (response.success) {
-          this.userId = response.user_id;
           this.success = response.message;
           
           // Send OTP automatically
@@ -486,7 +483,6 @@ export default {
 
         if (response.success) {
           this.success = response.message;
-          this.userId = response.user_id;
           this.currentStep = 4;
 
           // Clear success message after 3 seconds
@@ -515,7 +511,7 @@ export default {
 
       try {
         const response = await merchantRegistrationApi.uploadLicense(
-          licenseData.user_id,
+          this.registrationToken,
           licenseData
         );
         

@@ -120,19 +120,25 @@ class ProviderRegistrationController extends Controller
     {
         try {
             $validator = Validator::make($request->all(), [
-                'user_id' => 'required|exists:users,id',
+                'user_id' => 'nullable|exists:users,id',
+                'registration_token' => 'nullable|string',
                 'license_file' => 'required|file|mimes:pdf|max:10240', // 10MB max
-                'license_start_date' => 'required|date|after_or_equal:today',
+                'license_start_date' => 'required|date',
                 'license_expiry_date' => 'required|date|after:license_start_date',
                 'notes' => 'nullable|string|max:500',
             ], [
                 'license_start_date.required' => 'License start date is required.',
                 'license_start_date.date' => 'License start date must be a valid date.',
-                'license_start_date.after_or_equal' => 'License start date cannot be in the past.',
                 'license_expiry_date.required' => 'License expiry date is required.',
                 'license_expiry_date.date' => 'License expiry date must be a valid date.',
                 'license_expiry_date.after' => 'License expiry date must be after the start date.',
             ]);
+
+            $validator->after(function ($validator) use ($request) {
+                if (!$request->filled('registration_token') && !$request->filled('user_id')) {
+                    $validator->errors()->add('registration_token', 'Registration token or user ID is required.');
+                }
+            });
 
             if ($validator->fails()) {
                 return response()->json([
@@ -142,11 +148,20 @@ class ProviderRegistrationController extends Controller
                 ], 422);
             }
 
-            $result = $this->registrationService->completeProviderLicense(
-                $request->user_id,
-                $request->file('license_file'),
-                $request->only(['license_start_date', 'license_expiry_date', 'notes'])
-            );
+            if ($request->filled('registration_token')) {
+                $result = $this->registrationService->completeProviderRegistrationWithLicense(
+                    $request->registration_token,
+                    $request->file('license_file'),
+                    $request->only(['license_start_date', 'license_expiry_date', 'notes'])
+                );
+            } else {
+                // Backward compatibility path for existing flows that still submit user_id
+                $result = $this->registrationService->completeProviderLicense(
+                    $request->user_id,
+                    $request->file('license_file'),
+                    $request->only(['license_start_date', 'license_expiry_date', 'notes'])
+                );
+            }
 
             return response()->json($result);
         } catch (Exception $e) {

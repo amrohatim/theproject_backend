@@ -221,7 +221,7 @@
 
                 <!-- Back Link -->
                 <div class="mb-4">
-                    <a href="/register/provider/phone-verification" class="text-[var(--primary)] hover:text-[var(--primary-hover)] transition-colors duration-300 text-sm font-medium">
+                    <a id="backToPhoneLink" href="/register/provider/phone-verification" class="text-[var(--primary)] hover:text-[var(--primary-hover)] transition-colors duration-300 text-sm font-medium">
                         <i class="fas fa-arrow-{{ app()->getLocale() == 'ar' ? 'right' : 'left' }} {{ app()->getLocale() == 'ar' ? 'ml-2' : 'mr-2' }}"></i>
                         {{ __('messages.back_to_phone_verification') }}
                     </a>
@@ -301,7 +301,7 @@
                     <!-- Submit Button -->
                     <button type="submit" id="submitBtn" class="w-full text-white py-3 px-4 rounded-md font-semibold transition-all duration-300 transform hover:scale-105 focus:outline-none focus:ring-2 focus:ring-[var(--primary)] focus:ring-offset-2" style="background: linear-gradient(135deg, var(--primary) 0%, var(--primary-hover) 100%);">
                         <span class="loading hidden">
-                            <i class="fas fa-spinner fa-spin mr-2"></i>
+                            <i class="fas fa-spin mt-2 mr-2"></i>
                         </span>
                         <span class="button-text">{{ __('messages.complete_registration') }}</span>
                     </button>
@@ -311,10 +311,25 @@
     </div>
 
     <script>
-        // Set default start date to today
+        // Set default start date to local today (not UTC day).
         document.addEventListener('DOMContentLoaded', function() {
-            const today = new Date().toISOString().split('T')[0];
+            const now = new Date();
+            const localDate = new Date(now.getTime() - (now.getTimezoneOffset() * 60000));
+            const today = localDate.toISOString().split('T')[0];
             document.getElementById('license_start_date').value = today;
+            const urlParams = new URLSearchParams(window.location.search);
+            const tokenFromUrl = urlParams.get('token');
+            const tokenFromStorage = localStorage.getItem('provider_registration_token');
+            const registrationToken = tokenFromUrl || tokenFromStorage;
+
+            if (tokenFromUrl) {
+                localStorage.setItem('provider_registration_token', tokenFromUrl);
+            }
+
+            if (registrationToken) {
+                const backLink = document.getElementById('backToPhoneLink');
+                backLink.href = `/register/provider/phone-verification?token=${encodeURIComponent(registrationToken)}`;
+            }
         });
 
         // File upload preview
@@ -375,9 +390,10 @@
         document.getElementById('licenseForm').addEventListener('submit', function(e) {
             e.preventDefault();
 
-            // Get user_id from localStorage (should be set after phone verification)
-            const userId = localStorage.getItem('provider_user_id');
-            if (!userId) {
+            // Get registration token from URL first, then localStorage.
+            const urlParams = new URLSearchParams(window.location.search);
+            const registrationToken = urlParams.get('token') || localStorage.getItem('provider_registration_token');
+            if (!registrationToken) {
                 alert('{{ __('messages.user_session_not_found') }}');
                 window.location.href = '/register/provider/phone-verification';
                 return;
@@ -389,7 +405,7 @@
             submitBtn.disabled = true;
 
             const formData = new FormData(this);
-            formData.append('user_id', userId);
+            formData.append('registration_token', registrationToken);
 
             fetch('/api/provider-registration/license', {
                 method: 'POST',
@@ -398,13 +414,20 @@
                     'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
                 }
             })
-            .then(response => response.json())
+            .then(async response => {
+                const data = await response.json();
+                if (!response.ok) {
+                    const validationErrors = data.errors ? Object.values(data.errors).flat() : [];
+                    const firstValidationError = validationErrors.length ? validationErrors[0] : null;
+                    throw new Error(firstValidationError || data.message || '{{ __('messages.license_upload_failed') }}');
+                }
+                return data;
+            })
             .then(data => {
                 if (data.success) {
                     alert('{{ __('messages.license_uploaded_successfully') }}');
                     // Clear stored data
                     localStorage.removeItem('provider_registration_token');
-                    localStorage.removeItem('provider_user_id');
                     window.location.href = '/login';
                 } else {
                     throw new Error(data.message || '{{ __('messages.license_upload_failed') }}');

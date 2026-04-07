@@ -51,7 +51,9 @@ class MerchantRegistrationApi {
       }
 
       if (!response.ok) {
-        throw new Error(data.message || `HTTP error! status: ${response.status}`);
+        const validationErrors = data?.errors ? Object.values(data.errors).flat() : [];
+        const firstValidationError = validationErrors.length ? validationErrors[0] : null;
+        throw new Error(firstValidationError || data.message || `HTTP error! status: ${response.status}`);
       }
 
       return data;
@@ -98,7 +100,9 @@ class MerchantRegistrationApi {
       }
 
       if (!response.ok) {
-        throw new Error(data.message || `HTTP error! status: ${response.status}`);
+        const validationErrors = data?.errors ? Object.values(data.errors).flat() : [];
+        const firstValidationError = validationErrors.length ? validationErrors[0] : null;
+        throw new Error(firstValidationError || data.message || `HTTP error! status: ${response.status}`);
       }
 
       return data;
@@ -233,9 +237,9 @@ class MerchantRegistrationApi {
   }
 
   // Step 4: Upload license
-  async uploadLicense(userId, licenseData) {
+  async uploadLicense(registrationToken, licenseData) {
     const formData = new FormData();
-    formData.append('user_id', userId);
+    formData.append('registration_token', registrationToken);
     formData.append('license_file', licenseData.license_file);
 
     if (licenseData.license_start_date) {

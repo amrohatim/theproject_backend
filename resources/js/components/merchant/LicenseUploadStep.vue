@@ -59,7 +59,6 @@
           v-model="formData.license_start_date"
           class="form-input"
           :class="{ 'error': errors.license_start_date }"
-          :min="minStartDate"
           required
         />
         <div v-if="errors.license_start_date" class="error-message">{{ errors.license_start_date[0] }}</div>
@@ -121,8 +120,8 @@
 export default {
   name: 'LicenseUploadStep',
   props: {
-    userId: {
-      type: [String, Number],
+    registrationToken: {
+      type: String,
       required: true
     },
     loading: {
@@ -144,11 +143,6 @@ export default {
     };
   },
   computed: {
-    minStartDate() {
-      // Start date cannot be in the past
-      const today = new Date();
-      return today.toISOString().split('T')[0];
-    },
     minEndDate() {
       // End date must be after start date
       if (this.formData.license_start_date) {
@@ -156,7 +150,7 @@ export default {
         startDate.setDate(startDate.getDate() + 1); // At least one day after start date
         return startDate.toISOString().split('T')[0];
       }
-      return this.minStartDate;
+      return '';
     }
   },
   methods: {
@@ -170,7 +164,7 @@ export default {
 
       if (this.licenseFile) {
         this.$emit('submit', {
-          user_id: this.userId,
+          registration_token: this.registrationToken,
           license_file: this.licenseFile,
           license_start_date: this.formData.license_start_date,
           license_end_date: this.formData.license_end_date,
@@ -197,14 +191,6 @@ export default {
       if (this.formData.license_start_date && this.formData.license_end_date) {
         const startDate = new Date(this.formData.license_start_date);
         const endDate = new Date(this.formData.license_end_date);
-        const today = new Date();
-        today.setHours(0, 0, 0, 0);
-
-        // Check if start date is not in the past
-        if (startDate < today) {
-          this.errors.license_start_date = [this.$t('license_start_date_cannot_past')];
-          isValid = false;
-        }
 
         // Check if end date is after start date
         if (endDate <= startDate) {

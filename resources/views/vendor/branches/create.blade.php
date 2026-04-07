@@ -64,7 +64,7 @@
 .form-input:focus, .form-textarea:focus, .form-select:focus {
     border-color: var(--primary);
     border-width: 2px;
-    background-color: #A46BC1;
+    background-color: #ffffffff;
     outline: none;
 }
 

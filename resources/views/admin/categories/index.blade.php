@@ -37,14 +37,14 @@
     <!-- Search and filters -->
     <div class="bg-white dark:bg-gray-800 rounded-lg shadow mb-6 p-4 border border-gray-200 dark:border-gray-700">
         <form action="{{ route('admin.categories.index') }}" method="GET" class="space-y-4">
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
                 <div>
                     <label for="search" class="block text-sm font-medium text-gray-700 dark:text-gray-300">Search</label>
                     <div class="mt-1 relative rounded-md shadow-sm">
                         <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
                             <i class="fas fa-search text-gray-400"></i>
                         </div>
-                        <input type="text" name="search" id="search" class="focus:ring-indigo-500 focus:border-indigo-500 block w-full pl-10 sm:text-sm border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-white rounded-md" placeholder="Search categories...">
+                        <input type="text" name="search" id="search" value="{{ request('search') }}" class="focus:ring-indigo-500 focus:border-indigo-500 block w-full px-2 sm:text-sm border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-white rounded-md" placeholder="Search categories...">
                     </div>
                 </div>
 
@@ -52,16 +52,29 @@
                     <label for="type" class="block text-sm font-medium text-gray-700 dark:text-gray-300">Type</label>
                     <select id="type" name="type" class="mt-1 block w-full pl-3 pr-10 py-2 text-base border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-white focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm rounded-md">
                         <option value="">All Types</option>
-                        <option value="product">Product</option>
-                        <option value="service">Service</option>
+                        <option value="product" {{ request('type') === 'product' ? 'selected' : '' }}>Product</option>
+                        <option value="service" {{ request('type') === 'service' ? 'selected' : '' }}>Service</option>
+                    </select>
+                </div>
+
+                <div>
+                    <label for="filter_parent_id" class="block text-sm font-medium text-gray-700 dark:text-gray-300">Parent Category</label>
+                    <select id="filter_parent_id" name="parent_id" class="mt-1 block w-full pl-3 pr-10 py-2 text-base border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-white focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm rounded-md">
+                        <option value="">All Parent Categories</option>
+                        <option value="null" {{ request('parent_id') === 'null' ? 'selected' : '' }}>Main Categories Only</option>
                     </select>
                 </div>
             </div>
 
-            <div class="flex justify-end">
+            <div class="flex justify-end space-x-2">
                 <button type="submit" class="inline-flex items-center px-4 py-2 bg-indigo-600 border border-transparent rounded-md font-semibold text-xs text-white uppercase tracking-widest hover:bg-indigo-700 active:bg-indigo-900 focus:outline-none focus:border-indigo-900 focus:ring ring-indigo-300 disabled:opacity-25 transition ease-in-out duration-150">
                     <i class="fas fa-filter mr-2"></i> Filter
                 </button>
+                @if(request()->hasAny(['search', 'type', 'parent_id']))
+                <a href="{{ route('admin.categories.index') }}" class="inline-flex items-center px-4 py-2 bg-gray-600 border border-transparent rounded-md font-semibold text-xs text-white uppercase tracking-widest hover:bg-gray-700 active:bg-gray-900 focus:outline-none focus:border-gray-900 focus:ring ring-gray-300 disabled:opacity-25 transition ease-in-out duration-150">
+                    <i class="fas fa-times mr-2"></i> Clear
+                </a>
+                @endif
             </div>
         </form>
     </div>
@@ -397,7 +410,7 @@
 
 <script>
     // Function to fetch parent categories via AJAX
-    function fetchParentCategories() {
+    function fetchParentCategories(callback) {
         // Create a new XMLHttpRequest object
         const xhr = new XMLHttpRequest();
 
@@ -411,30 +424,55 @@
             if (xhr.status === 200) {
                 // Parse the JSON response
                 const parentCategories = JSON.parse(xhr.responseText);
-
-                // Get the parent categories select element
-                const parentCategorySelect = document.getElementById('parent_id');
-
-                // Clear existing options except the first one (None)
-                while (parentCategorySelect.options.length > 1) {
-                    parentCategorySelect.remove(1);
+                if (typeof callback === 'function') {
+                    callback(parentCategories);
                 }
-
-                // Add each parent category to the select
-                parentCategories.forEach(category => {
-                    // Create a new option
-                    const option = document.createElement('option');
-                    option.value = category.id;
-                    option.textContent = `${category.name} (${category.type ? category.type.charAt(0).toUpperCase() + category.type.slice(1) : 'Product'})`;
-
-                    // Add the option to the select
-                    parentCategorySelect.appendChild(option);
-                });
             }
         };
 
         // Send the request
         xhr.send();
+    }
+
+    function populateSubcategoryParentOptions(parentCategories) {
+        const parentCategorySelect = document.getElementById('parent_id');
+        if (!parentCategorySelect) return;
+
+        // Keep the first option "None (Parent Category)"
+        while (parentCategorySelect.options.length > 1) {
+            parentCategorySelect.remove(1);
+        }
+
+        parentCategories.forEach(category => {
+            const option = document.createElement('option');
+            option.value = category.id;
+            option.textContent = `${category.name} (${category.type ? category.type.charAt(0).toUpperCase() + category.type.slice(1) : 'Product'})`;
+            parentCategorySelect.appendChild(option);
+        });
+    }
+
+    function populateFilterParentOptions(parentCategories) {
+        const filterParentSelect = document.getElementById('filter_parent_id');
+        if (!filterParentSelect) return;
+
+        const selectedParentId = @json(request('parent_id'));
+
+        // Keep the first two options: "All Parent Categories" and "Main Categories Only"
+        while (filterParentSelect.options.length > 2) {
+            filterParentSelect.remove(2);
+        }
+
+        parentCategories.forEach(category => {
+            const option = document.createElement('option');
+            option.value = category.id;
+            option.textContent = `${category.name} (${category.type ? category.type.charAt(0).toUpperCase() + category.type.slice(1) : 'Product'})`;
+
+            if (selectedParentId && selectedParentId !== 'null' && String(category.id) === selectedParentId) {
+                option.selected = true;
+            }
+
+            filterParentSelect.appendChild(option);
+        });
     }
 
     function openAddParentCategoryModal() {
@@ -447,7 +485,7 @@
 
     function openAddCategoryModal() {
         // Fetch parent categories before opening the modal
-        fetchParentCategories();
+        fetchParentCategories(populateSubcategoryParentOptions);
         document.getElementById('addCategoryModal').classList.remove('hidden');
     }
 
@@ -564,7 +602,10 @@
     // Submit forms via AJAX
     document.addEventListener('DOMContentLoaded', function() {
         // Fetch parent categories when the page loads
-        fetchParentCategories();
+        fetchParentCategories(function(parentCategories) {
+            populateSubcategoryParentOptions(parentCategories);
+            populateFilterParentOptions(parentCategories);
+        });
         // Handle parent category form submission
         const parentCategoryForm = document.getElementById('parentCategoryForm');
 

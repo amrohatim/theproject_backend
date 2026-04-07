@@ -231,7 +231,7 @@
                 <div id="alert-container" class="hidden mb-4"></div>
 
                 <!-- Phone Verification Section -->
-                <div class="bg-[var(--towhite)] border border-[var(--primary-light)] rounded-lg p-6 mb-6">
+                <div class="border border-[var(--primary-light)] rounded-lg p-6 mb-6">
                     <div class="text-center">
                         <div class="w-16 h-16 bg-[var(--primary-light)] rounded-full flex items-center justify-center mx-auto mb-4">
                             <i class="fas fa-mobile-alt text-[var(--primary)] text-2xl"></i>
@@ -397,17 +397,16 @@
                 if (data.success) {
                     showAlert('Phone verified successfully! Redirecting...', 'success');
 
-                    // Store user_id for license upload step
-                    if (data.user_id) {
-                        localStorage.setItem('provider_user_id', data.user_id);
+                    // Keep registration token for final license upload step.
+                    const finalRegistrationToken = data.registration_token || registrationToken;
+                    if (finalRegistrationToken) {
+                        localStorage.setItem('provider_registration_token', finalRegistrationToken);
                     }
-
-                    // Clear the registration token as it's no longer needed
-                    localStorage.removeItem('provider_registration_token');
 
                     // Redirect to license upload step
                     setTimeout(() => {
-                        window.location.href = '/register/provider/step3';
+                        const redirectToken = encodeURIComponent(finalRegistrationToken || '');
+                        window.location.href = `/register/provider/step3?token=${redirectToken}`;
                     }, 2000);
                 } else {
                     showAlert(data.message || 'Invalid OTP. Please try again.');

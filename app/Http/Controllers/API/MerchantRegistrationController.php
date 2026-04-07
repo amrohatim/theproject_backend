@@ -139,18 +139,24 @@ class MerchantRegistrationController extends Controller
     {
         try {
             $validator = Validator::make($request->all(), [
-                'user_id' => 'required|exists:users,id',
+                'user_id' => 'nullable|exists:users,id',
+                'registration_token' => 'nullable|string',
                 'license_file' => 'required|file|mimes:pdf|max:10240', // 10MB max
-                'license_start_date' => 'required|date|after_or_equal:today',
+                'license_start_date' => 'required|date',
                 'license_end_date' => 'required|date|after:license_start_date',
             ], [
                 'license_start_date.required' => 'License start date is required.',
                 'license_start_date.date' => 'License start date must be a valid date.',
-                'license_start_date.after_or_equal' => 'License start date cannot be in the past.',
                 'license_end_date.required' => 'License end date is required.',
                 'license_end_date.date' => 'License end date must be a valid date.',
                 'license_end_date.after' => 'License end date must be after the start date.',
             ]);
+
+            $validator->after(function ($validator) use ($request) {
+                if (!$request->filled('registration_token') && !$request->filled('user_id')) {
+                    $validator->errors()->add('registration_token', 'Registration token or user ID is required.');
+                }
+            });
 
             if ($validator->fails()) {
                 return response()->json([
@@ -160,17 +166,27 @@ class MerchantRegistrationController extends Controller
                 ], 422);
             }
 
-            $user = User::findOrFail($request->user_id);
+            if ($request->filled('registration_token')) {
+                $result = $this->registrationService->completeMerchantRegistrationWithLicense(
+                    $request->registration_token,
+                    $request->file('license_file'),
+                    $request->only(['license_start_date', 'license_end_date', 'notes'])
+                );
+            } else {
+                $user = User::findOrFail($request->user_id);
 
-            // Verify user is a merchant
-            if ($user->role !== 'merchant') {
-                return response()->json([
-                    'success' => false,
-                    'message' => 'User is not a merchant',
-                ], 400);
+                // Verify user is a merchant
+                if ($user->role !== 'merchant') {
+                    return response()->json([
+                        'success' => false,
+                        'message' => 'User is not a merchant',
+                    ], 400);
+                }
+
+                $payload = $request->all();
+                $payload['license_file'] = $request->file('license_file');
+                $result = $this->registrationService->uploadMerchantLicense($user, $payload);
             }
-
-            $result = $this->registrationService->uploadMerchantLicense($user, $request->all());
 
             if ($result['success']) {
                 return response()->json($result, 200);

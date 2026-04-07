@@ -724,7 +724,36 @@ Route::prefix('admin')->name('admin.')->middleware(['auth', \App\Http\Middleware
             return response()->json($parentCategories);
         }
 
-        $categories = \App\Models\Category::with('parent')->orderBy('name')->paginate(10);
+        $query = \App\Models\Category::with('parent');
+
+        // Apply search filter
+        if ($request->filled('search')) {
+            $search = $request->input('search');
+            $query->where(function ($q) use ($search) {
+                $q->where('name', 'like', "%{$search}%")
+                    ->orWhere('category_name_arabic', 'like', "%{$search}%")
+                    ->orWhere('description', 'like', "%{$search}%")
+                    ->orWhere('category_description_arabic', 'like', "%{$search}%");
+            });
+        }
+
+        // Apply type filter
+        if ($request->filled('type')) {
+            $query->where('type', $request->input('type'));
+        }
+
+        // Apply parent filter
+        if ($request->filled('parent_id')) {
+            if ($request->input('parent_id') === 'null') {
+                $query->whereNull('parent_id');
+            } else {
+                $query->where('parent_id', $request->input('parent_id'));
+            }
+        }
+
+        $categories = $query->orderBy('name')->paginate(10);
+        $categories->appends($request->query());
+
         return view('admin.categories.index', compact('categories'));
     })->name('categories.index');
     Route::post('/categories', function (\Illuminate\Http\Request $request) {
@@ -905,8 +934,49 @@ Route::prefix('admin')->name('admin.')->middleware(['auth', \App\Http\Middleware
     Route::resource('subscription-types', \App\Http\Controllers\Admin\SubscriptionTypeController::class);
 
     // Companies
-    Route::get('/companies', function () {
-        $companies = \App\Models\Company::with('user')->orderBy('created_at', 'desc')->paginate(10);
+    Route::get('/companies', function (Illuminate\Http\Request $request) {
+        $query = \App\Models\Company::with('user')->withCount('branches');
+
+        // Search
+        if ($request->filled('search')) {
+            $search = $request->input('search');
+            $query->where(function ($q) use ($search) {
+                $q->where('name', 'like', "%{$search}%")
+                    ->orWhere('business_type', 'like', "%{$search}%")
+                    ->orWhere('email', 'like', "%{$search}%")
+                    ->orWhere('phone', 'like', "%{$search}%")
+                    ->orWhere('registration_number', 'like', "%{$search}%")
+                    ->orWhereHas('user', function ($userQuery) use ($search) {
+                        $userQuery->where('name', 'like', "%{$search}%")
+                            ->orWhere('email', 'like', "%{$search}%");
+                    });
+            });
+        }
+
+        // Status filter
+        if ($request->filled('status')) {
+            $query->where('status', $request->input('status'));
+        }
+
+        // Sort
+        $sort = $request->input('sort', 'newest');
+        switch ($sort) {
+            case 'oldest':
+                $query->oldest();
+                break;
+            case 'name_asc':
+                $query->orderBy('name');
+                break;
+            case 'name_desc':
+                $query->orderByDesc('name');
+                break;
+            case 'newest':
+            default:
+                $query->latest();
+                break;
+        }
+
+        $companies = $query->paginate(10)->appends($request->query());
         return view('admin.companies.index', compact('companies'));
     })->name('companies.index');
     Route::get('/companies/create', function () {
@@ -984,8 +1054,42 @@ Route::prefix('admin')->name('admin.')->middleware(['auth', \App\Http\Middleware
     })->name('companies.destroy');
 
     // Branches
-    Route::get('/branches', function () {
-        $branches = \App\Models\Branch::with(['company'])->orderBy('created_at', 'desc')->paginate(10);
+    Route::get('/branches', function (Illuminate\Http\Request $request) {
+        $query = \App\Models\Branch::with(['company']);
+
+        // Search
+        if ($request->filled('search')) {
+            $search = $request->input('search');
+            $query->where(function ($q) use ($search) {
+                $q->where('name', 'like', "%{$search}%")
+                    ->orWhere('branch_code', 'like', "%{$search}%")
+                    ->orWhere('phone', 'like', "%{$search}%")
+                    ->orWhere('email', 'like', "%{$search}%")
+                    ->orWhere('address', 'like', "%{$search}%")
+                    ->orWhere('city', 'like', "%{$search}%")
+                    ->orWhere('state', 'like', "%{$search}%")
+                    ->orWhereHas('company', function ($companyQuery) use ($search) {
+                        $companyQuery->where('name', 'like', "%{$search}%");
+                    });
+            });
+        }
+
+        // Filter by company
+        if ($request->filled('company_id')) {
+            $query->where('company_id', $request->input('company_id'));
+        }
+
+        // Filter by status
+        if ($request->filled('status')) {
+            $query->where('status', $request->input('status'));
+        }
+
+        // Filter by featured
+        if ($request->filled('featured')) {
+            $query->where('featured', (bool) $request->input('featured'));
+        }
+
+        $branches = $query->orderBy('created_at', 'desc')->paginate(10)->appends($request->query());
         $companies = \App\Models\Company::orderBy('name')->get();
         return view('admin.branches.index', compact('branches', 'companies'));
     })->name('branches.index');

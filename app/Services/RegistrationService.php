@@ -1613,7 +1613,7 @@ class RegistrationService
     }
 
     /**
-     * Verify phone OTP and create user.
+     * Verify phone OTP for temporary registration (without creating user yet).
      */
     public function verifyPhoneOTPAndCreateUser(string $registrationToken, string $otpCode): array
     {
@@ -1655,65 +1655,28 @@ class RegistrationService
                 ];
             }
 
+            // Mark phone as verified in temporary storage and keep registration data
+            // until the final step (license upload) succeeds.
+            $this->tempRegistrationService->storePhoneVerifiedStatus($registrationToken);
+            $this->tempRegistrationService->removePhoneVerificationRequestId($registrationToken);
+
             $userData = $tempData['user_data'];
             $userType = $tempData['user_type'];
+            $nextStep = $userType === 'vendor' ? 'company_information' : 'license_upload';
 
-            DB::beginTransaction();
-
-            // Create the user in database
-            $user = User::create([
-                'name' => $userData['name'],
-                'email' => $userData['email'],
-                'password' => Hash::make($userData['password']),
-                'phone' => $userData['phone'],
-                'role' => $userType,
-                'status' => 'inactive',
-                'registration_step' => 'phone_verified',
-                'email_verified_at' => now(),
-                'phone_verified' => true,
-                'phone_verified_at' => now(),
-            ]);
-
-            // Create role-specific profile
-            if ($userType === 'merchant') {
-                // Get temporary files
-                $tempFiles = $this->getTemporaryFiles($registrationToken);
-                $this->createMerchantProfile($user, $userData, $tempFiles);
-            } elseif ($userType === 'provider') {
-                // Get temporary files
-                $tempFiles = $this->getTemporaryFiles($registrationToken);
-                $this->createProviderProfile($user, $userData, $tempFiles);
-            }
-
-            // Clean up temporary data
-            $this->tempRegistrationService->removeTemporaryRegistration($registrationToken);
-
-            // Clean up temporary files
-            $this->cleanupTemporaryFiles($registrationToken);
-
-            DB::commit();
-
-            $nextStep = match($userType) {
-                'vendor' => 'company_information',
-                'provider' => 'license_upload',
-                'merchant' => 'license_upload',
-                default => 'license_upload'
-            };
-
-            Log::info('User created after phone verification', [
-                'user_id' => $user->id,
+            Log::info('Phone verified for temporary registration', [
+                'registration_token' => $registrationToken,
                 'phone' => $userData['phone'],
                 'user_type' => $userType,
             ]);
 
             return [
                 'success' => true,
-                'message' => 'Phone verified successfully. Registration completed!',
-                'user_id' => $user->id,
+                'message' => 'Phone verified successfully. Please continue to the next step.',
+                'registration_token' => $registrationToken,
                 'next_step' => $nextStep,
             ];
         } catch (Exception $e) {
-            DB::rollBack();
             Log::error('Phone verification error: ' . $e->getMessage());
             return [
                 'success' => false,
@@ -1773,6 +1736,274 @@ class RegistrationService
             return [
                 'success' => false,
                 'message' => 'Failed to resend OTP. Please try again.',
+            ];
+        }
+    }
+
+    /**
+     * Complete provider registration with final license upload.
+     * This creates user/profile/license in one transaction to avoid partial registration records.
+     */
+    public function completeProviderRegistrationWithLicense(string $registrationToken, UploadedFile $licenseFile, array $licenseData = []): array
+    {
+        try {
+            $tempData = $this->tempRegistrationService->getTemporaryRegistration($registrationToken);
+
+            if (!$tempData) {
+                return [
+                    'success' => false,
+                    'message' => 'Registration session expired. Please start again.',
+                ];
+            }
+
+            if (!$this->tempRegistrationService->isEmailVerified($registrationToken)) {
+                return [
+                    'success' => false,
+                    'message' => 'Please verify your email first.',
+                ];
+            }
+
+            if (!$this->tempRegistrationService->isPhoneVerified($registrationToken)) {
+                return [
+                    'success' => false,
+                    'message' => 'Please verify your phone number first.',
+                ];
+            }
+
+            if (($tempData['user_type'] ?? null) !== 'provider') {
+                return [
+                    'success' => false,
+                    'message' => 'Invalid registration type for this step.',
+                ];
+            }
+
+            $userData = $tempData['user_data'];
+            $this->validateUniqueFields($userData);
+
+            DB::beginTransaction();
+
+            $user = User::create([
+                'name' => $userData['name'],
+                'email' => $userData['email'],
+                'password' => Hash::make($userData['password']),
+                'phone' => $userData['phone'],
+                'role' => 'provider',
+                'status' => 'pending',
+                'registration_step' => 'phone_verified',
+                'email_verified_at' => now(),
+                'phone_verified' => true,
+                'phone_verified_at' => now(),
+            ]);
+
+            $tempFiles = $this->getTemporaryFiles($registrationToken);
+            $this->createProviderProfile($user, $userData, $tempFiles);
+
+            // Upload license file and create license record
+            $licensePath = $this->uploadLicenseFile($licenseFile, $user->id);
+            $startDate = $licenseData['license_start_date'] ?? Carbon::now()->toDateString();
+            if (isset($licenseData['license_expiry_date'])) {
+                $endDate = $licenseData['license_expiry_date'];
+                $duration = Carbon::parse($startDate)->diffInDays(Carbon::parse($endDate));
+            } else {
+                $duration = (int)($licenseData['duration_days'] ?? 365);
+                $endDate = Carbon::parse($startDate)->addDays($duration)->toDateString();
+            }
+            $renewalDate = $endDate;
+
+            $licenseStatus = $licenseData['license_status'] ?? 'pending';
+
+            $license = License::create([
+                'user_id' => $user->id,
+                'license_type' => 'registration',
+                'license_file_path' => $licensePath,
+                'license_file_name' => $licenseFile->getClientOriginalName(),
+                'start_date' => $startDate,
+                'end_date' => $endDate,
+                'duration_days' => $duration,
+                'status' => $licenseStatus,
+                'renewal_date' => $renewalDate,
+                'notes' => $licenseData['notes'] ?? null,
+            ]);
+
+            $userStatus = $licenseStatus === 'active' ? 'active' : 'pending';
+            $providerStatus = $licenseStatus === 'active' ? 'active' : 'pending';
+
+            $user->update([
+                'registration_step' => 'license_completed',
+                'status' => $userStatus,
+            ]);
+
+            $user->provider()->update(['status' => $providerStatus]);
+
+            $this->tempRegistrationService->removePhoneVerifiedStatus($registrationToken);
+            $this->tempRegistrationService->removePhoneVerificationRequestId($registrationToken);
+            $this->tempRegistrationService->removeTemporaryRegistration($registrationToken);
+            $this->cleanupTemporaryFiles($registrationToken);
+
+            DB::commit();
+
+            $message = $licenseStatus === 'active'
+                ? 'License uploaded successfully. Registration completed!'
+                : 'License uploaded successfully. Your license is now under review by our admin team.';
+
+            return [
+                'success' => true,
+                'message' => $message,
+                'license_id' => $license->id,
+                'next_step' => $licenseStatus === 'active' ? 'registration_complete' : 'verification_pending',
+                'user_id' => $user->id,
+                'registration_token' => $registrationToken,
+            ];
+        } catch (Exception $e) {
+            if (DB::transactionLevel() > 0) {
+                DB::rollBack();
+            }
+            Log::error('Complete provider registration with license error: ' . $e->getMessage(), [
+                'registration_token' => $registrationToken,
+            ]);
+
+            return [
+                'success' => false,
+                'message' => 'Failed to complete registration. Please try again.',
+            ];
+        }
+    }
+
+    /**
+     * Complete merchant registration with final license upload.
+     * This creates user/profile/license in one transaction to avoid partial registration records.
+     */
+    public function completeMerchantRegistrationWithLicense(string $registrationToken, UploadedFile $licenseFile, array $licenseData = []): array
+    {
+        try {
+            $tempData = $this->tempRegistrationService->getTemporaryRegistration($registrationToken);
+
+            if (!$tempData) {
+                return [
+                    'success' => false,
+                    'message' => 'Registration session expired. Please start again.',
+                ];
+            }
+
+            if (!$this->tempRegistrationService->isEmailVerified($registrationToken)) {
+                return [
+                    'success' => false,
+                    'message' => 'Please verify your email first.',
+                ];
+            }
+
+            if (!$this->tempRegistrationService->isPhoneVerified($registrationToken)) {
+                return [
+                    'success' => false,
+                    'message' => 'Please verify your phone number first.',
+                ];
+            }
+
+            if (($tempData['user_type'] ?? null) !== 'merchant') {
+                return [
+                    'success' => false,
+                    'message' => 'Invalid registration type for this step.',
+                ];
+            }
+
+            $userData = $tempData['user_data'];
+            $this->validateUniqueFields($userData);
+
+            DB::beginTransaction();
+
+            $user = User::create([
+                'name' => $userData['name'],
+                'email' => $userData['email'],
+                'password' => Hash::make($userData['password']),
+                'phone' => $userData['phone'],
+                'role' => 'merchant',
+                'status' => 'pending',
+                'registration_step' => 'phone_verified',
+                'email_verified_at' => now(),
+                'phone_verified' => true,
+                'phone_verified_at' => now(),
+            ]);
+
+            $tempFiles = $this->getTemporaryFiles($registrationToken);
+            $this->createMerchantProfile($user, $userData, $tempFiles);
+
+            $licensePath = $this->uploadLicenseFile($licenseFile, $user->id);
+            $startDate = $licenseData['license_start_date'];
+            $endDate = $licenseData['license_end_date'];
+            $renewalDate = $endDate;
+
+            $startCarbon = Carbon::parse($startDate);
+            $endCarbon = Carbon::parse($endDate);
+            $duration = $startCarbon->diffInDays($endCarbon);
+
+            $licenseStatus = $licenseData['license_status'] ?? 'pending';
+
+            $license = License::create([
+                'user_id' => $user->id,
+                'license_type' => 'registration',
+                'license_file_path' => $licensePath,
+                'license_file_name' => $licenseFile->getClientOriginalName(),
+                'start_date' => $startDate,
+                'end_date' => $endDate,
+                'duration_days' => $duration,
+                'status' => $licenseStatus,
+                'renewal_date' => $renewalDate,
+                'notes' => $licenseData['notes'] ?? null,
+            ]);
+
+            $userStatus = $licenseStatus === 'active' ? 'active' : 'pending';
+            $merchantStatus = $licenseStatus === 'active' ? 'active' : 'pending';
+
+            $user->update([
+                'registration_step' => 'license_completed',
+                'status' => $userStatus,
+            ]);
+
+            if ($user->merchant) {
+                $user->merchant()->update([
+                    'status' => $merchantStatus,
+                    'license_file' => $licensePath,
+                    'license_start_date' => $startDate,
+                    'license_expiry_date' => $endDate,
+                    'license_status' => $licenseStatus === 'active' ? 'verified' : 'checking',
+                    'license_verified' => $licenseStatus === 'active',
+                    'license_uploaded_at' => now(),
+                    'license_rejection_reason' => null,
+                    'license_approved_at' => $licenseStatus === 'active' ? now() : null,
+                    'license_approved_by' => null,
+                ]);
+            }
+
+            $this->tempRegistrationService->removePhoneVerifiedStatus($registrationToken);
+            $this->tempRegistrationService->removePhoneVerificationRequestId($registrationToken);
+            $this->tempRegistrationService->removeTemporaryRegistration($registrationToken);
+            $this->cleanupTemporaryFiles($registrationToken);
+
+            DB::commit();
+
+            $message = $licenseStatus === 'active'
+                ? 'License uploaded successfully. Registration completed!'
+                : 'License uploaded successfully. Your license is now under review by our admin team.';
+
+            return [
+                'success' => true,
+                'message' => $message,
+                'license_id' => $license->id,
+                'next_step' => $licenseStatus === 'active' ? 'registration_complete' : 'verification_pending',
+                'user_id' => $user->id,
+                'registration_token' => $registrationToken,
+            ];
+        } catch (Exception $e) {
+            if (DB::transactionLevel() > 0) {
+                DB::rollBack();
+            }
+            Log::error('Complete merchant registration with license error: ' . $e->getMessage(), [
+                'registration_token' => $registrationToken,
+            ]);
+
+            return [
+                'success' => false,
+                'message' => 'Failed to complete registration. Please try again.',
             ];
         }
     }

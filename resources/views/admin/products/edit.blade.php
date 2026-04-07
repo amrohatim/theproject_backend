@@ -28,6 +28,10 @@
                     <p class="text-gray-500 dark:text-gray-400">Name</p>
                     <p class="font-medium text-gray-900 dark:text-white">{{ $product->name }}</p>
                 </div>
+                  <div>
+                    <p class="text-gray-500 dark:text-gray-400">Arabic Name</p>
+                    <p class="font-medium text-gray-900 dark:text-white">{{ $product->product_name_arabic }}</p>
+                </div>
                 <div>
                     <p class="text-gray-500 dark:text-gray-400">Category</p>
                     <p class="font-medium text-gray-900 dark:text-white">{{ $product->category->name ?? 'N/A' }}</p>
@@ -65,6 +69,10 @@
             <div class="mt-4">
                 <p class="text-gray-500 dark:text-gray-400 text-sm">Description</p>
                 <p class="font-medium text-gray-900 dark:text-white whitespace-pre-line">{{ $product->description ?: 'N/A' }}</p>
+            </div>
+             <div class="mt-4">
+                <p class="text-gray-500 dark:text-gray-400 text-sm">Arabic Description</p>
+                <p class="font-medium text-gray-900 dark:text-white whitespace-pre-line">{{ $product->product_description_arabic ?: 'N/A' }}</p>
             </div>
 
             <div class="mt-4">

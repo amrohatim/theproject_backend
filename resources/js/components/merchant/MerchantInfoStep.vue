@@ -85,32 +85,68 @@
       <!-- Password -->
       <div class="form-group">
         <label for="password" class="form-label">{{ $t('password') }} *</label>
-        <input
-          type="password"
-          id="password"
-          v-model="formData.password"
-          class="form-input"
-          :class="{ 'error': errors.password }"
-          :placeholder="$t('enter_password')"
-          required
-          @input="updateField('password', $event.target.value)"
-        >
+        <div class="password-input-container">
+          <input
+            :type="showPassword ? 'text' : 'password'"
+            id="password"
+            v-model="formData.password"
+            class="form-input password-input"
+            :class="{ 'error': errors.password }"
+            :placeholder="$t('enter_password')"
+            required
+            @input="updateField('password', $event.target.value)"
+          >
+          <button
+            type="button"
+            class="password-toggle-btn"
+            @click="togglePasswordVisibility('password')"
+            :aria-label="showPassword ? $t('hide_password') : $t('show_password')"
+          >
+            <svg v-if="showPassword" xmlns="http://www.w3.org/2000/svg" class="password-toggle-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 3l18 18" />
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10.58 10.58a2 2 0 002.83 2.83" />
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16.68 16.67A9.73 9.73 0 0112 18c-5 0-9-6-9-6a17.65 17.65 0 014.32-4.95M9.88 5.09A9.76 9.76 0 0112 6c5 0 9 6 9 6a17.8 17.8 0 01-1.67 2.39" />
+            </svg>
+            <svg v-else xmlns="http://www.w3.org/2000/svg" class="password-toggle-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M1 12s4-6 11-6 11 6 11 6-4 6-11 6S1 12 1 12z" />
+              <circle cx="12" cy="12" r="3" stroke-width="2"></circle>
+            </svg>
+          </button>
+        </div>
         <div v-if="errors.password" class="error-message">{{ errors.password[0] }}</div>
       </div>
 
       <!-- Confirm Password -->
       <div class="form-group">
         <label for="password_confirmation" class="form-label">{{ $t('confirm_password') }} *</label>
-        <input
-          type="password"
-          id="password_confirmation"
-          v-model="formData.password_confirmation"
-          class="form-input"
-          :class="{ 'error': errors.password_confirmation }"
-          :placeholder="$t('enter_confirm_password')"
-          required
-          @input="updateField('password_confirmation', $event.target.value)"
-        >
+        <div class="password-input-container">
+          <input
+            :type="showPasswordConfirmation ? 'text' : 'password'"
+            id="password_confirmation"
+            v-model="formData.password_confirmation"
+            class="form-input password-input"
+            :class="{ 'error': errors.password_confirmation }"
+            :placeholder="$t('enter_confirm_password')"
+            required
+            @input="updateField('password_confirmation', $event.target.value)"
+          >
+          <button
+            type="button"
+            class="password-toggle-btn"
+            @click="togglePasswordVisibility('confirmation')"
+            :aria-label="showPasswordConfirmation ? $t('hide_password') : $t('show_password')"
+          >
+            <svg v-if="showPasswordConfirmation" xmlns="http://www.w3.org/2000/svg" class="password-toggle-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 3l18 18" />
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10.58 10.58a2 2 0 002.83 2.83" />
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16.68 16.67A9.73 9.73 0 0112 18c-5 0-9-6-9-6a17.65 17.65 0 014.32-4.95M9.88 5.09A9.76 9.76 0 0112 6c5 0 9 6 9 6a17.8 17.8 0 01-1.67 2.39" />
+            </svg>
+            <svg v-else xmlns="http://www.w3.org/2000/svg" class="password-toggle-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M1 12s4-6 11-6 11 6 11 6-4 6-11 6S1 12 1 12z" />
+              <circle cx="12" cy="12" r="3" stroke-width="2"></circle>
+            </svg>
+          </button>
+        </div>
         <div v-if="errors.password_confirmation" class="error-message">{{ errors.password_confirmation[0] }}</div>
       </div>
 
@@ -433,6 +469,8 @@ export default {
       mapError: null,
       showValidationModal: false,
       showLoginModal: false,
+      showPassword: false,
+      showPasswordConfirmation: false,
       validationErrors: [],
       loginModalMessage: '',
       map: null,
@@ -501,6 +539,13 @@ export default {
       if (this.errors[fieldName]) {
         this.errors = { ...this.errors };
         delete this.errors[fieldName];
+      }
+    },
+    togglePasswordVisibility(field) {
+      if (field === 'password') {
+        this.showPassword = !this.showPassword;
+      } else if (field === 'confirmation') {
+        this.showPasswordConfirmation = !this.showPasswordConfirmation;
       }
     },
     handlePhoneInput(event) {
@@ -1265,6 +1310,41 @@ export default {
 .form-input.error {
   border-color: #e53e3e !important;
   box-shadow: 0 0 0 3px rgba(229, 62, 62, 0.1) !important;
+}
+
+.password-input-container {
+  position: relative;
+}
+
+.password-input {
+  padding-right: 44px !important;
+}
+
+.password-toggle-btn {
+  position: absolute;
+  right: 12px;
+  top: 50%;
+  transform: translateY(-50%);
+  border: none;
+  background: transparent;
+  color: #6b7280;
+  cursor: pointer;
+  padding: 4px;
+  z-index: 3;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  line-height: 1;
+}
+
+.password-toggle-btn:hover {
+  color: #374151;
+}
+
+.password-toggle-icon {
+  width: 18px;
+  height: 18px;
+  display: block;
 }
 
 /* Select dropdown styling */

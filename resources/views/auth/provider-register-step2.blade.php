@@ -275,7 +275,7 @@
                 </div>
 
                 <!-- Email Verification Section -->
-                <div class="bg-[var(--towhite)] border border-[var(--primary-light)] rounded-lg p-6 mb-6">
+                <div class="border border-[var(--primary-light)] rounded-lg p-6 mb-6">
                     <div class="flex items-center justify-between mb-4">
                         <div class="flex items-center">
                             <i class="fas fa-envelope text-[var(--primary)] {{ app()->getLocale() == 'ar' ? 'ml-2' : 'mr-2' }}"></i>
