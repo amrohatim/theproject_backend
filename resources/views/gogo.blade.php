@@ -201,14 +201,14 @@
               </button>
               <div class="demo-menu-panel" id="demo-menu-panel" role="menu" aria-label="Demo pages">
                 <a href="{{ route('aboutmerchant') }}" class="demo-menu-card" role="menuitem">
-                  <img src="{{ asset('assets/medium-shot-smiley-woman-sewing-with-machine.avif') }}" alt="Merchant Hero" class="demo-menu-thumb" />
+                  <img src="{{ asset('assets/traderHero.webp') }}" alt="Merchant Hero" class="demo-menu-thumb" />
                   <span>
                     <span class="demo-menu-title">{{ __('messages.merchant') }}</span>
                     <span class="demo-menu-subtitle">{{ __('messages.aboutmerchantdemo') }}</span>
                   </span>
                 </a>
                 <a href="{{ route('aboutvendor') }}" class="demo-menu-card" role="menuitem">
-                  <img src="{{ asset('assets/vendoreps.png') }}" alt="Vendor Hero" class="demo-menu-thumb" />
+                  <img src="{{ asset('assets/vendorHero.webp') }}" alt="Vendor Hero" class="demo-menu-thumb" />
                   <span>
                     <span class="demo-menu-title">{{ __('messages.company') }}</span>
                     <span class="demo-menu-subtitle">{{ __('messages.aboutcompanydemo') }}</span>

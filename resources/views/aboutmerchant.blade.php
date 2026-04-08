@@ -3,9 +3,10 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>About | Merchant - glowlabs Merchant</title>
+    <title>About | Merchant - Glowlabs Merchant</title>
     <link href="https://fonts.googleapis.com/css2?family=Jersey+15&display=swap" rel="stylesheet">
-      <link rel="stylesheet" href="{{ asset('css/global.css') }}" />
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="{{ asset('css/global.css') }}" />
 
    
     <style>
@@ -223,7 +224,7 @@
         }
 
         .merchant-hero__description {
-            font-family: 'Proxima Nova', 'Segoe UI', sans-serif;
+            font-family:'Coco Sharp';
             font-size: clamp(20px, 2.15vw, 32px);
             line-height: 1.25;
             letter-spacing: 0.02em;
@@ -720,7 +721,7 @@
         }
 
         .features-showcase .service-title {
-            font-family: 'Roboto', 'Segoe UI', sans-serif;
+            font-family: 'Coco Sharp';
             font-size: 26px;
             line-height: 1.15;
             color: #a46bc1;
@@ -732,7 +733,7 @@
             font-family: 'Poppins', 'Segoe UI', sans-serif;
             font-size: 18px;
             line-height: 1.4;
-            color: #757575ff;
+             color: #3c3b42ff;
             margin-bottom: 14px;
         }
 
@@ -822,13 +823,33 @@
             }
 
             .features-intro__media {
-                min-height: 420px;
-                padding-inline: 12px;
+                min-height: 0;
+                align-items: center;
+                padding-inline: 0;
             }
 
             .features-notes-row {
-                margin-top: 36px;
+                margin-top: 24px;
                 gap: 20px;
+            }
+
+            .features-section .features-notes-row:first-child {
+                margin-top: 8px;
+            }
+
+            .features-section .features-notes-row:first-child .features-intro__media {
+                min-height: 240px;
+                height: 240px;
+                margin-top: 10px;
+                border-radius: 18px;
+                overflow: hidden;
+            }
+
+            .features-section .features-notes-row:first-child .features-main-image {
+                width: 100%;
+                height: 100%;
+                object-fit: cover;
+                object-position: center top;
             }
 
             .features-avatar {
@@ -1035,6 +1056,15 @@
           }
 
          @media (max-width: 768px) {
+            .merchant-hero__content {
+            position: relative;
+            z-index: 5;
+            max-width: min(1044px, 76vw);
+            display: flex;
+            flex-direction: column;
+            align-items: flex-start;
+            margin-top:150px;
+        }
              .hero-section {
                  min-height: 68vh;
              }
@@ -1085,6 +1115,15 @@
              .merchant-hero .cta-button {
                  border-radius: 16px;
                  padding: 14px 30px;
+             }
+
+             .cloud-divider {
+                 margin-top: -40px;
+                 margin-bottom: -44px;
+             }
+
+             .cloud-divider img {
+                 height: 130px;
              }
 
              .section-title {
@@ -1141,6 +1180,111 @@
                  padding: 12px 24px;
              }
 
+             .features-notes-row {
+                 margin-top: 18px;
+             }
+
+             .features-section .features-notes-row:first-child {
+                 margin-top: 4px;
+             }
+
+             .features-section .features-notes-row:first-child .features-intro__media {
+                 min-height: 210px;
+                 height: 210px;
+             }
+
+             .cloud-divider {
+                 margin-top: -26px;
+                 margin-bottom: -26px;
+             }
+
+             .cloud-divider img {
+                 height: 96px;
+             }
+
+         }
+
+         .merchant-faq-section {
+             background: #F9FCFD;
+             padding: 0px 0 90px;
+         }
+
+         .merchant-faq-wrap {
+             max-width: 980px;
+             margin: 0 auto;
+             padding: 0 20px;
+         }
+
+         .merchant-faq-title {
+            font-size: clamp(24px, 5.5vw, 48px); 
+            color:var(--primary); 
+            background-color:var(--primary-light); 
+            font-weight: 700;
+             font-family:'Coco Sharp'; 
+             line-height: 1.2;
+             text-align: center;
+             margin-bottom: 28px;
+             padding:10px;
+         }
+
+         .faq-panel {
+             border: 1px solid #e5e7eb;
+             border-radius: 16px;
+             background: #fff;
+             transition: border-color .2s ease, box-shadow .2s ease;
+             margin-bottom: 14px;
+         }
+
+         .faq-panel[open] {
+             border-color: var(--primary);
+             box-shadow: 0 10px 30px rgba(30, 37, 54, 0.06);
+         }
+
+         .faq-summary {
+             list-style: none;
+             cursor: pointer;
+             display: flex;
+             align-items: flex-start;
+             justify-content: space-between;
+             gap: 14px;
+             padding: 18px 22px;
+         }
+
+         .faq-summary::-webkit-details-marker {
+             display: none;
+         }
+
+         .faq-question {
+             font-family: 'Manrope', 'Segoe UI', sans-serif;
+             font-size: clamp(16px, 2vw, 20px);
+             line-height: 1.45;
+             color: #1e2536;
+             font-weight: 700;
+         }
+
+         .faq-answer {
+             padding: 0 22px 18px;
+             color: #525866;
+             font-size: 15px;
+             line-height: 1.75;
+         }
+
+         .faq-icon {
+             transition: transform .2s ease;
+             width: 28px;
+             height: 28px;
+             border: 1px solid #e5e7eb;
+             border-radius: 999px;
+             display: inline-flex;
+             align-items: center;
+             justify-content: center;
+             font-size: 20px;
+             color: #1e2536;
+             flex-shrink: 0;
+         }
+
+         .faq-panel[open] .faq-icon {
+             transform: rotate(45deg);
          }
     </style>
 </head>
@@ -1199,14 +1343,13 @@
                 
                     </div>
                         <div class="features-notes-side">
-                        <h2 class="features-heading">The Best Vision
-That You Can Trust</h2>
+                        <h2 class="features-heading">The Best Vision That You Can Trust</h2>
                         <p class="features-intro__description">
-                            Our Merchant package offer multiple features to facilitate the process of selling and managing your inventory, it also provide you with door-to-door free delivery to allow you access customers all over the United Arab Emirates.
+                            Our Merchant package is designed for independent sellers who want to grow with confidence. It gives you the tools to manage products, inventory, and orders smoothly, while free door-to-door delivery helps you reach customers across the United Arab Emirates.
+
+From one dashboard, you can manage stock flow, products, orders, and customer-facing offers while keeping your operations consistent and your brand experience reliable.
                         </p>
-                        <p class="features-intro__secondary">
-                            You may also want to serve customer at your place and for this purpose we offer you a mini store location to allow customers to reach you and benefit from your services.
-                        </p>
+                       
 
                         <ul class="features-checklist">
                             <li>Modern Equipment</li>
@@ -1230,7 +1373,7 @@ That You Can Trust</h2>
                             Our Merchant package offer multiple features to facilitate the process of selling and managing your inventory, it also provide you with door-to-door free delivery to allow you access customers all over the United Arab Emirates.
                         </p>
                         <p class="features-intro__secondary">
-                            You may also want to serve customer at your place and for this purpose we offer you a mini store location to allow customers to reach you and benefit from your services.
+                        You may also want to run promotional deals to attract customer attention to your product listings and increase your brand presence.
                         </p>
 
                         <ul class="features-checklist">
@@ -1276,6 +1419,8 @@ That You Can Trust</h2>
                             </div>
                             <div class="service-content">
                                 <h4 class="service-title">Dashboard</h4>
+                                   <img src="{{ asset('assets/dashboardicon.png') }}" alt="Dashboard Icon" style="width: 30px; text-align: left; display: block; margin-bottom: 10px;">
+
                                 <p class="service-description">
                                     Our Merchant dashboard is offering off-the-shelf features customized for individual Merchant.
                                     Easy manage your stock, add products, add services update order status.
@@ -1290,6 +1435,8 @@ That You Can Trust</h2>
                             </div>
                             <div class="service-content">
                                 <h4 class="service-title">Free Delivery</h4>
+                                    <img src="{{ asset('assets/delivery-truckicon.png') }}" alt="Delivery Truck Icon" style="width: 30px; text-align: left; display: block; margin-bottom: 10px;">
+
                                 <p class="service-description">
                                     Make it possible to reach all customers all over the United Arab Emirates. <br>Our thirty-party services allow to ship your products faster and expand your business geographically.
                                 </p>
@@ -1303,6 +1450,8 @@ That You Can Trust</h2>
                             </div>
                             <div class="service-content">
                                 <h4 class="service-title">Deals</h4>
+                           <img src="{{ asset('assets/discounticon.png') }}" alt="Discount Icon" style="width: 30px; text-align: left; display: block; margin-bottom: 10px;">
+
                                 <p class="service-description">
                                     Add and manage your offers easily and quickly with the merchant dashboard to grow your customers satisfaction. <br>Set deal's percentage, timespan, specific products and services.
                                 </p>
@@ -1316,6 +1465,8 @@ That You Can Trust</h2>
                             </div>
                             <div class="service-content">
                                 <h4 class="service-title">Mini Store</h4>
+                                   <img src="{{ asset('assets/shopicon.png') }}" alt="Discount Icon" style="width: 30px; text-align: left; display: block; margin-bottom: 10px;">
+
                                 <p class="service-description">
                                     Expose your mini-store for serving and pickups perfect for merchants who want both reach and relationship. <br>Our mini store feature gives you the power to grow your local reputation.
                                 </p>
@@ -1327,23 +1478,73 @@ That You Can Trust</h2>
             </div>
         </section>
 
-        <!-- Deals Section -->
-        <section style="background:#F9FCFD; margin-bottom: 200px;">
-            <div class="container">
-                <div id="deals-section" class="cross-grid-container" style="position: relative; width: 100%; max-width: 2000px; margin: 60px auto; height: 800px;">
-                    <!-- Top-Left Deals Section -->
-                    <div class="deals-section" style="position: absolute; top: 0; left: 0; width: 60%; height: 60%; padding: 60px; background: white; border-radius: 15px; color: black; display: flex; flex-direction: column; justify-content: center; align-items: flex-start; z-index: 2;">
-                        <div class="deals-content" style="text-align: left;">
-                            <h3 style="font-size: 28px; margin-bottom: 15px; margin-top: 0;">Reach customers with your discounts</h3>
-                            <h4 style="font-size: 24px; margin-bottom: 15px; margin-top: 0;">Deals and Discounts</h4>
-                            <p style="margin-bottom: 20px;">Easily manage and add deals and discounts for the selected products or services within your customised timespan</p>
-                            <button class="cta-button2" style="background: var(--primary); color: #fff; padding: 12px 24px; border: none; border-radius: 2px; font-weight: bold; cursor: pointer; hover:bg-blue-400">Create one now</button>
+        <section class="interface-section">
+            <div class="interface-container">
+                <div class="interface-grid">
+                    <div class="interface-copy">
+                        <p class="interface-label">The Interface</p>
+                        <h2 class="interface-title">Easy Dashboard <br>Interaction.</h2>
+                        <p class="interface-description">
+                            Say goodbye to cluttered spreadsheets and dated interfaces. The GlowLabs dashboard is an editorial experience, making management feel like art.
+                        </p>
+
+                        <div class="interface-features">
+                            <div class="interface-feature-item">
+                                <div class="interface-feature-icon-wrap">
+                                    <span class="material-symbols-outlined">analytics</span>
+                                </div>
+                                <div>
+                                    <h4 class="interface-feature-title">Powerful Analytics</h4>
+                                    <p class="interface-feature-text">Visual data storytelling that highlights growth opportunities without the noise.</p>
+                                </div>
+                            </div>
+                            <div class="interface-feature-item">
+                                <div class="interface-feature-icon-wrap">
+                                    <span class="material-symbols-outlined">touch_app</span>
+                                </div>
+                                <div>
+                                    <h4 class="interface-feature-title">Ease of Use</h4>
+                                    <p class="interface-feature-text">Intuitive workflows designed to save time and reduce operational complexity.</p>
+                                </div>
+                            </div>
                         </div>
                     </div>
 
-                    <!-- Bottom-Right Image Section -->
-                    <div class="deals-image-section" style="position: absolute; bottom: -50px; right: 0;  width: 60%; height: 60%; background: var(--primary); border-radius: 8px; display: flex; justify-content: center; align-items: center; z-index: 2; box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);">
-                        <img src="/assets/traderDeal.png" alt="Deals illustration" style="width: 99%; height: 99%; object-fit: cover; border-radius: 8px;">
+                    <div class="interface-mock-col">
+                        <div class="interface-mock-frame">
+                            <div class="interface-mock-image-wrap">
+                                <img class="interface-mock-image" src="{{ asset('assets/traderDashboard.png') }}" alt="Sleek modern software dashboard with clean data visualizations, minimalist charts, and high-end typography on a white interface">
+                            </div>
+                        </div>
+
+                        <div class="interface-floating-card">
+                            <div class="interface-floating-head">
+                                <span class="interface-pulse-dot"></span>
+                                <span class="interface-floating-label">Real-time Performance</span>
+                            </div>
+                            <p class="interface-floating-value">+18.4%</p>
+                            <p class="interface-floating-text">Conversion increase since last quarter</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Deals Section -->
+        <section class="parallax-deals-section">
+            <div class="container">
+                <div id="deals-section" class="parallax-deals-card" style="--deals-bg: url('/assets/traderDeal.png');">
+                    <div class="parallax-deals-bg" aria-hidden="true"></div>
+                    <div class="parallax-deals-overlay" aria-hidden="true"></div>
+
+                    <div class="parallax-deals-content">
+                        <span class="parallax-deals-eyebrow">Promotions</span>
+                        <h3 class="parallax-deals-title">Reach customers with your discounts</h3>
+                        <h4 class="parallax-deals-subtitle">Deals and Discounts</h4>
+                        <p class="parallax-deals-text">
+                            Easily manage and add deals and discounts for the selected products or services within your customised timespan.
+                        </p>
+                        <button class="parallax-deals-btn">Create one now</button>
                     </div>
                 </div>
             </div>
@@ -1353,7 +1554,7 @@ That You Can Trust</h2>
         <section class="dashboard-section" id="dashboard-section">
             <div class="container">
                 <div class="dashboard-content">
-                    <h2 style="text-align: center; font-family:Coco Sharp; font-size: 48px;  color:var(--primary); background-color:var(--primary-light);">Dashboard Usage</h2>
+                    <h2 style="text-align: center; padding:10px; margin-bottom:20px; font-family:Coco Sharp; font-size: clamp(24px, 5.5vw, 48px);  color:var(--primary); background-color:var(--primary-light);">Dashboard Usage</h2>
                     
                     <div class="usage-step" style="display: flex; align-items: flex-start; flex-direction: column;  gap: clamp(12px, 4vw, 40px);">
                         <!-- Video Box -->
@@ -1519,7 +1720,7 @@ That You Can Trust</h2>
                 <div class="ministore-content">
                     <!-- Section Header -->
                     <div style="text-align: center; margin-bottom: 32px;">
-                        <h2 style="font-family:Coco Sharp; font-size: 48px;  color:var(--primary); background-color:var(--primary-light); font-weight: 700; margin-bottom: 16px;">Mini Store Usage</h2>
+                        <h2 style="font-family:Coco Sharp; font-size: clamp(24px, 5.5vw, 48px);  color:var(--primary); background-color:var(--primary-light); font-weight: 700; padding:10px; margin-bottom:20px;">Mini Store Usage</h2>
                         <p style="color:  rgba(0, 0, 0, 0.81); font-size: clamp(16px, 3vw, 20px); max-width: 600px; margin: 0 auto; line-height: 1.6;">Discover how to set your mini store location with our  usage guide</p>
                         
                     </div>
@@ -1729,6 +1930,41 @@ That You Can Trust</h2>
                     }
                 }
             </style>
+        </section>
+
+        <section class="merchant-faq-section" id="merchant-faq-section">
+            <div class="merchant-faq-wrap">
+                <h2 class="merchant-faq-title">Trader FAQs</h2>
+                <div class="faq-panel" style="padding: 22px;">
+                    <h3 class="faq-question">What is the Trader role?</h3>
+                    <p class="faq-answer" style="padding: 12px 0 0;">
+                        The Trader (Merchant) role is designed for individual entrepreneurs, especially women, who create handcrafted products or run small personal brands.
+                    </p>
+                    <p class="faq-answer" style="padding: 0;">Traders can:</p>
+                    <p class="faq-answer" style="padding: 0;">- Sell handmade or self-branded products</p>
+                    <p class="faq-answer" style="padding: 0;">- Build their own brand presence within GlowLabs</p>
+                    <p class="faq-answer" style="padding: 0;">- Reach a wider audience across the UAE</p>
+                    <p class="faq-answer" style="padding: 0;">- Manage orders and customer interactions</p>
+                    <p class="faq-answer" style="padding: 0;">This role empowers small businesses and independent creators.</p>
+                </div>
+
+                <div class="faq-panel" style="padding: 22px;">
+                    <h3 class="faq-question">How can I register as a Trader?</h3>
+                    <p class="faq-answer" style="padding: 12px 0 0;">To register as a Trader:</p>
+                    <p class="faq-answer" style="padding: 0;">- Visit: <a href="/register">Registration</a></p>
+                    <p class="faq-answer" style="padding: 0;">- Select the Trader option</p>
+                    <p class="faq-answer" style="padding: 0;">- Complete registration at: <a href="/register/merchant">Trader Registration</a></p>
+                    <p class="faq-answer" style="padding: 0;">Your application will be reviewed before activation.</p>
+                </div>
+
+                <div class="faq-panel" style="padding: 22px; margin-bottom: 0;">
+                    <h3 class="faq-question">What are the prerequisites to register as a Trader?</h3>
+                    <p class="faq-answer" style="padding: 12px 0 0;">- A valid working email address</p>
+                    <p class="faq-answer" style="padding: 0;">- A dedicated phone number</p>
+                    <p class="faq-answer" style="padding: 0;">- A valid individual/trader license</p>
+                    <p class="faq-answer" style="padding: 0;">- Brand logo</p>
+                </div>
+            </div>
         </section>
     </main>
 
