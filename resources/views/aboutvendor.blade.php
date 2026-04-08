@@ -1668,7 +1668,9 @@
 
                 <!-- Deals Section -->
                 <!-- Cross Grid Layout Container -->
-                <div id="deals-section" class="cross-grid-container" style="position: relative; width: 100%; max-width: 2000px; margin: 60px auto; height: 800px;">
+                 <section>
+                    <div class="container">
+                         <div id="deals-section" class="cross-grid-container" style="position: relative; width: 100%; max-width: 2000px; margin: 60px auto; height: 800px;">
                     <!-- Top-Left Deals Section -->
                     <div class="deals-section" style="position: absolute; top: 0; left: 0; width: 60%; height: 60%; padding: 60px; background: linear-gradient(135deg, #000000 0%, #000000 100%); border-radius: 15px; color: white; display: flex; flex-direction: column; justify-content: center; align-items: flex-start; z-index: 2;">
                         <div class="deals-content" style="text-align: left;">
@@ -1686,6 +1688,8 @@
                     
                    
                 </div>
+                    </div>
+               
 
                 <!-- Payment Section -->
                 <div style="text-align: center; margin: 60px 0; padding: 40px; background: #f8f9fa; border-radius: 15px;">

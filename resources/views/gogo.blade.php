@@ -145,7 +145,7 @@
       <nav class="hidden items-center gap-8 md:flex">
         <a href="{{ route('home') }}" class="text-sm text-gray-500 transition-colors hover:text-brand-dark">{{ __('messages.home') }}</a>
         <a href="{{ route('faq') }}" class="text-sm text-gray-500 transition-colors hover:text-brand-dark">{{ __('messages.faq') }}</a>
-        <a href="#" class="text-sm text-gray-500 transition-colors hover:text-brand-dark">{{ __('messages.blog') }}</a>
+        <a href="#" class="text-sm text-gray-500 transition-colors hover:text-brand-dark">{{ __('messages.services') }}</a>
         <a href="#" class="text-sm text-gray-500 transition-colors hover:text-brand-dark">{{ __('messages.about_us') }}</a>
       </nav>
       <div class="flex items-center gap-3">
@@ -164,7 +164,7 @@
       <nav class="flex flex-col gap-3 py-3">
         <a href="{{ route('home') }}" class="text-sm text-gray-500 hover:text-brand-dark">{{ __('messages.home') }}</a>
         <a href="{{ route('faq') }}" class="text-sm text-gray-500 hover:text-brand-dark">{{ __('messages.faq') }}</a>
-        <a href="#" class="text-sm text-gray-500 hover:text-brand-dark">{{ __('messages.blog') }}</a>
+        <a href="#" class="text-sm text-gray-500 hover:text-brand-dark">{{ __('messages.services') }}</a>
         <a href="#" class="text-sm text-gray-500 hover:text-brand-dark">{{ __('messages.about_us') }}</a>
       </nav>
       <div class="flex items-center gap-4 pt-2">
