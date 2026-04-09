@@ -1,5 +1,6 @@
 <!DOCTYPE html>
-<html lang="en">
+@php($isRtl = app()->getLocale() === 'ar')
+<html lang="{{ str_replace('_', '-', app()->getLocale()) }}" dir="{{ $isRtl ? 'rtl' : 'ltr' }}">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -25,6 +26,50 @@
             line-height: 1.6;
             color: #e0e0e0;
             background-color: #F9FCFD;
+        }
+
+        /* RTL support */
+        html[dir="rtl"] body {
+            direction: rtl;
+        }
+
+        html[dir="rtl"] .merchant-hero__content,
+        html[dir="rtl"] .features-notes-side,
+        html[dir="rtl"] .features-showcase .service-content,
+        html[dir="rtl"] .features-showcase .service-description,
+        html[dir="rtl"] .step-content,
+        html[dir="rtl"] .merchant-faq-wrap,
+        html[dir="rtl"] .faq-answer,
+        html[dir="rtl"] .faq-question {
+            text-align: right;
+        }
+
+        html[dir="rtl"] .features-showcase .service-description {
+            text-align: right;
+        }
+
+        /* Dashboard usage custom bullets */
+        html[dir="rtl"] .step-list li {
+            padding-left: 0;
+            padding-right: 20px;
+        }
+
+        html[dir="rtl"] .step-list li:before {
+            left: auto;
+            right: 0;
+        }
+
+        /* Inline style helpers used in this page */
+        html[dir="rtl"] [style*="margin-left: 14px"] {
+            margin-left: 0 !important;
+            margin-right: 14px !important;
+            text-align: right !important;
+        }
+
+        html[dir="rtl"] [style*="bottom: 20px; left: 20px"] {
+            left: auto !important;
+            right: 20px !important;
+            text-align: right !important;
         }
 
         .container {
@@ -769,6 +814,7 @@
             .features-notes-row {
                 grid-template-columns: 1fr;
                 gap: 28px;
+                margin-inline: 10px;
             }
 
             .features-notes-side {
@@ -830,7 +876,7 @@
 
             .features-notes-row {
                 margin-top: 24px;
-                gap: 20px;
+                gap: 50px;
             }
 
             .features-section .features-notes-row:first-child {
@@ -839,15 +885,14 @@
 
             .features-section .features-notes-row:first-child .features-intro__media {
                 min-height: 240px;
-                height: 240px;
+                height: 260px;
                 margin-top: 10px;
                 border-radius: 18px;
-                overflow: hidden;
             }
 
             .features-section .features-notes-row:first-child .features-main-image {
-                width: 100%;
-                height: 100%;
+                width: 140%;
+                height: 140%;
                 object-fit: cover;
                 object-position: center top;
             }
@@ -908,6 +953,19 @@
                 height: 220px;
                 min-width: auto;
             }
+              .features-notes-stack .features-purple-notes:first-child {
+             position: relative;
+             z-index: 2;
+             width:450px;
+         }
+
+              .features-notes-stack .features-purple-notes:last-child {
+             position: absolute;
+             inset: 0;
+             z-index: 1;
+             transform: translate(70px, -5px);
+             visibility:hidden;
+         }
         }
 
         @media (max-width: 480px) {
@@ -1068,7 +1126,10 @@
              .hero-section {
                  min-height: 68vh;
              }
-
+             .features-shell{
+                margin:0 0;
+                width:100%;
+             }
              .hero-section::after {
                  bottom: -155px;
                  height: 250px;
@@ -1320,12 +1381,12 @@
                 <div class="merchant-hero__media" aria-hidden="true"></div>
                 <div class="merchant-hero__overlay" aria-hidden="true"></div>
                 <div class="merchant-hero__content">
-                    <h1 class="merchant-hero__title">glowlabs <span>Merchant</span></h1>
+                    <h1 class="merchant-hero__title">{{ __('messages.about_merchant_hero_title_prefix') }} <span>{{ __('messages.about_merchant_hero_title_highlight') }}</span></h1>
                     <p class="merchant-hero__description">
-                        Join our Merchant community and start your journey with us, access a wide range of customers across the
-                        United Arab Emirates. Harness the power of marketing with our ready to go Dashboard and App.
+                        {{ __('messages.about_merchant_hero_description_line_1') }}
+                        {{ __('messages.about_merchant_hero_description_line_2') }}
                     </p>
-                    <button class="cta-button">Start Now</button>
+                    <button class="cta-button">{{ __('messages.about_merchant_hero_cta') }}</button>
                 </div>
             </div>
         </section>
@@ -1339,28 +1400,28 @@
             <div class="features-shell">
                 <div class="features-notes-row">
                     <div class="features-intro__media">
-                        <img class="features-main-image" src="{{ asset('assets/div.elementor-widget-wrap.webp') }}" alt="Business team visual">
+                        <img class="features-main-image" src="{{ asset('assets/div.elementor-widget-wrap.webp') }}" alt="{{ __('messages.about_merchant_features_main_image_alt') }}">
                 
                     </div>
                         <div class="features-notes-side">
-                        <h2 class="features-heading">The Best Vision That You Can Trust</h2>
+                        <h2 class="features-heading">{{ __('messages.about_merchant_features_intro_heading') }}</h2>
                         <p class="features-intro__description">
-                            Our Merchant package is designed for independent sellers who want to grow with confidence. It gives you the tools to manage products, inventory, and orders smoothly, while free door-to-door delivery helps you reach customers across the United Arab Emirates.
+                            {{ __('messages.about_merchant_features_intro_description_line_1') }}
 
-From one dashboard, you can manage stock flow, products, orders, and customer-facing offers while keeping your operations consistent and your brand experience reliable.
+                        {{ __('messages.about_merchant_features_intro_description_line_2') }}
                         </p>
                        
 
                         <ul class="features-checklist">
-                            <li>Modern Equipment</li>
-                            <li>Easy Online Appointment</li>
-                            <li>Comfortable Clinic</li>
-                            <li>Always Monitored</li>
+                            <li>{{ __('messages.about_merchant_features_checklist_item_1') }}</li>
+                            <li>{{ __('messages.about_merchant_features_checklist_item_2') }}</li>
+                            <li>{{ __('messages.about_merchant_features_checklist_item_3') }}</li>
+                            <li>{{ __('messages.about_merchant_features_checklist_item_4') }}</li>
                         </ul>
 
                         <div class="features-actions">
-                            <a class="features-btn features-btn--primary" href="#dashboard-section">Learn More</a>
-                            <a class="features-btn features-btn--secondary" href="#ministore-usage-section">Create one now</a>
+                            <a class="features-btn features-btn--primary" href="#dashboard-section">{{ __('messages.about_merchant_features_learn_more') }}</a>
+                            <a class="features-btn features-btn--secondary" href="#ministore-usage-section">{{ __('messages.about_merchant_features_create_one_now') }}</a>
                         </div>
                     </div>
                     
@@ -1368,44 +1429,44 @@ From one dashboard, you can manage stock flow, products, orders, and customer-fa
 
                 <div class="features-notes-row">
                     <div class="features-notes-side">
-                        <h2 class="features-heading">Features</h2>
+                        <h2 class="features-heading">{{ __('messages.about_merchant_features_get_heading') }}</h2>
                         <p class="features-intro__description">
-                            Our Merchant package offer multiple features to facilitate the process of selling and managing your inventory, it also provide you with door-to-door free delivery to allow you access customers all over the United Arab Emirates.
+                            {{ __('messages.about_merchant_features_get_description_line_1') }}
                         </p>
                         <p class="features-intro__secondary">
-                        You may also want to run promotional deals to attract customer attention to your product listings and increase your brand presence.
+                        {{ __('messages.about_merchant_features_get_secondary') }}
                         </p>
 
                         <ul class="features-checklist">
-                            <li>Modern Equipment</li>
-                            <li>Easy Online Appointment</li>
-                            <li>Comfortable Clinic</li>
-                            <li>Always Monitored</li>
+                            <li>{{ __('messages.about_merchant_features_checklist_item_1') }}</li>
+                            <li>{{ __('messages.about_merchant_features_checklist_item_2') }}</li>
+                            <li>{{ __('messages.about_merchant_features_checklist_item_3') }}</li>
+                            <li>{{ __('messages.about_merchant_features_checklist_item_4') }}</li>
                         </ul>
 
                         <div class="features-actions">
-                            <a class="features-btn features-btn--primary" href="#dashboard-section">Learn More</a>
-                            <a class="features-btn features-btn--secondary" href="#ministore-usage-section">Create one now</a>
+                            <a class="features-btn features-btn--primary" href="#dashboard-section">{{ __('messages.about_merchant_features_learn_more') }}</a>
+                            <a class="features-btn features-btn--secondary" href="#ministore-usage-section">{{ __('messages.about_merchant_features_create_one_now') }}</a>
                         </div>
                     </div>
                     <div class="features-notes-stack">
                         <div class="features-purple-notes">
                             <ul class="feature-note-list">
-                                <li>Nationwide, door-to-door delivery at no extra cost — reach customers in every emirate with complimentary delivery that removes the logistics headache and helps you compete on convenience.</li>
-                                <li>Flexible fulfilment choices — offer home delivery, in-store pickup, or scheduled service visits so your customers can buy the way they want.</li>
-                                <li>Promotions &amp; visibility tools — built-in features to run discounts, highlight bestsellers, and appear in local discovery so new customers can find you faster.</li>
-                                <li>Easy inventory &amp; order management — add, update, and track products and bookings in real time from a clean, intuitive dashboard so you always know what's in stock and what's selling.</li>
-                                <li>Mini-store location option — prefer to welcome customers in person? Reserve a compact, branded mini-store space where people can see your products, book services, or pick up orders — a perfect bridge between online reach and face-to-face service.</li>
+                                <li>{{ __('messages.about_merchant_features_note_1') }}</li>
+                                <li>{{ __('messages.about_merchant_features_note_2') }}</li>
+                                <li>{{ __('messages.about_merchant_features_note_3') }}</li>
+                                <li>{{ __('messages.about_merchant_features_note_4') }}</li>
+                                <li>{{ __('messages.about_merchant_features_note_5') }}</li>
                             </ul>
                         </div>
 
                         <div class="features-purple-notes">
                             <ul class="feature-note-list text-transparent">
-                                <li>Nationwide, door-to-door delivery at no extra cost — reach customers in every emirate with complimentary delivery that removes the logistics headache and helps you compete on convenience.</li>
-                                <li>Flexible fulfilment choices — offer home delivery, in-store pickup, or scheduled service visits so your customers can buy the way they want.</li>
-                                <li>Promotions &amp; visibility tools — built-in features to run discounts, highlight bestsellers, and appear in local discovery so new customers can find you faster.</li>
-                                <li>Easy inventory &amp; order management — add, update, and track products and bookings in real time from a clean, intuitive dashboard so you always know what's in stock and what's selling.</li>
-                                <li>Mini-store location option — prefer to welcome customers in person? Reserve a compact, branded mini-store space where people can see your products, book services, or pick up orders — a perfect bridge between online reach and face-to-face service.</li>
+                                <li>{{ __('messages.about_merchant_features_note_1') }}</li>
+                                <li>{{ __('messages.about_merchant_features_note_2') }}</li>
+                                <li>{{ __('messages.about_merchant_features_note_3') }}</li>
+                                <li>{{ __('messages.about_merchant_features_note_4') }}</li>
+                                <li>{{ __('messages.about_merchant_features_note_5') }}</li>
                             </ul>
                         </div>
                     </div>
@@ -1415,62 +1476,62 @@ From one dashboard, you can manage stock flow, products, orders, and customer-fa
                     <div class="services-grid">
                         <div class="service-card">
                             <div class="service-image">
-                                <img src="{{ asset('assets/dashboardfeature.avif') }}" alt="Dashboard feature">
+                                <img src="{{ asset('assets/dashboardfeature.avif') }}" alt="{{ __('messages.about_merchant_features_showcase_dashboard_image_alt') }}">
                             </div>
                             <div class="service-content">
-                                <h4 class="service-title">Dashboard</h4>
-                                   <img src="{{ asset('assets/dashboardicon.png') }}" alt="Dashboard Icon" style="width: 30px; text-align: left; display: block; margin-bottom: 10px;">
+                                <h4 class="service-title">{{ __('messages.about_merchant_features_showcase_dashboard_title') }}</h4>
+                                   <img src="{{ asset('assets/dashboardicon.png') }}" alt="{{ __('messages.about_merchant_features_showcase_dashboard_icon_alt') }}" style="width: 30px; text-align: left; display: block; margin-bottom: 10px;">
 
                                 <p class="service-description">
-                                    Our Merchant dashboard is offering off-the-shelf features customized for individual Merchant.
-                                    Easy manage your stock, add products, add services update order status.
+                                    {{ __('messages.about_merchant_features_showcase_dashboard_description_line_1') }}
+                                    {{ __('messages.about_merchant_features_showcase_dashboard_description_line_2') }}
                                 </p>
-                                <a class="read-more" href="#dashboard-section">Read More</a>
+                                <a class="read-more" href="#dashboard-section">{{ __('messages.about_merchant_features_read_more') }}</a>
                             </div>
                         </div>
 
                         <div class="service-card">
                             <div class="service-image">
-                                <img src="{{ asset('assets/deliveryfeature.avif') }}" alt="Delivery feature">
+                                <img src="{{ asset('assets/deliveryfeature.avif') }}" alt="{{ __('messages.about_merchant_features_showcase_delivery_image_alt') }}">
                             </div>
                             <div class="service-content">
-                                <h4 class="service-title">Free Delivery</h4>
-                                    <img src="{{ asset('assets/delivery-truckicon.png') }}" alt="Delivery Truck Icon" style="width: 30px; text-align: left; display: block; margin-bottom: 10px;">
+                                <h4 class="service-title">{{ __('messages.about_merchant_features_showcase_delivery_title') }}</h4>
+                                    <img src="{{ asset('assets/delivery-truckicon.png') }}" alt="{{ __('messages.about_merchant_features_showcase_delivery_icon_alt') }}" style="width: 30px; text-align: left; display: block; margin-bottom: 10px;">
 
                                 <p class="service-description">
-                                    Make it possible to reach all customers all over the United Arab Emirates. <br>Our thirty-party services allow to ship your products faster and expand your business geographically.
+                                    {{ __('messages.about_merchant_features_showcase_delivery_description_line_1') }} <br>{{ __('messages.about_merchant_features_showcase_delivery_description_line_2') }}
                                 </p>
-                                <a class="read-more" href="#ministore-usage-section">Read More</a>
+                                <a class="read-more" href="#ministore-usage-section">{{ __('messages.about_merchant_features_read_more') }}</a>
                             </div>
                         </div>
 
                         <div class="service-card">
                             <div class="service-image">
-                                <img src="{{ asset('assets/dealfeature.avif') }}" alt="Deals feature">
+                                <img src="{{ asset('assets/dealfeature.avif') }}" alt="{{ __('messages.about_merchant_features_showcase_deals_image_alt') }}">
                             </div>
                             <div class="service-content">
-                                <h4 class="service-title">Deals</h4>
-                           <img src="{{ asset('assets/discounticon.png') }}" alt="Discount Icon" style="width: 30px; text-align: left; display: block; margin-bottom: 10px;">
+                                <h4 class="service-title">{{ __('messages.about_merchant_features_showcase_deals_title') }}</h4>
+                           <img src="{{ asset('assets/discounticon.png') }}" alt="{{ __('messages.about_merchant_features_showcase_deals_icon_alt') }}" style="width: 30px; text-align: left; display: block; margin-bottom: 10px;">
 
                                 <p class="service-description">
-                                    Add and manage your offers easily and quickly with the merchant dashboard to grow your customers satisfaction. <br>Set deal's percentage, timespan, specific products and services.
+                                    {{ __('messages.about_merchant_features_showcase_deals_description_line_1') }} <br>{{ __('messages.about_merchant_features_showcase_deals_description_line_2') }}
                                 </p>
-                                <a class="read-more" href="#deals-section">Read More</a>
+                                <a class="read-more" href="#deals-section">{{ __('messages.about_merchant_features_read_more') }}</a>
                             </div>
                         </div>
 
                         <div class="service-card">
                             <div class="service-image">
-                                <img src="{{ asset('assets/ministorefeature.avif') }}" alt="Mini store feature">
+                                <img src="{{ asset('assets/ministorefeature.avif') }}" alt="{{ __('messages.about_merchant_features_showcase_ministore_image_alt') }}">
                             </div>
                             <div class="service-content">
-                                <h4 class="service-title">Mini Store</h4>
-                                   <img src="{{ asset('assets/shopicon.png') }}" alt="Discount Icon" style="width: 30px; text-align: left; display: block; margin-bottom: 10px;">
+                                <h4 class="service-title">{{ __('messages.about_merchant_features_showcase_ministore_title') }}</h4>
+                                   <img src="{{ asset('assets/shopicon.png') }}" alt="{{ __('messages.about_merchant_features_showcase_ministore_icon_alt') }}" style="width: 30px; text-align: left; display: block; margin-bottom: 10px;">
 
                                 <p class="service-description">
-                                    Expose your mini-store for serving and pickups perfect for merchants who want both reach and relationship. <br>Our mini store feature gives you the power to grow your local reputation.
+                                    {{ __('messages.about_merchant_features_showcase_ministore_description_line_1') }} <br>{{ __('messages.about_merchant_features_showcase_ministore_description_line_2') }}
                                 </p>
-                                <a class="read-more" href="#ministore-usage-section">Read More</a>
+                                <a class="read-more" href="#ministore-usage-section">{{ __('messages.about_merchant_features_read_more') }}</a>
                             </div>
                         </div>
                     </div>
@@ -1482,20 +1543,20 @@ From one dashboard, you can manage stock flow, products, orders, and customer-fa
             <div class="interface-container">
                 <div class="interface-grid">
                     <div class="interface-copy">
-                        <p class="interface-label">The Interface</p>
-                        <h2 class="interface-title">Easy Dashboard <br>Interaction.</h2>
+                        <p class="interface-label">{{ __('messages.about_merchant_interface_label') }}</p>
+                        <h2 class="interface-title">{!! __('messages.about_merchant_interface_title') !!}</h2>
                         <p class="interface-description">
-                            Say goodbye to cluttered spreadsheets and dated interfaces. The GlowLabs dashboard is an editorial experience, making management feel like art.
+                            {{ __('messages.about_merchant_interface_description') }}
                         </p>
 
                         <div class="interface-features">
                             <div class="interface-feature-item">
                                 <div class="interface-feature-icon-wrap">
-                                    <span class="material-symbols-outlined">analytics</span>
+                                    <span class="material-symbols-outlined">local_shipping</span>
                                 </div>
                                 <div>
-                                    <h4 class="interface-feature-title">Powerful Analytics</h4>
-                                    <p class="interface-feature-text">Visual data storytelling that highlights growth opportunities without the noise.</p>
+                                    <h4 class="interface-feature-title">{{ __('messages.about_merchant_interface_feature_1_title') }}</h4>
+                                    <p class="interface-feature-text">{{ __('messages.about_merchant_interface_feature_1_text') }}</p>
                                 </div>
                             </div>
                             <div class="interface-feature-item">
@@ -1503,8 +1564,8 @@ From one dashboard, you can manage stock flow, products, orders, and customer-fa
                                     <span class="material-symbols-outlined">touch_app</span>
                                 </div>
                                 <div>
-                                    <h4 class="interface-feature-title">Ease of Use</h4>
-                                    <p class="interface-feature-text">Intuitive workflows designed to save time and reduce operational complexity.</p>
+                                    <h4 class="interface-feature-title">{{ __('messages.about_merchant_interface_feature_2_title') }}</h4>
+                                    <p class="interface-feature-text">{{ __('messages.about_merchant_interface_feature_2_text') }}</p>
                                 </div>
                             </div>
                         </div>
@@ -1513,17 +1574,17 @@ From one dashboard, you can manage stock flow, products, orders, and customer-fa
                     <div class="interface-mock-col">
                         <div class="interface-mock-frame">
                             <div class="interface-mock-image-wrap">
-                                <img class="interface-mock-image" src="{{ asset('assets/traderDashboard.png') }}" alt="Sleek modern software dashboard with clean data visualizations, minimalist charts, and high-end typography on a white interface">
+                                <img class="interface-mock-image" src="{{ asset('assets/traderDashboard.png') }}" alt="{{ __('messages.about_merchant_interface_mock_image_alt') }}">
                             </div>
                         </div>
 
                         <div class="interface-floating-card">
                             <div class="interface-floating-head">
                                 <span class="interface-pulse-dot"></span>
-                                <span class="interface-floating-label">Real-time Performance</span>
+                                <span class="interface-floating-label">{{ __('messages.about_merchant_interface_floating_label') }}</span>
                             </div>
                             <p class="interface-floating-value">+18.4%</p>
-                            <p class="interface-floating-text">Conversion increase since last quarter</p>
+                            <p class="interface-floating-text">{{ __('messages.about_merchant_interface_floating_text') }}</p>
                         </div>
                     </div>
                 </div>
@@ -1538,13 +1599,13 @@ From one dashboard, you can manage stock flow, products, orders, and customer-fa
                     <div class="parallax-deals-overlay" aria-hidden="true"></div>
 
                     <div class="parallax-deals-content">
-                        <span class="parallax-deals-eyebrow">Promotions</span>
-                        <h3 class="parallax-deals-title">Reach customers with your discounts</h3>
-                        <h4 class="parallax-deals-subtitle">Deals and Discounts</h4>
+                        <span class="parallax-deals-eyebrow">{{ __('messages.about_merchant_deals_eyebrow') }}</span>
+                        <h3 class="parallax-deals-title">{{ __('messages.about_merchant_deals_title') }}</h3>
+                        <h4 class="parallax-deals-subtitle">{{ __('messages.about_merchant_deals_subtitle') }}</h4>
                         <p class="parallax-deals-text">
-                            Easily manage and add deals and discounts for the selected products or services within your customised timespan.
+                            {{ __('messages.about_merchant_deals_text') }}
                         </p>
-                        <button class="parallax-deals-btn">Create one now</button>
+                        <button class="parallax-deals-btn">{{ __('messages.about_merchant_deals_cta') }}</button>
                     </div>
                 </div>
             </div>
@@ -1554,7 +1615,7 @@ From one dashboard, you can manage stock flow, products, orders, and customer-fa
         <section class="dashboard-section" id="dashboard-section">
             <div class="container">
                 <div class="dashboard-content">
-                    <h2 style="text-align: center; padding:10px; margin-bottom:20px; font-family:Coco Sharp; font-size: clamp(24px, 5.5vw, 48px);  color:var(--primary); background-color:var(--primary-light);">Dashboard Usage</h2>
+                    <h2 style="text-align: center; padding:10px; margin-bottom:20px; font-family:Coco Sharp; font-size: clamp(24px, 5.5vw, 48px);  color:var(--primary); background-color:var(--primary-light);">{{ __('messages.about_merchant_dashboard_usage_title') }}</h2>
                     
                     <div class="usage-step" style="display: flex; align-items: flex-start; flex-direction: column;  gap: clamp(12px, 4vw, 40px);">
                         <!-- Video Box -->
@@ -1577,35 +1638,35 @@ From one dashboard, you can manage stock flow, products, orders, and customer-fa
                                                     <path d="M8 5v14l11-7z"/>
                                                 </svg>
                                             </div>
-                                            <p style="margin: 0; font-weight: 600; color:black;">Product Creation Tutorial</p>
-                                            <p style="margin: 5px 0 0; font-size: 14px; opacity: 0.8; color:black;">Video loading...</p>
+                                            <p style="margin: 0; font-weight: 600; color:black;">{{ __('messages.about_merchant_dashboard_step_1_overlay_title') }}</p>
+                                            <p style="margin: 5px 0 0; font-size: 14px; opacity: 0.8; color:black;">{{ __('messages.about_merchant_dashboard_video_loading') }}</p>
                                         </div>
                                     </div>
                                 </video>
-                                <div style="position: absolute; bottom: 20px; left: 20px; color: white; font-weight: 600; font-size: 18px; text-shadow: 2px 2px 4px rgba(0,0,0,0.7); z-index: 10;">Product Creation Tutorial</div>
+                                <div style="position: absolute; bottom: 20px; left: 20px; color: white; font-weight: 600; font-size: 18px; text-shadow: 2px 2px 4px rgba(0,0,0,0.7); z-index: 10;">{{ __('messages.about_merchant_dashboard_step_1_overlay_title') }}</div>
                             </div>
                         </div>
                         <!-- Content -->
                         <div style="flex: 1;">
-                            <h3 class="step-title">1 / Product creation</h3>
+                            <h3 class="step-title">{{ __('messages.about_merchant_dashboard_step_1_title') }}</h3>
                             <div class="step-content">
-                                <p>From dashboard's sidebar click on products tap then click on "Add new product" button.</p>
-                                <p>You should enter these required information in order to create product:</p>
+                                <p>{{ __('messages.about_merchant_dashboard_step_1_intro_1') }}</p>
+                                <p>{{ __('messages.about_merchant_dashboard_step_1_intro_2') }}</p>
                                 <ul class="step-list">
-                                    <li>Name (English & Arabic)</li>
-                                    <li>Category</li>
-                                    <li>Price (the real price that will appear to customers)</li>
-                                    <li>Original Price (the price that will be shown with strikethrough style, normally bigger than the price)</li>
-                                    <li>Stock (the product will be out-stock if the stock value equal to zero)</li>
-                                    <li>Description optional but if you enter it you should write both Arabic and English versions</li>
+                                    <li>{{ __('messages.about_merchant_dashboard_step_1_item_1') }}</li>
+                                    <li>{{ __('messages.about_merchant_dashboard_step_1_item_2') }}</li>
+                                    <li>{{ __('messages.about_merchant_dashboard_step_1_item_3') }}</li>
+                                    <li>{{ __('messages.about_merchant_dashboard_step_1_item_4') }}</li>
+                                    <li>{{ __('messages.about_merchant_dashboard_step_1_item_5') }}</li>
+                                    <li>{{ __('messages.about_merchant_dashboard_step_1_item_6') }}</li>
                                 </ul>
-                                <p>On the colours and images tap you should enter the following:</p>
+                                <p>{{ __('messages.about_merchant_dashboard_step_1_colors_intro') }}</p>
                                 <ul class="step-list">
-                                    <li>Select at least one colour for the product</li>
-                                    <li>Enter the stock for that colour</li>
-                                    <li>Add one associated image for the colour, you should upload a high-quality image</li>
-                                    <li>Enter all sizes that apply to this colour option</li>
-                                    <li>Specifications section is optional</li>
+                                    <li>{{ __('messages.about_merchant_dashboard_step_1_colors_item_1') }}</li>
+                                    <li>{{ __('messages.about_merchant_dashboard_step_1_colors_item_2') }}</li>
+                                    <li>{{ __('messages.about_merchant_dashboard_step_1_colors_item_3') }}</li>
+                                    <li>{{ __('messages.about_merchant_dashboard_step_1_colors_item_4') }}</li>
+                                    <li>{{ __('messages.about_merchant_dashboard_step_1_colors_item_5') }}</li>
                                 </ul>
                             </div>
                         </div>
@@ -1679,30 +1740,30 @@ From one dashboard, you can manage stock flow, products, orders, and customer-fa
                                                     <path d="M8 5v14l11-7z"/>
                                                 </svg>
                                             </div>
-                                            <p style="margin: 0; font-weight: 600;">Deal Creation Tutorial</p>
-                                            <p style="margin: 5px 0 0; font-size: 14px; opacity: 0.8;">Video loading...</p>
+                                            <p style="margin: 0; font-weight: 600;">{{ __('messages.about_merchant_dashboard_step_2_overlay_title') }}</p>
+                                            <p style="margin: 5px 0 0; font-size: 14px; opacity: 0.8;">{{ __('messages.about_merchant_dashboard_video_loading') }}</p>
                                         </div>
                                     </div>
                                 </video>
-                                <div style="position: absolute; bottom: 20px; left: 20px; color: white; font-weight: 600; font-size: 18px; text-shadow: 2px 2px 4px rgba(0,0,0,0.7); z-index: 10;">Deal Creation Tutorial</div>
+                                <div style="position: absolute; bottom: 20px; left: 20px; color: white; font-weight: 600; font-size: 18px; text-shadow: 2px 2px 4px rgba(0,0,0,0.7); z-index: 10;">{{ __('messages.about_merchant_dashboard_step_2_overlay_title') }}</div>
                             </div>
                         </div>
                         <!-- Content -->
                         <div style="flex: 1;">
-                            <h3 class="step-title">2 / Deals creation</h3>
+                            <h3 class="step-title">{{ __('messages.about_merchant_dashboard_step_2_title') }}</h3>
                             <div class="step-content">
-                                <p>From dashboard's sidebar click on services tap then click on "create deal" or the plus button.</p>
-                                <p>After deal creation page opens enter the related deal information:</p>
+                                <p>{{ __('messages.about_merchant_dashboard_step_2_intro_1') }}</p>
+                                <p>{{ __('messages.about_merchant_dashboard_step_2_intro_2') }}</p>
                                 <ul class="step-list">
-                                    <li>Title (English & Arabic)</li>
-                                    <li>Discount Percentage (1-100%) the percentage deducted from the price</li>
-                                    <li>Description (Optional: If you enter a description in one language, you must enter it in both languages)</li>
-                                    <li>Promotional Message</li>
-                                    <li>Start Date when the deal will be applied to the items</li>
-                                    <li>End Date after this date all products/services will be reset to their normal price</li>
-                                    <li>Deal image</li>
-                                    <li>Deal Status can be either active or inactive</li>
-                                    <li>Select the product/services that you want to apply deal to</li>
+                                    <li>{{ __('messages.about_merchant_dashboard_step_2_item_1') }}</li>
+                                    <li>{{ __('messages.about_merchant_dashboard_step_2_item_2') }}</li>
+                                    <li>{{ __('messages.about_merchant_dashboard_step_2_item_3') }}</li>
+                                    <li>{{ __('messages.about_merchant_dashboard_step_2_item_4') }}</li>
+                                    <li>{{ __('messages.about_merchant_dashboard_step_2_item_5') }}</li>
+                                    <li>{{ __('messages.about_merchant_dashboard_step_2_item_6') }}</li>
+                                    <li>{{ __('messages.about_merchant_dashboard_step_2_item_7') }}</li>
+                                    <li>{{ __('messages.about_merchant_dashboard_step_2_item_8') }}</li>
+                                    <li>{{ __('messages.about_merchant_dashboard_step_2_item_9') }}</li>
                                 </ul>
                             </div>
                         </div>
@@ -1720,8 +1781,8 @@ From one dashboard, you can manage stock flow, products, orders, and customer-fa
                 <div class="ministore-content">
                     <!-- Section Header -->
                     <div style="text-align: center; margin-bottom: 32px;">
-                        <h2 style="font-family:Coco Sharp; font-size: clamp(24px, 5.5vw, 48px);  color:var(--primary); background-color:var(--primary-light); font-weight: 700; padding:10px; margin-bottom:20px;">Mini Store Usage</h2>
-                        <p style="color:  rgba(0, 0, 0, 0.81); font-size: clamp(16px, 3vw, 20px); max-width: 600px; margin: 0 auto; line-height: 1.6;">Discover how to set your mini store location with our  usage guide</p>
+                        <h2 style="font-family:Coco Sharp; font-size: clamp(24px, 5.5vw, 48px);  color:var(--primary); background-color:var(--primary-light); font-weight: 700; padding:10px; margin-bottom:20px;">{{ __('messages.about_merchant_ministore_title') }}</h2>
+                        <p style="color:  rgba(0, 0, 0, 0.81); font-size: clamp(16px, 3vw, 20px); max-width: 600px; margin: 0 auto; line-height: 1.6;">{{ __('messages.about_merchant_ministore_subtitle') }}</p>
                         
                     </div>
 
@@ -1732,7 +1793,7 @@ From one dashboard, you can manage stock flow, products, orders, and customer-fa
                             <div style="position: relative; border-radius: 20px; overflow: hidden; box-shadow: 0 20px 40px rgba(0,0,0,0.3); transform: perspective(1000px) rotateY(-5deg); transition: transform 0.3s ease;">
                                 <img 
                                     src="{{ asset('assets/ministoreusage.webp') }}" 
-                                    alt="Mini Store Usage Guide" 
+                                    alt="{{ __('messages.about_merchant_ministore_image_alt') }}" 
                                     style="width: 100%; height: auto; display: block; border-radius: 20px;"
                                     onmouseover="this.parentElement.style.transform='perspective(1000px) rotateY(0deg) scale(1.02)'"
                                     onmouseout="this.parentElement.style.transform='perspective(1000px) rotateY(-5deg) scale(1)'"
@@ -1740,7 +1801,7 @@ From one dashboard, you can manage stock flow, products, orders, and customer-fa
                                 <!-- Overlay Gradient -->
                                 <div style="position: absolute; bottom: 0; left: 0; right: 0; height: 100px; background: linear-gradient(transparent, rgba(0,0,0,0.7)); border-radius: 0 0 20px 20px;"></div>
                                 <!-- Image Label -->
-                                <div style="position: absolute; bottom: 20px; left: 20px; color: white; font-weight: 600; font-size: clamp(16px, 3vw, 20px); text-shadow: 2px 2px 4px rgba(0,0,0,0.8);">Mini Store Interface</div>
+                                <div style="position: absolute; bottom: 20px; left: 20px; color: white; font-weight: 600; font-size: clamp(16px, 3vw, 20px); text-shadow: 2px 2px 4px rgba(0,0,0,0.8);">{{ __('messages.about_merchant_ministore_image_label') }}</div>
                             </div>
                             <!-- Floating Elements -->
                             <div style="position: absolute; top: -10px; right: -10px; width: 60px; height: 60px; background: rgba(255,255,255,0.2); border-radius: 50%; backdrop-filter: blur(10px); display: flex; align-items: center; justify-content: center;">
@@ -1759,38 +1820,32 @@ From one dashboard, you can manage stock flow, products, orders, and customer-fa
                                             <path d="M19 7h-3V6a4 4 0 0 0-8 0v1H5a1 1 0 0 0-1 1v11a3 3 0 0 0 3 3h10a3 3 0 0 0 3-3V8a1 1 0 0 0-1-1zM10 6a2 2 0 0 1 4 0v1h-4V6zm8 13a1 1 0 0 1-1 1H7a1 1 0 0 1-1-1V9h2v1a1 1 0 0 0 2 0V9h4v1a1 1 0 0 0 2 0V9h2v10z"/>
                                         </svg>
                                     </span>
-                                    Manage Your Place
+                                    {{ __('messages.about_merchant_ministore_manage_title') }}
                                 </h3>
                                 
                                 <div style="space-y: 16px;">
                                     <div style="margin-bottom: 16px;">
                                         <h4 style="color:  rgba(0, 0, 0, 0.81);; font-size: clamp(16px, 3vw, 18px); font-weight: 600; margin-bottom: 8px; display: flex; align-items: center; gap: 8px;">
                                             <span style="width: 6px; height: 6px; background: var(--primary); border-radius: 50%;"></span>
-                                            Usage
+                                            {{ __('messages.about_merchant_ministore_usage_heading') }}
                                         </h4>
-                                        <p style="color:  rgba(0, 0, 0, 0.81); font-size: clamp(14px, 2.5vw, 16px); line-height: 1.6; margin-left: 14px;">1-Login to your dashboard</p>
-                                                                                <p style="color:  rgba(0, 0, 0, 0.81); font-size: clamp(14px, 2.5vw, 16px); line-height: 1.6; margin-left: 14px;">2-Click on the mini store tab in the sidebar</p>
-                                        <p style="color:  rgba(0, 0, 0, 0.81); font-size: clamp(14px, 2.5vw, 16px); line-height: 1.6; margin-left: 14px;">3-Click edit location</p>
-                                        <p style="color:  rgba(0, 0, 0, 0.81); font-size: clamp(14px, 2.5vw, 16px); line-height: 1.6; margin-left: 14px;">4-Pick the location from google map screen</p>
-                                        <p style="color:  rgba(0, 0, 0, 0.81); font-size: clamp(14px, 2.5vw, 16px); line-height: 1.6; margin-left: 14px;">5-Click save location button</p>
+                                        <p style="color:  rgba(0, 0, 0, 0.81); font-size: clamp(14px, 2.5vw, 16px); line-height: 1.6; margin-left: 14px;">{{ __('messages.about_merchant_ministore_usage_step_1') }}</p>
+                                                                                <p style="color:  rgba(0, 0, 0, 0.81); font-size: clamp(14px, 2.5vw, 16px); line-height: 1.6; margin-left: 14px;">{{ __('messages.about_merchant_ministore_usage_step_2') }}</p>
+                                        <p style="color:  rgba(0, 0, 0, 0.81); font-size: clamp(14px, 2.5vw, 16px); line-height: 1.6; margin-left: 14px;">{{ __('messages.about_merchant_ministore_usage_step_3') }}</p>
+                                        <p style="color:  rgba(0, 0, 0, 0.81); font-size: clamp(14px, 2.5vw, 16px); line-height: 1.6; margin-left: 14px;">{{ __('messages.about_merchant_ministore_usage_step_4') }}</p>
+                                        <p style="color:  rgba(0, 0, 0, 0.81); font-size: clamp(14px, 2.5vw, 16px); line-height: 1.6; margin-left: 14px;">{{ __('messages.about_merchant_ministore_usage_step_5') }}</p>
 
                                     </div>
-                                    <div style="margin-bottom: 16px;">
-                                        <h4 style="color:  rgba(0, 0, 0, 0.81);; font-size: clamp(16px, 3vw, 18px); font-weight: 600; margin-bottom: 8px; display: flex; align-items: center; gap: 8px;">
-                                            <span style="width: 6px; height: 6px; background: #fbbf24; border-radius: 50%;"></span>
-                                            On-store services
-                                        </h4>
-                                        <p style="color:  rgba(0, 0, 0, 0.81); font-size: clamp(14px, 2.5vw, 16px); line-height: 1.6; margin-left: 14px;">Serve your customers on your specifc location , identify your customers and provide them with a better experience</p>
-                                    </div>
+                                    
                                     
                      
                                     
                                     <div style="margin-bottom: 16px;">
                                         <h4 style="color:  rgba(0, 0, 0, 0.81);; font-size: clamp(16px, 3vw, 18px); font-weight: 600; margin-bottom: 8px; display: flex; align-items: center; gap: 8px;">
                                             <span style="width: 6px; height: 6px; background: #8b5cf6; border-radius: 50%;"></span>
-                                            Change per your need
+                                            {{ __('messages.about_merchant_ministore_change_heading') }}
                                         </h4>
-                                        <p style="color:  rgba(0, 0, 0, 0.81); font-size: clamp(14px, 2.5vw, 16px); line-height: 1.6; margin-left: 14px;">Don't hesitate to change your store's location whenever you want</p>
+                                        <p style="color:  rgba(0, 0, 0, 0.81); font-size: clamp(14px, 2.5vw, 16px); line-height: 1.6; margin-left: 14px;">{{ __('messages.about_merchant_ministore_change_text') }}</p>
                                     </div>
                                 </div>
 
@@ -1799,7 +1854,7 @@ From one dashboard, you can manage stock flow, products, orders, and customer-fa
                                     <button style="background: linear-gradient(135deg, #fbbf24 0%, #f59e0b 100%); color: white; border: none; padding: 14px 28px; border-radius: 12px; font-weight: 600; font-size: clamp(14px, 2.5vw, 16px); cursor: pointer; transition: all 0.3s ease; box-shadow: 0 4px 15px rgba(251, 191, 36, 0.4); width: 100%;" 
                             onmouseover="this.style.transform='translateY(-2px)'; this.style.boxShadow='0 6px 20px rgba(251, 191, 36, 0.6)'"
                             onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow='0 4px 15px rgba(251, 191, 36, 0.4)'">
-                                        Get Started with Mini Store
+                                        {{ __('messages.about_merchant_ministore_cta') }}
                                     </button>
                                 </div>
                             </div>
@@ -1831,7 +1886,7 @@ From one dashboard, you can manage stock flow, products, orders, and customer-fa
                         padding: clamp(40px, 8vw, 60px) 0 !important;
                     }
                     .ministore-section .container > div > div:first-child {
-                        margin-bottom: clamp(40px, 8vw, 60px) !important;
+                        margin-bottom: clamp(0px, 8vw, 60px) !important;
                     }
                     .ministore-section .container > div > div:nth-child(2) {
                         flex-direction: column !important;
@@ -1934,35 +1989,35 @@ From one dashboard, you can manage stock flow, products, orders, and customer-fa
 
         <section class="merchant-faq-section" id="merchant-faq-section">
             <div class="merchant-faq-wrap">
-                <h2 class="merchant-faq-title">Trader FAQs</h2>
+                <h2 class="merchant-faq-title">{{ __('messages.about_merchant_faq_title') }}</h2>
                 <div class="faq-panel" style="padding: 22px;">
-                    <h3 class="faq-question">What is the Trader role?</h3>
+                    <h3 class="faq-question">{{ __('messages.about_merchant_faq_q1') }}</h3>
                     <p class="faq-answer" style="padding: 12px 0 0;">
-                        The Trader (Merchant) role is designed for individual entrepreneurs, especially women, who create handcrafted products or run small personal brands.
+                        {{ __('messages.about_merchant_faq_a1_intro') }}
                     </p>
-                    <p class="faq-answer" style="padding: 0;">Traders can:</p>
-                    <p class="faq-answer" style="padding: 0;">- Sell handmade or self-branded products</p>
-                    <p class="faq-answer" style="padding: 0;">- Build their own brand presence within GlowLabs</p>
-                    <p class="faq-answer" style="padding: 0;">- Reach a wider audience across the UAE</p>
-                    <p class="faq-answer" style="padding: 0;">- Manage orders and customer interactions</p>
-                    <p class="faq-answer" style="padding: 0;">This role empowers small businesses and independent creators.</p>
+                    <p class="faq-answer" style="padding: 0;">{{ __('messages.about_merchant_faq_a1_lead') }}</p>
+                    <p class="faq-answer" style="padding: 0;">- {{ __('messages.about_merchant_faq_a1_item_1') }}</p>
+                    <p class="faq-answer" style="padding: 0;">- {{ __('messages.about_merchant_faq_a1_item_2') }}</p>
+                    <p class="faq-answer" style="padding: 0;">- {{ __('messages.about_merchant_faq_a1_item_3') }}</p>
+                    <p class="faq-answer" style="padding: 0;">- {{ __('messages.about_merchant_faq_a1_item_4') }}</p>
+                    <p class="faq-answer" style="padding: 0;">{{ __('messages.about_merchant_faq_a1_outro') }}</p>
                 </div>
 
                 <div class="faq-panel" style="padding: 22px;">
-                    <h3 class="faq-question">How can I register as a Trader?</h3>
-                    <p class="faq-answer" style="padding: 12px 0 0;">To register as a Trader:</p>
-                    <p class="faq-answer" style="padding: 0;">- Visit: <a href="/register">Registration</a></p>
-                    <p class="faq-answer" style="padding: 0;">- Select the Trader option</p>
-                    <p class="faq-answer" style="padding: 0;">- Complete registration at: <a href="/register/merchant">Trader Registration</a></p>
-                    <p class="faq-answer" style="padding: 0;">Your application will be reviewed before activation.</p>
+                    <h3 class="faq-question">{{ __('messages.about_merchant_faq_q2') }}</h3>
+                    <p class="faq-answer" style="padding: 12px 0 0;">{{ __('messages.about_merchant_faq_a2_lead') }}</p>
+                    <p class="faq-answer" style="padding: 0;">- {{ __('messages.about_merchant_faq_a2_item_1_prefix') }} <a href="/register">{{ __('messages.about_merchant_faq_a2_item_1_link') }}</a></p>
+                    <p class="faq-answer" style="padding: 0;">- {{ __('messages.about_merchant_faq_a2_item_2') }}</p>
+                    <p class="faq-answer" style="padding: 0;">- {{ __('messages.about_merchant_faq_a2_item_3_prefix') }} <a href="/register/merchant">{{ __('messages.about_merchant_faq_a2_item_3_link') }}</a></p>
+                    <p class="faq-answer" style="padding: 0;">{{ __('messages.about_merchant_faq_a2_outro') }}</p>
                 </div>
 
                 <div class="faq-panel" style="padding: 22px; margin-bottom: 0;">
-                    <h3 class="faq-question">What are the prerequisites to register as a Trader?</h3>
-                    <p class="faq-answer" style="padding: 12px 0 0;">- A valid working email address</p>
-                    <p class="faq-answer" style="padding: 0;">- A dedicated phone number</p>
-                    <p class="faq-answer" style="padding: 0;">- A valid individual/trader license</p>
-                    <p class="faq-answer" style="padding: 0;">- Brand logo</p>
+                    <h3 class="faq-question">{{ __('messages.about_merchant_faq_q3') }}</h3>
+                    <p class="faq-answer" style="padding: 12px 0 0;">- {{ __('messages.about_merchant_faq_a3_item_1') }}</p>
+                    <p class="faq-answer" style="padding: 0;">- {{ __('messages.about_merchant_faq_a3_item_2') }}</p>
+                    <p class="faq-answer" style="padding: 0;">- {{ __('messages.about_merchant_faq_a3_item_3') }}</p>
+                    <p class="faq-answer" style="padding: 0;">- {{ __('messages.about_merchant_faq_a3_item_4') }}</p>
                 </div>
             </div>
         </section>

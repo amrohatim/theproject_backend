@@ -30,9 +30,53 @@
     <link rel="stylesheet" href="{{ asset('css/global.css') }}">
 
     <style>
+        :root {
+            --register-bg-blue: #14d0f0e6;
+            --register-bg-pink: #a46bc177;
+            --register-bg-white: rgba(0, 0, 0, 0.57);
+        }
         
         body {
             font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            position: relative;
+            min-height: 100vh;
+            background: transparent;
+        }
+
+        .background {
+            /* background-image: url('https://images.unsplash.com/photo-1554692760-4b7e52978fb6?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=1650&q=80'); */
+            background-image:url('assets/registerBG.webp');
+            background-size: cover;
+            background-repeat: no-repeat;
+            background-color: #252746;
+            background-position: center;
+            width: 105vw;
+            height: 105vh;
+            position: fixed;
+            top: 0px;
+            left: 0;
+            z-index: 0;
+            pointer-events: none;
+        }
+
+        .background-texture {
+            background: linear-gradient(
+                to top,
+                var(--register-bg-pink),
+                var(--register-bg-white)
+            );
+            width: 100vw;
+            height: 100vh;
+            position: fixed;
+            top: 0;
+            left: 0;
+            z-index: 0;
+            pointer-events: none;
+        }
+
+        .register-choice-content {
+            position: relative;
+            z-index: 1;
         }
 
         /* Pricing-style card styles */
@@ -426,30 +470,34 @@
         }
     </style>
 </head>
-<body class="bg-gray-50 font-sans">
+<body class="font-sans">
+    <div class="background" aria-hidden="true"></div>
+    <div class="background-texture" aria-hidden="true"></div>
+
+    <div class="register-choice-content">
     <!-- Navigation -->
-    <nav class="fixed top-0 left-0 right-0 z-50 bg-white/1 backdrop-blur-md border-b border-gray-200 shadow-sm">
+    <nav class="fixed top-0 left-0 right-0 z-50 bg-transparent">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div class="flex justify-between items-center h-16">
                 <div class="flex items-center">
                     <div class="w-10 h-7 bg-transparent flex items-center justify-center">
                         <img src="{{ asset('assets/logo.png') }}" alt="glowlabs Logo" class="w-16 h-16 object-cover rounded-lg">
                     </div>
-                    <span class="ml-3 text-gray-800 font-bold text-xl">glowlabs</span>
+                    <span class="ml-3 text-white/80 font-bold text-xl">glowlabs</span>
                 </div>
 
                 <div class="hidden md:flex items-center space-x-8">
-                    <a href="{{ url('/') }}#features" class="text-gray-600 hover:text-gray-800 transition-colors">{{ __('messages.services') }}</a>
-                    <a href="{{ url('/') }}#about" class="text-gray-600 hover:text-gray-800 transition-colors">{{ __('messages.about') }}</a>
-                    <a href="{{ url('/') }}#contact" class="text-gray-600 hover:text-gray-800 transition-colors">{{ __('messages.contact') }}</a>
+                    <a href="{{ url('/') }}#features" class="text-white font-bold">{{ __('messages.services') }}</a>
+                    <a href="{{ url('/') }}#about" class="text-white font-bold">{{ __('messages.about') }}</a>
+                    <a href="{{ url('/') }}#contact" class="text-white font-bold">{{ __('messages.contact') }}</a>
 
                     <!-- Language Switcher -->
                     <div class="language-switcher flex items-center space-x-2">
-                        <button onclick="switchLanguage('en')" class="lang-btn text-gray-600 hover:text-gray-800 transition-colors px-2 py-1 rounded {{ app()->getLocale() === 'en' ? 'bg-gray-200 font-semibold' : '' }}" data-lang="en">
+                        <button onclick="switchLanguage('en')" class="lang-btn text-gray-600 hover:text-gray-800 transition-colors px-2 py-1 rounded {{ app()->getLocale() === 'en' ? 'bg-gray-200 font-semibold' : 'text-white' }}" data-lang="en">
                             EN
                         </button>
                         <span class="text-gray-400">|</span>
-                        <button onclick="switchLanguage('ar')" class="lang-btn text-gray-600 hover:text-gray-800 transition-colors px-2 py-1 rounded {{ app()->getLocale() === 'ar' ? 'bg-gray-200 font-semibold' : '' }}" data-lang="ar">
+                        <button onclick="switchLanguage('ar')" class="lang-btn text-gray-600 hover:text-gray-800 transition-colors px-2 py-1 rounded {{ app()->getLocale() === 'ar' ? 'bg-gray-200 font-semibold' : 'text-white' }}" data-lang="ar">
                             AR
                         </button>
                     </div>
@@ -478,18 +526,18 @@
         </div>
 
         <!-- Mobile Menu -->
-        <div class="mobile-menu md:hidden bg-white/95 backdrop-blur-md border-t border-gray-200">
+        <div class="mobile-menu md:hidden">
             <div class="px-4 py-4 space-y-3">
-                <a href="{{ url('/') }}#features" class="block text-gray-600 hover:text-gray-800 transition-colors">{{ __('messages.services') }}</a>
-                <a href="{{ url('/') }}#about" class="block text-gray-600 hover:text-gray-800 transition-colors">{{ __('messages.about') }}</a>
-                <a href="{{ url('/') }}#contact" class="block text-gray-600 hover:text-gray-800 transition-colors">{{ __('messages.contact') }}</a>
+                <a href="{{ url('/') }}#features" class="block text-white font-bold">{{ __('messages.services') }}</a>
+                <a href="{{ url('/') }}#about" class="block text-white font-bold">{{ __('messages.about') }}</a>
+                <a href="{{ url('/') }}#contact" class="block text-white font-bold">{{ __('messages.contact') }}</a>
 
                 <!-- Mobile Language Switcher -->
-                <div class="language-switcher flex items-center justify-center space-x-4 py-2">
-                    <button onclick="switchLanguage('en')" class="lang-btn text-gray-600 hover:text-gray-800 transition-colors px-3 py-1 rounded border border-gray-300 {{ app()->getLocale() === 'en' ? 'bg-gray-200 font-semibold' : '' }}" data-lang="en">
+                <div class="language-switcher flex items-center justify-center gap-2 space-x-4 py-2">
+                    <button onclick="switchLanguage('en')" class="lang-btn text-gray-600 hover:text-gray-800 transition-colors px-3 py-1 rounded border border-gray-300 {{ app()->getLocale() === 'en' ? 'bg-gray-200 font-semibold' : 'text-white' }}" data-lang="en">
                         {{ __('messages.english') }}
                     </button>
-                    <button onclick="switchLanguage('ar')" class="lang-btn text-gray-600 hover:text-gray-800 transition-colors px-3 py-1 rounded border border-gray-300 {{ app()->getLocale() === 'ar' ? 'bg-gray-200 font-semibold' : '' }}" data-lang="ar">
+                    <button onclick="switchLanguage('ar')" class="lang-btn text-gray-600 hover:text-gray-800 transition-colors px-3 py-1 rounded border border-gray-300 {{ app()->getLocale() === 'ar' ? 'bg-gray-200 font-semibold' : 'text-white' }}" data-lang="ar">
                         {{ __('messages.arabic') }}
                     </button>
                 </div>
@@ -515,8 +563,8 @@
 
     <div class="container mx-auto px-4 py-8 pt-24">
         <header class="mb-12 {{ app()->getLocale() === 'ar' ? 'text-right' : 'text-left' }}">
-            <h1 class="text-4xl font-bold text-gray-800 mb-4">{{ __('messages.choose_registration_type') }}</h1>
-            <p class="text-lg font-semibold text-gray-900 max-w-3xl {{ app()->getLocale() === 'ar' ? 'text-right' : 'text-left' }}">{{ __('messages.registration_type_desc') }}</p>
+            <h1 class="text-4xl font-bold text-white/70 mb-4">{{ __('messages.choose_registration_type') }}</h1>
+            <p class="text-lg font-semibold text-white/80 max-w-3xl {{ app()->getLocale() === 'ar' ? 'text-right' : 'text-left' }}">{{ __('messages.registration_type_desc') }}</p>
         </header>
 
         <main class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
@@ -656,6 +704,7 @@
         <footer class="text-center mt-12">
            
         </footer>
+    </div>
     </div>
 
     <script>
