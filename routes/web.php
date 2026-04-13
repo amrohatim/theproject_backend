@@ -2972,6 +2972,16 @@ Route::get('/aboutvendor', function () {
     return view('aboutvendor');
 })->name('aboutvendor');
 
+//About Us page
+Route::get('/about-us', function () {
+    return view('about-us');
+})->name('about.us');
+
+//Services page
+Route::get('/our-services', function () {
+    return view('services');
+})->name('services.public');
+
 
 
 

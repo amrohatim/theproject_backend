@@ -1128,7 +1128,7 @@
              }
              .features-shell{
                 margin:0 0;
-                width:100%;
+                width:80%;
              }
              .hero-section::after {
                  bottom: -155px;

@@ -36,30 +36,6 @@
     * { box-sizing: border-box; margin: 0; padding: 0; }
     body { font-family: 'DM Sans', sans-serif; color: #1e2536; }
     .font-serif { font-family: 'DM Serif Display', serif; }
-    .login-cta {
-      position: relative;
-      display: inline-block;
-      transition: color .25s ease, transform .25s ease;
-    }
-    .login-cta::after {
-      content: '';
-      position: absolute;
-      left: 0;
-      bottom: -3px;
-      width: 100%;
-      height: 2px;
-      background: var(--primary);
-      transform: scaleX(0);
-      transform-origin: left;
-      transition: transform .28s ease;
-    }
-    .login-cta:hover {
-      color: #1e2536;
-      transform: translateY(-2px);
-    }
-    .login-cta:hover::after {
-      transform: scaleX(1);
-    }
     .faq-panel {
       border: 1px solid #e5e7eb;
       border-radius: 16px;
@@ -84,6 +60,7 @@
       transform: rotate(45deg);
     }
   </style>
+  @include('partials.public-shell-styles')
 </head>
 <body class="bg-white antialiased">
   @php
@@ -104,43 +81,9 @@
     };
   @endphp
 
-  <header class="w-full bg-white">
-    <div class="mx-auto flex max-w-7xl items-center justify-between px-6 py-4">
-      <div class="flex flex-row items-center justifiy-center gap-2">
-        <img src="{{ asset('assets/logo.png') }}" width="40" height="40">
-      <p class="font-serif text-2xl text-brand-dark">{{ config('app.name') }}</p>
-      </div>
-      <nav class="hidden items-center gap-8 md:flex">
-        <a href="{{ route('home') }}" class="text-sm text-gray-500 transition-colors hover:text-brand-dark">{{ __('messages.home') }}</a>
-        <a href="{{ route('faq') }}" class="text-sm font-medium text-brand-dark">{{ __('messages.faq') }}</a>
-        <a href="#" class="text-sm text-gray-500 transition-colors hover:text-brand-dark">{{ __('messages.services') }}</a>
-        <a href="#" class="text-sm text-gray-500 transition-colors hover:text-brand-dark">{{ __('messages.about_us') }}</a>
-      </nav>
-      <div class="flex items-center gap-3">
-        <x-language-switcher />
-        <div class="hidden items-center gap-4 md:flex">
-          <a href="{{ $isAuthenticated ? $getStartedUrl : route('login') }}" class="login-cta text-sm text-gray-500">{{ __('messages.login') }}</a>
-          <a href="{{ route('register') }}" class="rounded-full bg-brand-pink px-5 py-2 text-sm text-white transition-opacity hover:opacity-90">{{ __('messages.signup') }}</a>
-        </div>
-        <button class="md:hidden" onclick="document.getElementById('mobile-menu').classList.toggle('hidden')">
-          <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="4" x2="20" y1="12" y2="12"/><line x1="4" x2="20" y1="6" y2="6"/><line x1="4" x2="20" y1="18" y2="18"/></svg>
-        </button>
-      </div>
-    </div>
-
-    <div id="mobile-menu" class="hidden border-t border-gray-100 px-6 pb-4 md:hidden">
-      <nav class="flex flex-col gap-3 py-3">
-        <a href="{{ route('home') }}" class="text-sm text-gray-500 hover:text-brand-dark">{{ __('messages.home') }}</a>
-        <a href="{{ route('faq') }}" class="text-sm font-medium text-brand-dark">{{ __('messages.faq') }}</a>
-        <a href="#" class="text-sm text-gray-500 hover:text-brand-dark">{{ __('messages.services') }}</a>
-        <a href="#" class="text-sm text-gray-500 hover:text-brand-dark">{{ __('messages.about_us') }}</a>
-      </nav>
-      <div class="flex items-center gap-4 pt-2">
-        <a href="{{ $isAuthenticated ? $getStartedUrl : route('login') }}" class="login-cta text-sm text-gray-500">{{ __('messages.login') }}</a>
-        <a href="{{ route('register') }}" class="rounded-full bg-brand-pink px-5 py-2 text-sm text-white">{{ __('messages.signup') }}</a>
-      </div>
-    </div>
-  </header>
+  <section class="upper-shell relative isolate overflow-hidden">
+    @include('partials.public-navbar', ['publicNavActive' => 'faq'])
+  </section>
 
   <main class="relative overflow-hidden py-12 md:py-20">
 
@@ -162,5 +105,6 @@
       </section>
     </div>
   </main>
+  @include('partials.public-footer')
 </body>
 </html>
