@@ -939,7 +939,7 @@
                 grid-template-columns: 1fr;
                 grid-template-rows: auto;
                 max-width: 100%;
-                padding: 0 15px;
+                padding: 0 5px;
             }
 
             .features-showcase .service-card {
@@ -953,10 +953,14 @@
                 height: 220px;
                 min-width: auto;
             }
+              .features-notes-stack {
+
+             padding-right: 0px;
+         }
               .features-notes-stack .features-purple-notes:first-child {
              position: relative;
              z-index: 2;
-             width:450px;
+             width:auto;
          }
 
               .features-notes-stack .features-purple-notes:last-child {
@@ -1126,10 +1130,7 @@
              .hero-section {
                  min-height: 68vh;
              }
-             .features-shell{
-                margin:0 0;
-                width:80%;
-             }
+             
              .hero-section::after {
                  bottom: -155px;
                  height: 250px;

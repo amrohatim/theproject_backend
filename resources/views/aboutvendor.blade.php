@@ -2126,7 +2126,7 @@
          .features-notes-stack .features-purple-notes:first-child {
              position: relative;
              z-index: 2;
-             width:450px;
+             width:auto;
          }
 
               .features-notes-stack .features-purple-notes:last-child {
