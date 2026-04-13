@@ -35,7 +35,7 @@
   <style>
     .about-us-page {
       background: #fff;
-      color: #181325;
+      color: #f9fcfd;
       font-family: "Poppins", sans-serif;
     }
     .about-shell {
@@ -192,7 +192,7 @@
       z-index: 1;
     }
     .about-team {
-      background: #08080b;
+      background: #f9fcfd;
       color: #fff;
       padding: 2.75rem 1rem;
     }
@@ -274,7 +274,7 @@
     }
     .team-bio p {
       margin: 0;
-      color: #efe5f5;
+      color: #362a3dff;
       font-size: 1rem;
       line-height: 1.7;
       font-weight: 400;

@@ -2349,7 +2349,7 @@
 
                         <div class="features-actions">
                             <a class="features-btn features-btn--primary" href="#dashboard-section">{{ __('messages.about_vendor_features_learn_more') }}</a>
-                            <a class="features-btn features-btn--secondary" href="#deals-section">{{ __('messages.about_vendor_features_create_one_now') }}</a>
+                            <a class="features-btn features-btn--secondary" href="/register/vendor">{{ __('messages.about_vendor_features_create_one_now') }}</a>
                         </div>
                     </div>
                 </div>
@@ -2374,7 +2374,7 @@
 
                         <div class="features-actions">
                             <a class="features-btn features-btn--primary" href="#dashboard-section">{{ __('messages.about_vendor_features_learn_more') }}</a>
-                            <a class="features-btn features-btn--secondary" href="#deals-section">{{ __('messages.about_vendor_features_create_one_now') }}</a>
+                            <a class="features-btn features-btn--secondary" href="/register/vendor">{{ __('messages.about_vendor_features_create_one_now') }}</a>
                         </div>
                     </div>
                     <div class="features-notes-stack">
@@ -2554,7 +2554,7 @@
                         <p class="parallax-deals-text">
                             {{ __('messages.about_vendor_deals_text') }}
                         </p>
-                        <button class="parallax-deals-btn">{{ __('messages.about_vendor_deals_cta') }}</button>
+                       <a href="/vendor/deals"> <button class="parallax-deals-btn">{{ __('messages.about_vendor_deals_cta') }}</button></a>
                     </div>
                 </div>
 

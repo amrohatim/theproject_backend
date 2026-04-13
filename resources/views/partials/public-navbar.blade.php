@@ -1,6 +1,20 @@
 @php
-  $isAuthenticated = auth()->check();
-  $getStartedUrl = $isAuthenticated ? url('/dashboard') : route('register');
+  $authUser = auth()->user();
+  $isAuthenticated = isset($isAuthenticated)
+    ? $isAuthenticated
+    : ($authUser && $authUser->status === 'active');
+
+  if (!isset($getStartedUrl) && $isAuthenticated) {
+    $getStartedUrl = match ($authUser->role) {
+      'admin' => route('admin.dashboard'),
+      'vendor' => route('vendor.dashboard'),
+      'provider' => route('provider.dashboard'),
+      'merchant' => route('merchant.dashboard'),
+      'service_provider' => route('service-provider.dashboard'),
+      'products_manager' => route('products-manager.dashboard'),
+      default => route('login'),
+    };
+  }
   $publicNavActive = $publicNavActive ?? '';
 @endphp
 

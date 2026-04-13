@@ -1422,7 +1422,7 @@
 
                         <div class="features-actions">
                             <a class="features-btn features-btn--primary" href="#dashboard-section">{{ __('messages.about_merchant_features_learn_more') }}</a>
-                            <a class="features-btn features-btn--secondary" href="#ministore-usage-section">{{ __('messages.about_merchant_features_create_one_now') }}</a>
+                            <a class="features-btn features-btn--secondary" href="/register/merchant">{{ __('messages.about_merchant_features_create_one_now') }}</a>
                         </div>
                     </div>
                     
@@ -1447,7 +1447,7 @@
 
                         <div class="features-actions">
                             <a class="features-btn features-btn--primary" href="#dashboard-section">{{ __('messages.about_merchant_features_learn_more') }}</a>
-                            <a class="features-btn features-btn--secondary" href="#ministore-usage-section">{{ __('messages.about_merchant_features_create_one_now') }}</a>
+                            <a class="features-btn features-btn--secondary" href="/register/merchant">{{ __('messages.about_merchant_features_create_one_now') }}</a>
                         </div>
                     </div>
                     <div class="features-notes-stack">
@@ -1606,7 +1606,7 @@
                         <p class="parallax-deals-text">
                             {{ __('messages.about_merchant_deals_text') }}
                         </p>
-                        <button class="parallax-deals-btn">{{ __('messages.about_merchant_deals_cta') }}</button>
+                        <a href="/merchant/deals"><button class="parallax-deals-btn">{{ __('messages.about_merchant_deals_cta') }}</button></a>
                     </div>
                 </div>
             </div>
@@ -1852,11 +1852,11 @@
 
                                 <!-- CTA Button -->
                                 <div style="margin-top: 30px;">
-                                    <button style="background: linear-gradient(135deg, #fbbf24 0%, #f59e0b 100%); color: white; border: none; padding: 14px 28px; border-radius: 12px; font-weight: 600; font-size: clamp(14px, 2.5vw, 16px); cursor: pointer; transition: all 0.3s ease; box-shadow: 0 4px 15px rgba(251, 191, 36, 0.4); width: 100%;" 
+                                  <a href="merchant/mini-store">  <button  style="background: linear-gradient(135deg, #fbbf24 0%, #f59e0b 100%); color: white; border: none; padding: 14px 28px; border-radius: 12px; font-weight: 600; font-size: clamp(14px, 2.5vw, 16px); cursor: pointer; transition: all 0.3s ease; box-shadow: 0 4px 15px rgba(251, 191, 36, 0.4); width: 100%;" 
                             onmouseover="this.style.transform='translateY(-2px)'; this.style.boxShadow='0 6px 20px rgba(251, 191, 36, 0.6)'"
                             onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow='0 4px 15px rgba(251, 191, 36, 0.4)'">
                                         {{ __('messages.about_merchant_ministore_cta') }}
-                                    </button>
+                                    </button></a>
                                 </div>
                             </div>
                         </div>
