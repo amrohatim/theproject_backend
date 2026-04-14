@@ -60,6 +60,14 @@ class Order extends Model
     }
 
     /**
+     * Get the branch associated with the order (legacy/direct relation).
+     */
+    public function branch()
+    {
+        return $this->belongsTo(Branch::class);
+    }
+
+    /**
      * Get the order items for the order.
      */
     public function items()
