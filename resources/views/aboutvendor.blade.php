@@ -1247,7 +1247,6 @@
             background: white;
             border-radius: 10px;
             overflow: hidden;
-            box-shadow: 0 5px 20px rgba(0,0,0,0.3);
             transition: transform 0.3s ease;
             display: flex;
             flex-direction: row;
@@ -1897,84 +1896,81 @@
              margin-top: 11px;
          }
 
-         .features-showcase {
+         .features-showcase.features-showcase--figma {
              margin-top: 72px;
-             background: #F9FCFD;
+             background: #f9fcfd;
              border-radius: 0;
-             padding: 62px 30px 34px;
+             padding: 24px 6px 20px;
              position: relative;
          }
 
-         .features-showcase .services-grid {
+         .features-showcase--figma .services-grid {
              display: grid;
-             grid-template-columns: repeat(2, 1fr);
-             grid-template-rows: repeat(2, 1fr);
-             gap: 30px;
-             margin: 30px auto 0 auto;
-             max-width: 1460px;
-             padding: 0 20px;
+             grid-template-columns: repeat(2, minmax(0, 1fr));
+             gap: 26px;
+             margin: 0 auto;
+             max-width: 1586px;
+             padding: 0;
              transform: none;
          }
 
-         .features-showcase .service-card {
-             background: #ffffff;
-             border-radius: 10px;
+         .features-showcase--figma .service-card {
+             background: #f2f2f2;
+             border-radius: 0;
              overflow: hidden;
-             transition: transform 0.3s ease;
-             display: flex;
-             flex-direction: row;
+             transition: none;
+             display: grid;
+             grid-template-columns: minmax(0, 1.4fr) minmax(0, 1fr);
              align-items: stretch;
-             min-height: 230px;
+             min-height: 274px;
              width: 100%;
              box-shadow: none;
          }
 
-         .features-showcase .service-image {
-             width: 50%;
-             min-width: 200px;
-             background-size: cover;
-             background-position: center;
-             flex-shrink: 0;
+         .features-showcase--figma .service-card:hover {
+             transform: none;
          }
 
-         .features-showcase .service-image img {
-             width: 100%;
-             height: 100%;
-             object-fit: cover;
-             display: block;
-         }
-
-         .features-showcase .service-content {
-             padding: 20px;
-             flex: 1;
+         .features-showcase--figma .service-content {
+             padding: 36px 34px 30px;
              display: flex;
              flex-direction: column;
              justify-content: center;
-             background: #ffffff;
+             background: #ebe5f7ff;
          }
 
-         .features-showcase .service-title {
-             font-family:"Coco Sharp";
-             font-size: 26px;
-             line-height: 1.15;
+         .features-showcase--figma .service-title {
+             font-family: 'Roboto', 'Segoe UI', sans-serif;
+             font-size: clamp(28px, 2.1vw, 34px);
+             line-height: 1.16;
              color: #a46bc1;
-             margin-bottom: 10px;
+             margin-bottom: 12px;
              font-weight: 700;
          }
 
-         .features-showcase .service-description {
-             font-family: 'Poppins', 'Segoe UI', sans-serif;
-             font-size: 18px;
-             line-height: 1.4;
-             color: #3c3b42ff;
-             margin-bottom: 14px;
+        .features-showcase--figma .service-icon {
+            width: 30px;
+            height: 30px;
+            object-fit: contain;
+            display: block;
+            align-self: flex-start;
+            margin-bottom: 10px;
+        }
+
+         .features-showcase--figma .service-description {
+             font-family: 'Roboto', 'Segoe UI', sans-serif;
+             font-size: 16px;
+             line-height: 1.3;
+             color: #000000;
+             margin-bottom: 16px;
              text-align: left;
+             max-width: 290px;
          }
 
-         .features-showcase .read-more {
-             width: 114px;
-             min-height: 30px;
-             border-radius: 20px;
+        .features-showcase--figma .read-more {
+            width: 114px;
+            min-height: 30px;
+             border-radius: 999px;
              background: #a46bc1;
              color: #ffffff;
              font-family: 'Nunito Sans', 'Segoe UI', sans-serif;
@@ -1982,9 +1978,32 @@
              line-height: 16px;
              text-decoration: underline;
              font-weight: 700;
-             display: inline-flex;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            align-self: flex-start;
+        }
+
+         .features-showcase--figma .service-image {
+             background: #ffffff;
+             padding: 20px;
+             display: flex;
              align-items: center;
              justify-content: center;
+             width:100%;
+         }
+
+         .features-showcase--figma .service-image img {
+             width: 100%;
+             height: 100%;
+             object-fit: cover;
+             border-radius:20px;
+             display: block;
+         }
+
+         html[dir="rtl"] .features-showcase--figma .service-icon,
+         html[dir="rtl"] .features-showcase--figma .read-more {
+             align-self: flex-end;
          }
 
          @media (max-width: 1200px) {
@@ -2020,6 +2039,23 @@
              .features-shell {
                  width: min(1260px, calc(100% - 28px));
              }
+
+             .features-notes-row {
+                 grid-template-columns: 1fr;
+             }
+
+             .features-showcase.features-showcase--figma {
+                 padding-inline: 18px;
+             }
+
+             .features-showcase--figma .services-grid {
+                 gap: 20px;
+                 padding: 0 10px;
+             }
+
+             .features-showcase--figma .service-title {
+                 font-size: 22px;
+             }
          }
 
          @media (max-width: 768px) {
@@ -2027,9 +2063,9 @@
                  min-height: 68vh;
              }
 
-              .features-showcase {
-             margin-top: 2px;
-             padding: 62px 3px 34px;
+              .features-showcase.features-showcase--figma {
+             margin-top: 16px;
+             padding: 12px 0;
          }
                
              .merchant-hero {
@@ -2096,20 +2132,20 @@
                  width: 100%;
              }
 
-             .features-showcase .services-grid {
+             .features-showcase--figma .services-grid {
                  grid-template-columns: 1fr;
                  grid-template-rows: auto;
                  max-width: 100%;
                  padding: 0 5px;
              }
 
-             .features-showcase .service-card {
+             .features-showcase--figma .service-card {
                  width: 100%;
-                 flex-direction: column;
+                 grid-template-columns: 1fr;
                  min-height: auto;
              }
 
-             .features-showcase .service-image {
+             .features-showcase--figma .service-image {
                  width: 100%;
                  height: 220px;
                  min-width: auto;
@@ -2184,15 +2220,15 @@
                  height: 210px;
              }
 
-             .features-showcase .service-content {
-                 padding: 20px 16px;
+             .features-showcase--figma .service-content {
+                 padding: 24px 18px;
              }
 
-             .features-showcase .service-image {
+             .features-showcase--figma .service-image {
                  height: 180px;
              }
 
-             .features-showcase .service-description {
+             .features-showcase--figma .service-description {
                  font-size: 13px;
                  line-height: 1.5;
              }
@@ -2404,84 +2440,84 @@
                     </div>
                 </div>
 
-                <div class="features-showcase">
+                <div class="features-showcase features-showcase--figma">
                     <div class="services-grid">
                         <div class="service-card">
-                            <div class="service-image">
-                                <img src="{{ asset('assets/dashboardfeature.avif') }}" alt="{{ __('messages.about_vendor_features_showcase_dashboard_image_alt') }}">
-                            </div>
                             <div class="service-content">
                                 <h4 class="service-title">{{ __('messages.about_vendor_features_showcase_dashboard_title') }}</h4>
-                                <img src="{{ asset('assets/dashboardicon.png') }}" alt="{{ __('messages.about_vendor_features_showcase_dashboard_icon_alt') }}" style="width: 30px; text-align: left; display: block; margin-bottom: 10px;">
+                                <img class="service-icon" src="{{ asset('assets/dashboardicon.png') }}" alt="{{ __('messages.about_vendor_features_showcase_dashboard_icon_alt') }}">
                                 <p class="service-description">
                                     {{ __('messages.about_vendor_features_showcase_dashboard_description_line_1') }} <br>{{ __('messages.about_vendor_features_showcase_dashboard_description_line_2') }}
                                 </p>
                                 <a href="#dashboard-section" class="read-more">{{ __('messages.about_vendor_features_read_more') }}</a>
                             </div>
+                            <div class="service-image">
+                                <img src="{{ asset('assets/dashboardfeature.webp') }}" alt="{{ __('messages.about_vendor_features_showcase_dashboard_image_alt') }}">
+                            </div>
                         </div>
                         <div class="service-card">
-                            <div class="service-image">
-                                <img src="{{ asset('assets/deliveryfeature.avif') }}" alt="{{ __('messages.about_vendor_features_showcase_delivery_image_alt') }}">
-                            </div>
                             <div class="service-content">
                                 <h4 class="service-title">{{ __('messages.about_vendor_features_showcase_delivery_title') }}</h4>
-                                <img src="{{ asset('assets/delivery-truckicon.png') }}" alt="{{ __('messages.about_vendor_features_showcase_delivery_icon_alt') }}" style="width: 30px; text-align: left; display: block; margin-bottom: 10px;">
+                                <img class="service-icon" src="{{ asset('assets/delivery-truckicon.png') }}" alt="{{ __('messages.about_vendor_features_showcase_delivery_icon_alt') }}">
                                 <p class="service-description">
                                     {{ __('messages.about_vendor_features_showcase_delivery_description_line_1') }} <br>{{ __('messages.about_vendor_features_showcase_delivery_description_line_2') }}
                                 </p>
                                 <a href="#" class="read-more">{{ __('messages.about_vendor_features_read_more') }}</a>
                             </div>
+                            <div class="service-image">
+                                <img src="{{ asset('assets/deliveryfeature.jpg') }}" alt="{{ __('messages.about_vendor_features_showcase_delivery_image_alt') }}">
+                            </div>
                         </div>
                         <div class="service-card">
-                            <div class="service-image">
-                                <img src="{{ asset('assets/dealfeature.avif') }}" alt="{{ __('messages.about_vendor_features_showcase_deals_image_alt') }}">
-                            </div>
                             <div class="service-content">
                                 <h4 class="service-title">{{ __('messages.about_vendor_features_showcase_deals_title') }}</h4>
-                                <img src="{{ asset('assets/discounticon.png') }}" alt="{{ __('messages.about_vendor_features_showcase_deals_icon_alt') }}" style="width: 30px; text-align: left; display: block; margin-bottom: 10px;">
+                                <img class="service-icon" src="{{ asset('assets/discounticon.png') }}" alt="{{ __('messages.about_vendor_features_showcase_deals_icon_alt') }}">
                                 <p class="service-description">
                                     {{ __('messages.about_vendor_features_showcase_deals_description_line_1') }} <br>{{ __('messages.about_vendor_features_showcase_deals_description_line_2') }}
                                 </p>
                                 <a href="#deals-section" class="read-more">{{ __('messages.about_vendor_features_read_more') }}</a>
                             </div>
+                            <div class="service-image">
+                                <img src="{{ asset('assets/dealfeature.webp') }}" alt="{{ __('messages.about_vendor_features_showcase_deals_image_alt') }}">
+                            </div>
                         </div>
                         <div class="service-card">
-                            <div class="service-image">
-                                <img src="{{ asset('assets/branchm.jpg') }}" alt="{{ __('messages.about_vendor_features_showcase_branch_image_alt') }}">
-                            </div>
                             <div class="service-content">
                                 <h4 class="service-title">{{ __('messages.about_vendor_features_showcase_branch_title') }}</h4>
-                                <img src="{{ asset('assets/shopicon.png') }}" alt="{{ __('messages.about_vendor_features_showcase_branch_icon_alt') }}" style="width: 30px; text-align: left; display: block; margin-bottom: 10px;">
+                                <img class="service-icon" src="{{ asset('assets/shopicon.png') }}" alt="{{ __('messages.about_vendor_features_showcase_branch_icon_alt') }}">
                                 <p class="service-description">
                                     {{ __('messages.about_vendor_features_showcase_branch_description_line_1') }} <br>{{ __('messages.about_vendor_features_showcase_branch_description_line_2') }}
                                 </p>
                                 <a href="#dashboard-section" class="read-more">{{ __('messages.about_vendor_features_read_more') }}</a>
                             </div>
+                            <div class="service-image">
+                                <img src="{{ asset('assets/branchm.webp') }}" alt="{{ __('messages.about_vendor_features_showcase_branch_image_alt') }}">
+                            </div>
                         </div>
                         <div class="service-card">
-                            <div class="service-image">
-                                <img src="{{ asset('assets/serviceprovider.webp') }}" alt="{{ __('messages.about_vendor_features_showcase_service_provider_image_alt') }}">
-                            </div>
                             <div class="service-content">
                                 <h4 class="service-title">{{ __('messages.about_vendor_features_showcase_service_provider_title') }}</h4>
-                                <img src="{{ asset('assets/employee.png') }}" alt="{{ __('messages.about_vendor_features_showcase_service_provider_icon_alt') }}" style="width: 30px; text-align: left; display: block; margin-bottom: 10px;">
+                                <img class="service-icon" src="{{ asset('assets/employee.png') }}" alt="{{ __('messages.about_vendor_features_showcase_service_provider_icon_alt') }}">
                                 <p class="service-description">
                                     {{ __('messages.about_vendor_features_showcase_service_provider_description_line_1') }} <br>{{ __('messages.about_vendor_features_showcase_service_provider_description_line_2') }}
                                 </p>
                                 <a href="#service-provider-section" class="read-more">{{ __('messages.about_vendor_features_read_more') }}</a>
                             </div>
+                            <div class="service-image">
+                                <img src="{{ asset('assets/serviceprovider.webp') }}" alt="{{ __('messages.about_vendor_features_showcase_service_provider_image_alt') }}">
+                            </div>
                         </div>
                         <div class="service-card">
-                            <div class="service-image">
-                                <img src="{{ asset('assets/productmanager.avif') }}" alt="{{ __('messages.about_vendor_features_showcase_product_manager_image_alt') }}">
-                            </div>
                             <div class="service-content">
                                 <h4 class="service-title">{{ __('messages.about_vendor_features_showcase_product_manager_title') }}</h4>
-                                <img src="{{ asset('assets/productstock.png') }}" alt="{{ __('messages.about_vendor_features_showcase_product_manager_icon_alt') }}" style="width: 30px; text-align: left; display: block; margin-bottom: 10px;">
+                                <img class="service-icon" src="{{ asset('assets/productstock.png') }}" alt="{{ __('messages.about_vendor_features_showcase_product_manager_icon_alt') }}">
                                 <p class="service-description">
                                     {{ __('messages.about_vendor_features_showcase_product_manager_description_line_1') }}<br>{{ __('messages.about_vendor_features_showcase_product_manager_description_line_2') }}
                                 </p>
                                 <a href="#products-manager-section" class="read-more">{{ __('messages.about_vendor_features_read_more') }}</a>
+                            </div>
+                            <div class="service-image">
+                                <img src="{{ asset('assets/productmanager.webp') }}" alt="{{ __('messages.about_vendor_features_showcase_product_manager_image_alt') }}">
                             </div>
                         </div>
                     </div>

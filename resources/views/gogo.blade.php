@@ -21,7 +21,7 @@
           },
           colors: {
             brand: {
-              pink: '#d9657a',
+              pink: 'var(--primary)',
               'pink-light': '#f8d5d0',
               'pink-bg': '#fdf0ee',
               dark: '#1e2536',
@@ -394,7 +394,7 @@
     .pricing-card-themed:hover .mt-6 > span {
       color: #ffffff !important;
     }
-    .pricing-card-themed:hover svg[stroke="#d9657a"] {
+    .pricing-card-themed:hover svg[stroke="var(--primary)"] {
       stroke: #ffffff;
     }
     [dir="rtl"] .pricing-themed .pricing-card-themed,
@@ -780,7 +780,7 @@
         <div class="relative flex min-h-[440px] items-end justify-end sm:min-h-[520px] lg:min-h-[640px]">
           <div class="pointer-events-none absolute -bottom-1 right-0 h-[calc(100%+6rem)] w-full max-w-[680px]">
             <div class="hero-model-glow"></div>
-            <img src="{{ asset('assets/heroModel.webp') }}" alt="{{ __('messages.gogo_alt_professional_businesswoman') }}" class="relative z-10 h-[130%] w-[130%] object-contain object-bottom sm:object-cover lg:object-contain" />
+            <img src="{{ asset('assets/heroModel.webp') }}" alt="{{ __('messages.gogo_alt_professional_businesswoman') }}" class="relative z-10 -translate-y-10 h-[130%] w-[130%] object-contain object-bottom sm:object-cover lg:object-contain" />
           </div>
         </div>
       </div>
@@ -818,14 +818,12 @@
         </div>
 
         <div class="lg:pl-2">
-          <span class="about-us-pill">More About Us</span>
-          <h2 class="about-us-heading">About Us</h2>
+          <span class="about-us-pill">{{__('messages.about_us')}}</span>
+          <h2 class="about-us-heading">{{__('messages.about_us')}}</h2>
           <p class="about-us-copy">
-            This is a Paragraph. Click on "Edit Text" or double click on the text box to start editing the content and make sure to add any relevant details or information that you want to share with your visitors.
+            {!! __('messages.about_us_desc') !!}
           </p>
-          <p class="about-us-copy mt-4">
-            Nullam quis ante. Etiam sit amet orci eget eros faucibus tincidunt. Duis leo. Sed fringilla mauris sit amet nibh.
-          </p>
+         
           <div class="mt-10 flex flex-wrap items-center gap-5">
             <a href="{{ route('faq') }}" class="about-us-action-primary">Learn More</a>
             <a href="{{ route('register') }}" class="about-us-action-secondary">Create Account</a>
@@ -846,35 +844,12 @@
           <p class="mt-6 text-sm leading-relaxed text-gray-500">
             {{ __('messages.gogo_support_description') }}
           </p>
-          <div class="mt-8 flex gap-10">
-            <div>
-              <div class="flex gap-1">
-                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="#f5a623" stroke="none"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
-                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="#f5a623" stroke="none"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
-                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="#f5a623" stroke="none"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
-                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="#f5a623" stroke="none"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
-                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="#f5a623" stroke="none"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
-              </div>
-              <p class="mt-1 text-sm font-semibold text-brand-dark">4.9 / 5 rating</p>
-              <p class="text-xs text-gray-500">{{ __('messages.gogo_trustpilots') }}</p>
-            </div>
-            <div>
-              <div class="flex gap-1">
-                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="#f5a623" stroke="none"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
-                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="#f5a623" stroke="none"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
-                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="#f5a623" stroke="none"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
-                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="#f5a623" stroke="none"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
-                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="#f5a623" stroke="none"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
-              </div>
-              <p class="mt-1 text-sm font-semibold text-brand-dark">4.8 / 5 rating</p>
-              <p class="text-xs text-gray-500">{{ __('messages.gogo_clutchanlytica') }}</p>
-            </div>
-          </div>
+         
         </div>
         <div class="flex flex-col gap-8">
           <div class="flex gap-4">
-            <div class="flex h-12 w-12 shrink-0 items-center justify-center rounded-xl bg-brand-pink-bg">
-              <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#d9657a" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect width="18" height="18" x="3" y="3" rx="2"/><path d="M3 9h18"/><path d="M9 21V9"/></svg>
+            <div class="flex h-12 w-12 shrink-0 items-center justify-center rounded-xl bg-[var(--towhite)]">
+              <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="var(--primary)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect width="18" height="18" x="3" y="3" rx="2"/><path d="M3 9h18"/><path d="M9 21V9"/></svg>
             </div>
             <div>
               <h3 class="text-base font-semibold text-brand-dark">{{ __('messages.gogo_business_operations_hub') }}</h3>
@@ -882,8 +857,8 @@
             </div>
           </div>
           <div class="flex gap-4">
-            <div class="flex h-12 w-12 shrink-0 items-center justify-center rounded-xl bg-brand-pink-bg">
-              <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#d9657a" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>
+            <div class="flex h-12 w-12 shrink-0 items-center justify-center rounded-xl bg-[var(--towhite)]">
+              <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="var(--primary)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>
             </div>
             <div>
               <h3 class="text-base font-semibold text-brand-dark">{{ __('messages.gogo_commerce_revenue_control') }}</h3>
@@ -891,8 +866,8 @@
             </div>
           </div>
           <div class="flex gap-4">
-            <div class="flex h-12 w-12 shrink-0 items-center justify-center rounded-xl bg-brand-pink-bg">
-              <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#d9657a" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+            <div class="flex h-12 w-12 shrink-0 items-center justify-center rounded-xl bg-[var(--towhite)]">
+              <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="var(--primary)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
             </div>
             <div>
               <h3 class="text-base font-semibold text-brand-dark">{{ __('messages.gogo_engagement') }}</h3>
@@ -907,28 +882,33 @@
   <!-- FEATURES -->
   <section class="bg-white py-20">
     <div class="mx-auto max-w-7xl px-6">
-      <div class="flex flex-col items-start justify-between gap-6 md:flex-row md:items-end">
+      <div class="flex flex-col items-start justify-between gap-6 md:flex-col md:items-start">
         <h2 class="font-serif text-3xl leading-tight text-brand-dark md:text-4xl">{!! __('messages.gogo_features_title') !!}</h2>
         <div class="max-w-md">
           <p class="text-sm leading-relaxed text-gray-500">{{ __('messages.gogo_features_description') }}</p>
-          <button class="mt-4 rounded-full bg-brand-pink px-6 py-2.5 text-sm font-medium text-white transition-opacity hover:opacity-90">{{ __('messages.gogo_get_started') }}</button>
+        <a href="/register">          <button class="mt-4 rounded-full bg-brand-pink px-6 py-2.5 text-sm font-medium text-white transition-opacity hover:opacity-90">{{ __('messages.gogo_get_started') }}</button>
+</a>
         </div>
       </div>
       <div class="mt-14 grid gap-6 md:grid-cols-3">
-        <div class="relative overflow-hidden rounded-2xl bg-[#FAA8BF]">
-          <img src="{{asset('assets/FD.jpg')}}" alt="{{ __('messages.gogo_alt_free_delivery_feature') }}" width="400" height="250" class="h-48 w-full object-cover" />
+       <div class="overflow-hidden rounded-2xl">
+          <div class="relative">
+            <div class="absolute right-4 top-4 z-10 flex gap-2">
+            
+            </div>
+            <img src="{{asset('assets/FD.webp')}}" alt="{{ __('messages.gogo_alt_resolution_center_feature') }}" width="400" height="300" class="h-64 w-full rounded-2xl object-cover" />
+          </div>
         </div>
         <div class="overflow-hidden rounded-2xl">
           <div class="relative">
             <div class="absolute right-4 top-4 z-10 flex gap-2">
-              <div class="rounded-lg bg-white/90 px-3 py-1.5 text-xs font-semibold text-brand-dark backdrop-blur-sm">86%</div>
-              <div class="rounded-lg bg-white/90 px-3 py-1.5 text-xs font-semibold text-brand-dark backdrop-blur-sm">44%</div>
+            
             </div>
-            <img src="{{asset('assets/RC.jpg')}}" alt="{{ __('messages.gogo_alt_resolution_center_feature') }}" width="400" height="300" class="h-64 w-full rounded-2xl object-cover" />
+            <img src="{{asset('assets/IP.webp')}}" alt="{{ __('messages.gogo_alt_resolution_center_feature') }}" width="400" height="300" class="h-64 w-full rounded-2xl object-cover" />
           </div>
         </div>
         <div class="overflow-hidden rounded-2xl">
-          <img src="{{asset('assets/DA.jpg')}}" alt="{{ __('messages.gogo_alt_daily_analytics_feature') }}" width="400" height="300" class="h-64 w-full rounded-2xl object-cover" />
+          <img src="{{asset('assets/DA.webp')}}" alt="{{ __('messages.gogo_alt_daily_analytics_feature') }}"  width="400" height="300" class="h-64 w-full rounded-2xl  object-cover" />
         </div>
       </div>
       <div class="mt-8 grid gap-6 md:grid-cols-3">
@@ -937,8 +917,8 @@
           <p class="mt-2 text-sm text-gray-500">{{ __('messages.gogo_free_delivery_description') }}</p>
         </div>
         <div>
-          <h3 class="text-lg font-semibold text-brand-dark">{{ __('messages.gogo_resolution_center') }}</h3>
-          <p class="mt-2 text-sm text-gray-500">{{ __('messages.gogo_resolution_center_description') }}</p>
+          <h3 class="text-lg font-semibold text-brand-dark">{{ __('messages.gogo_instant_payout_title') }}</h3>
+          <p class="mt-2 text-sm text-gray-500">{{ __('messages.gogo_instant_payout_desc') }}</p>
         </div>
         <div>
           <h3 class="text-lg font-semibold text-brand-dark">{{ __('messages.gogo_daily_analytics') }}</h3>
@@ -1096,19 +1076,19 @@
           </div>
           <ul class="mt-8 flex flex-col gap-4">
             <li class="flex items-center gap-3">
-              <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#d9657a" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+              <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="var(--primary)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
               <span class="text-sm text-brand-dark">{{ __('messages.individual_business_setup') }}</span>
             </li>
             <li class="flex items-center gap-3">
-              <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#d9657a" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+              <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="var(--primary)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
               <span class="text-sm text-brand-dark">{{ __('messages.direct_customer_sales') }}</span>
             </li>
             <li class="flex items-center gap-3">
-              <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#d9657a" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+              <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="var(--primary)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
               <span class="text-sm text-brand-dark">{{ __('messages.flexible_delivery_options') }}</span>
             </li>
             <li class="flex items-center gap-3">
-              <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#d9657a" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+              <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="var(--primary)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
               <span class="text-sm text-brand-dark">{{ __('messages.small_store_management') }}</span>
             </li>
           </ul>
@@ -1125,19 +1105,19 @@
           </div>
           <ul class="mt-8 flex flex-col gap-4">
             <li class="flex items-center gap-3">
-              <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#d9657a" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+              <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="var(--primary)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
               <span class="text-sm text-brand-dark">{{ __('messages.product_catalog_management') }}</span>
             </li>
             <li class="flex items-center gap-3">
-              <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#d9657a" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+              <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="var(--primary)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
               <span class="text-sm text-brand-dark">{{ __('messages.inventory_tracking_analytics') }}</span>
             </li>
             <li class="flex items-center gap-3">
-              <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#d9657a" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+              <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="var(--primary)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
               <span class="text-sm text-brand-dark">{{ __('messages.order_management_system') }}</span>
             </li>
             <li class="flex items-center gap-3">
-              <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#d9657a" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+              <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="var(--primary)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
               <span class="text-sm text-brand-dark">{{ __('messages.multi_channel_delivery') }}</span>
             </li>
           </ul>
@@ -1153,19 +1133,19 @@
           </div>
           <ul class="mt-8 flex flex-col gap-4">
             <li class="flex items-center gap-3">
-              <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#d9657a" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+              <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="var(--primary)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
               <span class="text-sm text-brand-dark">{{ __('messages.wholesale_product_catalog') }}</span>
             </li>
             <li class="flex items-center gap-3">
-              <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#d9657a" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+              <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="var(--primary)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
               <span class="text-sm text-brand-dark">{{ __('messages.bulk_order_management') }}</span>
             </li>
             <li class="flex items-center gap-3">
-              <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#d9657a" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+              <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="var(--primary)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
               <span class="text-sm text-brand-dark">{{ __('messages.vendor_relationship_management') }}</span>
             </li>
             <li class="flex items-center gap-3">
-              <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#d9657a" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+              <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="var(--primary)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
               <span class="text-sm text-brand-dark">{{ __('messages.supply_chain_tracking') }}</span>
             </li>
           </ul>

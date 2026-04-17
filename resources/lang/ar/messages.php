@@ -2341,6 +2341,9 @@ return [
     'gogo_more_than_stores' => 'أكثر من 25,000 متجر وتاجر',
     'gogo_city_dubai' => 'دبي',
     'gogo_city_ajman' => 'عجمان',
+    'company_reg'=> 'تسجيل كشركة او متجر',
+    'merchant_reg'=> 'تسجيل كتاجرة مستقلة',
+    'provider_reg'=>'تسجيل كمزودة',
     'invoice' => 'الفاتورة',
     'gogo_city_sharjah' => 'الشارقة',
     'gogo_city_abu_dhabi' => 'أبوظبي',
@@ -2357,9 +2360,11 @@ return [
     'gogo_commerce_revenue_control_description' => 'رؤية كاملة للطلبات والحجوزات والعمولات والأرباح والسجل مع تتبع مالي آمن وشفاف.',
     'gogo_engagement' => 'التفاعل',
     'gogo_engagement_description' => 'تنقل في لوحتك بسهولة وتفاعل مع عملائك.',
-    'gogo_features_title' => 'ميزاتنا<br />التي يمكنك الحصول عليها',
+    'gogo_features_title' => 'ميزاتنا التي يمكنك الحصول عليها',
+    'gogo_instant_payout_desc'=>'مع ميزة الصرف الفوري، يمكنك تحويل أرباحك إلى حسابك البنكي أو بطاقتك في غضون ثوانٍ. استمتع بوصول مباشر وفوري إلى أموالك على مدار الساعة طوال أيام الأسبوع',
     'gogo_features_description' => 'نقدم مجموعة من الميزات المفيدة التي تساعدك على رفع إنتاجيتك وإدارة مشاريعك بسهولة.',
     'gogo_get_started' => 'ابدأ الآن',
+    'gogo_instant_payout_title'=>'صرف فوري',
     'gogo_alt_free_delivery_feature' => 'ميزة التوصيل المجاني',
     'gogo_alt_resolution_center_feature' => 'ميزة مركز الحلول',
     'gogo_alt_daily_analytics_feature' => 'ميزة التحليلات اليومية',
@@ -2400,6 +2405,13 @@ return [
     'gogo_folders_collaboration' => 'مجلدات وتعاون',
     'gogo_all_incoming_apps' => 'كل التطبيقات الواردة',
     'gogo_go_to_pro' => 'الانتقال إلى الاحترافي',
+    'about_us_desc'=> 'GlowLabs هي منصة موثوقة صُممت خصيصًا لتلبية احتياجات المرأة في الإمارات، حيث تجمع المنتجات والخدمات في مكان واحد بطريقة سهلة ومريحة. نهدف إلى مساعدة المستخدمين على الوصول بسرعة إلى ما يحتاجونه دون عناء البحث في التطبيقات العامة.<br>
+
+كما تدعم منصتنا النساء وصاحبات المشاريع الصغيرة والمورّدين من خلال توفير وسيلة بسيطة لعرض وبيع منتجاتهم في جميع أنحاء الإمارات. ونوفر أيضًا خيارات حجز مرنة للخدمات، حتى تتمكن كل مستخدمة من اختيار الوقت الذي يناسبها بكل سهولة.<br>
+
+في GlowLabs نعمل على تسهيل عملية البيع من خلال تعزيز الظهور، ودعم التسويق، وتوفير حلول التوصيل، مع الحرص على بناء تجربة آمنة وموثوقة عبر البائعين الموثقين. هدفنا هو تقديم تجربة سلسة وممتعة وموثوقة لكل من ترغب في التسوق أو اكتشاف الخدمات أو حجزها.
+
+أقدر أكتبها لك أيضًا بصيغة أقصر أو أفخم وأقوى تسويقيًا لتناسب تصميم الصفحة.',
     'gogo_provider_plan_description' => 'افتح قدرات جديدة وانضم إلى دوري التصميم.',
     'gogo_all_features_pro_plan' => 'كل ميزات الخطة الاحترافية',
     'gogo_account_success_manager' => 'مدير نجاح الحساب',
@@ -2508,7 +2520,7 @@ return [
     'about_vendor_features_showcase_dashboard_image_alt' => 'ميزة لوحة التحكم',
     'about_vendor_features_showcase_dashboard_title' => 'لوحة التحكم',
     'about_vendor_features_showcase_dashboard_icon_alt' => 'أيقونة لوحة التحكم',
-    'about_vendor_features_showcase_dashboard_description_line_1' => 'توفر لوحة تحكم التاجر مزايا جاهزة ومخصصة لكل تاجر.',
+    'about_vendor_features_showcase_dashboard_description_line_1' => 'توفر لوحة تحكم المتجر مزايا جاهزة ومخصصة لكل شركة.',
     'about_vendor_features_showcase_dashboard_description_line_2' => 'أديري المخزون بسهولة، وأضيفي المنتجات والخدمات، وحدثي حالة الطلب، واطبعي الفواتير، والمزيد.',
     'about_vendor_features_showcase_delivery_image_alt' => 'ميزة التوصيل',
     'about_vendor_features_showcase_delivery_title' => 'توصيل مجاني',
@@ -2729,7 +2741,7 @@ return [
     'about_merchant_features_showcase_ministore_image_alt' => 'ميزة المتجر المصغر',
     'about_merchant_features_showcase_ministore_title' => 'متجر مصغر',
     'about_merchant_features_showcase_ministore_icon_alt' => 'أيقونة المتجر المصغر',
-    'about_merchant_features_showcase_ministore_description_line_1' => 'أبرزي متجرك المصغر لخدمة العملاء والاستلام، وهو خيار مثالي للتاجرات اللواتي يرغبن في الجمع بين الانتشار وبناء العلاقة.',
+    'about_merchant_features_showcase_ministore_description_line_1' => 'أبرزي متجرك المصغر من اجل الاستلام، وهو خيار مثالي للتاجرات اللواتي يرغبن في الجمع بين الانتشار وبناء العلاقة.',
     'about_merchant_features_showcase_ministore_description_line_2' => 'تمنحك ميزة المتجر المصغر القدرة على تنمية سمعتك المحلية.',
     'about_merchant_features_read_more' => 'اقرئي المزيد',
     'about_merchant_interface_label' => 'الواجهة',

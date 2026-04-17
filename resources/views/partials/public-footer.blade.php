@@ -27,12 +27,11 @@
         </ul>
       </div>
       <div>
-        <h4 class="text-sm font-semibold text-brand-dark">{{ __('messages.product') }}</h4>
+        <h4 class="text-sm font-semibold text-brand-dark">{{ __('messages.subscription') }}</h4>
         <ul class="mt-4 flex flex-col gap-3">
-          <li><a href="#" class="text-sm text-gray-500 transition-colors hover:text-brand-dark">{{ __('messages.update') }}</a></li>
-          <li><a href="#" class="text-sm text-gray-500 transition-colors hover:text-brand-dark">{{ __('messages.security') }}</a></li>
-          <li><a href="#" class="text-sm text-gray-500 transition-colors hover:text-brand-dark">{{ __('messages.gogo_beta_test') }}</a></li>
-          <li><a href="#" class="text-sm text-gray-500 transition-colors hover:text-brand-dark">{{ __('messages.gogo_pricing_product') }}</a></li>
+          <li><a href="/register/vendor" class="text-sm text-gray-500 transition-colors hover:text-brand-dark">{{ __('messages.company_reg') }}</a></li>
+          <li><a href="#" class="text-sm text-gray-500 transition-colors hover:text-brand-dark">{{ __('messages.merchant_reg') }}</a></li>
+          <li><a href="#" class="text-sm text-gray-500 transition-colors hover:text-brand-dark">{{ __('messages.provider_reg') }}</a></li>
         </ul>
       </div>
     </div>
