@@ -38,7 +38,7 @@
                     <div class="flex flex-col gap-3">
                         <div class="flex flex-col gap-1">
                             <div class="text-lg font-semibold text-gray-900">{{ $product->name }}</div>
-                            <div class="text-sm font-semibold text-gray-900">${{ number_format($product->price, 2) }}</div>
+                            <div class="text-sm font-semibold text-gray-900">{{ number_format($product->price, 2) }} {{__('messages.aed')}}</div>
                             <div class="text-sm font-medium text-gray-700">{{ $product->category->name ?? __('merchant.uncategorized') }}</div>
                         @if(!empty($product->description))
                             <div class="text-xs text-gray-400">{{ \Illuminate\Support\Str::limit($product->description, 36) }}</div>

@@ -127,7 +127,7 @@
                 </div>
                 <div class="ml-4">
                     <div class="text-sm font-medium text-gray-500 dark:text-gray-400">{{ __('products_manager.total_revenue') }}</div>
-                    <div class="text-2xl font-bold text-gray-900 dark:text-white">${{ number_format($stats['total_revenue'], 2) }}</div>
+                    <div class="text-2xl font-bold text-gray-900 dark:text-white">{{ number_format($stats['total_revenue'], 2) }} {{__('messages.aed')}}</div>
                 </div>
             </div>
         </div>
@@ -165,7 +165,7 @@
                                     </div>
                                 </div>
                                 <div class="text-left sm:text-right">
-                                    <p class="text-sm font-medium text-gray-900 dark:text-white">${{ number_format($product->price, 2) }}</p>
+                                    <p class="text-sm font-medium text-gray-900 dark:text-white">{{ number_format($product->price, 2) }} {{__('messages.aed')}}</p>
                                     <p class="text-sm text-gray-500 dark:text-gray-400">{{ $product->order_items_count ?? 0 }} {{ __('products_manager.sold') }}</p>
                                 </div>
                             </div>
@@ -223,7 +223,7 @@
                                         @endif">
                                         {{ ucfirst($order->status) }}
                                     </span>
-                                    <p class="text-sm text-gray-500 dark:text-gray-400 mt-1">${{ number_format($order->total_amount, 2) }}</p>
+                                    <p class="text-sm text-gray-500 dark:text-gray-400 mt-1">{{ number_format($order->total_amount, 2) }} {{__('messages.aed')}}</p>
                                 </div>
                             </div>
                         @endforeach

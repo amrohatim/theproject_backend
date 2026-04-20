@@ -86,7 +86,7 @@
                         <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
                             <i class="fas fa-search text-gray-400"></i>
                         </div>
-                        <input type="text" name="search" id="search" value="{{ request('search') }}" class="focus:ring-[var(--primary)] focus:border-[var(--primary)] block w-full pl-10 sm:text-sm border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-white rounded-md" placeholder="{{ __('messages.search_services') }}">
+                        <input type="text" name="search" id="search" value="{{ request('search') }}" class="focus:ring-[var(--primary)] focus:border-[var(--primary)] block w-full px-2 sm:text-sm border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-white rounded-md" placeholder="{{ __('messages.search_services') }}">
                     </div>
                 </div>
 
@@ -209,7 +209,7 @@
                             <div class="text-sm text-gray-500 dark:text-gray-400">{{ $service->branch->name ?? 'N/A' }}</div>
                         </td>
                         <td class="px-6 py-4 whitespace-nowrap" data-label="{{ __('messages.price') }}">
-                            <div class="text-sm font-medium text-gray-900 dark:text-white">${{ number_format($service->price, 2) }}</div>
+                            <div class="text-sm font-medium text-gray-900 dark:text-white">{{ number_format($service->price, 2) }} {{__('messages.aed')}}</div>
                         </td>
                         <td class="px-6 py-4 whitespace-nowrap" data-label="{{ __('messages.duration') }}">
                             <div class="text-sm text-gray-500 dark:text-gray-400">{{ $service->duration }} {{ __('messages.min') }}</div>

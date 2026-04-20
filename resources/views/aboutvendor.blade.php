@@ -2613,16 +2613,16 @@
                               <div class="usage-step" style="display: flex; align-items: flex-start; flex-direction: column; gap: clamp(12px, 4vw, 40px);">
                         <!-- Video Box -->
                         <div class="video-container" style="flex: 1 1 600px; min-width: 280px; max-width: 100%; position: relative;  border-radius: 10px; overflow: hidden;">
-                            <div style="aspect-ratio: 16/9; position: relative;">
+                            <div style="position: relative;">
                                 <video 
-                                    style="width: 100%; height: 100%; object-fit: cover; border-radius: 10px;" 
+                                    style="width: 100%; height: 100%;  border-radius: 10px;" 
                                     controls 
                                     muted 
                                     loop
                                     preload="metadata"
                                     {{-- poster="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 400 225'%3E%3Crect width='400' height='225' fill='%23667eea'/%3E%3Ctext x='200' y='112' text-anchor='middle' fill='white' font-size='16' font-family='Arial'%3EProduct Tutorial Video%3C/text%3E%3C/svg%3E" --}}   >
                                     {{-- <source src="https://firebasestorage.googleapis.com/v0/b/dala3chic-e2b81.firebasestorage.app/o/product%20merchant%20usage.mov?alt=media&token=d174b7d9-f59c-4987-86f3-806d77cc2882" type="video/quicktime"> --}}
-                                    <source src="https://firebasestorage.googleapis.com/v0/b/dala3chic-e2b81.firebasestorage.app/o/Branch%20Demo.mov?alt=media&token=02db0f94-78c7-44a3-9a44-687b44b17321" type="video/mp4">
+                                    <source src="https://firebasestorage.googleapis.com/v0/b/dala3chic-e2b81.firebasestorage.app/o/Vendor%20Branch%20TUTOR.mp4?alt=media&token=efb232fc-6f0a-4ccb-a01e-a3aca5c6a6e8" type="video/mp4">
                                     <div style="display: flex; align-items: center; justify-content: center; height: 100%; background: rgba(255, 255, 255, 0.1); color: white; text-align: center; padding: 20px;">
                                         <div>
                                             <div style="width: 80px; height: 80px; background: rgba(255, 255, 255, 0.2); border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto 15px; backdrop-filter: blur(1px);">
@@ -2670,16 +2670,16 @@
                     <div class="usage-step" style="display: flex; align-items: flex-start; flex-direction: column; gap: clamp(12px, 4vw, 40px); ">
                         <!-- Video Box -->
                         <div class="video-container" style="flex: 1 1 600px; min-width: 280px; max-width: 100%; position: relative;  border-radius: 10px; overflow: hidden;">
-                            <div style="aspect-ratio: 16/9; position: relative;">
+                            <div style="position: relative;">
                                 <video 
-                                    style="width: 100%; height: 100%; object-fit: cover; border-radius: 10px;" 
+                                    style="width: 100%; height: 100%; border-radius: 10px;" 
                                     controls 
                                     muted 
                                     loop
                                     preload="metadata"
                                     {{-- poster="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 400 225'%3E%3Crect width='400' height='225' fill='%23667eea'/%3E%3Ctext x='200' y='112' text-anchor='middle' fill='white' font-size='16' font-family='Arial'%3EProduct Tutorial Video%3C/text%3E%3C/svg%3E" --}} >
                                     {{-- <source src="https://firebasestorage.googleapis.com/v0/b/dala3chic-e2b81.firebasestorage.app/o/product%20merchant%20usage.mov?alt=media&token=d174b7d9-f59c-4987-86f3-806d77cc2882" type="video/quicktime"> --}}
-                                    <source src="https://firebasestorage.googleapis.com/v0/b/dala3chic-e2b81.firebasestorage.app/o/Product%20Demo.mov?alt=media&token=6d3128ba-f0c4-4900-ae15-2696fb93450a" type="video/mp4">
+                                    <source src="https://firebasestorage.googleapis.com/v0/b/dala3chic-e2b81.firebasestorage.app/o/Product%20Creation%20Vendor%20TUTOR.mp4?alt=media&token=cbd118e1-8121-47a5-9963-2f5bc74e234b" type="video/mp4">
                                     <div style="display: flex; align-items: center; justify-content: center; height: 100%; background: rgba(255, 255, 255, 0.1); color: white; text-align: center; padding: 20px;">
                                         <div>
                                             <div style="width: 80px; height: 80px; background: rgba(255, 255, 255, 0.2); border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto 15px; backdrop-filter: blur(1px);">
@@ -2725,16 +2725,16 @@
                     <div class="usage-step" style="display: flex; align-items: flex-start; flex-direction: column; gap: clamp(12px, 4vw, 40px); ">
                         <!-- Video Box -->
                         <div class="video-container" style="flex: 1 1 600px; min-width: 280px; max-width: 100%; position: relative;">
-                            <div style="aspect-ratio: 16/9; position: relative;">
+                            <div style="position: relative;">
                                 <video 
-                                    style="width: 100%; height: 100%; object-fit: cover; border-radius: 10px;" 
+                                    style="width: 100%; height: 100%;  border-radius: 10px;" 
                                     controls 
                                     muted 
                                     loop
                                     preload="metadata"
                                     {{-- poster="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 400 225'%3E%3Crect width='400' height='225' fill='%23f093fb'/%3E%3Ctext x='200' y='112' text-anchor='middle' fill='white' font-size='16' font-family='Arial'%3EService Tutorial Video%3C/text%3E%3C/svg%3E" --}}   >
                                     {{-- <source src="https://firebasestorage.googleapis.com/v0/b/dala3chic-e2b81.firebasestorage.app/o/service%20merchant%20tutor.mov?alt=media&token=d174b7d9-f59c-4987-86f3-806d77cc2882" type="video/quicktime"> --}}
-                                    <source src="https://firebasestorage.googleapis.com/v0/b/dala3chic-e2b81.firebasestorage.app/o/Sevice%20Demo.mov?alt=media&token=e001f22f-73a5-449a-9b50-ae3e6b20e7bc" type="video/mp4">
+                                    <source src="https://firebasestorage.googleapis.com/v0/b/dala3chic-e2b81.firebasestorage.app/o/Vendor%20Service%20Creation%20TUTOR.mp4?alt=media&token=51a19c91-2e33-4d67-95e7-6edb53bd066c" type="video/mp4">
                                     <div style="display: flex; align-items: center; justify-content: center; height: 100%; background: rgba(255, 255, 255, 0.1); color: white; text-align: center; padding: 20px;">
                                         <div>
                                             <div style="width: 80px; height: 80px; background: rgba(255, 255, 255, 0.2); border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto 15px; backdrop-filter: blur(10px);">
@@ -2774,16 +2774,16 @@
                     <div class="usage-step" style="display: flex; align-items: flex-start; flex-direction: column; gap: clamp(12px, 4vw, 40px);">
                         <!-- Video Box -->
                         <div class="video-container" style="flex: 1 1 600px; min-width: 280px; max-width: 100%; position: relative;">
-                            <div style="aspect-ratio: 16/9; position: relative;">
+                            <div style="position: relative;">
                                 <video 
-                                    style="width: 100%; height: 100%; object-fit: cover; border-radius: 10px;" 
+                                    style="width: 100%; height: 100%;  border-radius: 10px;" 
                                     controls 
                                     muted 
                                     loop
                                     preload="metadata"
                                     {{-- poster="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 400 225'%3E%3Crect width='400' height='225' fill='%23667eea'/%3E%3Ctext x='200' y='112' text-anchor='middle' fill='white' font-size='16' font-family='Arial'%3EDeal Tutorial Video%3C/text%3E%3C/svg%3E" --}}   >
                                     {{-- <source src="https://firebasestorage.googleapis.com/v0/b/dala3chic-e2b81.firebasestorage.app/o/deal%20merchant%20tutor.mov?alt=media&token=d174b7d9-f59c-4987-86f3-806d77cc2882" type="video/quicktime"> --}}
-                                    <source src="https://firebasestorage.googleapis.com/v0/b/dala3chic-e2b81.firebasestorage.app/o/Deal%20Demo.mp4?alt=media&token=https://firebasestorage.googleapis.com/v0/b/dala3chic-e2b81.firebasestorage.app/o/Deal%20Demo.mp4?alt=media&token=087f44f8-3a3c-4139-9c2b-9033656838fc" type="video/mp4">
+                                    <source src="https://firebasestorage.googleapis.com/v0/b/dala3chic-e2b81.firebasestorage.app/o/Vendor%20Deal%20Creation%20TUTOR.mp4?alt=media&token=c2146c9f-64e6-46d7-93f8-0cc08c769f14" type="video/mp4">
                                     <div style="display: flex; align-items: center; justify-content: center; height: 100%; background: rgba(255, 255, 255, 0.1); color: white; text-align: center; padding: 20px;">
                                         <div>
                                             <div style="width: 80px; height: 80px; background: rgba(255, 255, 255, 0.2); border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto 15px; backdrop-filter: blur(10px);">

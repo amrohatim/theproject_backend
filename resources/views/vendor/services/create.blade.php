@@ -607,7 +607,7 @@
                     <div>
                         <div class="flex items-start">
                             <div class="flex items-center h-5">
-                                <input id="is_available" name="is_available" type="checkbox" class="focus:ring-indigo-500 h-4 w-4 text-indigo-600 border-gray-300 dark:border-gray-600 rounded" value="1" {{ old('is_available', '1') == '1' ? 'checked' : '' }}>
+                                <input id="is_available" name="is_available" type="checkbox" class="focus:ring-[var(--primary)] h-4 w-4 text-[var(--primary)] border-gray-300 dark:border-gray-600 rounded" value="1" {{ old('is_available', '1') == '1' ? 'checked' : '' }}>
                             </div>
                             <div class="ml-3 text-sm">
                                 <label for="is_available" class="font-medium text-gray-700 dark:text-gray-300">{{ __('messages.available_for_booking') }}</label>
@@ -623,7 +623,7 @@
                     <div>
                         <div class="flex items-start">
                             <div class="flex items-center h-5">
-                                <input id="home_service" name="home_service" type="checkbox" class="focus:ring-indigo-500 h-4 w-4 text-indigo-600 border-gray-300 dark:border-gray-600 rounded" value="1" {{ old('home_service') == '1' ? 'checked' : '' }}>
+                                <input id="home_service" name="home_service" type="checkbox" class="focus:ring-[var(--primary)] h-4 w-4 text-[var(--primary)] border-gray-300 dark:border-gray-600 rounded" value="1" {{ old('home_service') == '1' ? 'checked' : '' }}>
                             </div>
                             <div class="ml-3 text-sm">
                                 <label for="home_service" class="font-medium text-gray-700 dark:text-gray-300">{{ __('messages.enable_home_service') }}</label>
@@ -723,7 +723,7 @@
                                     <img src="#" alt="Image Preview" class="mx-auto h-32 w-auto object-cover rounded-md">
                                 </div>
                                 <div class="flex text-sm text-gray-600 dark:text-gray-400">
-                                    <label for="image" class="relative cursor-pointer bg-white dark:bg-gray-700 rounded-md font-medium text-[var(--primary)] dark:text-[var(--primary)] hover:text-[var(--primary-hover)] dark:hover:text-[var(--primary-hover)] focus-within:outline-none focus-within:ring-2 focus-within:ring-offset-2 focus-within:ring-indigo-500">
+                                    <label for="image" class="relative cursor-pointer bg-white dark:bg-gray-700 rounded-md font-medium text-[var(--primary)] dark:text-[var(--primary)] hover:text-[var(--primary-hover)] dark:hover:text-[var(--primary-hover)] focus-within:outline-none focus-within:ring-2 focus-within:ring-offset-2 focus-within:ring-[var(--primary)]">
                                         <span>{{ __('messages.upload_file') }}</span>
                                         <input id="image" name="image" type="file" class="sr-only" onchange="previewImage(this)" required>
                                     </label>
@@ -780,7 +780,7 @@
             </div>
 
             <div class="mt-6 flex justify-end">
-                <button type="submit" class="inline-flex items-center px-4 py-2 bg-[var(--primary)] border border-transparent rounded-md font-semibold text-xs text-white uppercase tracking-widest hover:bg-indigo-700 active:bg-indigo-900 focus:outline-none focus:border-indigo-900 focus:ring ring-indigo-300 disabled:opacity-25 transition ease-in-out duration-150">
+                <button type="submit" class="inline-flex items-center px-4 py-2 bg-[var(--primary)] border border-transparent rounded-md font-semibold text-xs text-white uppercase tracking-widest hover:bg-[var(--primary-hover)] active:bg-[var(--primary)] focus:outline-none focus:border-[var(--primary)] focus:ring ring-[var(--primary)] disabled:opacity-25 transition ease-in-out duration-150">
                     <i class="fas fa-save mr-2"></i> {{ __('messages.save_service') }}
                 </button>
             </div>

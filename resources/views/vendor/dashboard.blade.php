@@ -200,9 +200,9 @@
                             <div class="text-sm text-gray-500 dark:text-gray-400">{{ $product->branch->name ?? 'N/A' }}</div>
                         </td>
                         <td class="px-6 py-4 whitespace-nowrap">
-                            <div class="text-sm font-medium text-gray-900 dark:text-white">${{ number_format($product->price, 2) }}</div>
+                            <div class="text-sm font-medium text-gray-900 dark:text-white">{{ number_format($product->price, 2) }} {{__('messages.aed')}}</div>
                             @if($product->original_price)
-                                <div class="text-xs text-gray-500 dark:text-gray-400 line-through">${{ number_format($product->original_price, 2) }}</div>
+                                <div class="text-xs text-gray-500 dark:text-gray-400 line-through">{{ number_format($product->original_price, 2) }}</div>
                             @endif
                         </td>
                         <td class="px-6 py-4 whitespace-nowrap">
@@ -271,7 +271,7 @@
                             <div class="text-sm text-gray-500 dark:text-gray-400">{{ $service->branch->name ?? 'N/A' }}</div>
                         </td>
                         <td class="px-6 py-4 whitespace-nowrap">
-                            <div class="text-sm font-medium text-gray-900 dark:text-white">${{ number_format($service->price, 2) }}</div>
+                            <div class="text-sm font-medium text-gray-900 dark:text-white">{{ number_format($service->price, 2) }} {{__('messages.aed')}}</div>
                         </td>
                         <td class="px-6 py-4 whitespace-nowrap">
                             <div class="text-sm text-gray-500 dark:text-gray-400">{{ $service->duration }} min</div>

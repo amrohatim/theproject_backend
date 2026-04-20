@@ -77,7 +77,7 @@
                 </div>
             </div>
             <div>
-                <h3 class="text-3xl font-bold text-gray-800 dark:text-white">${{ isset($totalRevenue) ? number_format($totalRevenue, 2) : '0.00' }}</h3>
+                <h3 class="text-3xl font-bold text-gray-800 dark:text-white">{{ isset($totalRevenue) ? number_format($totalRevenue, 2) : '0.00' }} {{__('messages.aed')}}</h3>
                 <p class="text-gray-600 dark:text-gray-400 text-sm">{{ __('provider.revenue') }}</p>
             </div>
         </div>
@@ -137,7 +137,7 @@
                             </div>
                         </td>
                         <td class="px-6 py-4 whitespace-nowrap">
-                            <div class="text-sm font-medium text-gray-900 dark:text-white">${{ number_format($product->price, 2) }}</div>
+                            <div class="text-sm font-medium text-gray-900 dark:text-white">{{ number_format($product->price, 2) }} {{__('messages.aed')}}</div>
                         </td>
                         <td class="px-6 py-4 whitespace-nowrap">
                             <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full
@@ -191,7 +191,7 @@
                             <div class="text-sm text-gray-500 dark:text-gray-400">{{ $order->customer_name }}</div>
                         </td>
                         <td class="px-6 py-4 whitespace-nowrap">
-                            <div class="text-sm font-medium text-gray-900 dark:text-white">${{ number_format($order->total, 2) }}</div>
+                            <div class="text-sm font-medium text-gray-900 dark:text-white">{{ number_format($order->total, 2) }} {{__('messages.aed')}}</div>
                         </td>
                         <td class="px-6 py-4 whitespace-nowrap">
                             @php

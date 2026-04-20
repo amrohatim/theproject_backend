@@ -301,7 +301,7 @@
                                 </div>
                             </div>
                         </td>
-                        <td class="px-6 py-4 text-sm font-medium text-gray-900">${{ number_format($product->price, 2) }}</td>
+                        <td class="px-6 py-4 text-sm font-medium text-gray-900">{{ number_format($product->price, 2) }} {{__('messages.aed')}}</td>
                         <td class="px-6 py-4">
                             <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium {{ $product->is_available ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800' }}">
                                 <span class="w-1.5 h-1.5 rounded-full mr-1.5 {{ $product->is_available ? 'bg-green-400' : 'bg-red-400' }}"></span>

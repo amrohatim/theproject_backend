@@ -95,7 +95,7 @@
                         {{ $product->category->name ?? __('merchant.uncategorized') }}
                     </span>
                 </td>
-                <td class="px-3 sm:px-6 py-4 text-sm font-medium text-gray-900">${{ number_format($product->price, 2) }}</td>
+                <td class="px-3 sm:px-6 py-4 text-sm font-medium text-gray-900">{{ number_format($product->price, 2) }} {{__('messages.aed')}}</td>
                 <td class="px-3 sm:px-6 py-4">
                     @if($product->stock !== null)
                         <div class="flex items-center">

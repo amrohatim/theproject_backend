@@ -90,7 +90,7 @@ use Illuminate\Support\Facades\Storage;
                         <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
                             <i class="fas fa-search text-gray-400"></i>
                         </div>
-                        <input type="text" name="search" id="search" value="{{ request('search') }}" class="focus:ring-[var(--primary)] focus:border-[var(--primary)] block w-full pl-10 sm:text-sm   dark:bg-gray-700 dark:text-white rounded-md" placeholder="{{ __('messages.search_branches') }}">
+                        <input type="text" name="search" id="search" value="{{ request('search') }}" class="focus:ring-[var(--primary)] focus:border-[var(--primary)] block w-full px-2 sm:text-sm   dark:bg-gray-700 dark:text-white rounded-md" placeholder="{{ __('messages.search_branches') }}">
                     </div>
                 </div>
 

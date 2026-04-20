@@ -117,7 +117,7 @@
                                     </div>
                                 </div>
                                 <div class="text-right">
-                                    <p class="text-sm font-medium text-gray-900 dark:text-white">${{ number_format($service->price, 2) }}</p>
+                                    <p class="text-sm font-medium text-gray-900 dark:text-white">{{ number_format($service->price, 2) }} {{__('messages.aed')}}</p>
                                     <p class="text-sm text-gray-500 dark:text-gray-400">{{ $service->duration }} min</p>
                                 </div>
                             </div>

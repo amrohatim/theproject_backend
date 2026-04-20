@@ -289,7 +289,7 @@
         <div class="discord-card">
             <div class="discord-card-body" style="text-align: center;">
                 <div style="font-size: 24px; font-weight: 700; color: var(--discord-green); margin-bottom: 8px;">
-                    ${{ number_format($products->avg('price'), 2) }}
+                    {{ number_format($products->avg('price'), 2) }}
                 </div>
                 <div style="color: var(--discord-light); font-size: 14px;">{{ __('merchant.average_price') }}</div>
             </div>

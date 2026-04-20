@@ -120,7 +120,7 @@
                                 </td>
                                 <td class="px-6 py-4 md:whitespace-nowrap text-sm text-gray-900 dark:text-white" data-label="{{ __('products_manager.category') }}">{{ $product->category->name ?? '-' }}</td>
                                 <td class="px-6 py-4 md:whitespace-nowrap text-sm text-gray-900 dark:text-white" data-label="{{ __('products_manager.branch') }}">{{ $product->branch->name ?? '-' }}</td>
-                                <td class="px-6 py-4 md:whitespace-nowrap text-sm text-gray-900 dark:text-white" data-label="{{ __('products_manager.price') }}">${{ number_format($product->price, 2) }}</td>
+                                <td class="px-6 py-4 md:whitespace-nowrap text-sm text-gray-900 dark:text-white" data-label="{{ __('products_manager.price') }}">{{ number_format($product->price, 2) }} {{__('messages.aed')}}</td>
                                 <td class="px-6 py-4 md:whitespace-nowrap" data-label="{{ __('products_manager.stock') }}">
                                     @if($product->stock <= 0)
                                         <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-red-100 text-red-800 dark:bg-red-900 dark:text-red-200">
@@ -147,8 +147,8 @@
                                         {{ ucfirst($productStatus) }}
                                     </span>
                                 </td>
-                                <td class="px-6 py-4 md:whitespace-nowrap text-right text-sm font-medium" data-label="{{ __('products_manager.actions') }}">
-                                    <div class="flex items-center justify-end space-x-2">
+                                <td class="px-6 py-4 md:whitespace-nowrap  text-sm font-medium" data-label="{{ __('products_manager.actions') }}">
+                                    <div class="flex  {{ app()->getLocale() === 'ar' ? 'justify-start' : 'justify-end' }} gap-4 space-x-2">
                                         <a href="{{ route('products-manager.products.edit', $product) }}" class="text-[var(--primary)] hover:text-[var(--primary-hover)] dark:text-[var(--primary)] dark:hover:text-[var(--primary)]">
                                             <i class="fas fa-edit"></i>
                                         </a>

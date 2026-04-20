@@ -51,7 +51,7 @@
                             {{ $service->category->name ?? '-' }}
                         </td>
                         <td class="px-4 py-3 text-sm font-medium text-gray-900 dark:text-white" data-label="{{ __('service_provider.price') }}">
-                            ${{ number_format($service->price, 2) }}
+                            {{ number_format($service->price, 2) }} {{__('messages.aed')}}
                         </td>
                         <td class="px-4 py-3 text-sm text-gray-700 dark:text-gray-300" data-label="{{ __('service_provider.duration') }}">
                             {{ $service->duration }} min

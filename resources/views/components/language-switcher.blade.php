@@ -1,8 +1,8 @@
 @php
     $currentLocale = app()->getLocale();
     $supportedLocales = config('app.supported_locales', [
-        'en' => ['name' => 'English', 'native' => 'English', 'flag' => '🇺🇸', 'rtl' => false],
-        'ar' => ['name' => 'Arabic', 'native' => 'العربية', 'flag' => '🇸🇦', 'rtl' => true]
+        'en' => ['name' => 'English', 'native' => 'English',  'rtl' => false],
+        'ar' => ['name' => 'Arabic', 'native' => 'العربية',  'rtl' => true]
     ]);
     $currentLanguage = $supportedLocales[$currentLocale] ?? ['native' => strtoupper($currentLocale), 'flag' => '🌐', 'rtl' => false];
     $switcherId = 'language-switcher-' . uniqid();
@@ -15,7 +15,6 @@
         aria-expanded="false"
         aria-haspopup="true"
     >
-        <span class="flag-icon">{{ $currentLanguage['flag'] }}</span>
         <span class="hidden sm:inline">{{ $currentLanguage['native'] }}</span>
         <svg class="h-3.5 w-3.5 text-gray-500" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor">
             <path fill-rule="evenodd" d="M5.23 7.21a.75.75 0 0 1 1.06.02L10 11.17l3.71-3.94a.75.75 0 1 1 1.08 1.04l-4.25 4.5a.75.75 0 0 1-1.08 0l-4.25-4.5a.75.75 0 0 1 .02-1.06Z" clip-rule="evenodd" />
@@ -29,7 +28,6 @@
                     class="language-option {{ $locale === $currentLocale ? 'active' : '' }} flex items-center gap-2 rounded-lg px-3 py-2 text-sm text-gray-700 transition-colors hover:bg-gray-50"
                     href="{{ route('language.switch', $locale) }}"
                 >
-                    <span class="flag-icon">{{ $details['flag'] }}</span>
                     <span>{{ $details['native'] }}</span>
                     @if($locale === $currentLocale)
                         <span class="ms-auto text-pink-600">✓</span>

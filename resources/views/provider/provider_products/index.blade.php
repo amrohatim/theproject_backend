@@ -164,9 +164,9 @@ document.addEventListener('DOMContentLoaded', function() {
                             </div>
                         </td>
                         <td class="px-6 py-4 whitespace-nowrap" data-label="{{ __('provider.price') }}">
-                            <div class="text-sm font-medium text-gray-900 dark:text-white">${{ number_format($item->price, 2) }}</div>
+                            <div class="text-sm font-medium text-gray-900 dark:text-white">{{ number_format($item->price, 2) }} {{__('messages.aed')}}</div>
                             @if(!empty($item->original_price))
-                                <div class="text-xs text-gray-500 dark:text-gray-400 line-through">${{ number_format($item->original_price, 2) }}</div>
+                                <div class="text-xs text-gray-500 dark:text-gray-400 line-through">{{ number_format($item->original_price, 2) }}</div>
                             @endif
                         </td>
                         <td class="px-6 py-4 whitespace-nowrap" data-label="{{ __('provider.stock') }}">
@@ -248,7 +248,7 @@ document.addEventListener('DOMContentLoaded', function() {
                     <div class="mt-4 grid grid-cols-2 gap-3 text-sm text-gray-600 dark:text-gray-400">
                         <div>
                             <div class="text-xs uppercase tracking-wider text-gray-400 dark:text-gray-500">{{ __('provider.price') }}</div>
-                            <div class="font-medium text-gray-900 dark:text-white">${{ number_format($item->price, 2) }}</div>
+                            <div class="font-medium text-gray-900 dark:text-white">{{ number_format($item->price, 2) }} {{__('messages.aed')}}</div>
                         </div>
                         <div>
                             <div class="text-xs uppercase tracking-wider text-gray-400 dark:text-gray-500">{{ __('provider.stock') }}</div>
