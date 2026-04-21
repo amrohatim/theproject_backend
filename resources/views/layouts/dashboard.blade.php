@@ -167,7 +167,7 @@
                                 @endif
                             </a>
 
-                            <div class="hidden group-hover:block group-focus-within:block absolute right-0 top-10 z-50 w-80 rounded-lg border border-gray-200 bg-white shadow-lg dark:border-gray-700 dark:bg-gray-800">
+                            <div class="hidden group-hover:block group-focus-within:block absolute top-10 z-50 w-80 max-w-[calc(100vw-1rem)] {{ app()->getLocale() === 'ar' ? 'left-0' : 'right-0' }} rounded-lg border border-gray-200 bg-white shadow-lg dark:border-gray-700 dark:bg-gray-800">
                                 <div class="flex items-center justify-between border-b border-gray-200 px-4 py-2 dark:border-gray-700">
                                     <h3 class="text-sm font-semibold text-gray-800 dark:text-gray-100">{{ __('messages.notifications') }}</h3>
                                     <span class="text-xs text-gray-500 dark:text-gray-400">{{ __('messages.latest') }} 10</span>
@@ -207,7 +207,7 @@
                                 @endif
                             </a>
 
-                            <div class="hidden group-hover:block group-focus-within:block absolute right-0 top-10 z-50 w-80 rounded-lg border border-gray-200 bg-white shadow-lg dark:border-gray-700 dark:bg-gray-800">
+                            <div class="hidden group-hover:block group-focus-within:block absolute top-10 z-50 w-80 max-w-[calc(100vw-1rem)] {{ app()->getLocale() === 'ar' ? 'left-0' : 'right-0' }} rounded-lg border border-gray-200 bg-white shadow-lg dark:border-gray-700 dark:bg-gray-800">
                                 <div class="flex items-center justify-between border-b border-gray-200 px-4 py-2 dark:border-gray-700">
                                     <h3 class="text-sm font-semibold text-gray-800 dark:text-gray-100">{{ __('messages.notifications') }}</h3>
                                     <span class="text-xs text-gray-500 dark:text-gray-400">{{ __('messages.latest') }} 10</span>
