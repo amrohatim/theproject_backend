@@ -2,8 +2,8 @@
     $isRtl = app()->getLocale() === 'ar';
 
     // Get message content from the template file
-    $templatePath = resource_path('views/messages_when_approval.md');
-    $content = file_get_contents($templatePath);
+    $templatePath = resource_path('../messages_when_approval.md');
+    $content = file_exists($templatePath) ? file_get_contents($templatePath) : '';
 
     // Parse the content based on license type and language
     $language = $isRtl ? 'AR' : 'EN';
@@ -111,9 +111,7 @@
         }
 
         .info-card {
-            background-color: #ffffff;
-            border: 1px solid #d4d5d6;
-            border-radius: 8px;
+           
             padding: 14px 16px;
             margin: 0 0 20px;
         }

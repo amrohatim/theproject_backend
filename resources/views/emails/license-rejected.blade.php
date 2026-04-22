@@ -108,6 +108,10 @@
         }
 
         .info-card {
+            padding: 14px 16px;
+            margin: 0 0 20px;
+        }
+         .reason-card {
             background-color: #ffffff;
             border: 1px solid #d4d5d6;
             border-radius: 8px;
@@ -248,7 +252,7 @@
 
                     <tr>
                         <td>
-                            <div class="info-card {{ $isRtl ? 'rtl-text' : '' }}">
+                            <div class="reason-card {{ $isRtl ? 'rtl-text' : '' }}">
                                 <p class="info-title">{{ __('Reason for Rejection:') }}</p>
                                 <p class="info-text reason-text">{{ $rejectionReason }}</p>
                             </div>

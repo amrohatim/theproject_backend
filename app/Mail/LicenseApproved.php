@@ -3,14 +3,13 @@
 namespace App\Mail;
 
 use Illuminate\Bus\Queueable;
-use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Mail\Mailable;
 use Illuminate\Mail\Mailables\Content;
 use Illuminate\Mail\Mailables\Envelope;
 use Illuminate\Queue\SerializesModels;
 use App\Models\User;
 
-class LicenseApproved extends Mailable implements ShouldQueue
+class LicenseApproved extends Mailable
 {
     use Queueable, SerializesModels;
 
@@ -102,8 +101,8 @@ class LicenseApproved extends Mailable implements ShouldQueue
      */
     public function getMessageContent(string $language = 'en'): array
     {
-        $templatePath = resource_path('views/messages_when_approval.md');
-        $content = file_get_contents($templatePath);
+        $templatePath = resource_path('../messages_when_approval.md');
+        $content = file_exists($templatePath) ? file_get_contents($templatePath) : '';
         
         // Parse the content based on license type and language
         $pattern = "/\*\*{$this->licenseType} message when approved:{$language}\*\*(.*?)(?=\*\*|$)/is";
