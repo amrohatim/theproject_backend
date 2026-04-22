@@ -6,182 +6,303 @@
     <title>Branch License Approved</title>
     <style>
         body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            line-height: 1.6;
-            color: #333;
-            max-width: 600px;
+            margin: 0;
+            padding: 0;
+            background-color: #f2f2f7;
+            font-family: Arial, Helvetica, sans-serif;
+            color: #4f5a68;
+        }
+
+        table {
+            border-spacing: 0;
+            border-collapse: collapse;
+        }
+
+        img {
+            border: 0;
+            outline: none;
+            text-decoration: none;
+            display: block;
+            max-width: 100%;
+            height: auto;
+        }
+
+        .email-shell {
+            width: 100%;
+            background-color: #f2f2f7;
+            padding: 48px 20px;
+        }
+
+        .email-card {
+            width: 100%;
+            max-width: 560px;
             margin: 0 auto;
-            padding: 20px;
-            background-color: #f8f9fa;
+            background-color: #f2f2f7;
         }
-        .email-container {
-            background-color: #ffffff;
-            border-radius: 10px;
-            padding: 30px;
-            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+
+        .logo-wrap {
+            padding-bottom: 64px;
         }
-        .header {
-            text-align: center;
-            margin-bottom: 30px;
-            padding-bottom: 20px;
-            border-bottom: 2px solid #28a745;
+
+        .headline {
+            margin: 0;
+            font-size: 40px;
+            line-height: 44px;
+            font-weight: 700;
+            color: #4f5a68;
+            letter-spacing: -0.4px;
         }
-        .logo {
-            font-size: 28px;
-            font-weight: bold;
-            color: #28a745;
-            margin-bottom: 10px;
+
+        .subtext {
+            margin: 0;
+            font-size: 16px;
+            line-height: 24px;
+            color: #4f5a68;
         }
-        .success-icon {
-            font-size: 48px;
-            color: #28a745;
-            margin-bottom: 15px;
+
+        .message-block {
+            padding: 0 0 48px;
         }
-        .title {
+
+        .greeting {
+            margin: 0 0 12px;
             font-size: 24px;
-            font-weight: bold;
-            color: #28a745;
-            margin-bottom: 20px;
+            line-height: 32px;
+            color: #4f5a68;
+            font-weight: 400;
         }
-        .content {
-            margin-bottom: 25px;
-        }
-        .branch-details {
-            background-color: #f8f9fa;
-            padding: 20px;
+
+        .details-card {
+            /* background-color: #ffffff;
+            border: 1px solid #d4d5d6; */
             border-radius: 8px;
-            margin: 20px 0;
-            border-left: 4px solid #28a745;
+            padding: 16px;
+            margin-bottom: 24px;
         }
+
+        .details-title {
+            margin: 0 0 12px;
+            font-size: 16px;
+            line-height: 24px;
+            font-weight: 700;
+            color: #4f5a68;
+        }
+
         .detail-row {
-            display: flex;
-            justify-content: space-between;
-            margin-bottom: 10px;
-            padding: 5px 0;
+            padding: 7px 0;
+            border-bottom: 1px solid #ececf1;
+            font-size: 14px;
+            line-height: 20px;
         }
+
+        .detail-row:last-child {
+            border-bottom: 0;
+        }
+
         .detail-label {
-            font-weight: bold;
-            color: #555;
+            font-weight: 700;
+            color: #4f5a68;
+            width: 42%;
+            vertical-align: top;
         }
+
         .detail-value {
-            color: #333;
+            color: #4f5a68;
+            width: 58%;
+            word-break: break-word;
         }
-        .admin-message {
-            background-color: #e8f5e8;
-            padding: 15px;
+
+        .admin-note {
+            background-color: #ffffff;
+            border: 1px solid #d4d5d6;
             border-radius: 8px;
-            margin: 20px 0;
-            border-left: 4px solid #28a745;
+            padding: 14px 16px;
+            margin: 0 0 24px;
         }
+
+        .admin-note-title {
+            margin: 0 0 8px;
+            font-size: 14px;
+            line-height: 20px;
+            font-weight: 700;
+            color: #4f5a68;
+        }
+
+        .admin-note-text {
+            margin: 0;
+            font-size: 14px;
+            line-height: 20px;
+            color: #4f5a68;
+        }
+
+        .cta-wrap {
+            padding: 0 0 56px;
+        }
+
         .cta-button {
             display: inline-block;
-            background-color: #28a745;
-            color: white;
-            padding: 12px 30px;
+            background-color: #A46BC1;
+            color: #ffffff !important;
             text-decoration: none;
-            border-radius: 5px;
-            font-weight: bold;
-            margin: 20px 0;
-            text-align: center;
-        }
-        .cta-button:hover {
-            background-color: #218838;
-        }
-        .footer {
-            margin-top: 30px;
-            padding-top: 20px;
-            border-top: 1px solid #eee;
-            text-align: center;
-            color: #666;
-            font-size: 14px;
-        }
-        .contact-info {
-            margin-top: 20px;
-            padding: 15px;
-            background-color: #f8f9fa;
+            font-size: 16px;
+            line-height: 24px;
+            font-weight: 700;
             border-radius: 8px;
+            padding: 12px 48px;
+            box-shadow: 0 3px 9px rgba(0, 0, 0, 0.09);
+            min-width: 283px;
+            text-align: center;
+        }
+
+        .footer {
+            border-top: 1px solid #d4d5d6;
+            padding-top: 32px;
+        }
+
+        .footer-text {
+            margin: 0 0 20px;
+            font-size: 14px;
+            line-height: 20px;
+            color: rgba(79, 90, 104, 0.6);
+        }
+
+        @media only screen and (max-width: 600px) {
+            .email-shell {
+                padding: 24px 14px;
+            }
+
+            .email-card {
+                width: 100% !important;
+            }
+
+            .email-card td {
+                padding-left: 12px !important;
+                padding-right: 12px !important;
+            }
+
+            .logo-wrap {
+                padding-bottom: 40px;
+            }
+
+            .headline {
+                font-size: 32px;
+                line-height: 36px;
+            }
+
+            .greeting {
+                font-size: 22px;
+                line-height: 30px;
+            }
+
+            .cta-button {
+                display: block;
+                width: 100%;
+                min-width: 0;
+                box-sizing: border-box;
+            }
+
+            .detail-label,
+            .detail-value {
+                display: block;
+                width: 100%;
+            }
+
+            .detail-label {
+                margin-bottom: 2px;
+            }
         }
     </style>
 </head>
-<body>
-    <div class="email-container">
-        <div class="header">
-            <div class="logo">glowlabs</div>
-            <div class="success-icon">✅</div>
-            <div class="title">Branch License Approved!</div>
-        </div>
+<body style="padding-inline:4px;">
+    <table role="presentation" width="100%" class="email-shell">
+        <tr>
+            <td align="center">
+                <table role="presentation" width="560" class="email-card">
+                    <tr>
+                        <td class="logo-wrap">
+                            <img src="https://glowlabs.ae/assets/logo.png" alt="Glowlabs" width="124">
+                        </td>
+                    </tr>
 
-        <div class="content">
-            <p>Dear {{ $vendor->name }},</p>
-            
-            <p>Congratulations! We are pleased to inform you that your branch license has been <strong>approved</strong> and is now active.</p>
+                    <tr>
+                        <td style="padding-bottom: 48px;">
+                            <p class="greeting">Hi {{ $vendor->name }},</p>
+                            <h1 class="headline">Branch License Approved.</h1>
+                        </td>
+                    </tr>
 
-            <div class="branch-details">
-                <h3 style="margin-top: 0; color: #28a745;">Branch Details</h3>
-                <div class="detail-row">
-                    <span class="detail-label">Branch Name:</span>
-                    <span class="detail-value">{{ $branch->name }}</span>
-                </div>
-                <div class="detail-row">
-                    <span class="detail-label">Address:</span>
-                    <span class="detail-value">{{ $branch->address }}</span>
-                </div>
-                @if($branch->emirate)
-                <div class="detail-row">
-                    <span class="detail-label">Emirate:</span>
-                    <span class="detail-value">{{ $branch->emirate }}</span>
-                </div>
-                @endif
-                <div class="detail-row">
-                    <span class="detail-label">Business Type:</span>
-                    <span class="detail-value">{{ $branch->business_type }}</span>
-                </div>
-                <div class="detail-row">
-                    <span class="detail-label">License Start Date:</span>
-                    <span class="detail-value">{{ $license->start_date->format('d-m-Y') }}</span>
-                </div>
-                <div class="detail-row">
-                    <span class="detail-label">License End Date:</span>
-                    <span class="detail-value">{{ $license->end_date->format('d-m-Y') }}</span>
-                </div>
-                <div class="detail-row">
-                    <span class="detail-label">Approved Date:</span>
-                    <span class="detail-value">{{ $license->verified_at->format('d-m-Y H:i') }}</span>
-                </div>
-            </div>
+                    <tr>
+                        <td class="message-block">
+                            <p class="subtext">Great news, your branch license has been approved and is now active. You can start managing branch operations from your dashboard.</p>
+                        </td>
+                    </tr>
 
-            @if($adminMessage)
-            <div class="admin-message">
-                <h4 style="margin-top: 0; color: #28a745;">Message from Admin:</h4>
-                <p style="margin-bottom: 0;">{{ $adminMessage }}</p>
-            </div>
-            @endif
+                    <tr>
+                        <td>
+                            <div class="details-card">
+                                <p class="details-title">Branch Details</p>
+                                <table role="presentation" width="100%">
+                                    <tr class="detail-row">
+                                        <td class="detail-label">Branch Name:</td>
+                                        <td class="detail-value">{{ $branch->name }}</td>
+                                    </tr>
+                                    <tr class="detail-row">
+                                        <td class="detail-label">Address:</td>
+                                        <td class="detail-value">{{ $branch->address }}</td>
+                                    </tr>
+                                    @if($branch->emirate)
+                                    <tr class="detail-row">
+                                        <td class="detail-label">Emirate:</td>
+                                        <td class="detail-value">{{ $branch->emirate }}</td>
+                                    </tr>
+                                    @endif
+                                    <tr class="detail-row">
+                                        <td class="detail-label">Business Type:</td>
+                                        <td class="detail-value">{{ $branch->business_type }}</td>
+                                    </tr>
+                                    <tr class="detail-row">
+                                        <td class="detail-label">License Start Date:</td>
+                                        <td class="detail-value">{{ $license->start_date->format('d-m-Y') }}</td>
+                                    </tr>
+                                    <tr class="detail-row">
+                                        <td class="detail-label">License End Date:</td>
+                                        <td class="detail-value">{{ $license->end_date->format('d-m-Y') }}</td>
+                                    </tr>
+                                    <tr class="detail-row">
+                                        <td class="detail-label">Approved Date:</td>
+                                        <td class="detail-value">{{ $license->verified_at->format('d-m-Y H:i') }}</td>
+                                    </tr>
+                                </table>
+                            </div>
+                        </td>
+                    </tr>
 
-            <p>Your branch is now active and you can:</p>
-            <ul>
-                <li>Add products and services to this branch</li>
-                <li>Manage branch information and settings</li>
-                <li>Start receiving orders and bookings</li>
-                <li>Access all vendor dashboard features</li>
-            </ul>
+                    @if($adminMessage)
+                    <tr>
+                        <td>
+                            <div class="admin-note">
+                                <p class="admin-note-title">Message from Admin</p>
+                                <p class="admin-note-text">{{ $adminMessage }}</p>
+                            </div>
+                        </td>
+                    </tr>
+                    @endif
 
-            <div style="text-align: center;">
-                <a href="{{ $dashboardUrl }}" class="cta-button">Access Your Dashboard</a>
-            </div>
+                    <tr>
+                        <td class="cta-wrap">
+                            <a href="{{ $dashboardUrl }}" class="cta-button">Access Your Dashboard</a>
+                        </td>
+                    </tr>
 
-            <div class="contact-info">
-                <h4 style="margin-top: 0;">Need Help?</h4>
-                <p style="margin-bottom: 0;">If you have any questions or need assistance, please don't hesitate to contact our support team.</p>
-            </div>
-        </div>
-
-        <div class="footer">
-            <p>Thank you for choosing glowlabs!</p>
-            <p><strong>The glowlabs Team</strong></p>
-            <p style="font-size: 12px; color: #999;">
-                This is an automated message. Please do not reply to this email.
-            </p>
-        </div>
-    </div>
+                    <tr>
+                        <td class="footer">
+                            <p class="footer-text">If you did not sign up for this account you can ignore this email and the account will be deleted.</p>
+                            <p class="footer-text">&copy; {{ date('Y') }} Glowlabs Company. All rights reserved. You received this email because you create a branch in our platform.</p>
+                        </td>
+                    </tr>
+                </table>
+            </td>
+        </tr>
+    </table>
 </body>
 </html>

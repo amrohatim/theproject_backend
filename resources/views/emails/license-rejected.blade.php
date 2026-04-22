@@ -1,256 +1,295 @@
+@php
+    $isRtl = app()->getLocale() === 'ar';
+
+    // Get message content from the template file
+    $templatePath = resource_path('../message_rejected.md');
+    $messageData = ['title' => '', 'body' => '', 'call_to_action' => ''];
+
+    if (file_exists($templatePath)) {
+        $content = file_get_contents($templatePath);
+
+        // Extract title
+        if (preg_match('/\*\*Title\*\*\s*\n(.+?)(?=\n\*\*|$)/s', $content, $matches)) {
+            $messageData['title'] = trim($matches[1]);
+        }
+
+        // Extract body
+        if (preg_match('/\*\*Body\*\*\s*\n(.*?)(?=\n\*\*Reason\*\*)/s', $content, $matches)) {
+            $messageData['body'] = trim($matches[1]);
+        }
+
+        // Extract call to action
+        if (preg_match('/\*\*Call to Action\*\*\s*\n(.+?)(?=\n|$)/s', $content, $matches)) {
+            $messageData['call_to_action'] = trim($matches[1]);
+        }
+
+        // Replace placeholders
+        $messageData['body'] = str_replace('[User Name]', $user->name, $messageData['body']);
+    } else {
+        // Fallback content
+        $messageData['title'] = 'Your glowlabs Registration Has Been Rejected';
+        $messageData['body'] = "Hello {$user->name},\n\nWe regret to inform you that your glowlabs registration has been rejected. We have reviewed your application and found that it does not meet our requirements. Please review our guidelines and reapply once you have made the necessary improvements.";
+        $messageData['call_to_action'] = 'Please review our guidelines and reapply once you have made the necessary improvements.';
+    }
+@endphp
+
 <!DOCTYPE html>
-<html lang="en">
+<html lang="{{ app()->getLocale() }}" dir="{{ $isRtl ? 'rtl' : 'ltr' }}">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>License Rejected - glowlabs</title>
     <style>
         body {
-            font-family: 'Arial', sans-serif;
-            line-height: 1.6;
-            color: #333;
-            max-width: 600px;
+            margin: 0;
+            padding: 0;
+            background-color: #f2f2f7;
+            font-family: Arial, Helvetica, sans-serif;
+            color: #4f5a68;
+        }
+
+        table {
+            border-spacing: 0;
+            border-collapse: collapse;
+        }
+
+        img {
+            border: 0;
+            outline: none;
+            text-decoration: none;
+            display: block;
+            max-width: 100%;
+            height: auto;
+        }
+
+        .email-shell {
+            width: 100%;
+            background-color: #f2f2f7;
+            padding: 48px 20px;
+        }
+
+        .email-card {
+            width: 100%;
+            max-width: 560px;
             margin: 0 auto;
-            padding: 20px;
-            background-color: #f8f9fa;
-            direction: {{ app()->getLocale() === 'ar' ? 'rtl' : 'ltr' }};
+            background-color: #f2f2f7;
         }
-        .container {
-            background-color: #ffffff;
-            border-radius: 10px;
-            padding: 40px;
-            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+
+        .logo-wrap {
+            padding-bottom: 64px;
         }
-        .header {
-            text-align: center;
-            margin-bottom: 30px;
+
+        .headline {
+            margin: 0;
+            font-size: 40px;
+            line-height: 44px;
+            font-weight: 700;
+            color: #4f5a68;
+            letter-spacing: -0.4px;
         }
-        .logo {
-            width: 70px;
-            height: 90px;
-            margin: 0 auto 20px;
-            background: linear-gradient(135deg, #dc2626 0%, #b91c1c 100%);
-            border-radius: 15px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            color: white;
-            font-size: 24px;
-            font-weight: bold;
-            text-align: center;
-            line-height: 90px;
-            vertical-align: middle;
-            padding-left: 21px;
-        }
-        .vendor-logo {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            text-align: center;
-            line-height: 90px;
-            vertical-align: middle;
-            background: linear-gradient(135deg, #dc2626 0%, #b91c1c 100%);
-        }
-        .provider-logo {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            text-align: center;
-            line-height: 90px;
-            vertical-align: middle;
-            background: linear-gradient(135deg, #dc2626 0%, #b91c1c 100%);
-        }
-        .merchant-logo {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            text-align: center;
-            line-height: 90px;
-            vertical-align: middle;
-            background: linear-gradient(135deg, #dc2626 0%, #b91c1c 100%);
-        }
-        h1 {
-            color: #2d3748;
-            margin-bottom: 10px;
-            font-size: 28px;
-        }
-        .subtitle {
-            color: #383a39;
+
+        .subtext {
+            margin: 0;
             font-size: 16px;
-            margin-bottom: 30px;
-            font-weight:600;
+            line-height: 24px;
+            color: #4f5a68;
         }
-        .rejection-banner {
-            background: linear-gradient(135deg, #dc2626 0%, #b91c1c 100%);
-            color: white;
-            padding: 20px;
-            border-radius: 10px;
-            text-align: center;
-            margin: 30px 0;
-            font-size: 20px;
-            font-weight: bold;
+
+        .greeting {
+            margin: 0 0 12px;
+            font-size: 24px;
+            line-height: 32px;
+            color: #4f5a68;
+            font-weight: 400;
         }
-        .message-content {
+
+        .message-block {
+            padding: 0 0 32px;
+        }
+
+        .info-card {
             background-color: #ffffff;
-            border-left: 4px solid #dc2626;
-            color: #000000de;
-            padding: 10px;
-            margin: 30px 0;
-            border-radius: 0 8px 8px 0;
+            border: 1px solid #d4d5d6;
+            border-radius: 8px;
+            padding: 14px 16px;
+            margin: 0 0 20px;
+        }
+
+        .info-title {
+            margin: 0 0 8px;
+            font-size: 14px;
+            line-height: 20px;
+            font-weight: 700;
+            color: #4f5a68;
+        }
+
+        .info-text {
+            margin: 0;
+            font-size: 14px;
+            line-height: 20px;
+            color: #4f5a68;
             white-space: pre-line;
         }
-        .rejection-reason {
-            background-color: #fffeff;
-            border: 1px solid #fecaca;
-            border-radius: 8px;
-            padding: 15px;
-            margin: 20px 0;
-        }
-        .rejection-reason h4 {
-            color: #403434;
-            margin-top: 0;
-            margin-bottom: 10px;
-            font-size: 16px;
-        }
-        .rejection-reason p {
-            margin-bottom: 0;
+
+        .reason-text {
             color: #7f1d1d;
+            font-weight: 700;
         }
-        .button {
-            display: inline-block;
-            background: linear-gradient(135deg, #dc2626 0%, #b91c1c 100%);
-            color: white;
-            padding: 15px 30px;
-            text-decoration: none;
-            border-radius: 8px;
-            font-weight: bold;
-            margin: 20px 0;
-            text-align: center;
-            transition: transform 0.2s ease;
+
+        .support-list {
+            margin: 0;
+            padding-left: 18px;
         }
-        .button:hover {
-            transform: translateY(-2px);
-        }
-        .footer {
-            text-align: center;
-            margin-top: 40px;
-            padding-top: 20px;
-            border-top: 1px solid #e2e8f0;
-            color: #718096;
+
+        .support-list li {
+            margin: 0 0 8px;
             font-size: 14px;
+            line-height: 20px;
+            color: #4f5a68;
         }
-        .call-to-action {
-            background-color: #f0f9ff;
-            border-left: 4px solid #0ea5e9;
-            padding: 15px;
-            margin: 20px 0;
-            border-radius: 0 8px 8px 0;
+
+        .support-list li:last-child {
+            margin-bottom: 0;
         }
-        .rtl {
+
+        .footer {
+            border-top: 1px solid #d4d5d6;
+            padding-top: 32px;
+        }
+
+        .footer-text {
+            margin: 0 0 20px;
+            font-size: 14px;
+            line-height: 20px;
+            color: rgba(79, 90, 104, 0.6);
+        }
+
+        .rtl-text {
             direction: rtl;
             text-align: right;
         }
-        .rtl .message-content {
-            border-left: none;
-            border-right: 4px solid #dc2626;
-            border-radius: 8px 0 0 8px;
+
+        .rtl-text .support-list {
+            padding-right: 18px;
+            padding-left: 0;
         }
-        .rtl .call-to-action {
-            border-left: none;
-            border-right: 4px solid #0ea5e9;
-            border-radius: 8px 0 0 8px;
+
+        @media only screen and (max-width: 600px) {
+            .email-shell {
+                padding: 24px 14px;
+            }
+
+            .email-card {
+                width: 100% !important;
+            }
+
+            .email-card td {
+                padding-left: 12px !important;
+                padding-right: 12px !important;
+            }
+
+            .logo-wrap {
+                padding-bottom: 40px;
+            }
+
+            .headline {
+                font-size: 32px;
+                line-height: 36px;
+            }
+
+            .greeting {
+                font-size: 22px;
+                line-height: 30px;
+            }
         }
     </style>
 </head>
-<body>
-    <div class="container">
-        <!-- Header -->
-        <div class="header">
-            <div class="logo {{ $licenseType }}-logo">
-                D3C
-            </div>
-            <h1>{{ __('Registration Update') }}</h1>
-            <p class="subtitle">{{ __('Important information about your application') }}</p>
-        </div>
+<body style="padding-inline:4px;">
+    <table role="presentation" width="100%" class="email-shell">
+        <tr>
+            <td align="center">
+                <table role="presentation" width="560" class="email-card">
+                    <tr>
+                        <td class="logo-wrap">
+                            <img src="https://glowlabs.ae/assets/logo.png" alt="Glowlabs" width="124">
+                        </td>
+                    </tr>
 
-        @php
-            // Get message content from the template file
-            $templatePath = resource_path('../message_rejected.md');
-            $messageData = ['title' => '', 'body' => '', 'call_to_action' => ''];
-            
-            if (file_exists($templatePath)) {
-                $content = file_get_contents($templatePath);
-                
-                // Extract title
-                if (preg_match('/\*\*Title\*\*\s*\n(.+?)(?=\n\*\*|$)/s', $content, $matches)) {
-                    $messageData['title'] = trim($matches[1]);
-                }
-                
-                // Extract body
-                if (preg_match('/\*\*Body\*\*\s*\n(.*?)(?=\n\*\*Reason\*\*)/s', $content, $matches)) {
-                    $messageData['body'] = trim($matches[1]);
-                }
-                
-                // Extract call to action
-                if (preg_match('/\*\*Call to Action\*\*\s*\n(.+?)(?=\n|$)/s', $content, $matches)) {
-                    $messageData['call_to_action'] = trim($matches[1]);
-                }
-                
-                // Replace placeholders
-                $messageData['body'] = str_replace('[User Name]', $user->name, $messageData['body']);
-            } else {
-                // Fallback content
-                $messageData['title'] = 'Your glowlabs Registration Has Been Rejected';
-                $messageData['body'] = "Hello {$user->name},\n\nWe regret to inform you that your glowlabs registration has been rejected. We have reviewed your application and found that it does not meet our requirements. Please review our guidelines and reapply once you have made the necessary improvements.";
-                $messageData['call_to_action'] = 'Please review our guidelines and reapply once you have made the necessary improvements.';
-            }
-        @endphp
+                    <tr>
+                        <td style="padding-bottom: 48px;" class="{{ $isRtl ? 'rtl-text' : '' }}">
+                            <p class="greeting">{{ __('Hello') }} {{ $user->name }},</p>
+                            <h1 class="headline">{{ __('Registration Update') }}</h1>
+                        </td>
+                    </tr>
 
-        
+                    <tr>
+                        <td class="message-block {{ $isRtl ? 'rtl-text' : '' }}">
+                            <p class="subtext">{{ __('Important information about your application') }}</p>
+                        </td>
+                    </tr>
 
-        <!-- Message Content from Template -->
-        <div class="message-content {{ app()->getLocale() === 'ar' ? 'rtl' : '' }}">
-            Hello {{$user->name}},.
-       <br>
-       <p class="text-[#000000de]">We regret to inform you that your glowlabs registration has been rejected</p>
-       <br>
-       <p class="text-[#000000de]"> We have reviewed your application and found that it does not meet our requirements. Please review our guidelines and reapply once you have made the necessary improvements.</p>
-        </div>
+                    @if($messageData['title'])
+                    <tr>
+                        <td>
+                            <div class="info-card {{ $isRtl ? 'rtl-text' : '' }}">
+                                <p class="info-title">{{ $messageData['title'] }}</p>
+                            </div>
+                        </td>
+                    </tr>
+                    @endif
 
-        <!-- Rejection Reason -->
-        <div class="rejection-reason">
-            <h4>{{ __('Reason for Rejection:') }}</h4>
-            <p>{{ $rejectionReason }}</p>
-        </div>
+                    <tr>
+                        <td>
+                            <div class="info-card {{ $isRtl ? 'rtl-text' : '' }}">
+                                <p class="info-text">{!! nl2br(e($messageData['body'])) !!}</p>
+                            </div>
+                        </td>
+                    </tr>
 
-        <!-- Call to Action -->
-        @if($messageData['call_to_action'])
-            <div class="call-to-action {{ app()->getLocale() === 'ar' ? 'rtl' : '' }}">
-                <strong>{{ __('Next Steps:') }}</strong><br>
-                {{ $messageData['call_to_action'] }}
-            </div>
-        @endif
+                    <tr>
+                        <td>
+                            <div class="info-card {{ $isRtl ? 'rtl-text' : '' }}">
+                                <p class="info-title">{{ __('Reason for Rejection:') }}</p>
+                                <p class="info-text reason-text">{{ $rejectionReason }}</p>
+                            </div>
+                        </td>
+                    </tr>
 
-       
+                    @if($messageData['call_to_action'])
+                    <tr>
+                        <td>
+                            <div class="info-card {{ $isRtl ? 'rtl-text' : '' }}">
+                                <p class="info-title">{{ __('Next Steps:') }}</p>
+                                <p class="info-text">{{ $messageData['call_to_action'] }}</p>
+                            </div>
+                        </td>
+                    </tr>
+                    @endif
 
-        <!-- Support Information -->
-        <div style="margin-top: 30px;">
-            <p>{{ __('If you have any questions about this decision or need assistance, our support team is here to help:') }}</p>
-            <ul>
-                <li><strong>{{ __('Email:') }}</strong> support@glowlabs.ae</li>
-                <li><strong>{{ __('Phone:') }}</strong> +971-xxx-xxxx</li>
-                <li><strong>{{ __('Help Center:') }}</strong> <a href="https://help.glowlabs.ae">help.glowlabs.ae</a></li>
-            </ul>
-        </div>
+                    <tr>
+                        <td>
+                            <div class="info-card {{ $isRtl ? 'rtl-text' : '' }}">
+                                <p class="info-title">{{ __('Support Information') }}</p>
+                                <p class="info-text" style="margin-bottom: 12px;">{{ __('If you have any questions about this decision or need assistance, our support team is here to help:') }}</p>
+                                <ul class="support-list">
+                                    <li><strong>{{ __('Email:') }}</strong> support@glowlabs.ae</li>
+                                    <li><strong>{{ __('Phone:') }}</strong> +971-xxx-xxxx</li>
+                                    <li><strong>{{ __('Help Center:') }}</strong> <a href="https://help.glowlabs.ae">help.glowlabs.ae</a></li>
+                                </ul>
+                            </div>
+                        </td>
+                    </tr>
 
-        <p>{{ __('Best regards,') }}<br>
-        {{ __('The glowlabs Team') }}</p>
-
-        <!-- Footer -->
-        <div class="footer">
-            <p>© {{ date('Y') }} glowlabs. {{ __('All rights reserved.') }}</p>
-            <p>{{ __('This email was sent to :email.', ['email' => $user->email]) }}</p>
-        </div>
-    </div>
+                    <tr>
+                        <td class="footer {{ $isRtl ? 'rtl-text' : '' }}">
+                            <p class="footer-text">{{ __('Best regards,') }}<br>{{ __('The glowlabs Team') }}</p>
+                            <p class="footer-text">&copy; {{ date('Y') }} glowlabs. {{ __('All rights reserved.') }}</p>
+                            <p class="footer-text">{{ __('This email was sent to :email.', ['email' => $user->email]) }}</p>
+                        </td>
+                    </tr>
+                </table>
+            </td>
+        </tr>
+    </table>
 </body>
 </html>

@@ -1536,7 +1536,6 @@ return [
     'change' => 'تغيير',
     'remove' => 'إزالة',
     'continue_to_email_verification' => 'متابعة إلى تحقق البريد الإلكتروني',
-    'resend_in_seconds' => 'إعادة الإرسال خلال {seconds} ثانية',
     'check_spam_junk_folder' => 'تحقق من مجلد الرسائل غير المرغوب فيها إذا لم تجد البريد الإلكتروني',
     'verification_code_expires_10_minutes' => 'ينتهي رمز التحقق خلال 10 دقائق',
 

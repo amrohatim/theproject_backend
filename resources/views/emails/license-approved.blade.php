@@ -1,277 +1,316 @@
+@php
+    $isRtl = app()->getLocale() === 'ar';
+
+    // Get message content from the template file
+    $templatePath = resource_path('views/messages_when_approval.md');
+    $content = file_get_contents($templatePath);
+
+    // Parse the content based on license type and language
+    $language = $isRtl ? 'AR' : 'EN';
+    $pattern = "/\*\*" . ucfirst($licenseType) . " message when approved:{$language}\*\*(.*?)(?=\*\*|$)/is";
+    preg_match($pattern, $content, $matches);
+
+    $messageBody = '';
+    if (!empty($matches[1])) {
+        $messageContent = trim($matches[1]);
+
+        // Extract body (skip subject line)
+        if (preg_match('/Subject:\s*(.+?)(?:\n\n|\n(?=[A-Z]))/s', $messageContent, $subjectMatch)) {
+            $messageBody = trim(str_replace($subjectMatch[0], '', $messageContent));
+        } else {
+            $messageBody = $messageContent;
+        }
+
+        // Replace placeholders
+        $userName = $user->name ?? 'Valued User';
+        $messageBody = str_replace(
+            ['[Provider Name]', '[Vendor Name]', '[Merchant Name]', '[اسم المزود ]', '[اسم البائع ]', '[اسم التاجر ]'],
+            $userName,
+            $messageBody
+        );
+    }
+
+    // Fallback message if parsing fails
+    if (empty($messageBody)) {
+        $messageBody = "Hello {$user->name},\n\nWe are thrilled to inform you that your glowlabs {$licenseType} registration has been approved! You are now officially part of the glowlabs marketplace.\n\nYou can access your dashboard and manage your account using your email and password at: https://glowlabs.ae/login";
+    }
+@endphp
+
 <!DOCTYPE html>
-<html lang="en">
+<html lang="{{ app()->getLocale() }}" dir="{{ $isRtl ? 'rtl' : 'ltr' }}">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>License Approved - glowlabs</title>
     <style>
         body {
-            font-family: 'Arial', sans-serif;
-            line-height: 1.6;
-            color: #333;
-            max-width: 600px;
+            margin: 0;
+            padding: 0;
+            background-color: #f2f2f7;
+            font-family: Arial, Helvetica, sans-serif;
+            color: #4f5a68;
+        }
+
+        table {
+            border-spacing: 0;
+            border-collapse: collapse;
+        }
+
+        img {
+            border: 0;
+            outline: none;
+            text-decoration: none;
+            display: block;
+            max-width: 100%;
+            height: auto;
+        }
+
+        .email-shell {
+            width: 100%;
+            background-color: #f2f2f7;
+            padding: 48px 20px;
+        }
+
+        .email-card {
+            width: 100%;
+            max-width: 560px;
             margin: 0 auto;
-            padding: 20px;
-            background-color: #f8f9fa;
-            direction: {{ app()->getLocale() === 'ar' ? 'rtl' : 'ltr' }};
+            background-color: #f2f2f7;
         }
-        .container {
-            background-color: #ffffff;
-            border-radius: 10px;
-            padding: 40px;
-            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+
+        .logo-wrap {
+            padding-bottom: 64px;
         }
-        .header {
-            text-align: center;
-            margin-bottom: 30px;
+
+        .headline {
+            margin: 0;
+            font-size: 40px;
+            line-height: 44px;
+            font-weight: 700;
+            color: #4f5a68;
+            letter-spacing: -0.4px;
         }
-        .logo {
-           width: 70px;
-            height: 90px;
-            margin: 0 auto 20px;
-            background: linear-gradient(135deg, #10b981 0%, #059669 100%);
-            border-radius: 15px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            color: white;
-            font-size: 24px;
-            font-weight: bold;
-            text-align: center;
-            line-height: 90px;
-            vertical-align: middle;
-            padding-left: 21px;
-        }
-        .vendor-logo {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            text-align: center;
-            line-height: 90px;
-            vertical-align: middle;
-            background:  #667eea;
-        }
-        .provider-logo {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            text-align: center;
-            line-height: 90px;
-            vertical-align: middle;
-            background:  #f093fb;
-        }
-        .merchant-logo {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            text-align: center;
-            line-height: 90px;
-            vertical-align: middle;
-            background:  #fbbf24;
-        }
-        h1 {
-            color: #2d3748;
-            margin-bottom: 10px;
-            font-size: 28px;
-        }
-        .subtitle {
-            color: #383a39;
+
+        .subtext {
+            margin: 0;
             font-size: 16px;
-            margin-bottom: 30px;
-            font-weight:600;
+            line-height: 24px;
+            color: #4f5a68;
         }
-        .celebration-banner {
-            background: linear-gradient(135deg, #10b981 0%, #059669 100%);
-            color: white;
-            padding: 20px;
-            border-radius: 10px;
-            text-align: center;
-            margin: 30px 0;
-            font-size: 20px;
-            font-weight: bold;
+
+        .greeting {
+            margin: 0 0 12px;
+            font-size: 24px;
+            line-height: 32px;
+            color: #4f5a68;
+            font-weight: 400;
         }
-        .vendor-banner {
-            background:  #667eea
+
+        .message-block {
+            padding: 0 0 32px;
         }
-        .provider-banner {
-            background: #f093fb 
+
+        .info-card {
+            background-color: #ffffff;
+            border: 1px solid #d4d5d6;
+            border-radius: 8px;
+            padding: 14px 16px;
+            margin: 0 0 20px;
         }
-        .merchant-banner {
-            background:  #fbbf24 
+
+        .info-title {
+            margin: 0 0 8px;
+            font-size: 14px;
+            line-height: 20px;
+            font-weight: 700;
+            color: #4f5a68;
         }
-        .message-content {
-            background-color: #f7fafc;
-            border-left: 4px solid #10b981;
-            padding: 20px;
-            margin: 30px 0;
-            border-radius: 0 8px 8px 0;
+
+        .info-text {
+            margin: 0;
+            font-size: 14px;
+            line-height: 20px;
+            color: #4f5a68;
             white-space: pre-line;
         }
-        .vendor-content {
-            border-left-color: #667eea;
+
+        .cta-wrap {
+            padding: 0 0 56px;
+            text-align: center;
         }
-        .provider-content {
-            border-left-color: #f093fb;
-        }
-        .merchant-content {
-            border-left-color: #fbbf24;
-        }
-        .button {
+
+        .cta-button {
             display: inline-block;
-            background: linear-gradient(135deg, #10b981 0%, #059669 100%);
-            color: white;
-            padding: 15px 30px;
+            background-color: #a46bc1;
+            color: #ffffff !important;
             text-decoration: none;
+            font-size: 16px;
+            line-height: 24px;
+            font-weight: 700;
             border-radius: 8px;
-            font-weight: bold;
-            margin: 20px 0;
+            padding: 12px 48px;
+            box-shadow: 0 3px 9px rgba(0, 0, 0, 0.09);
+            min-width: 283px;
             text-align: center;
-            transition: transform 0.2s ease;
         }
-        .button:hover {
-            transform: translateY(-2px);
+
+        .support-list {
+            margin: 0;
+            padding-left: 18px;
         }
-        .vendor-button {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-        }
-        .provider-button {
-            background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
-        }
-        .merchant-button {
-            background: linear-gradient(135deg, #fbbf24 0%, #f59e0b 100%);
-        }
-        .footer {
-            text-align: center;
-            margin-top: 40px;
-            padding-top: 20px;
-            border-top: 1px solid #e2e8f0;
-            color: #718096;
+
+        .support-list li {
+            margin: 0 0 8px;
             font-size: 14px;
+            line-height: 20px;
+            color: #4f5a68;
         }
-        .admin-message {
-            background-color: #edf2f7;
-            border-radius: 8px;
-            padding: 15px;
-            margin: 20px 0;
-            border-left: 4px solid #4299e1;
+
+        .support-list li:last-child {
+            margin-bottom: 0;
         }
-        .rtl {
+
+        .footer {
+            border-top: 1px solid #d4d5d6;
+            padding-top: 32px;
+        }
+
+        .footer-text {
+            margin: 0 0 20px;
+            font-size: 14px;
+            line-height: 20px;
+            color: rgba(79, 90, 104, 0.6);
+        }
+
+        .rtl-text {
             direction: rtl;
             text-align: right;
         }
-        .rtl .message-content {
-            border-left: none;
-            border-right: 4px solid #10b981;
-            border-radius: 8px 0 0 8px;
+
+        .rtl-text .support-list {
+            padding-right: 18px;
+            padding-left: 0;
         }
-        .rtl .vendor-content {
-            border-right-color: #667eea;
-        }
-        .rtl .provider-content {
-            border-right-color: #f093fb;
-        }
-        .rtl .merchant-content {
-            border-right-color: #fbbf24;
-        }
-        .rtl .admin-message {
-            border-left: none;
-            border-right: 4px solid #4299e1;
+
+        @media only screen and (max-width: 600px) {
+            .email-shell {
+                padding: 24px 14px;
+            }
+
+            .email-card {
+                width: 100% !important;
+            }
+
+            .email-card td {
+                padding-left: 12px !important;
+                padding-right: 12px !important;
+            }
+
+            .logo-wrap {
+                padding-bottom: 40px;
+            }
+
+            .headline {
+                font-size: 32px;
+                line-height: 36px;
+            }
+
+            .greeting {
+                font-size: 22px;
+                line-height: 30px;
+            }
+
+            .cta-button {
+                display: block;
+                width: 100%;
+                min-width: 0;
+                box-sizing: border-box;
+            }
         }
     </style>
 </head>
-<body>
-    <div class="container">
-        <!-- Header -->
-        <div class="header">
-            <div class="logo {{ $licenseType }}-logo">
-                D3C
-            </div>
-            <h1>{{ __('Congratulations!') }}</h1>
-            <p class="subtitle">{{ __('Your license has been approved') }}</p>
-            
-        </div>
+<body style="padding-inline:4px;">
+    <table role="presentation" width="100%" class="email-shell">
+        <tr>
+            <td align="center">
+                <table role="presentation" width="560" class="email-card">
+                    <tr>
+                        <td class="logo-wrap">
+                            <img src="https://glowlabs.ae/assets/logo.png" alt="Glowlabs" width="124">
+                        </td>
+                    </tr>
 
-        <!-- Celebration Banner -->
-        <div class="celebration-banner {{ $licenseType }}-banner">
-             {{ __('Welcome to the glowlabs :type Community!', ['type' => ucfirst($licenseType)]) }} 
-        </div>
+                    <tr>
+                        <td style="padding-bottom: 48px;" class="{{ $isRtl ? 'rtl-text' : '' }}">
+                            <p class="greeting">{{ __('Hello') }} {{ $user->name }},</p>
+                            <h1 class="headline">{{ __('Congratulations!') }}</h1>
+                        </td>
+                    </tr>
 
-        @php
-            // Get message content from the template file
-            $templatePath = resource_path('views/messages_when_approval.md');
-            $content = file_get_contents($templatePath);
+                    <tr>
+                        <td class="message-block {{ $isRtl ? 'rtl-text' : '' }}">
+                            <p class="subtext">{{ __('Your license has been approved') }}</p>
+                        </td>
+                    </tr>
 
-            // Parse the content based on license type and language
-            $language = app()->getLocale() === 'ar' ? 'AR' : 'EN';
-            $pattern = "/\*\*" . ucfirst($licenseType) . " message when approved:{$language}\*\*(.*?)(?=\*\*|$)/is";
-            preg_match($pattern, $content, $matches);
+                    <tr>
+                        <td>
+                            <div class="info-card {{ $isRtl ? 'rtl-text' : '' }}">
+                                <p class="info-text">{{ __('Welcome to the glowlabs :type Community!', ['type' => ucfirst($licenseType)]) }}</p>
+                            </div>
+                        </td>
+                    </tr>
 
-            $messageBody = '';
-            if (!empty($matches[1])) {
-                $messageContent = trim($matches[1]);
+                    <tr>
+                        <td>
+                            <div class="info-card {{ $isRtl ? 'rtl-text' : '' }}">
+                                <p class="info-title">{{ __('Approval Details') }}</p>
+                                <p class="info-text">{!! nl2br(e($messageBody)) !!}</p>
+                            </div>
+                        </td>
+                    </tr>
 
-                // Extract body (skip subject line)
-                if (preg_match('/Subject:\s*(.+?)(?:\n\n|\n(?=[A-Z]))/s', $messageContent, $subjectMatch)) {
-                    $messageBody = trim(str_replace($subjectMatch[0], '', $messageContent));
-                } else {
-                    $messageBody = $messageContent;
-                }
+                    <tr>
+                        <td class="cta-wrap">
+                            <a href="https://glowlabs.ae/login" class="cta-button">{{ __('Access Your Dashboard') }}</a>
+                        </td>
+                    </tr>
 
-                // Replace placeholders
-                $userName = $user->name ?? 'Valued User';
-                $messageBody = str_replace(
-                    ['[Provider Name]', '[Vendor Name]', '[Merchant Name]', '[اسم المزود ]', '[اسم البائع ]', '[اسم التاجر ]'],
-                    $userName,
-                    $messageBody
-                );
-            }
+                    @if($adminMessage)
+                    <tr>
+                        <td>
+                            <div class="info-card {{ $isRtl ? 'rtl-text' : '' }}">
+                                <p class="info-title">{{ __('Message from Admin:') }}</p>
+                                <p class="info-text">{{ $adminMessage }}</p>
+                            </div>
+                        </td>
+                    </tr>
+                    @endif
 
-            // Fallback message if parsing fails
-            if (empty($messageBody)) {
-                $type = ucfirst($licenseType);
-                $messageBody = "Hello {$user->name},\n\nWe are thrilled to inform you that your glowlabs {$licenseType} registration has been approved! You are now officially part of the glowlabs marketplace.\n\nYou can access your dashboard and manage your account using your email and password at: https://glowlabs.ae/login";
-            }
-        @endphp
+                    <tr>
+                        <td>
+                            <div class="info-card {{ $isRtl ? 'rtl-text' : '' }}">
+                                <p class="info-title">{{ __('Support Information') }}</p>
+                                <p class="info-text" style="margin-bottom: 12px;">{{ __('If you have any questions or need assistance, our support team is here to help:') }}</p>
+                                <ul class="support-list">
+                                    <li><strong>{{ __('Email:') }}</strong> support@glowlabs.ae</li>
+                                    <li><strong>{{ __('Phone:') }}</strong> +971-xxx-xxxx</li>
+                                    <li><strong>{{ __('Help Center:') }}</strong> <a href="https://help.glowlabs.ae">help.glowlabs.ae</a></li>
+                                </ul>
+                            </div>
+                        </td>
+                    </tr>
 
-        <!-- Message Content from Template -->
-        <div class="message-content {{ $licenseType }}-content {{ app()->getLocale() === 'ar' ? 'rtl' : '' }} text-color-black ">
-            {!! nl2br(e($messageBody)) !!}
-        </div>
-
-        <!-- Dashboard Button -->
-        <div style="text-align: center;">
-            <a href="https://glowlabs.ae/login"
-               class="button {{ $licenseType }}-button">
-                {{ __('Access Your Dashboard') }}
-            </a>
-        </div>
-
-        <!-- Admin Message (if provided) -->
-        @if($adminMessage)
-            <div class="admin-message {{ app()->getLocale() === 'ar' ? 'rtl' : '' }}">
-                <h4 style="margin-top: 0; color: #2d3748;">{{ __('Message from Admin:') }}</h4>
-                <p style="margin-bottom: 0;">{{ $adminMessage }}</p>
-            </div>
-        @endif
-
-        <!-- Support Information -->
-        <div style="margin-top: 30px;">
-            <p>{{ __('If you have any questions or need assistance, our support team is here to help:') }}</p>
-            <ul>
-                <li><strong>{{ __('Email:') }}</strong> support@glowlabs.ae</li>
-                <li><strong>{{ __('Phone:') }}</strong> +971-xxx-xxxx</li>
-                <li><strong>{{ __('Help Center:') }}</strong> <a href="https://help.glowlabs.ae">help.glowlabs.ae</a></li>
-            </ul>
-        </div>
-
-        <p>{{ __('Best regards,') }}<br>
-        {{ __('The glowlabs Team') }}</p>
-
-        <!-- Footer -->
-        <div class="footer">
-            <p>© {{ date('Y') }} glowlabs. {{ __('All rights reserved.') }}</p>
-            <p>{{ __('This email was sent to :email.', ['email' => $user->email]) }}</p>
-        </div>
-    </div>
+                    <tr>
+                        <td class="footer {{ $isRtl ? 'rtl-text' : '' }}">
+                            <p class="footer-text">{{ __('Best regards,') }}<br>{{ __('The glowlabs Team') }}</p>
+                            <p class="footer-text">&copy; {{ date('Y') }} glowlabs. {{ __('All rights reserved.') }}</p>
+                            <p class="footer-text">{{ __('This email was sent to :email.', ['email' => $user->email]) }}</p>
+                        </td>
+                    </tr>
+                </table>
+            </td>
+        </tr>
+    </table>
 </body>
 </html>

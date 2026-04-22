@@ -6,207 +6,320 @@
     <title>Email Verification - glowlabs</title>
     <style>
         body {
-            font-family: 'Arial', sans-serif;
-            line-height: 1.6;
-            color: #333;
-            max-width: 600px;
-            margin: 0 auto;
-            padding: 20px;
-            background-color: #f8f9fa;
+            margin: 0;
+            padding: 0;
+            background-color: #f2f2f7;
+            font-family: Arial, Helvetica, sans-serif;
+            color: #4f5a68;
         }
-        .container {
-            background-color: #ffffff;
-            border-radius: 10px;
-            padding: 40px;
-            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+
+        table {
+            border-spacing: 0;
+            border-collapse: collapse;
         }
-        .header {
-            text-align: center;
-            margin-bottom: 30px;
-        }
-        .logo {
-            width: 80px;
-            height: 80px;
-            margin: 0 auto 20px;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            border-radius: 15px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            color: white;
-            font-size: 24px;
-            font-weight: bold;
-        }
-        .vendor-logo {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-        }
-        .provider-logo {
-            background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
-        }
-        h1 {
-            color: #2d3748;
-            margin-bottom: 10px;
-            font-size: 28px;
-        }
-        .subtitle {
-            color: #718096;
-            font-size: 16px;
-            margin-bottom: 30px;
-        }
-        .verification-code {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            color: white;
-            padding: 20px;
-            border-radius: 10px;
-            text-align: center;
-            margin: 30px 0;
-            font-size: 32px;
-            font-weight: bold;
-            letter-spacing: 8px;
-            font-family: 'Courier New', monospace;
-        }
-        .provider-code {
-            background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
-        }
-        .button {
-            display: inline-block;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            color: white;
-            padding: 15px 30px;
+
+        img {
+            border: 0;
+            outline: none;
             text-decoration: none;
+            display: block;
+            max-width: 100%;
+            height: auto;
+        }
+
+        .email-shell {
+            width: 100%;
+            background-color: #f2f2f7;
+            padding: 48px 20px;
+        }
+
+        .email-card {
+            width: 100%;
+            max-width: 560px;
+            margin: 0 auto;
+            background-color: #f2f2f7;
+        }
+
+        .logo-wrap {
+            padding-bottom: 64px;
+        }
+
+        .headline {
+            margin: 0;
+            font-size: 40px;
+            line-height: 44px;
+            font-weight: 700;
+            color: #4f5a68;
+            letter-spacing: -0.4px;
+        }
+
+        .subtext {
+            margin: 0;
+            font-size: 16px;
+            line-height: 24px;
+            color: #4f5a68;
+        }
+
+        .message-block {
+            padding: 0 0 32px;
+        }
+
+        .greeting {
+            margin: 0 0 12px;
+            font-size: 24px;
+            line-height: 32px;
+            color: #4f5a68;
+            font-weight: 400;
+        }
+
+        .info-card {
             border-radius: 8px;
-            font-weight: bold;
-            margin: 20px 0;
+            padding: 14px 16px;
+            margin: 0 0 20px;
+        }
+
+        .info-title {
+            margin: 0 0 8px;
+            font-size: 14px;
+            line-height: 20px;
+            font-weight: 700;
+            color: #4f5a68;
+        }
+
+        .info-text {
+            margin: 0;
+            font-size: 14px;
+            line-height: 20px;
+            color: #4f5a68;
+        }
+
+        .code-box {
+            margin: 0;
+            background-color: #a46bc1;
+            border-radius: 8px;
+            text-align: center;
+            padding: 16px 12px;
+            font-size: 32px;
+            line-height: 36px;
+            font-weight: 700;
+            letter-spacing: 8px;
+            color: #4f5a68;
+            font-family: "Courier New", Courier, monospace;
+        }
+
+        .info-list {
+            margin: 0;
+            padding: 0 0 0 18px;
+        }
+
+        .info-list li {
+            margin: 0 0 8px;
+            font-size: 14px;
+            line-height: 20px;
+            color: #4f5a68;
+        }
+
+        .info-list li:last-child {
+            margin-bottom: 0;
+        }
+
+        .cta-wrap {
+            padding: 0 0 56px;
+        }
+
+        .cta-button {
+            display: inline-block;
+            background-color: #a46bc1;
+            color: #ffffff !important;
+            text-decoration: none;
+            font-size: 16px;
+            line-height: 24px;
+            font-weight: 700;
+            border-radius: 8px;
+            padding: 12px 48px;
+            box-shadow: 0 3px 9px rgba(0, 0, 0, 0.09);
+            min-width: 283px;
             text-align: center;
         }
-        .provider-button {
-            background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
-        }
-        .instructions {
-            background-color: #f7fafc;
-            border-left: 4px solid #4299e1;
-            padding: 20px;
-            margin: 30px 0;
-            border-radius: 0 8px 8px 0;
-        }
+
         .footer {
-            text-align: center;
-            margin-top: 40px;
-            padding-top: 20px;
-            border-top: 1px solid #e2e8f0;
-            color: #718096;
-            font-size: 14px;
+            border-top: 1px solid #d4d5d6;
+            padding-top: 32px;
         }
-        .warning {
-            background-color: #fed7d7;
-            border: 1px solid #feb2b2;
-            color: #c53030;
-            padding: 15px;
-            border-radius: 8px;
-            margin: 20px 0;
+
+        .footer-text {
+            margin: 0 0 20px;
             font-size: 14px;
+            line-height: 20px;
+            color: rgba(79, 90, 104, 0.6);
+        }
+
+        @media only screen and (max-width: 600px) {
+            .email-shell {
+                padding: 24px 14px;
+            }
+
+            .email-card {
+                width: 100% !important;
+            }
+
+            .email-card td {
+                padding-left: 12px !important;
+                padding-right: 12px !important;
+            }
+
+            .logo-wrap {
+                padding-bottom: 40px;
+            }
+
+            .headline {
+                font-size: 32px;
+                line-height: 36px;
+            }
+
+            .greeting {
+                font-size: 22px;
+                line-height: 30px;
+            }
+
+            .code-box {
+                font-size: 26px;
+                line-height: 30px;
+                letter-spacing: 5px;
+            }
+
+            .cta-button {
+                display: block;
+                width: 100%;
+                min-width: 0;
+                box-sizing: border-box;
+            }
         }
     </style>
 </head>
-<body>
-    <div class="container">
-        <!-- Header -->
-        <div class="header">
-            <div class="logo {{ $userType === 'provider' ? 'provider-logo' : 'vendor-logo' }}">
-                D3C
-            </div>
-            <h1>Email Verification</h1>
-            <p class="subtitle">
-                @if($userType === 'vendor')
-                    Welcome to glowlabs Vendor Platform
-                @elseif($userType === 'provider')
-                    Welcome to glowlabs Provider Platform
-                @elseif($userType === 'merchant')
-                    Welcome to glowlabs Merchant Platform
-                @else
-                    Welcome to glowlabs
-                @endif
-            </p>
-        </div>
+<body style="padding-inline:4px;">
+    <table role="presentation" width="100%" class="email-shell">
+        <tr>
+            <td align="center">
+                <table role="presentation" width="560" class="email-card">
+                    <tr>
+                        <td class="logo-wrap">
+                            <img src="https://glowlabs.ae/assets/logo.png" alt="Glowlabs" width="124">
+                        </td>
+                    </tr>
 
-        <!-- Greeting -->
-        <p>Hello {{ $user->name }},</p>
+                    <tr>
+                        <td style="padding-bottom: 48px;">
+                            <p class="greeting">Hi {{ $user->name }},</p>
+                            <h1 class="headline">Email Verification.</h1>
+                        </td>
+                    </tr>
 
-        <p>Thank you for registering
-            @if($userType === 'vendor')
-                as a vendor
-            @elseif($userType === 'provider')
-                as a service provider
-            @elseif($userType === 'merchant')
-                as a merchant
-            @endif
-            with glowlabs! To complete your registration, please verify your email address.
-        </p>
+                    <tr>
+                        <td class="message-block">
+                            <p class="subtext">
+                                @if($userType === 'vendor')
+                                    Welcome to glowlabs Vendor Platform.
+                                @elseif($userType === 'provider')
+                                    Welcome to glowlabs Provider Platform.
+                                @elseif($userType === 'merchant')
+                                    Welcome to glowlabs Merchant Platform.
+                                @else
+                                    Welcome to glowlabs.
+                                @endif
+                                Please verify your email address to complete registration.
+                            </p>
+                        </td>
+                    </tr>
 
-        <!-- Verification Code -->
-        <div class="verification-code {{ $userType === 'provider' ? 'provider-code' : '' }}">
-            {{ $verificationCode }}
-        </div>
+                    <tr>
+                        <td>
+                            <div class="info-card">
+                                <p class="info-title">Your Verification Code</p>
+                                <p class="code-box">{{ $verificationCode }}</p>
+                            </div>
+                        </td>
+                    </tr>
 
-        <!-- Instructions -->
-        <div class="instructions">
-            <h3 style="margin-top: 0; color: #2d3748;">How to verify your email:</h3>
-            <ol style="margin: 0; padding-left: 20px;">
-                <li>Copy the verification code above</li>
-                <li>Return to the registration page</li>
-                <li>Enter the code in the verification field</li>
-                <li>Click "Verify Email" to complete your registration</li>
-            </ol>
-        </div>
+                    <tr>
+                        <td>
+                            <div class="info-card">
+                                <p class="info-title">How to verify your email</p>
+                                <ol class="info-list">
+                                    <li>Copy the verification code above.</li>
+                                    <li>Return to the registration page.</li>
+                                    <li>Enter the code in the verification field.</li>
+                                    <li>Click "Verify Email" to complete your registration.</li>
+                                </ol>
+                            </div>
+                        </td>
+                    </tr>
 
-        <!-- Alternative Button -->
-        @if($user->id > 0)
-        <div style="text-align: center;">
-            <p>Or click the button below to verify automatically:</p>
-            <a href="{{ route(match($userType) {
-                'vendor' => 'vendor.email.verify',
-                'provider' => 'provider.email.verify',
-                'merchant' => 'merchant.email.verify',
-                default => 'vendor.email.verify'
-            }, ['user_id' => $user->id, 'code' => $verificationCode]) }}"
-               class="button {{ $userType === 'provider' ? 'provider-button' : '' }}">
-                Verify Email Address
-            </a>
-        </div>
-        @else
-        <div style="text-align: center;">
-            <p>Please return to the registration page and enter the verification code above to continue.</p>
-        </div>
-        @endif
+                    @if($user->id > 0)
+                    <tr>
+                        <td>
+                            <div class="info-card">
+                                <p class="info-text">Or click the button below to verify automatically:</p>
+                            </div>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="cta-wrap">
+                            <a href="{{ route(match($userType) {
+                                'vendor' => 'vendor.email.verify',
+                                'provider' => 'provider.email.verify',
+                                'merchant' => 'merchant.email.verify',
+                                default => 'vendor.email.verify'
+                            }, ['user_id' => $user->id, 'code' => $verificationCode]) }}" class="cta-button">Verify Email Address</a>
+                        </td>
+                    </tr>
+                    @else
+                    <tr>
+                        <td class="cta-wrap">
+                            <div class="info-card" style="margin-bottom: 0;">
+                                <p class="info-text">Please return to the registration page and enter the verification code above to continue.</p>
+                            </div>
+                        </td>
+                    </tr>
+                    @endif
 
-        <!-- Security Warning -->
-        <div class="warning">
-            <strong>Security Notice:</strong> This verification code will expire in 24 hours. If you didn't request this verification, please ignore this email or contact our support team.
-        </div>
+                    <tr>
+                        <td>
+                            <div class="info-card">
+                                <p class="info-title">Security Notice</p>
+                                <p class="info-text">This verification code will expire in 24 hours. If you did not request this verification, please ignore this email or contact our support team.</p>
+                            </div>
+                        </td>
+                    </tr>
 
-        <!-- Additional Info -->
-        <p>
-            @if($userType === 'vendor')
-                Once verified, you'll be able to set up your store, add products, and start selling on our marketplace.
-            @elseif($userType === 'provider')
-                Once verified, you'll be able to offer your services and connect with customers looking for your expertise.
-            @elseif($userType === 'merchant')
-                Once verified, you'll be able to set up your merchant account, manage your business profile, and start accepting orders.
-            @else
-                Once verified, you'll have full access to your account.
-            @endif
-        </p>
+                    <tr>
+                        <td>
+                            <div class="info-card">
+                                <p class="info-text">
+                                    @if($userType === 'vendor')
+                                        Once verified, you'll be able to set up your store, add products, and start selling on our marketplace.
+                                    @elseif($userType === 'provider')
+                                        Once verified, you'll be able to offer your services and connect with customers looking for your expertise.
+                                    @elseif($userType === 'merchant')
+                                        Once verified, you'll be able to set up your merchant account, manage your business profile, and start accepting orders.
+                                    @else
+                                        Once verified, you'll have full access to your account.
+                                    @endif
+                                </p>
+                            </div>
+                        </td>
+                    </tr>
 
-        <p>If you have any questions or need assistance, please don't hesitate to contact our support team.</p>
-
-        <p>Best regards,<br>
-        The glowlabs Team</p>
-
-        <!-- Footer -->
-        <div class="footer">
-            <p>© {{ date('Y') }} glowlabs. All rights reserved.</p>
-            <p>This email was sent to {{ $user->email }}. If you didn't request this verification, please ignore this email.</p>
-        </div>
-    </div>
+                    <tr>
+                        <td class="footer">
+                            <p class="footer-text">If you have any questions or need assistance, please do not hesitate to contact our support team.</p>
+                            <p class="footer-text">&copy; {{ date('Y') }} glowlabs. All rights reserved.</p>
+                            <p class="footer-text">This email was sent to {{ $user->email }}. If you did not request this verification, please ignore this email.</p>
+                        </td>
+                    </tr>
+                </table>
+            </td>
+        </tr>
+    </table>
 </body>
 </html>

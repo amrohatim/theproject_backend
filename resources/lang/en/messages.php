@@ -679,7 +679,6 @@ return [
     'change' => 'Change',
     'remove' => 'Remove',
     'continue_to_email_verification' => 'Continue to Email Verification',
-    'resend_in_seconds' => 'Resend in {seconds} seconds',
     'check_spam_junk_folder' => 'Check your spam/junk folder if you dont see the email',
     'verification_code_expires_10_minutes' => 'Verification code expires in 10 minutes',
     "grow_your_sales_desc"=>"Grow your sales by connecting with more customers and providers",
