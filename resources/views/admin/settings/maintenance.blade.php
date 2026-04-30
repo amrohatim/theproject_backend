@@ -37,6 +37,7 @@
                 $maintenance = $maintenances[$platformKey] ?? null;
                 $isEnabled = old('platform') === $platformKey ? old('maintenance', false) : ($maintenance?->maintenance ?? false);
                 $message = old('platform') === $platformKey ? old('message') : ($maintenance?->message ?? '');
+                $messageArabic = old('platform') === $platformKey ? old('message_arabic') : ($maintenance?->message_arabic ?? '');
                 $startAt = old('platform') === $platformKey
                     ? old('start_at')
                     : optional($maintenance?->start_at)->format('Y-m-d');
@@ -78,6 +79,17 @@
                             class="block w-full p-2 rounded-md border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-white focus:border-red-500 focus:ring-red-500"
                  
                         >{{ $message }}</textarea>
+                    </div>
+
+                    <div>
+                        <label for="message_arabic_{{ $platformKey }}" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Message (Arabic)</label>
+                        <textarea
+                            id="message_arabic_{{ $platformKey }}"
+                            name="message_arabic"
+                            rows="4"
+                            required
+                            class="block w-full p-2 rounded-md border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-white focus:border-red-500 focus:ring-red-500"
+                        >{{ $messageArabic }}</textarea>
                     </div>
 
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-4">

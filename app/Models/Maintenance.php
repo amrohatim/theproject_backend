@@ -11,6 +11,7 @@ class Maintenance extends Model
     protected $fillable = [
         'maintenance',
         'message',
+        'message_arabic',
         'start_at',
         'end_at',
         'platform',

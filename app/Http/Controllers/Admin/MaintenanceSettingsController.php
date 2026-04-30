@@ -38,6 +38,7 @@ class MaintenanceSettingsController extends Controller
             'platform' => ['required', 'in:mobile,web'],
             'maintenance' => ['nullable', 'boolean'],
             'message' => ['required', 'string'],
+            'message_arabic' => ['required', 'string'],
             'start_at' => ['required', 'date'],
             'end_at' => ['required', 'date', 'after_or_equal:start_at'],
         ]);
@@ -47,6 +48,7 @@ class MaintenanceSettingsController extends Controller
             [
                 'maintenance' => $request->boolean('maintenance'),
                 'message' => $validated['message'],
+                'message_arabic' => $validated['message_arabic'],
                 'start_at' => $validated['start_at'],
                 'end_at' => $validated['end_at'],
             ]
