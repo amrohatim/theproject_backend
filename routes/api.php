@@ -42,6 +42,8 @@ use App\Http\Controllers\API\GeneralWishlistMerchantController;
 use App\Http\Controllers\LanguageController;
 use App\Http\Controllers\API\JobController as ApiJobController;
 use App\Http\Controllers\API\JobApplicationController;
+use App\Http\Controllers\API\MaintenanceController;
+
 
 /*
 |--------------------------------------------------------------------------
@@ -73,6 +75,7 @@ Route::prefix('language')->group(function () {
     Route::get('/switcher-data', [LanguageController::class, 'getLanguageSwitcherData']);
     Route::post('/format-number', [LanguageController::class, 'formatNumber']);
     Route::post('/convert-to-arabic-numbers', [LanguageController::class, 'convertToArabicNumbers']);
+
 });
 
 // Public routes (no authentication required)
@@ -84,6 +87,7 @@ Route::prefix('public')->group(function () {
     Route::get('/companies/{id}', [CompanyController::class, 'show']);
     Route::get('/companies/{id}/branches', [CompanyController::class, 'getBranches']);
     Route::post('/branches/{id}/track-view', [BranchController::class, 'trackView']);
+    Route::get('/maintenance',[MaintenanceController::class , 'index']);
 
     // Provider public routes
     Route::get('/providers/{id}/ratings', [ProviderRatingController::class, 'index']);
@@ -443,4 +447,7 @@ Route::middleware('auth:sanctum')->group(function () {
     // Image serving routes
     Route::get('/product-image/{filename}', [ProductController::class, 'getImage']);
     Route::get('/provider-product-image/{filename}', [ProductController::class, 'getProviderProductImage']);
+
+
 });
+
